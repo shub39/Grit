@@ -14,10 +14,10 @@ jobs:
         uses: actions/checkout@v2
 
       - name: Set up JDK 17
-        uses: actions/setup-java@v2
+        uses: actions/setup-java@v3
         with:
-          java-version: '17'
           distribution: 'adopt'
+          java-version: '17'
 
       - name: Decode and write keystore
         run: echo ${{ secrets.KEYSTORE_FILE }} | base64 --decode > release.keystore
@@ -32,11 +32,11 @@ jobs:
 
       - name: Sign the APK
         run: |
-          jarsigner -verbose -sigalg SHA1withRSA -digestalg SHA1 \
-            -keystore $KEYSTORE_FILE \
-            -storepass $KEYSTORE_PASSWORD \
-            -keypass $KEY_PASSWORD \
-            app/build/outputs/apk/release/app-release-unsigned.apk $KEY_ALIAS
+          jarsigner -verbose -sigalg SHA256withRSA -digestalg SHA-256 \
+            -keystore release.keystore \
+            -storepass ${{ secrets.KEYSTORE_PASSWORD }} \
+            -keypass ${{ secrets.KEY_PASSWORD }} \
+            app/build/outputs/apk/release/app-release-unsigned.apk ${{ secrets.KEY_ALIAS }}
 
       - name: Verify the APK
         run: |
