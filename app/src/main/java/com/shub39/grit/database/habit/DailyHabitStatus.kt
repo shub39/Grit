@@ -1,14 +1,20 @@
 package com.shub39.grit.database.habit
 
 import androidx.room.Entity
+import androidx.room.ForeignKey
 import androidx.room.PrimaryKey
-import androidx.room.TypeConverter
 import java.util.Date
 
-@Entity
+@Entity(
+    tableName = "daily_habits_status",
+    foreignKeys = [ForeignKey(
+        entity = Habit::class,
+        parentColumns = ["id"],
+        childColumns = ["id"],
+        onDelete = ForeignKey.CASCADE
+    )]
+)
 data class DailyHabitStatus(
     @PrimaryKey val id: String,
-    val habitId: String,
-    val date: Long,
-    val completed: Boolean
+    val date: Date,
 )

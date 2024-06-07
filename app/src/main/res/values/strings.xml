@@ -7,7 +7,12 @@
     <string name="empty">Nothing Yet</string>
     <string name="urgent">Urgent</string>
     <string name="add_task">Add Task</string>
-    <string name="add_habit">Add Habit</string>
+    <string name="add_habit">Add new Habit</string>
+    <string name="update">Update</string>
+    <string name="update_description">Update Description</string>
+    <string name="delete">Delete</string>
+    <string name="add_description">Add Description</string>
+    <string name="select_time">Select time</string>
     <string name="habits">Habits</string>
     <string name="analytics">Analytics</string>
     <string name="goals">Goals</string>

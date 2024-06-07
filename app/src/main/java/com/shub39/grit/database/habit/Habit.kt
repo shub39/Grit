@@ -2,11 +2,11 @@ package com.shub39.grit.database.habit
 
 import androidx.room.Entity
 import androidx.room.PrimaryKey
+import java.sql.Timestamp
 
-@Entity
+@Entity(tableName = "habit_index")
 data class Habit(
     @PrimaryKey val id: String,
-    val title: String,
     val description: String,
-    var status: Boolean
+    val time: Long
 )

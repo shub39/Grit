@@ -1,4 +1,4 @@
-package com.shub39.grit.components
+package com.shub39.grit.component
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Row

@@ -15,8 +15,10 @@
 
 ### Features
 - [x] Todo List
-- [ ] Habit Tracking
+- [x] Habit Tracking
 - [ ] Analytics
+- [ ] Notifications
+- [ ] Widgets
 
 ### What's Unique?
 - Blur Completed Tasks
@@ -25,5 +27,5 @@
 ## Screenshots
 <div style="display: flex; justify-content: space-between;">
    <img src="https://github.com/shub39/Grit/assets/143277026/5798e2b2-df81-4cf0-9565-b79e658cc959" alt="Screenshot 2" style="width: 48%;">
-  <img src="https://github.com/shub39/Grit/assets/143277026/b6ba997c-0766-4f1d-a7f8-924d9e3c6edb" alt="Screenshot 1" style="width: 48%;">
+   <img src="https://github.com/shub39/Grit/assets/143277026/b6ba997c-0766-4f1d-a7f8-924d9e3c6edb" alt="Screenshot 1" style="width: 48%;">
 </div>

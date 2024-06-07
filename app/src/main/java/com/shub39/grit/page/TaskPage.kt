@@ -1,11 +1,12 @@
-package com.shub39.grit.pages
+package com.shub39.grit.page
 
+import androidx.compose.animation.animateContentSize
+import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
@@ -39,12 +40,12 @@ import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import com.shub39.grit.R
-import com.shub39.grit.components.Done
+import com.shub39.grit.component.Done
+import com.shub39.grit.component.EmptyPage
 import com.shub39.grit.viewModel.TaskListViewModel
-import com.shub39.grit.components.TaskCard
+import com.shub39.grit.component.TaskCard
 import com.shub39.grit.database.task.Task
 import java.time.Instant
 import java.util.Date
@@ -88,16 +89,10 @@ fun TodoPage(viewModel: TaskListViewModel) {
         }
     ) { innerPadding ->
         if (showTaskAddDialog) {
-            var newTask by remember {
-                mutableStateOf("")
-            }
-            var newPriority by remember {
-                mutableStateOf(false)
-            }
+            var newTask by remember { mutableStateOf("") }
+            var newPriority by remember { mutableStateOf(false) }
             val keyboardController = LocalSoftwareKeyboardController.current
-            val focusRequester = remember {
-                FocusRequester()
-            }
+            val focusRequester = remember { FocusRequester() }
             LaunchedEffect(Unit) {
                 focusRequester.requestFocus()
                 keyboardController?.show()
@@ -111,7 +106,8 @@ fun TodoPage(viewModel: TaskListViewModel) {
                             value = newTask,
                             onValueChange = { newTask = it },
                             shape = MaterialTheme.shapes.medium,
-                            modifier = Modifier.focusRequester(focusRequester)
+                            modifier = Modifier.focusRequester(focusRequester),
+                            label = { Text(text = stringResource(id = R.string.add_task)) }
                         )
                     }
                 },
@@ -119,7 +115,7 @@ fun TodoPage(viewModel: TaskListViewModel) {
                     Row(
                         modifier = Modifier
                             .fillMaxWidth(),
-                        horizontalArrangement = Arrangement.SpaceBetween
+                        horizontalArrangement = Arrangement.SpaceEvenly
                     ) {
                         Row(
                             verticalAlignment = Alignment.CenterVertically
@@ -156,18 +152,8 @@ fun TodoPage(viewModel: TaskListViewModel) {
                 }
             )
         }
-
         if (taskListIsEmpty) {
-            Row(
-                modifier = Modifier.fillMaxSize(),
-                verticalAlignment = Alignment.CenterVertically,
-                horizontalArrangement = Arrangement.Center
-            ) {
-                Text(
-                    text = stringResource(id = R.string.empty),
-                    textAlign = TextAlign.Center,
-                )
-            }
+            EmptyPage(paddingValues = innerPadding)
         } else {
             TaskList(
                 viewModel = viewModel,
@@ -183,7 +169,7 @@ fun TodoPage(viewModel: TaskListViewModel) {
     }
 }
 
-@OptIn(ExperimentalMaterial3Api::class)
+@OptIn(ExperimentalMaterial3Api::class, ExperimentalFoundationApi::class)
 @Composable
 fun TaskList(
     viewModel: TaskListViewModel,
@@ -194,7 +180,9 @@ fun TaskList(
     val tasks by viewModel.tasks.collectAsState()
 
     LazyColumn(
-        modifier = Modifier.padding(paddingValues),
+        modifier = Modifier
+            .padding(paddingValues)
+            .animateContentSize(),
         contentPadding = PaddingValues(16.dp),
     ) {
         items(tasks, key = { it.id }) {
@@ -216,7 +204,8 @@ fun TaskList(
             SwipeToDismissBox(
                 state = dismissState,
                 enableDismissFromEndToStart = true,
-                backgroundContent = { Done() }
+                backgroundContent = { Done() },
+                modifier = Modifier.animateItemPlacement()
             ) {
                 TaskCard(
                     task = it,

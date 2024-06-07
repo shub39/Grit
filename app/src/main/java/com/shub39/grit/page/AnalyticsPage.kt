@@ -1,4 +1,4 @@
-package com.shub39.grit.pages
+package com.shub39.grit.page
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column

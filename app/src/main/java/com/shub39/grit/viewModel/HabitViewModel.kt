@@ -7,17 +7,20 @@ import androidx.room.Room
 import com.shub39.grit.database.habit.DailyHabitStatus
 import com.shub39.grit.database.habit.Habit
 import com.shub39.grit.database.habit.HabitDatabase
+import com.shub39.grit.notification.scheduleDailyNotification
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
 
 class HabitViewModel(applicationContext: Context) : ViewModel() {
+
     private val habitDatabase = Room.databaseBuilder(
         applicationContext,
         HabitDatabase::class.java,
         "habit-database"
     ).build()
     private val habitDao = habitDatabase.habitDao()
+    private val habitStatusDao = habitDatabase.dailyHabitStatusDao()
     private val _habits = MutableStateFlow(listOf<Habit>())
 
     val habits: StateFlow<List<Habit>> get() = _habits
@@ -35,17 +38,31 @@ class HabitViewModel(applicationContext: Context) : ViewModel() {
         }
     }
 
-    fun addStatusForHabit(habit: DailyHabitStatus) {
+    fun addStatusForHabit(status: DailyHabitStatus) {
         viewModelScope.launch {
-            habitDao.insertDailyHabitStatus(habit)
+            habitStatusDao.insertDailyStatus(status)
         }
     }
 
     fun deleteHabit(habit: Habit) {
         viewModelScope.launch {
             habitDao.deleteHabit(habit)
-            habitDao.deleteDailyStatusForHabit(habit.id)
+            _habits.value -= habit
         }
     }
 
+    fun updateHabit(habit: Habit) {
+        viewModelScope.launch {
+            habitDao.updateHabit(habit)
+            _habits.value = habitDao.getAllHabits()
+        }
+    }
+
+    fun getStatusForHabit(id: String): List<DailyHabitStatus> {
+        var status = listOf<DailyHabitStatus>()
+        viewModelScope.launch {
+            status = habitStatusDao.getDailyStatusForHabit(id)
+        }
+        return status
+    }
 }

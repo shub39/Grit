@@ -6,6 +6,7 @@ import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.material3.NavigationBar
 import androidx.compose.material3.NavigationBarItem
 import androidx.compose.material3.Scaffold
@@ -23,10 +24,10 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
-import com.shub39.grit.components.BottomAppBarDestination
-import com.shub39.grit.pages.AnalyticsPage
-import com.shub39.grit.pages.TodoPage
-import com.shub39.grit.pages.HabitsPage
+import com.shub39.grit.component.BottomAppBarDestination
+import com.shub39.grit.page.AnalyticsPage
+import com.shub39.grit.page.TodoPage
+import com.shub39.grit.page.HabitsPage
 import com.shub39.grit.ui.theme.GritTheme
 import com.shub39.grit.viewModel.HabitViewModel
 import com.shub39.grit.viewModel.TaskListViewModel
@@ -70,31 +71,31 @@ class MainActivity : ComponentActivity() {
 
 @Composable
 private fun BottomBar(navController: NavController) {
-//    NavigationBar(tonalElevation = 8.dp) {
-//        BottomAppBarDestination.entries.forEach { destination ->
-//            val isSelected =
-//                navController.currentBackStackEntryAsState().value?.destination?.route == destination.direction
-//            NavigationBarItem(
-//                selected = isSelected,
-//                onClick = {
-//                    navController.navigate(destination.direction)
-//                },
-//                icon = {
-//                    if (isSelected) {
-//                        Icon(
-//                            painter = painterResource(id = destination.iconSelected),
-//                            contentDescription = null
-//                        )
-//                    } else {
-//                        Icon(
-//                            painter = painterResource(id = destination.iconSelected),
-//                            contentDescription = null
-//                        )
-//                    }
-//                },
-//                label = { Text(stringResource(id = destination.label)) },
-//                alwaysShowLabel = false
-//            )
-//        }
-//    }
+    NavigationBar(tonalElevation = 8.dp) {
+        BottomAppBarDestination.entries.forEach { destination ->
+            val isSelected =
+                navController.currentBackStackEntryAsState().value?.destination?.route == destination.direction
+            NavigationBarItem(
+                selected = isSelected,
+                onClick = {
+                    navController.navigate(destination.direction)
+                },
+                icon = {
+                    if (isSelected) {
+                        Icon(
+                            painter = painterResource(id = destination.iconSelected),
+                            contentDescription = null
+                        )
+                    } else {
+                        Icon(
+                            painter = painterResource(id = destination.iconSelected),
+                            contentDescription = null
+                        )
+                    }
+                },
+                label = { Text(stringResource(id = destination.label)) },
+                alwaysShowLabel = false
+            )
+        }
+    }
 }
