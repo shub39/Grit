@@ -19,32 +19,20 @@ jobs:
           distribution: 'adopt'
           java-version: '17'
 
-      - name: Decode and write keystore
-        run: echo "${{ secrets.KEYSTORE_FILE }}" | base64 --decode > release.keystore
-
       - name: Build Release APK
         run: ./gradlew assembleRelease
+
+      - name: Sign app APK
+        id: sign_app
+        uses: r0adkll/sign-android-release@v1
+        with:
+          releaseDirectory: app/build/outputs/apk/release
+          signingKeyBase64: ${{ secrets.KEYSTORE_FILE }}
+          alias: ${{ secrets.KEY_ALIAS }}
+          keyStorePassword: ${{ secrets.KEYSTORE_PASSWORD }}
+          keyPassword: ${{ secrets.KEY_PASSWORD }}
         env:
-          KEYSTORE_FILE: release.keystore
-          KEYSTORE_PASSWORD: ${{ secrets.KEYSTORE_PASSWORD }}
-          KEY_ALIAS: ${{ secrets.KEY_ALIAS }}
-          KEY_PASSWORD: ${{ secrets.KEY_PASSWORD }}
-
-      - name: Sign the APK
-        run: |
-          jarsigner -verbose -sigalg SHA256withRSA -digestalg SHA-256 \
-            -keystore release.keystore \
-            -storepass ${{ secrets.KEYSTORE_PASSWORD }} \
-            -keypass ${{ secrets.KEY_PASSWORD }} \
-            app/build/outputs/apk/release/app-release-unsigned.apk ${{ secrets.KEY_ALIAS }}
-
-      - name: Verify the APK
-        run: |
-          jarsigner -verify -verbose -certs app/build/outputs/apk/release/app-release-unsigned.apk
-
-      - name: Zipalign the APK
-        run: |
-          ${ANDROID_SDK_ROOT}/build-tools/30.0.3/zipalign -v 4 app/build/outputs/apk/release/app-release-unsigned.apk app/build/outputs/apk/release/app-release.apk
+          BUILD_TOOLS_VERSION: "34.0.0"  # optional, specify if you need a specific build-tools version
 
       - name: Create Release
         id: create_release
@@ -63,7 +51,7 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
           upload_url: ${{ steps.create_release.outputs.upload_url }}
-          asset_path: app/build/outputs/apk/release/app-release.apk
+          asset_path: ${{ steps.sign_app.outputs.signedReleaseFile }}
           asset_name: app-release.apk
           asset_content_type: application/vnd.android.package-archive
 
