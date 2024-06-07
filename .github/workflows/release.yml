@@ -17,6 +17,7 @@ jobs:
         uses: actions/setup-java@v2
         with:
           java-version: '17'
+          distribution: 'adopt'
 
       - name: Decode and write keystore
         run: echo ${{ secrets.KEYSTORE_FILE }} | base64 --decode > release.keystore
