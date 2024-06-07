@@ -20,7 +20,8 @@ jobs:
           java-version: '17'
 
       - name: Decode and write keystore
-        run: echo ${{ secrets.KEYSTORE_FILE }} | base64 --decode > release.keystore
+        run: |
+          echo ${{ secrets.KEYSTORE_FILE }} | base64 --decode > release.keystore
 
       - name: Build Release APK
         run: ./gradlew assembleRelease
