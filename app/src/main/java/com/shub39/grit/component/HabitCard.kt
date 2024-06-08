@@ -8,6 +8,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Button
 import androidx.compose.material3.Card
@@ -16,22 +17,25 @@ import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
-import androidx.compose.material3.TimeInput
-import androidx.compose.material3.TimePickerState
+import androidx.compose.material3.TimePicker
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.focus.FocusRequester
+import androidx.compose.ui.focus.focusRequester
+import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.input.KeyboardCapitalization
 import androidx.compose.ui.unit.dp
 import com.shub39.grit.R
 import com.shub39.grit.database.habit.Habit
-import java.time.Instant
-import java.time.LocalDateTime
-import java.time.ZoneOffset
+import com.shub39.grit.database.habit.localToTimePickerState
+import com.shub39.grit.database.habit.timePickerStateToLocalDateTime
 import java.time.format.DateTimeFormatter
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -45,7 +49,13 @@ fun HabitCard(
 
     if (showEditDialog) {
         var newHabitDescription by remember { mutableStateOf(habit.description) }
-        val timePickerState = remember { longToTimePickerState(habit.time) }
+        val timePickerState = remember { localToTimePickerState(habit.time) }
+        val keyboardController = LocalSoftwareKeyboardController.current
+        val focusRequester = remember { FocusRequester() }
+        LaunchedEffect(Unit) {
+            focusRequester.requestFocus()
+            keyboardController?.show()
+        }
 
 
         AlertDialog(
@@ -56,13 +66,22 @@ fun HabitCard(
                     OutlinedTextField(
                         value = newHabitDescription,
                         shape = MaterialTheme.shapes.medium,
+                        keyboardOptions = KeyboardOptions.Default.copy(
+                            capitalization = KeyboardCapitalization.Sentences
+                        ),
                         onValueChange = { newHabitDescription = it },
-                        label = { Text(text = stringResource(id = R.string.update_description)) }
+                        label = {
+                            if (newHabitDescription.length <= 50) {
+                                Text(text = stringResource(id = R.string.update_description))
+                            } else {
+                                Text(text = stringResource(id = R.string.too_long))
+                            }
+                        },
+                        isError = newHabitDescription.length > 50,
+                        modifier = Modifier.focusRequester(focusRequester)
                     )
                     Spacer(modifier = Modifier.padding(8.dp))
-                    TimeInput(
-                        state = timePickerState
-                    )
+                    TimePicker(state = timePickerState)
                 }
             },
             confirmButton = {
@@ -83,14 +102,11 @@ fun HabitCard(
                                 Habit(
                                     habit.id,
                                     newHabitDescription,
-                                    timePickerStateToLong(
-                                        timePickerState.hour,
-                                        timePickerState.minute
-                                    )
+                                    timePickerStateToLocalDateTime(timePickerState)
                                 )
                             )
                         },
-                        enabled = newHabitDescription.isNotBlank() && newHabitDescription.length < 50,
+                        enabled = newHabitDescription.isNotBlank() && newHabitDescription.length <= 50,
                     ) {
                         Text(text = stringResource(id = R.string.update))
                     }
@@ -135,27 +151,9 @@ fun HabitCard(
             ) {
                 Text(
                     modifier = Modifier.padding(8.dp),
-                    text = formatDateTime(habit.time)
+                    text = habit.time.format(DateTimeFormatter.ofPattern("hh:mm a"))
                 )
             }
         }
     }
-}
-
-private fun formatDateTime(time: Long): String {
-    val localDateTime = LocalDateTime.ofInstant(Instant.ofEpochMilli(time), ZoneOffset.UTC)
-    val formatter = DateTimeFormatter.ofPattern("hh:mm a")
-    return localDateTime.format(formatter)
-}
-
-@OptIn(ExperimentalMaterial3Api::class)
-private fun longToTimePickerState(timeInMillis: Long): TimePickerState {
-    val localDateTime = LocalDateTime.ofInstant(Instant.ofEpochMilli(timeInMillis), ZoneOffset.UTC)
-    return TimePickerState(localDateTime.hour, localDateTime.minute, false)
-}
-
-private fun timePickerStateToLong(hour: Int, minute: Int): Long {
-    val now = LocalDateTime.now()
-    val time = now.withHour(hour).withMinute(minute).withSecond(0).withNano(0)
-    return time.toInstant(ZoneOffset.UTC).toEpochMilli()
 }

@@ -3,7 +3,7 @@ package com.shub39.grit.database.habit
 import androidx.room.Entity
 import androidx.room.ForeignKey
 import androidx.room.PrimaryKey
-import java.util.Date
+import java.time.LocalDateTime
 
 @Entity(
     tableName = "daily_habits_status",
@@ -16,5 +16,5 @@ import java.util.Date
 )
 data class DailyHabitStatus(
     @PrimaryKey val id: String,
-    val date: Date,
+    val date: LocalDateTime,
 )

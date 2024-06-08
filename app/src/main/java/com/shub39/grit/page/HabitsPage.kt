@@ -1,5 +1,9 @@
 package com.shub39.grit.page
 
+import android.content.Context
+import android.os.Build
+import androidx.annotation.RequiresApi
+import androidx.compose.animation.animateContentSize
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
@@ -8,6 +12,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Button
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -17,10 +22,11 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
-import androidx.compose.material3.TimeInput
+import androidx.compose.material3.TimePicker
 import androidx.compose.material3.TimePickerState
 import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -28,21 +34,26 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.focus.FocusRequester
+import androidx.compose.ui.focus.focusRequester
+import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.input.KeyboardCapitalization
 import androidx.compose.ui.unit.dp
 import com.shub39.grit.R
 import com.shub39.grit.component.EmptyPage
 import com.shub39.grit.component.HabitCard
 import com.shub39.grit.database.habit.Habit
+import com.shub39.grit.database.habit.timePickerStateToLocalDateTime
+import com.shub39.grit.notification.showAddNotification
 import com.shub39.grit.viewModel.HabitViewModel
-import java.time.LocalDateTime
-import java.time.ZoneOffset
 
+@RequiresApi(Build.VERSION_CODES.TIRAMISU)
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun HabitsPage(habitViewModel: HabitViewModel) {
+fun HabitsPage(habitViewModel: HabitViewModel, context: Context) {
     val habits by habitViewModel.habits.collectAsState()
     val habitListIsEmpty = habits.isEmpty()
     var showAddHabitDialog by remember { mutableStateOf(false) }
@@ -82,6 +93,12 @@ fun HabitsPage(habitViewModel: HabitViewModel) {
             var newHabitName by remember { mutableStateOf("") }
             var newHabitDescription by remember { mutableStateOf("") }
             val timePickerState = remember { TimePickerState(12, 0, false) }
+            val keyboardController = LocalSoftwareKeyboardController.current
+            val focusRequester = remember { FocusRequester() }
+            LaunchedEffect(Unit) {
+                focusRequester.requestFocus()
+                keyboardController?.show()
+            }
 
             AlertDialog(
                 onDismissRequest = { showAddHabitDialog = false },
@@ -90,29 +107,56 @@ fun HabitsPage(habitViewModel: HabitViewModel) {
                         OutlinedTextField(
                             value = newHabitName,
                             onValueChange = { newHabitName = it },
+                            keyboardOptions = KeyboardOptions.Default.copy(
+                                capitalization = KeyboardCapitalization.Words
+                            ),
                             shape = MaterialTheme.shapes.medium,
-                            label = { Text(text = stringResource(id = R.string.add_habit)) },
+                            label = {
+                                if (newHabitName.length <= 20) {
+                                    Text(text = stringResource(id = R.string.add_habit))
+                                } else {
+                                    Text(text = stringResource(id = R.string.too_long))
+                                }
+                            },
+                            isError = newHabitName.length > 20,
+                            modifier = Modifier.focusRequester(focusRequester)
                         )
                         Spacer(modifier = Modifier.padding(8.dp))
                         OutlinedTextField(
                             value = newHabitDescription,
                             shape = MaterialTheme.shapes.medium,
+                            keyboardOptions = KeyboardOptions.Default.copy(
+                                capitalization = KeyboardCapitalization.Sentences
+                            ),
                             onValueChange = { newHabitDescription = it },
-                            label = { Text(text = stringResource(id = R.string.add_description)) }
+                            label = {
+                                if (newHabitName.length <= 50) {
+                                    Text(text = stringResource(id = R.string.add_description))
+                                } else {
+                                    Text(text = stringResource(id = R.string.too_long))
+                                }
+                            },
+                            isError = newHabitName.length > 50
                         )
                         Spacer(modifier = Modifier.padding(8.dp))
-                        TimeInput(
-                            state = timePickerState
+                        TimePicker(
+                            state = timePickerState,
                         )
                     }
                 },
                 confirmButton = {
                     Button(
                         onClick = {
+                            val habit = Habit(
+                                newHabitName,
+                                newHabitDescription,
+                                timePickerStateToLocalDateTime(timePickerState)
+                            )
                             showAddHabitDialog = false
-                            habitViewModel.addHabit(Habit(newHabitName, newHabitDescription, timePickerStateToLong(timePickerState.hour, timePickerState.minute)))
+                            habitViewModel.addHabit(habit)
+                            showAddNotification(context, habit)
                         },
-                        enabled = newHabitName.isNotBlank() && newHabitDescription.isNotBlank() && newHabitName.length < 10 && newHabitDescription.length < 50,
+                        enabled = newHabitName.isNotBlank() && newHabitDescription.isNotBlank() && newHabitName.length < 20 && newHabitDescription.length < 50,
                         modifier = Modifier.fillMaxWidth()
                     ) {
                         Text(text = stringResource(id = R.string.add_habit))
@@ -141,10 +185,12 @@ private fun HabitsList(
     val habits by viewModel.habits.collectAsState()
 
     LazyColumn(
-        modifier = Modifier.padding(paddingValue),
+        modifier = Modifier
+            .padding(paddingValue)
+            .animateContentSize(),
         contentPadding = PaddingValues(16.dp)
     ) {
-        items(habits, key = { it.id }) {habit ->
+        items(habits, key = { it.id }) { habit ->
             HabitCard(
                 habit = habit,
                 onHabitClick = {
@@ -156,11 +202,4 @@ private fun HabitsList(
             )
         }
     }
-}
-
-
-private fun timePickerStateToLong(hour: Int, minute: Int): Long {
-    val now = LocalDateTime.now()
-    val time = now.withHour(hour).withMinute(minute).withSecond(0).withNano(0)
-    return time.toInstant(ZoneOffset.UTC).toEpochMilli()
 }

@@ -1,12 +1,17 @@
 package com.shub39.grit
 
+import android.app.AlarmManager
+import android.app.PendingIntent
+import android.content.Intent
+import android.os.Build
 import androidx.compose.material3.Icon
 import android.os.Bundle
+import android.util.Log
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
+import androidx.annotation.RequiresApi
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
 import androidx.compose.material3.NavigationBar
 import androidx.compose.material3.NavigationBarItem
 import androidx.compose.material3.Scaffold
@@ -25,19 +30,24 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import com.shub39.grit.component.BottomAppBarDestination
+import com.shub39.grit.notification.NotificationReceiver
+import com.shub39.grit.notification.createNotificationChannel
 import com.shub39.grit.page.AnalyticsPage
 import com.shub39.grit.page.TodoPage
 import com.shub39.grit.page.HabitsPage
 import com.shub39.grit.ui.theme.GritTheme
 import com.shub39.grit.viewModel.HabitViewModel
 import com.shub39.grit.viewModel.TaskListViewModel
+import java.util.Calendar
 
 class MainActivity : ComponentActivity() {
+    @RequiresApi(Build.VERSION_CODES.TIRAMISU)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
         val taskListViewModel = TaskListViewModel(applicationContext)
         val habitsViewModel = HabitViewModel(applicationContext)
+        createNotificationChannel(this)
 
         enableEdgeToEdge()
         setContent {
@@ -57,7 +67,7 @@ class MainActivity : ComponentActivity() {
                             TodoPage(taskListViewModel)
                         }
                         composable(BottomAppBarDestination.HabitsPage.direction) {
-                            HabitsPage(habitsViewModel)
+                            HabitsPage(habitsViewModel, this@MainActivity)
                         }
                         composable(BottomAppBarDestination.AnalyticsPage.direction) {
                             AnalyticsPage()

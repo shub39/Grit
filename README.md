@@ -17,7 +17,7 @@
 - [x] Todo List
 - [x] Habit Tracking
 - [ ] Analytics
-- [ ] Notifications
+- [x] Notifications
 - [ ] Widgets
 
 ### What's Unique?
