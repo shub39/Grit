@@ -29,6 +29,7 @@ class HabitViewModel(applicationContext: Context) : ViewModel() {
     init {
         viewModelScope.launch {
             _habits.value = habitDao.getAllHabits()
+            scheduler.repeater()
         }
     }
 
@@ -37,6 +38,15 @@ class HabitViewModel(applicationContext: Context) : ViewModel() {
             _habits.value += habit
             habitDao.insertHabit(habit)
             scheduler.schedule(habit)
+        }
+    }
+
+    fun repeatHabits() {
+        viewModelScope.launch {
+            _habits.value.forEach {
+                scheduler.cancel(it)
+                scheduler.schedule(it)
+            }
         }
     }
 

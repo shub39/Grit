@@ -7,6 +7,8 @@ import android.os.Build
 import android.util.Log
 import androidx.annotation.RequiresApi
 import com.shub39.grit.database.habit.Habit
+import com.shub39.grit.viewModel.HabitViewModel
+import kotlinx.coroutines.flow.forEach
 import java.time.LocalDateTime
 
 class NotificationReceiver: BroadcastReceiver() {
@@ -17,6 +19,8 @@ class NotificationReceiver: BroadcastReceiver() {
             val habitId = intent.getStringExtra("1") ?: return
             val habitDescription = intent.getStringExtra("2") ?: return
             habitNotification(context, Habit(habitId, habitDescription, LocalDateTime.now()))
+        } else {
+            HabitViewModel(context).repeatHabits()
         }
     }
 
