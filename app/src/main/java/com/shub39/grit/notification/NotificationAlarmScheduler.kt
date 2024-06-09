@@ -6,11 +6,8 @@ import android.content.Context
 import android.content.Intent
 import android.util.Log
 import com.shub39.grit.database.habit.Habit
-import java.time.Instant
-import java.time.LocalDateTime
 import java.time.ZoneId
 import java.time.format.DateTimeFormatter
-import java.util.Calendar
 
 class NotificationAlarmScheduler(
     private val context: Context
@@ -23,10 +20,10 @@ class NotificationAlarmScheduler(
             putExtra("1", item.id)
             putExtra("2", item.description)
         }
-        alarmManager.setInexactRepeating(
+        alarmManager.setRepeating(
             AlarmManager.RTC_WAKEUP,
-            item.time.atZone(ZoneId.systemDefault()).toEpochSecond(),
-            (24 * 60 * 60 * 1000).toLong(),
+            item.time.atZone(ZoneId.systemDefault()).toEpochSecond() * 1000,
+            AlarmManager.INTERVAL_DAY,
             PendingIntent.getBroadcast(
                 context,
                 item.id.hashCode(),
@@ -34,8 +31,7 @@ class NotificationAlarmScheduler(
                 PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE
             )
         )
-        Log.d("NotificationAlarmScheduler", "Scheduled notification for ${item.time.format(
-            DateTimeFormatter.ofPattern("hh:mm a"))}")
+        Log.d("NotificationAlarmScheduler", "Scheduled notification for ${item.time.format(DateTimeFormatter.ofPattern("hh:mm a"))}")
     }
 
     override fun cancel(item: Habit) {

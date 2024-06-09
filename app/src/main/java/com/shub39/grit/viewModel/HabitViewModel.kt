@@ -29,10 +29,6 @@ class HabitViewModel(applicationContext: Context) : ViewModel() {
     init {
         viewModelScope.launch {
             _habits.value = habitDao.getAllHabits()
-            _habits.value.forEach {
-                scheduler.cancel(it)
-                scheduler.schedule(it)
-            }
         }
     }
 
