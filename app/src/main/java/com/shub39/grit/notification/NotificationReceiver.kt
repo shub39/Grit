@@ -10,6 +10,7 @@ import com.shub39.grit.database.habit.Habit
 import java.time.LocalDateTime
 
 class NotificationReceiver: BroadcastReceiver() {
+
     @RequiresApi(Build.VERSION_CODES.TIRAMISU)
     override fun onReceive(context: Context, intent: Intent?) {
         Log.d("NotificationReceiver", "Received")
