@@ -41,6 +41,7 @@ import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardCapitalization
 import androidx.compose.ui.unit.dp
 import com.shub39.grit.R
@@ -109,7 +110,8 @@ fun TodoPage(viewModel: TaskListViewModel) {
                             onValueChange = { newTask = it },
                             shape = MaterialTheme.shapes.medium,
                             keyboardOptions = KeyboardOptions.Default.copy(
-                                capitalization = KeyboardCapitalization.Sentences
+                                capitalization = KeyboardCapitalization.Sentences,
+                                imeAction = ImeAction.Done
                             ),
                             modifier = Modifier.focusRequester(focusRequester),
                             label = { Text(text = stringResource(id = R.string.add_task)) }

@@ -18,6 +18,7 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
 import androidx.compose.material3.TimePicker
+import androidx.compose.material3.TimePickerLayoutType
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
@@ -30,6 +31,7 @@ import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardCapitalization
 import androidx.compose.ui.unit.dp
 import com.shub39.grit.R
@@ -67,7 +69,8 @@ fun HabitCard(
                         value = newHabitDescription,
                         shape = MaterialTheme.shapes.medium,
                         keyboardOptions = KeyboardOptions.Default.copy(
-                            capitalization = KeyboardCapitalization.Sentences
+                            capitalization = KeyboardCapitalization.Sentences,
+                            imeAction = ImeAction.Done
                         ),
                         onValueChange = { newHabitDescription = it },
                         label = {
@@ -81,7 +84,9 @@ fun HabitCard(
                         modifier = Modifier.focusRequester(focusRequester)
                     )
                     Spacer(modifier = Modifier.padding(8.dp))
-                    TimePicker(state = timePickerState)
+                    TimePicker(
+                        state = timePickerState,
+                    )
                 }
             },
             confirmButton = {
