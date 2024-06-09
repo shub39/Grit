@@ -8,7 +8,6 @@ import android.util.Log
 import androidx.annotation.RequiresApi
 import com.shub39.grit.database.habit.Habit
 import com.shub39.grit.viewModel.HabitViewModel
-import kotlinx.coroutines.flow.forEach
 import java.time.LocalDateTime
 
 class NotificationReceiver: BroadcastReceiver() {
