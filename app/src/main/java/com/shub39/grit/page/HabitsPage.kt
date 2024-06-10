@@ -42,6 +42,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardCapitalization
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import com.shub39.grit.R
 import com.shub39.grit.component.EmptyPage
@@ -66,7 +67,9 @@ fun HabitsPage(habitViewModel: HabitViewModel, context: Context) {
                     Text(
                         text = stringResource(id = R.string.habits),
                         style = MaterialTheme.typography.headlineSmall,
-                        fontWeight = FontWeight.Bold
+                        fontWeight = FontWeight.Bold,
+                        modifier = Modifier.fillMaxWidth(),
+                        textAlign = TextAlign.Center
                     )
                 }
             )
@@ -199,12 +202,7 @@ private fun HabitsList(
         items(habits, key = { it.id }) { habit ->
             HabitCard(
                 habit = habit,
-                onHabitClick = {
-                    viewModel.updateHabit(it)
-                },
-                onDeleteClick = {
-                    viewModel.deleteHabit(it)
-                }
+                habitViewModel = viewModel
             )
         }
     }

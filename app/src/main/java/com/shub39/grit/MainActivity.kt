@@ -7,6 +7,9 @@ import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import androidx.annotation.RequiresApi
+import androidx.compose.animation.core.tween
+import androidx.compose.animation.fadeIn
+import androidx.compose.animation.fadeOut
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.NavigationBar
 import androidx.compose.material3.NavigationBarItem
@@ -15,12 +18,14 @@ import androidx.compose.material3.SnackbarHost
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
+import androidx.navigation.NavGraph.Companion.findStartDestination
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
@@ -40,7 +45,7 @@ class MainActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
 
         val taskListViewModel = TaskListViewModel(applicationContext)
-        val habitsViewModel = HabitViewModel(applicationContext)
+        val habitsViewModel = HabitViewModel(application)
         createNotificationChannel(this)
 
         enableEdgeToEdge()
@@ -56,6 +61,10 @@ class MainActivity : ComponentActivity() {
                         navController = navController,
                         startDestination = BottomAppBarDestination.TodoPage.direction,
                         modifier = Modifier.padding(innerPadding),
+                        enterTransition = { fadeIn(animationSpec = tween(700)) },
+                        exitTransition = { fadeOut(animationSpec = tween(700)) },
+                        popEnterTransition = { fadeIn(animationSpec = tween(700)) },
+                        popExitTransition = { fadeOut(animationSpec = tween(700)) }
                     ) {
                         composable(BottomAppBarDestination.TodoPage.direction) {
                             TodoPage(taskListViewModel)
@@ -64,7 +73,7 @@ class MainActivity : ComponentActivity() {
                             HabitsPage(habitsViewModel, this@MainActivity)
                         }
                         composable(BottomAppBarDestination.AnalyticsPage.direction) {
-                            AnalyticsPage()
+                            AnalyticsPage(habitsViewModel)
                         }
                     }
                 }
@@ -77,25 +86,27 @@ class MainActivity : ComponentActivity() {
 private fun BottomBar(navController: NavController) {
     NavigationBar(tonalElevation = 8.dp) {
         BottomAppBarDestination.entries.forEach { destination ->
-            val isSelected =
-                navController.currentBackStackEntryAsState().value?.destination?.route == destination.direction
+            val navBackStackEntry by navController.currentBackStackEntryAsState()
+            val currentRoute = navBackStackEntry?.destination?.route
+            val isSelected = currentRoute == destination.direction
             NavigationBarItem(
                 selected = isSelected,
                 onClick = {
-                    navController.navigate(destination.direction)
+                    if (currentRoute != destination.direction) {
+                        navController.navigate(destination.direction) {
+                            launchSingleTop = true
+                            restoreState = true
+                            popUpTo(navController.graph.findStartDestination().id) {
+                                saveState = true
+                            }
+                        }
+                    }
                 },
                 icon = {
-                    if (isSelected) {
-                        Icon(
-                            painter = painterResource(id = destination.iconSelected),
-                            contentDescription = null
-                        )
-                    } else {
-                        Icon(
-                            painter = painterResource(id = destination.iconSelected),
-                            contentDescription = null
-                        )
-                    }
+                    Icon(
+                        painter = painterResource(id = destination.iconSelected),
+                        contentDescription = null
+                    )
                 },
                 label = { Text(stringResource(id = destination.label)) },
                 alwaysShowLabel = false

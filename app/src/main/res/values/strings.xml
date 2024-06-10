@@ -13,8 +13,9 @@
     <string name="delete">Delete</string>
     <string name="add_description">Add Description</string>
     <string name="select_time">Select time</string>
-    <string name="habits">Habits</string>
-    <string name="analytics">Analytics</string>
+    <string name="habits">Daily Habits</string>
+    <string name="analytics">Habit Analytics</string>
+    <string name="mark_done">Mark Done</string>
     <string name="goals">Goals</string>
     <string name="settings">Settings</string>
     <string name="new_habit">New Habit </string>

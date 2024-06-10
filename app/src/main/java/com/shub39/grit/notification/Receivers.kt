@@ -9,7 +9,7 @@ import androidx.annotation.RequiresApi
 import com.shub39.grit.database.habit.Habit
 import java.time.LocalDateTime
 
-class NotificationReceiver: BroadcastReceiver() {
+class NotificationReceiver : BroadcastReceiver() {
 
     @RequiresApi(Build.VERSION_CODES.TIRAMISU)
     override fun onReceive(context: Context, intent: Intent?) {

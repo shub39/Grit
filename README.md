@@ -1,7 +1,7 @@
 <div align="center">  
   
 <h1>🛠️ Grit 🛠️</h1>
-<h3><i>A Simple Todo List and Habits Android App using ROOM Database</i></h3>
+<h3><i>A Simple Todo List and Habits tracker App for Android</i></h3>
 
 </div>
 
@@ -16,13 +16,9 @@
 ### Features
 - [x] Todo List
 - [x] Habit Tracking
-- [ ] Analytics
+- [x] Analytics
 - [x] Notifications
 - [ ] Widgets
-
-### What's Unique?
-- Blur Completed Tasks
-- More uniqueness coming soon...
 
 ## Screenshots
 <div style="display: flex; justify-content: space-between;">

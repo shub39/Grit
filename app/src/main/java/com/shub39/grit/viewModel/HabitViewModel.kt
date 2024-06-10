@@ -1,6 +1,8 @@
 package com.shub39.grit.viewModel
 
+import android.app.Application
 import android.content.Context
+import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import androidx.room.Room
@@ -11,24 +13,25 @@ import com.shub39.grit.notification.NotificationAlarmScheduler
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
+import java.time.LocalDate
+import java.time.LocalDateTime
 
-class HabitViewModel(applicationContext: Context) : ViewModel() {
+class HabitViewModel(application: Application) : ViewModel() {
 
-    private val habitDatabase = Room.databaseBuilder(
-        applicationContext,
-        HabitDatabase::class.java,
-        "habit-database"
-    ).build()
+    private val habitDatabase = HabitDatabase.getDatabase(application)
     private val habitDao = habitDatabase.habitDao()
     private val habitStatusDao = habitDatabase.dailyHabitStatusDao()
     private val _habits = MutableStateFlow(listOf<Habit>())
-    private val scheduler = NotificationAlarmScheduler(applicationContext)
+    private val _habitStatuses = MutableStateFlow(listOf<DailyHabitStatus>())
+    private val scheduler = NotificationAlarmScheduler(application.applicationContext)
 
     val habits: StateFlow<List<Habit>> get() = _habits
+    val habitStatuses: StateFlow<List<DailyHabitStatus>> get() = _habitStatuses
 
     init {
         viewModelScope.launch {
             _habits.value = habitDao.getAllHabits()
+            _habitStatuses.value = habitStatusDao.getDailyStatusForHabit()
             habits.value.forEach {
                 scheduler.cancel(it)
                 scheduler.schedule(it)
@@ -44,16 +47,38 @@ class HabitViewModel(applicationContext: Context) : ViewModel() {
         }
     }
 
-    fun addStatusForHabit(status: DailyHabitStatus) {
+    fun addStatusForHabit(string: String) {
         viewModelScope.launch {
-            habitStatusDao.insertDailyStatus(status)
+            val dailyHabitStatus = DailyHabitStatus(string, LocalDate.now())
+            _habitStatuses.value += dailyHabitStatus
+            habitStatusDao.insertDailyStatus(dailyHabitStatus)
+            Log.d("TAG", "addStatusForHabit: $dailyHabitStatus")
         }
+    }
+
+
+    fun deleteDailyStatus(string: String) {
+        viewModelScope.launch {
+            val status = DailyHabitStatus(string, LocalDate.now())
+            _habitStatuses.value -= status
+            habitStatusDao.deleteDailyStatus(status)
+        }
+    }
+
+    fun isStatusAdded(string: String): Boolean {
+        val status = DailyHabitStatus(string, LocalDate.now())
+        return habitStatuses.value.contains(status)
     }
 
     fun deleteHabit(habit: Habit) {
         viewModelScope.launch {
             habitDao.deleteHabit(habit)
             _habits.value -= habit
+            habitStatuses.value.forEach{
+                if (it.id == habit.id) {
+                    _habitStatuses.value -= it
+                }
+            }
             scheduler.cancel(habit)
         }
     }
@@ -67,12 +92,5 @@ class HabitViewModel(applicationContext: Context) : ViewModel() {
         }
     }
 
-    fun getStatusForHabit(id: String): List<DailyHabitStatus> {
-        var status = listOf<DailyHabitStatus>()
-        viewModelScope.launch {
-            status = habitStatusDao.getDailyStatusForHabit(id)
-        }
-        return status
-    }
 }
 

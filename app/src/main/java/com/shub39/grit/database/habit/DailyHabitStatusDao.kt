@@ -1,20 +1,21 @@
 package com.shub39.grit.database.habit
 
 import androidx.room.Dao
+import androidx.room.Delete
 import androidx.room.Insert
+import androidx.room.OnConflictStrategy
 import androidx.room.Query
-import androidx.room.Update
 
 @Dao
 interface DailyHabitStatusDao {
 
-    @Query("SELECT * FROM daily_habits_status WHERE id = :id")
-    suspend fun getDailyStatusForHabit(id: String): List<DailyHabitStatus>
+    @Query("SELECT * FROM daily_habit_status")
+    suspend fun getDailyStatusForHabit(): List<DailyHabitStatus>
 
-    @Insert
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insertDailyStatus(dailyHabitStatus: DailyHabitStatus)
 
-    @Update
-    suspend fun updateDailyStatus(dailyHabitStatus: DailyHabitStatus)
+    @Delete
+    suspend fun deleteDailyStatus(dailyHabitStatus: DailyHabitStatus)
 
 }

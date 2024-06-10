@@ -1,5 +1,6 @@
 package com.shub39.grit.component
 
+import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -12,9 +13,9 @@ import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Button
 import androidx.compose.material3.Card
-import androidx.compose.material3.CardColors
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.OutlinedCard
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
 import androidx.compose.material3.TimePicker
@@ -37,16 +38,20 @@ import com.shub39.grit.R
 import com.shub39.grit.database.habit.Habit
 import com.shub39.grit.database.habit.localToTimePickerState
 import com.shub39.grit.database.habit.timePickerStateToLocalDateTime
+import com.shub39.grit.viewModel.HabitViewModel
 import java.time.format.DateTimeFormatter
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun HabitCard(
     habit: Habit,
-    onHabitClick: (Habit) -> Unit,
-    onDeleteClick: (Habit) -> Unit
+    habitViewModel: HabitViewModel
 ) {
     var showEditDialog by remember { mutableStateOf(false) }
+    var isButtonEnabled by remember { mutableStateOf(true) }
+    if (habitViewModel.isStatusAdded(habit.id)) {
+        isButtonEnabled = false
+    }
 
     if (showEditDialog) {
         var newHabitDescription by remember { mutableStateOf(habit.description) }
@@ -95,14 +100,14 @@ fun HabitCard(
                 ) {
                     Button(onClick = {
                         showEditDialog = false
-                        onDeleteClick(habit)
+                        habitViewModel.deleteHabit(habit)
                     }) {
                         Text(text = stringResource(id = R.string.delete))
                     }
                     Button(
                         onClick = {
                             showEditDialog = false
-                            onHabitClick(
+                            habitViewModel.updateHabit(
                                 Habit(
                                     habit.id,
                                     newHabitDescription,
@@ -120,8 +125,8 @@ fun HabitCard(
     }
 
     Card(
-        onClick = { showEditDialog = true },
-        Modifier.padding(8.dp)
+        Modifier.padding(8.dp),
+        shape = MaterialTheme.shapes.large
     ) {
         Row(
             modifier = Modifier
@@ -144,19 +149,40 @@ fun HabitCard(
                 )
             }
             Spacer(modifier = Modifier.width(16.dp))
-            Card(
-                colors = CardColors(
-                    contentColor = MaterialTheme.colorScheme.surface,
-                    containerColor = MaterialTheme.colorScheme.primary,
-                    disabledContentColor = MaterialTheme.colorScheme.onSurface,
-                    disabledContainerColor = MaterialTheme.colorScheme.surface
-                ),
+            OutlinedCard(
+                border = BorderStroke(1.dp, MaterialTheme.colorScheme.primary),
                 shape = MaterialTheme.shapes.medium
             ) {
                 Text(
                     modifier = Modifier.padding(8.dp),
                     text = habit.time.format(DateTimeFormatter.ofPattern("hh:mm a"))
                 )
+            }
+        }
+
+        Row(
+            modifier = Modifier
+                .padding(16.dp)
+                .fillMaxWidth(),
+        ) {
+            Button(
+                onClick = { showEditDialog = true },
+                modifier = Modifier.weight(1f),
+                shape = MaterialTheme.shapes.medium
+            ) {
+                Text(text = stringResource(id = R.string.update))
+            }
+            Spacer(modifier = Modifier.width(8.dp))
+            Button(
+                onClick = {
+                    habitViewModel.addStatusForHabit(habit.id)
+                    isButtonEnabled = !isButtonEnabled
+                },
+                modifier = Modifier.weight(1f),
+                shape = MaterialTheme.shapes.medium,
+                enabled = isButtonEnabled
+            ) {
+                Text(text = stringResource(id = R.string.mark_done))
             }
         }
     }
