@@ -22,6 +22,10 @@
 
 ## Screenshots
 <div style="display: flex; justify-content: space-between;">
-   <img src="https://github.com/shub39/Grit/assets/143277026/5798e2b2-df81-4cf0-9565-b79e658cc959" alt="Screenshot 2" style="width: 48%;">
-   <img src="https://github.com/shub39/Grit/assets/143277026/b6ba997c-0766-4f1d-a7f8-924d9e3c6edb" alt="Screenshot 1" style="width: 48%;">
+  <img src="https://github.com/shub39/Grit/assets/143277026/a8b47aa1-84ec-484c-baf7-eb1e00fc9b35" alt="Screenshot 1" style="width: 18%;">
+  <img src="https://github.com/shub39/Grit/assets/143277026/95c49edf-1019-4696-89f0-a5996390e04b" alt="Screenshot 2" style="width: 18%;">
+  <img src="https://github.com/shub39/Grit/assets/143277026/f09ae46a-7a57-4f39-95f8-bc6af636dc91" alt="Screenshot 3" style="width: 18%;">
+  <img src="https://github.com/shub39/Grit/assets/143277026/1d015676-6b94-4657-abdb-778b8864cf62" alt="Screenshot 4" style="width: 18%;">
+  <img src="https://github.com/shub39/Grit/assets/143277026/56dfe3b2-70db-4467-b435-e2bc4d101f2d" alt="Screenshot 5" style="width: 18%;">
 </div>
+
