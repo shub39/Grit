@@ -21,11 +21,10 @@
 - [ ] Widgets
 
 ## Screenshots
-<div style="display: flex; justify-content: space-between;">
-  <img src="https://github.com/shub39/Grit/assets/143277026/a8b47aa1-84ec-484c-baf7-eb1e00fc9b35" alt="Screenshot 1" style="width: 18%;">
-  <img src="https://github.com/shub39/Grit/assets/143277026/95c49edf-1019-4696-89f0-a5996390e04b" alt="Screenshot 2" style="width: 18%;">
-  <img src="https://github.com/shub39/Grit/assets/143277026/f09ae46a-7a57-4f39-95f8-bc6af636dc91" alt="Screenshot 3" style="width: 18%;">
-  <img src="https://github.com/shub39/Grit/assets/143277026/1d015676-6b94-4657-abdb-778b8864cf62" alt="Screenshot 4" style="width: 18%;">
-  <img src="https://github.com/shub39/Grit/assets/143277026/56dfe3b2-70db-4467-b435-e2bc4d101f2d" alt="Screenshot 5" style="width: 18%;">
-</div>
+
+![ResizedImage_2024-06-11_15-21-41_4](https://github.com/shub39/Grit/assets/143277026/075e98e4-9d13-4216-a653-233002a83269)
+![ResizedImage_2024-06-11_15-21-41_3](https://github.com/shub39/Grit/assets/143277026/d6335283-1c66-4478-afcb-fe2823b26d51)
+![ResizedImage_2024-06-11_15-21-40_2](https://github.com/shub39/Grit/assets/143277026/13350b5b-3489-4ee2-aa00-5e43cbabd123)
+![ResizedImage_2024-06-11_15-21-40_1](https://github.com/shub39/Grit/assets/143277026/9693c1e2-b88c-4b9c-96fc-f43deba22fb7)
+
 
