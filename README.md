@@ -29,3 +29,13 @@ There are plenty of todo list and habit tracker apps for android. Some have the 
 ![ResizedImage_2024-06-11_15-21-40_2](https://github.com/shub39/Grit/assets/143277026/13350b5b-3489-4ee2-aa00-5e43cbabd123)
 ![ResizedImage_2024-06-11_15-21-40_1](https://github.com/shub39/Grit/assets/143277026/9693c1e2-b88c-4b9c-96fc-f43deba22fb7)
 
+## Tech Stack 
+- Material3 Design with Jetpack Compose
+  
+- Database using ROOM Library
+  
+- Alarm Manager API
+
+- Kotlin Coroutines
+
+- Viewmodels
