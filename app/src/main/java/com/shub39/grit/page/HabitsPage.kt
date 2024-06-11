@@ -98,12 +98,7 @@ fun HabitsPage(habitViewModel: HabitViewModel, context: Context) {
             var newHabitDescription by remember { mutableStateOf("") }
             val timePickerState = remember { TimePickerState(12, 0, false) }
             val isHabitPresent = { habits.any { it.id == newHabitName } }
-            val keyboardController = LocalSoftwareKeyboardController.current
-            val focusRequester = remember { FocusRequester() }
-            LaunchedEffect(Unit) {
-                focusRequester.requestFocus()
-                keyboardController?.show()
-            }
+
 
             AlertDialog(
                 onDismissRequest = { showAddHabitDialog = false },
@@ -126,8 +121,7 @@ fun HabitsPage(habitViewModel: HabitViewModel, context: Context) {
                                     Text(text = stringResource(id = R.string.too_long))
                                 }
                             },
-                            isError = newHabitName.length > 20 || isHabitPresent(),
-                            modifier = Modifier.focusRequester(focusRequester)
+                            isError = newHabitName.length > 20 || isHabitPresent()
                         )
                         Spacer(modifier = Modifier.padding(8.dp))
                         OutlinedTextField(

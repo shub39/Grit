@@ -20,16 +20,12 @@ import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
 import androidx.compose.material3.TimePicker
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.focus.FocusRequester
-import androidx.compose.ui.focus.focusRequester
-import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardCapitalization
@@ -56,13 +52,6 @@ fun HabitCard(
     if (showEditDialog) {
         var newHabitDescription by remember { mutableStateOf(habit.description) }
         val timePickerState = remember { localToTimePickerState(habit.time) }
-        val keyboardController = LocalSoftwareKeyboardController.current
-        val focusRequester = remember { FocusRequester() }
-        LaunchedEffect(Unit) {
-            focusRequester.requestFocus()
-            keyboardController?.show()
-        }
-
 
         AlertDialog(
             onDismissRequest = { showEditDialog = false },
@@ -84,8 +73,7 @@ fun HabitCard(
                                 Text(text = stringResource(id = R.string.too_long))
                             }
                         },
-                        isError = newHabitDescription.length > 50,
-                        modifier = Modifier.focusRequester(focusRequester)
+                        isError = newHabitDescription.length > 50
                     )
                     Spacer(modifier = Modifier.padding(8.dp))
                     TimePicker(

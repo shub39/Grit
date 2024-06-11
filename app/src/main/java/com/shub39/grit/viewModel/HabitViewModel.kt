@@ -1,11 +1,9 @@
 package com.shub39.grit.viewModel
 
 import android.app.Application
-import android.content.Context
 import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import androidx.room.Room
 import com.shub39.grit.database.habit.DailyHabitStatus
 import com.shub39.grit.database.habit.Habit
 import com.shub39.grit.database.habit.HabitDatabase
@@ -14,7 +12,6 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
 import java.time.LocalDate
-import java.time.LocalDateTime
 
 class HabitViewModel(application: Application) : ViewModel() {
 
@@ -26,7 +23,7 @@ class HabitViewModel(application: Application) : ViewModel() {
     private val scheduler = NotificationAlarmScheduler(application.applicationContext)
 
     val habits: StateFlow<List<Habit>> get() = _habits
-    val habitStatuses: StateFlow<List<DailyHabitStatus>> get() = _habitStatuses
+    private val habitStatuses: StateFlow<List<DailyHabitStatus>> get() = _habitStatuses
 
     init {
         viewModelScope.launch {
@@ -81,6 +78,14 @@ class HabitViewModel(application: Application) : ViewModel() {
             }
             scheduler.cancel(habit)
         }
+    }
+
+    fun getStatusForHabit(string: String): List<DailyHabitStatus> {
+        var list = listOf<DailyHabitStatus>()
+        viewModelScope.launch {
+            list = habitStatuses.value.filter { it.id == string }
+        }
+        return list
     }
 
     fun updateHabit(habit: Habit) {

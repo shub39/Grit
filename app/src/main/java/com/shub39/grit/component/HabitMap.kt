@@ -4,8 +4,11 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.lazy.LazyListState
+import androidx.compose.foundation.lazy.LazyRow
+import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
@@ -14,22 +17,39 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.unit.dp
 import com.shub39.grit.database.habit.DailyHabitStatus
 import java.time.LocalDate
+import androidx.compose.runtime.*
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 
 @Composable
 fun HabitMap(
     data: List<DailyHabitStatus>
 ) {
-    val months = LocalDate.now().minusMonths(3)
-    val allDaysOfMonths = generateSequence(months) { it.plusDays(1) }
-        .takeWhile { !it.isAfter(LocalDate.now()) }
-        .toList()
+    var weeks by remember { mutableStateOf<List<List<LocalDate>>>(emptyList()) }
     val habitDaysSet = data.map { it.date }.toSet()
-    val weeks = allDaysOfMonths.chunked(7)
+    val listState = remember { LazyListState() }
+    val coroutineScope = rememberCoroutineScope()
 
-    Row(
-        horizontalArrangement = Arrangement.spacedBy(2.dp)
+    LaunchedEffect(data) {
+        weeks = withContext(Dispatchers.Default) {
+            val months = LocalDate.now().minusDays(LocalDate.now().dayOfWeek.value.toLong()).minusWeeks(17)
+            val allDaysOfMonths = generateSequence(months) { it.plusDays(1) }
+                .takeWhile { !it.isAfter(LocalDate.now()) }
+                .toList()
+            allDaysOfMonths.chunked(7)
+        }
+        coroutineScope.launch {
+            listState.scrollToItem(weeks.size - 1)
+        }
+    }
+
+    LazyRow(
+        horizontalArrangement = Arrangement.spacedBy(2.dp),
+        modifier = Modifier.padding(8.dp),
+        state = listState
     ) {
-        weeks.forEach { week ->
+        items(weeks) { week ->
             Column(
                 verticalArrangement = Arrangement.spacedBy(2.dp)
             ) {
@@ -40,6 +60,7 @@ fun HabitMap(
         }
     }
 }
+
 
 
 @Composable

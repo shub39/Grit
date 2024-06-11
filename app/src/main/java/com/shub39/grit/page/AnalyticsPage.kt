@@ -4,7 +4,6 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
@@ -34,14 +33,13 @@ fun AnalyticsPage(
     viewModel: HabitViewModel
 ) {
     val habits by viewModel.habits.collectAsState()
-    val habitsStatuses by viewModel.habitStatuses.collectAsState()
     val habitsIsEmpty = habits.isEmpty()
 
     Scaffold(
         topBar = {
             TopAppBar(
                 title = { Text(
-                    text = stringResource(id = R.string.analytics),
+                            text = stringResource(id = R.string.analytics),
                     fontWeight = FontWeight.Bold,
                     style = MaterialTheme.typography.headlineSmall,
                     modifier = Modifier.fillMaxWidth(),
@@ -77,15 +75,13 @@ fun AnalyticsPage(
                             modifier = Modifier.fillMaxWidth(),
                             textAlign = TextAlign.Center
                         )
-                        Spacer(modifier = Modifier.padding(8.dp))
                     }
                     Row(
                         modifier = Modifier
-                            .fillMaxWidth()
-                            .padding(bottom = 16.dp),
+                            .fillMaxWidth(),
                         horizontalArrangement = Arrangement.Center
                     ) {
-                        HabitMap(data = habitsStatuses.filter { it.id == habit.id })
+                        HabitMap(data = viewModel.getStatusForHabit(habit.id))
                     }
                 }
             }
