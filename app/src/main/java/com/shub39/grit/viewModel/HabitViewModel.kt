@@ -12,6 +12,7 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
 import java.time.LocalDate
+import java.time.LocalDateTime
 
 class HabitViewModel(application: Application) : ViewModel() {
 
@@ -46,32 +47,26 @@ class HabitViewModel(application: Application) : ViewModel() {
 
     fun addStatusForHabit(string: String) {
         viewModelScope.launch {
-            val dailyHabitStatus = DailyHabitStatus(string, LocalDate.now())
+            val dailyHabitStatus = DailyHabitStatus(LocalDateTime.now(), string, LocalDate.now())
             _habitStatuses.value += dailyHabitStatus
             habitStatusDao.insertDailyStatus(dailyHabitStatus)
             Log.d("TAG", "addStatusForHabit: $dailyHabitStatus")
         }
     }
 
-
-    fun deleteDailyStatus(string: String) {
-        viewModelScope.launch {
-            val status = DailyHabitStatus(string, LocalDate.now())
-            _habitStatuses.value -= status
-            habitStatusDao.deleteDailyStatus(status)
-        }
-    }
-
     fun isStatusAdded(string: String): Boolean {
-        val status = DailyHabitStatus(string, LocalDate.now())
-        return habitStatuses.value.contains(status)
+        var isAdded = listOf<DailyHabitStatus>()
+        viewModelScope.launch {
+            isAdded = habitStatuses.value.filter { it.id == string && it.date == LocalDate.now() }
+        }
+        return isAdded.isNotEmpty()
     }
 
     fun deleteHabit(habit: Habit) {
         viewModelScope.launch {
             habitDao.deleteHabit(habit)
             _habits.value -= habit
-            habitStatuses.value.forEach{
+            _habitStatuses.value.forEach{
                 if (it.id == habit.id) {
                     _habitStatuses.value -= it
                 }
