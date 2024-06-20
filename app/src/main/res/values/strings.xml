@@ -20,7 +20,8 @@
     <string name="analytics">Analytics</string>
     <string name="mark_done">Mark Done</string>
     <string name="days_completed">Days Completed</string>
-    <string name="streak">Day Streak</string>
+    <string name="streak">Streak</string>
+    <string name="best_streak">Best Streak</string>
     <string name="since">Since</string>
     <string name="goals">Goals</string>
     <string name="settings">Settings</string>

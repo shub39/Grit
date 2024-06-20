@@ -25,7 +25,6 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
-import androidx.navigation.NavGraph.Companion.findStartDestination
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
@@ -35,7 +34,6 @@ import com.shub39.grit.notification.createNotificationChannel
 import com.shub39.grit.page.AnalyticsPage
 import com.shub39.grit.page.TodoPage
 import com.shub39.grit.page.HabitsPage
-import com.shub39.grit.page.SettingsPage
 import com.shub39.grit.ui.theme.GritTheme
 import com.shub39.grit.viewModel.HabitViewModel
 import com.shub39.grit.viewModel.TaskListViewModel
@@ -76,9 +74,9 @@ class MainActivity : ComponentActivity() {
                         composable(BottomAppBarDestination.AnalyticsPage.direction) {
                             AnalyticsPage(habitsViewModel)
                         }
-                        composable(BottomAppBarDestination.SettingsPage.direction) {
-                            SettingsPage()
-                        }
+//                        composable(BottomAppBarDestination.SettingsPage.direction) {
+//                            SettingsPage()
+//                        }
                     }
                 }
             }
@@ -97,13 +95,7 @@ private fun BottomBar(navController: NavController) {
                 selected = isSelected,
                 onClick = {
                     if (currentRoute != destination.direction) {
-                        navController.navigate(destination.direction) {
-                            launchSingleTop = true
-                            restoreState = true
-                            popUpTo(navController.graph.findStartDestination().id) {
-                                saveState = true
-                            }
-                        }
+                        navController.navigate(destination.direction)
                     }
                 },
                 icon = {

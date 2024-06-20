@@ -209,5 +209,8 @@ fun TaskList(
                 )
             }
         }
+        item {
+            Spacer(modifier = Modifier.padding(60.dp))
+        }
     }
 }

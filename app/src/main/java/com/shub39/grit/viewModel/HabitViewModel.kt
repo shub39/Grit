@@ -67,7 +67,7 @@ class HabitViewModel(application: Application) : ViewModel() {
         viewModelScope.launch {
             habitDao.deleteHabit(habit)
             _habits.value -= habit
-            _habitStatuses.value.forEach{
+            _habitStatuses.value.forEach {
                 if (it.id == habit.id) {
                     _habitStatuses.value -= it
                 }
@@ -89,6 +89,15 @@ class HabitViewModel(application: Application) : ViewModel() {
         var streak = 0
         viewModelScope.launch {
             streak = countConsecutiveDaysBeforeLast(list.map { it.date })
+        }
+        return streak
+    }
+
+    fun getBestStreakForHabit(string: String): Int {
+        val list = getStatusForHabit(string)
+        var streak = 0
+        viewModelScope.launch {
+            streak = countBestStreak(list.map { it.date })
         }
         return streak
     }
@@ -116,6 +125,29 @@ class HabitViewModel(application: Application) : ViewModel() {
             }
         }
         return consecutiveCount
+    }
+
+    private fun countBestStreak(dates: List<LocalDate>): Int {
+        if (dates.isEmpty()) return 0
+        val sortedDates = dates.sorted()
+        var maxConsecutive = 0
+        var currentConsecutive = 0
+        for (i in 1 until sortedDates.size) {
+            val previousDate = sortedDates[i - 1]
+            val currentDate = sortedDates[i]
+            if (ChronoUnit.DAYS.between(previousDate, currentDate) == 1L) {
+                currentConsecutive++
+            } else {
+                if (currentConsecutive > maxConsecutive) {
+                    maxConsecutive = currentConsecutive
+                }
+                currentConsecutive = 1
+            }
+        }
+        if (currentConsecutive > maxConsecutive) {
+            maxConsecutive = currentConsecutive
+        }
+        return maxConsecutive
     }
 
 }

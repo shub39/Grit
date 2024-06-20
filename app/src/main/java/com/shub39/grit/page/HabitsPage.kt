@@ -181,5 +181,8 @@ private fun HabitsList(
                 habitViewModel = viewModel
             )
         }
+        item {
+            Spacer(modifier = Modifier.padding(60.dp))
+        }
     }
 }
