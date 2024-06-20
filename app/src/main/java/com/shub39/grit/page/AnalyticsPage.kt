@@ -157,9 +157,6 @@ private fun HabitCard(
                         onClick = {}
                     )
                 }
-                item {
-                    Spacer(modifier = Modifier.padding(60.dp))
-                }
             }
             Spacer(modifier = Modifier.height(8.dp))
         }
