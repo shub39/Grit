@@ -35,6 +35,7 @@ import com.shub39.grit.notification.createNotificationChannel
 import com.shub39.grit.page.AnalyticsPage
 import com.shub39.grit.page.TodoPage
 import com.shub39.grit.page.HabitsPage
+import com.shub39.grit.page.SettingsPage
 import com.shub39.grit.ui.theme.GritTheme
 import com.shub39.grit.viewModel.HabitViewModel
 import com.shub39.grit.viewModel.TaskListViewModel
@@ -74,6 +75,9 @@ class MainActivity : ComponentActivity() {
                         }
                         composable(BottomAppBarDestination.AnalyticsPage.direction) {
                             AnalyticsPage(habitsViewModel)
+                        }
+                        composable(BottomAppBarDestination.SettingsPage.direction) {
+                            SettingsPage()
                         }
                     }
                 }

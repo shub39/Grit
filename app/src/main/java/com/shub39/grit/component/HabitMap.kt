@@ -63,7 +63,7 @@ fun HabitMap(
     LazyRow(
         horizontalArrangement = Arrangement.spacedBy(2.dp),
         modifier = Modifier
-            .padding(16.dp)
+            .padding(start = 16.dp, end = 16.dp, bottom = 16.dp)
             .fillMaxSize(),
         state = listState
     ) {

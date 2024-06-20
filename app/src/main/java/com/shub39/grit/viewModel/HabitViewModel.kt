@@ -13,6 +13,7 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
 import java.time.LocalDate
 import java.time.LocalDateTime
+import java.time.temporal.ChronoUnit
 
 class HabitViewModel(application: Application) : ViewModel() {
 
@@ -83,6 +84,15 @@ class HabitViewModel(application: Application) : ViewModel() {
         return list
     }
 
+    fun getStreakForHabit(string: String): Int {
+        val list = getStatusForHabit(string)
+        var streak = 0
+        viewModelScope.launch {
+            streak = countConsecutiveDaysBeforeLast(list.map { it.date })
+        }
+        return streak
+    }
+
     fun updateHabit(habit: Habit) {
         viewModelScope.launch {
             habitDao.updateHabit(habit)
@@ -90,6 +100,22 @@ class HabitViewModel(application: Application) : ViewModel() {
             scheduler.cancel(habit)
             scheduler.schedule(habit)
         }
+    }
+
+    private fun countConsecutiveDaysBeforeLast(dates: List<LocalDate>): Int {
+        if (dates.size < 2) return 0
+        val sortedDates = dates.sorted()
+        var consecutiveCount = 0
+        for (i in sortedDates.size - 2 downTo 0) {
+            val currentDate = sortedDates[i]
+            val nextDate = sortedDates[i + 1]
+            if (ChronoUnit.DAYS.between(currentDate, nextDate) == 1L) {
+                consecutiveCount++
+            } else {
+                break
+            }
+        }
+        return consecutiveCount
     }
 
 }

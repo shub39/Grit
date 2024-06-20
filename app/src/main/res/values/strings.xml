@@ -17,9 +17,11 @@
     <string name="add_description">Add Description</string>
     <string name="select_time">Select time</string>
     <string name="habits">Daily Habits</string>
-    <string name="analytics">Habit Analytics</string>
+    <string name="analytics">Analytics</string>
     <string name="mark_done">Mark Done</string>
     <string name="days_completed">Days Completed</string>
+    <string name="streak">Day Streak</string>
+    <string name="since">Since</string>
     <string name="goals">Goals</string>
     <string name="settings">Settings</string>
     <string name="new_habit">New Habit </string>

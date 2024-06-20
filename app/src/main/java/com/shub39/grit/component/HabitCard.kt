@@ -37,7 +37,6 @@ import androidx.compose.ui.unit.dp
 import com.shub39.grit.R
 import com.shub39.grit.database.habit.Habit
 import com.shub39.grit.database.habit.localToTimePickerState
-import com.shub39.grit.database.habit.timePickerStateToLocalDateTime
 import com.shub39.grit.viewModel.HabitViewModel
 import java.time.format.DateTimeFormatter
 
@@ -148,7 +147,7 @@ fun HabitCard(
                                 Habit(
                                     habit.id,
                                     newHabitDescription,
-                                    timePickerStateToLocalDateTime(timePickerState)
+                                    habit.time.withHour(timePickerState.hour).withMinute(timePickerState.minute)
                                 )
                             )
                         },

@@ -179,7 +179,7 @@ fun TaskList(
             .padding(paddingValues)
             .fillMaxSize()
             .animateContentSize(),
-        contentPadding = PaddingValues(16.dp),
+        contentPadding = PaddingValues(start = 16.dp, end = 16.dp),
     ) {
         items(tasks, key = { it.id }) {
             val dismissState = rememberSwipeToDismissBoxState(
