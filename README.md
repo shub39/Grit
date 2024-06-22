@@ -24,17 +24,11 @@ There are plenty of todo list and habit tracker apps for android. Some have the 
 
 ## Screenshots
 
-![Before Adding Task](https://github.com/shub39/Grit/assets/143277026/ae0753f4-341b-45f4-b503-6e2b11453db3)
-![Adding Task](https://github.com/shub39/Grit/assets/143277026/4f7b73a4-f2f7-4967-a4dc-2e6daead7874)
-![After Adding Task](https://github.com/shub39/Grit/assets/143277026/661ed888-8672-4a2e-bdbc-90cbd78231c6)
-![Before Adding Habit](https://github.com/shub39/Grit/assets/143277026/65701128-26c0-41cf-b79f-1f6a49cb7365)
-![Adding Habit](https://github.com/shub39/Grit/assets/143277026/f5806eee-3ed0-4552-84c5-fd558b8a11dc)
-![Notification](https://github.com/shub39/Grit/assets/143277026/13350b5b-3489-4ee2-aa00-5e43cbabd123)
-![After Adding Habit](https://github.com/shub39/Grit/assets/143277026/2afd17b1-bcf4-43e7-8a0f-6b82f8fb0c16)
-![Updating Habit](https://github.com/shub39/Grit/assets/143277026/f32ebe4b-311f-4c7f-8a45-c30947158b7c)
-![Deleting Habit](https://github.com/shub39/Grit/assets/143277026/73236956-42c0-4eaa-a24d-51d8faff6af7)
-![Analytics](https://github.com/shub39/Grit/assets/143277026/d009d3aa-9f18-4a7b-adef-e813f5ec4a69)
-![Analytics Expanded](https://github.com/shub39/Grit/assets/143277026/963aa38b-9796-4bcc-b61a-b5c5e5e6be04)
+| ![Image 1](https://github.com/shub39/Grit/assets/143277026/9b83f978-a47a-4764-bd98-3aef8610f738) | ![Image 2](https://github.com/shub39/Grit/assets/143277026/1ffed9f6-021a-463c-80ce-d5c16c84c170) |
+|:-------------------------------------------------------------------------------------------------:|:------------------------------------------------------------------------------------------------:|
+| ![Image 3](https://github.com/shub39/Grit/assets/143277026/2ba1da86-31d3-468d-bf53-b6dfecd241b6) | ![Image 4](https://github.com/shub39/Grit/assets/143277026/cd7793ff-d1b5-44f0-afac-26bd8fbb0697) |
+| ![Image 5](https://github.com/shub39/Grit/assets/143277026/5c0f80c1-66c0-46c7-ba3b-45f9337ecc0a) | ![Image 6](https://github.com/shub39/Grit/assets/143277026/ce2e0f00-b004-4a4f-ae3d-1fdb4b29e48b) |
+
 
 ## Tech Stack 
 - Material3 Design with Jetpack Compose
@@ -45,4 +39,4 @@ There are plenty of todo list and habit tracker apps for android. Some have the 
 
 - Kotlin Coroutines
 
-- Viewmodels
+- MVVM architecture 
