@@ -18,8 +18,8 @@ class NotificationAlarmScheduler(
 
     override fun schedule(item: Habit) {
         var time = item.time
-        if (time.isBefore(LocalDateTime.now())) {
-            time = LocalDateTime.now().plusDays(1).withHour(time.hour).withMinute(time.minute)
+        while (time.isBefore(LocalDateTime.now())) {
+            time = time.plusDays(1)
         }
         val intent = Intent(context, NotificationReceiver::class.java).apply {
             putExtra("1", item.id)

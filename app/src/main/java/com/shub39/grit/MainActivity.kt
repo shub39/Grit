@@ -1,5 +1,7 @@
 package com.shub39.grit
 
+import android.content.Intent
+import android.net.Uri
 import android.os.Build
 import androidx.compose.material3.Icon
 import android.os.Bundle
@@ -72,11 +74,17 @@ class MainActivity : ComponentActivity() {
                             HabitsPage(habitsViewModel, this@MainActivity)
                         }
                         composable(BottomAppBarDestination.AnalyticsPage.direction) {
-                            AnalyticsPage(habitsViewModel)
+                            AnalyticsPage(
+                                habitsViewModel,
+                                onClick = {
+                                    val intent = Intent(
+                                        Intent.ACTION_VIEW,
+                                        Uri.parse("https://www.github.com/shub39/Grit")
+                                    )
+                                    startActivity(intent)
+                                }
+                            )
                         }
-//                        composable(BottomAppBarDestination.SettingsPage.direction) {
-//                            SettingsPage()
-//                        }
                     }
                 }
             }

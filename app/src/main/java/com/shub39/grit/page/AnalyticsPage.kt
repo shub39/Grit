@@ -20,6 +20,7 @@ import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material3.AssistChip
 import androidx.compose.material3.Card
+import androidx.compose.material3.ElevatedCard
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
@@ -47,7 +48,8 @@ import java.time.format.DateTimeFormatter
 
 @Composable
 fun AnalyticsPage(
-    viewModel: HabitViewModel
+    viewModel: HabitViewModel,
+    onClick: () -> Unit
 ) {
     val habits by viewModel.habits.collectAsState()
     val habitsIsEmpty = habits.isEmpty()
@@ -77,7 +79,20 @@ fun AnalyticsPage(
                 )
             }
             item {
-                Spacer(modifier = Modifier.padding(60.dp))
+                ElevatedCard(
+                    modifier = Modifier
+                        .padding(top = 8.dp, bottom = 8.dp),
+                    onClick = {
+                        onClick()
+                    }
+                ) {
+                    Text(
+                        text = stringResource(id = R.string.made_by) + " shub39",
+                        style = Typography.bodyMedium,
+                        textAlign = TextAlign.Center,
+                        modifier = Modifier.fillMaxWidth().padding(8.dp)
+                    )
+                }
             }
         }
     }

@@ -32,7 +32,6 @@ class HabitViewModel(application: Application) : ViewModel() {
             _habits.value = habitDao.getAllHabits()
             _habitStatuses.value = habitStatusDao.getDailyStatusForHabit()
             habits.value.forEach {
-                scheduler.cancel(it)
                 scheduler.schedule(it)
             }
         }
@@ -106,7 +105,6 @@ class HabitViewModel(application: Application) : ViewModel() {
         viewModelScope.launch {
             habitDao.updateHabit(habit)
             _habits.value = habitDao.getAllHabits()
-            scheduler.cancel(habit)
             scheduler.schedule(habit)
         }
     }
