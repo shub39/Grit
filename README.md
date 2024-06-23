@@ -1,7 +1,7 @@
 <div align="center">  
-  
-<h1>🛠️ Grit 🛠️</h1>
-<h3><i>A Simple Todo List and Habits tracker App for Android</i></h3>
+
+![GritPreview](https://github.com/shub39/Grit/assets/143277026/d7b2eab6-e76f-42a6-bf37-668bac2a2d2d)
+
 
 </div>
 
