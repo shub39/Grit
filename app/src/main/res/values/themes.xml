@@ -2,4 +2,5 @@
 <resources>
 
     <style name="Theme.Grit" parent="android:Theme.Material.Light.NoActionBar" />
+
 </resources>

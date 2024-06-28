@@ -6,7 +6,6 @@ import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.Query
 import androidx.room.Update
-import com.shub39.grit.database.task.Task
 
 @Dao
 interface TasksDao {
