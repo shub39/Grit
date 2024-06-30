@@ -47,10 +47,17 @@ class HabitViewModel(application: Application) : ViewModel() {
 
     fun addStatusForHabit(string: String) {
         viewModelScope.launch {
-            val dailyHabitStatus = DailyHabitStatus(LocalDateTime.now(), string, LocalDate.now())
-            _habitStatuses.value += dailyHabitStatus
-            habitStatusDao.insertDailyStatus(dailyHabitStatus)
-            Log.d("TAG", "addStatusForHabit: $dailyHabitStatus")
+            val dailyHabitStatus = _habitStatuses.value.find { it.id == string && it.date == LocalDate.now() }
+            if (dailyHabitStatus == null) {
+                val status = DailyHabitStatus(LocalDateTime.now(), string, LocalDate.now())
+                habitStatusDao.insertDailyStatus(status)
+                _habitStatuses.value += status
+                Log.d("TAG", "added status for Habit: $string")
+            } else {
+                habitStatusDao.deleteDailyStatus(dailyHabitStatus)
+                _habitStatuses.value -= dailyHabitStatus
+                Log.d("TAG", "removed status for Habit: $string")
+            }
         }
     }
 

@@ -13,6 +13,7 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Card
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
@@ -201,6 +202,12 @@ fun HabitCard(
                 .padding(16.dp)
                 .fillMaxWidth(),
         ) {
+            val color = if (isButtonEnabled) {
+                ButtonDefaults.buttonColors()
+            } else {
+                ButtonDefaults.elevatedButtonColors()
+            }
+
             Button(
                 onClick = { showEditDialog = true },
                 modifier = Modifier.weight(1f),
@@ -216,9 +223,13 @@ fun HabitCard(
                 },
                 modifier = Modifier.weight(1f),
                 shape = MaterialTheme.shapes.medium,
-                enabled = isButtonEnabled
+                colors = color
             ) {
-                Text(text = stringResource(id = R.string.mark_done))
+                if (isButtonEnabled) {
+                    Text(text = stringResource(id = R.string.mark_done))
+                } else {
+                    Text(text = stringResource(id = R.string.mark_undone))
+                }
             }
         }
     }

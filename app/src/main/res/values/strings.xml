@@ -26,6 +26,7 @@
     <string name="since">Since</string>
     <string name="goals">Goals</string>
     <string name="settings">Settings</string>
+    <string name="mark_undone">Mark Undone</string>
     <string name="new_habit">New Habit </string>
     <string name="at">Reminder at </string>
     <string name="habit_exists">Habit Already Exists</string>
