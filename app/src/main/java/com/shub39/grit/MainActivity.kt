@@ -1,7 +1,5 @@
 package com.shub39.grit
 
-import android.content.Intent
-import android.net.Uri
 import android.os.Build
 import androidx.compose.material3.Icon
 import android.os.Bundle
@@ -20,6 +18,7 @@ import androidx.compose.material3.SnackbarHost
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
@@ -33,10 +32,12 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import com.shub39.grit.component.BottomAppBarDestination
+import com.shub39.grit.database.Datastore
 import com.shub39.grit.notification.createNotificationChannel
 import com.shub39.grit.page.AnalyticsPage
 import com.shub39.grit.page.TodoPage
 import com.shub39.grit.page.HabitsPage
+import com.shub39.grit.page.SettingsPage
 import com.shub39.grit.ui.theme.GritTheme
 import com.shub39.grit.viewModel.HabitViewModel
 import com.shub39.grit.viewModel.TaskListViewModel
@@ -53,7 +54,9 @@ class MainActivity : ComponentActivity() {
 
         enableEdgeToEdge()
         setContent {
-            GritTheme {
+            val theme by Datastore.getTheme(this).collectAsState(initial = "Default")
+
+            GritTheme(theme = theme) {
                 val navController = rememberNavController()
                 val snackbarHost = remember { SnackbarHostState() }
                 Scaffold(
@@ -76,16 +79,10 @@ class MainActivity : ComponentActivity() {
                             HabitsPage(habitsViewModel, this@MainActivity)
                         }
                         composable(BottomAppBarDestination.AnalyticsPage.direction) {
-                            AnalyticsPage(
-                                habitsViewModel,
-                                onClick = {
-                                    val intent = Intent(
-                                        Intent.ACTION_VIEW,
-                                        Uri.parse("https://www.github.com/shub39/Grit")
-                                    )
-                                    startActivity(intent)
-                                }
-                            )
+                            AnalyticsPage(habitsViewModel)
+                        }
+                        composable(BottomAppBarDestination.SettingsPage.direction) {
+                            SettingsPage(taskListViewModel)
                         }
                     }
                 }

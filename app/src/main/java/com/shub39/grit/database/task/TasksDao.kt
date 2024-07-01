@@ -18,6 +18,9 @@ interface TasksDao {
     @Delete
     suspend fun deleteTask(task: Task)
 
+    @Query("DELETE FROM TASK")
+    suspend fun deleteAllTasks()
+
     @Update
     suspend fun updateTask(task: Task)
 }

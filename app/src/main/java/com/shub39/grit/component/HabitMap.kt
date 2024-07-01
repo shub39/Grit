@@ -21,6 +21,8 @@ import com.shub39.grit.database.habit.DailyHabitStatus
 import java.time.LocalDate
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
+import androidx.compose.ui.platform.LocalContext
+import com.shub39.grit.database.Datastore
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
@@ -36,7 +38,9 @@ fun HabitMap(
 
     LaunchedEffect(data) {
         weeks = withContext(Dispatchers.Default) {
-            val startDate = LocalDate.now().minusDays(LocalDate.now().dayOfWeek.value.toLong()).minusWeeks(17)
+            val startDate = LocalDate.now().minusDays(LocalDate.now().dayOfWeek.value.toLong()).minusWeeks(
+                17
+            )
             val allDays = generateSequence(startDate) { it.plusDays(1) }
                 .takeWhile { !it.isAfter(LocalDate.now()) }
                 .toList()

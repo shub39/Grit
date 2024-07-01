@@ -3,9 +3,9 @@ package com.shub39.grit.viewModel
 import android.content.Context
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import androidx.room.Room
 import com.shub39.grit.database.task.Task
 import com.shub39.grit.database.task.TaskDatabase
+import com.shub39.grit.notification.NotificationAlarmScheduler
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -13,13 +13,10 @@ import kotlinx.coroutines.launch
 
 class TaskListViewModel(applicationContext: Context) : ViewModel() {
 
-    private val taskDatabase = Room.databaseBuilder(
-        applicationContext,
-        TaskDatabase::class.java,
-        "task_database"
-    ).build()
+    private val taskDatabase = TaskDatabase.getDatabase(applicationContext)
     private val tasksDao = taskDatabase.taskDao()
     private val _tasks = MutableStateFlow(listOf<Task>())
+    private val scheduler = NotificationAlarmScheduler(applicationContext)
 
     val tasks: StateFlow<List<Task>> get() = _tasks
 
@@ -34,6 +31,10 @@ class TaskListViewModel(applicationContext: Context) : ViewModel() {
             _tasks.value += task
             tasksDao.addTask(task)
         }
+    }
+
+    fun scheduleDeletion(preference: String) {
+        scheduler.schedule(preference)
     }
 
     fun updateTaskStatus(updatedTask: Task) {

@@ -49,7 +49,6 @@ import java.time.format.DateTimeFormatter
 @Composable
 fun AnalyticsPage(
     viewModel: HabitViewModel,
-    onClick: () -> Unit
 ) {
     val habits by viewModel.habits.collectAsState()
     val habitsIsEmpty = habits.isEmpty()
@@ -77,22 +76,6 @@ fun AnalyticsPage(
                         expandedCardId = if (expandedCardId == habit.id) null else habit.id
                     }
                 )
-            }
-            item {
-                ElevatedCard(
-                    modifier = Modifier
-                        .padding(top = 8.dp, bottom = 8.dp),
-                    onClick = {
-                        onClick()
-                    }
-                ) {
-                    Text(
-                        text = stringResource(id = R.string.made_by) + " shub39",
-                        style = Typography.bodyMedium,
-                        textAlign = TextAlign.Center,
-                        modifier = Modifier.fillMaxWidth().padding(8.dp)
-                    )
-                }
             }
         }
     }
