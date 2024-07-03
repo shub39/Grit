@@ -37,6 +37,10 @@ class TaskListViewModel(applicationContext: Context) : ViewModel() {
         scheduler.schedule(preference)
     }
 
+    fun cancelScheduleDeletion(preference: String) {
+        scheduler.cancel(preference)
+    }
+
     fun updateTaskStatus(updatedTask: Task) {
         viewModelScope.launch {
             _tasks.value = _tasks.value.map { task ->

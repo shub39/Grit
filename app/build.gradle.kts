@@ -13,8 +13,8 @@ android {
         applicationId = "com.shub39.grit"
         minSdk = 29
         targetSdk = 34
-        versionCode = 1
-        versionName = "1.0.0"
+        versionCode = 2
+        versionName = "1.1.0"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
         vectorDrawables {
@@ -77,6 +77,7 @@ dependencies {
     implementation(libs.androidx.core.splashscreen)
     implementation(libs.glance.appwidget)
     implementation(libs.glance.material)
+
 
     implementation(libs.androidx.room.runtime)
     annotationProcessor(libs.androidx.room.compiler)

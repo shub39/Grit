@@ -88,7 +88,7 @@ fun SettingsPage(
                     selected = currentClearPreference == preference,
                     onClick = {
                         coroutineScope.launch {
-                            taskListViewModel.scheduleDeletion(currentClearPreference)
+                            taskListViewModel.cancelScheduleDeletion(currentClearPreference)
                             Datastore.setClearPreferences(context, preference)
                             taskListViewModel.scheduleDeletion(preference)
                         }

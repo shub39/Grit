@@ -82,6 +82,7 @@ class NotificationAlarmScheduler(
                 PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE
             )
         )
+        Log.d("NotificationAlarmScheduler", "Cancelled notification for $preference")
     }
 
     private fun getNextMonday(): LocalDateTime {
