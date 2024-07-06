@@ -10,6 +10,8 @@
 ![](https://img.shields.io/github/last-commit/shub39/Grit?&style=for-the-badge&color=FFB1C8&logoColor=D9E0EE&labelColor=292324)
 ![](https://img.shields.io/github/repo-size/shub39/Grit?color=CAC992&label=SIZE&logo=googledrive&style=for-the-badge&logoColor=D9E0EE&labelColor=292324)
 
+### Download from [Releases](https://github.com/shub39/Grit/releases/latest)
+
 </div>
 
 ### Features
