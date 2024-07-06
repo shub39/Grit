@@ -24,10 +24,9 @@ There are plenty of todo list and habit tracker apps for android. Some have the 
 
 ## Screenshots
 
-| ![Image 1](https://github.com/shub39/Grit/assets/143277026/9b83f978-a47a-4764-bd98-3aef8610f738) | ![Image 2](https://github.com/shub39/Grit/assets/143277026/1ffed9f6-021a-463c-80ce-d5c16c84c170) |
+| ![Image 1](fastlane/metadata/android/en-US/images/phoneScreenshots/1.png) | ![Image 2](fastlane/metadata/android/en-US/images/phoneScreenshots/2.png) |
 |:-------------------------------------------------------------------------------------------------:|:------------------------------------------------------------------------------------------------:|
-| ![Image 3](https://github.com/shub39/Grit/assets/143277026/2ba1da86-31d3-468d-bf53-b6dfecd241b6) | ![Image 4](https://github.com/shub39/Grit/assets/143277026/cd7793ff-d1b5-44f0-afac-26bd8fbb0697) |
-| ![Image 5](https://github.com/shub39/Grit/assets/143277026/5c0f80c1-66c0-46c7-ba3b-45f9337ecc0a) | ![Image 6](https://github.com/shub39/Grit/assets/143277026/ce2e0f00-b004-4a4f-ae3d-1fdb4b29e48b) |
+| ![Image 3](fastlane/metadata/android/en-US/images/phoneScreenshots/3.png) | ![Image 4](fastlane/metadata/android/en-US/images/phoneScreenshots/4.png) |
 
 
 ## Tech Stack 
