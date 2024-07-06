@@ -92,7 +92,9 @@ fun TodoPage(viewModel: TaskListViewModel) {
             AlertDialog(
                 onDismissRequest = { showTaskAddDialog = false },
                 text = {
-                    Column {
+                    Column(
+                        horizontalAlignment = Alignment.CenterHorizontally
+                    ) {
                         OutlinedTextField(
                             value = newTask,
                             onValueChange = { newTask = it },
@@ -113,7 +115,8 @@ fun TodoPage(viewModel: TaskListViewModel) {
                         horizontalArrangement = Arrangement.SpaceEvenly
                     ) {
                         Row(
-                            verticalAlignment = Alignment.CenterVertically
+                            verticalAlignment = Alignment.CenterVertically,
+                            modifier = Modifier.weight(1f)
                         ) {
                             Checkbox(
                                 checked = newPriority,
