@@ -1,0 +1,22 @@
+name: Retrieve Keystore
+
+on:
+  workflow_dispatch:  # Allows you to manually trigger the workflow from the Actions tab
+
+jobs:
+  decode-keystore:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v2
+
+    - name: Decode base64 keystore
+      run: echo "${{ secrets.KEYSTORE_FILE }}" | base64 --decode > my-release-key.jks
+
+    - name: Upload keystore as artifact
+      uses: actions/upload-artifact@v2
+      with:
+        name: my-release-key
+        path: my-release-key.jks
+
