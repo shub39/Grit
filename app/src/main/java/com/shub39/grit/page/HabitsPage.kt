@@ -57,7 +57,8 @@ fun HabitsPage(habitViewModel: HabitViewModel, context: Context) {
     Scaffold(
         floatingActionButton = {
             FloatingActionButton(
-                onClick = { showAddHabitDialog = true }
+                onClick = { showAddHabitDialog = true },
+                shape = MaterialTheme.shapes.extraLarge
             ) {
                 Row(
                     modifier = Modifier
@@ -68,8 +69,6 @@ fun HabitsPage(habitViewModel: HabitViewModel, context: Context) {
                         painter = painterResource(id = R.drawable.round_add_24),
                         contentDescription = null
                     )
-                    Spacer(modifier = Modifier.padding(4.dp))
-                    Text(text = stringResource(id = R.string.add_habit))
                 }
             }
         }
@@ -148,7 +147,6 @@ fun HabitsPage(habitViewModel: HabitViewModel, context: Context) {
                 }
             )
         }
-
 
         if (habitListIsEmpty) {
             EmptyPage(paddingValues = paddingValues)

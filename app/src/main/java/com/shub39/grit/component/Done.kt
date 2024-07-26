@@ -1,34 +1,42 @@
 package com.shub39.grit.component
 
-import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Delete
+import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
-import androidx.compose.material3.Text
+import androidx.compose.material3.SwipeToDismissBoxState
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
-import com.shub39.grit.R
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun Done() {
-    Row(
+fun Done(
+    swipeDismissState: SwipeToDismissBoxState
+) {
+    val iconSize = if (swipeDismissState.progress == 1f) {
+        0f
+    } else {
+        swipeDismissState.progress * 100
+    }
+
+    Box(
         modifier = Modifier
-            .fillMaxSize(),
-        verticalAlignment = Alignment.CenterVertically,
-        horizontalArrangement = Arrangement.Start
+            .fillMaxSize()
+            .padding(16.dp),
+        contentAlignment = Alignment.CenterStart
     ) {
-        Spacer(modifier = Modifier.padding(start = 4.dp))
         Icon(
-            painter = painterResource(id = R.drawable.round_check_24),
-            contentDescription = null
+            imageVector = Icons.Default.Delete,
+            contentDescription = null,
+            tint = Color.White,
+            modifier = Modifier.size(iconSize.dp)
         )
-        Spacer(modifier = Modifier.padding(start = 4.dp))
-        Text(text = stringResource(id = R.string.done))
     }
 }

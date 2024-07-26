@@ -12,16 +12,20 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Button
-import androidx.compose.material3.Checkbox
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.SnackbarDuration
+import androidx.compose.material3.SnackbarHost
+import androidx.compose.material3.SnackbarHostState
+import androidx.compose.material3.SnackbarResult
 import androidx.compose.material3.SwipeToDismissBox
 import androidx.compose.material3.SwipeToDismissBoxValue
 import androidx.compose.material3.Text
@@ -32,6 +36,7 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -50,11 +55,15 @@ import com.shub39.grit.component.EmptyPage
 import com.shub39.grit.viewModel.TaskListViewModel
 import com.shub39.grit.component.TaskCard
 import com.shub39.grit.database.task.Task
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.launch
 import java.time.Instant
 import java.util.Date
 
 @Composable
-fun TodoPage(viewModel: TaskListViewModel) {
+fun TodoPage(
+    viewModel: TaskListViewModel,
+) {
     var showTaskAddDialog by remember { mutableStateOf(false) }
     val tasks by viewModel.tasks.collectAsState()
     val taskListIsEmpty = tasks.isEmpty()
@@ -62,7 +71,8 @@ fun TodoPage(viewModel: TaskListViewModel) {
     Scaffold(
         floatingActionButton = {
             FloatingActionButton(
-                onClick = { showTaskAddDialog = true }
+                onClick = { showTaskAddDialog = true },
+                shape = MaterialTheme.shapes.extraLarge
             ) {
                 Row(
                     modifier = Modifier
@@ -73,8 +83,6 @@ fun TodoPage(viewModel: TaskListViewModel) {
                         painter = painterResource(id = R.drawable.round_add_24),
                         contentDescription = null
                     )
-                    Spacer(modifier = Modifier.padding(4.dp))
-                    Text(text = stringResource(id = R.string.add_task))
                 }
             }
         }
@@ -114,17 +122,33 @@ fun TodoPage(viewModel: TaskListViewModel) {
                             .fillMaxWidth(),
                         horizontalArrangement = Arrangement.SpaceEvenly
                     ) {
-                        Row(
-                            verticalAlignment = Alignment.CenterVertically,
-                            modifier = Modifier.weight(1f)
+                        Button(
+                            onClick = {
+                                showTaskAddDialog = false
+                                newPriority = true
+                                viewModel.addTask(
+                                    Task(
+                                        Date.from(Instant.now()).toString(),
+                                        newTask,
+                                        newPriority
+                                    )
+                                )
+                                newTask = ""
+                            },
+                            enabled = newTask.isNotEmpty(),
+                            modifier = Modifier.weight(1f),
+                            shape = RoundedCornerShape(16.dp, 4.dp, 4.dp, 16.dp)
                         ) {
-                            Checkbox(
-                                checked = newPriority,
-                                onCheckedChange = { newPriority = it },
-                                enabled = newTask.isNotEmpty()
+                            Text(
+                                text = stringResource(id = R.string.add_urgent_task),
+                                style = MaterialTheme.typography.labelMedium,
+                                fontWeight = FontWeight.Bold,
+                                modifier = Modifier.padding(4.dp)
                             )
-                            Text(text = stringResource(id = R.string.urgent))
                         }
+
+                        Spacer(modifier = Modifier.padding(2.dp))
+
                         Button(
                             onClick = {
                                 showTaskAddDialog = false
@@ -137,7 +161,9 @@ fun TodoPage(viewModel: TaskListViewModel) {
                                 )
                                 newTask = ""
                             },
-                            enabled = newTask.isNotEmpty()
+                            enabled = newTask.isNotEmpty(),
+                            modifier = Modifier.weight(1f),
+                            shape = RoundedCornerShape(4.dp, 16.dp, 16.dp, 4.dp)
                         ) {
                             Text(
                                 text = stringResource(id = R.string.add_task),
@@ -181,10 +207,9 @@ fun TaskList(
         modifier = Modifier
             .padding(paddingValues)
             .fillMaxSize()
-            .animateContentSize(),
-        contentPadding = PaddingValues(start = 16.dp, end = 16.dp),
+            .animateContentSize()
     ) {
-        items(tasks, key = { it.id }) {
+        items(tasks.sortedBy { !it.priority }, key = { it.id }) {
             val dismissState = rememberSwipeToDismissBoxState(
                 initialValue = SwipeToDismissBoxValue.Settled,
                 confirmValueChange = { dismissValue ->
@@ -202,8 +227,8 @@ fun TaskList(
 
             SwipeToDismissBox(
                 state = dismissState,
-                enableDismissFromEndToStart = true,
-                backgroundContent = { Done() },
+                backgroundContent = { Done(dismissState) },
+                enableDismissFromEndToStart = false,
                 modifier = Modifier.animateItemPlacement()
             ) {
                 TaskCard(

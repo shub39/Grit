@@ -13,10 +13,10 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.blur
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.unit.dp
 import com.shub39.grit.database.task.Task
 
@@ -27,54 +27,53 @@ fun TaskCard(
 ) {
     var taskStatus by remember { mutableStateOf(task.status) }
 
-    val modifier = {
+    val lineThrough = {
         if (taskStatus) {
-            Modifier.blur(5.dp)
+            TextDecoration.LineThrough
         } else {
-            Modifier.blur(0.dp)
+            TextDecoration.None
         }
     }
 
+
     Card(
-        colors = getCardColors(task.priority),
-        modifier = modifier()
-            .padding(top = 8.dp, bottom = 8.dp, start = 4.dp, end = 4.dp)
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(start = 16.dp, end = 16.dp, top = 4.dp, bottom = 4.dp)
+            .clickable {
+                taskStatus = !taskStatus
+                task.status = !task.status
+                onStatusChange(task)
+            },
+
+        colors = getCardColors(task.priority)
     ) {
-        Card(
+        Text(
+            text = task.title,
             modifier = Modifier
-                .fillMaxWidth()
-                .padding(start = 4.dp, end = 4.dp)
-                .clickable {
-                    taskStatus = !taskStatus
-                    task.status = !task.status
-                    onStatusChange(task)
-                }
-        ) {
-            Text(
-                text = task.title,
-                modifier = Modifier
-                    .padding(16.dp)
-                    .fillMaxWidth(),
-                textAlign = TextAlign.Center,
-                style = MaterialTheme.typography.bodyLarge,
-                fontWeight = FontWeight.Bold
-            )
-        }
+                .padding(16.dp)
+                .fillMaxWidth(),
+            textAlign = TextAlign.Center,
+            style = MaterialTheme.typography.bodyLarge,
+            fontWeight = FontWeight.Bold,
+            textDecoration = lineThrough(),
+        )
     }
 }
 
+@Composable
 private fun getCardColors(priority: Boolean): CardColors {
     return when (priority) {
         true -> CardColors(
-            containerColor = Color.Red,
-            contentColor = Color.Red,
+            containerColor = MaterialTheme.colorScheme.errorContainer,
+            contentColor = MaterialTheme.colorScheme.onErrorContainer,
             disabledContentColor = Color.Red,
             disabledContainerColor = Color.Red
         )
 
         else -> CardColors(
-            containerColor = Color.Yellow,
-            contentColor = Color.Yellow,
+            containerColor = MaterialTheme.colorScheme.primaryContainer,
+            contentColor = MaterialTheme.colorScheme.onPrimaryContainer,
             disabledContentColor = Color.Yellow,
             disabledContainerColor = Color.Yellow
         )

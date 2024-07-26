@@ -56,18 +56,16 @@ class MainActivity : ComponentActivity() {
             val theme by Datastore.getTheme(this).collectAsState(initial = "Default")
 
             GritTheme(theme = theme) {
-                val snackbarHost = remember { SnackbarHostState() }
                 val pagerState = rememberPagerState(initialPage = 0) { BottomAppBarDestination.entries.size }
                 Scaffold(
-                    bottomBar = { BottomBar(pagerState) },
-                    snackbarHost = { SnackbarHost(snackbarHost) }
+                    bottomBar = { BottomBar(pagerState) }
                 ) { innerPadding ->
                     HorizontalPager(
                         state = pagerState,
                         modifier = Modifier.padding(innerPadding),
                     ) { page->
                         when (page) {
-                            0 -> TodoPage(viewModel = taskListViewModel)
+                            0 -> TodoPage(taskListViewModel)
                             1 -> HabitsPage(habitsViewModel, context = this@MainActivity)
                             2 -> AnalyticsPage(habitsViewModel)
                             3 -> SettingsPage(taskListViewModel)
