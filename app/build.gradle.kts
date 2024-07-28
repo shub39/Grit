@@ -5,6 +5,8 @@ plugins {
     id("com.google.devtools.ksp")
 }
 
+val appName = "Grit"
+
 android {
     namespace = "com.shub39.grit"
     compileSdk = 34
@@ -24,11 +26,16 @@ android {
 
     buildTypes {
         release {
+            resValue("string", "app_name", appName)
             isMinifyEnabled = true
             proguardFiles(
                 getDefaultProguardFile("proguard-android-optimize.txt"),
                 "proguard-rules.pro"
             )
+        }
+        debug {
+            resValue("string", "app_name", "$appName Debug")
+            applicationIdSuffix = ".debug"
         }
     }
     compileOptions {
@@ -66,7 +73,7 @@ dependencies {
     implementation(libs.androidx.ui.graphics)
     implementation(libs.androidx.ui.tooling.preview)
     implementation(libs.androidx.lifecycle.viewmodel.ktx)
-    implementation (libs.androidx.runtime.livedata)
+    implementation(libs.androidx.runtime.livedata)
     implementation(libs.androidx.compose.material)
     implementation(libs.androidx.work.runtime.ktx)
     testImplementation(libs.junit)
