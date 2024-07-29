@@ -1,5 +1,6 @@
 package com.shub39.grit.page
 
+import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.animateContentSize
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.layout.Arrangement
@@ -12,6 +13,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material3.AlertDialog
@@ -60,23 +62,57 @@ fun TodoPage(
     var showTaskAddDialog by remember { mutableStateOf(false) }
     val tasks by viewModel.tasks.collectAsState()
     val taskListIsEmpty = tasks.isEmpty()
+    var recentDeletedTask by remember { mutableStateOf<String?>(null) }
+    var recentDeletedTaskPriority by remember { mutableStateOf<Boolean?>(null) }
 
     Scaffold(
         floatingActionButton = {
-            FloatingActionButton(
-                onClick = { showTaskAddDialog = true },
-                shape = MaterialTheme.shapes.extraLarge
-            ) {
-                Row(
-                    modifier = Modifier
-                        .padding(16.dp),
-                    verticalAlignment = Alignment.CenterVertically,
-                ) {
-                    Icon(
-                        painter = painterResource(id = R.drawable.round_add_24),
-                        contentDescription = null
-                    )
+            Row {
+
+                AnimatedVisibility(visible = recentDeletedTask != null) {
+                    FloatingActionButton(
+                        onClick = {
+                            if (recentDeletedTask != null && recentDeletedTaskPriority != null) {
+                                viewModel.addTask(
+                                    Task(
+                                        Date.from(Instant.now()).toString(),
+                                        recentDeletedTask!!,
+                                        recentDeletedTaskPriority!!
+                                    )
+                                )
+                            }
+                            recentDeletedTask = null
+                            recentDeletedTaskPriority = null
+                        },
+                        shape = MaterialTheme.shapes.extraLarge
+                    ) {
+                        Row(
+                            verticalAlignment = Alignment.CenterVertically
+                        ) {
+                            Icon(
+                                painter = painterResource(id = R.drawable.round_undo_24),
+                                contentDescription = null
+                            )
+                        }
+                    }
                 }
+
+                Spacer(modifier = Modifier.padding(8.dp))
+
+                FloatingActionButton(
+                    onClick = { showTaskAddDialog = true },
+                    shape = MaterialTheme.shapes.extraLarge
+                ) {
+                    Row(
+                        verticalAlignment = Alignment.CenterVertically
+                    ) {
+                        Icon(
+                            painter = painterResource(id = R.drawable.round_add_24),
+                            contentDescription = null
+                        )
+                    }
+                }
+
             }
         }
     ) { innerPadding ->
@@ -179,6 +215,8 @@ fun TodoPage(
                 },
                 onDeleteTask = { deletedTask ->
                     viewModel.deleteTask(deletedTask)
+                    recentDeletedTask = deletedTask.title
+                    recentDeletedTaskPriority = deletedTask.priority
                 },
                 paddingValues = innerPadding
             )
@@ -195,14 +233,19 @@ fun TaskList(
     paddingValues: PaddingValues
 ) {
     val tasks by viewModel.tasks.collectAsState()
+    var sortedTasks = tasks.sortedBy { !it.priority }
+
+    LaunchedEffect(tasks) {
+        sortedTasks = tasks.sortedBy { !it.priority }
+    }
 
     LazyColumn(
         modifier = Modifier
             .padding(paddingValues)
             .fillMaxSize()
-            .animateContentSize()
+            .animateContentSize(),
     ) {
-        items(tasks.sortedBy { !it.priority }, key = { it.id }) {
+        items(sortedTasks, key = { it.id }) {
             val dismissState = rememberSwipeToDismissBoxState(
                 initialValue = SwipeToDismissBoxValue.Settled,
                 confirmValueChange = { dismissValue ->

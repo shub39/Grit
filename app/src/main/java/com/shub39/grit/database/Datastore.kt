@@ -20,7 +20,7 @@ object Datastore {
         .catch {
             Log.e(TAG, "clearPreferences: ", it)
         }.map { preferences ->
-            preferences[CLEAR_PREFERENCES] ?: "Daily"
+            preferences[CLEAR_PREFERENCES] ?: "Never"
         }
 
     suspend fun setClearPreferences(context: Context, clear: String) {
