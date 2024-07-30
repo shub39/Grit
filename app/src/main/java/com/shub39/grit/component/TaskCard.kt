@@ -35,7 +35,6 @@ fun TaskCard(
         }
     }
 
-
     Card(
         modifier = Modifier
             .fillMaxWidth()
@@ -45,8 +44,8 @@ fun TaskCard(
                 task.status = !task.status
                 onStatusChange(task)
             },
-
-        colors = getCardColors(task.priority)
+        colors = getCardColors(task.priority),
+        shape = MaterialTheme.shapes.extraLarge
     ) {
         Text(
             text = task.title,

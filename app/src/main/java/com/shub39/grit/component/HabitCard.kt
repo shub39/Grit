@@ -10,6 +10,7 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Button
@@ -81,7 +82,7 @@ fun HabitCard(
                 }
             },
             confirmButton = {
-                Row (
+                Row(
                     modifier = Modifier.fillMaxWidth(),
                     horizontalArrangement = Arrangement.SpaceEvenly
                 ) {
@@ -148,7 +149,8 @@ fun HabitCard(
                                 Habit(
                                     habit.id,
                                     newHabitDescription,
-                                    habit.time.withHour(timePickerState.hour).withMinute(timePickerState.minute)
+                                    habit.time.withHour(timePickerState.hour)
+                                        .withMinute(timePickerState.minute)
                                 )
                             )
                         },
@@ -163,7 +165,7 @@ fun HabitCard(
 
     Card(
         Modifier.padding(8.dp),
-        shape = MaterialTheme.shapes.large
+        shape = MaterialTheme.shapes.extraLarge
     ) {
         Row(
             modifier = Modifier
@@ -211,18 +213,18 @@ fun HabitCard(
             Button(
                 onClick = { showEditDialog = true },
                 modifier = Modifier.weight(1f),
-                shape = MaterialTheme.shapes.medium
+                shape = RoundedCornerShape(topStart = 16.dp, bottomStart = 16.dp, topEnd = 4.dp, bottomEnd = 4.dp)
             ) {
                 Text(text = stringResource(id = R.string.update))
             }
-            Spacer(modifier = Modifier.width(8.dp))
+            Spacer(modifier = Modifier.width(4.dp))
             Button(
                 onClick = {
                     habitViewModel.addStatusForHabit(habit.id)
                     isButtonEnabled = !isButtonEnabled
                 },
                 modifier = Modifier.weight(1f),
-                shape = MaterialTheme.shapes.medium,
+                shape = RoundedCornerShape(topStart = 4.dp, bottomStart = 4.dp, topEnd = 16.dp, bottomEnd = 16.dp),
                 colors = color
             ) {
                 if (isButtonEnabled) {

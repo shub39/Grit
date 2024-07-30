@@ -23,7 +23,7 @@ fun Done(
     val iconSize = if (swipeDismissState.progress == 1f) {
         0f
     } else {
-        swipeDismissState.progress * 100
+        swipeDismissState.progress * 40
     }
 
     Box(
