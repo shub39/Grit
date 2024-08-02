@@ -20,8 +20,8 @@ import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material3.AssistChip
 import androidx.compose.material3.Card
-import androidx.compose.material3.ElevatedCard
 import androidx.compose.material3.Icon
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -68,7 +68,7 @@ fun AnalyticsPage(
             contentPadding = PaddingValues(16.dp)
         ) {
             items(habits, key = { it.id }) { habit ->
-                HabitCard(
+                HabitAnalyticsCard(
                     habit = habit,
                     viewModel = viewModel,
                     isLastRowVisible = expandedCardId == habit.id,
@@ -82,7 +82,7 @@ fun AnalyticsPage(
 }
 
 @Composable
-private fun HabitCard(
+private fun HabitAnalyticsCard(
     habit: Habit,
     viewModel: HabitViewModel,
     isLastRowVisible: Boolean,
@@ -101,8 +101,9 @@ private fun HabitCard(
     Card(
         modifier = Modifier
             .fillMaxWidth()
-            .padding(top = 8.dp, bottom = 8.dp)
-            .clickable { onItemClick() }
+            .padding(top = 4.dp, bottom = 4.dp)
+            .clickable { onItemClick() },
+        shape = MaterialTheme.shapes.extraLarge
     ) {
         Column(
             modifier = Modifier
@@ -188,6 +189,7 @@ fun HabitAssistChip(
                 painter = painterResource(id = iconId),
                 contentDescription = null
             )
-        }
+        },
+        shape = MaterialTheme.shapes.extraLarge
     )
 }

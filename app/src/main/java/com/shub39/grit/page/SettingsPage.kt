@@ -1,16 +1,22 @@
 package com.shub39.grit.page
 
+import android.content.Context
 import android.content.Intent
 import android.net.Uri
 import android.os.Build
+import androidx.compose.foundation.Image
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material3.Card
 import androidx.compose.material3.ElevatedCard
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.SegmentedButton
@@ -25,6 +31,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.RectangleShape
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
@@ -43,87 +50,151 @@ fun SettingsPage(
     val coroutineScope = rememberCoroutineScope()
     val context = LocalContext.current
     val currentTheme by Datastore.getTheme(context).collectAsState(initial = "Default")
-    val currentClearPreference by Datastore.clearPreferences(context).collectAsState(initial = "Daily")
+    val currentClearPreference by Datastore.clearPreferences(context)
+        .collectAsState(initial = "Daily")
     var theme = currentTheme
 
     Column(
         modifier = Modifier
             .fillMaxSize()
-            .padding(32.dp),
+            .padding(top = 32.dp, bottom = 8.dp, start = 16.dp, end = 16.dp),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
-            Row(
-                modifier = Modifier.fillMaxWidth(),
-                horizontalArrangement = Arrangement.SpaceBetween,
-                verticalAlignment = Alignment.CenterVertically
+            Card(
+                shape = RoundedCornerShape(
+                    topStart = 18.dp,
+                    bottomStart = 8.dp,
+                    topEnd = 18.dp,
+                    bottomEnd = 8.dp
+                )
             ) {
-                Text(text = stringResource(id = R.string.material_theme))
-                Switch(
-                    checked = currentTheme == "Material",
-                    onCheckedChange = {
-                        if (theme != "Material") {
-                            theme = "Material"
-                            coroutineScope.launch {
-                                Datastore.setTheme(context, "Material")
-                            }
-                        } else {
-                            theme = "Default"
-                            coroutineScope.launch {
-                                Datastore.setTheme(context, "Default")
+                Row(
+                    modifier = Modifier.fillMaxWidth().padding(8.dp),
+                    horizontalArrangement = Arrangement.SpaceBetween,
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
+                    Text(text = stringResource(id = R.string.material_theme))
+                    Switch(
+                        checked = currentTheme == "Material",
+                        onCheckedChange = {
+                            if (theme != "Material") {
+                                theme = "Material"
+                                coroutineScope.launch {
+                                    Datastore.setTheme(context, "Material")
+                                }
+                            } else {
+                                theme = "Default"
+                                coroutineScope.launch {
+                                    Datastore.setTheme(context, "Default")
+                                }
                             }
                         }
-                    }
-                )
+                    )
+                }
             }
         }
 
-        Spacer(modifier = Modifier.padding(8.dp))
+        Spacer(modifier = Modifier.padding(2.dp))
 
-        Text(text = stringResource(id = R.string.clear_preference))
-        Spacer(modifier = Modifier.padding(4.dp))
-        SingleChoiceSegmentedButtonRow {
-            listOf("Daily", "Weekly", "Monthly", "Never").forEachIndexed { index, preference ->
-                SegmentedButton(
-                    selected = currentClearPreference == preference,
-                    onClick = {
-                        coroutineScope.launch {
-                            taskListViewModel.cancelScheduleDeletion(currentClearPreference)
-                            Datastore.setClearPreferences(context, preference)
-                            taskListViewModel.scheduleDeletion(preference)
+        Card(
+            shape = RoundedCornerShape(
+                topStart = 8.dp,
+                bottomStart = 18.dp,
+                topEnd = 8.dp,
+                bottomEnd = 18.dp
+            )
+        ) {
+            Column(
+                modifier = Modifier.padding(16.dp)
+            ) {
+                Text(text = stringResource(id = R.string.clear_preference))
+                Spacer(modifier = Modifier.padding(4.dp))
+                SingleChoiceSegmentedButtonRow {
+                    listOf(
+                        "Daily",
+                        "Weekly",
+                        "Monthly",
+                        "Never"
+                    ).forEachIndexed { index, preference ->
+                        SegmentedButton(
+                            selected = currentClearPreference == preference,
+                            onClick = {
+                                coroutineScope.launch {
+                                    taskListViewModel.cancelScheduleDeletion(currentClearPreference)
+                                    Datastore.setClearPreferences(context, preference)
+                                    taskListViewModel.scheduleDeletion(preference)
+                                }
+                            },
+                            shape = when (index) {
+                                0 -> RoundedCornerShape(topStart = 16.dp, bottomStart = 16.dp)
+                                3 -> RoundedCornerShape(topEnd = 16.dp, bottomEnd = 16.dp)
+                                else -> RectangleShape
+                            }
+                        ) {
+                            Text(text = preference)
                         }
-                    },
-                    shape = when (index) {
-                        0 -> RoundedCornerShape(topStart = 16.dp, bottomStart = 16.dp)
-                        3 -> RoundedCornerShape(topEnd = 16.dp, bottomEnd = 16.dp)
-                        else -> RectangleShape
                     }
-                ) {
-                    Text(text = preference)
                 }
             }
         }
 
         Spacer(modifier = Modifier.padding(8.dp))
 
-        ElevatedCard(
-            modifier = Modifier
-                .padding(top = 8.dp, bottom = 8.dp),
-            onClick = {
-                val intent = Intent(
-                    Intent.ACTION_VIEW,
-                    Uri.parse("https://www.github.com/shub39/Grit")
-                )
-                context.startActivity(intent)
-            }
+        Box (
+            modifier = Modifier.fillMaxSize(),
+            contentAlignment = Alignment.BottomCenter
         ) {
-            Text(
-                text = stringResource(id = R.string.made_by) + " shub39",
-                style = Typography.bodyMedium,
-                textAlign = TextAlign.Center,
-                modifier = Modifier.fillMaxWidth().padding(8.dp)
-            )
-        }
-    }
+            Column(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(top = 32.dp)
+            ) {
+                Text(
+                    text = "Made by shub39",
+                    textAlign = TextAlign.Center,
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(8.dp)
+                )
+                Row(
+                    modifier = Modifier
+                        .padding(bottom = 12.dp)
+                        .fillMaxWidth(),
+                    horizontalArrangement = Arrangement.Center
+                ) {
+                    Image(
+                        painter = painterResource(id = R.drawable.github_mark),
+                        contentDescription = null,
+                        modifier = Modifier
+                            .size(32.dp)
+                            .clickable {
+                                openLinkInBrowser(context, "https://github.com/shub39/Grit")
+                            }
+                    )
 
+                    Spacer(modifier = Modifier.padding(8.dp))
+
+                    Image(
+                        painter = painterResource(id = R.drawable.discord_svgrepo_com),
+                        contentDescription = null,
+                        modifier = Modifier
+                            .size(32.dp)
+                            .clickable {
+                                openLinkInBrowser(
+                                    context,
+                                    "https://discord.gg/https://discord.gg/nxA2hgtEKf"
+                                )
+                            }
+                    )
+                }
+            }
+        }
+
+    }
+}
+
+fun openLinkInBrowser(context: Context, url: String) {
+    val intent = Intent(Intent.ACTION_VIEW, Uri.parse(url))
+    context.startActivity(intent)
 }

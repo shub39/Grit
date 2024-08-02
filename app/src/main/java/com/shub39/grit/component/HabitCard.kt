@@ -136,12 +136,17 @@ fun HabitCard(
                     modifier = Modifier.fillMaxWidth(),
                     horizontalArrangement = Arrangement.SpaceEvenly
                 ) {
-                    Button(onClick = {
-                        showEditDialog = false
-                        showDeleteDialog = true
-                    }) {
+                    Button(
+                        onClick = {
+                            showEditDialog = false
+                            showDeleteDialog = true
+                        },
+                        modifier = Modifier.weight(1f),
+                        shape = RoundedCornerShape(topStart = 16.dp, bottomStart = 16.dp, topEnd = 4.dp, bottomEnd = 4.dp)
+                    ) {
                         Text(text = stringResource(id = R.string.delete))
                     }
+                    Spacer(modifier = Modifier.width(4.dp))
                     Button(
                         onClick = {
                             showEditDialog = false
@@ -154,6 +159,8 @@ fun HabitCard(
                                 )
                             )
                         },
+                        modifier = Modifier.weight(1f),
+                        shape = RoundedCornerShape(topStart = 4.dp, bottomStart = 4.dp, topEnd = 16.dp, bottomEnd = 16.dp),
                         enabled = newHabitDescription.isNotBlank() && newHabitDescription.length <= 50,
                     ) {
                         Text(text = stringResource(id = R.string.update))
@@ -164,7 +171,7 @@ fun HabitCard(
     }
 
     Card(
-        Modifier.padding(8.dp),
+        Modifier.padding(4.dp),
         shape = MaterialTheme.shapes.extraLarge
     ) {
         Row(
@@ -213,7 +220,12 @@ fun HabitCard(
             Button(
                 onClick = { showEditDialog = true },
                 modifier = Modifier.weight(1f),
-                shape = RoundedCornerShape(topStart = 16.dp, bottomStart = 16.dp, topEnd = 4.dp, bottomEnd = 4.dp)
+                shape = RoundedCornerShape(
+                    topStart = 16.dp,
+                    bottomStart = 16.dp,
+                    topEnd = 4.dp,
+                    bottomEnd = 4.dp
+                )
             ) {
                 Text(text = stringResource(id = R.string.update))
             }
@@ -224,7 +236,12 @@ fun HabitCard(
                     isButtonEnabled = !isButtonEnabled
                 },
                 modifier = Modifier.weight(1f),
-                shape = RoundedCornerShape(topStart = 4.dp, bottomStart = 4.dp, topEnd = 16.dp, bottomEnd = 16.dp),
+                shape = RoundedCornerShape(
+                    topStart = 4.dp,
+                    bottomStart = 4.dp,
+                    topEnd = 16.dp,
+                    bottomEnd = 16.dp
+                ),
                 colors = color
             ) {
                 if (isButtonEnabled) {
