@@ -27,14 +27,17 @@ jobs:
         distribution: 'adopt'
         java-version: '17'
 
-    - name: Download keystore
+    - name: Setup Android SDK
+      uses: android-actions/setup-android@v2.0.10
+
+    - name: keystore
       run: echo "${{ secrets.KEYSTORE_FILE }}" | base64 --decode > keystore.jks
 
-    - name: Build and sign the app
+    - name: Build
       run: ./gradlew assembleRelease --stacktrace
 
     - name: List build output files
-      run: ls -R
+      run: ls -R .
 
     - name: Sign the APK
       run: |
