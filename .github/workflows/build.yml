@@ -28,7 +28,7 @@ jobs:
         java-version: '17'
 
     - name: Download keystore
-      run: echo "${{ secrets.KEYSTORE_FILE }}" | base64 --decode > android/app/keystore.jks
+      run: echo "${{ secrets.KEYSTORE_FILE }}" | base64 --decode > keystore.jks
 
     - name: Build and sign the app
       run: ./gradlew assembleRelease
@@ -36,7 +36,7 @@ jobs:
     - name: Sign the APK
       run: |
         jarsigner -verbose -sigalg SHA1withRSA -digestalg SHA1 \
-        -keystore android/app/keystore.jks \
+        -keystore keystore.jks \
         -storepass $KEYSTORE_PASSWORD \
         -keypass $KEY_PASSWORD \
         android/app/build/outputs/apk/release/app-release-unsigned.apk \
