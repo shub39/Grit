@@ -1,0 +1,65 @@
+name: Android CI
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    env:
+      KEYSTORE_PASSWORD: ${{ secrets.KEYSTORE_PASSWORD }}
+      KEY_ALIAS: ${{ secrets.KEY_ALIAS }}
+      KEY_PASSWORD: ${{ secrets.KEY_PASSWORD }}
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v3
+
+    - name: Set up JDK 17
+      uses: actions/setup-java@v3
+      with:
+        distribution: 'adopt'
+        java-version: '17'
+
+    - name: Cache Gradle files
+      uses: actions/cache@v3
+      with:
+        path: |
+          ~/.gradle/caches
+          ~/.gradle/wrapper
+        key: ${{ runner.os }}-gradle-${{ hashFiles('**/*.gradle*', '**/gradle-wrapper.properties') }}
+        restore-keys: ${{ runner.os }}-gradle
+
+    - name: Download keystore
+      run: echo "${{ secrets.KEYSTORE_FILE }}" | base64 --decode > android/app/keystore.jks
+
+    - name: Build and sign the app
+      run: ./gradlew assembleRelease
+
+    - name: Sign the APK
+      run: |
+        jarsigner -verbose -sigalg SHA1withRSA -digestalg SHA1 \
+        -keystore android/app/keystore.jks \
+        -storepass $KEYSTORE_PASSWORD \
+        -keypass $KEY_PASSWORD \
+        android/app/build/outputs/apk/release/app-release-unsigned.apk \
+        $KEY_ALIAS
+
+    - name: Align APK with zipalign
+      run: |
+        $ANDROID_HOME/build-tools/$(ls $ANDROID_HOME/build-tools | tail -n 1)/zipalign -v -p 4 \
+        android/app/build/outputs/apk/release/app-release-unsigned.apk \
+        android/app/build/outputs/apk/release/app-release.apk
+
+    - name: Upload signed APK
+      uses: actions/upload-artifact@v3
+      with:
+        name: app-release.apk
+        path: android/app/build/outputs/apk/release/app-release.apk
+
