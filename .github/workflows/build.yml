@@ -34,7 +34,7 @@ jobs:
       run: ./gradlew assembleRelease
 
     - name: List build output files
-      run: tree
+      run: ls -R android/app/build
 
     - name: Sign the APK
       run: |
