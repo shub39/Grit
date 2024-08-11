@@ -31,10 +31,10 @@ jobs:
       run: echo "${{ secrets.KEYSTORE_FILE }}" | base64 --decode > keystore.jks
 
     - name: Build and sign the app
-      run: ./gradlew assembleRelease
+      run: ./gradlew assembleRelease --stacktrace
 
     - name: List build output files
-      run: ls -R android/app/build
+      run: ls -R
 
     - name: Sign the APK
       run: |
