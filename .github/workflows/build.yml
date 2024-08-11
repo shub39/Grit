@@ -48,15 +48,9 @@ jobs:
         app/build/outputs/apk/release/app-release-unsigned.apk \
         $KEY_ALIAS
 
-    - name: Align APK with zipalign
-      run: |
-        $ANDROID_HOME/build-tools/$(ls $ANDROID_HOME/build-tools | tail -n 1)/zipalign -v -p 4 \
-        app/build/outputs/apk/release/app-release-unsigned.apk \
-        app/build/outputs/apk/release/app-release.apk
-
     - name: Upload signed APK
       uses: actions/upload-artifact@v3
       with:
         name: app-release.apk
-        path: app/build/outputs/apk/release/app-release.apk
+        path: app/build/outputs/apk/release/app-release-unsigned.apk
 
