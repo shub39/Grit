@@ -27,17 +27,4 @@ class Converters {
     fun dayToTimestamp(date: LocalDate?): Long? {
         return date?.toEpochDay()
     }
-
-}
-
-@OptIn(ExperimentalMaterial3Api::class)
-fun localToTimePickerState(localTime: LocalDateTime): TimePickerState {
-    val hour = localTime.hour
-    val minute = localTime.minute
-    return TimePickerState(hour, minute, false)
-}
-
-@OptIn(ExperimentalMaterial3Api::class)
-fun timePickerStateToLocalDateTime(timePickerState: TimePickerState, date: LocalDate = LocalDate.now()): LocalDateTime {
-    return LocalDateTime.of(date, java.time.LocalTime.of(timePickerState.hour, timePickerState.minute))
 }

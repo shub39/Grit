@@ -3,16 +3,11 @@ package com.shub39.grit.page
 import android.content.Context
 import android.os.Build
 import androidx.annotation.RequiresApi
-import androidx.compose.animation.animateContentSize
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material3.AlertDialog
@@ -41,10 +36,10 @@ import androidx.compose.ui.text.input.KeyboardCapitalization
 import androidx.compose.ui.unit.dp
 import com.shub39.grit.R
 import com.shub39.grit.component.EmptyPage
-import com.shub39.grit.component.HabitCard
+import com.shub39.grit.component.HabitsList
 import com.shub39.grit.database.habit.Habit
-import com.shub39.grit.database.habit.timePickerStateToLocalDateTime
-import com.shub39.grit.notification.showAddNotification
+import com.shub39.grit.logic.NotificationMethods.showAddNotification
+import com.shub39.grit.logic.OtherLogic.timePickerStateToLocalDateTime
 import com.shub39.grit.viewModel.HabitViewModel
 
 @RequiresApi(Build.VERSION_CODES.TIRAMISU)
@@ -157,32 +152,6 @@ fun HabitsPage(habitViewModel: HabitViewModel, context: Context) {
                 viewModel = habitViewModel,
                 paddingValue = paddingValues,
             )
-        }
-    }
-}
-
-@Composable
-private fun HabitsList(
-    viewModel: HabitViewModel,
-    paddingValue: PaddingValues,
-) {
-    val habits by viewModel.habits.collectAsState()
-
-    LazyColumn(
-        modifier = Modifier
-            .padding(paddingValue)
-            .fillMaxSize()
-            .animateContentSize(),
-        contentPadding = PaddingValues(16.dp)
-    ) {
-        items(habits, key = { it.id }) { habit ->
-            HabitCard(
-                habit = habit,
-                habitViewModel = viewModel
-            )
-        }
-        item {
-            Spacer(modifier = Modifier.padding(60.dp))
         }
     }
 }

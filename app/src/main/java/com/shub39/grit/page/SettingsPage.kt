@@ -37,6 +37,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import com.shub39.grit.R
 import com.shub39.grit.database.Datastore
+import com.shub39.grit.logic.UILogic.openLinkInBrowser
 import com.shub39.grit.ui.theme.Typography
 import com.shub39.grit.viewModel.TaskListViewModel
 import kotlinx.coroutines.launch
@@ -192,9 +193,4 @@ fun SettingsPage(
         }
 
     }
-}
-
-fun openLinkInBrowser(context: Context, url: String) {
-    val intent = Intent(Intent.ACTION_VIEW, Uri.parse(url))
-    context.startActivity(intent)
 }

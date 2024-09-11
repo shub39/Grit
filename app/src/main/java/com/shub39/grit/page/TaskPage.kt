@@ -50,6 +50,7 @@ import com.shub39.grit.component.Done
 import com.shub39.grit.component.EmptyPage
 import com.shub39.grit.viewModel.TaskListViewModel
 import com.shub39.grit.component.TaskCard
+import com.shub39.grit.component.TaskList
 import com.shub39.grit.database.task.Task
 import java.time.Instant
 import java.util.Date
@@ -219,61 +220,6 @@ fun TodoPage(
                 },
                 paddingValues = innerPadding
             )
-        }
-    }
-}
-
-@OptIn(ExperimentalMaterial3Api::class, ExperimentalFoundationApi::class)
-@Composable
-fun TaskList(
-    viewModel: TaskListViewModel,
-    onStatusChange: (Task) -> Unit,
-    onDeleteTask: (Task) -> Unit,
-    paddingValues: PaddingValues
-) {
-    val tasks by viewModel.tasks.collectAsState()
-    var sortedTasks = tasks.sortedBy { !it.priority }
-
-    LaunchedEffect(tasks) {
-        sortedTasks = tasks.sortedBy { !it.priority }
-    }
-
-    LazyColumn(
-        modifier = Modifier
-            .padding(paddingValues)
-            .fillMaxSize()
-            .animateContentSize(),
-    ) {
-        items(sortedTasks, key = { it.id }) {
-            val dismissState = rememberSwipeToDismissBoxState(
-                initialValue = SwipeToDismissBoxValue.Settled,
-                confirmValueChange = { dismissValue ->
-                    if (dismissValue == SwipeToDismissBoxValue.StartToEnd) {
-                        onDeleteTask(it)
-                        true
-                    } else {
-                        false
-                    }
-                },
-                positionalThreshold = { threshold ->
-                    threshold * 0.8F
-                }
-            )
-
-            SwipeToDismissBox(
-                state = dismissState,
-                backgroundContent = { Done(dismissState) },
-                enableDismissFromEndToStart = false,
-                modifier = Modifier.animateItemPlacement()
-            ) {
-                TaskCard(
-                    task = it,
-                    onStatusChange = onStatusChange,
-                )
-            }
-        }
-        item {
-            Spacer(modifier = Modifier.padding(60.dp))
         }
     }
 }

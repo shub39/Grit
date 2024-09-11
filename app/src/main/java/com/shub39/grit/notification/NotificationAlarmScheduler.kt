@@ -6,7 +6,7 @@ import android.content.Context
 import android.content.Intent
 import android.util.Log
 import com.shub39.grit.database.habit.Habit
-import java.time.DayOfWeek
+import com.shub39.grit.logic.OtherLogic.getNextMonday
 import java.time.LocalDateTime
 import java.time.ZoneId
 import java.time.format.DateTimeFormatter
@@ -83,14 +83,6 @@ class NotificationAlarmScheduler(
             )
         )
         Log.d("NotificationAlarmScheduler", "Cancelled notification for $preference")
-    }
-
-    private fun getNextMonday(): LocalDateTime {
-        var nextMonday = LocalDateTime.now().plusWeeks(1)
-        while (nextMonday.dayOfWeek != DayOfWeek.MONDAY) {
-            nextMonday = nextMonday.minusDays(1)
-        }
-        return nextMonday.withHour(0).withMinute(0)
     }
 
 }

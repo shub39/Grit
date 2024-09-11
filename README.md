@@ -1,7 +1,8 @@
 <div align="center">  
 
-![GritPreview](https://github.com/shub39/Grit/assets/143277026/d7b2eab6-e76f-42a6-bf37-668bac2a2d2d)
+![GritPreview](fastlane/metadata/android/en-US/images/icon.png)
 
+# Grit
 
 </div>
 

@@ -19,6 +19,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.unit.dp
 import com.shub39.grit.database.task.Task
+import com.shub39.grit.logic.UILogic.getCardColors
 
 @Composable
 fun TaskCard(
@@ -56,25 +57,6 @@ fun TaskCard(
             style = MaterialTheme.typography.bodyLarge,
             fontWeight = FontWeight.Bold,
             textDecoration = lineThrough(),
-        )
-    }
-}
-
-@Composable
-private fun getCardColors(priority: Boolean): CardColors {
-    return when (priority) {
-        true -> CardColors(
-            containerColor = MaterialTheme.colorScheme.errorContainer,
-            contentColor = MaterialTheme.colorScheme.onErrorContainer,
-            disabledContentColor = Color.Red,
-            disabledContainerColor = Color.Red
-        )
-
-        else -> CardColors(
-            containerColor = MaterialTheme.colorScheme.primaryContainer,
-            contentColor = MaterialTheme.colorScheme.onPrimaryContainer,
-            disabledContentColor = Color.Yellow,
-            disabledContainerColor = Color.Yellow
         )
     }
 }

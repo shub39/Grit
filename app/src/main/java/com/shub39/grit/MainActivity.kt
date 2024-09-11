@@ -27,7 +27,7 @@ import androidx.compose.ui.unit.dp
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import com.shub39.grit.component.BottomAppBarDestination
 import com.shub39.grit.database.Datastore
-import com.shub39.grit.notification.createNotificationChannel
+import com.shub39.grit.logic.NotificationMethods.createNotificationChannel
 import com.shub39.grit.page.AnalyticsPage
 import com.shub39.grit.page.TodoPage
 import com.shub39.grit.page.HabitsPage
