@@ -3,6 +3,7 @@
 ![GritPreview](fastlane/metadata/android/en-US/images/icon.png)
 
 # Grit
+### A simple ToDo list and Habit Tracker
 
 </div>
 
