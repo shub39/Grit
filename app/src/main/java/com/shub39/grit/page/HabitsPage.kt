@@ -41,11 +41,15 @@ import com.shub39.grit.database.habit.Habit
 import com.shub39.grit.logic.NotificationMethods.showAddNotification
 import com.shub39.grit.logic.OtherLogic.timePickerStateToLocalDateTime
 import com.shub39.grit.viewModel.HabitViewModel
+import org.koin.androidx.compose.koinViewModel
 
 @RequiresApi(Build.VERSION_CODES.TIRAMISU)
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun HabitsPage(habitViewModel: HabitViewModel, context: Context) {
+fun HabitsPage(
+    habitViewModel: HabitViewModel = koinViewModel(),
+    context: Context
+) {
     val habits by habitViewModel.habits.collectAsState()
     val habitListIsEmpty = habits.isEmpty()
     var showAddHabitDialog by remember { mutableStateOf(false) }
@@ -75,7 +79,6 @@ fun HabitsPage(habitViewModel: HabitViewModel, context: Context) {
             val timePickerState = remember { TimePickerState(12, 0, false) }
             val isHabitPresent = { habits.any { it.id == newHabitName } }
 
-
             AlertDialog(
                 onDismissRequest = { showAddHabitDialog = false },
                 text = {
@@ -99,7 +102,9 @@ fun HabitsPage(habitViewModel: HabitViewModel, context: Context) {
                             },
                             isError = newHabitName.length > 20 || isHabitPresent()
                         )
+
                         Spacer(modifier = Modifier.padding(8.dp))
+
                         OutlinedTextField(
                             value = newHabitDescription,
                             shape = MaterialTheme.shapes.medium,
@@ -117,7 +122,9 @@ fun HabitsPage(habitViewModel: HabitViewModel, context: Context) {
                             },
                             isError = newHabitName.length > 50
                         )
+
                         Spacer(modifier = Modifier.padding(8.dp))
+
                         TimePicker(
                             state = timePickerState,
                         )
@@ -146,7 +153,9 @@ fun HabitsPage(habitViewModel: HabitViewModel, context: Context) {
         }
 
         if (habitListIsEmpty) {
+
             EmptyPage(paddingValues = paddingValues)
+
         } else {
             HabitsList(
                 viewModel = habitViewModel,

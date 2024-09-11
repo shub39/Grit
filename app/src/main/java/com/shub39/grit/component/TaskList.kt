@@ -62,7 +62,7 @@ fun TaskList(
                 state = dismissState,
                 backgroundContent = { Done(dismissState) },
                 enableDismissFromEndToStart = false,
-                modifier = Modifier.animateItemPlacement()
+                modifier = Modifier.animateItem(fadeInSpec = null, fadeOutSpec = null)
             ) {
                 TaskCard(
                     task = it,

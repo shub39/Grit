@@ -7,7 +7,6 @@ import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import androidx.annotation.RequiresApi
-import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.pager.HorizontalPager
 import androidx.compose.foundation.pager.PagerState
@@ -33,19 +32,14 @@ import com.shub39.grit.page.TodoPage
 import com.shub39.grit.page.HabitsPage
 import com.shub39.grit.page.SettingsPage
 import com.shub39.grit.ui.theme.GritTheme
-import com.shub39.grit.viewModel.HabitViewModel
-import com.shub39.grit.viewModel.TaskListViewModel
 import kotlinx.coroutines.launch
 
 class MainActivity : ComponentActivity() {
-    @OptIn(ExperimentalFoundationApi::class)
     @RequiresApi(Build.VERSION_CODES.TIRAMISU)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         installSplashScreen()
 
-        val taskListViewModel = TaskListViewModel(applicationContext)
-        val habitsViewModel = HabitViewModel(application)
         createNotificationChannel(this)
 
         enableEdgeToEdge()
@@ -62,10 +56,10 @@ class MainActivity : ComponentActivity() {
                         modifier = Modifier.padding(innerPadding),
                     ) { page->
                         when (page) {
-                            0 -> TodoPage(taskListViewModel)
-                            1 -> HabitsPage(habitsViewModel, context = this@MainActivity)
-                            2 -> AnalyticsPage(habitsViewModel)
-                            3 -> SettingsPage(taskListViewModel)
+                            0 -> TodoPage()
+                            1 -> HabitsPage(context = this@MainActivity)
+                            2 -> AnalyticsPage()
+                            3 -> SettingsPage()
                         }
                     }
                 }
@@ -74,7 +68,6 @@ class MainActivity : ComponentActivity() {
     }
 }
 
-@OptIn(ExperimentalFoundationApi::class)
 @Composable
 private fun BottomBar(pagerState: PagerState) {
     val coroutineScope = rememberCoroutineScope()

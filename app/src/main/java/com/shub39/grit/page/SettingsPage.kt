@@ -1,8 +1,5 @@
 package com.shub39.grit.page
 
-import android.content.Context
-import android.content.Intent
-import android.net.Uri
 import android.os.Build
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
@@ -17,7 +14,6 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Card
-import androidx.compose.material3.ElevatedCard
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.SegmentedButton
 import androidx.compose.material3.SingleChoiceSegmentedButtonRow
@@ -38,14 +34,13 @@ import androidx.compose.ui.unit.dp
 import com.shub39.grit.R
 import com.shub39.grit.database.Datastore
 import com.shub39.grit.logic.UILogic.openLinkInBrowser
-import com.shub39.grit.ui.theme.Typography
 import com.shub39.grit.viewModel.TaskListViewModel
 import kotlinx.coroutines.launch
+import org.koin.androidx.compose.koinViewModel
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun SettingsPage(
-    taskListViewModel: TaskListViewModel
+    taskListViewModel: TaskListViewModel = koinViewModel()
 ) {
 
     val coroutineScope = rememberCoroutineScope()

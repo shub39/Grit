@@ -17,10 +17,11 @@ import androidx.compose.ui.unit.dp
 import com.shub39.grit.component.EmptyPage
 import com.shub39.grit.component.HabitAnalyticsCard
 import com.shub39.grit.viewModel.HabitViewModel
+import org.koin.androidx.compose.koinViewModel
 
 @Composable
 fun AnalyticsPage(
-    viewModel: HabitViewModel,
+    viewModel: HabitViewModel = koinViewModel(),
 ) {
     val habits by viewModel.habits.collectAsState()
     val habitsIsEmpty = habits.isEmpty()
