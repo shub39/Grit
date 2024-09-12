@@ -27,8 +27,8 @@ fun HabitMap(
     var weeks by remember { mutableStateOf<List<List<LocalDate?>>>(emptyList()) }
     val listState = rememberLazyListState()
     val coroutineScope = rememberCoroutineScope()
-    val data = habitViewModel.getStatusForHabit(habit.id)
-    val habitDaysSet = data.map { it.date }.toSet()
+    val data by remember { mutableStateOf(habitViewModel.getStatusForHabit(habit.id)) }
+    val habitDaysSet by remember { mutableStateOf(data.map { it.date }.toSet()) }
 
     LaunchedEffect(data) {
         weeks = withContext(Dispatchers.Default) {
@@ -72,7 +72,9 @@ fun HabitMap(
             ) {
                 week.forEach { day ->
                     if (day == null) {
+
                         EmptyDayBox()
+
                     } else {
                         val containsDay = remember { mutableStateOf(habitDaysSet.contains(day)) }
 

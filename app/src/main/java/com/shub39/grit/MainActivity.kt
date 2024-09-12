@@ -33,6 +33,7 @@ import com.shub39.grit.page.HabitsPage
 import com.shub39.grit.page.SettingsPage
 import com.shub39.grit.ui.theme.GritTheme
 import kotlinx.coroutines.launch
+import org.koin.compose.KoinContext
 
 class MainActivity : ComponentActivity() {
     @RequiresApi(Build.VERSION_CODES.TIRAMISU)
@@ -55,11 +56,13 @@ class MainActivity : ComponentActivity() {
                         state = pagerState,
                         modifier = Modifier.padding(innerPadding),
                     ) { page->
-                        when (page) {
-                            0 -> TaskPage()
-                            1 -> HabitsPage(context = this@MainActivity)
-                            2 -> AnalyticsPage()
-                            3 -> SettingsPage()
+                        KoinContext {
+                            when (page) {
+                                0 -> TaskPage()
+                                1 -> HabitsPage(context = this@MainActivity)
+                                2 -> AnalyticsPage()
+                                3 -> SettingsPage()
+                            }
                         }
                     }
                 }
