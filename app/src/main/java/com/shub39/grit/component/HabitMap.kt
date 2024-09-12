@@ -1,38 +1,34 @@
 package com.shub39.grit.component
 
-import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.rememberLazyListState
-import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
 import androidx.compose.ui.unit.dp
-import com.shub39.grit.database.habit.DailyHabitStatus
 import java.time.LocalDate
 import androidx.compose.runtime.*
-import androidx.compose.ui.Alignment
+import com.shub39.grit.database.habit.Habit
+import com.shub39.grit.viewModel.HabitViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
+import org.koin.androidx.compose.koinViewModel
 
 @Composable
 fun HabitMap(
-    data: List<DailyHabitStatus>
+    habit: Habit,
+    habitViewModel: HabitViewModel = koinViewModel()
 ) {
     var weeks by remember { mutableStateOf<List<List<LocalDate?>>>(emptyList()) }
-    val habitDaysSet = data.map { it.date }.toSet()
     val listState = rememberLazyListState()
     val coroutineScope = rememberCoroutineScope()
+    val data = habitViewModel.getStatusForHabit(habit.id)
+    val habitDaysSet = data.map { it.date }.toSet()
 
     LaunchedEffect(data) {
         weeks = withContext(Dispatchers.Default) {
@@ -57,6 +53,7 @@ fun HabitMap(
             }
             daysWithEmptyDays.chunked(7)
         }
+
         coroutineScope.launch {
             listState.scrollToItem(weeks.size - 1)
         }
@@ -77,7 +74,16 @@ fun HabitMap(
                     if (day == null) {
                         EmptyDayBox()
                     } else {
-                        DayBox(habitDaysSet.contains(day), day)
+                        val containsDay = remember { mutableStateOf(habitDaysSet.contains(day)) }
+
+                        DayBox(
+                            done = containsDay.value,
+                            day = day,
+                            onClick = {
+                                habitViewModel.addStatusForHabit(habit.id, day.atStartOfDay())
+                                containsDay.value = !containsDay.value
+                            }
+                        )
                     }
                 }
             }

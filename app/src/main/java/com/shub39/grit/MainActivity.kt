@@ -28,7 +28,7 @@ import com.shub39.grit.component.BottomAppBarDestination
 import com.shub39.grit.database.Datastore
 import com.shub39.grit.logic.NotificationMethods.createNotificationChannel
 import com.shub39.grit.page.AnalyticsPage
-import com.shub39.grit.page.TodoPage
+import com.shub39.grit.page.TaskPage
 import com.shub39.grit.page.HabitsPage
 import com.shub39.grit.page.SettingsPage
 import com.shub39.grit.ui.theme.GritTheme
@@ -56,7 +56,7 @@ class MainActivity : ComponentActivity() {
                         modifier = Modifier.padding(innerPadding),
                     ) { page->
                         when (page) {
-                            0 -> TodoPage()
+                            0 -> TaskPage()
                             1 -> HabitsPage(context = this@MainActivity)
                             2 -> AnalyticsPage()
                             3 -> SettingsPage()

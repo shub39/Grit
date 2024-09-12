@@ -7,13 +7,14 @@ import androidx.lifecycle.viewModelScope
 import com.shub39.grit.database.habit.DailyHabitStatus
 import com.shub39.grit.database.habit.Habit
 import com.shub39.grit.database.habit.HabitDatabase
+import com.shub39.grit.logic.OtherLogic.countBestStreak
+import com.shub39.grit.logic.OtherLogic.countConsecutiveDaysBeforeLast
 import com.shub39.grit.notification.NotificationAlarmScheduler
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
 import java.time.LocalDate
 import java.time.LocalDateTime
-import java.time.temporal.ChronoUnit
 
 class HabitViewModel(application: Application) : ViewModel() {
 
@@ -42,11 +43,11 @@ class HabitViewModel(application: Application) : ViewModel() {
         }
     }
 
-    fun addStatusForHabit(string: String) {
+    fun addStatusForHabit(string: String, time: LocalDateTime = LocalDateTime.now()) {
         viewModelScope.launch {
-            val dailyHabitStatus = _habitStatuses.value.find { it.id == string && it.date == LocalDate.now() }
+            val dailyHabitStatus = _habitStatuses.value.find { it.id == string && it.date == time.toLocalDate() }
             if (dailyHabitStatus == null) {
-                val status = DailyHabitStatus(LocalDateTime.now(), string, LocalDate.now())
+                val status = DailyHabitStatus(time, string, time.toLocalDate())
                 habitStatusDao.insertDailyStatus(status)
                 _habitStatuses.value += status
                 Log.d("TAG", "added status for Habit: $string")
@@ -111,45 +112,6 @@ class HabitViewModel(application: Application) : ViewModel() {
             _habits.value = habitDao.getAllHabits()
             scheduler.schedule(habit)
         }
-    }
-
-    private fun countConsecutiveDaysBeforeLast(dates: List<LocalDate>): Int {
-        if (dates.size < 2) return 0
-        val sortedDates = dates.sorted()
-        var consecutiveCount = 0
-        for (i in sortedDates.size - 2 downTo 0) {
-            val currentDate = sortedDates[i]
-            val nextDate = sortedDates[i + 1]
-            if (ChronoUnit.DAYS.between(currentDate, nextDate) == 1L) {
-                consecutiveCount++
-            } else {
-                break
-            }
-        }
-        return consecutiveCount
-    }
-
-    private fun countBestStreak(dates: List<LocalDate>): Int {
-        if (dates.isEmpty()) return 0
-        val sortedDates = dates.sorted()
-        var maxConsecutive = 0
-        var currentConsecutive = 0
-        for (i in 1 until sortedDates.size) {
-            val previousDate = sortedDates[i - 1]
-            val currentDate = sortedDates[i]
-            if (ChronoUnit.DAYS.between(previousDate, currentDate) == 1L) {
-                currentConsecutive++
-            } else {
-                if (currentConsecutive > maxConsecutive) {
-                    maxConsecutive = currentConsecutive
-                }
-                currentConsecutive = 1
-            }
-        }
-        if (currentConsecutive > maxConsecutive) {
-            maxConsecutive = currentConsecutive
-        }
-        return maxConsecutive
     }
 
 }

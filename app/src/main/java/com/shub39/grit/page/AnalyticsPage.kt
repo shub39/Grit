@@ -43,7 +43,6 @@ fun AnalyticsPage(
             items(habits, key = { it.id }) { habit ->
                 HabitAnalyticsCard(
                     habit = habit,
-                    viewModel = viewModel,
                     isLastRowVisible = expandedCardId == habit.id,
                     onItemClick = {
                         expandedCardId = if (expandedCardId == habit.id) null else habit.id

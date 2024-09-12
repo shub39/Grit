@@ -24,6 +24,7 @@ import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
 import androidx.compose.material3.TimePicker
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -40,19 +41,110 @@ import com.shub39.grit.R
 import com.shub39.grit.database.habit.Habit
 import com.shub39.grit.logic.OtherLogic.localToTimePickerState
 import com.shub39.grit.viewModel.HabitViewModel
+import org.koin.androidx.compose.koinViewModel
 import java.time.format.DateTimeFormatter
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun HabitCard(
     habit: Habit,
-    habitViewModel: HabitViewModel
+    habitViewModel: HabitViewModel = koinViewModel()
 ) {
     var showEditDialog by remember { mutableStateOf(false) }
     var showDeleteDialog by remember { mutableStateOf(false) }
     var isButtonEnabled by remember { mutableStateOf(true) }
-    if (habitViewModel.isStatusAdded(habit.id)) {
-        isButtonEnabled = false
+
+    LaunchedEffect (Unit) {
+        isButtonEnabled = !habitViewModel.isStatusAdded(habit.id)
+    }
+
+    Card(
+        Modifier.padding(4.dp),
+        shape = MaterialTheme.shapes.extraLarge
+    ) {
+        Row(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(16.dp),
+            horizontalArrangement = Arrangement.SpaceBetween,
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            Column(
+                modifier = Modifier.weight(1f)
+            ) {
+                Text(
+                    text = habit.id,
+                    style = MaterialTheme.typography.titleLarge
+                )
+
+                Spacer(modifier = Modifier.height(8.dp))
+
+                Text(
+                    text = habit.description,
+                    style = MaterialTheme.typography.bodyMedium
+                )
+            }
+
+            Spacer(modifier = Modifier.width(16.dp))
+
+            OutlinedCard(
+                border = BorderStroke(1.dp, MaterialTheme.colorScheme.primary),
+                shape = MaterialTheme.shapes.medium
+            ) {
+                Text(
+                    modifier = Modifier.padding(8.dp),
+                    text = habit.time.format(DateTimeFormatter.ofPattern("hh:mm a"))
+                )
+            }
+        }
+
+        Row(
+            modifier = Modifier
+                .padding(16.dp)
+                .fillMaxWidth(),
+        ) {
+            val color = if (isButtonEnabled) {
+                ButtonDefaults.buttonColors()
+            } else {
+                ButtonDefaults.elevatedButtonColors()
+            }
+
+            Button(
+                onClick = { showEditDialog = true },
+                modifier = Modifier.weight(1f),
+                shape = RoundedCornerShape(
+                    topStart = 16.dp,
+                    bottomStart = 16.dp,
+                    topEnd = 4.dp,
+                    bottomEnd = 4.dp
+                )
+            ) {
+                Text(text = stringResource(id = R.string.update))
+            }
+
+            Spacer(modifier = Modifier.width(4.dp))
+
+            Button(
+                onClick = {
+                    habitViewModel.addStatusForHabit(habit.id)
+                    isButtonEnabled = !isButtonEnabled
+                },
+                modifier = Modifier.weight(1f),
+                shape = RoundedCornerShape(
+                    topStart = 4.dp,
+                    bottomStart = 4.dp,
+                    topEnd = 16.dp,
+                    bottomEnd = 16.dp
+                ),
+                colors = color
+            ) {
+                if (isButtonEnabled) {
+                    Text(text = stringResource(id = R.string.mark_done))
+                } else {
+                    Text(text = stringResource(id = R.string.mark_undone))
+                }
+            }
+        }
     }
 
     if (showDeleteDialog) {
@@ -67,12 +159,14 @@ fun HabitCard(
                             .align(Alignment.CenterHorizontally)
                             .size(64.dp)
                     )
+
                     Text(
                         text = stringResource(id = R.string.delete_warning),
                         style = MaterialTheme.typography.titleMedium,
                         textAlign = TextAlign.Center,
                         modifier = Modifier.fillMaxWidth()
                     )
+
                     Text(
                         text = stringResource(id = R.string.all_data_lost),
                         style = MaterialTheme.typography.bodySmall,
@@ -89,6 +183,7 @@ fun HabitCard(
                     Button(onClick = { showDeleteDialog = false }) {
                         Text(text = stringResource(id = R.string.cancel))
                     }
+
                     Button(onClick = {
                         showDeleteDialog = false
                         habitViewModel.deleteHabit(habit)
@@ -125,10 +220,10 @@ fun HabitCard(
                         },
                         isError = newHabitDescription.length > 50
                     )
+
                     Spacer(modifier = Modifier.padding(8.dp))
-                    TimePicker(
-                        state = timePickerState,
-                    )
+
+                    TimePicker(state = timePickerState)
                 }
             },
             confirmButton = {
@@ -146,7 +241,9 @@ fun HabitCard(
                     ) {
                         Text(text = stringResource(id = R.string.delete))
                     }
+
                     Spacer(modifier = Modifier.width(4.dp))
+
                     Button(
                         onClick = {
                             showEditDialog = false
@@ -168,88 +265,5 @@ fun HabitCard(
                 }
             }
         )
-    }
-
-    Card(
-        Modifier.padding(4.dp),
-        shape = MaterialTheme.shapes.extraLarge
-    ) {
-        Row(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(16.dp),
-            horizontalArrangement = Arrangement.SpaceBetween,
-            verticalAlignment = Alignment.CenterVertically
-        ) {
-            Column(
-                modifier = Modifier.weight(1f)
-            ) {
-                Text(
-                    text = habit.id,
-                    style = MaterialTheme.typography.titleLarge
-                )
-                Spacer(modifier = Modifier.height(8.dp))
-                Text(
-                    text = habit.description,
-                    style = MaterialTheme.typography.bodyMedium
-                )
-            }
-            Spacer(modifier = Modifier.width(16.dp))
-            OutlinedCard(
-                border = BorderStroke(1.dp, MaterialTheme.colorScheme.primary),
-                shape = MaterialTheme.shapes.medium
-            ) {
-                Text(
-                    modifier = Modifier.padding(8.dp),
-                    text = habit.time.format(DateTimeFormatter.ofPattern("hh:mm a"))
-                )
-            }
-        }
-
-        Row(
-            modifier = Modifier
-                .padding(16.dp)
-                .fillMaxWidth(),
-        ) {
-            val color = if (isButtonEnabled) {
-                ButtonDefaults.buttonColors()
-            } else {
-                ButtonDefaults.elevatedButtonColors()
-            }
-
-            Button(
-                onClick = { showEditDialog = true },
-                modifier = Modifier.weight(1f),
-                shape = RoundedCornerShape(
-                    topStart = 16.dp,
-                    bottomStart = 16.dp,
-                    topEnd = 4.dp,
-                    bottomEnd = 4.dp
-                )
-            ) {
-                Text(text = stringResource(id = R.string.update))
-            }
-            Spacer(modifier = Modifier.width(4.dp))
-            Button(
-                onClick = {
-                    habitViewModel.addStatusForHabit(habit.id)
-                    isButtonEnabled = !isButtonEnabled
-                },
-                modifier = Modifier.weight(1f),
-                shape = RoundedCornerShape(
-                    topStart = 4.dp,
-                    bottomStart = 4.dp,
-                    topEnd = 16.dp,
-                    bottomEnd = 16.dp
-                ),
-                colors = color
-            ) {
-                if (isButtonEnabled) {
-                    Text(text = stringResource(id = R.string.mark_done))
-                } else {
-                    Text(text = stringResource(id = R.string.mark_undone))
-                }
-            }
-        }
     }
 }

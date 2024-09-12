@@ -73,6 +73,16 @@ fun HabitsPage(
             }
         }
     ) { paddingValues ->
+        if (habitListIsEmpty) {
+
+            EmptyPage(paddingValues = paddingValues)
+
+        } else {
+
+            HabitsList(paddingValue = paddingValues)
+
+        }
+
         if (showAddHabitDialog) {
             var newHabitName by remember { mutableStateOf("") }
             var newHabitDescription by remember { mutableStateOf("") }
@@ -149,17 +159,6 @@ fun HabitsPage(
                         Text(text = stringResource(id = R.string.add_habit))
                     }
                 }
-            )
-        }
-
-        if (habitListIsEmpty) {
-
-            EmptyPage(paddingValues = paddingValues)
-
-        } else {
-            HabitsList(
-                viewModel = habitViewModel,
-                paddingValue = paddingValues,
             )
         }
     }

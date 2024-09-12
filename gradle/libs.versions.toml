@@ -2,7 +2,6 @@
 agp = "8.6.0"
 coreSplashscreen = "1.0.1"
 datastorePreferences = "1.1.1"
-koinAndroid = "3.5.0"
 koinAndroidxCompose = "3.5.0"
 kotlin = "2.0.10"
 coreKtx = "1.13.1"

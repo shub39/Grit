@@ -1,6 +1,7 @@
 package com.shub39.grit.component
 
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -16,7 +17,8 @@ import java.time.LocalDate
 @Composable
 fun DayBox(
     done: Boolean,
-    day: LocalDate
+    day: LocalDate,
+    onClick: () -> Unit
 ) {
     val color = if (done) {
         MaterialTheme.colorScheme.primary
@@ -28,11 +30,13 @@ fun DayBox(
     } else {
         MaterialTheme.colorScheme.onBackground
     }
+
     Box(
         modifier = Modifier
             .size(30.dp)
             .clip(RoundedCornerShape(6.dp))
-            .background(color),
+            .background(color)
+            .clickable { onClick() },
         contentAlignment = Alignment.Center
     ) {
         Text(

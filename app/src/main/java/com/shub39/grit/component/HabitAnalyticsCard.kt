@@ -32,12 +32,13 @@ import com.shub39.grit.R
 import com.shub39.grit.database.habit.Habit
 import com.shub39.grit.ui.theme.Typography
 import com.shub39.grit.viewModel.HabitViewModel
+import org.koin.androidx.compose.koinViewModel
 import java.time.format.DateTimeFormatter
 
 @Composable
 fun HabitAnalyticsCard(
     habit: Habit,
-    viewModel: HabitViewModel,
+    viewModel: HabitViewModel = koinViewModel(),
     isLastRowVisible: Boolean,
     onItemClick: () -> Unit,
 ) {
@@ -70,14 +71,18 @@ fun HabitAnalyticsCard(
                 textAlign = TextAlign.Center,
                 fontWeight = FontWeight.Bold
             )
+
             Spacer(modifier = Modifier.height(4.dp))
+
             Text(
                 text = habit.description,
                 style = Typography.bodyLarge,
                 modifier = Modifier.fillMaxWidth(),
                 textAlign = TextAlign.Center
             )
+
             Spacer(modifier = Modifier.height(4.dp))
+
             LazyRow(
                 horizontalArrangement = Arrangement.spacedBy(6.dp)
             ) {
@@ -88,6 +93,7 @@ fun HabitAnalyticsCard(
                         onClick = {}
                     )
                 }
+
                 item {
                     HabitAssistChip(
                         text = stringResource(id = R.string.best_streak) + " " + bestStreak.toString(),
@@ -95,6 +101,7 @@ fun HabitAnalyticsCard(
                         onClick = {}
                     )
                 }
+
                 item {
                     HabitAssistChip(
                         text = stringResource(id = R.string.days_completed) + " " + doneDays.toString(),
@@ -102,6 +109,7 @@ fun HabitAnalyticsCard(
                         onClick = {}
                     )
                 }
+
                 item {
                     HabitAssistChip(
                         text = habit.time.format(DateTimeFormatter.ofPattern("yyyy-MM-dd")),
@@ -110,8 +118,10 @@ fun HabitAnalyticsCard(
                     )
                 }
             }
+
             Spacer(modifier = Modifier.height(8.dp))
         }
+
         AnimatedVisibility(
             visible = isLastRowVisible,
             enter = fadeIn() + expandVertically(),
@@ -122,7 +132,7 @@ fun HabitAnalyticsCard(
                     .fillMaxWidth(),
                 horizontalArrangement = Arrangement.Center
             ) {
-                HabitMap(data = viewModel.getStatusForHabit(habit.id))
+                HabitMap(habit = habit)
             }
         }
     }

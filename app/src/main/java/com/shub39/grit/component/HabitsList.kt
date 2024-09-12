@@ -13,10 +13,11 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import com.shub39.grit.viewModel.HabitViewModel
+import org.koin.androidx.compose.koinViewModel
 
 @Composable
 fun HabitsList(
-    viewModel: HabitViewModel,
+    viewModel: HabitViewModel = koinViewModel(),
     paddingValue: PaddingValues,
 ) {
     val habits by viewModel.habits.collectAsState()
@@ -29,11 +30,9 @@ fun HabitsList(
         contentPadding = PaddingValues(16.dp)
     ) {
         items(habits, key = { it.id }) { habit ->
-            HabitCard(
-                habit = habit,
-                habitViewModel = viewModel
-            )
+            HabitCard(habit = habit)
         }
+
         item {
             Spacer(modifier = Modifier.padding(60.dp))
         }

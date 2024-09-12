@@ -45,7 +45,7 @@ import java.time.Instant
 import java.util.Date
 
 @Composable
-fun TodoPage(
+fun TaskPage(
     viewModel: TaskListViewModel = koinViewModel()
 ) {
     var showTaskAddDialog by remember { mutableStateOf(false) }
@@ -57,7 +57,6 @@ fun TodoPage(
     Scaffold(
         floatingActionButton = {
             Row {
-
                 AnimatedVisibility(visible = recentDeletedTask != null) {
                     FloatingActionButton(
                         onClick = {
@@ -101,7 +100,6 @@ fun TodoPage(
                         )
                     }
                 }
-
             }
         }
     ) { innerPadding ->
@@ -110,6 +108,7 @@ fun TodoPage(
             var newPriority by remember { mutableStateOf(false) }
             val keyboardController = LocalSoftwareKeyboardController.current
             val focusRequester = remember { FocusRequester() }
+
             LaunchedEffect(Unit) {
                 focusRequester.requestFocus()
                 keyboardController?.show()
@@ -194,16 +193,14 @@ fun TodoPage(
                 }
             )
         }
+
         if (taskListIsEmpty) {
+
             EmptyPage(paddingValues = innerPadding)
+            
         } else {
             TaskList(
-                viewModel = viewModel,
-                onStatusChange = { updatedTask ->
-                    viewModel.updateTaskStatus(updatedTask)
-                },
                 onDeleteTask = { deletedTask ->
-                    viewModel.deleteTask(deletedTask)
                     recentDeletedTask = deletedTask.title
                     recentDeletedTaskPriority = deletedTask.priority
                 },
