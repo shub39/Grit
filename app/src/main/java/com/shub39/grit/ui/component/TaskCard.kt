@@ -1,4 +1,4 @@
-package com.shub39.grit.component
+package com.shub39.grit.ui.component
 
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.fillMaxWidth

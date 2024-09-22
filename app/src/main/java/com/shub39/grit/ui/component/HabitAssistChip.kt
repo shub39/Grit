@@ -1,4 +1,4 @@
-package com.shub39.grit.component
+package com.shub39.grit.ui.component
 
 import androidx.compose.material3.AssistChip
 import androidx.compose.material3.Icon

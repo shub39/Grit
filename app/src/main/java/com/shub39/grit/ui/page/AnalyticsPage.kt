@@ -1,4 +1,4 @@
-package com.shub39.grit.page
+package com.shub39.grit.ui.page
 
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
@@ -14,8 +14,8 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
-import com.shub39.grit.component.EmptyPage
-import com.shub39.grit.component.HabitAnalyticsCard
+import com.shub39.grit.ui.component.EmptyPage
+import com.shub39.grit.ui.component.HabitAnalyticsCard
 import com.shub39.grit.viewModel.HabitViewModel
 import org.koin.androidx.compose.koinViewModel
 

@@ -1,4 +1,4 @@
-package com.shub39.grit.page
+package com.shub39.grit.ui.page
 
 import android.os.Build
 import androidx.compose.foundation.Image

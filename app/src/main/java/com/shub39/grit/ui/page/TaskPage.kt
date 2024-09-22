@@ -1,4 +1,4 @@
-package com.shub39.grit.page
+package com.shub39.grit.ui.page
 
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.layout.Arrangement
@@ -36,9 +36,9 @@ import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardCapitalization
 import androidx.compose.ui.unit.dp
 import com.shub39.grit.R
-import com.shub39.grit.component.EmptyPage
+import com.shub39.grit.ui.component.EmptyPage
 import com.shub39.grit.viewModel.TaskListViewModel
-import com.shub39.grit.component.TaskList
+import com.shub39.grit.ui.component.TaskList
 import com.shub39.grit.database.task.Task
 import org.koin.androidx.compose.koinViewModel
 import java.time.Instant

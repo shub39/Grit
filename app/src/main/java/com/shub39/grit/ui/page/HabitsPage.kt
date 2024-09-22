@@ -1,4 +1,4 @@
-package com.shub39.grit.page
+package com.shub39.grit.ui.page
 
 import android.content.Context
 import android.os.Build
@@ -35,8 +35,8 @@ import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardCapitalization
 import androidx.compose.ui.unit.dp
 import com.shub39.grit.R
-import com.shub39.grit.component.EmptyPage
-import com.shub39.grit.component.HabitsList
+import com.shub39.grit.ui.component.EmptyPage
+import com.shub39.grit.ui.component.HabitsList
 import com.shub39.grit.database.habit.Habit
 import com.shub39.grit.logic.NotificationMethods.showAddNotification
 import com.shub39.grit.logic.OtherLogic.timePickerStateToLocalDateTime

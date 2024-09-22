@@ -1,4 +1,4 @@
-package com.shub39.grit.component
+package com.shub39.grit.logic
 
 import androidx.annotation.StringRes
 import com.shub39.grit.R
