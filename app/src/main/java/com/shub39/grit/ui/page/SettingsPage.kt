@@ -1,8 +1,6 @@
 package com.shub39.grit.ui.page
 
 import android.os.Build
-import androidx.compose.foundation.Image
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -14,6 +12,8 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Card
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.SegmentedButton
 import androidx.compose.material3.SingleChoiceSegmentedButtonRow
 import androidx.compose.material3.Switch
@@ -158,30 +158,27 @@ fun SettingsPage(
                         .fillMaxWidth(),
                     horizontalArrangement = Arrangement.Center
                 ) {
-                    Image(
-                        painter = painterResource(id = R.drawable.github_mark),
-                        contentDescription = null,
-                        modifier = Modifier
-                            .size(32.dp)
-                            .clickable {
-                                openLinkInBrowser(context, "https://github.com/shub39/Grit")
-                            }
-                    )
+                    IconButton(modifier = Modifier.size(32.dp), onClick = {
+                        openLinkInBrowser(context, "https://github.com/shub39/Grit")
+                    }) {
+                        Icon(
+                            painter = painterResource(id = R.drawable.github_mark),
+                            contentDescription = null,
+                        )
+                    }
 
                     Spacer(modifier = Modifier.padding(8.dp))
 
-                    Image(
-                        painter = painterResource(id = R.drawable.discord_svgrepo_com),
-                        contentDescription = null,
-                        modifier = Modifier
-                            .size(32.dp)
-                            .clickable {
-                                openLinkInBrowser(
-                                    context,
-                                    "https://discord.gg/https://discord.gg/nxA2hgtEKf"
-                                )
-                            }
-                    )
+                    IconButton(modifier = Modifier.size(32.dp), onClick = {
+                        openLinkInBrowser(
+                            context, "https://discord.gg/https://discord.gg/nxA2hgtEKf"
+                        )
+                    }) {
+                        Icon(
+                            painter = painterResource(id = R.drawable.discord_svgrepo_com),
+                            contentDescription = null,
+                        )
+                    }
                 }
             }
         }
