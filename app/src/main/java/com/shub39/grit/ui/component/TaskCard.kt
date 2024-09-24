@@ -1,10 +1,8 @@
 package com.shub39.grit.ui.component
 
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Card
-import androidx.compose.material3.CardColors
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -13,7 +11,6 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextDecoration
@@ -39,14 +36,11 @@ fun TaskCard(
     Card(
         modifier = Modifier
             .fillMaxWidth()
-            .padding(start = 16.dp, end = 16.dp, top = 4.dp, bottom = 4.dp)
-            .clickable {
-                taskStatus = !taskStatus
-                task.status = !task.status
-                onStatusChange(task)
-            },
-        colors = getCardColors(task.priority),
-        shape = MaterialTheme.shapes.extraLarge
+            .padding(start = 16.dp, end = 16.dp, top = 4.dp, bottom = 4.dp), onClick = {
+            taskStatus = !taskStatus
+            task.status = !task.status
+            onStatusChange(task)
+        }, colors = getCardColors(task.priority), shape = MaterialTheme.shapes.extraLarge
     ) {
         Text(
             text = task.title,
