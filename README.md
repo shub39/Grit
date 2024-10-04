@@ -20,7 +20,7 @@
     height="80">](https://f-droid.org/packages/com.shub39.grit)
 
 
-### Or Download from [Releases](https://github.com/shub39/Grit/releases/latest)
+### Or Download latest from [Releases](https://github.com/shub39/Grit/releases/latest)
 
 </div>
 
@@ -40,14 +40,13 @@
 - [ ] Progress Sharing
 - [ ] Montages
 
-There are plenty of todo list and habit tracker apps for android. Some have the features I love while some have good UI design. While learning android I made this app for myself that brings together all the features that I like keeping everything simple. I eventually want to turn this app into a productivity hub with many social features like progress sharing in the form of beautiful cards and creating [montages](https://www.youtube.com/watch?v=65nfbW-27ps&pp=ygUnbWFuIHRha2VzIHBpY3R1cmUgZXZlcnlkYXkgZm9yIDIwIHllYXJz) to share easily, no video editor or picture management required. Need to figure out a lot of things, if you wanna discuss or help join my discord!
+There are plenty of todo list and habit tracker apps for android. Some have the features I love while some have good UI design.
+While learning android I made this app for myself that brings together all the features that I like keeping everything simple. 
+I eventually want to turn this app into a productivity hub with many social features like progress sharing in the form of beautiful cards and 
+creating [montages](https://www.youtube.com/watch?v=65nfbW-27ps&pp=ygUnbWFuIHRha2VzIHBpY3R1cmUgZXZlcnlkYXkgZm9yIDIwIHllYXJz) to share easily, no video editor or picture management required. Need to figure out a lot of things, 
+if you wanna discuss or help join my discord!
 
 [![](https://dcbadge.limes.pink/api/server/https://discord.gg/nxA2hgtEKf)](https://discord.gg/https://discord.gg/nxA2hgtEKf)
-
-Also, consider donating...I'm an undergrad trying to get some pocket money and move out 🥹
-
-[<img height="40" alt="bmc-button" src="https://github.com/user-attachments/assets/5ed4e619-7341-4346-9186-f7b850ab36ec">](https://www.buymeacoffee.com/shub39)
-
 
 ## 🏗️ Tech Stack 🏗️
 - Material3 Design with Jetpack Compose
@@ -59,3 +58,8 @@ Also, consider donating...I'm an undergrad trying to get some pocket money and m
 - Kotlin Coroutines
 
 - MVVM architecture 
+
+## 💕 Support 💕
+If you loved this app, consider donating. I'm an undergrad trying to get some pocket money
+
+[<img alt="bmc-button" src="https://github.com/user-attachments/assets/5ed4e619-7341-4346-9186-f7b850ab36ec">](https://www.buymeacoffee.com/shub39)
