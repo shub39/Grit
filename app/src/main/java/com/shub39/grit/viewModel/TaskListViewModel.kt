@@ -6,7 +6,6 @@ import androidx.lifecycle.viewModelScope
 import com.shub39.grit.database.task.Task
 import com.shub39.grit.database.task.TaskDatabase
 import com.shub39.grit.notification.NotificationAlarmScheduler
-import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
@@ -30,6 +29,25 @@ class TaskListViewModel(applicationContext: Context) : ViewModel() {
         viewModelScope.launch {
             _tasks.value += task
             tasksDao.addTask(task)
+            _tasks.value = tasksDao.getTasks()
+        }
+    }
+
+    fun updateTaskStatus(updatedTask: Task) {
+        viewModelScope.launch {
+            tasksDao.updateTask(updatedTask)
+            _tasks.value = tasksDao.getTasks()
+        }
+    }
+
+    fun deleteTasks() {
+        viewModelScope.launch {
+            for (task in _tasks.value) {
+                if (task.status) {
+                    tasksDao.deleteTask(task)
+                }
+            }
+            _tasks.value = tasksDao.getTasks()
         }
     }
 
@@ -39,22 +57,5 @@ class TaskListViewModel(applicationContext: Context) : ViewModel() {
 
     fun cancelScheduleDeletion(preference: String) {
         scheduler.cancel(preference)
-    }
-
-    fun updateTaskStatus(updatedTask: Task) {
-        viewModelScope.launch {
-            _tasks.value = _tasks.value.map { task ->
-                if (task.id == updatedTask.id) updatedTask else task
-            }
-            tasksDao.updateTask(updatedTask)
-        }
-    }
-
-    fun deleteTask(task: Task) {
-        viewModelScope.launch {
-            delay(500)
-            _tasks.value = _tasks.value.filter { it.id != task.id }
-            tasksDao.deleteTask(task)
-        }
     }
 }

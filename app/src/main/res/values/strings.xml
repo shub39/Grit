@@ -34,6 +34,10 @@
     <string name="at">Reminder at </string>
     <string name="habit_exists">Habit Already Exists</string>
     <string name="too_long">Too Long</string>
+    <string name="edit_task">Edit Task</string>
+    <string name="tasks_guide_1">Tap to mark as done</string>
+    <string name="tasks_guide_2">Tap and Hold to edit</string>
+    <string name="delete_tasks">Are you sure you want to delete all completed tasks?</string>
     <string name="channel_name">Habits Channel</string>
     <string name="channel_description">Notification channel for habit status update</string>
 </resources>

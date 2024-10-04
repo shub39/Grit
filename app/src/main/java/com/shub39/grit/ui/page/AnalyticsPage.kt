@@ -29,7 +29,7 @@ fun AnalyticsPage(
     Scaffold { innerPadding ->
 
         if (habitsIsEmpty) {
-            EmptyPage(paddingValues = innerPadding)
+            EmptyPage()
         }
 
         var expandedCardId by remember { mutableStateOf<String?>(null) }

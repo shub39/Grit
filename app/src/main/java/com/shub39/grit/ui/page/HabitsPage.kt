@@ -75,7 +75,7 @@ fun HabitsPage(
     ) { paddingValues ->
         if (habitListIsEmpty) {
 
-            EmptyPage(paddingValues = paddingValues)
+            EmptyPage()
 
         } else {
 
