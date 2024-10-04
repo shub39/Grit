@@ -62,4 +62,4 @@ if you wanna discuss or help join my discord!
 ## 💕 Support 💕
 If you loved this app, consider donating. I'm an undergrad trying to get some pocket money
 
-[<img alt="bmc-button" src="https://github.com/user-attachments/assets/5ed4e619-7341-4346-9186-f7b850ab36ec">](https://www.buymeacoffee.com/shub39)
+[<img height="80" alt="bmc-button" src="https://github.com/user-attachments/assets/5ed4e619-7341-4346-9186-f7b850ab36ec">](https://www.buymeacoffee.com/shub39)
