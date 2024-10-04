@@ -42,9 +42,7 @@
 
 There are plenty of todo list and habit tracker apps for android. Some have the features I love while some have good UI design.
 While learning android I made this app for myself that brings together all the features that I like keeping everything simple. 
-I eventually want to turn this app into a productivity hub with many social features like progress sharing in the form of beautiful cards and 
-creating [montages](https://www.youtube.com/watch?v=65nfbW-27ps&pp=ygUnbWFuIHRha2VzIHBpY3R1cmUgZXZlcnlkYXkgZm9yIDIwIHllYXJz) to share easily, no video editor or picture management required. Need to figure out a lot of things, 
-if you wanna discuss or help join my discord!
+I eventually want to turn this app into a productivity hub with many social features like progress sharing in the form of beautiful cards.
 
 [![](https://dcbadge.limes.pink/api/server/https://discord.gg/nxA2hgtEKf)](https://discord.gg/https://discord.gg/nxA2hgtEKf)
 
