@@ -2,15 +2,16 @@ package com.shub39.grit.ui.page
 
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.animateContentSize
+import androidx.compose.animation.core.animateDpAsState
 import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
 import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
@@ -19,11 +20,14 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Button
+import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
+import androidx.compose.material3.pulltorefresh.PullToRefreshBox
+import androidx.compose.material3.pulltorefresh.rememberPullToRefreshState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
@@ -31,6 +35,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
@@ -47,25 +52,33 @@ import androidx.compose.ui.text.input.KeyboardCapitalization
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import com.shub39.grit.R
-import com.shub39.grit.ui.component.EmptyPage
+import com.shub39.grit.ui.component.Empty
 import com.shub39.grit.viewModel.TaskListViewModel
 import com.shub39.grit.database.task.Task
 import com.shub39.grit.ui.component.TaskCard
+import com.shub39.grit.ui.component.TasksGuide
+import kotlinx.coroutines.launch
 import org.koin.androidx.compose.koinViewModel
 import java.time.Instant
 import java.util.Date
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun TaskPage(
     viewModel: TaskListViewModel = koinViewModel()
 ) {
-    val context = LocalContext.current
     val tasks by viewModel.tasks.collectAsState()
     var sortedTasks = tasks.sortedBy { !it.priority }
 
     var showTaskAddDialog by remember { mutableStateOf(false) }
     var showDeleteDialog by remember { mutableStateOf(false) }
     var completedTasks by rememberSaveable { mutableIntStateOf(0) }
+    val addState = rememberPullToRefreshState()
+    val coroutineScope = rememberCoroutineScope()
+
+    val addSize by animateDpAsState(
+        targetValue = if (addState.distanceFraction != 0f) 64.dp else 0.dp,
+    )
 
     LaunchedEffect(tasks) {
         sortedTasks = tasks.sortedBy { !it.priority }
@@ -74,45 +87,69 @@ fun TaskPage(
         }
     }
 
-    Box(
-        modifier = Modifier.fillMaxSize()
+    PullToRefreshBox(
+        isRefreshing = false,
+        onRefresh = {
+            coroutineScope.launch {
+                addState.animateToHidden()
+            }
+            showTaskAddDialog = true
+        },
+        state = addState,
+        modifier = Modifier.fillMaxSize(),
+        indicator = {}
     ) {
-        if (tasks.isEmpty()) {
-
-            EmptyPage()
-
-        } else {
-            LazyColumn(
-                modifier = Modifier
-                    .padding(start = 8.dp, end = 8.dp, top = 16.dp)
-                    .fillMaxSize()
-                    .animateContentSize(),
-            ) {
-                items(sortedTasks, key = { it.id }) {
-                    TaskCard(
-                        task = it,
-                        onStatusChange = { updatedTask ->
-                            viewModel.updateTaskStatus(updatedTask)
-                            if (updatedTask.status) completedTasks++ else completedTasks--
-                        },
+        LazyColumn(
+            modifier = Modifier
+                .padding(top = 16.dp)
+                .fillMaxSize()
+                .animateContentSize(),
+        ) {
+            item {
+                Button(
+                    onClick = {},
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(addSize / 4)
+                        .height(addSize)
+                ) {
+                    Icon(
+                        painter = painterResource(R.drawable.round_add_24),
+                        contentDescription = null
                     )
                 }
+            }
 
-                if (sortedTasks.size == 1) {
-                    item {
-                        Column(
-                            modifier = Modifier.fillMaxWidth(),
-                            horizontalAlignment = Alignment.CenterHorizontally
-                        ) {
-                            Text(stringResource(R.string.tasks_guide_1))
-                            Text(stringResource(R.string.tasks_guide_2))
-                        }
-                    }
-                }
+            items(sortedTasks, key = { it.id }) {
+                TaskCard(
+                    task = it,
+                    onStatusChange = { updatedTask ->
+                        viewModel.updateTaskStatus(updatedTask)
+                        if (updatedTask.status) completedTasks++ else completedTasks--
+                    },
+                )
+            }
 
-                item {
-                    Spacer(modifier = Modifier.padding(60.dp))
-                }
+            item {
+                AnimatedVisibility(
+                    visible = sortedTasks.size == 1,
+                    enter = fadeIn(),
+                    exit = fadeOut(),
+                    content = { TasksGuide() }
+                )
+            }
+
+            item {
+                AnimatedVisibility(
+                    visible = sortedTasks.isEmpty() && !showDeleteDialog && !showTaskAddDialog,
+                    enter = fadeIn(),
+                    exit = fadeOut(),
+                    content = { Empty() }
+                )
+            }
+
+            item {
+                Spacer(modifier = Modifier.padding(60.dp))
             }
         }
 
@@ -143,52 +180,47 @@ fun TaskPage(
                 }
             }
 
-            Spacer(modifier = Modifier.padding(8.dp))
-
-            FloatingActionButton(
-                onClick = { showTaskAddDialog = true },
-                shape = MaterialTheme.shapes.extraLarge
-            ) {
-                Row(
-                    verticalAlignment = Alignment.CenterVertically
-                ) {
-                    Icon(
-                        painter = painterResource(id = R.drawable.round_add_24),
-                        contentDescription = null
-                    )
-                }
-            }
-
-            if (context.packageName.endsWith(".debug")) {
-                Spacer(modifier = Modifier.padding(8.dp))
-
-                FloatingActionButton(
-                    onClick = {
-                        var id = 0
-                        var priority = true
-                        var title = "q"
-
-                        while (id < 10) {
-
-                            viewModel.addTask(
-                                Task(
-                                    id++.toString(),
-                                    title = title,
-                                    priority = priority
-                                )
-                            )
-
-                            title += "p"
-                            priority = !priority
-                        }
-                    }
-                ) {
-                    Icon(
-                        painter = painterResource(R.drawable.round_add_24),
-                        contentDescription = null
-                    )
-                }
-            }
+//            if (context.packageName.endsWith(".debug")) {
+//                Spacer(modifier = Modifier.padding(8.dp))
+//
+//                FloatingActionButton(
+//                    onClick = {
+//                        var id = 0
+//                        var priority = true
+//
+//                        while (id < 50) {
+//
+//                            viewModel.addTask(
+//                                Task(
+//                                    id++.toString(),
+//                                    title = "Task $id",
+//                                    priority = priority
+//                                )
+//                            )
+//
+//                            priority = !priority
+//                        }
+//                    }
+//                ) {
+//                    Icon(
+//                        painter = painterResource(R.drawable.round_add_24),
+//                        contentDescription = null
+//                    )
+//                }
+//
+//                Spacer(modifier = Modifier.padding(8.dp))
+//
+//                FloatingActionButton(
+//                    onClick = {
+//                        viewModel.deleteTasks(true)
+//                    }
+//                ) {
+//                    Icon(
+//                        painter = painterResource(R.drawable.round_delete_forever_24),
+//                        contentDescription = null
+//                    )
+//                }
+//            }
         }
 
         if (showDeleteDialog) {

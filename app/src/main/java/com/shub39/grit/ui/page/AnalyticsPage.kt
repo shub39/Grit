@@ -14,7 +14,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
-import com.shub39.grit.ui.component.EmptyPage
+import com.shub39.grit.ui.component.Empty
 import com.shub39.grit.ui.component.HabitAnalyticsCard
 import com.shub39.grit.viewModel.HabitViewModel
 import org.koin.androidx.compose.koinViewModel
@@ -29,7 +29,7 @@ fun AnalyticsPage(
     Scaffold { innerPadding ->
 
         if (habitsIsEmpty) {
-            EmptyPage()
+            Empty()
         }
 
         var expandedCardId by remember { mutableStateOf<String?>(null) }

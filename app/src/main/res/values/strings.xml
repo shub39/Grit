@@ -6,7 +6,7 @@
     <string name="material_theme">Material You Theme</string>
     <string name="clear_preference">Clear Tasks</string>
     <string name="done">Done</string>
-    <string name="empty">Nothing Yet</string>
+    <string name="empty">Swipe down to add new</string>
     <string name="urgent">Urgent</string>
     <string name="add_task">Add Task</string>
     <string name="add_urgent_task">Add Urgent</string>

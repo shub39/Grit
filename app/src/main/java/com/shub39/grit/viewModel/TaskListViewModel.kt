@@ -40,10 +40,12 @@ class TaskListViewModel(applicationContext: Context) : ViewModel() {
         }
     }
 
-    fun deleteTasks() {
+    fun deleteTasks(all: Boolean = false) {
         viewModelScope.launch {
             for (task in _tasks.value) {
-                if (task.status) {
+                if (all) {
+                    tasksDao.deleteTask(task)
+                } else if (task.status) {
                     tasksDao.deleteTask(task)
                 }
             }

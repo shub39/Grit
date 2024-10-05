@@ -70,9 +70,7 @@ fun TaskCard(
                     onStatusChange(task)
                 },
                 onLongClick = {
-                    if (!task.status) {
-                        showEditDialog = true
-                    }
+                    showEditDialog = true
                 }
             ),
         colors = cardColors,
