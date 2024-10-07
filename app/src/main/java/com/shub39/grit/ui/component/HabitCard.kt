@@ -1,12 +1,13 @@
 package com.shub39.grit.ui.component
 
-import androidx.compose.foundation.BorderStroke
+import androidx.compose.animation.animateColorAsState
+import androidx.compose.foundation.ExperimentalFoundationApi
+import androidx.compose.foundation.combinedClickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
@@ -14,12 +15,12 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Button
-import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Card
+import androidx.compose.material3.CardDefaults
+import androidx.compose.material3.Checkbox
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.OutlinedCard
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
 import androidx.compose.material3.TimePicker
@@ -28,6 +29,7 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -41,34 +43,75 @@ import com.shub39.grit.R
 import com.shub39.grit.database.habit.Habit
 import com.shub39.grit.logic.OtherLogic.localToTimePickerState
 import com.shub39.grit.viewModel.HabitViewModel
-import org.koin.androidx.compose.koinViewModel
 import java.time.format.DateTimeFormatter
 
-@OptIn(ExperimentalMaterial3Api::class)
+@OptIn(ExperimentalMaterial3Api::class, ExperimentalFoundationApi::class)
 @Composable
 fun HabitCard(
     habit: Habit,
-    habitViewModel: HabitViewModel = koinViewModel()
+    habitViewModel: HabitViewModel
 ) {
     var showEditDialog by remember { mutableStateOf(false) }
+    var showAnalyticsSheet by remember { mutableStateOf(false) }
     var showDeleteDialog by remember { mutableStateOf(false) }
-    var isButtonEnabled by remember { mutableStateOf(true) }
+    var completedStatus by rememberSaveable { mutableStateOf(false) }
 
-    LaunchedEffect (Unit) {
-        isButtonEnabled = !habitViewModel.isStatusAdded(habit.id)
+    val cardContent by animateColorAsState(
+        targetValue = when (completedStatus) {
+            true -> MaterialTheme.colorScheme.primary
+            else -> MaterialTheme.colorScheme.secondary
+        }
+    )
+    val cardBackground by animateColorAsState(
+        targetValue = when (completedStatus) {
+            true -> MaterialTheme.colorScheme.primaryContainer
+            else -> MaterialTheme.colorScheme.secondaryContainer
+        }
+    )
+    val cardColors = CardDefaults.cardColors(
+        contentColor = cardContent,
+        containerColor = cardBackground
+    )
+
+    val updateLambda = {
+        if (!completedStatus) {
+            habitViewModel.insertHabitStatus(habit.id)
+            completedStatus = true
+        } else {
+            habitViewModel.deleteHabitStatus(habit.id)
+            completedStatus = false
+        }
+    }
+
+    LaunchedEffect(Unit, showAnalyticsSheet) {
+        if (habitViewModel.isHabitCompleted(habitId = habit.id)) {
+            completedStatus = true
+        }
     }
 
     Card(
-        Modifier.padding(4.dp),
-        shape = MaterialTheme.shapes.extraLarge
+        modifier = Modifier
+            .padding(bottom = 8.dp, start = 16.dp, end = 16.dp)
+            .combinedClickable(
+                onClick = { updateLambda() },
+                onLongClick = { showEditDialog = true },
+                onDoubleClick = { showAnalyticsSheet = true }
+            ),
+        shape = MaterialTheme.shapes.extraLarge,
+        colors = cardColors
     ) {
         Row(
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(16.dp),
+                .padding(top = 16.dp, bottom = 16.dp, start = 8.dp, end = 8.dp),
             horizontalArrangement = Arrangement.SpaceBetween,
             verticalAlignment = Alignment.CenterVertically
         ) {
+            Checkbox(
+                checked = completedStatus,
+                onCheckedChange = { updateLambda() }
+            )
+
             Column(
                 modifier = Modifier.weight(1f)
             ) {
@@ -76,75 +119,20 @@ fun HabitCard(
                     text = habit.id,
                     style = MaterialTheme.typography.titleLarge
                 )
-
-                Spacer(modifier = Modifier.height(8.dp))
-
-                Text(
-                    text = habit.description,
-                    style = MaterialTheme.typography.bodyMedium
-                )
             }
 
             Spacer(modifier = Modifier.width(16.dp))
 
-            OutlinedCard(
-                border = BorderStroke(1.dp, MaterialTheme.colorScheme.primary),
-                shape = MaterialTheme.shapes.medium
-            ) {
-                Text(
-                    modifier = Modifier.padding(8.dp),
-                    text = habit.time.format(DateTimeFormatter.ofPattern("hh:mm a"))
-                )
-            }
+            Icon(
+                painter = painterResource(R.drawable.round_alarm_24),
+                contentDescription = null
+            )
+            Text(
+                modifier = Modifier.padding(8.dp),
+                text = habit.time.format(DateTimeFormatter.ofPattern("hh:mm a"))
+            )
         }
 
-        Row(
-            modifier = Modifier
-                .padding(16.dp)
-                .fillMaxWidth(),
-        ) {
-            val color = if (isButtonEnabled) {
-                ButtonDefaults.buttonColors()
-            } else {
-                ButtonDefaults.elevatedButtonColors()
-            }
-
-            Button(
-                onClick = { showEditDialog = true },
-                modifier = Modifier.weight(1f),
-                shape = RoundedCornerShape(
-                    topStart = 16.dp,
-                    bottomStart = 16.dp,
-                    topEnd = 4.dp,
-                    bottomEnd = 4.dp
-                )
-            ) {
-                Text(text = stringResource(id = R.string.update))
-            }
-
-            Spacer(modifier = Modifier.width(4.dp))
-
-            Button(
-                onClick = {
-                    habitViewModel.addStatusForHabit(habit.id)
-                    isButtonEnabled = !isButtonEnabled
-                },
-                modifier = Modifier.weight(1f),
-                shape = RoundedCornerShape(
-                    topStart = 4.dp,
-                    bottomStart = 4.dp,
-                    topEnd = 16.dp,
-                    bottomEnd = 16.dp
-                ),
-                colors = color
-            ) {
-                if (isButtonEnabled) {
-                    Text(text = stringResource(id = R.string.mark_done))
-                } else {
-                    Text(text = stringResource(id = R.string.mark_undone))
-                }
-            }
-        }
     }
 
     if (showDeleteDialog) {
@@ -195,6 +183,14 @@ fun HabitCard(
         )
     }
 
+    if (showAnalyticsSheet) {
+        AnalyticsSheet(
+            habit = habit,
+            vm = habitViewModel,
+            onDismiss = { showAnalyticsSheet = false }
+        )
+    }
+
     if (showEditDialog) {
         var newHabitDescription by remember { mutableStateOf(habit.description) }
         val timePickerState = remember { localToTimePickerState(habit.time) }
@@ -237,7 +233,12 @@ fun HabitCard(
                             showDeleteDialog = true
                         },
                         modifier = Modifier.weight(1f),
-                        shape = RoundedCornerShape(topStart = 16.dp, bottomStart = 16.dp, topEnd = 4.dp, bottomEnd = 4.dp)
+                        shape = RoundedCornerShape(
+                            topStart = 16.dp,
+                            bottomStart = 16.dp,
+                            topEnd = 4.dp,
+                            bottomEnd = 4.dp
+                        )
                     ) {
                         Text(text = stringResource(id = R.string.delete))
                     }
@@ -257,7 +258,12 @@ fun HabitCard(
                             )
                         },
                         modifier = Modifier.weight(1f),
-                        shape = RoundedCornerShape(topStart = 4.dp, bottomStart = 4.dp, topEnd = 16.dp, bottomEnd = 16.dp),
+                        shape = RoundedCornerShape(
+                            topStart = 4.dp,
+                            bottomStart = 4.dp,
+                            topEnd = 16.dp,
+                            bottomEnd = 16.dp
+                        ),
                         enabled = newHabitDescription.isNotBlank() && newHabitDescription.length <= 50,
                     ) {
                         Text(text = stringResource(id = R.string.update))

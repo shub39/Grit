@@ -6,11 +6,11 @@ import androidx.room.Room
 import androidx.room.RoomDatabase
 import androidx.room.TypeConverters
 
-@Database(entities = [Habit::class, DailyHabitStatus::class], version = 1, exportSchema = false)
+@Database(entities = [Habit::class, HabitStatus::class], version = 1, exportSchema = false)
 @TypeConverters(Converters::class)
 abstract class HabitDatabase : RoomDatabase() {
     abstract fun habitDao(): HabitDao
-    abstract fun dailyHabitStatusDao(): DailyHabitStatusDao
+    abstract fun habitStatusDao(): HabitStatusDao
 
     companion object {
         @Volatile

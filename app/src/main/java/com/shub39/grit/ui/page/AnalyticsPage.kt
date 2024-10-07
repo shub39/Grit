@@ -15,7 +15,6 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import com.shub39.grit.ui.component.Empty
-import com.shub39.grit.ui.component.HabitAnalyticsCard
 import com.shub39.grit.viewModel.HabitViewModel
 import org.koin.androidx.compose.koinViewModel
 
@@ -41,13 +40,7 @@ fun AnalyticsPage(
             contentPadding = PaddingValues(16.dp)
         ) {
             items(habits, key = { it.id }) { habit ->
-                HabitAnalyticsCard(
-                    habit = habit,
-                    isLastRowVisible = expandedCardId == habit.id,
-                    onItemClick = {
-                        expandedCardId = if (expandedCardId == habit.id) null else habit.id
-                    }
-                )
+
             }
         }
     }

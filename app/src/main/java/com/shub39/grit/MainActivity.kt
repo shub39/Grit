@@ -27,7 +27,6 @@ import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import com.shub39.grit.logic.BottomAppBarDestination
 import com.shub39.grit.database.Datastore
 import com.shub39.grit.logic.NotificationMethods.createNotificationChannel
-import com.shub39.grit.ui.page.AnalyticsPage
 import com.shub39.grit.ui.page.TaskPage
 import com.shub39.grit.ui.page.HabitsPage
 import com.shub39.grit.ui.page.SettingsPage
@@ -60,8 +59,7 @@ class MainActivity : ComponentActivity() {
                             when (page) {
                                 0 -> TaskPage()
                                 1 -> HabitsPage(context = this@MainActivity)
-                                2 -> AnalyticsPage()
-                                3 -> SettingsPage()
+                                2 -> SettingsPage()
                             }
                         }
                     }

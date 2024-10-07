@@ -4,34 +4,31 @@ import android.app.Application
 import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.shub39.grit.database.habit.DailyHabitStatus
 import com.shub39.grit.database.habit.Habit
 import com.shub39.grit.database.habit.HabitDatabase
-import com.shub39.grit.logic.OtherLogic.countBestStreak
-import com.shub39.grit.logic.OtherLogic.countConsecutiveDaysBeforeLast
+import com.shub39.grit.database.habit.HabitStatus
 import com.shub39.grit.notification.NotificationAlarmScheduler
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
 import java.time.LocalDate
-import java.time.LocalDateTime
 
 class HabitViewModel(application: Application) : ViewModel() {
 
     private val habitDatabase = HabitDatabase.getDatabase(application)
     private val habitDao = habitDatabase.habitDao()
-    private val habitStatusDao = habitDatabase.dailyHabitStatusDao()
+    private val habitStatusDao = habitDatabase.habitStatusDao()
+
     private val _habits = MutableStateFlow(listOf<Habit>())
-    private val _habitStatuses = MutableStateFlow(listOf<DailyHabitStatus>())
+    private val _habitsWithStatuses = MutableStateFlow(mapOf<String, List<HabitStatus>>())
     private val scheduler = NotificationAlarmScheduler(application.applicationContext)
 
     val habits: StateFlow<List<Habit>> get() = _habits
-    private val habitStatuses: StateFlow<List<DailyHabitStatus>> get() = _habitStatuses
 
     init {
         viewModelScope.launch {
             _habits.value = habitDao.getAllHabits()
-            _habitStatuses.value = habitStatusDao.getDailyStatusForHabit()
+            updateStatusMap()
         }
     }
 
@@ -43,75 +40,62 @@ class HabitViewModel(application: Application) : ViewModel() {
         }
     }
 
-    fun addStatusForHabit(string: String, time: LocalDateTime = LocalDateTime.now()) {
-        viewModelScope.launch {
-            val dailyHabitStatus = _habitStatuses.value.find { it.id == string && it.date == time.toLocalDate() }
-            if (dailyHabitStatus == null) {
-                val status = DailyHabitStatus(time, string, time.toLocalDate())
-                habitStatusDao.insertDailyStatus(status)
-                _habitStatuses.value += status
-                Log.d("TAG", "added status for Habit: $string")
-            } else {
-                habitStatusDao.deleteDailyStatus(dailyHabitStatus)
-                _habitStatuses.value -= dailyHabitStatus
-                Log.d("TAG", "removed status for Habit: $string")
-            }
-        }
-    }
-
-    fun isStatusAdded(string: String): Boolean {
-        var isAdded = listOf<DailyHabitStatus>()
-        viewModelScope.launch {
-            isAdded = habitStatuses.value.filter { it.id == string && it.date == LocalDate.now() }
-        }
-        return isAdded.isNotEmpty()
-    }
-
     fun deleteHabit(habit: Habit) {
         viewModelScope.launch {
-            habitDao.deleteHabit(habit)
             _habits.value -= habit
-            _habitStatuses.value.forEach {
-                if (it.id == habit.id) {
-                    _habitStatuses.value -= it
-                }
-            }
+            habitDao.deleteHabit(habit)
             scheduler.cancel(habit)
         }
     }
 
-    fun getStatusForHabit(string: String): List<DailyHabitStatus> {
-        var list = listOf<DailyHabitStatus>()
-        viewModelScope.launch {
-            list = habitStatuses.value.filter { it.id == string }
-        }
-        return list
-    }
-
-    fun getStreakForHabit(string: String): Int {
-        val list = getStatusForHabit(string)
-        var streak = 0
-        viewModelScope.launch {
-            streak = countConsecutiveDaysBeforeLast(list.map { it.date })
-        }
-        return streak
-    }
-
-    fun getBestStreakForHabit(string: String): Int {
-        val list = getStatusForHabit(string)
-        var streak = 0
-        viewModelScope.launch {
-            streak = countBestStreak(list.map { it.date })
-        }
-        return streak
-    }
-
     fun updateHabit(habit: Habit) {
         viewModelScope.launch {
-            habitDao.updateHabit(habit)
             _habits.value = habitDao.getAllHabits()
+            habitDao.updateHabit(habit)
             scheduler.schedule(habit)
         }
+    }
+
+    fun insertHabitStatus(habitId: String, date: LocalDate = LocalDate.now()) {
+        viewModelScope.launch {
+            habitStatusDao.insertHabitStatus(
+                HabitStatus(
+                    habitId = habitId,
+                    date = date
+                )
+            )
+            updateStatusMap(habitId)
+        }
+    }
+
+    fun deleteHabitStatus(habitId: String, date: LocalDate = LocalDate.now()) {
+        viewModelScope.launch {
+            habitStatusDao.deleteStatus(habitId, date)
+            updateStatusMap(habitId)
+        }
+    }
+
+    fun getHabitStatus(habitId: String): List<HabitStatus> {
+        return _habitsWithStatuses.value[habitId] ?: emptyList()
+    }
+
+    fun isHabitCompleted(habitId: String): Boolean {
+        val result = getHabitStatus(habitId).find {
+            it.habitId == habitId && it.date == LocalDate.now()
+        } != null
+        Log.d("HabitViewModel", "isHabitCompleted: $result")
+        return result
+    }
+
+    private suspend fun updateStatusMap() {
+        _habits.value.forEach {
+            val statusList = habitStatusDao.getStatusForHabit(it.id)
+            _habitsWithStatuses.value += it.id to statusList
+        }
+    }
+
+    private suspend fun updateStatusMap(habitId: String) {
+        _habitsWithStatuses.value += habitId to habitStatusDao.getStatusForHabit(habitId)
     }
 
 }
