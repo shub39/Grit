@@ -58,19 +58,16 @@ class HabitViewModel(application: Application) : ViewModel() {
 
     fun insertHabitStatus(habit: Habit, date: LocalDate = LocalDate.now()) {
         viewModelScope.launch {
-            habitStatusDao.insertHabitStatus(
-                HabitStatus(
-                    habitId = habit.id,
-                    date = date
+            if (!isHabitCompleted(habit, date)) {
+                habitStatusDao.insertHabitStatus(
+                    HabitStatus(
+                        habitId = habit.id,
+                        date = date
+                    )
                 )
-            )
-            updateStatusMap(habit)
-        }
-    }
-
-    fun deleteHabitStatus(habit: Habit, date: LocalDate = LocalDate.now()) {
-        viewModelScope.launch {
-            habitStatusDao.deleteStatus(habit.id, date)
+            } else {
+                habitStatusDao.deleteStatus(habit.id, date)
+            }
             updateStatusMap(habit)
         }
     }
@@ -79,9 +76,9 @@ class HabitViewModel(application: Application) : ViewModel() {
         return _habitsWithStatuses.value[habit] ?: emptyList()
     }
 
-    fun isHabitCompleted(habit: Habit): Boolean {
+    fun isHabitCompleted(habit: Habit, date: LocalDate = LocalDate.now()): Boolean {
         val isCompleted = getHabitStatus(habit).any {
-            it.date == LocalDate.now()
+            it.date == date
         }
         Log.d("HabitViewModel", "isHabitCompleted: $isCompleted for habitId: $habit")
         return isCompleted

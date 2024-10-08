@@ -25,6 +25,7 @@ import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
 import androidx.compose.material3.TimePicker
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -54,6 +55,10 @@ fun HabitCard(
     var showDeleteDialog by remember { mutableStateOf(false) }
     var currentCompletedStatus by remember { mutableStateOf(habitViewModel.isHabitCompleted(habit)) }
 
+    LaunchedEffect(showAnalyticsSheet) {
+        currentCompletedStatus = habitViewModel.isHabitCompleted(habit)
+    }
+
     val cardContent by animateColorAsState(
         targetValue = when (currentCompletedStatus) {
             true -> MaterialTheme.colorScheme.primary
@@ -72,13 +77,8 @@ fun HabitCard(
     )
 
     val updateLambda = {
-        if (!currentCompletedStatus) {
-            habitViewModel.insertHabitStatus(habit)
-            currentCompletedStatus = true
-        } else {
-            habitViewModel.deleteHabitStatus(habit)
-            currentCompletedStatus = false
-        }
+        habitViewModel.insertHabitStatus(habit)
+        currentCompletedStatus = !currentCompletedStatus
     }
 
     Card(
