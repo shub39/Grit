@@ -1,5 +1,6 @@
 package com.shub39.grit.ui.component
 
+import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.animateColorAsState
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.combinedClickable
@@ -17,7 +18,6 @@ import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Button
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
-import androidx.compose.material3.Checkbox
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
@@ -25,11 +25,9 @@ import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
 import androidx.compose.material3.TimePicker
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -49,21 +47,21 @@ import java.time.format.DateTimeFormatter
 @Composable
 fun HabitCard(
     habit: Habit,
-    habitViewModel: HabitViewModel
+    habitViewModel: HabitViewModel,
 ) {
     var showEditDialog by remember { mutableStateOf(false) }
     var showAnalyticsSheet by remember { mutableStateOf(false) }
     var showDeleteDialog by remember { mutableStateOf(false) }
-    var completedStatus by rememberSaveable { mutableStateOf(false) }
+    var currentCompletedStatus by remember { mutableStateOf(habitViewModel.isHabitCompleted(habit)) }
 
     val cardContent by animateColorAsState(
-        targetValue = when (completedStatus) {
+        targetValue = when (currentCompletedStatus) {
             true -> MaterialTheme.colorScheme.primary
             else -> MaterialTheme.colorScheme.secondary
         }
     )
     val cardBackground by animateColorAsState(
-        targetValue = when (completedStatus) {
+        targetValue = when (currentCompletedStatus) {
             true -> MaterialTheme.colorScheme.primaryContainer
             else -> MaterialTheme.colorScheme.secondaryContainer
         }
@@ -74,18 +72,12 @@ fun HabitCard(
     )
 
     val updateLambda = {
-        if (!completedStatus) {
-            habitViewModel.insertHabitStatus(habit.id)
-            completedStatus = true
+        if (!currentCompletedStatus) {
+            habitViewModel.insertHabitStatus(habit)
+            currentCompletedStatus = true
         } else {
-            habitViewModel.deleteHabitStatus(habit.id)
-            completedStatus = false
-        }
-    }
-
-    LaunchedEffect(Unit, showAnalyticsSheet) {
-        if (habitViewModel.isHabitCompleted(habitId = habit.id)) {
-            completedStatus = true
+            habitViewModel.deleteHabitStatus(habit)
+            currentCompletedStatus = false
         }
     }
 
@@ -103,21 +95,26 @@ fun HabitCard(
         Row(
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(top = 16.dp, bottom = 16.dp, start = 8.dp, end = 8.dp),
+                .padding(top = 16.dp, bottom = 16.dp, start = 16.dp, end = 8.dp),
             horizontalArrangement = Arrangement.SpaceBetween,
             verticalAlignment = Alignment.CenterVertically
         ) {
-            Checkbox(
-                checked = completedStatus,
-                onCheckedChange = { updateLambda() }
-            )
+            AnimatedVisibility(
+                visible = currentCompletedStatus
+            ) {
+                Icon(
+                    painterResource(R.drawable.round_check_circle_24), null
+                )
+            }
 
             Column(
-                modifier = Modifier.weight(1f)
+                modifier = Modifier
+                    .weight(1f)
+                    .padding(start = 8.dp)
             ) {
                 Text(
                     text = habit.id,
-                    style = MaterialTheme.typography.titleLarge
+                    style = MaterialTheme.typography.titleMedium
                 )
             }
 
@@ -155,12 +152,6 @@ fun HabitCard(
                         modifier = Modifier.fillMaxWidth()
                     )
 
-                    Text(
-                        text = stringResource(id = R.string.all_data_lost),
-                        style = MaterialTheme.typography.bodySmall,
-                        textAlign = TextAlign.Center,
-                        modifier = Modifier.fillMaxWidth()
-                    )
                 }
             },
             confirmButton = {
@@ -168,14 +159,34 @@ fun HabitCard(
                     modifier = Modifier.fillMaxWidth(),
                     horizontalArrangement = Arrangement.SpaceEvenly
                 ) {
-                    Button(onClick = { showDeleteDialog = false }) {
+                    Button(
+                        onClick = { showDeleteDialog = false },
+                        modifier = Modifier.weight(1f),
+                        shape = RoundedCornerShape(
+                            topStart = 16.dp,
+                            bottomStart = 16.dp,
+                            topEnd = 4.dp,
+                            bottomEnd = 4.dp
+                        )
+                    ) {
                         Text(text = stringResource(id = R.string.cancel))
                     }
 
-                    Button(onClick = {
-                        showDeleteDialog = false
-                        habitViewModel.deleteHabit(habit)
-                    }) {
+                    Spacer(modifier = Modifier.width(4.dp))
+
+                    Button(
+                        onClick = {
+                            showDeleteDialog = false
+                            habitViewModel.deleteHabit(habit)
+                        },
+                        modifier = Modifier.weight(1f),
+                        shape = RoundedCornerShape(
+                            topStart = 4.dp,
+                            bottomStart = 4.dp,
+                            topEnd = 16.dp,
+                            bottomEnd = 16.dp
+                        )
+                    ) {
                         Text(text = stringResource(id = R.string.delete))
                     }
                 }

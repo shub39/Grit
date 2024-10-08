@@ -39,7 +39,7 @@ import org.koin.androidx.compose.koinViewModel
 
 @Composable
 fun SettingsPage(
-    taskListViewModel: TaskListViewModel = koinViewModel()
+    taskListViewModel: TaskListViewModel
 ) {
 
     val coroutineScope = rememberCoroutineScope()

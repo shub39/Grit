@@ -64,7 +64,7 @@ import java.util.Date
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun TaskPage(
-    viewModel: TaskListViewModel = koinViewModel()
+    viewModel: TaskListViewModel
 ) {
     val tasks by viewModel.tasks.collectAsState()
     var sortedTasks = tasks.sortedBy { !it.priority }

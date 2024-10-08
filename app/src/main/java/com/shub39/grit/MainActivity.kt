@@ -31,7 +31,10 @@ import com.shub39.grit.ui.page.TaskPage
 import com.shub39.grit.ui.page.HabitsPage
 import com.shub39.grit.ui.page.SettingsPage
 import com.shub39.grit.ui.theme.GritTheme
+import com.shub39.grit.viewModel.HabitViewModel
+import com.shub39.grit.viewModel.TaskListViewModel
 import kotlinx.coroutines.launch
+import org.koin.androidx.compose.koinViewModel
 import org.koin.compose.KoinContext
 
 class MainActivity : ComponentActivity() {
@@ -56,10 +59,13 @@ class MainActivity : ComponentActivity() {
                         modifier = Modifier.padding(innerPadding),
                     ) { page->
                         KoinContext {
+                            val tvm: TaskListViewModel = koinViewModel()
+                            val hvm: HabitViewModel = koinViewModel()
+
                             when (page) {
-                                0 -> TaskPage()
-                                1 -> HabitsPage(context = this@MainActivity)
-                                2 -> SettingsPage()
+                                0 -> TaskPage(tvm)
+                                1 -> HabitsPage(hvm, context = this@MainActivity)
+                                2 -> SettingsPage(tvm)
                             }
                         }
                     }

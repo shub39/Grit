@@ -3,8 +3,11 @@ package com.shub39.grit.ui.page
 import android.content.Context
 import android.os.Build
 import androidx.annotation.RequiresApi
+import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.animateContentSize
 import androidx.compose.animation.core.animateDpAsState
+import androidx.compose.animation.fadeIn
+import androidx.compose.animation.fadeOut
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
@@ -45,15 +48,16 @@ import com.shub39.grit.database.habit.Habit
 import com.shub39.grit.logic.NotificationMethods.showAddNotification
 import com.shub39.grit.logic.OtherLogic.timePickerStateToLocalDateTime
 import com.shub39.grit.ui.component.HabitCard
+import com.shub39.grit.ui.component.HabitGuide
+import com.shub39.grit.ui.component.TasksGuide
 import com.shub39.grit.viewModel.HabitViewModel
 import kotlinx.coroutines.launch
-import org.koin.androidx.compose.koinViewModel
 
 @RequiresApi(Build.VERSION_CODES.TIRAMISU)
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun HabitsPage(
-    habitViewModel: HabitViewModel = koinViewModel(),
+    habitViewModel: HabitViewModel,
     context: Context
 ) {
     val habits by habitViewModel.habits.collectAsState()
@@ -101,11 +105,27 @@ fun HabitsPage(
             items(habits, key = { it.id }) {
                 HabitCard(
                     habit = it,
-                    habitViewModel = habitViewModel
+                    habitViewModel = habitViewModel,
                 )
             }
 
-            if (habits.isEmpty()) item { Empty() }
+            item {
+                AnimatedVisibility(
+                    visible = habits.size == 1,
+                    enter = fadeIn(),
+                    exit = fadeOut(),
+                    content = { HabitGuide() }
+                )
+            }
+
+            item {
+                AnimatedVisibility(
+                    visible = habits.isEmpty() && !showAddHabitDialog,
+                    enter = fadeIn(),
+                    exit = fadeOut(),
+                    content = { Empty() }
+                )
+            }
 
             item { Spacer(modifier = Modifier.padding(60.dp)) }
         }

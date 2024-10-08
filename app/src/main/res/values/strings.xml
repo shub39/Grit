@@ -15,9 +15,8 @@
     <string name="update_description">Update Description</string>
     <string name="delete">Delete</string>
     <string name="task_deleted">Task Deleted</string>
-    <string name="delete_warning">Are you sure you want to delete this Habit?</string>
+    <string name="delete_warning">Are you sure you want to delete this Habit? all progress will be lost forever</string>
     <string name="cancel">Cancel</string>
-    <string name="all_data_lost">All progress will be lost forever</string>
     <string name="add_description">Add Description</string>
     <string name="select_time">Select time</string>
     <string name="habits">Habits</string>
@@ -37,6 +36,9 @@
     <string name="edit_task">Edit Task</string>
     <string name="tasks_guide_1">Tap to mark as done</string>
     <string name="tasks_guide_2">Tap and Hold to edit</string>
+    <string name="habits_guide_1">Tap to Mark as done</string>
+    <string name="habits_guide_2">Double Tap to view Analytics</string>
+    <string name="habits_guide_3">Tap and hold to edit</string>
     <string name="delete_tasks">Are you sure you want to delete all completed tasks?</string>
     <string name="channel_name">Habits Channel</string>
     <string name="channel_description">Notification channel for habit status update</string>

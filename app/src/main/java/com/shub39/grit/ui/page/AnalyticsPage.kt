@@ -20,7 +20,7 @@ import org.koin.androidx.compose.koinViewModel
 
 @Composable
 fun AnalyticsPage(
-    viewModel: HabitViewModel = koinViewModel(),
+    viewModel: HabitViewModel,
 ) {
     val habits by viewModel.habits.collectAsState()
     val habitsIsEmpty = habits.isEmpty()

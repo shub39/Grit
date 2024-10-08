@@ -13,7 +13,7 @@ fun AnalyticsSheet(
     vm: HabitViewModel,
     onDismiss: () -> Unit
 ) {
-    val statusList = vm.getHabitStatus(habit.id)
+    val statusList = vm.getHabitStatus(habit)
 
     ModalBottomSheet(
         onDismissRequest = { onDismiss() }

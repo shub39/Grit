@@ -20,7 +20,7 @@ class HabitViewModel(application: Application) : ViewModel() {
     private val habitStatusDao = habitDatabase.habitStatusDao()
 
     private val _habits = MutableStateFlow(listOf<Habit>())
-    private val _habitsWithStatuses = MutableStateFlow(mapOf<String, List<HabitStatus>>())
+    private val _habitsWithStatuses = MutableStateFlow(mapOf<Habit, List<HabitStatus>>())
     private val scheduler = NotificationAlarmScheduler(application.applicationContext)
 
     val habits: StateFlow<List<Habit>> get() = _habits
@@ -28,7 +28,7 @@ class HabitViewModel(application: Application) : ViewModel() {
     init {
         viewModelScope.launch {
             _habits.value = habitDao.getAllHabits()
-            updateStatusMap()
+            updateStatusMapForAllHabits()
         }
     }
 
@@ -50,52 +50,55 @@ class HabitViewModel(application: Application) : ViewModel() {
 
     fun updateHabit(habit: Habit) {
         viewModelScope.launch {
-            _habits.value = habitDao.getAllHabits()
             habitDao.updateHabit(habit)
+            _habits.value = habitDao.getAllHabits()
             scheduler.schedule(habit)
         }
     }
 
-    fun insertHabitStatus(habitId: String, date: LocalDate = LocalDate.now()) {
+    fun insertHabitStatus(habit: Habit, date: LocalDate = LocalDate.now()) {
         viewModelScope.launch {
             habitStatusDao.insertHabitStatus(
                 HabitStatus(
-                    habitId = habitId,
+                    habitId = habit.id,
                     date = date
                 )
             )
-            updateStatusMap(habitId)
+            updateStatusMap(habit)
         }
     }
 
-    fun deleteHabitStatus(habitId: String, date: LocalDate = LocalDate.now()) {
+    fun deleteHabitStatus(habit: Habit, date: LocalDate = LocalDate.now()) {
         viewModelScope.launch {
-            habitStatusDao.deleteStatus(habitId, date)
-            updateStatusMap(habitId)
+            habitStatusDao.deleteStatus(habit.id, date)
+            updateStatusMap(habit)
         }
     }
 
-    fun getHabitStatus(habitId: String): List<HabitStatus> {
-        return _habitsWithStatuses.value[habitId] ?: emptyList()
+    fun getHabitStatus(habit: Habit): List<HabitStatus> {
+        return _habitsWithStatuses.value[habit] ?: emptyList()
     }
 
-    fun isHabitCompleted(habitId: String): Boolean {
-        val result = getHabitStatus(habitId).find {
-            it.habitId == habitId && it.date == LocalDate.now()
-        } != null
-        Log.d("HabitViewModel", "isHabitCompleted: $result")
-        return result
-    }
-
-    private suspend fun updateStatusMap() {
-        _habits.value.forEach {
-            val statusList = habitStatusDao.getStatusForHabit(it.id)
-            _habitsWithStatuses.value += it.id to statusList
+    fun isHabitCompleted(habit: Habit): Boolean {
+        val isCompleted = getHabitStatus(habit).any {
+            it.date == LocalDate.now()
         }
+        Log.d("HabitViewModel", "isHabitCompleted: $isCompleted for habitId: $habit")
+        return isCompleted
     }
 
-    private suspend fun updateStatusMap(habitId: String) {
-        _habitsWithStatuses.value += habitId to habitStatusDao.getStatusForHabit(habitId)
+    private suspend fun updateStatusMapForAllHabits() {
+        val newStatusMap = _habits.value.associateWith { habit ->
+            habitStatusDao.getStatusForHabit(habit.id)
+        }
+        _habitsWithStatuses.value = newStatusMap
+    }
+
+    private suspend fun updateStatusMap(habit: Habit) {
+        val updatedStatus = habitStatusDao.getStatusForHabit(habit.id)
+        _habitsWithStatuses.value = _habitsWithStatuses.value.toMutableMap().apply {
+            this[habit] = updatedStatus
+        }
     }
 
 }
