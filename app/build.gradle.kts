@@ -102,3 +102,8 @@ dependencies {
     implementation(libs.koin.androidx.compose)
 
 }
+java {
+    toolchain {
+        languageVersion = JavaLanguageVersion.of(17)
+    }
+}

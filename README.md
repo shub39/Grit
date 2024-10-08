@@ -38,7 +38,6 @@
 - [x] Notifications
 - [ ] Widgets
 - [ ] Progress Sharing
-- [ ] Montages
 
 There are plenty of todo list and habit tracker apps for android. Some have the features I love while some have good UI design.
 While learning android I made this app for myself that brings together all the features that I like keeping everything simple. 
