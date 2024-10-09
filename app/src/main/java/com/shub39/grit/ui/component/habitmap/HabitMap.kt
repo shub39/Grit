@@ -6,13 +6,13 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.rememberLazyListState
-import androidx.compose.material3.Card
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import java.time.LocalDate
 import androidx.compose.runtime.*
 import com.shub39.grit.database.habit.HabitStatus
+import com.shub39.grit.ui.component.AnalyticsCard
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
@@ -57,7 +57,7 @@ fun HabitMap(
         }
     }
 
-    Card {
+    AnalyticsCard(title = "Habit Map") {
         LazyRow(
             horizontalArrangement = Arrangement.spacedBy(2.dp),
             modifier = Modifier

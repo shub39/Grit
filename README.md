@@ -28,9 +28,10 @@
 
 ## 👀 Screenshots 👀
 
-| ![Image 1](fastlane/metadata/android/en-US/images/phoneScreenshots/1.png) | ![Image 2](fastlane/metadata/android/en-US/images/phoneScreenshots/2.png) |
-|:-------------------------------------------------------------------------------------------------:|:------------------------------------------------------------------------------------------------:|
-| ![Image 3](fastlane/metadata/android/en-US/images/phoneScreenshots/3.png) | ![Image 4](fastlane/metadata/android/en-US/images/phoneScreenshots/4.png) |
+| ![Image 1](fastlane/metadata/android/en-US/images/phoneScreenshots/1.png) | ![Image 2](fastlane/metadata/android/en-US/images/phoneScreenshots/3.png) |
+|:-------------------------------------------------------------------------:|:-------------------------------------------------------------------------:|
+| ![Image 3](fastlane/metadata/android/en-US/images/phoneScreenshots/4.png) | ![Image 4](fastlane/metadata/android/en-US/images/phoneScreenshots/4.png) |
+| ![Image 5](fastlane/metadata/android/en-US/images/phoneScreenshots/5.png) | ![Image 6](fastlane/metadata/android/en-US/images/phoneScreenshots/6.png) |
 
 ## 💫 Features and Plans 💫
 - [x] Todo List
@@ -55,7 +56,9 @@ I eventually want to turn this app into a productivity hub with many social feat
 
 - Kotlin Coroutines
 
-- MVVM architecture 
+- MVVM architecture
+
+- [charts](https://github.com/tehras/charts) for making charts!
 
 ## 💕 Support 💕
 If you loved this app, consider donating. I'm an undergrad trying to get some pocket money

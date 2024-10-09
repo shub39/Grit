@@ -3,7 +3,6 @@ package com.shub39.grit.ui.component
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.material3.Card
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
@@ -21,7 +20,7 @@ fun WeeklyComparisonChart(
 ) {
     val primary = MaterialTheme.colorScheme.primary
 
-    Card {
+    AnalyticsCard(title = "Weekly Comparison") {
 
         LineChart(
             linesChartData = listOf(
