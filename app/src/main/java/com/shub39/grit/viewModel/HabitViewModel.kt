@@ -20,7 +20,7 @@ class HabitViewModel(application: Application) : ViewModel() {
     private val habitStatusDao = habitDatabase.habitStatusDao()
 
     private val _habits = MutableStateFlow(listOf<Habit>())
-    private val _habitsWithStatuses = MutableStateFlow(mapOf<Habit, List<HabitStatus>>())
+    private val _habitsWithStatuses = MutableStateFlow(mapOf<String, List<HabitStatus>>())
     private val scheduler = NotificationAlarmScheduler(application.applicationContext)
 
     val habits: StateFlow<List<Habit>> get() = _habits
@@ -73,7 +73,7 @@ class HabitViewModel(application: Application) : ViewModel() {
     }
 
     fun getHabitStatus(habit: Habit): List<HabitStatus> {
-        return _habitsWithStatuses.value[habit] ?: emptyList()
+        return _habitsWithStatuses.value[habit.id] ?: emptyList()
     }
 
     fun isHabitCompleted(habit: Habit, date: LocalDate = LocalDate.now()): Boolean {
@@ -85,8 +85,8 @@ class HabitViewModel(application: Application) : ViewModel() {
     }
 
     private suspend fun updateStatusMapForAllHabits() {
-        val newStatusMap = _habits.value.associateWith { habit ->
-            habitStatusDao.getStatusForHabit(habit.id)
+        val newStatusMap = _habits.value.associate { habit ->
+            habit.id to habitStatusDao.getStatusForHabit(habit.id)
         }
         _habitsWithStatuses.value = newStatusMap
     }
@@ -94,9 +94,8 @@ class HabitViewModel(application: Application) : ViewModel() {
     private suspend fun updateStatusMap(habit: Habit) {
         val updatedStatus = habitStatusDao.getStatusForHabit(habit.id)
         _habitsWithStatuses.value = _habitsWithStatuses.value.toMutableMap().apply {
-            this[habit] = updatedStatus
+            this[habit.id] = updatedStatus
         }
     }
 
 }
-
