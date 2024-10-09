@@ -1,4 +1,4 @@
-package com.shub39.grit.ui.component
+package com.shub39.grit.ui.component.habitmap
 
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.size

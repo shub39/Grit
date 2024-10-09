@@ -51,6 +51,7 @@ class MainActivity : ComponentActivity() {
 
             GritTheme(theme = theme) {
                 val pagerState = rememberPagerState(initialPage = 0) { BottomAppBarDestination.entries.size }
+
                 Scaffold(
                     bottomBar = { BottomBar(pagerState) }
                 ) { innerPadding ->

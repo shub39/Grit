@@ -35,13 +35,11 @@ import com.shub39.grit.database.Datastore
 import com.shub39.grit.logic.UILogic.openLinkInBrowser
 import com.shub39.grit.viewModel.TaskListViewModel
 import kotlinx.coroutines.launch
-import org.koin.androidx.compose.koinViewModel
 
 @Composable
 fun SettingsPage(
     taskListViewModel: TaskListViewModel
 ) {
-
     val coroutineScope = rememberCoroutineScope()
     val context = LocalContext.current
     val currentTheme by Datastore.getTheme(context).collectAsState(initial = "Default")
@@ -52,7 +50,7 @@ fun SettingsPage(
     Column(
         modifier = Modifier
             .fillMaxSize()
-            .padding(top = 32.dp, bottom = 8.dp, start = 16.dp, end = 16.dp),
+            .padding(top = 16.dp, bottom = 8.dp, start = 16.dp, end = 16.dp),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {

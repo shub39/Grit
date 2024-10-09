@@ -15,8 +15,8 @@ android {
         applicationId = "com.shub39.grit"
         minSdk = 29
         targetSdk = 35
-        versionCode = 6
-        versionName = "1.3.2"
+        versionCode = 7
+        versionName = "1.3.3"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
         vectorDrawables {
@@ -86,8 +86,6 @@ dependencies {
     androidTestImplementation(libs.androidx.ui.test.junit4)
     debugImplementation(libs.androidx.ui.tooling)
     implementation(libs.androidx.core.splashscreen)
-    implementation(libs.glance.appwidget)
-    implementation(libs.glance.material)
 
     implementation(libs.androidx.room.runtime)
     annotationProcessor(libs.androidx.room.compiler)
@@ -100,8 +98,10 @@ dependencies {
     implementation(libs.androidx.room.paging)
     implementation(libs.androidx.datastore.preferences)
     implementation(libs.koin.androidx.compose)
+    implementation(libs.charts)
 
 }
+
 java {
     toolchain {
         languageVersion = JavaLanguageVersion.of(17)

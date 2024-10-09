@@ -1,12 +1,12 @@
-package com.shub39.grit.ui.component
+package com.shub39.grit.ui.component.habitmap
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.rememberLazyListState
+import androidx.compose.material3.Card
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
@@ -57,30 +57,31 @@ fun HabitMap(
         }
     }
 
-    LazyRow(
-        horizontalArrangement = Arrangement.spacedBy(2.dp),
-        modifier = Modifier
-            .fillMaxSize()
-            .padding(start = 16.dp, end = 16.dp),
-        state = listState
-    ) {
-        items(weeks) { week ->
-            Column(
-                verticalArrangement = Arrangement.spacedBy(2.dp)
-            ) {
-                week.forEach { day ->
-                    if (day == null) {
+    Card {
+        LazyRow(
+            horizontalArrangement = Arrangement.spacedBy(2.dp),
+            modifier = Modifier
+                .padding(16.dp),
+            state = listState
+        ) {
+            items(weeks) { week ->
+                Column(
+                    verticalArrangement = Arrangement.spacedBy(2.dp)
+                ) {
+                    week.forEach { day ->
+                        if (day == null) {
 
-                        EmptyDayBox()
+                            EmptyDayBox()
 
-                    } else {
-                        val containsDay = remember { mutableStateOf(daysSet.contains(day)) }
+                        } else {
+                            val containsDay = remember { mutableStateOf(daysSet.contains(day)) }
 
-                        DayBox(
-                            done = containsDay.value,
-                            day = day,
-                            onClick = { onClick(day) }
-                        )
+                            DayBox(
+                                done = containsDay.value,
+                                day = day,
+                                onClick = { onClick(day) }
+                            )
+                        }
                     }
                 }
             }

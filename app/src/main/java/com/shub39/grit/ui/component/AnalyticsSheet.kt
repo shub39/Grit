@@ -9,10 +9,14 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.ModalBottomSheet
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import com.shub39.grit.database.habit.Habit
+import com.shub39.grit.logic.UILogic
+import com.shub39.grit.ui.component.habitmap.HabitMap
 import com.shub39.grit.viewModel.HabitViewModel
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -22,7 +26,14 @@ fun AnalyticsSheet(
     vm: HabitViewModel,
     onDismiss: () -> Unit
 ) {
-    val statusList = vm.getHabitStatus(habit)
+    var statusList by remember { mutableStateOf(vm.getHabitStatus(habit)) }
+    var updateTrigger by remember { mutableStateOf(false) }
+    var weeklyData by remember { mutableStateOf<List<Pair<Int, Int>>>(UILogic.prepareWeeklyData(statusList)) }
+
+    LaunchedEffect(updateTrigger) {
+        statusList = vm.getHabitStatus(habit)
+        weeklyData = UILogic.prepareWeeklyData(statusList)
+    }
 
     ModalBottomSheet(
         onDismissRequest = { onDismiss() }
@@ -49,8 +60,14 @@ fun AnalyticsSheet(
                 statusList = statusList,
                 onClick = { date ->
                     vm.insertHabitStatus(habit, date)
+                    updateTrigger = !updateTrigger
                 }
             )
+
+            Spacer(modifier = Modifier.padding(8.dp))
+
+            WeeklyComparisonChart(weeklyData)
+
         }
     }
 }

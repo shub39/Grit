@@ -1,4 +1,4 @@
-package com.shub39.grit.ui.component
+package com.shub39.grit.ui.component.habitmap
 
 import androidx.compose.animation.animateColorAsState
 import androidx.compose.foundation.background
@@ -10,12 +10,12 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.unit.dp
 import androidx.compose.runtime.*
+import androidx.compose.runtime.saveable.rememberSaveable
 import java.time.LocalDate
 
 @Composable
@@ -24,7 +24,7 @@ fun DayBox(
     day: LocalDate,
     onClick: () -> Unit
 ) {
-    var currentChange by remember { mutableStateOf(done) }
+    var currentChange by rememberSaveable(day) { mutableStateOf(done) }
 
     val color by animateColorAsState(
         targetValue = when (currentChange) {

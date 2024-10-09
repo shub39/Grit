@@ -68,7 +68,7 @@ fun HabitCard(
     val cardBackground by animateColorAsState(
         targetValue = when (currentCompletedStatus) {
             true -> MaterialTheme.colorScheme.primaryContainer
-            else -> MaterialTheme.colorScheme.secondaryContainer
+            else -> MaterialTheme.colorScheme.surfaceContainerHighest
         }
     )
     val cardColors = CardDefaults.cardColors(

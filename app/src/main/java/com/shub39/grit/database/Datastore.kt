@@ -41,4 +41,5 @@ object Datastore {
             settings[THEME] = theme
         }
     }
+
 }

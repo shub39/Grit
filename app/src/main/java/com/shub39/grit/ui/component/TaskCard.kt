@@ -51,7 +51,7 @@ fun TaskCard(
     val cardContainer by animateColorAsState(
         targetValue = when (taskStatus) {
             true -> Color.LightGray
-            else -> if (task.priority) MaterialTheme.colorScheme.primaryContainer else MaterialTheme.colorScheme.secondaryContainer
+            else -> if (task.priority) MaterialTheme.colorScheme.primaryContainer else MaterialTheme.colorScheme.surfaceContainerHighest
         }
     )
     val cardColors = CardDefaults.cardColors(
