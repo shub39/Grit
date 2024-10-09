@@ -14,12 +14,13 @@
 ![](https://img.shields.io/github/stars/shub39/Grit?style=for-the-badge&logo=andela&color=FFB686&logoColor=D9E0EE&labelColor=292324)
 [![GitHub release](https://img.shields.io/github/v/release/Shub39/Grit?include_prereleases&logo=github&style=for-the-badge&color=FFB1C8&logoColor=D9E0EE&labelColor=292324)](https://github.com/shub39/Rush/releases)
 ![](https://img.shields.io/f-droid/v/com.shub39.grit?logo=F-Droid&style=for-the-badge&color=CAC992&logoColor=D9E0EE&labelColor=292324)
+![](https://img.shields.io/endpoint?url=https://apt.izzysoft.de/fdroid/api/v1/shield/com.shub39.grit&style=for-the-badge&color=FFB1C8&logoColor=D9E0EE&labelColor=292324)
+
 
 [<img src="https://f-droid.org/badge/get-it-on.png"
     alt="Get it on F-Droid"
     height="80">](https://f-droid.org/packages/com.shub39.grit)
-
-
+<a href="https://apt.izzysoft.de/packages/com.shub39.grit/latest"><img src="https://gitlab.com/IzzyOnDroid/repo/-/raw/master/assets/IzzyOnDroid.png" height="80"></a>
 ### Or Download latest from [Releases](https://github.com/shub39/Grit/releases/latest)
 
 </div>
