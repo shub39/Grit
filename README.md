@@ -64,3 +64,7 @@ I eventually want to turn this app into a productivity hub with many social feat
 If you loved this app, consider donating. I'm an undergrad trying to get some pocket money
 
 [<img height="80" alt="bmc-button" src="https://github.com/user-attachments/assets/5ed4e619-7341-4346-9186-f7b850ab36ec">](https://www.buymeacoffee.com/shub39)
+
+## 🌟 Star History 🌟
+
+[![Star History Chart](https://api.star-history.com/svg?repos=shub39/Grit&type=Date)](https://star-history.com/#shub39/Grit&Date)
