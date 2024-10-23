@@ -1,4 +1,4 @@
-package com.shub39.grit.ui.component
+package com.shub39.grit.ui.page.task_page.component
 
 import androidx.compose.animation.animateColorAsState
 import androidx.compose.foundation.ExperimentalFoundationApi

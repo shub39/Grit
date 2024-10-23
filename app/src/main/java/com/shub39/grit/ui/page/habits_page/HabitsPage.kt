@@ -1,4 +1,4 @@
-package com.shub39.grit.ui.page
+package com.shub39.grit.ui.page.habits_page
 
 import android.content.Context
 import android.os.Build
@@ -47,8 +47,8 @@ import com.shub39.grit.ui.component.Empty
 import com.shub39.grit.database.habit.Habit
 import com.shub39.grit.notification.NotificationMethods.showAddNotification
 import com.shub39.grit.logic.OtherLogic.timePickerStateToLocalDateTime
-import com.shub39.grit.ui.component.HabitCard
-import com.shub39.grit.ui.component.HabitGuide
+import com.shub39.grit.ui.page.habits_page.component.HabitGuide
+import com.shub39.grit.ui.page.habits_page.component.HabitCard
 import com.shub39.grit.viewModel.HabitViewModel
 import kotlinx.coroutines.launch
 

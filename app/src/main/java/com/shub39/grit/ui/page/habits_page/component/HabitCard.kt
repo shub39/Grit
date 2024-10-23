@@ -1,4 +1,4 @@
-package com.shub39.grit.ui.component
+package com.shub39.grit.ui.page.habits_page.component
 
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.animateColorAsState
@@ -41,6 +41,7 @@ import androidx.compose.ui.unit.dp
 import com.shub39.grit.R
 import com.shub39.grit.database.habit.Habit
 import com.shub39.grit.logic.OtherLogic.localToTimePickerState
+import com.shub39.grit.ui.page.habits_page.AnalyticsSheet
 import com.shub39.grit.viewModel.HabitViewModel
 import java.time.format.DateTimeFormatter
 
@@ -63,13 +64,15 @@ fun HabitCard(
         targetValue = when (currentCompletedStatus) {
             true -> MaterialTheme.colorScheme.primary
             else -> MaterialTheme.colorScheme.secondary
-        }
+        },
+        label = "cardContent"
     )
     val cardBackground by animateColorAsState(
         targetValue = when (currentCompletedStatus) {
             true -> MaterialTheme.colorScheme.primaryContainer
             else -> MaterialTheme.colorScheme.surfaceContainerHighest
-        }
+        },
+        label = "cardBackground"
     )
     val cardColors = CardDefaults.cardColors(
         contentColor = cardContent,

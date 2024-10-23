@@ -1,4 +1,4 @@
-package com.shub39.grit.ui.component
+package com.shub39.grit.ui.page.task_page.component
 
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth

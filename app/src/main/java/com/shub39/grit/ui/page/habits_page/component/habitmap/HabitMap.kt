@@ -1,4 +1,4 @@
-package com.shub39.grit.ui.component.habitmap
+package com.shub39.grit.ui.page.habits_page.component.habitmap
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -12,7 +12,7 @@ import androidx.compose.ui.unit.dp
 import java.time.LocalDate
 import androidx.compose.runtime.*
 import com.shub39.grit.database.habit.HabitStatus
-import com.shub39.grit.ui.component.AnalyticsCard
+import com.shub39.grit.ui.page.habits_page.component.AnalyticsCard
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext

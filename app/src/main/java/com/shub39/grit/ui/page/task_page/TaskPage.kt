@@ -1,4 +1,4 @@
-package com.shub39.grit.ui.page
+package com.shub39.grit.ui.page.task_page
 
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.animateContentSize
@@ -54,8 +54,8 @@ import com.shub39.grit.R
 import com.shub39.grit.ui.component.Empty
 import com.shub39.grit.viewModel.TaskListViewModel
 import com.shub39.grit.database.task.Task
-import com.shub39.grit.ui.component.TaskCard
-import com.shub39.grit.ui.component.TasksGuide
+import com.shub39.grit.ui.page.task_page.component.TaskCard
+import com.shub39.grit.ui.page.task_page.component.TasksGuide
 import kotlinx.coroutines.launch
 import java.time.Instant
 import java.util.Date
@@ -76,6 +76,7 @@ fun TaskPage(
 
     val addSize by animateDpAsState(
         targetValue = if (addState.distanceFraction != 0f) 64.dp else 0.dp,
+        label = "addSize"
     )
 
     LaunchedEffect(tasks) {

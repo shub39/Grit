@@ -1,4 +1,4 @@
-package com.shub39.grit.ui.component
+package com.shub39.grit.ui.page.habits_page
 
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
@@ -16,7 +16,8 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import com.shub39.grit.database.habit.Habit
 import com.shub39.grit.logic.UILogic
-import com.shub39.grit.ui.component.habitmap.HabitMap
+import com.shub39.grit.ui.page.habits_page.component.WeeklyComparisonChart
+import com.shub39.grit.ui.page.habits_page.component.habitmap.HabitMap
 import com.shub39.grit.viewModel.HabitViewModel
 
 @OptIn(ExperimentalMaterial3Api::class)

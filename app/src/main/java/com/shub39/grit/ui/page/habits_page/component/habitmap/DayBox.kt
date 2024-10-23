@@ -1,4 +1,4 @@
-package com.shub39.grit.ui.component.habitmap
+package com.shub39.grit.ui.page.habits_page.component.habitmap
 
 import androidx.compose.animation.animateColorAsState
 import androidx.compose.foundation.background
