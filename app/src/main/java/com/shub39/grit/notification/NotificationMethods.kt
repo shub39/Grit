@@ -1,4 +1,4 @@
-package com.shub39.grit.logic
+package com.shub39.grit.notification
 
 import android.Manifest
 import android.annotation.SuppressLint
@@ -14,7 +14,6 @@ import androidx.annotation.RequiresApi
 import androidx.core.app.ActivityCompat
 import androidx.core.app.NotificationCompat
 import androidx.core.app.NotificationManagerCompat
-import androidx.core.content.ContextCompat
 import androidx.core.content.ContextCompat.getString
 import com.shub39.grit.MainActivity
 import com.shub39.grit.R
@@ -23,8 +22,8 @@ import java.time.format.DateTimeFormatter
 
 object NotificationMethods {
     fun createNotificationChannel(context: Context) {
-        val name = ContextCompat.getString(context, R.string.channel_name)
-        val descriptionText = ContextCompat.getString(context, R.string.channel_description)
+        val name = getString(context, R.string.channel_name)
+        val descriptionText = getString(context, R.string.channel_description)
         val importance = NotificationManager.IMPORTANCE_DEFAULT
         val channel = NotificationChannel("1", name, importance).apply {
             description = descriptionText
@@ -39,14 +38,17 @@ object NotificationMethods {
         val intent = Intent(context, MainActivity::class.java).apply {
             flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
         }
-        val pendingIntent: PendingIntent = PendingIntent.getActivity(context, 0, intent, PendingIntent.FLAG_IMMUTABLE)
+        val pendingIntent: PendingIntent =
+            PendingIntent.getActivity(context, 0, intent, PendingIntent.FLAG_IMMUTABLE)
 
         val builder = NotificationCompat.Builder(context, "1")
             .setSmallIcon(R.drawable.round_checklist_24)
-            .setContentTitle(getString(context, R.string.new_habit) +" "+ habit.id)
+            .setContentTitle(getString(context, R.string.new_habit) + " " + habit.id)
             .setContentText(
-                getString(context, R.string.at) +" "+ habit.time.format(
-                    DateTimeFormatter.ofPattern("hh:mm a")))
+                getString(context, R.string.at) + " " + habit.time.format(
+                    DateTimeFormatter.ofPattern("hh:mm a")
+                )
+            )
             .setPriority(NotificationCompat.PRIORITY_DEFAULT)
             .setContentIntent(pendingIntent)
             .setAutoCancel(true)
@@ -74,7 +76,8 @@ object NotificationMethods {
         val intent = Intent(context, MainActivity::class.java).apply {
             flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
         }
-        val pendingIntent: PendingIntent = PendingIntent.getActivity(context, 0, intent, PendingIntent.FLAG_IMMUTABLE)
+        val pendingIntent: PendingIntent =
+            PendingIntent.getActivity(context, 0, intent, PendingIntent.FLAG_IMMUTABLE)
 
         val builder = NotificationCompat.Builder(context, "1")
             .setSmallIcon(R.drawable.round_checklist_24)

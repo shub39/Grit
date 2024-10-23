@@ -1,6 +1,5 @@
 package com.shub39.grit.viewModel
 
-import android.content.Context
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.shub39.grit.database.task.Task
@@ -10,12 +9,14 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
 
-class TaskListViewModel(applicationContext: Context) : ViewModel() {
+class TaskListViewModel(
+    taskDatabase: TaskDatabase,
+    scheduler: NotificationAlarmScheduler
+) : ViewModel() {
 
-    private val taskDatabase = TaskDatabase.getDatabase(applicationContext)
     private val tasksDao = taskDatabase.taskDao()
     private val _tasks = MutableStateFlow(listOf<Task>())
-    private val scheduler = NotificationAlarmScheduler(applicationContext)
+    private val _scheduler = scheduler
 
     val tasks: StateFlow<List<Task>> get() = _tasks
 
@@ -54,10 +55,10 @@ class TaskListViewModel(applicationContext: Context) : ViewModel() {
     }
 
     fun scheduleDeletion(preference: String) {
-        scheduler.schedule(preference)
+        _scheduler.schedule(preference)
     }
 
     fun cancelScheduleDeletion(preference: String) {
-        scheduler.cancel(preference)
+        _scheduler.cancel(preference)
     }
 }

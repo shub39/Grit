@@ -1,6 +1,5 @@
 package com.shub39.grit.viewModel
 
-import android.app.Application
 import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -13,15 +12,17 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
 import java.time.LocalDate
 
-class HabitViewModel(application: Application) : ViewModel() {
+class HabitViewModel(
+    habitDatabase: HabitDatabase,
+    scheduler: NotificationAlarmScheduler
+) : ViewModel() {
 
-    private val habitDatabase = HabitDatabase.getDatabase(application)
     private val habitDao = habitDatabase.habitDao()
     private val habitStatusDao = habitDatabase.habitStatusDao()
 
     private val _habits = MutableStateFlow(listOf<Habit>())
     private val _habitsWithStatuses = MutableStateFlow(mapOf<String, List<HabitStatus>>())
-    private val scheduler = NotificationAlarmScheduler(application.applicationContext)
+    private val _scheduler = scheduler
 
     val habits: StateFlow<List<Habit>> get() = _habits
 
@@ -36,7 +37,7 @@ class HabitViewModel(application: Application) : ViewModel() {
         viewModelScope.launch {
             _habits.value += habit
             habitDao.insertHabit(habit)
-            scheduler.schedule(habit)
+            _scheduler.schedule(habit)
         }
     }
 
@@ -44,7 +45,7 @@ class HabitViewModel(application: Application) : ViewModel() {
         viewModelScope.launch {
             _habits.value -= habit
             habitDao.deleteHabit(habit)
-            scheduler.cancel(habit)
+            _scheduler.cancel(habit)
         }
     }
 
@@ -52,7 +53,7 @@ class HabitViewModel(application: Application) : ViewModel() {
         viewModelScope.launch {
             habitDao.updateHabit(habit)
             _habits.value = habitDao.getAllHabits()
-            scheduler.schedule(habit)
+            _scheduler.schedule(habit)
         }
     }
 

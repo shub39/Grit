@@ -57,7 +57,6 @@ import com.shub39.grit.database.task.Task
 import com.shub39.grit.ui.component.TaskCard
 import com.shub39.grit.ui.component.TasksGuide
 import kotlinx.coroutines.launch
-import org.koin.androidx.compose.koinViewModel
 import java.time.Instant
 import java.util.Date
 

@@ -1,5 +1,5 @@
 [versions]
-agp = "8.7.0"
+agp = "8.7.1"
 charts = "0.2.4-alpha"
 coreSplashscreen = "1.0.1"
 datastorePreferences = "1.1.1"

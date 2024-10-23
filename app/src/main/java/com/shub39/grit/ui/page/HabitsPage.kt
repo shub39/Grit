@@ -45,11 +45,10 @@ import androidx.compose.ui.unit.dp
 import com.shub39.grit.R
 import com.shub39.grit.ui.component.Empty
 import com.shub39.grit.database.habit.Habit
-import com.shub39.grit.logic.NotificationMethods.showAddNotification
+import com.shub39.grit.notification.NotificationMethods.showAddNotification
 import com.shub39.grit.logic.OtherLogic.timePickerStateToLocalDateTime
 import com.shub39.grit.ui.component.HabitCard
 import com.shub39.grit.ui.component.HabitGuide
-import com.shub39.grit.ui.component.TasksGuide
 import com.shub39.grit.viewModel.HabitViewModel
 import kotlinx.coroutines.launch
 

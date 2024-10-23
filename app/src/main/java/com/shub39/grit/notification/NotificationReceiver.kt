@@ -8,7 +8,7 @@ import android.util.Log
 import androidx.annotation.RequiresApi
 import com.shub39.grit.database.habit.Habit
 import com.shub39.grit.database.task.TaskDatabase
-import com.shub39.grit.logic.NotificationMethods.habitNotification
+import com.shub39.grit.notification.NotificationMethods.habitNotification
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.SupervisorJob
