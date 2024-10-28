@@ -1,4 +1,4 @@
-package com.shub39.grit.viewModel
+package com.shub39.grit.ui.page.task_page
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope

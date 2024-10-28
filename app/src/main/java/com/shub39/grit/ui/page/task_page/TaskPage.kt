@@ -52,7 +52,6 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import com.shub39.grit.R
 import com.shub39.grit.ui.component.Empty
-import com.shub39.grit.viewModel.TaskListViewModel
 import com.shub39.grit.database.task.Task
 import com.shub39.grit.ui.page.task_page.component.TaskCard
 import com.shub39.grit.ui.page.task_page.component.TasksGuide

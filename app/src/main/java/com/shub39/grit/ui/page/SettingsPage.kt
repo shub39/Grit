@@ -33,7 +33,7 @@ import androidx.compose.ui.unit.dp
 import com.shub39.grit.R
 import com.shub39.grit.database.Datastore
 import com.shub39.grit.logic.UILogic.openLinkInBrowser
-import com.shub39.grit.viewModel.TaskListViewModel
+import com.shub39.grit.ui.page.task_page.TaskListViewModel
 import kotlinx.coroutines.launch
 
 @Composable

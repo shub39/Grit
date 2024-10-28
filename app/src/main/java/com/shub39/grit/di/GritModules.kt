@@ -4,7 +4,7 @@ import com.shub39.grit.database.habit.HabitDatabase
 import com.shub39.grit.database.task.TaskDatabase
 import com.shub39.grit.notification.NotificationAlarmScheduler
 import com.shub39.grit.viewModel.HabitViewModel
-import com.shub39.grit.viewModel.TaskListViewModel
+import com.shub39.grit.ui.page.task_page.TaskListViewModel
 import org.koin.androidx.viewmodel.dsl.viewModel
 import org.koin.dsl.module
 
