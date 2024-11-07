@@ -9,7 +9,7 @@ val appName = "Grit"
 
 android {
     namespace = "com.shub39.grit"
-    compileSdk = 34
+    compileSdk = 35
 
     defaultConfig {
         applicationId = "com.shub39.grit"
