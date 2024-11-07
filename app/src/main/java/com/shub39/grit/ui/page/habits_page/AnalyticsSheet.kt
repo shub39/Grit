@@ -15,24 +15,23 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import com.shub39.grit.database.habit.Habit
+import com.shub39.grit.database.habit.HabitStatus
 import com.shub39.grit.logic.UILogic
 import com.shub39.grit.ui.page.habits_page.component.WeeklyComparisonChart
 import com.shub39.grit.ui.page.habits_page.component.habitmap.HabitMap
-import com.shub39.grit.viewModel.HabitViewModel
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun AnalyticsSheet(
     habit: Habit,
-    vm: HabitViewModel,
-    onDismiss: () -> Unit
+    statusList: List<HabitStatus>,
+    onDismiss: () -> Unit,
+    action: (HabitsPageAction) -> Unit
 ) {
-    var statusList by remember { mutableStateOf(vm.getHabitStatus(habit)) }
     var updateTrigger by remember { mutableStateOf(false) }
     var weeklyData by remember { mutableStateOf<List<Pair<Int, Int>>>(UILogic.prepareWeeklyData(statusList)) }
 
     LaunchedEffect(updateTrigger) {
-        statusList = vm.getHabitStatus(habit)
         weeklyData = UILogic.prepareWeeklyData(statusList)
     }
 
@@ -46,7 +45,7 @@ fun AnalyticsSheet(
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
             Text(
-                text = habit.id,
+                text = habit.title,
                 style = MaterialTheme.typography.titleLarge,
             )
 
@@ -60,7 +59,9 @@ fun AnalyticsSheet(
             HabitMap(
                 statusList = statusList,
                 onClick = { date ->
-                    vm.insertHabitStatus(habit, date)
+                    action(
+                        HabitsPageAction.InsertStatus(habit, date)
+                    )
                     updateTrigger = !updateTrigger
                 }
             )
