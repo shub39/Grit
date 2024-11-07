@@ -25,7 +25,6 @@ import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
 import androidx.compose.material3.TimePicker
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -40,35 +39,33 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import com.shub39.grit.R
 import com.shub39.grit.database.habit.Habit
+import com.shub39.grit.database.habit.HabitStatus
 import com.shub39.grit.logic.OtherLogic.localToTimePickerState
 import com.shub39.grit.ui.page.habits_page.AnalyticsSheet
-import com.shub39.grit.viewModel.HabitViewModel
+import com.shub39.grit.ui.page.habits_page.HabitsPageAction
 import java.time.format.DateTimeFormatter
 
 @OptIn(ExperimentalMaterial3Api::class, ExperimentalFoundationApi::class)
 @Composable
 fun HabitCard(
     habit: Habit,
-    habitViewModel: HabitViewModel,
+    statusList: List<HabitStatus>,
+    completed: Boolean,
+    action: (HabitsPageAction) -> Unit,
 ) {
     var showEditDialog by remember { mutableStateOf(false) }
     var showAnalyticsSheet by remember { mutableStateOf(false) }
     var showDeleteDialog by remember { mutableStateOf(false) }
-    var currentCompletedStatus by remember { mutableStateOf(habitViewModel.isHabitCompleted(habit)) }
-
-    LaunchedEffect(showAnalyticsSheet) {
-        currentCompletedStatus = habitViewModel.isHabitCompleted(habit)
-    }
 
     val cardContent by animateColorAsState(
-        targetValue = when (currentCompletedStatus) {
+        targetValue = when (completed) {
             true -> MaterialTheme.colorScheme.primary
             else -> MaterialTheme.colorScheme.secondary
         },
         label = "cardContent"
     )
     val cardBackground by animateColorAsState(
-        targetValue = when (currentCompletedStatus) {
+        targetValue = when (completed) {
             true -> MaterialTheme.colorScheme.primaryContainer
             else -> MaterialTheme.colorScheme.surfaceContainerHighest
         },
@@ -79,16 +76,11 @@ fun HabitCard(
         containerColor = cardBackground
     )
 
-    val updateLambda = {
-        habitViewModel.insertHabitStatus(habit)
-        currentCompletedStatus = !currentCompletedStatus
-    }
-
     Card(
         modifier = Modifier
             .padding(bottom = 8.dp, start = 16.dp, end = 16.dp)
             .combinedClickable(
-                onClick = { updateLambda() },
+                onClick = { action(HabitsPageAction.InsertStatus(habit)) },
                 onLongClick = { showEditDialog = true },
                 onDoubleClick = { showAnalyticsSheet = true }
             ),
@@ -103,7 +95,7 @@ fun HabitCard(
             verticalAlignment = Alignment.CenterVertically
         ) {
             AnimatedVisibility(
-                visible = currentCompletedStatus
+                visible = completed
             ) {
                 Icon(
                     painterResource(R.drawable.round_check_circle_24), null
@@ -116,7 +108,7 @@ fun HabitCard(
                     .padding(start = 8.dp)
             ) {
                 Text(
-                    text = habit.id,
+                    text = habit.title,
                     style = MaterialTheme.typography.titleMedium
                 )
             }
@@ -180,7 +172,7 @@ fun HabitCard(
                     Button(
                         onClick = {
                             showDeleteDialog = false
-                            habitViewModel.deleteHabit(habit)
+                            action(HabitsPageAction.DeleteHabit(habit))
                         },
                         modifier = Modifier.weight(1f),
                         shape = RoundedCornerShape(
@@ -200,8 +192,9 @@ fun HabitCard(
     if (showAnalyticsSheet) {
         AnalyticsSheet(
             habit = habit,
-            vm = habitViewModel,
-            onDismiss = { showAnalyticsSheet = false }
+            statusList = statusList,
+            onDismiss = { showAnalyticsSheet = false },
+            action = action
         )
     }
 
@@ -262,12 +255,15 @@ fun HabitCard(
                     Button(
                         onClick = {
                             showEditDialog = false
-                            habitViewModel.updateHabit(
-                                Habit(
-                                    habit.id,
-                                    newHabitDescription,
-                                    habit.time.withHour(timePickerState.hour)
-                                        .withMinute(timePickerState.minute)
+                            action(
+                                HabitsPageAction.UpdateHabit(
+                                    Habit(
+                                        id = habit.id,
+                                        title = habit.title,
+                                        description = newHabitDescription,
+                                        time = habit.time.withHour(timePickerState.hour)
+                                            .withMinute(timePickerState.minute)
+                                    )
                                 )
                             )
                         },

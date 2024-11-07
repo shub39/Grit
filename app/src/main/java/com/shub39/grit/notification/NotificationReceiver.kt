@@ -27,8 +27,14 @@ class NotificationReceiver : BroadcastReceiver() {
             if (intent.getStringExtra("preference") == null) {
                 val habitId = intent.getStringExtra("1") ?: return
                 val habitDescription = intent.getStringExtra("2") ?: return
-                habitNotification(context, Habit(habitId, habitDescription, LocalDateTime.now()))
-                scheduler.schedule(Habit(habitId, habitDescription, LocalDateTime.now()))
+
+                val habit = Habit(
+                    title = habitId,
+                    description = habitDescription,
+                    time = LocalDateTime.now()
+                )
+                habitNotification(context, habit)
+                scheduler.schedule(habit)
             } else {
                 val taskDatabase = TaskDatabase.getDatabase(context)
                 val preference = intent.getStringExtra("preference") ?: return

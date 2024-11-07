@@ -30,13 +30,10 @@ import androidx.compose.material3.pulltorefresh.PullToRefreshBox
 import androidx.compose.material3.pulltorefresh.rememberPullToRefreshState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
-import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -62,14 +59,11 @@ import java.util.Date
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun TaskPage(
-    viewModel: TaskListViewModel
+    state: TaskPageState,
+    action: (TaskPageAction) -> Unit
 ) {
-    val tasks by viewModel.tasks.collectAsState()
-    var sortedTasks = tasks.sortedBy { !it.priority }
-
     var showTaskAddDialog by remember { mutableStateOf(false) }
     var showDeleteDialog by remember { mutableStateOf(false) }
-    var completedTasks by rememberSaveable { mutableIntStateOf(0) }
     val addState = rememberPullToRefreshState()
     val coroutineScope = rememberCoroutineScope()
 
@@ -78,13 +72,9 @@ fun TaskPage(
         label = "addSize"
     )
 
-    LaunchedEffect(tasks) {
-        sortedTasks = tasks.sortedBy { !it.priority }
-        for (task in tasks) {
-            if (task.status) completedTasks++
-        }
-    }
-
+    /*
+    Using pull to refresh as an interactive indicator to add tasks
+     */
     PullToRefreshBox(
         isRefreshing = false,
         onRefresh = {
@@ -118,19 +108,18 @@ fun TaskPage(
                 }
             }
 
-            items(sortedTasks, key = { it.id }) {
+            items(state.tasks, key = { it.id }) {
                 TaskCard(
                     task = it,
                     onStatusChange = { updatedTask ->
-                        viewModel.updateTaskStatus(updatedTask)
-                        if (updatedTask.status) completedTasks++ else completedTasks--
+                        action(TaskPageAction.UpdateTaskStatus(updatedTask))
                     },
                 )
             }
 
             item {
                 AnimatedVisibility(
-                    visible = sortedTasks.size == 1,
+                    visible = state.tasks.size == 1,
                     enter = fadeIn(),
                     exit = fadeOut(),
                     content = { TasksGuide() }
@@ -139,7 +128,7 @@ fun TaskPage(
 
             item {
                 AnimatedVisibility(
-                    visible = sortedTasks.isEmpty() && !showDeleteDialog && !showTaskAddDialog,
+                    visible = state.tasks.isEmpty() && !showDeleteDialog && !showTaskAddDialog,
                     enter = fadeIn(),
                     exit = fadeOut(),
                     content = { Empty() }
@@ -157,7 +146,7 @@ fun TaskPage(
                 .padding(16.dp)
         ) {
             AnimatedVisibility(
-                visible = completedTasks != 0,
+                visible = state.completedTasks != 0,
                 enter = fadeIn(),
                 exit = fadeOut()
             ) {
@@ -177,48 +166,6 @@ fun TaskPage(
                     }
                 }
             }
-
-//            if (context.packageName.endsWith(".debug")) {
-//                Spacer(modifier = Modifier.padding(8.dp))
-//
-//                FloatingActionButton(
-//                    onClick = {
-//                        var id = 0
-//                        var priority = true
-//
-//                        while (id < 50) {
-//
-//                            viewModel.addTask(
-//                                Task(
-//                                    id++.toString(),
-//                                    title = "Task $id",
-//                                    priority = priority
-//                                )
-//                            )
-//
-//                            priority = !priority
-//                        }
-//                    }
-//                ) {
-//                    Icon(
-//                        painter = painterResource(R.drawable.round_add_24),
-//                        contentDescription = null
-//                    )
-//                }
-//
-//                Spacer(modifier = Modifier.padding(8.dp))
-//
-//                FloatingActionButton(
-//                    onClick = {
-//                        viewModel.deleteTasks(true)
-//                    }
-//                ) {
-//                    Icon(
-//                        painter = painterResource(R.drawable.round_delete_forever_24),
-//                        contentDescription = null
-//                    )
-//                }
-//            }
         }
 
         if (showDeleteDialog) {
@@ -240,16 +187,14 @@ fun TaskPage(
                 confirmButton = {
                     Button(
                         onClick = {
-                            viewModel.deleteTasks()
+                            action(TaskPageAction.DeleteTasks)
                             showDeleteDialog = false
-                            completedTasks = 0
                         },
                         modifier = Modifier.fillMaxWidth()
                     ) {
                         Text(stringResource(R.string.delete))
                     }
                 }
-
             )
         }
 
@@ -294,11 +239,13 @@ fun TaskPage(
                             onClick = {
                                 showTaskAddDialog = false
                                 newPriority = true
-                                viewModel.addTask(
-                                    Task(
-                                        Date.from(Instant.now()).toString(),
-                                        newTask,
-                                        newPriority
+                                action(
+                                    TaskPageAction.AddTask(
+                                        Task(
+                                            Date.from(Instant.now()).toString(),
+                                            newTask,
+                                            newPriority
+                                        )
                                     )
                                 )
                                 newTask = ""
@@ -320,11 +267,13 @@ fun TaskPage(
                         Button(
                             onClick = {
                                 showTaskAddDialog = false
-                                viewModel.addTask(
-                                    Task(
-                                        Date.from(Instant.now()).toString(),
-                                        newTask,
-                                        newPriority
+                                action(
+                                    TaskPageAction.AddTask(
+                                        Task(
+                                            Date.from(Instant.now()).toString(),
+                                            newTask,
+                                            newPriority
+                                        )
                                     )
                                 )
                                 newTask = ""

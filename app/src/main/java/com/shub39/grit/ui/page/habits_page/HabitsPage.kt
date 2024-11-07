@@ -1,6 +1,5 @@
 package com.shub39.grit.ui.page.habits_page
 
-import android.content.Context
 import android.os.Build
 import androidx.annotation.RequiresApi
 import androidx.compose.animation.AnimatedVisibility
@@ -30,13 +29,13 @@ import androidx.compose.material3.TimePickerState
 import androidx.compose.material3.pulltorefresh.PullToRefreshBox
 import androidx.compose.material3.pulltorefresh.rememberPullToRefreshState
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.ImeAction
@@ -49,17 +48,16 @@ import com.shub39.grit.notification.NotificationMethods.showAddNotification
 import com.shub39.grit.logic.OtherLogic.timePickerStateToLocalDateTime
 import com.shub39.grit.ui.page.habits_page.component.HabitGuide
 import com.shub39.grit.ui.page.habits_page.component.HabitCard
-import com.shub39.grit.viewModel.HabitViewModel
 import kotlinx.coroutines.launch
 
 @RequiresApi(Build.VERSION_CODES.TIRAMISU)
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun HabitsPage(
-    habitViewModel: HabitViewModel,
-    context: Context
+    state: HabitPageState,
+    action: (HabitsPageAction) -> Unit
 ) {
-    val habits by habitViewModel.habits.collectAsState()
+    val context = LocalContext.current
 
     var showAddHabitDialog by remember { mutableStateOf(false) }
     val addState = rememberPullToRefreshState()
@@ -101,16 +99,18 @@ fun HabitsPage(
                 }
             }
 
-            items(habits, key = { it.id }) {
+            items(state.habits, key = { it.id }) {
                 HabitCard(
                     habit = it,
-                    habitViewModel = habitViewModel,
+                    statusList = state.habitsWithStatuses[it.id] ?: emptyList(),
+                    completed = state.completedHabits.contains(it),
+                    action = action,
                 )
             }
 
             item {
                 AnimatedVisibility(
-                    visible = habits.size == 1,
+                    visible = state.habits.size == 1,
                     enter = fadeIn(),
                     exit = fadeOut(),
                     content = { HabitGuide() }
@@ -119,7 +119,7 @@ fun HabitsPage(
 
             item {
                 AnimatedVisibility(
-                    visible = habits.isEmpty() && !showAddHabitDialog,
+                    visible = state.habits.isEmpty() && !showAddHabitDialog,
                     enter = fadeIn(),
                     exit = fadeOut(),
                     content = { Empty() }
@@ -134,7 +134,7 @@ fun HabitsPage(
         var newHabitName by remember { mutableStateOf("") }
         var newHabitDescription by remember { mutableStateOf("") }
         val timePickerState = remember { TimePickerState(12, 0, false) }
-        val isHabitPresent = { habits.any { it.id == newHabitName } }
+        val isHabitPresent = { state.habits.any { it.title == newHabitName } }
 
         AlertDialog(
             onDismissRequest = { showAddHabitDialog = false },
@@ -191,12 +191,12 @@ fun HabitsPage(
                 Button(
                     onClick = {
                         val habit = Habit(
-                            newHabitName,
-                            newHabitDescription,
-                            timePickerStateToLocalDateTime(timePickerState)
+                            title = newHabitName,
+                            description = newHabitDescription,
+                            time = timePickerStateToLocalDateTime(timePickerState)
                         )
                         showAddHabitDialog = false
-                        habitViewModel.addHabit(habit)
+                        action(HabitsPageAction.AddHabit(habit))
                         showAddNotification(context, habit)
                     },
                     enabled = newHabitName.isNotBlank() && newHabitDescription.isNotBlank() && newHabitName.length < 20 && newHabitDescription.length < 50,

@@ -6,7 +6,11 @@ import com.shub39.grit.database.task.Task
 import com.shub39.grit.database.task.TaskDatabase
 import com.shub39.grit.notification.NotificationAlarmScheduler
 import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.SharingStarted
+import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.onStart
+import kotlinx.coroutines.flow.stateIn
+import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 
 class TaskListViewModel(
@@ -15,42 +19,83 @@ class TaskListViewModel(
 ) : ViewModel() {
 
     private val tasksDao = taskDatabase.taskDao()
-    private val _tasks = MutableStateFlow(listOf<Task>())
+
+    private val _tasksState = MutableStateFlow(TaskPageState())
     private val _scheduler = scheduler
 
-    val tasks: StateFlow<List<Task>> get() = _tasks
-
-    init {
-        viewModelScope.launch {
-            _tasks.value = tasksDao.getTasks()
+    val tasksState = _tasksState.asStateFlow()
+        .onStart {
+            getTasks()
+            updateCompleted()
         }
-    }
+        .stateIn(
+            viewModelScope,
+            SharingStarted.WhileSubscribed(5000),
+            TaskPageState()
+        )
 
-    fun addTask(task: Task) {
+    fun taskPageAction(action: TaskPageAction) {
         viewModelScope.launch {
-            _tasks.value += task
-            tasksDao.addTask(task)
-            _tasks.value = tasksDao.getTasks()
-        }
-    }
+            when (action) {
+                is TaskPageAction.AddTask -> {
+                    addTask(action.task)
+                    getTasks()
+                }
 
-    fun updateTaskStatus(updatedTask: Task) {
-        viewModelScope.launch {
-            tasksDao.updateTask(updatedTask)
-            _tasks.value = tasksDao.getTasks()
-        }
-    }
+                TaskPageAction.DeleteTasks -> {
+                    deleteTasks()
+                    getTasks()
+                    updateCompleted()
+                }
 
-    fun deleteTasks(all: Boolean = false) {
-        viewModelScope.launch {
-            for (task in _tasks.value) {
-                if (all) {
-                    tasksDao.deleteTask(task)
-                } else if (task.status) {
-                    tasksDao.deleteTask(task)
+                is TaskPageAction.UpdateTaskStatus -> {
+                    updateTaskStatus(action.task)
+                    getTasks()
+                    updateCompleted()
                 }
             }
-            _tasks.value = tasksDao.getTasks()
+        }
+    }
+
+    private suspend fun getTasks() {
+        _tasksState.update {
+            it.copy(
+                tasks = tasksDao.getTasks()
+            )
+        }
+    }
+
+    private suspend fun addTask(task: Task) {
+        tasksDao.addTask(task)
+    }
+
+    private suspend fun updateTaskStatus(updatedTask: Task) {
+        tasksDao.updateTask(updatedTask)
+    }
+
+    private fun updateCompleted() {
+        var completed = 0
+
+        for (task in _tasksState.value.tasks) {
+            if (task.status) {
+                completed++
+            }
+        }
+
+        _tasksState.update {
+            it.copy(
+                completedTasks = completed
+            )
+        }
+    }
+
+    private suspend fun deleteTasks(all: Boolean = false) {
+        for (task in _tasksState.value.tasks) {
+            if (all) {
+                tasksDao.deleteTask(task)
+            } else if (task.status) {
+                tasksDao.deleteTask(task)
+            }
         }
     }
 

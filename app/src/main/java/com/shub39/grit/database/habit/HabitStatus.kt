@@ -20,6 +20,6 @@ import java.time.LocalDate
 )
 data class HabitStatus(
     @PrimaryKey(autoGenerate = true) val id: Long = 0,
-    val habitId: String,
+    val habitId: Long,
     val date: LocalDate,
 )

@@ -12,8 +12,8 @@ interface HabitStatusDao {
     suspend fun insertHabitStatus(habitStatus: HabitStatus)
 
     @Query("SELECT * FROM habit_status WHERE habitId = :habitId")
-    suspend fun getStatusForHabit(habitId: String): List<HabitStatus>
+    suspend fun getStatusForHabit(habitId: Long): List<HabitStatus>
 
     @Query("DELETE FROM habit_status WHERE habitId = :habitId AND date = :date")
-    suspend fun deleteStatus(habitId: String, date: LocalDate)
+    suspend fun deleteStatus(habitId: Long, date: LocalDate)
 }

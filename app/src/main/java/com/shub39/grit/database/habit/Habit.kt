@@ -6,7 +6,8 @@ import java.time.LocalDateTime
 
 @Entity(tableName = "habit_index")
 data class Habit(
-    @PrimaryKey val id: String,
+    @PrimaryKey(autoGenerate = true) val id: Long = 0,
+    val title: String,
     val description: String,
     val time: LocalDateTime
 )

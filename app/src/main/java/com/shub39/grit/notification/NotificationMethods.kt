@@ -81,7 +81,7 @@ object NotificationMethods {
 
         val builder = NotificationCompat.Builder(context, "1")
             .setSmallIcon(R.drawable.round_checklist_24)
-            .setContentTitle(habit.id)
+            .setContentTitle(habit.title)
             .setContentText(habit.description)
             .setPriority(NotificationCompat.PRIORITY_DEFAULT)
             .setContentIntent(pendingIntent)
