@@ -30,9 +30,7 @@ fun HabitMap(
 
     LaunchedEffect(daysSet) {
         weeks = withContext(Dispatchers.Default) {
-            val startDate = LocalDate.now().minusDays(LocalDate.now().dayOfWeek.value.toLong()).minusWeeks(
-                17
-            )
+            val startDate = LocalDate.now().minusDays(LocalDate.now().dayOfWeek.value.toLong()).minusWeeks(17)
             val allDays = generateSequence(startDate) { it.plusDays(1) }
                 .takeWhile { !it.isAfter(LocalDate.now()) }
                 .toList()
@@ -49,19 +47,17 @@ fun HabitMap(
                     }
                 }
             }
+
             daysWithEmptyDays.chunked(7)
         }
 
-        coroutineScope.launch {
-            listState.scrollToItem(weeks.size - 1)
-        }
+        coroutineScope.launch { listState.scrollToItem(weeks.size - 1) }
     }
 
     AnalyticsCard(title = "Habit Map") {
         LazyRow(
             horizontalArrangement = Arrangement.spacedBy(2.dp),
-            modifier = Modifier
-                .padding(16.dp),
+            modifier = Modifier.padding(16.dp),
             state = listState
         ) {
             items(weeks) { week ->

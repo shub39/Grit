@@ -59,9 +59,7 @@ fun AnalyticsSheet(
             HabitMap(
                 statusList = statusList,
                 onClick = { date ->
-                    action(
-                        HabitsPageAction.InsertStatus(habit, date)
-                    )
+                    action(HabitsPageAction.InsertStatus(habit, date))
                     updateTrigger = !updateTrigger
                 }
             )

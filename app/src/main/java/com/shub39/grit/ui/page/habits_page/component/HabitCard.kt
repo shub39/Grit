@@ -119,6 +119,7 @@ fun HabitCard(
                 painter = painterResource(R.drawable.round_alarm_24),
                 contentDescription = null
             )
+
             Text(
                 modifier = Modifier.padding(8.dp),
                 text = habit.time.format(DateTimeFormatter.ofPattern("hh:mm a"))
@@ -146,7 +147,6 @@ fun HabitCard(
                         textAlign = TextAlign.Center,
                         modifier = Modifier.fillMaxWidth()
                     )
-
                 }
             },
             confirmButton = {

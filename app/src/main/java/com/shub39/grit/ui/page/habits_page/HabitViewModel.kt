@@ -73,16 +73,17 @@ class HabitViewModel(
     }
 
     private suspend fun addHabit(habit: Habit) {
+        habitDao.insertHabit(habit)
         _habitState.update {
             it.copy(
                 habits = it.habits.plus(habit),
             )
         }
-        habitDao.insertHabit(habit)
         _scheduler.schedule(habit)
     }
 
     private suspend fun deleteHabit(habit: Habit) {
+        habitDao.deleteHabit(habit)
         _habitState.update {
             it.copy(
                 habits = it.habits.minus(habit),
@@ -92,7 +93,6 @@ class HabitViewModel(
                 }
             )
         }
-        habitDao.deleteHabit(habit)
         _scheduler.cancel(habit)
     }
 
@@ -109,6 +109,12 @@ class HabitViewModel(
     private suspend fun insertHabitStatus(habit: Habit, date: LocalDate) {
         if (isHabitCompleted(habit, date)) {
             habitStatusDao.deleteStatus(habit.id, date)
+
+            _habitState.update {
+                it.copy(
+                    completedHabits = it.completedHabits.minus(habit)
+                )
+            }
         } else {
             habitStatusDao.insertHabitStatus(
                 HabitStatus(
@@ -116,6 +122,12 @@ class HabitViewModel(
                     date = date
                 )
             )
+
+            _habitState.update {
+                it.copy(
+                    completedHabits = it.completedHabits.plus(habit)
+                )
+            }
         }
 
         _habitState.update {
@@ -124,20 +136,6 @@ class HabitViewModel(
                     this[habit.id] = habitStatusDao.getStatusForHabit(habit.id)
                 }
             )
-        }
-
-        if (isHabitCompleted(habit, LocalDate.now())) {
-            _habitState.update {
-                it.copy(
-                    completedHabits = it.completedHabits.plus(habit)
-                )
-            }
-        } else {
-            _habitState.update {
-                it.copy(
-                    completedHabits = it.completedHabits.minus(habit)
-                )
-            }
         }
     }
 
