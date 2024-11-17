@@ -23,6 +23,7 @@ class MainActivity : ComponentActivity() {
         createNotificationChannel(this)
 
         enableEdgeToEdge()
+
         setContent {
             val theme by Datastore.getTheme(this).collectAsState(initial = "Default")
 

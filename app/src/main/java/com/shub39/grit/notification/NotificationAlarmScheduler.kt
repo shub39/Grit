@@ -23,7 +23,7 @@ class NotificationAlarmScheduler(
             time = time.plusDays(1)
         }
         val intent = Intent(context, NotificationReceiver::class.java).apply {
-            putExtra("1", item.id)
+            putExtra("1", item.title)
             putExtra("2", item.description)
         }
         alarmManager.setExactAndAllowWhileIdle(

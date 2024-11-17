@@ -43,7 +43,7 @@ object NotificationMethods {
 
         val builder = NotificationCompat.Builder(context, "1")
             .setSmallIcon(R.drawable.round_checklist_24)
-            .setContentTitle(getString(context, R.string.new_habit) + " " + habit.id)
+            .setContentTitle(getString(context, R.string.new_habit) + " " + habit.title)
             .setContentText(
                 getString(context, R.string.at) + " " + habit.time.format(
                     DateTimeFormatter.ofPattern("hh:mm a")
