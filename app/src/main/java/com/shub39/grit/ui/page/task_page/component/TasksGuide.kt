@@ -9,6 +9,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import com.shub39.grit.R
 
+// needs work, looks jarring currently
 @Composable
 fun TasksGuide() {
     Column(

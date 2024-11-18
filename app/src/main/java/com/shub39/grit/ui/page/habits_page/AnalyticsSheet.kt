@@ -66,6 +66,7 @@ fun AnalyticsSheet(
 
             Spacer(modifier = Modifier.padding(8.dp))
 
+            // needs work, maybe will create my own charting system
             WeeklyComparisonChart(weeklyData)
 
         }

@@ -6,6 +6,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 
+// empty placeholder box for end of the month
 @Composable
 fun EmptyDayBox() {
     Box(

@@ -62,19 +62,22 @@ fun TaskPage(
     state: TaskPageState,
     action: (TaskPageAction) -> Unit
 ) {
+    // dialog controllers
     var showTaskAddDialog by remember { mutableStateOf(false) }
     var showDeleteDialog by remember { mutableStateOf(false) }
+
+    // remembered states and scopes
     val addState = rememberPullToRefreshState()
     val coroutineScope = rememberCoroutineScope()
 
+    // animated size of the pull to refresh button
     val addSize by animateDpAsState(
         targetValue = if (addState.distanceFraction != 0f) 64.dp else 0.dp,
         label = "addSize"
     )
 
-    /*
-    Using pull to refresh as an interactive indicator to add tasks
-     */
+
+    // Using pull to refresh as an interactive indicator to add tasks
     PullToRefreshBox(
         isRefreshing = false,
         onRefresh = {
@@ -93,6 +96,7 @@ fun TaskPage(
                 .fillMaxSize()
                 .animateContentSize(),
         ) {
+            // pull to refresh button
             item {
                 Button(
                     onClick = {},
@@ -108,6 +112,7 @@ fun TaskPage(
                 }
             }
 
+            // tasks
             items(state.tasks, key = { it.id }) {
                 TaskCard(
                     task = it,
@@ -117,6 +122,7 @@ fun TaskPage(
                 )
             }
 
+            // guide to using the app, needs work
             item {
                 AnimatedVisibility(
                     visible = state.tasks.size == 1,
@@ -126,6 +132,7 @@ fun TaskPage(
                 )
             }
 
+            // when no tasks
             item {
                 AnimatedVisibility(
                     visible = state.tasks.isEmpty() && !showDeleteDialog && !showTaskAddDialog,
@@ -135,11 +142,13 @@ fun TaskPage(
                 )
             }
 
+            // to leave some space in the bottom, idk looks good
             item {
                 Spacer(modifier = Modifier.padding(60.dp))
             }
         }
 
+        // delete button
         Row(
             modifier = Modifier
                 .align(Alignment.BottomEnd)
@@ -168,6 +177,7 @@ fun TaskPage(
             }
         }
 
+        // delete dialog
         if (showDeleteDialog) {
             AlertDialog(
                 onDismissRequest = { showDeleteDialog = false },
@@ -198,6 +208,7 @@ fun TaskPage(
             )
         }
 
+        // add dialog
         if (showTaskAddDialog) {
             var newTask by remember { mutableStateOf("") }
             var newPriority by remember { mutableStateOf(false) }

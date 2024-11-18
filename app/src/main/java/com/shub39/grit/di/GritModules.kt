@@ -9,9 +9,14 @@ import org.koin.androidx.viewmodel.dsl.viewModel
 import org.koin.dsl.module
 
 val appModule = module {
+    // databases
     single { HabitDatabase.getDatabase(get()) }
     single { TaskDatabase.getDatabase(get()) }
+
+    // scheduler
     single { NotificationAlarmScheduler(get()) }
+
+    // viewmodels
     viewModel { HabitViewModel(get(), get()) }
     viewModel { TaskListViewModel(get(), get()) }
 }

@@ -8,12 +8,14 @@ import java.time.LocalDate
 import java.time.temporal.WeekFields
 import java.util.Locale
 
+// common ui logic used globally
 object UILogic {
     fun openLinkInBrowser(context: Context, url: String) {
         val intent = Intent(Intent.ACTION_VIEW, Uri.parse(url))
         context.startActivity(intent)
     }
 
+    // prepares data for the graph library
     fun prepareWeeklyData(habitStatusList: List<HabitStatus>): List<Pair<Int, Int>> {
         if (habitStatusList.isEmpty()) return emptyList()
 

@@ -9,8 +9,6 @@ import android.app.PendingIntent
 import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageManager
-import android.os.Build
-import androidx.annotation.RequiresApi
 import androidx.core.app.ActivityCompat
 import androidx.core.app.NotificationCompat
 import androidx.core.app.NotificationManagerCompat
@@ -33,7 +31,6 @@ object NotificationMethods {
         notificationManager.createNotificationChannel(channel)
     }
 
-    @RequiresApi(Build.VERSION_CODES.TIRAMISU)
     fun showAddNotification(context: Context, habit: Habit) {
         val intent = Intent(context, MainActivity::class.java).apply {
             flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
@@ -71,7 +68,6 @@ object NotificationMethods {
     }
 
     @SuppressLint("MissingPermission")
-    @RequiresApi(Build.VERSION_CODES.TIRAMISU)
     fun habitNotification(context: Context, habit: Habit) {
         val intent = Intent(context, MainActivity::class.java).apply {
             flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK

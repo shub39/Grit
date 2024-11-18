@@ -46,13 +46,15 @@ fun TaskCard(
         targetValue = when (taskStatus) {
             true -> Color.Gray
             else -> if (task.priority) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.secondary
-        }
+        },
+        label = "cardContent"
     )
     val cardContainer by animateColorAsState(
         targetValue = when (taskStatus) {
             true -> Color.LightGray
             else -> if (task.priority) MaterialTheme.colorScheme.primaryContainer else MaterialTheme.colorScheme.surfaceContainerHighest
-        }
+        },
+        label = "cardContainer"
     )
     val cardColors = CardDefaults.cardColors(
         containerColor = cardContainer,
@@ -64,11 +66,13 @@ fun TaskCard(
             .fillMaxWidth()
             .padding(start = 16.dp, end = 16.dp, bottom = 8.dp)
             .combinedClickable(
+                // change status on click
                 onClick = {
                     taskStatus = !taskStatus
                     task.status = !task.status
                     onStatusChange(task)
                 },
+                // edit on click and hold
                 onLongClick = {
                     showEditDialog = true
                 }
@@ -87,6 +91,7 @@ fun TaskCard(
         )
     }
 
+    // edit dialog
     if (showEditDialog) {
         var newTitle by remember { mutableStateOf(task.title) }
         val keyboardController = LocalSoftwareKeyboardController.current

@@ -25,6 +25,7 @@ class TaskListViewModel(
 
     val tasksState = _tasksState.asStateFlow()
         .onStart {
+            // runs when flow starts
             getTasks()
             updateCompleted()
         }
@@ -34,6 +35,7 @@ class TaskListViewModel(
             TaskPageState()
         )
 
+    // handles actions from task page
     fun taskPageAction(action: TaskPageAction) {
         viewModelScope.launch {
             when (action) {
@@ -99,6 +101,7 @@ class TaskListViewModel(
         }
     }
 
+    // schedule deletion to user preference, needs testing
     fun scheduleDeletion(preference: String) {
         _scheduler.schedule(preference)
     }

@@ -7,6 +7,7 @@ import java.time.LocalDate
 import java.time.LocalDateTime
 import java.time.temporal.ChronoUnit
 
+// converters and time related stuff, the streak stuff is not implemented yet
 object OtherLogic {
     @OptIn(ExperimentalMaterial3Api::class)
     fun localToTimePickerState(localTime: LocalDateTime): TimePickerState {

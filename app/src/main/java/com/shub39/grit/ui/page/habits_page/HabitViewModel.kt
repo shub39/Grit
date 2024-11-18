@@ -34,6 +34,7 @@ class HabitViewModel(
             HabitPageState()
         )
 
+    // handles actions from habit page
     fun habitsPageAction(action: HabitsPageAction) {
         viewModelScope.launch {
             when (action) {

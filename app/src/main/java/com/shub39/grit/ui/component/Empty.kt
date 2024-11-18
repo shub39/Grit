@@ -16,6 +16,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import com.shub39.grit.R
 
+// could be better imo
 @Composable
 fun Empty() {
     Column(

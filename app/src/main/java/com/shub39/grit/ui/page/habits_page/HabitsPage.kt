@@ -1,7 +1,5 @@
 package com.shub39.grit.ui.page.habits_page
 
-import android.os.Build
-import androidx.annotation.RequiresApi
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.animateContentSize
 import androidx.compose.animation.core.animateDpAsState
@@ -50,7 +48,6 @@ import com.shub39.grit.ui.page.habits_page.component.HabitGuide
 import com.shub39.grit.ui.page.habits_page.component.HabitCard
 import kotlinx.coroutines.launch
 
-@RequiresApi(Build.VERSION_CODES.TIRAMISU)
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun HabitsPage(
@@ -59,12 +56,14 @@ fun HabitsPage(
 ) {
     val context = LocalContext.current
 
+    // controllers, states and scopes
     var showAddHabitDialog by remember { mutableStateOf(false) }
     val addState = rememberPullToRefreshState()
     val coroutineScope = rememberCoroutineScope()
 
     val addSize by animateDpAsState(
         targetValue = if (addState.distanceFraction != 0f) 64.dp else 0.dp,
+        label = "button size"
     )
 
     PullToRefreshBox(
@@ -84,6 +83,7 @@ fun HabitsPage(
                 .padding(top = 16.dp)
                 .animateContentSize()
         ) {
+            // add button
             item {
                 Button(
                     onClick = {},
@@ -99,6 +99,7 @@ fun HabitsPage(
                 }
             }
 
+            // habits
             items(state.habits, key = { it.id }) {
                 HabitCard(
                     habit = it,
@@ -108,6 +109,7 @@ fun HabitsPage(
                 )
             }
 
+            // habit guide
             item {
                 AnimatedVisibility(
                     visible = state.habits.size == 1,
@@ -117,6 +119,7 @@ fun HabitsPage(
                 )
             }
 
+            // when no habits
             item {
                 AnimatedVisibility(
                     visible = state.habits.isEmpty() && !showAddHabitDialog,
@@ -126,10 +129,12 @@ fun HabitsPage(
                 )
             }
 
+            // ui sweetener
             item { Spacer(modifier = Modifier.padding(60.dp)) }
         }
     }
 
+    // add dialog
     if (showAddHabitDialog) {
         var newHabitName by remember { mutableStateOf("") }
         var newHabitDescription by remember { mutableStateOf("") }

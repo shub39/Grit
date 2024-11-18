@@ -53,10 +53,12 @@ fun HabitCard(
     completed: Boolean,
     action: (HabitsPageAction) -> Unit,
 ) {
+    // controllers
     var showEditDialog by remember { mutableStateOf(false) }
     var showAnalyticsSheet by remember { mutableStateOf(false) }
     var showDeleteDialog by remember { mutableStateOf(false) }
 
+    // animated colors
     val cardContent by animateColorAsState(
         targetValue = when (completed) {
             true -> MaterialTheme.colorScheme.primary
@@ -128,6 +130,7 @@ fun HabitCard(
 
     }
 
+    // delete dialog
     if (showDeleteDialog) {
         AlertDialog(
             onDismissRequest = { showDeleteDialog = false },

@@ -30,6 +30,7 @@ fun HabitMap(
 
     LaunchedEffect(daysSet) {
         weeks = withContext(Dispatchers.Default) {
+            // goes 17 weeks back from current date, and generates a sequence
             val startDate = LocalDate.now().minusDays(LocalDate.now().dayOfWeek.value.toLong()).minusWeeks(17)
             val allDays = generateSequence(startDate) { it.plusDays(1) }
                 .takeWhile { !it.isAfter(LocalDate.now()) }
@@ -38,8 +39,11 @@ fun HabitMap(
             val daysWithEmptyDays = mutableListOf<LocalDate?>()
             var currentMonth = startDate.monthValue
 
+            // iterate through all the days
             for (day in allDays) {
                 daysWithEmptyDays.add(day)
+
+                // if month changes, add 7 empty days
                 if (day.plusDays(1).monthValue != currentMonth) {
                     currentMonth = day.plusDays(1).monthValue
                     repeat(7) {
@@ -48,6 +52,7 @@ fun HabitMap(
                 }
             }
 
+            // returns in nested lists of 7 days
             daysWithEmptyDays.chunked(7)
         }
 

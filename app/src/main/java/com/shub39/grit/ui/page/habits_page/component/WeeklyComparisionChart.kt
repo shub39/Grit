@@ -14,6 +14,7 @@ import com.github.tehras.charts.line.renderer.point.FilledCircularPointDrawer
 import com.github.tehras.charts.line.renderer.xaxis.SimpleXAxisDrawer
 import com.github.tehras.charts.line.renderer.yaxis.SimpleYAxisDrawer
 
+// needs work
 @Composable
 fun WeeklyComparisonChart(
     weeklyData: List<Pair<Int, Int>>

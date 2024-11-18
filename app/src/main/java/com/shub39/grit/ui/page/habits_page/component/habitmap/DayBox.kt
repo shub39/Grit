@@ -18,6 +18,7 @@ import androidx.compose.runtime.*
 import androidx.compose.runtime.saveable.rememberSaveable
 import java.time.LocalDate
 
+// singular box for the map
 @Composable
 fun DayBox(
     done: Boolean,
