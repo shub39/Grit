@@ -17,10 +17,9 @@
 ![](https://img.shields.io/endpoint?url=https://apt.izzysoft.de/fdroid/api/v1/shield/com.shub39.grit&style=for-the-badge&color=FFB1C8&logoColor=D9E0EE&labelColor=292324)
 
 
-[<img src="https://f-droid.org/badge/get-it-on.png"
-    alt="Get it on F-Droid"
-    height="80">](https://f-droid.org/packages/com.shub39.grit)
+[<img src="https://f-droid.org/badge/get-it-on.png" alt="Get it on F-Droid" height="80">](https://f-droid.org/packages/com.shub39.grit)
 <a href="https://apt.izzysoft.de/packages/com.shub39.grit/latest"><img src="https://gitlab.com/IzzyOnDroid/repo/-/raw/master/assets/IzzyOnDroid.png" height="80"></a>
+
 ### Or Download latest from [Releases](https://github.com/shub39/Grit/releases/latest)
 
 </div>

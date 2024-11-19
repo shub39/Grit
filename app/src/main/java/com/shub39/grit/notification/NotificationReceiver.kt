@@ -3,10 +3,11 @@ package com.shub39.grit.notification
 import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
-import android.os.Build
 import android.util.Log
-import androidx.annotation.RequiresApi
+import androidx.core.app.NotificationManagerCompat
 import com.shub39.grit.database.habit.Habit
+import com.shub39.grit.database.habit.HabitDatabase
+import com.shub39.grit.database.habit.HabitStatus
 import com.shub39.grit.database.task.TaskDatabase
 import com.shub39.grit.notification.NotificationMethods.habitNotification
 import kotlinx.coroutines.CoroutineScope
@@ -17,33 +18,85 @@ import java.time.LocalDateTime
 
 class NotificationReceiver : BroadcastReceiver() {
 
+    private val tag = "NotificationReceiver"
     private val receiverScope = CoroutineScope(Dispatchers.IO + SupervisorJob())
 
-    @RequiresApi(Build.VERSION_CODES.TIRAMISU)
     override fun onReceive(context: Context, intent: Intent?) {
-        Log.d("NotificationReceiver", "Received")
+        Log.d(tag, "Received intent")
         val scheduler = NotificationAlarmScheduler(context)
-        if (intent != null) {
-            if (intent.getStringExtra("preference") == null) {
-                val habitId = intent.getStringExtra("1") ?: return
-                val habitDescription = intent.getStringExtra("2") ?: return
+        val habitDatabase = HabitDatabase.getDatabase(context)
+        val habitStatusDao = habitDatabase.habitStatusDao()
 
-                val habit = Habit(
-                    title = habitId,
-                    description = habitDescription,
-                    time = LocalDateTime.now()
-                )
-                habitNotification(context, habit)
-                scheduler.schedule(habit)
-            } else {
-                val taskDatabase = TaskDatabase.getDatabase(context)
-                val preference = intent.getStringExtra("preference") ?: return
-                val taskDao = taskDatabase.taskDao()
-                receiverScope.launch {
-                    taskDao.deleteAllTasks()
-                    Log.d("NotificationReceiver", "Deleted all tasks")
+        if (intent != null) {
+            when (intent.action) {
+                IntentActions.HABIT_NOTIFICATION.action -> {
+                    Log.d(tag, "Habit notification received")
+                    val habitId = intent.getLongExtra("3", -1)
+                    if (habitId < 0L) return
+                    val habitTitle = intent.getStringExtra("1") ?: return
+                    val habitDescription = intent.getStringExtra("2") ?: return
+                    val habit = Habit(
+                        id = habitId,
+                        title = habitTitle,
+                        description = habitDescription,
+                        time = LocalDateTime.now()
+                    )
+
+                    // check if habit is completed today, if not then shows notification
+                    receiverScope.launch {
+                        val habitStatus = habitStatusDao.getStatusForHabit(habitId)
+                        val time = LocalDateTime.now().toLocalDate()
+
+                        if (
+                            habitStatus.any { it.date == time }
+                        ) {
+                            Log.d(tag, "Habit already completed today")
+                        } else {
+                            habitNotification(context, habit)
+                        }
+                    }
+
+                    scheduler.schedule(habit)
                 }
-                scheduler.schedule(preference)
+
+                IntentActions.TASKS_DELETION.action -> {
+                    Log.d(tag, "Tasks deletion received")
+                    val taskDatabase = TaskDatabase.getDatabase(context)
+                    val preference = intent.getStringExtra("preference") ?: return
+                    val taskDao = taskDatabase.taskDao()
+
+                    // deletes all tasks
+                    receiverScope.launch {
+                        taskDao.deleteAllTasks()
+                        Log.d(tag, "Deleted all tasks")
+                    }
+
+                    scheduler.schedule(preference)
+                }
+
+                IntentActions.ADD_HABIT_STATUS.action -> {
+                    Log.d(tag, "Add habit status received")
+                    val habitId = intent.getLongExtra("1", -1)
+                    if (habitId < 0) return
+
+                    NotificationManagerCompat.from(context).cancel(habitId.hashCode())
+
+                    receiverScope.launch {
+                        try {
+                            val habitStatus = HabitStatus(
+                                habitId = habitId,
+                                date = LocalDateTime.now().toLocalDate()
+                            )
+                            habitStatusDao.insertHabitStatus(habitStatus)
+
+                            Log.d(tag, "Habit status added successfully")
+                        } catch (e: Exception) {
+                            Log.e(tag, "Error adding habit status", e)
+                        }
+                    }
+                }
+
+                else -> return
             }
         }
     }

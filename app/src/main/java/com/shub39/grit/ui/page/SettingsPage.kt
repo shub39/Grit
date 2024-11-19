@@ -1,5 +1,6 @@
 package com.shub39.grit.ui.page
 
+import android.content.Intent
 import android.os.Build
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -11,6 +12,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material3.Button
 import androidx.compose.material3.Card
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -33,6 +35,8 @@ import androidx.compose.ui.unit.dp
 import com.shub39.grit.R
 import com.shub39.grit.database.Datastore
 import com.shub39.grit.logic.UILogic.openLinkInBrowser
+import com.shub39.grit.notification.IntentActions
+import com.shub39.grit.notification.NotificationReceiver
 import com.shub39.grit.ui.page.task_page.TaskListViewModel
 import kotlinx.coroutines.launch
 
@@ -143,6 +147,50 @@ fun SettingsPage(
                     .fillMaxWidth()
                     .padding(top = 32.dp)
             ) {
+
+                // debug buttons
+                if (context.packageName.contains(".debug")) {
+                    Button(
+                        onClick = {
+                            val intent = Intent(context, NotificationReceiver::class.java).apply {
+                                action = IntentActions.HABIT_NOTIFICATION.action
+                                putExtra("1", "OK")
+                                putExtra("2", "desc")
+                                putExtra("3", 1L)
+                            }
+
+                            context.sendBroadcast(intent)
+                        }
+                    ) {
+                        Text("Send Notification Intent")
+                    }
+
+                    Button(
+                        onClick = {
+                            val intent = Intent(context, NotificationReceiver::class.java).apply {
+                                action = IntentActions.TASKS_DELETION.action
+                            }
+
+                            context.sendBroadcast(intent)
+                        }
+                    ) {
+                        Text("Send Deletion Intent")
+                    }
+
+                    Button(
+                        onClick = {
+                            val intent = Intent(context, NotificationReceiver::class.java).apply {
+                                action = IntentActions.ADD_HABIT_STATUS.action
+                            }
+
+                            context.sendBroadcast(intent)
+                        }
+                    ) {
+                        Text("Send Status Intent")
+                    }
+                }
+
+                // Credits
                 Text(
                     text = "Made by shub39",
                     textAlign = TextAlign.Center,
@@ -180,6 +228,7 @@ fun SettingsPage(
                 }
             }
         }
+
 
     }
 }
