@@ -2,25 +2,21 @@ package com.shub39.grit.tasks.data.database
 
 import androidx.room.Dao
 import androidx.room.Delete
-import androidx.room.Insert
-import androidx.room.OnConflictStrategy
 import androidx.room.Query
-import androidx.room.Update
+import androidx.room.Upsert
+import kotlinx.coroutines.flow.Flow
 
 @Dao
 interface TasksDao {
     @Query("SELECT * FROM task")
-    suspend fun getTasks(): List<Task>
+    fun getTasksFlow(): Flow<List<TaskEntity>>
 
-    @Insert(onConflict = OnConflictStrategy.REPLACE)
-    suspend fun addTask(task: Task)
+    @Upsert
+    suspend fun upsertTask(taskEntity: TaskEntity)
 
     @Delete
-    suspend fun deleteTask(task: Task)
+    suspend fun deleteTask(taskEntity: TaskEntity)
 
-    @Query("DELETE FROM TASK")
+    @Query("DELETE FROM task")
     suspend fun deleteAllTasks()
-
-    @Update
-    suspend fun updateTask(task: Task)
 }

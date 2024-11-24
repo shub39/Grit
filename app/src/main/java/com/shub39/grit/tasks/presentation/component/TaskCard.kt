@@ -31,7 +31,7 @@ import androidx.compose.ui.text.input.KeyboardCapitalization
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import com.shub39.grit.R
-import com.shub39.grit.tasks.data.database.Task
+import com.shub39.grit.tasks.domain.Task
 
 @OptIn(ExperimentalFoundationApi::class)
 @Composable

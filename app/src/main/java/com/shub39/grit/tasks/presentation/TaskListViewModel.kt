@@ -2,32 +2,32 @@ package com.shub39.grit.tasks.presentation
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.shub39.grit.tasks.data.database.Task
-import com.shub39.grit.tasks.data.database.TaskDatabase
 import com.shub39.grit.core.domain.NotificationAlarmScheduler
+import com.shub39.grit.tasks.domain.Task
+import com.shub39.grit.tasks.domain.TaskRepo
+import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.launchIn
+import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.flow.onStart
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 
 class TaskListViewModel(
-    taskDatabase: TaskDatabase,
-    scheduler: NotificationAlarmScheduler
+    private val repo: TaskRepo,
+    private val scheduler: NotificationAlarmScheduler
 ) : ViewModel() {
 
-    private val tasksDao = taskDatabase.taskDao()
-
+    private var savedJob: Job? = null
     private val _tasksState = MutableStateFlow(TaskPageState())
-    private val _scheduler = scheduler
 
     val tasksState = _tasksState.asStateFlow()
         .onStart {
             // runs when flow starts
-            getTasks()
-            updateCompleted()
+            observeTasks()
         }
         .stateIn(
             viewModelScope,
@@ -40,73 +40,55 @@ class TaskListViewModel(
         viewModelScope.launch {
             when (action) {
                 is TaskPageAction.AddTask -> {
-                    addTask(action.task)
-                    getTasks()
+                    upsertTask(action.task)
                 }
 
                 TaskPageAction.DeleteTasks -> {
                     deleteTasks()
-                    getTasks()
-                    updateCompleted()
                 }
 
                 is TaskPageAction.UpdateTaskStatus -> {
-                    updateTaskStatus(action.task)
-                    getTasks()
-                    updateCompleted()
+                    upsertTask(action.task)
                 }
             }
         }
     }
 
-    private suspend fun getTasks() {
-        _tasksState.update {
-            it.copy(
-                tasks = tasksDao.getTasks()
-            )
-        }
-    }
-
-    private suspend fun addTask(task: Task) {
-        tasksDao.addTask(task)
-    }
-
-    private suspend fun updateTaskStatus(updatedTask: Task) {
-        tasksDao.updateTask(updatedTask)
-    }
-
-    private fun updateCompleted() {
-        var completed = 0
-
-        for (task in _tasksState.value.tasks) {
-            if (task.status) {
-                completed++
+    private fun observeTasks() {
+        savedJob?.cancel()
+        savedJob = repo
+            .getTasks()
+            .onEach { tasks ->
+                _tasksState.update { task ->
+                    task.copy(
+                        tasks = tasks,
+                        completedTasks = tasks.filter { it.status }
+                    )
+                }
             }
-        }
+            .launchIn(viewModelScope)
+    }
 
-        _tasksState.update {
-            it.copy(
-                completedTasks = completed
-            )
-        }
+    private suspend fun upsertTask(task: Task) {
+        repo.upsertTask(task)
     }
 
     private suspend fun deleteTasks(all: Boolean = false) {
         for (task in _tasksState.value.tasks) {
             if (all) {
-                tasksDao.deleteTask(task)
+                repo.deleteTask(task)
             } else if (task.status) {
-                tasksDao.deleteTask(task)
+                repo.deleteTask(task)
             }
         }
     }
 
     // schedule deletion to user preference, needs testing
     fun scheduleDeletion(preference: String) {
-        _scheduler.schedule(preference)
+        scheduler.schedule(preference)
     }
 
     fun cancelScheduleDeletion(preference: String) {
-        _scheduler.cancel(preference)
+        scheduler.cancel(preference)
     }
 }

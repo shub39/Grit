@@ -49,7 +49,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import com.shub39.grit.R
 import com.shub39.grit.app.Empty
-import com.shub39.grit.tasks.data.database.Task
+import com.shub39.grit.tasks.domain.Task
 import com.shub39.grit.tasks.presentation.component.TaskCard
 import com.shub39.grit.tasks.presentation.component.TasksGuide
 import kotlinx.coroutines.launch
@@ -155,7 +155,7 @@ fun TaskPage(
                 .padding(16.dp)
         ) {
             AnimatedVisibility(
-                visible = state.completedTasks != 0,
+                visible = state.completedTasks.isNotEmpty(),
                 enter = fadeIn(),
                 exit = fadeOut()
             ) {

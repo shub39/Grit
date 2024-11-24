@@ -1,6 +1,5 @@
 package com.shub39.grit.habits.presentation
 
-import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.shub39.grit.core.domain.AlarmScheduler
@@ -95,21 +94,17 @@ class HabitViewModel(
 
     private fun updateCompletedHabits() {
         _habitState.update { habitPageState ->
-            Log.d("HabitViewModel", "Looking for completed habits...")
             val completedHabits = mutableListOf<Habit>()
 
             habitPageState.habits.forEach { habit ->
                 if (habitPageState.habitsWithStatuses[habit.id]?.any { it.date == LocalDate.now() } == true) {
                     completedHabits += habit
-                    Log.d("HabitViewModel", "Found completed habit: ${habit.title}")
                 }
             }
 
             habitPageState.copy(
                 completedHabits = completedHabits
-            ).also {
-                Log.d("HabitViewModel", "Completed habits: ${it.completedHabits}")
-            }
+            )
         }
     }
 

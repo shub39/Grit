@@ -6,7 +6,9 @@ import com.shub39.grit.tasks.data.database.TaskDatabase
 import com.shub39.grit.habits.data.repository.HabitRepository
 import com.shub39.grit.core.domain.NotificationAlarmScheduler
 import com.shub39.grit.habits.domain.HabitRepo
+import com.shub39.grit.tasks.data.repository.TasksRepository
 import com.shub39.grit.habits.presentation.HabitViewModel
+import com.shub39.grit.tasks.domain.TaskRepo
 import com.shub39.grit.tasks.presentation.TaskListViewModel
 import org.koin.androidx.viewmodel.dsl.viewModelOf
 import org.koin.core.module.dsl.singleOf
@@ -23,11 +25,12 @@ val appModule = module {
     single { get<TaskDatabase>().taskDao() }
 
     singleOf(::HabitRepository).bind<HabitRepo>()
+    singleOf(::TasksRepository).bind<TaskRepo>()
 
     // scheduler
     singleOf(::NotificationAlarmScheduler).bind<AlarmScheduler>()
 
-    // viewmodels
+    // view models
     viewModelOf(::HabitViewModel)
     viewModelOf(::TaskListViewModel)
 }
