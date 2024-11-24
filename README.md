@@ -1,6 +1,6 @@
 ![](fastlane/metadata/android/en-US/images/icon200x200.png)
 
-# Grit ⚒️
+# Grit 
 ### A simple ToDo list and Habit Tracker
 
 
@@ -25,7 +25,7 @@
 | ![Image 3](fastlane/metadata/android/en-US/images/phoneScreenshots/3.png) | ![Image 4](fastlane/metadata/android/en-US/images/phoneScreenshots/4.png) |
 | ![Image 5](fastlane/metadata/android/en-US/images/phoneScreenshots/5.png) | ![Image 6](fastlane/metadata/android/en-US/images/phoneScreenshots/6.png) |
 
-## Features and Plans 💫
+## Features / Road Map 🛣️
 >- [x] Todo List
 >- [x] Habit Tracking
 >- [x] Analytics
