@@ -1,11 +1,18 @@
 package com.shub39.grit.di
 
-import com.shub39.grit.database.habit.HabitDatabase
-import com.shub39.grit.database.task.TaskDatabase
-import com.shub39.grit.notification.NotificationAlarmScheduler
-import com.shub39.grit.ui.page.habits_page.HabitViewModel
-import com.shub39.grit.ui.page.task_page.TaskListViewModel
-import org.koin.androidx.viewmodel.dsl.viewModel
+import com.shub39.grit.core.domain.AlarmScheduler
+import com.shub39.grit.habits.data.database.HabitDatabase
+import com.shub39.grit.tasks.data.database.TaskDatabase
+import com.shub39.grit.habits.data.repository.HabitRepository
+import com.shub39.grit.core.domain.NotificationAlarmScheduler
+import com.shub39.grit.habits.domain.HabitRepo
+import com.shub39.grit.tasks.data.repository.TasksRepository
+import com.shub39.grit.habits.presentation.HabitViewModel
+import com.shub39.grit.tasks.domain.TaskRepo
+import com.shub39.grit.tasks.presentation.TaskListViewModel
+import org.koin.androidx.viewmodel.dsl.viewModelOf
+import org.koin.core.module.dsl.singleOf
+import org.koin.dsl.bind
 import org.koin.dsl.module
 
 val appModule = module {
@@ -13,10 +20,17 @@ val appModule = module {
     single { HabitDatabase.getDatabase(get()) }
     single { TaskDatabase.getDatabase(get()) }
 
-    // scheduler
-    single { NotificationAlarmScheduler(get()) }
+    single { get<HabitDatabase>().habitDao() }
+    single { get<HabitDatabase>().habitStatusDao() }
+    single { get<TaskDatabase>().taskDao() }
 
-    // viewmodels
-    viewModel { HabitViewModel(get(), get()) }
-    viewModel { TaskListViewModel(get(), get()) }
+    singleOf(::HabitRepository).bind<HabitRepo>()
+    singleOf(::TasksRepository).bind<TaskRepo>()
+
+    // scheduler
+    singleOf(::NotificationAlarmScheduler).bind<AlarmScheduler>()
+
+    // view models
+    viewModelOf(::HabitViewModel)
+    viewModelOf(::TaskListViewModel)
 }
