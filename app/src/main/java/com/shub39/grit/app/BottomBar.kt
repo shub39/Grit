@@ -8,25 +8,21 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
-import androidx.navigation.NavController
-import androidx.navigation.compose.currentBackStackEntryAsState
 
 // just a simple Bottombar
 @Composable
-fun BottomBar(navController: NavController) {
-    val currentRoute = navController.currentBackStackEntryAsState()
-
+fun BottomBar(
+    currentRoute: BottomAppBarDestination,
+    onChange: (BottomAppBarDestination) -> Unit
+) {
     NavigationBar(tonalElevation = 8.dp) {
-        BottomAppBarDestination.entries.forEachIndexed { index, destination ->
-            val selected = currentRoute.value?.destination?.route == destination.route
+        BottomAppBarDestination.entries.forEachIndexed { _, destination ->
 
             NavigationBarItem(
-                selected = selected,
+                selected = currentRoute == destination,
                 onClick = {
-                    if (!selected) {
-                        navController.navigate(destination.route) {
-                            launchSingleTop = true
-                        }
+                    if (currentRoute != destination) {
+                        onChange(destination)
                     }
                 },
                 icon = {
