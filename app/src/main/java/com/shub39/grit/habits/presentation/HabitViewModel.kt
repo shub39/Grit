@@ -1,5 +1,6 @@
 package com.shub39.grit.habits.presentation
 
+import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.shub39.grit.core.domain.AlarmScheduler
@@ -87,25 +88,21 @@ class HabitViewModel(
                     )
                 }
 
-                updateCompletedHabits()
-            }
-            .launchIn(viewModelScope)
-    }
+                _habitState.update { habitPageState ->
+                    val completedHabits = mutableListOf<Habit>()
 
-    private fun updateCompletedHabits() {
-        _habitState.update { habitPageState ->
-            val completedHabits = mutableListOf<Habit>()
+                    habitPageState.habits.forEach { habit ->
+                        if (habitPageState.habitsWithStatuses[habit.id]?.any { it.date == LocalDate.now() } == true) {
+                            completedHabits += habit
+                        }
+                    }
 
-            habitPageState.habits.forEach { habit ->
-                if (habitPageState.habitsWithStatuses[habit.id]?.any { it.date == LocalDate.now() } == true) {
-                    completedHabits += habit
+                    habitPageState.copy(
+                        completedHabits = completedHabits
+                    ).also { Log.d("HabitViewModel", "Completed habits: $completedHabits") }
                 }
             }
-
-            habitPageState.copy(
-                completedHabits = completedHabits
-            )
-        }
+            .launchIn(viewModelScope)
     }
 
     private suspend fun addHabit(habit: Habit) {
