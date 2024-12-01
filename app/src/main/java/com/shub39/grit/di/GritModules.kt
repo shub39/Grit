@@ -10,8 +10,8 @@ import com.shub39.grit.tasks.data.repository.TasksRepository
 import com.shub39.grit.habits.presentation.HabitViewModel
 import com.shub39.grit.tasks.domain.TaskRepo
 import com.shub39.grit.tasks.presentation.TaskListViewModel
-import org.koin.androidx.viewmodel.dsl.viewModelOf
 import org.koin.core.module.dsl.singleOf
+import org.koin.core.module.dsl.viewModelOf
 import org.koin.dsl.bind
 import org.koin.dsl.module
 

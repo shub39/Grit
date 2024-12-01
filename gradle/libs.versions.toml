@@ -3,8 +3,9 @@ agp = "8.7.2"
 charts = "0.2.4-alpha"
 coreSplashscreen = "1.0.1"
 datastorePreferences = "1.1.1"
-koinAndroidxCompose = "3.5.0"
-kotlin = "2.0.20"
+koinAndroidxCompose = "4.0.0"
+kotlin = "2.0.21"
+ksp = "2.0.21-1.0.28"
 coreKtx = "1.15.0"
 junit = "4.13.2"
 junitVersion = "1.2.1"
@@ -64,6 +65,7 @@ androidx-lifecycle-runtime-compose-android = { group = "androidx.lifecycle", nam
 koin-androidx-compose = { module = "io.insert-koin:koin-androidx-compose", version.ref = "koinAndroidxCompose" }
 
 [plugins]
+ksp = { id = "com.google.devtools.ksp", version.ref = "ksp" }
 android-application = { id = "com.android.application", version.ref = "agp" }
 jetbrains-kotlin-android = { id = "org.jetbrains.kotlin.android", version.ref = "kotlin" }
 compose-compiler = { id = "org.jetbrains.kotlin.plugin.compose", version.ref = "kotlin" }
