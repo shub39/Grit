@@ -45,6 +45,7 @@ I eventually want to turn this app into a productivity hub with many social feat
 >- Alarm Manager API
 >- Kotlin Coroutines
 >- MVVM architecture
+>- [HeatMaps](https://github.com/shub39/HeatMaps) for Heat Maps!
 >- [charts](https://github.com/tehras/charts) for making charts!
 
 ## Support 💕

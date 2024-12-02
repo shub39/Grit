@@ -8,6 +8,7 @@ import com.shub39.grit.habits.domain.Habit
 import com.shub39.grit.habits.domain.HabitRepo
 import com.shub39.grit.habits.domain.HabitStatus
 import kotlinx.coroutines.Job
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.asStateFlow
@@ -87,6 +88,9 @@ class HabitViewModel(
                         habitsWithStatuses = habitWithStatuses
                     )
                 }
+
+                // for the habits to load. is there a better way?
+                delay(300)
 
                 _habitState.update { habitPageState ->
                     val completedHabits = mutableListOf<Habit>()
