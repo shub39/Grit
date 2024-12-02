@@ -17,8 +17,9 @@ import androidx.compose.ui.unit.dp
 import com.shub39.grit.habits.domain.Habit
 import com.shub39.grit.habits.domain.HabitStatus
 import com.shub39.grit.habits.domain.UILogic
+import com.shub39.grit.habits.presentation.component.AnalyticsCard
 import com.shub39.grit.habits.presentation.component.WeeklyComparisonChart
-import com.shub39.grit.habits.presentation.component.habitmap.HabitMap
+import lib.shub39.heatmaps.calendar.bool.BooleanHeatMap
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -56,13 +57,19 @@ fun AnalyticsSheet(
 
             Spacer(modifier = Modifier.padding(8.dp))
 
-            HabitMap(
-                statusList = statusList,
-                onClick = { date ->
-                    action(HabitsPageAction.InsertStatus(habit, date))
-                    updateTrigger = !updateTrigger
-                }
-            )
+            AnalyticsCard(title = "Habit Map") {
+                BooleanHeatMap(
+                    dates = statusList.map { it.date },
+                    modifier = Modifier
+                        .padding(16.dp)
+                        .fillMaxWidth(),
+                    editEnabled = true,
+                    onClick = { date ->
+                        action(HabitsPageAction.InsertStatus(habit, date))
+                        updateTrigger = !updateTrigger
+                    }
+                )
+            }
 
             Spacer(modifier = Modifier.padding(8.dp))
 
