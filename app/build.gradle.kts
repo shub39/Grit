@@ -3,6 +3,7 @@ plugins {
     alias(libs.plugins.jetbrains.kotlin.android)
     alias(libs.plugins.compose.compiler)
     alias(libs.plugins.ksp)
+    alias(libs.plugins.kotlin.serialization)
 }
 
 val appName = "Grit"
@@ -86,6 +87,7 @@ dependencies {
     androidTestImplementation(libs.androidx.ui.test.junit4)
     debugImplementation(libs.androidx.ui.tooling)
     implementation(libs.androidx.core.splashscreen)
+    implementation(libs.kotlinx.serialization.json)
 
     implementation(libs.androidx.room.runtime)
     annotationProcessor(libs.androidx.room.compiler)

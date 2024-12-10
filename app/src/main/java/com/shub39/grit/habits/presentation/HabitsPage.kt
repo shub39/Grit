@@ -40,10 +40,10 @@ import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardCapitalization
 import androidx.compose.ui.unit.dp
 import com.shub39.grit.R
-import com.shub39.grit.app.Empty
-import com.shub39.grit.core.presentation.NotificationMethods.showAddNotification
+import com.shub39.grit.core.presentation.Empty
+import com.shub39.grit.core.presentation.showAddNotification
+import com.shub39.grit.core.presentation.timePickerStateToLocalDateTime
 import com.shub39.grit.habits.domain.Habit
-import com.shub39.grit.habits.domain.OtherLogic.timePickerStateToLocalDateTime
 import com.shub39.grit.habits.presentation.component.HabitGuide
 import com.shub39.grit.habits.presentation.component.HabitCard
 import kotlinx.coroutines.launch

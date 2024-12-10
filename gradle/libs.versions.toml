@@ -1,9 +1,9 @@
 [versions]
-agp = "8.7.2"
+agp = "8.7.3"
 charts = "0.2.4-alpha"
 coreSplashscreen = "1.0.1"
 datastorePreferences = "1.1.1"
-heatmaps = "1.0.0"
+heatmaps = "1.0.1"
 koinAndroidxCompose = "4.0.0"
 kotlin = "2.0.21"
 ksp = "2.0.21-1.0.28"
@@ -30,6 +30,7 @@ navigationCompose = "2.8.4"
 material3Android = "1.3.1"
 lifecycleRuntimeComposeAndroid = "2.8.7"
 workRuntimeKtx = "2.10.0"
+serialization = "1.7.3"
 
 [libraries]
 androidx-material3 = { module = "androidx.compose.material3:material3", version.ref = "material3" }
@@ -65,9 +66,11 @@ androidx-navigation-compose = { group = "androidx.navigation", name = "navigatio
 androidx-material3-android = { group = "androidx.compose.material3", name = "material3-android", version.ref = "material3Android" }
 androidx-lifecycle-runtime-compose-android = { group = "androidx.lifecycle", name = "lifecycle-runtime-compose-android", version.ref = "lifecycleRuntimeComposeAndroid" }
 koin-androidx-compose = { module = "io.insert-koin:koin-androidx-compose", version.ref = "koinAndroidxCompose" }
+kotlinx-serialization-json = { module = "org.jetbrains.kotlinx:kotlinx-serialization-json", version.ref = "serialization"}
 
 [plugins]
 ksp = { id = "com.google.devtools.ksp", version.ref = "ksp" }
 android-application = { id = "com.android.application", version.ref = "agp" }
 jetbrains-kotlin-android = { id = "org.jetbrains.kotlin.android", version.ref = "kotlin" }
 compose-compiler = { id = "org.jetbrains.kotlin.plugin.compose", version.ref = "kotlin" }
+kotlin-serialization = { id = "org.jetbrains.kotlin.plugin.serialization", version.ref = "kotlin" }

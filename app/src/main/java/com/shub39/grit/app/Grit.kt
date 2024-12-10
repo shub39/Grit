@@ -1,12 +1,17 @@
 package com.shub39.grit.app
 
-import androidx.compose.animation.AnimatedContent
+import androidx.compose.animation.core.tween
+import androidx.compose.animation.fadeIn
+import androidx.compose.animation.fadeOut
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import com.shub39.grit.core.presentation.SettingsPage
+import androidx.navigation.compose.NavHost
+import androidx.navigation.compose.composable
+import androidx.navigation.compose.navigation
+import androidx.navigation.compose.rememberNavController
 import com.shub39.grit.habits.presentation.HabitViewModel
 import com.shub39.grit.habits.presentation.HabitsPage
 import com.shub39.grit.tasks.presentation.TaskListViewModel
@@ -18,42 +23,60 @@ fun Grit(
     tvm: TaskListViewModel = koinViewModel(),
     hvm: HabitViewModel = koinViewModel()
 ) {
-    var currentRoute: BottomAppBarDestination by remember { mutableStateOf(BottomAppBarDestination.TasksPage) }
+    val navController = rememberNavController()
+    var currentRoute: Routes by remember { mutableStateOf(Routes.TasksGraph) }
 
     val taskPageState by tvm.tasksState.collectAsStateWithLifecycle()
     val habitsPageState by hvm.habitsPageState.collectAsStateWithLifecycle()
 
-    Scaffold(
-        bottomBar = {
-            BottomBar(
-                currentRoute = currentRoute,
-                onChange = { currentRoute = it }
-            )
-        }
-    ) { innerPadding ->
+    Scaffold { padding ->
+        NavHost(
+            navController = navController,
+            startDestination = currentRoute,
+            modifier = Modifier.padding(padding),
+            enterTransition = { fadeIn(animationSpec = tween(300)) },
+            exitTransition = { fadeOut(animationSpec = tween(300)) },
+            popEnterTransition = { fadeIn(animationSpec = tween(300)) },
+            popExitTransition = { fadeOut(animationSpec = tween(300)) }
+        ) {
+            navigation<Routes.TasksGraph>(
+                startDestination = Routes.TasksPage
+            ) {
+                composable<Routes.TasksPage> {
+                    currentRoute = Routes.TasksGraph
 
-      AnimatedContent(
-          targetState = currentRoute,
-          modifier = Modifier.padding(innerPadding),
-          label = "page"
-      ) {
-          when (it) {
-              BottomAppBarDestination.TasksPage -> {
-                  TaskPage(
-                      state = taskPageState,
-                      action = tvm::taskPageAction
-                  )
-              }
-              BottomAppBarDestination.HabitsPage -> {
-                  HabitsPage(
-                      state = habitsPageState,
-                      action = hvm::habitsPageAction
-                  )
-              }
-              BottomAppBarDestination.SettingsPage -> {
-                  SettingsPage(tvm)
-              }
-          }
-      }
+                    TaskPage(
+                        state = taskPageState,
+                        action = tvm::taskPageAction
+                    )
+                }
+
+                composable<Routes.TasksSettings> {
+                    currentRoute = Routes.TasksSettings
+
+
+                }
+            }
+
+            navigation<Routes.HabitGraph>(
+                startDestination = Routes.HabitsPage
+            ) {
+                composable<Routes.HabitsPage> {
+                    currentRoute = Routes.HabitsPage
+
+                    HabitsPage(
+                        state = habitsPageState,
+                        action = hvm::habitsPageAction
+                    )
+                }
+
+                composable<Routes.HabitsSettings> {
+                    currentRoute = Routes.HabitsSettings
+
+
+                }
+            }
+        }
     }
+
 }
