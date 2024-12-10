@@ -1,6 +1,5 @@
 package com.shub39.grit.habits.presentation
 
-import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.shub39.grit.core.domain.AlarmScheduler
@@ -8,7 +7,6 @@ import com.shub39.grit.habits.domain.Habit
 import com.shub39.grit.habits.domain.HabitRepo
 import com.shub39.grit.habits.domain.HabitStatus
 import kotlinx.coroutines.Job
-import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.asStateFlow
@@ -25,14 +23,12 @@ class HabitViewModel(
     private val repo: HabitRepo
 ) : ViewModel() {
 
-    private var savedHabitsJob: Job? = null
     private var habitStatusJob: Job? = null
 
     private val _habitState = MutableStateFlow(HabitPageState())
 
     val habitsPageState = _habitState.asStateFlow()
         .onStart {
-            observeHabits()
             observeHabitStatuses()
         }
         .stateIn(
@@ -64,46 +60,18 @@ class HabitViewModel(
         }
     }
 
-    private fun observeHabits() {
-        savedHabitsJob?.cancel()
-        savedHabitsJob = repo
-            .getHabits()
-            .onEach { habits ->
-                _habitState.update {
-                    it.copy(
-                        habits = habits
-                    )
-                }
-            }
-            .launchIn(viewModelScope)
-    }
-
     private fun observeHabitStatuses() {
         habitStatusJob?.cancel()
         habitStatusJob = repo
             .getHabitStatus()
             .onEach { habitWithStatuses ->
-                _habitState.update {
-                    it.copy(
-                        habitsWithStatuses = habitWithStatuses
-                    )
-                }
-
-                // for the habits to load. is there a better way?
-                delay(300)
-
                 _habitState.update { habitPageState ->
-                    val completedHabits = mutableListOf<Habit>()
-
-                    habitPageState.habits.forEach { habit ->
-                        if (habitPageState.habitsWithStatuses[habit.id]?.any { it.date == LocalDate.now() } == true) {
-                            completedHabits += habit
-                        }
-                    }
-
                     habitPageState.copy(
-                        completedHabits = completedHabits
-                    ).also { Log.d("HabitViewModel", "Completed habits: $completedHabits") }
+                        habitsWithStatuses = habitWithStatuses,
+                        completedHabits = habitWithStatuses.keys.filter { habit ->
+                            habitWithStatuses[habit]?.any { it.date == LocalDate.now() } == true
+                        }
+                    )
                 }
             }
             .launchIn(viewModelScope)
@@ -120,7 +88,7 @@ class HabitViewModel(
     }
 
     private suspend fun insertHabitStatus(habit: Habit, date: LocalDate) {
-        if (isHabitCompleted(habit.id, date)) {
+        if (isHabitCompleted(habit, date)) {
 
             repo.deleteHabitStatus(habit.id, date)
 
@@ -134,8 +102,8 @@ class HabitViewModel(
         }
     }
 
-    private fun isHabitCompleted(habitId: Long, date: LocalDate): Boolean {
-        return _habitState.value.habitsWithStatuses[habitId]?.any { it.date == date } == true
+    private fun isHabitCompleted(habit: Habit, date: LocalDate): Boolean {
+        return _habitState.value.habitsWithStatuses[habit]?.any { it.date == date } == true
     }
 
 }

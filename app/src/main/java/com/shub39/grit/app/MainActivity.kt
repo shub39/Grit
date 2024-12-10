@@ -8,8 +8,8 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import com.shub39.grit.core.data.GritDatastore
-import com.shub39.grit.core.presentation.NotificationMethods.createNotificationChannel
 import com.shub39.grit.core.presentation.GritTheme
+import com.shub39.grit.core.presentation.createNotificationChannel
 import org.koin.compose.KoinContext
 
 class MainActivity : ComponentActivity() {

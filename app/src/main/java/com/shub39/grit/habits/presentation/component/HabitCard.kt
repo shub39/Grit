@@ -10,9 +10,7 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
-import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Button
@@ -33,9 +31,11 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardCapitalization
 import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import com.shub39.grit.R
 import com.shub39.grit.core.presentation.localToTimePickerState
@@ -110,7 +110,9 @@ fun HabitCard(
             ) {
                 Text(
                     text = habit.title,
-                    style = MaterialTheme.typography.titleMedium
+                    style = MaterialTheme.typography.titleMedium,
+                    maxLines = 2,
+                    overflow = TextOverflow.Ellipsis
                 )
             }
 
@@ -134,37 +136,35 @@ fun HabitCard(
         AlertDialog(
             onDismissRequest = { showDeleteDialog = false },
             text = {
-                Column {
+                Column(
+                    horizontalAlignment = Alignment.CenterHorizontally
+                ) {
                     Icon(
                         painter = painterResource(id = R.drawable.round_warning_24),
                         contentDescription = null,
-                        modifier = Modifier
-                            .align(Alignment.CenterHorizontally)
-                            .size(64.dp)
+                        modifier = Modifier.align(Alignment.CenterHorizontally)
+                    )
+
+                    Text(
+                        text = stringResource(R.string.delete),
+                        style = MaterialTheme.typography.titleLarge,
+                        textAlign = TextAlign.Center,
+                        fontWeight = FontWeight.Bold
                     )
 
                     Text(
                         text = stringResource(id = R.string.delete_warning),
                         style = MaterialTheme.typography.titleMedium,
-                        textAlign = TextAlign.Center,
-                        modifier = Modifier.fillMaxWidth()
+                        textAlign = TextAlign.Center
                     )
                 }
             },
             confirmButton = {
                 Row(
-                    modifier = Modifier.fillMaxWidth(),
                     horizontalArrangement = Arrangement.SpaceEvenly
                 ) {
                     Button(
-                        onClick = { showDeleteDialog = false },
-                        modifier = Modifier.weight(1f),
-                        shape = RoundedCornerShape(
-                            topStart = 16.dp,
-                            bottomStart = 16.dp,
-                            topEnd = 4.dp,
-                            bottomEnd = 4.dp
-                        )
+                        onClick = { showDeleteDialog = false }
                     ) {
                         Text(text = stringResource(id = R.string.cancel))
                     }
@@ -175,14 +175,7 @@ fun HabitCard(
                         onClick = {
                             showDeleteDialog = false
                             action(HabitsPageAction.DeleteHabit(habit))
-                        },
-                        modifier = Modifier.weight(1f),
-                        shape = RoundedCornerShape(
-                            topStart = 4.dp,
-                            bottomStart = 4.dp,
-                            topEnd = 16.dp,
-                            bottomEnd = 16.dp
-                        )
+                        }
                     ) {
                         Text(text = stringResource(id = R.string.delete))
                     }
@@ -233,21 +226,13 @@ fun HabitCard(
             },
             confirmButton = {
                 Row(
-                    modifier = Modifier.fillMaxWidth(),
                     horizontalArrangement = Arrangement.SpaceEvenly
                 ) {
                     Button(
                         onClick = {
                             showEditDialog = false
                             showDeleteDialog = true
-                        },
-                        modifier = Modifier.weight(1f),
-                        shape = RoundedCornerShape(
-                            topStart = 16.dp,
-                            bottomStart = 16.dp,
-                            topEnd = 4.dp,
-                            bottomEnd = 4.dp
-                        )
+                        }
                     ) {
                         Text(text = stringResource(id = R.string.delete))
                     }
@@ -269,13 +254,6 @@ fun HabitCard(
                                 )
                             )
                         },
-                        modifier = Modifier.weight(1f),
-                        shape = RoundedCornerShape(
-                            topStart = 4.dp,
-                            bottomStart = 4.dp,
-                            topEnd = 16.dp,
-                            bottomEnd = 16.dp
-                        ),
                         enabled = newHabitDescription.isNotBlank() && newHabitDescription.length <= 50,
                     ) {
                         Text(text = stringResource(id = R.string.update))
