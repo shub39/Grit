@@ -241,7 +241,7 @@ fun HabitsPage(
 }
 
 @Preview(showBackground = true, backgroundColor = 0xFFFFFFFF,
-    device = "spec:width=673dp,height=841dp", showSystemUi = true
+    device = "spec:width=411dp,height=891dp", showSystemUi = true
 )
 @Composable
 private fun HabitsPagePreview() {

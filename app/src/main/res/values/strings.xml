@@ -42,4 +42,5 @@
     <string name="delete_tasks">Are you sure you want to delete all completed tasks?</string>
     <string name="channel_name">Habits Channel</string>
     <string name="channel_description">Notification channel for habit status update</string>
+    <string name="update_title">Update title</string>
 </resources>
