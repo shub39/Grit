@@ -21,6 +21,7 @@ import com.shub39.grit.habits.presentation.HabitViewModel
 import com.shub39.grit.habits.presentation.HabitsPage
 import com.shub39.grit.tasks.presentation.TaskListViewModel
 import com.shub39.grit.tasks.presentation.TaskPage
+import com.shub39.grit.tasks.presentation.TaskSettings
 import org.koin.androidx.compose.koinViewModel
 
 @Composable
@@ -91,14 +92,19 @@ fun Grit(
 
                     TaskPage(
                         state = taskPageState,
-                        action = tvm::taskPageAction
+                        action = tvm::taskPageAction,
+                        onSettingsClick = {
+                            navController.navigate(Routes.TasksSettings) {
+                                launchSingleTop = true
+                            }
+                        }
                     )
                 }
 
                 composable<Routes.TasksSettings> {
                     currentRoute = Routes.TasksSettings
 
-
+                    TaskSettings(tvm)
                 }
             }
 

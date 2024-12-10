@@ -43,4 +43,5 @@
     <string name="channel_name">Habits Channel</string>
     <string name="channel_description">Notification channel for habit status update</string>
     <string name="update_title">Update title</string>
+    <string name="clear_preference_exp">periodically clear tasks</string>
 </resources>

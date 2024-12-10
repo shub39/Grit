@@ -123,8 +123,7 @@ fun TaskCard(
                         task.title = newTitle
                         onStatusChange(task)
                         showEditDialog = false
-                    },
-                    modifier = Modifier.fillMaxWidth()
+                    }
                 ) {
                     Text(stringResource(R.string.edit_task))
                 }
