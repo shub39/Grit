@@ -38,7 +38,6 @@ class TaskListViewModel(
         .onStart {
             // runs when flow starts
             observeTasks()
-            observeSettings()
         }
         .stateIn(
             viewModelScope,
@@ -72,12 +71,16 @@ class TaskListViewModel(
                     upsertTask(action.task)
                 }
 
-                is TaskPageAction.changeCategory -> {
+                is TaskPageAction.ChangeCategory -> {
                     _tasksState.update {
                         it.copy(
                             currentCategory = action.category
                         )
                     }
+                }
+
+                is TaskPageAction.AddCategory -> {
+                    addCategory(action.category)
                 }
             }
         }
@@ -91,6 +94,10 @@ class TaskListViewModel(
                     datastore.setClearPreferences(action.clearPreference)
                     scheduleDeletion(action.clearPreference)
                 }
+
+                is TasksSettingsAction.DeleteCategory -> {
+                    deleteCategory(action.category)
+                }
             }
         }
     }
@@ -102,7 +109,7 @@ class TaskListViewModel(
             .onEach { preference ->
                 _tasksSettings.update { settings ->
                     settings.copy(
-                        currentClearPreference = preference
+                        currentClearPreference = preference,
                     )
                 }
             }
@@ -118,7 +125,20 @@ class TaskListViewModel(
                     task.copy(
                         tasks = tasks,
                         completedTasks = tasks.values.flatten().filter { it.status },
-                        currentCategory = tasks.keys.first()
+                    )
+                }
+
+                if (_tasksState.value.currentCategory == null) {
+                    _tasksState.update {
+                        it.copy(
+                            currentCategory = tasks.keys.firstOrNull()
+                        )
+                    }
+                }
+
+                _tasksSettings.update {
+                    it.copy(
+                        categories = tasks.keys.toList()
                     )
                 }
 
@@ -130,7 +150,7 @@ class TaskListViewModel(
     }
 
     private suspend fun addDefault() {
-        repo.upsertCategory(Category(name = "Misc", color = CategoryColors.GRAY.color))
+        addCategory(Category(name = "Misc", color = CategoryColors.GRAY.color))
     }
 
     private suspend fun upsertTask(task: Task) {

@@ -17,7 +17,7 @@ class GritDatastore(
 ) {
 
     private val Context.dataStore by preferencesDataStore(name = FILE_NAME)
-    private val clearPreference = stringPreferencesKey("Daily")
+    private val clearPreference = stringPreferencesKey("clear_preference")
 
     fun clearPreferences(): Flow<String> = context.dataStore.data
         .catch {

@@ -6,6 +6,7 @@ import androidx.compose.animation.core.animateDpAsState
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
@@ -15,11 +16,16 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.widthIn
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material3.AlertDialog
+import androidx.compose.material3.AssistChip
+import androidx.compose.material3.BasicAlertDialog
 import androidx.compose.material3.Button
+import androidx.compose.material3.Card
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.FilterChip
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
@@ -49,8 +55,10 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.shub39.grit.R
+import com.shub39.grit.core.presentation.Empty
 import com.shub39.grit.core.presentation.GritTheme
 import com.shub39.grit.tasks.domain.Category
+import com.shub39.grit.tasks.domain.CategoryColors
 import com.shub39.grit.tasks.domain.Task
 import com.shub39.grit.tasks.presentation.component.TaskCard
 import kotlinx.coroutines.launch
@@ -64,6 +72,7 @@ fun TaskPage(
 ) {
     // dialog controllers
     var showTaskAddDialog by remember { mutableStateOf(false) }
+    var showCategoryAddDialog by remember { mutableStateOf(false) }
     var showDeleteDialog by remember { mutableStateOf(false) }
 
     // remembered states and scopes
@@ -97,7 +106,7 @@ fun TaskPage(
                             visible = state.completedTasks.isNotEmpty()
                         ) {
                             IconButton(
-                                onClick = { action(TaskPageAction.DeleteTasks) }
+                                onClick = { showDeleteDialog = true }
                             ) {
                                 Icon(
                                     painter = painterResource(R.drawable.round_delete_forever_24),
@@ -105,10 +114,6 @@ fun TaskPage(
                                 )
                             }
                         }
-
-//                        IconButton(
-//                            onClick = {}
-//                        ) { }
 
                         IconButton(
                             onClick = onSettingsClick
@@ -140,6 +145,33 @@ fun TaskPage(
                         .fillMaxSize()
                         .animateContentSize(),
                 ) {
+                    item {
+                        LazyRow(
+                            horizontalArrangement = Arrangement.spacedBy(8.dp),
+                            contentPadding = PaddingValues(bottom = 8.dp, start = 8.dp, end = 8.dp)
+                        ) {
+                            items(state.tasks.keys.toList(), key = { it.id }) {
+                                FilterChip(
+                                    selected = it == state.currentCategory,
+                                    onClick = { action(TaskPageAction.ChangeCategory(it)) },
+                                    label = { Text(it.name) }
+                                )
+                            }
+
+                            item {
+                                AssistChip(
+                                    onClick = { showCategoryAddDialog = true },
+                                    label = {
+                                        Icon(
+                                            painter = painterResource(R.drawable.round_add_24),
+                                            contentDescription = null
+                                        )
+                                    }
+                                )
+                            }
+                        }
+                    }
+
                     // pull to refresh button
                     item {
                         Button(
@@ -168,6 +200,12 @@ fun TaskPage(
                                 },
                             )
                         }
+
+                        if (items.isEmpty()) {
+                            item {
+                                Empty()
+                            }
+                        }
                     }
 
 //                    // guide to using the app, needs work
@@ -177,12 +215,6 @@ fun TaskPage(
 //                        }
 //                    }
 //
-//                    // when no tasks
-//                    if (state.tasks.isEmpty() && !showDeleteDialog && !showTaskAddDialog) {
-//                        item {
-//                            Empty()
-//                        }
-//                    }
 
                     // to leave some space in the bottom, idk looks good
                     item {
@@ -221,6 +253,58 @@ fun TaskPage(
                 }
             }
         )
+    }
+
+    if (showCategoryAddDialog) {
+        var name by remember { mutableStateOf("") }
+        val keyboardController = LocalSoftwareKeyboardController.current
+        val focusRequester = remember { FocusRequester() }
+
+        LaunchedEffect(Unit) {
+            focusRequester.requestFocus()
+            keyboardController?.show()
+        }
+
+        BasicAlertDialog(
+            onDismissRequest = { showCategoryAddDialog = false }
+        ) {
+            Card(
+                shape = MaterialTheme.shapes.extraLarge
+            ) {
+                Column(
+                    modifier = Modifier.padding(16.dp),
+                    horizontalAlignment = Alignment.CenterHorizontally,
+                    verticalArrangement = Arrangement.spacedBy(8.dp)
+                ) {
+                    OutlinedTextField(
+                        value = name,
+                        onValueChange = { name = it },
+                        shape = MaterialTheme.shapes.medium,
+                        keyboardOptions = KeyboardOptions.Default.copy(
+                            capitalization = KeyboardCapitalization.Sentences,
+                            imeAction = ImeAction.Done
+                        ),
+                        singleLine = true,
+                        modifier = Modifier.focusRequester(focusRequester),
+                        label = { Text(text = stringResource(id = R.string.add_category)) }
+                    )
+
+                    Button(
+                        onClick = {
+                            action(TaskPageAction.AddCategory(
+                                Category(
+                                    name = name,
+                                    color = CategoryColors.GRAY.color
+                                )
+                            ))
+                            showCategoryAddDialog = false
+                        }
+                    ) {
+                        Text(text = stringResource(R.string.done))
+                    }
+                }
+            }
+        }
     }
 
     // add dialog
