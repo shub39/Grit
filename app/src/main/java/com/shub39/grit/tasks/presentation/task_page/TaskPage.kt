@@ -1,4 +1,4 @@
-package com.shub39.grit.tasks.presentation
+package com.shub39.grit.tasks.presentation.task_page
 
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.animateContentSize
@@ -50,6 +50,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.shub39.grit.R
 import com.shub39.grit.core.presentation.Empty
+import com.shub39.grit.core.presentation.GritTheme
 import com.shub39.grit.tasks.domain.Task
 import com.shub39.grit.tasks.presentation.component.TaskCard
 import com.shub39.grit.tasks.presentation.component.TasksGuide
@@ -312,26 +313,28 @@ fun TaskPage(
 )
 @Composable
 private fun TaskPagePreview() {
-    TaskPage(
-        state = TaskPageState(
-            tasks = (0L..100L).map { 
-                Task(
-                    id = it.toString(),
-                    title = "Task no $it",
-                    priority = it % 2 == 0L,
-                    status = it % 2 != 0L
-                )
-            },
-            completedTasks = (0L..100L).map {
-                Task(
-                    id = it.toString(),
-                    title = "Task no $it",
-                    priority = it % 2 == 0L,
-                    status = it % 2 != 0L
-                )
-            },
-        ),
-        action = {},
-        onSettingsClick = {}
-    )
+    GritTheme {
+        TaskPage(
+            state = TaskPageState(
+                tasks = (0L..100L).map {
+                    Task(
+                        id = it.toString(),
+                        title = "Task no $it",
+                        priority = it % 2 == 0L,
+                        status = it % 2 != 0L
+                    )
+                },
+                completedTasks = (0L..100L).map {
+                    Task(
+                        id = it.toString(),
+                        title = "Task no $it",
+                        priority = it % 2 == 0L,
+                        status = it % 2 != 0L
+                    )
+                },
+            ),
+            action = {},
+            onSettingsClick = {}
+        )
+    }
 }

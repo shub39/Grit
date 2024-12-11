@@ -89,11 +89,10 @@ private val LightColorScheme = lightColorScheme(
 @Composable
 fun GritTheme(
     darkTheme: Boolean = isSystemInDarkTheme(),
-    theme: String,
     content: @Composable () -> Unit
 ) {
     val colorScheme = when {
-        theme == "Material" && Build.VERSION.SDK_INT >= Build.VERSION_CODES.S -> {
+        Build.VERSION.SDK_INT >= Build.VERSION_CODES.S -> {
             val context = LocalContext.current
             if (darkTheme) dynamicDarkColorScheme(context) else dynamicLightColorScheme(context)
         }

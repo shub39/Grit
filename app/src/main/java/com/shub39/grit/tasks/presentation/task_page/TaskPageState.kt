@@ -1,4 +1,4 @@
-package com.shub39.grit.tasks.presentation
+package com.shub39.grit.tasks.presentation.task_page
 
 import androidx.compose.runtime.Immutable
 import com.shub39.grit.tasks.domain.Task

@@ -20,8 +20,8 @@ import com.shub39.grit.R
 import com.shub39.grit.habits.presentation.HabitViewModel
 import com.shub39.grit.habits.presentation.HabitsPage
 import com.shub39.grit.tasks.presentation.TaskListViewModel
-import com.shub39.grit.tasks.presentation.TaskPage
-import com.shub39.grit.tasks.presentation.TaskSettings
+import com.shub39.grit.tasks.presentation.task_page.TaskPage
+import com.shub39.grit.tasks.presentation.tasks_settings.TaskSettings
 import org.koin.androidx.compose.koinViewModel
 
 @Composable
@@ -33,6 +33,7 @@ fun Grit(
     var currentRoute: Routes by remember { mutableStateOf(Routes.TasksGraph) }
 
     val taskPageState by tvm.tasksState.collectAsStateWithLifecycle()
+    val taskSettingsState by tvm.tasksSettings.collectAsStateWithLifecycle()
     val habitsPageState by hvm.habitsPageState.collectAsStateWithLifecycle()
 
     Scaffold(
@@ -104,7 +105,10 @@ fun Grit(
                 composable<Routes.TasksSettings> {
                     currentRoute = Routes.TasksSettings
 
-                    TaskSettings(tvm)
+                    TaskSettings(
+                        state = taskSettingsState,
+                        action = tvm::tasksSettingsAction
+                    )
                 }
             }
 

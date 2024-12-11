@@ -22,6 +22,7 @@ class BootReceiver : BroadcastReceiver() {
             val scheduler = NotificationAlarmScheduler(context)
             val habitDatabase = HabitDatabase.getDatabase(context)
             val habitDao = habitDatabase.habitDao()
+            val datastore = GritDatastore(context)
 
             receiverScope.launch {
                 habitDao.getAllHabits().forEach {
@@ -29,7 +30,7 @@ class BootReceiver : BroadcastReceiver() {
                     Log.d("BootReceiver", "Scheduled habit: ${it.id}")
                 }
 
-                val preference = GritDatastore.clearPreferences(context).first()
+                val preference = datastore.clearPreferences().first()
 
                 scheduler.schedule(preference)
                 Log.d("BootReceiver", "Scheduled preference: $preference")
