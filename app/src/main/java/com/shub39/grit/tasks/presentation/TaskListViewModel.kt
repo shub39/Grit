@@ -168,6 +168,14 @@ class TaskListViewModel(
     }
 
     private suspend fun deleteCategory(category: Category) {
+        if (_tasksState.value.currentCategory == category) {
+            _tasksState.update {
+                it.copy(
+                    currentCategory = it.tasks.keys.first()
+                )
+            }
+        }
+
         repo.deleteCategory(category)
     }
 

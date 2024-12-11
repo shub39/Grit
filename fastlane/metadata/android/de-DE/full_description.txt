@@ -1,0 +1,7 @@
+Funktionen
+
+- Aufgaben-Liste mit automatischer Bereinigung
+- Aufgaben mit priorität
+- Routinen mit geplanten Benachrichtigungen
+- Routinen Statistik zur Visualisierung des Fortschritts
+- Material You Thema und Aussehen
