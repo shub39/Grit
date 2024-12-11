@@ -8,18 +8,15 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
-import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Button
-import androidx.compose.material3.Card
-import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
+import androidx.compose.material3.ListItem
+import androidx.compose.material3.ListItemDefaults
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
@@ -31,17 +28,19 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardCapitalization
 import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import com.shub39.grit.R
+import com.shub39.grit.core.presentation.localToTimePickerState
 import com.shub39.grit.habits.domain.Habit
 import com.shub39.grit.habits.domain.HabitStatus
-import com.shub39.grit.habits.domain.OtherLogic.localToTimePickerState
-import com.shub39.grit.habits.presentation.AnalyticsSheet
 import com.shub39.grit.habits.presentation.HabitsPageAction
 import java.time.format.DateTimeFormatter
 
@@ -73,99 +72,96 @@ fun HabitCard(
         },
         label = "cardBackground"
     )
-    val cardColors = CardDefaults.cardColors(
-        contentColor = cardContent,
-        containerColor = cardBackground
+    val cardColors = ListItemDefaults.colors(
+        containerColor = cardBackground,
+        headlineColor = cardContent,
+        trailingIconColor = cardContent
     )
 
-    Card(
+    ListItem(
+        colors = cardColors,
         modifier = Modifier
             .padding(bottom = 8.dp, start = 16.dp, end = 16.dp)
+            .clip(MaterialTheme.shapes.large)
             .combinedClickable(
                 onClick = { action(HabitsPageAction.InsertStatus(habit)) },
                 onLongClick = { showEditDialog = true },
                 onDoubleClick = { showAnalyticsSheet = true }
             ),
-        shape = MaterialTheme.shapes.extraLarge,
-        colors = cardColors
-    ) {
-        Row(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(top = 16.dp, bottom = 16.dp, start = 16.dp, end = 8.dp),
-            horizontalArrangement = Arrangement.SpaceBetween,
-            verticalAlignment = Alignment.CenterVertically
-        ) {
-            AnimatedVisibility(
-                visible = completed
+        headlineContent = {
+            Row(
+                verticalAlignment = Alignment.CenterVertically,
+                horizontalArrangement = Arrangement.SpaceBetween
             ) {
-                Icon(
-                    painterResource(R.drawable.round_check_circle_24), null
-                )
-            }
+                AnimatedVisibility(
+                    visible = completed
+                ) {
+                    Icon(
+                        painterResource(R.drawable.round_check_circle_24),
+                        contentDescription = null
+                    )
+                }
 
-            Column(
-                modifier = Modifier
-                    .weight(1f)
-                    .padding(start = 8.dp)
-            ) {
+                Spacer(modifier = Modifier.width(8.dp))
+
                 Text(
                     text = habit.title,
-                    style = MaterialTheme.typography.titleMedium
+                    maxLines = 2,
+                    overflow = TextOverflow.Ellipsis
                 )
             }
+        },
+        trailingContent = {
+            Row(
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                Icon(
+                    painter = painterResource(R.drawable.round_alarm_24),
+                    contentDescription = null
+                )
 
-            Spacer(modifier = Modifier.width(16.dp))
-
-            Icon(
-                painter = painterResource(R.drawable.round_alarm_24),
-                contentDescription = null
-            )
-
-            Text(
-                modifier = Modifier.padding(8.dp),
-                text = habit.time.format(DateTimeFormatter.ofPattern("hh:mm a"))
-            )
+                Text(
+                    modifier = Modifier.padding(8.dp),
+                    text = habit.time.format(DateTimeFormatter.ofPattern("hh:mm a"))
+                )
+            }
         }
-
-    }
+    )
 
     // delete dialog
     if (showDeleteDialog) {
         AlertDialog(
             onDismissRequest = { showDeleteDialog = false },
             text = {
-                Column {
+                Column(
+                    horizontalAlignment = Alignment.CenterHorizontally
+                ) {
                     Icon(
                         painter = painterResource(id = R.drawable.round_warning_24),
                         contentDescription = null,
-                        modifier = Modifier
-                            .align(Alignment.CenterHorizontally)
-                            .size(64.dp)
+                        modifier = Modifier.align(Alignment.CenterHorizontally)
+                    )
+
+                    Text(
+                        text = stringResource(R.string.delete),
+                        style = MaterialTheme.typography.titleLarge,
+                        textAlign = TextAlign.Center,
+                        fontWeight = FontWeight.Bold
                     )
 
                     Text(
                         text = stringResource(id = R.string.delete_warning),
                         style = MaterialTheme.typography.titleMedium,
-                        textAlign = TextAlign.Center,
-                        modifier = Modifier.fillMaxWidth()
+                        textAlign = TextAlign.Center
                     )
                 }
             },
             confirmButton = {
                 Row(
-                    modifier = Modifier.fillMaxWidth(),
                     horizontalArrangement = Arrangement.SpaceEvenly
                 ) {
                     Button(
-                        onClick = { showDeleteDialog = false },
-                        modifier = Modifier.weight(1f),
-                        shape = RoundedCornerShape(
-                            topStart = 16.dp,
-                            bottomStart = 16.dp,
-                            topEnd = 4.dp,
-                            bottomEnd = 4.dp
-                        )
+                        onClick = { showDeleteDialog = false }
                     ) {
                         Text(text = stringResource(id = R.string.cancel))
                     }
@@ -176,14 +172,7 @@ fun HabitCard(
                         onClick = {
                             showDeleteDialog = false
                             action(HabitsPageAction.DeleteHabit(habit))
-                        },
-                        modifier = Modifier.weight(1f),
-                        shape = RoundedCornerShape(
-                            topStart = 4.dp,
-                            bottomStart = 4.dp,
-                            topEnd = 16.dp,
-                            bottomEnd = 16.dp
-                        )
+                        }
                     ) {
                         Text(text = stringResource(id = R.string.delete))
                     }
@@ -202,6 +191,7 @@ fun HabitCard(
     }
 
     if (showEditDialog) {
+        var newHabitTitle by remember { mutableStateOf(habit.title) }
         var newHabitDescription by remember { mutableStateOf(habit.description) }
         val timePickerState = remember { localToTimePickerState(habit.time) }
 
@@ -209,6 +199,26 @@ fun HabitCard(
             onDismissRequest = { showEditDialog = false },
             text = {
                 Column {
+                    OutlinedTextField(
+                        value = newHabitTitle,
+                        shape = MaterialTheme.shapes.medium,
+                        keyboardOptions = KeyboardOptions.Default.copy(
+                            capitalization = KeyboardCapitalization.Sentences,
+                            imeAction = ImeAction.Done
+                        ),
+                        onValueChange = { newHabitTitle = it },
+                        label = {
+                            if (newHabitTitle.length <= 20) {
+                                Text(text = stringResource(id = R.string.update_title))
+                            } else {
+                                Text(text = stringResource(id = R.string.too_long))
+                            }
+                        },
+                        isError = newHabitDescription.length > 20
+                    )
+
+                    Spacer(modifier = Modifier.padding(8.dp))
+
                     OutlinedTextField(
                         value = newHabitDescription,
                         shape = MaterialTheme.shapes.medium,
@@ -234,21 +244,13 @@ fun HabitCard(
             },
             confirmButton = {
                 Row(
-                    modifier = Modifier.fillMaxWidth(),
                     horizontalArrangement = Arrangement.SpaceEvenly
                 ) {
                     Button(
                         onClick = {
                             showEditDialog = false
                             showDeleteDialog = true
-                        },
-                        modifier = Modifier.weight(1f),
-                        shape = RoundedCornerShape(
-                            topStart = 16.dp,
-                            bottomStart = 16.dp,
-                            topEnd = 4.dp,
-                            bottomEnd = 4.dp
-                        )
+                        }
                     ) {
                         Text(text = stringResource(id = R.string.delete))
                     }
@@ -262,7 +264,7 @@ fun HabitCard(
                                 HabitsPageAction.UpdateHabit(
                                     Habit(
                                         id = habit.id,
-                                        title = habit.title,
+                                        title = newHabitTitle,
                                         description = newHabitDescription,
                                         time = habit.time.withHour(timePickerState.hour)
                                             .withMinute(timePickerState.minute)
@@ -270,14 +272,7 @@ fun HabitCard(
                                 )
                             )
                         },
-                        modifier = Modifier.weight(1f),
-                        shape = RoundedCornerShape(
-                            topStart = 4.dp,
-                            bottomStart = 4.dp,
-                            topEnd = 16.dp,
-                            bottomEnd = 16.dp
-                        ),
-                        enabled = newHabitDescription.isNotBlank() && newHabitDescription.length <= 50,
+                        enabled = newHabitDescription.isNotBlank() && newHabitDescription.length <= 50 && newHabitTitle.length <= 20,
                     ) {
                         Text(text = stringResource(id = R.string.update))
                     }

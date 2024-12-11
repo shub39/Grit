@@ -13,6 +13,11 @@
 > [<img src="https://m3-markdown-badges.vercel.app/issues/1/2/shub39/Grit">]()
 > [<img src="https://ziadoua.github.io/m3-Markdown-Badges/badges/Discord/discord2.svg">](https://discord.gg/https://discord.gg/nxA2hgtEKf)
 
+> [!NOTE]
+> This app is personalised for my use and some versions might break or 
+> corrupt past data you have saved. Please reconsider using this as 
+> your main habit tracker/tasks app 
+
 > ### Get On
 >[<img src="https://f-droid.org/badge/get-it-on.png" alt="Get it on F-Droid" height="80">](https://f-droid.org/packages/com.shub39.grit)
 >[<img src="https://gitlab.com/IzzyOnDroid/repo/-/raw/master/assets/IzzyOnDroid.png" height="80">](https://apt.izzysoft.de/packages/com.shub39.grit/latest)

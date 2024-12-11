@@ -4,7 +4,9 @@ import com.shub39.grit.habits.data.database.HabitEntity
 import com.shub39.grit.habits.data.database.HabitStatusEntity
 import com.shub39.grit.habits.domain.Habit
 import com.shub39.grit.habits.domain.HabitStatus
+import com.shub39.grit.tasks.data.database.CategoryEntity
 import com.shub39.grit.tasks.data.database.TaskEntity
+import com.shub39.grit.tasks.domain.Category
 import com.shub39.grit.tasks.domain.Task
 
 fun HabitEntity.toHabit(): Habit {
@@ -44,17 +46,33 @@ fun HabitStatus.toHabitStatusEntity(): HabitStatusEntity {
 fun Task.toTaskEntity(): TaskEntity {
     return TaskEntity(
         id = id,
+        categoryId = categoryId,
         title = title,
-        priority = priority,
         status = status
     )
 }
 
-fun TaskEntity.toTask() : Task {
+fun TaskEntity.toTask(): Task {
     return Task(
         id = id,
+        categoryId = categoryId,
         title = title,
-        priority = priority,
         status = status
+    )
+}
+
+fun CategoryEntity.toCategory(): Category {
+    return Category(
+        id = id,
+        name = name,
+        color = color
+    )
+}
+
+fun Category.toCategoryEntity(): CategoryEntity {
+    return CategoryEntity(
+        id = id,
+        name = name,
+        color = color
     )
 }

@@ -45,14 +45,14 @@ fun TaskCard(
     val cardContent by animateColorAsState(
         targetValue = when (taskStatus) {
             true -> Color.Gray
-            else -> if (task.priority) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.secondary
+            else -> MaterialTheme.colorScheme.secondary
         },
         label = "cardContent"
     )
     val cardContainer by animateColorAsState(
         targetValue = when (taskStatus) {
             true -> Color.LightGray
-            else -> if (task.priority) MaterialTheme.colorScheme.primaryContainer else MaterialTheme.colorScheme.surfaceContainerHighest
+            else -> MaterialTheme.colorScheme.surfaceContainerHighest
         },
         label = "cardContainer"
     )
@@ -123,8 +123,7 @@ fun TaskCard(
                         task.title = newTitle
                         onStatusChange(task)
                         showEditDialog = false
-                    },
-                    modifier = Modifier.fillMaxWidth()
+                    }
                 ) {
                     Text(stringResource(R.string.edit_task))
                 }

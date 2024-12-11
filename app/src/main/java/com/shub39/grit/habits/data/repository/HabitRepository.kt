@@ -10,6 +10,7 @@ import com.shub39.grit.habits.domain.Habit
 import com.shub39.grit.habits.domain.HabitRepo
 import com.shub39.grit.habits.domain.HabitStatus
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.map
 import java.time.LocalDate
 
@@ -17,12 +18,6 @@ class HabitRepository(
     private val habitDao: HabitDao,
     private val habitStatusDao: HabitStatusDao
 ): HabitRepo {
-    override fun getHabits(): Flow<List<Habit>> {
-        return habitDao.getAllHabitsFlow().map { entities ->
-            entities.map { it.toHabit() }
-        }
-    }
-
     override suspend fun upsertHabit(habit: Habit) {
         habitDao.upsertHabit(habit.toHabitEntity())
     }
@@ -31,12 +26,21 @@ class HabitRepository(
         habitDao.deleteHabit(habitId)
     }
 
-    override fun getHabitStatus(): Flow<Map<Long, List<HabitStatus>>> {
-        return habitStatusDao
+    override fun getHabitStatus(): Flow<Map<Habit, List<HabitStatus>>> {
+        val habits = habitDao.getAllHabitsFlow().map { habits ->
+            habits.map { it.toHabit() }
+        }
+        val habitStatuses = habitStatusDao
             .getAllHabitStatuses()
             .map { habitStatuses ->
-                habitStatuses.map { it.toHabitStatus() }.groupBy { it.habitId }
+                habitStatuses.map { it.toHabitStatus() }
             }
+
+        return habits.combine(habitStatuses) { habitsFlow, habitStatusesFlow ->
+            habitsFlow.associateWith { habit ->
+                habitStatusesFlow.filter { it.habitId == habit.id }
+            }
+        }
     }
 
     override suspend fun insertHabitStatus(habitStatus: HabitStatus) {

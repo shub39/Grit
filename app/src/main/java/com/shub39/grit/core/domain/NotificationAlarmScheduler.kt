@@ -5,8 +5,8 @@ import android.app.PendingIntent
 import android.content.Context
 import android.content.Intent
 import android.util.Log
+import com.shub39.grit.core.presentation.getNextMonday
 import com.shub39.grit.habits.domain.Habit
-import com.shub39.grit.habits.domain.OtherLogic.getNextMonday
 import java.time.LocalDateTime
 import java.time.ZoneId
 import java.time.format.DateTimeFormatter
