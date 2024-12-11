@@ -139,7 +139,7 @@ fun HabitsPage(
                     }
 
                     // habit guide
-                    if (state.habitsWithStatuses.size <= 1) {
+                    if (state.habitsWithStatuses.size == 1) {
                         item {
                             HabitGuide()
                         }

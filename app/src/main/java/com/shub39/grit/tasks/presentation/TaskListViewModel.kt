@@ -4,6 +4,8 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.shub39.grit.core.data.GritDatastore
 import com.shub39.grit.core.domain.NotificationAlarmScheduler
+import com.shub39.grit.tasks.domain.Category
+import com.shub39.grit.tasks.domain.CategoryColors
 import com.shub39.grit.tasks.domain.Task
 import com.shub39.grit.tasks.domain.TaskRepo
 import com.shub39.grit.tasks.presentation.task_page.TaskPageAction
@@ -69,6 +71,14 @@ class TaskListViewModel(
                 is TaskPageAction.UpdateTaskStatus -> {
                     upsertTask(action.task)
                 }
+
+                is TaskPageAction.changeCategory -> {
+                    _tasksState.update {
+                        it.copy(
+                            currentCategory = action.category
+                        )
+                    }
+                }
             }
         }
     }
@@ -107,25 +117,38 @@ class TaskListViewModel(
                 _tasksState.update { task ->
                     task.copy(
                         tasks = tasks,
-                        completedTasks = tasks.filter { it.status }
+                        completedTasks = tasks.values.flatten().filter { it.status },
+                        currentCategory = tasks.keys.first()
                     )
+                }
+
+                if (tasks.isEmpty()) {
+                    addDefault()
                 }
             }
             .launchIn(viewModelScope)
+    }
+
+    private suspend fun addDefault() {
+        repo.upsertCategory(Category(name = "Misc", color = CategoryColors.GRAY.color))
     }
 
     private suspend fun upsertTask(task: Task) {
         repo.upsertTask(task)
     }
 
-    private suspend fun deleteTasks(all: Boolean = false) {
-        for (task in _tasksState.value.tasks) {
-            if (all) {
-                repo.deleteTask(task)
-            } else if (task.status) {
-                repo.deleteTask(task)
-            }
+    private suspend fun deleteTasks() {
+        for (task in _tasksState.value.completedTasks) {
+            repo.deleteTask(task)
         }
+    }
+
+    private suspend fun addCategory(category: Category) {
+        repo.upsertCategory(category)
+    }
+
+    private suspend fun deleteCategory(category: Category) {
+        repo.deleteCategory(category)
     }
 
     // schedule deletion to user preference, needs testing

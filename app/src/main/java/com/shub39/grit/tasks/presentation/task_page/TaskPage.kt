@@ -49,14 +49,11 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.shub39.grit.R
-import com.shub39.grit.core.presentation.Empty
 import com.shub39.grit.core.presentation.GritTheme
+import com.shub39.grit.tasks.domain.Category
 import com.shub39.grit.tasks.domain.Task
 import com.shub39.grit.tasks.presentation.component.TaskCard
-import com.shub39.grit.tasks.presentation.component.TasksGuide
 import kotlinx.coroutines.launch
-import java.time.Instant
-import java.util.Date
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -109,6 +106,10 @@ fun TaskPage(
                             }
                         }
 
+//                        IconButton(
+//                            onClick = {}
+//                        ) { }
+
                         IconButton(
                             onClick = onSettingsClick
                         ) {
@@ -156,28 +157,32 @@ fun TaskPage(
                     }
 
                     // tasks
-                    items(state.tasks, key = { it.id }) {
-                        TaskCard(
-                            task = it,
-                            onStatusChange = { updatedTask ->
-                                action(TaskPageAction.UpdateTaskStatus(updatedTask))
-                            },
-                        )
-                    }
+                    if (state.currentCategory != null) {
+                        val items = state.tasks[state.currentCategory] ?: emptyList()
 
-                    // guide to using the app, needs work
-                    if (state.tasks.size == 1) {
-                        item {
-                            TasksGuide()
+                        items(items, key = { it.id }) {
+                            TaskCard(
+                                task = it,
+                                onStatusChange = { updatedTask ->
+                                    action(TaskPageAction.UpdateTaskStatus(updatedTask))
+                                },
+                            )
                         }
                     }
 
-                    // when no tasks
-                    if (state.tasks.isEmpty() && !showDeleteDialog && !showTaskAddDialog) {
-                        item {
-                            Empty()
-                        }
-                    }
+//                    // guide to using the app, needs work
+//                    if (state.tasks.size == 1) {
+//                        item {
+//                            TasksGuide()
+//                        }
+//                    }
+//
+//                    // when no tasks
+//                    if (state.tasks.isEmpty() && !showDeleteDialog && !showTaskAddDialog) {
+//                        item {
+//                            Empty()
+//                        }
+//                    }
 
                     // to leave some space in the bottom, idk looks good
                     item {
@@ -221,7 +226,6 @@ fun TaskPage(
     // add dialog
     if (showTaskAddDialog) {
         var newTask by remember { mutableStateOf("") }
-        var newPriority by remember { mutableStateOf(false) }
         val keyboardController = LocalSoftwareKeyboardController.current
         val focusRequester = remember { FocusRequester() }
 
@@ -257,41 +261,19 @@ fun TaskPage(
                     Button(
                         onClick = {
                             showTaskAddDialog = false
-                            newPriority = true
-                            action(
-                                TaskPageAction.AddTask(
-                                    Task(
-                                        Date.from(Instant.now()).toString(),
-                                        newTask,
-                                        newPriority
+
+                            if (state.currentCategory != null) {
+                                action(
+                                    TaskPageAction.AddTask(
+                                        Task(
+                                            categoryId = state.currentCategory.id,
+                                            title = newTask,
+                                            status = false
+                                        )
                                     )
                                 )
-                            )
-                            newTask = ""
-                        },
-                        enabled = newTask.isNotEmpty()
-                    ) {
-                        Text(
-                            text = stringResource(id = R.string.add_urgent_task),
-                            style = MaterialTheme.typography.labelMedium,
-                            fontWeight = FontWeight.Bold,
-                        )
-                    }
+                            }
 
-                    Spacer(modifier = Modifier.padding(2.dp))
-
-                    Button(
-                        onClick = {
-                            showTaskAddDialog = false
-                            action(
-                                TaskPageAction.AddTask(
-                                    Task(
-                                        Date.from(Instant.now()).toString(),
-                                        newTask,
-                                        newPriority
-                                    )
-                                )
-                            )
                             newTask = ""
                         },
                         enabled = newTask.isNotEmpty()
@@ -308,7 +290,8 @@ fun TaskPage(
     }
 }
 
-@Preview(showSystemUi = true, showBackground = true, backgroundColor = 0xFFFFFFFF,
+@Preview(
+    showSystemUi = true, showBackground = true, backgroundColor = 0xFFFFFFFF,
     device = "spec:width=673dp,height=841dp"
 )
 @Composable
@@ -316,22 +299,20 @@ private fun TaskPagePreview() {
     GritTheme {
         TaskPage(
             state = TaskPageState(
-                tasks = (0L..100L).map {
-                    Task(
-                        id = it.toString(),
-                        title = "Task no $it",
-                        priority = it % 2 == 0L,
-                        status = it % 2 != 0L
-                    )
-                },
-                completedTasks = (0L..100L).map {
-                    Task(
-                        id = it.toString(),
-                        title = "Task no $it",
-                        priority = it % 2 == 0L,
-                        status = it % 2 != 0L
-                    )
-                },
+               tasks = (0L..10L).associate { category ->
+                   Category(
+                       id = category,
+                       name = "Category: $category",
+                       color = "gray"
+                   ) to (0L..10L).map { 
+                       Task(
+                           id = it,
+                           categoryId = category,
+                           title = "$category $it",
+                           status = it % 2L == 0L
+                       )
+                   }
+               }
             ),
             action = {},
             onSettingsClick = {}

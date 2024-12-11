@@ -57,6 +57,7 @@ fun Grit(
                             )
                         }
                     }
+
                     Routes.TasksPage -> {
                         FloatingActionButton(
                             onClick = {
@@ -71,6 +72,7 @@ fun Grit(
                             )
                         }
                     }
+
                     else -> {}
                 }
             }

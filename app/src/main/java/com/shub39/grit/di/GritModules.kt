@@ -24,6 +24,7 @@ val appModule = module {
     single { get<HabitDatabase>().habitDao() }
     single { get<HabitDatabase>().habitStatusDao() }
     single { get<TaskDatabase>().taskDao() }
+    single { get<TaskDatabase>().categoryDao() }
 
     singleOf(::GritDatastore)
 
