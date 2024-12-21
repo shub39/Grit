@@ -1,0 +1,8 @@
+Grit est une application de listes de tâches et de suivi d'habitudes qui vous permet de visualiser votre progrès.
+
+Fonctionnalités
+
+- Listes de tâches avec purge automatique
+- Suivi d'habitudes avec envoi de notifications programmées
+- Calendrier d'habitudes pour visualiser votre progrès
+- Thèmes et aspect Material3
