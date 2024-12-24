@@ -1,5 +1,6 @@
 package com.shub39.grit.habits.presentation
 
+import android.content.res.Configuration
 import androidx.compose.animation.animateContentSize
 import androidx.compose.animation.core.animateDpAsState
 import androidx.compose.foundation.layout.Box
@@ -43,6 +44,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.shub39.grit.R
 import com.shub39.grit.core.presentation.Empty
+import com.shub39.grit.core.presentation.GritTheme
 import com.shub39.grit.core.presentation.showAddNotification
 import com.shub39.grit.core.presentation.timePickerStateToLocalDateTime
 import com.shub39.grit.habits.domain.Habit
@@ -77,23 +79,13 @@ fun HabitsPage(
     ) {
         Column(
             modifier = Modifier
-                .widthIn(max = 400.dp)
+                .widthIn(max = 500.dp)
                 .fillMaxSize()
         ) {
             TopAppBar(
                 title = {
                     Text(text = stringResource(id = R.string.habits))
-                },
-//                actions = {
-//                    IconButton(
-//                        onClick =  onSettingsClick
-//                    ) {
-//                        Icon(
-//                            painter = painterResource(R.drawable.round_settings_24),
-//                            contentDescription = null
-//                        )
-//                    }
-//                }
+                }
             )
 
             PullToRefreshBox(
@@ -240,26 +232,29 @@ fun HabitsPage(
 }
 
 @Preview(showBackground = true, backgroundColor = 0xFFFFFFFF,
-    device = "spec:width=411dp,height=891dp", showSystemUi = true
+    device = "spec:width=411dp,height=891dp", showSystemUi = true,
+    uiMode = Configuration.UI_MODE_NIGHT_YES or Configuration.UI_MODE_TYPE_NORMAL
 )
 @Composable
 private fun HabitsPagePreview() {
-    HabitsPage(
-        state = HabitPageState(
-            habitsWithStatuses = (0L..100L).associate { habitId ->
-                Habit(
-                    id = habitId,
-                    title = "Habit no $habitId",
-                    description = "Description no $habitId",
-                    time = LocalDateTime.now()
-                ) to (0L..10L).map { HabitStatus(
-                    id = it * 2,
-                    habitId = habitId,
-                    date = LocalDateTime.now().toLocalDate().minusDays(it)
-                ) }
-            }
-        ),
-        action = {},
-        onSettingsClick = {}
-    )
+    GritTheme {
+        HabitsPage(
+            state = HabitPageState(
+                habitsWithStatuses = (0L..100L).associate { habitId ->
+                    Habit(
+                        id = habitId,
+                        title = "Habit no $habitId",
+                        description = "Description no $habitId",
+                        time = LocalDateTime.now()
+                    ) to (0L..10L).map { HabitStatus(
+                        id = it * 2,
+                        habitId = habitId,
+                        date = LocalDateTime.now().toLocalDate().minusDays(it)
+                    ) }
+                }
+            ),
+            action = {},
+            onSettingsClick = {}
+        )
+    }
 }

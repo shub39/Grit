@@ -1,5 +1,6 @@
 package com.shub39.grit.tasks.presentation.task_page
 
+import android.content.res.Configuration
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.animateContentSize
 import androidx.compose.animation.core.animateDpAsState
@@ -7,7 +8,6 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
-import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -19,7 +19,6 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.text.KeyboardOptions
-import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.AssistChip
 import androidx.compose.material3.BasicAlertDialog
 import androidx.compose.material3.Button
@@ -30,6 +29,7 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
+import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.pulltorefresh.PullToRefreshBox
@@ -68,7 +68,6 @@ import kotlinx.coroutines.launch
 fun TaskPage(
     state: TaskPageState,
     action: (TaskPageAction) -> Unit,
-    onSettingsClick: () -> Unit
 ) {
     // dialog controllers
     var showTaskAddDialog by remember { mutableStateOf(false) }
@@ -91,7 +90,7 @@ fun TaskPage(
     ) {
         Column(
             modifier = Modifier
-                .widthIn(max = 400.dp)
+                .widthIn(max = 500.dp)
                 .fillMaxSize()
         ) {
             TopAppBar(
@@ -101,25 +100,14 @@ fun TaskPage(
                     )
                 },
                 actions = {
-                    Row {
-                        AnimatedVisibility(
-                            visible = state.completedTasks.isNotEmpty()
-                        ) {
-                            IconButton(
-                                onClick = { showDeleteDialog = true }
-                            ) {
-                                Icon(
-                                    painter = painterResource(R.drawable.round_delete_forever_24),
-                                    contentDescription = null
-                                )
-                            }
-                        }
-
+                    AnimatedVisibility(
+                        visible = state.completedTasks.isNotEmpty()
+                    ) {
                         IconButton(
-                            onClick = onSettingsClick
+                            onClick = { showDeleteDialog = true }
                         ) {
                             Icon(
-                                painter = painterResource(R.drawable.round_settings_24),
+                                painter = painterResource(R.drawable.round_delete_forever_24),
                                 contentDescription = null
                             )
                         }
@@ -208,14 +196,6 @@ fun TaskPage(
                         }
                     }
 
-//                    // guide to using the app, needs work
-//                    if (state.tasks.size == 1) {
-//                        item {
-//                            TasksGuide()
-//                        }
-//                    }
-//
-
                     // to leave some space in the bottom, idk looks good
                     item {
                         Spacer(modifier = Modifier.padding(60.dp))
@@ -227,32 +207,39 @@ fun TaskPage(
 
     // delete dialog
     if (showDeleteDialog) {
-        AlertDialog(
-            onDismissRequest = { showDeleteDialog = false },
-            text = {
-                Text(
-                    text = stringResource(id = R.string.delete_tasks),
-                    textAlign = TextAlign.Center
-                )
-            },
-            icon = {
-                Icon(
-                    painter = painterResource(R.drawable.round_warning_24),
-                    contentDescription = null,
-                    modifier = Modifier.size(64.dp)
-                )
-            },
-            confirmButton = {
-                Button(
-                    onClick = {
-                        action(TaskPageAction.DeleteTasks)
-                        showDeleteDialog = false
-                    }
+        BasicAlertDialog(
+            onDismissRequest = { showDeleteDialog = false }
+        ) {
+            Card(
+                shape = MaterialTheme.shapes.extraLarge
+            ) {
+                Column(
+                    modifier = Modifier.padding(16.dp),
+                    horizontalAlignment = Alignment.CenterHorizontally,
+                    verticalArrangement = Arrangement.spacedBy(8.dp)
                 ) {
-                    Text(stringResource(R.string.delete))
+                    Icon(
+                        painter = painterResource(R.drawable.round_warning_24),
+                        contentDescription = null,
+                        modifier = Modifier.size(64.dp)
+                    )
+
+                    Text(
+                        text = stringResource(id = R.string.delete_tasks),
+                        textAlign = TextAlign.Center
+                    )
+
+                    Button(
+                        onClick = {
+                            action(TaskPageAction.DeleteTasks)
+                            showDeleteDialog = false
+                        }
+                    ) {
+                        Text(stringResource(R.string.delete))
+                    }
                 }
             }
-        )
+        }
     }
 
     if (showCategoryAddDialog) {
@@ -291,14 +278,17 @@ fun TaskPage(
 
                     Button(
                         onClick = {
-                            action(TaskPageAction.AddCategory(
-                                Category(
-                                    name = name,
-                                    color = CategoryColors.GRAY.color
+                            action(
+                                TaskPageAction.AddCategory(
+                                    Category(
+                                        name = name,
+                                        color = CategoryColors.GRAY.color
+                                    )
                                 )
-                            ))
+                            )
                             showCategoryAddDialog = false
-                        }
+                        },
+                        enabled = name.isNotBlank() && name.length <= 20
                     ) {
                         Text(text = stringResource(R.string.done))
                     }
@@ -318,11 +308,16 @@ fun TaskPage(
             keyboardController?.show()
         }
 
-        AlertDialog(
-            onDismissRequest = { showTaskAddDialog = false },
-            text = {
+        BasicAlertDialog(
+            onDismissRequest = { showTaskAddDialog = false }
+        ) {
+            Card(
+                shape = MaterialTheme.shapes.extraLarge
+            ) {
                 Column(
-                    horizontalAlignment = Alignment.CenterHorizontally
+                    modifier = Modifier.padding(16.dp),
+                    horizontalAlignment = Alignment.CenterHorizontally,
+                    verticalArrangement = Arrangement.spacedBy(8.dp)
                 ) {
                     OutlinedTextField(
                         value = newTask,
@@ -336,12 +331,7 @@ fun TaskPage(
                         modifier = Modifier.focusRequester(focusRequester),
                         label = { Text(text = stringResource(id = R.string.add_task)) }
                     )
-                }
-            },
-            confirmButton = {
-                Row(
-                    horizontalArrangement = Arrangement.SpaceEvenly
-                ) {
+
                     Button(
                         onClick = {
                             showTaskAddDialog = false
@@ -357,8 +347,6 @@ fun TaskPage(
                                     )
                                 )
                             }
-
-                            newTask = ""
                         },
                         enabled = newTask.isNotEmpty()
                     ) {
@@ -370,36 +358,42 @@ fun TaskPage(
                     }
                 }
             }
-        )
+        }
     }
 }
 
 @Preview(
     showSystemUi = true, showBackground = true, backgroundColor = 0xFFFFFFFF,
-    device = "spec:width=673dp,height=841dp"
+    device = "spec:width=411dp,height=891dp",
+    uiMode = Configuration.UI_MODE_NIGHT_YES or Configuration.UI_MODE_TYPE_NORMAL
 )
 @Composable
 private fun TaskPagePreview() {
     GritTheme {
-        TaskPage(
-            state = TaskPageState(
-               tasks = (0L..10L).associate { category ->
-                   Category(
-                       id = category,
-                       name = "Category: $category",
-                       color = "gray"
-                   ) to (0L..10L).map { 
-                       Task(
-                           id = it,
-                           categoryId = category,
-                           title = "$category $it",
-                           status = it % 2L == 0L
-                       )
-                   }
-               }
-            ),
-            action = {},
-            onSettingsClick = {}
-        )
+        Scaffold { padding ->
+            Box(
+                modifier = Modifier.padding(padding)
+            ) {
+                TaskPage(
+                    state = TaskPageState(
+                        tasks = (0L..10L).associate { category ->
+                            Category(
+                                id = category,
+                                name = "Category: $category",
+                                color = "gray"
+                            ) to (0L..10L).map {
+                                Task(
+                                    id = it,
+                                    categoryId = category,
+                                    title = "$category $it",
+                                    status = it % 2L == 0L
+                                )
+                            }
+                        }
+                    ),
+                    action = {},
+                )
+            }
+        }
     }
 }

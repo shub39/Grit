@@ -31,7 +31,7 @@
     <string name="mark_undone">Marquer comme non accompli</string>
     <string name="new_habit">Nouvelle habitude </string>
     <string name="at">Rappel à </string>
-    <string name="habit_exists">L'habitude existe déjà</string>
+    <string name="habit_exists">L\'habitude existe déjà</string>
     <string name="too_long">Trop long</string>
     <string name="edit_task">Modifier la tâche</string>
     <string name="tasks_guide_1">Appuyez pour marquer comme accompli</string>
@@ -40,8 +40,8 @@
     <string name="habits_guide_2">Appuyez deux fois pour voir les données</string>
     <string name="habits_guide_3">Appuyez et maintenez pour modifier</string>
     <string name="delete_tasks">Êtes-vous sûr de vouloir supprimer toutes les tâches accomplies</string>
-    <string name="channel_name">Canal d'habitude</string>
-    <string name="channel_description">Canal de notification pour les mises à jour d'habitudes</string>
+    <string name="channel_name">Canal d\'habitude</string>
+    <string name="channel_description">Canal de notification pour les mises à jour d\'habitudes</string>
     <string name="update_title">Mettre à jour le titre</string>
     <string name="clear_preference_exp">Effacer périodiquement les tâches</string>
     <string name="categories">Catégories</string>

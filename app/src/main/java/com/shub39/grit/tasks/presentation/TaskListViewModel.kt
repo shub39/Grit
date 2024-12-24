@@ -10,8 +10,8 @@ import com.shub39.grit.tasks.domain.Task
 import com.shub39.grit.tasks.domain.TaskRepo
 import com.shub39.grit.tasks.presentation.task_page.TaskPageAction
 import com.shub39.grit.tasks.presentation.task_page.TaskPageState
-import com.shub39.grit.tasks.presentation.tasks_settings.TasksSettingsAction
-import com.shub39.grit.tasks.presentation.tasks_settings.TasksSettingsState
+import com.shub39.grit.core.presentation.settings.SettingsAction
+import com.shub39.grit.core.presentation.settings.SettingsState
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
@@ -32,7 +32,7 @@ class TaskListViewModel(
     private var savedJob: Job? = null
     private var settingsJob: Job? = null
     private val _tasksState = MutableStateFlow(TaskPageState())
-    private val _tasksSettings = MutableStateFlow(TasksSettingsState())
+    private val _tasksSettings = MutableStateFlow(SettingsState())
 
     val tasksState = _tasksState.asStateFlow()
         .onStart {
@@ -52,7 +52,7 @@ class TaskListViewModel(
         .stateIn(
             viewModelScope,
             SharingStarted.WhileSubscribed(5000),
-            TasksSettingsState()
+            SettingsState()
         )
 
     // handles actions from task page
@@ -86,16 +86,16 @@ class TaskListViewModel(
         }
     }
 
-    fun tasksSettingsAction(action: TasksSettingsAction) {
+    fun tasksSettingsAction(action: SettingsAction) {
         viewModelScope.launch {
             when (action) {
-                is TasksSettingsAction.UpdateClearPreference -> {
+                is SettingsAction.UpdateClearPreference -> {
                     cancelScheduleDeletion(_tasksSettings.value.currentClearPreference)
                     datastore.setClearPreferences(action.clearPreference)
                     scheduleDeletion(action.clearPreference)
                 }
 
-                is TasksSettingsAction.DeleteCategory -> {
+                is SettingsAction.DeleteCategory -> {
                     deleteCategory(action.category)
                 }
             }
