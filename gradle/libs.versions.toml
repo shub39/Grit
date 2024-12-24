@@ -16,6 +16,7 @@ activityCompose = "1.9.3"
 composeBom = "2024.12.01"
 lifecycleViewmodelKtx = "2.8.7"
 material3 = "1.3.1"
+#reorderable = "0.9.6"
 roomCompiler = "2.6.1"
 roomGuava = "2.6.1"
 roomKtx = "2.6.1"
@@ -67,6 +68,7 @@ androidx-material3-android = { group = "androidx.compose.material3", name = "mat
 androidx-lifecycle-runtime-compose-android = { group = "androidx.lifecycle", name = "lifecycle-runtime-compose-android", version.ref = "lifecycleRuntimeComposeAndroid" }
 koin-androidx-compose = { module = "io.insert-koin:koin-androidx-compose", version.ref = "koinAndroidxCompose" }
 kotlinx-serialization-json = { module = "org.jetbrains.kotlinx:kotlinx-serialization-json", version.ref = "serialization"}
+#reorderable = { module = "org.burnoutcrew.composereorderable:reorderable", version.ref = "reorderable" }
 
 [plugins]
 ksp = { id = "com.google.devtools.ksp", version.ref = "ksp" }

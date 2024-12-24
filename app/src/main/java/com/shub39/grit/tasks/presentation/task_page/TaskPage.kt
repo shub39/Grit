@@ -2,7 +2,6 @@ package com.shub39.grit.tasks.presentation.task_page
 
 import android.content.res.Configuration
 import androidx.compose.animation.AnimatedVisibility
-import androidx.compose.animation.animateContentSize
 import androidx.compose.animation.core.animateDpAsState
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -114,6 +113,31 @@ fun TaskPage(
                 }
             )
 
+            LazyRow(
+                horizontalArrangement = Arrangement.spacedBy(8.dp),
+                contentPadding = PaddingValues(bottom = 8.dp, start = 8.dp, end = 8.dp)
+            ) {
+                items(state.tasks.keys.toList(), key = { it.id }) {
+                    FilterChip(
+                        selected = it == state.currentCategory,
+                        onClick = { action(TaskPageAction.ChangeCategory(it)) },
+                        label = { Text(it.name) }
+                    )
+                }
+
+                item {
+                    AssistChip(
+                        onClick = { showCategoryAddDialog = true },
+                        label = {
+                            Icon(
+                                painter = painterResource(R.drawable.round_add_24),
+                                contentDescription = null
+                            )
+                        }
+                    )
+                }
+            }
+
             // Using pull to refresh as an interactive indicator to add tasks
             PullToRefreshBox(
                 isRefreshing = false,
@@ -130,36 +154,7 @@ fun TaskPage(
                 LazyColumn(
                     modifier = Modifier
                         .fillMaxSize()
-                        .animateContentSize(),
                 ) {
-                    item {
-                        LazyRow(
-                            horizontalArrangement = Arrangement.spacedBy(8.dp),
-                            contentPadding = PaddingValues(bottom = 8.dp, start = 8.dp, end = 8.dp)
-                        ) {
-                            items(state.tasks.keys.toList(), key = { it.id }) {
-                                FilterChip(
-                                    selected = it == state.currentCategory,
-                                    onClick = { action(TaskPageAction.ChangeCategory(it)) },
-                                    label = { Text(it.name) }
-                                )
-                            }
-
-                            item {
-                                AssistChip(
-                                    onClick = { showCategoryAddDialog = true },
-                                    label = {
-                                        Icon(
-                                            painter = painterResource(R.drawable.round_add_24),
-                                            contentDescription = null
-                                        )
-                                    }
-                                )
-                            }
-                        }
-                    }
-
-                    // pull to refresh button
                     item {
                         Button(
                             onClick = {},
@@ -179,9 +174,9 @@ fun TaskPage(
                     if (state.currentCategory != null) {
                         val items = state.tasks[state.currentCategory] ?: emptyList()
 
-                        items(items, key = { it.id }) {
+                        items(items, key = { it.id }) { task ->
                             TaskCard(
-                                task = it,
+                                task = task,
                                 onStatusChange = { updatedTask ->
                                     action(TaskPageAction.UpdateTaskStatus(updatedTask))
                                 },
