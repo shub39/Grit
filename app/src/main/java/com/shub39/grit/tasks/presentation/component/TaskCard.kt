@@ -3,16 +3,12 @@ package com.shub39.grit.tasks.presentation.component
 import androidx.compose.animation.animateColorAsState
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.combinedClickable
-import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.text.KeyboardOptions
-import androidx.compose.material3.BasicAlertDialog
 import androidx.compose.material3.Button
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
-import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
@@ -22,7 +18,6 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.focus.focusRequester
@@ -35,9 +30,10 @@ import androidx.compose.ui.text.input.KeyboardCapitalization
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import com.shub39.grit.R
+import com.shub39.grit.core.presentation.GritDialog
 import com.shub39.grit.tasks.domain.Task
 
-@OptIn(ExperimentalFoundationApi::class, ExperimentalMaterial3Api::class)
+@OptIn(ExperimentalFoundationApi::class)
 @Composable
 fun TaskCard(
     task: Task,
@@ -106,39 +102,29 @@ fun TaskCard(
             keyboardController?.show()
         }
 
-        BasicAlertDialog(
+        GritDialog(
             onDismissRequest = { showEditDialog = false }
         ) {
-            Card(
-                shape = MaterialTheme.shapes.extraLarge
-            ) {
-                Column(
-                    modifier = Modifier.padding(16.dp),
-                    horizontalAlignment = Alignment.CenterHorizontally,
-                    verticalArrangement = Arrangement.spacedBy(8.dp)
-                ) {
-                    OutlinedTextField(
-                        value = newTitle,
-                        onValueChange = { newTitle = it },
-                        singleLine = true,
-                        shape = MaterialTheme.shapes.extraLarge,
-                        modifier = Modifier.focusRequester(focusRequester),
-                        keyboardOptions = KeyboardOptions.Default.copy(
-                            capitalization = KeyboardCapitalization.Sentences,
-                            imeAction = ImeAction.Done
-                        )
-                    )
+            OutlinedTextField(
+                value = newTitle,
+                onValueChange = { newTitle = it },
+                singleLine = true,
+                shape = MaterialTheme.shapes.medium,
+                modifier = Modifier.focusRequester(focusRequester),
+                keyboardOptions = KeyboardOptions.Default.copy(
+                    capitalization = KeyboardCapitalization.Sentences,
+                    imeAction = ImeAction.Done
+                )
+            )
 
-                    Button(
-                        onClick = {
-                            task.title = newTitle
-                            onStatusChange(task)
-                            showEditDialog = false
-                        }
-                    ) {
-                        Text(stringResource(R.string.edit_task))
-                    }
+            Button(
+                onClick = {
+                    task.title = newTitle
+                    onStatusChange(task)
+                    showEditDialog = false
                 }
+            ) {
+                Text(stringResource(R.string.edit_task))
             }
         }
     }

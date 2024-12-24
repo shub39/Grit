@@ -20,9 +20,7 @@ import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material3.AssistChip
-import androidx.compose.material3.BasicAlertDialog
 import androidx.compose.material3.Button
-import androidx.compose.material3.Card
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.FilterChip
 import androidx.compose.material3.Icon
@@ -56,6 +54,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.shub39.grit.R
 import com.shub39.grit.core.presentation.Empty
+import com.shub39.grit.core.presentation.GritDialog
 import com.shub39.grit.core.presentation.GritTheme
 import com.shub39.grit.tasks.domain.Category
 import com.shub39.grit.tasks.domain.CategoryColors
@@ -207,37 +206,27 @@ fun TaskPage(
 
     // delete dialog
     if (showDeleteDialog) {
-        BasicAlertDialog(
+        GritDialog(
             onDismissRequest = { showDeleteDialog = false }
         ) {
-            Card(
-                shape = MaterialTheme.shapes.extraLarge
-            ) {
-                Column(
-                    modifier = Modifier.padding(16.dp),
-                    horizontalAlignment = Alignment.CenterHorizontally,
-                    verticalArrangement = Arrangement.spacedBy(8.dp)
-                ) {
-                    Icon(
-                        painter = painterResource(R.drawable.round_warning_24),
-                        contentDescription = null,
-                        modifier = Modifier.size(64.dp)
-                    )
+            Icon(
+                painter = painterResource(R.drawable.round_warning_24),
+                contentDescription = null,
+                modifier = Modifier.size(64.dp)
+            )
 
-                    Text(
-                        text = stringResource(id = R.string.delete_tasks),
-                        textAlign = TextAlign.Center
-                    )
+            Text(
+                text = stringResource(id = R.string.delete_tasks),
+                textAlign = TextAlign.Center
+            )
 
-                    Button(
-                        onClick = {
-                            action(TaskPageAction.DeleteTasks)
-                            showDeleteDialog = false
-                        }
-                    ) {
-                        Text(stringResource(R.string.delete))
-                    }
+            Button(
+                onClick = {
+                    action(TaskPageAction.DeleteTasks)
+                    showDeleteDialog = false
                 }
+            ) {
+                Text(stringResource(R.string.delete))
             }
         }
     }
@@ -252,47 +241,37 @@ fun TaskPage(
             keyboardController?.show()
         }
 
-        BasicAlertDialog(
+        GritDialog(
             onDismissRequest = { showCategoryAddDialog = false }
         ) {
-            Card(
-                shape = MaterialTheme.shapes.extraLarge
-            ) {
-                Column(
-                    modifier = Modifier.padding(16.dp),
-                    horizontalAlignment = Alignment.CenterHorizontally,
-                    verticalArrangement = Arrangement.spacedBy(8.dp)
-                ) {
-                    OutlinedTextField(
-                        value = name,
-                        onValueChange = { name = it },
-                        shape = MaterialTheme.shapes.medium,
-                        keyboardOptions = KeyboardOptions.Default.copy(
-                            capitalization = KeyboardCapitalization.Sentences,
-                            imeAction = ImeAction.Done
-                        ),
-                        singleLine = true,
-                        modifier = Modifier.focusRequester(focusRequester),
-                        label = { Text(text = stringResource(id = R.string.add_category)) }
-                    )
+            OutlinedTextField(
+                value = name,
+                onValueChange = { name = it },
+                shape = MaterialTheme.shapes.medium,
+                keyboardOptions = KeyboardOptions.Default.copy(
+                    capitalization = KeyboardCapitalization.Sentences,
+                    imeAction = ImeAction.Done
+                ),
+                singleLine = true,
+                modifier = Modifier.focusRequester(focusRequester),
+                label = { Text(text = stringResource(id = R.string.add_category)) }
+            )
 
-                    Button(
-                        onClick = {
-                            action(
-                                TaskPageAction.AddCategory(
-                                    Category(
-                                        name = name,
-                                        color = CategoryColors.GRAY.color
-                                    )
-                                )
+            Button(
+                onClick = {
+                    action(
+                        TaskPageAction.AddCategory(
+                            Category(
+                                name = name,
+                                color = CategoryColors.GRAY.color
                             )
-                            showCategoryAddDialog = false
-                        },
-                        enabled = name.isNotBlank() && name.length <= 20
-                    ) {
-                        Text(text = stringResource(R.string.done))
-                    }
-                }
+                        )
+                    )
+                    showCategoryAddDialog = false
+                },
+                enabled = name.isNotBlank() && name.length <= 20
+            ) {
+                Text(text = stringResource(R.string.done))
             }
         }
     }
@@ -308,55 +287,45 @@ fun TaskPage(
             keyboardController?.show()
         }
 
-        BasicAlertDialog(
+        GritDialog(
             onDismissRequest = { showTaskAddDialog = false }
         ) {
-            Card(
-                shape = MaterialTheme.shapes.extraLarge
-            ) {
-                Column(
-                    modifier = Modifier.padding(16.dp),
-                    horizontalAlignment = Alignment.CenterHorizontally,
-                    verticalArrangement = Arrangement.spacedBy(8.dp)
-                ) {
-                    OutlinedTextField(
-                        value = newTask,
-                        onValueChange = { newTask = it },
-                        shape = MaterialTheme.shapes.medium,
-                        keyboardOptions = KeyboardOptions.Default.copy(
-                            capitalization = KeyboardCapitalization.Sentences,
-                            imeAction = ImeAction.Done
-                        ),
-                        singleLine = true,
-                        modifier = Modifier.focusRequester(focusRequester),
-                        label = { Text(text = stringResource(id = R.string.add_task)) }
-                    )
+            OutlinedTextField(
+                value = newTask,
+                onValueChange = { newTask = it },
+                shape = MaterialTheme.shapes.medium,
+                keyboardOptions = KeyboardOptions.Default.copy(
+                    capitalization = KeyboardCapitalization.Sentences,
+                    imeAction = ImeAction.Done
+                ),
+                singleLine = true,
+                modifier = Modifier.focusRequester(focusRequester),
+                label = { Text(text = stringResource(id = R.string.add_task)) }
+            )
 
-                    Button(
-                        onClick = {
-                            showTaskAddDialog = false
+            Button(
+                onClick = {
+                    showTaskAddDialog = false
 
-                            if (state.currentCategory != null) {
-                                action(
-                                    TaskPageAction.AddTask(
-                                        Task(
-                                            categoryId = state.currentCategory.id,
-                                            title = newTask,
-                                            status = false
-                                        )
-                                    )
+                    if (state.currentCategory != null) {
+                        action(
+                            TaskPageAction.AddTask(
+                                Task(
+                                    categoryId = state.currentCategory.id,
+                                    title = newTask,
+                                    status = false
                                 )
-                            }
-                        },
-                        enabled = newTask.isNotEmpty()
-                    ) {
-                        Text(
-                            text = stringResource(id = R.string.add_task),
-                            style = MaterialTheme.typography.labelMedium,
-                            fontWeight = FontWeight.Bold,
+                            )
                         )
                     }
-                }
+                },
+                enabled = newTask.isNotEmpty()
+            ) {
+                Text(
+                    text = stringResource(id = R.string.add_task),
+                    style = MaterialTheme.typography.labelMedium,
+                    fontWeight = FontWeight.Bold,
+                )
             }
         }
     }

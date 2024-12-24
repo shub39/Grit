@@ -13,9 +13,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.widthIn
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
-import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardOptions
-import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Button
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
@@ -44,12 +42,12 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.shub39.grit.R
 import com.shub39.grit.core.presentation.Empty
+import com.shub39.grit.core.presentation.GritDialog
 import com.shub39.grit.core.presentation.GritTheme
 import com.shub39.grit.core.presentation.showAddNotification
 import com.shub39.grit.core.presentation.timePickerStateToLocalDateTime
 import com.shub39.grit.habits.domain.Habit
 import com.shub39.grit.habits.domain.HabitStatus
-import com.shub39.grit.habits.presentation.component.HabitGuide
 import com.shub39.grit.habits.presentation.component.HabitCard
 import kotlinx.coroutines.launch
 import java.time.LocalDateTime
@@ -59,7 +57,6 @@ import java.time.LocalDateTime
 fun HabitsPage(
     state: HabitPageState,
     action: (HabitsPageAction) -> Unit,
-    onSettingsClick: () -> Unit
 ) {
     val context = LocalContext.current
 
@@ -73,7 +70,7 @@ fun HabitsPage(
         label = "button size"
     )
 
-    Box (
+    Box(
         modifier = Modifier.fillMaxSize(),
         contentAlignment = Alignment.Center
     ) {
@@ -130,13 +127,6 @@ fun HabitsPage(
                         )
                     }
 
-                    // habit guide
-                    if (state.habitsWithStatuses.size == 1) {
-                        item {
-                            HabitGuide()
-                        }
-                    }
-
                     // when no habits
                     if (state.habitsWithStatuses.isEmpty() && !showAddHabitDialog) {
                         item {
@@ -158,80 +148,72 @@ fun HabitsPage(
         val timePickerState = remember { TimePickerState(12, 0, false) }
         val isHabitPresent = { state.habitsWithStatuses.any { it.key.title == newHabitName } }
 
-        AlertDialog(
-            onDismissRequest = { showAddHabitDialog = false },
-            text = {
-                Column {
-                    OutlinedTextField(
-                        value = newHabitName,
-                        onValueChange = { newHabitName = it },
-                        keyboardOptions = KeyboardOptions.Default.copy(
-                            capitalization = KeyboardCapitalization.Words,
-                            imeAction = ImeAction.Next
-                        ),
-                        shape = MaterialTheme.shapes.medium,
-                        label = {
-                            if (isHabitPresent()) {
-                                Text(text = stringResource(id = R.string.habit_exists))
-                            } else if (newHabitName.length <= 20) {
-                                Text(text = stringResource(id = R.string.add_habit))
-                            } else {
-                                Text(text = stringResource(id = R.string.too_long))
-                            }
-                        },
-                        isError = newHabitName.length > 20 || isHabitPresent()
+        GritDialog(
+            onDismissRequest = { showAddHabitDialog = false }
+        ) {
+            OutlinedTextField(
+                value = newHabitName,
+                onValueChange = { newHabitName = it },
+                keyboardOptions = KeyboardOptions.Default.copy(
+                    capitalization = KeyboardCapitalization.Words,
+                    imeAction = ImeAction.Next
+                ),
+                shape = MaterialTheme.shapes.medium,
+                label = {
+                    if (isHabitPresent()) {
+                        Text(text = stringResource(id = R.string.habit_exists))
+                    } else if (newHabitName.length <= 20) {
+                        Text(text = stringResource(id = R.string.add_habit))
+                    } else {
+                        Text(text = stringResource(id = R.string.too_long))
+                    }
+                },
+                isError = newHabitName.length > 20 || isHabitPresent()
+            )
+
+            OutlinedTextField(
+                value = newHabitDescription,
+                shape = MaterialTheme.shapes.medium,
+                keyboardOptions = KeyboardOptions.Default.copy(
+                    capitalization = KeyboardCapitalization.Sentences,
+                    imeAction = ImeAction.Done
+                ),
+                onValueChange = { newHabitDescription = it },
+                label = {
+                    if (newHabitName.length <= 50) {
+                        Text(text = stringResource(id = R.string.add_description))
+                    } else {
+                        Text(text = stringResource(id = R.string.too_long))
+                    }
+                },
+                isError = newHabitName.length > 50
+            )
+
+            TimePicker(
+                state = timePickerState,
+            )
+
+            Button(
+                onClick = {
+                    val habitEntity = Habit(
+                        title = newHabitName,
+                        description = newHabitDescription,
+                        time = timePickerStateToLocalDateTime(timePickerState)
                     )
-
-                    Spacer(modifier = Modifier.padding(8.dp))
-
-                    OutlinedTextField(
-                        value = newHabitDescription,
-                        shape = MaterialTheme.shapes.medium,
-                        keyboardOptions = KeyboardOptions.Default.copy(
-                            capitalization = KeyboardCapitalization.Sentences,
-                            imeAction = ImeAction.Done
-                        ),
-                        onValueChange = { newHabitDescription = it },
-                        label = {
-                            if (newHabitName.length <= 50) {
-                                Text(text = stringResource(id = R.string.add_description))
-                            } else {
-                                Text(text = stringResource(id = R.string.too_long))
-                            }
-                        },
-                        isError = newHabitName.length > 50
-                    )
-
-                    Spacer(modifier = Modifier.padding(8.dp))
-
-                    TimePicker(
-                        state = timePickerState,
-                    )
-                }
-            },
-            confirmButton = {
-                Button(
-                    onClick = {
-                        val habitEntity = Habit(
-                            title = newHabitName,
-                            description = newHabitDescription,
-                            time = timePickerStateToLocalDateTime(timePickerState)
-                        )
-                        showAddHabitDialog = false
-                        action(HabitsPageAction.AddHabit(habitEntity))
-                        showAddNotification(context, habitEntity)
-                    },
-                    enabled = newHabitName.isNotBlank() && newHabitDescription.isNotBlank() && newHabitName.length < 20 && newHabitDescription.length < 50,
-                    shape = RoundedCornerShape(16.dp)
-                ) {
-                    Text(text = stringResource(id = R.string.add_habit))
-                }
+                    showAddHabitDialog = false
+                    action(HabitsPageAction.AddHabit(habitEntity))
+                    showAddNotification(context, habitEntity)
+                },
+                enabled = newHabitName.isNotBlank() && newHabitDescription.isNotBlank() && newHabitName.length < 20 && newHabitDescription.length < 50,
+            ) {
+                Text(text = stringResource(id = R.string.add_habit))
             }
-        )
+        }
     }
 }
 
-@Preview(showBackground = true, backgroundColor = 0xFFFFFFFF,
+@Preview(
+    showBackground = true, backgroundColor = 0xFFFFFFFF,
     device = "spec:width=411dp,height=891dp", showSystemUi = true,
     uiMode = Configuration.UI_MODE_NIGHT_YES or Configuration.UI_MODE_TYPE_NORMAL
 )
@@ -246,15 +228,16 @@ private fun HabitsPagePreview() {
                         title = "Habit no $habitId",
                         description = "Description no $habitId",
                         time = LocalDateTime.now()
-                    ) to (0L..10L).map { HabitStatus(
-                        id = it * 2,
-                        habitId = habitId,
-                        date = LocalDateTime.now().toLocalDate().minusDays(it)
-                    ) }
+                    ) to (0L..10L).map {
+                        HabitStatus(
+                            id = it * 2,
+                            habitId = habitId,
+                            date = LocalDateTime.now().toLocalDate().minusDays(it)
+                        )
+                    }
                 }
             ),
             action = {},
-            onSettingsClick = {}
         )
     }
 }

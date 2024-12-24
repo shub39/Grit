@@ -129,9 +129,7 @@ fun Grit(
 
                 HabitsPage(
                     state = habitsPageState,
-                    action = hvm::habitsPageAction,
-                    onSettingsClick = {
-                    }
+                    action = hvm::habitsPageAction
                 )
             }
         }
