@@ -3,8 +3,10 @@ package com.shub39.grit.habits.presentation
 import android.content.res.Configuration
 import androidx.compose.animation.animateContentSize
 import androidx.compose.animation.core.animateDpAsState
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -19,6 +21,7 @@ import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
+import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TimePicker
 import androidx.compose.material3.TimePickerState
@@ -99,7 +102,9 @@ fun HabitsPage(
                 LazyColumn(
                     modifier = Modifier
                         .fillMaxSize()
-                        .animateContentSize()
+                        .animateContentSize(),
+                    verticalArrangement = Arrangement.spacedBy(8.dp),
+                    contentPadding = PaddingValues(horizontal = 16.dp)
                 ) {
                     // add button
                     item {
@@ -220,24 +225,28 @@ fun HabitsPage(
 @Composable
 private fun HabitsPagePreview() {
     GritTheme {
-        HabitsPage(
-            state = HabitPageState(
-                habitsWithStatuses = (0L..100L).associate { habitId ->
-                    Habit(
-                        id = habitId,
-                        title = "Habit no $habitId",
-                        description = "Description no $habitId",
-                        time = LocalDateTime.now()
-                    ) to (0L..10L).map {
-                        HabitStatus(
-                            id = it * 2,
-                            habitId = habitId,
-                            date = LocalDateTime.now().toLocalDate().minusDays(it)
-                        )
-                    }
-                }
-            ),
-            action = {},
-        )
+        Scaffold { padd ->
+            Box(Modifier.padding(padd)) {
+                HabitsPage(
+                    state = HabitPageState(
+                        habitsWithStatuses = (0L..100L).associate { habitId ->
+                            Habit(
+                                id = habitId,
+                                title = "Habit no $habitId",
+                                description = "Description no $habitId",
+                                time = LocalDateTime.now()
+                            ) to (0L..10L).map {
+                                HabitStatus(
+                                    id = it * 2,
+                                    habitId = habitId,
+                                    date = LocalDateTime.now().toLocalDate().minusDays(it)
+                                )
+                            }
+                        }
+                    ),
+                    action = {},
+                )
+            }
+        }
     }
 }

@@ -1,1 +1,1 @@
-Eine Aufgaben-Liste und eine Routinen App, die Ihnen hilft, Ihre Fortschritte zu visualisieren.
+Eine App, die Ihnen hilft, Ihre Aufgaben und Routinen zu erledigen.

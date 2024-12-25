@@ -2,20 +2,26 @@ package com.shub39.grit.habits.presentation.component
 
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.animateColorAsState
+import androidx.compose.animation.slideInHorizontally
+import androidx.compose.animation.slideOutHorizontally
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.combinedClickable
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material3.Button
+import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.ListItem
 import androidx.compose.material3.ListItemDefaults
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.OutlinedCard
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
 import androidx.compose.material3.TimePicker
@@ -34,13 +40,17 @@ import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardCapitalization
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.shub39.grit.R
 import com.shub39.grit.core.presentation.GritDialog
+import com.shub39.grit.core.presentation.GritTheme
 import com.shub39.grit.core.presentation.localToTimePickerState
 import com.shub39.grit.habits.domain.Habit
 import com.shub39.grit.habits.domain.HabitStatus
 import com.shub39.grit.habits.presentation.HabitsPageAction
+import lib.shub39.heatmaps.calendar.bool.WeekActivity
+import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
 
 @OptIn(ExperimentalMaterial3Api::class, ExperimentalFoundationApi::class)
@@ -71,61 +81,82 @@ fun HabitCard(
         },
         label = "cardBackground"
     )
-    val cardColors = ListItemDefaults.colors(
-        containerColor = cardBackground,
-        headlineColor = cardContent,
-        trailingIconColor = cardContent
-    )
 
-    ListItem(
-        colors = cardColors,
-        modifier = Modifier
-            .padding(bottom = 8.dp, start = 16.dp, end = 16.dp)
-            .clip(MaterialTheme.shapes.large)
-            .combinedClickable(
-                onClick = { action(HabitsPageAction.InsertStatus(habit)) },
-                onLongClick = { showEditDialog = true },
-                onDoubleClick = { showAnalyticsSheet = true }
+    OutlinedCard(
+        shape = MaterialTheme.shapes.large,
+        colors = CardDefaults.outlinedCardColors(
+            containerColor = MaterialTheme.colorScheme.onPrimary
+        ),
+        border = CardDefaults.outlinedCardBorder(
+            enabled = completed
+        )
+    ) {
+        ListItem(
+            modifier = Modifier
+                .clip(MaterialTheme.shapes.large)
+                .combinedClickable(
+                    onClick = { action(HabitsPageAction.InsertStatus(habit)) },
+                    onLongClick = { showEditDialog = true },
+                    onDoubleClick = { showAnalyticsSheet = true }
+                ),
+            colors = ListItemDefaults.colors(
+                containerColor = cardBackground,
+                headlineColor = cardContent,
+                trailingIconColor = cardContent
             ),
-        headlineContent = {
-            Row(
-                verticalAlignment = Alignment.CenterVertically,
-                horizontalArrangement = Arrangement.SpaceBetween
-            ) {
+            leadingContent = {
                 AnimatedVisibility(
-                    visible = completed
+                    visible = completed,
+                    enter = slideInHorizontally(),
+                    exit = slideOutHorizontally()
                 ) {
                     Icon(
                         painterResource(R.drawable.round_check_circle_24),
-                        contentDescription = null
+                        contentDescription = null,
                     )
                 }
-
-                Spacer(modifier = Modifier.width(8.dp))
-
+            },
+            headlineContent = {
+                Row(
+                    verticalAlignment = Alignment.CenterVertically,
+                    horizontalArrangement = Arrangement.SpaceBetween
+                ) {
+                    Text(
+                        text = habit.title,
+                        maxLines = 2,
+                        overflow = TextOverflow.Ellipsis
+                    )
+                }
+            },
+            supportingContent = {
                 Text(
-                    text = habit.title,
+                    text = habit.description,
                     maxLines = 2,
                     overflow = TextOverflow.Ellipsis
                 )
-            }
-        },
-        trailingContent = {
-            Row(
-                verticalAlignment = Alignment.CenterVertically
-            ) {
-                Icon(
-                    painter = painterResource(R.drawable.round_alarm_24),
-                    contentDescription = null
-                )
+            },
+            trailingContent = {
+                Row(
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
+                    Icon(
+                        painter = painterResource(R.drawable.round_alarm_24),
+                        contentDescription = null
+                    )
 
-                Text(
-                    modifier = Modifier.padding(8.dp),
-                    text = habit.time.format(DateTimeFormatter.ofPattern("hh:mm a"))
-                )
+                    Text(
+                        modifier = Modifier.padding(8.dp),
+                        text = habit.time.format(DateTimeFormatter.ofPattern("hh:mm a"))
+                    )
+                }
             }
-        }
-    )
+        )
+
+        WeekActivity(
+            dates = statusList.map { it.date },
+            modifier = Modifier.padding(8.dp)
+        )
+    }
 
     // delete dialog
     if (showDeleteDialog) {
@@ -252,6 +283,38 @@ fun HabitCard(
                     Text(text = stringResource(id = R.string.update))
                 }
             }
+        }
+    }
+}
+
+@Preview
+@Composable
+private fun HabitCardPreview() {
+    GritTheme {
+        Column {
+            HabitCard(
+                habit = Habit(
+                    id = 1,
+                    title = "A Habit",
+                    description = "Description for Habit",
+                    time = LocalDateTime.now()
+                ),
+                statusList = listOf(),
+                completed = true
+            ) { }
+
+            Spacer(modifier = Modifier.height(16.dp))
+
+            HabitCard(
+                habit = Habit(
+                    id = 1,
+                    title = "A Habit",
+                    description = "Description for Habit",
+                    time = LocalDateTime.now()
+                ),
+                statusList = listOf(),
+                completed = false
+            ) { }
         }
     }
 }
