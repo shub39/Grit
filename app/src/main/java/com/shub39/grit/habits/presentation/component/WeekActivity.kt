@@ -13,6 +13,7 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.unit.dp
 import java.time.DayOfWeek
 import java.time.LocalDate
@@ -34,17 +35,27 @@ fun WeekActivity(
         ) {
             items(currentWeekDates, key = { it.dayOfWeek.name }) { day ->
                 val isHighlighted = dates.contains(day)
+                val enabled = day.isBefore(currentDate) || day.isEqual(currentDate)
 
                 Card(
                     colors = CardDefaults.cardColors(
-                        containerColor = if (isHighlighted) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.onPrimary,
-                        contentColor = if (isHighlighted) MaterialTheme.colorScheme.onPrimary else MaterialTheme.colorScheme.primary
+                        containerColor = if (enabled) {
+                            MaterialTheme.colorScheme.tertiaryContainer
+                        } else {
+                            MaterialTheme.colorScheme.secondaryContainer
+                        },
+                        contentColor = if (enabled) {
+                            MaterialTheme.colorScheme.onTertiaryContainer
+                        } else {
+                            MaterialTheme.colorScheme.onSecondaryContainer
+                        }
                     ),
                     shape = if (isHighlighted) MaterialTheme.shapes.extraLarge else MaterialTheme.shapes.medium
                 ) {
                     Text(
                         text = day.dayOfWeek.name.take(3),
-                        modifier = Modifier.padding(8.dp)
+                        modifier = Modifier.padding(8.dp),
+                        textDecoration = if (isHighlighted) TextDecoration.LineThrough else null
                     )
                 }
             }

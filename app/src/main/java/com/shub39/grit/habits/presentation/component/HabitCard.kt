@@ -4,24 +4,24 @@ import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.animateColorAsState
 import androidx.compose.animation.slideInHorizontally
 import androidx.compose.animation.slideOutHorizontally
-import androidx.compose.foundation.ExperimentalFoundationApi
-import androidx.compose.foundation.combinedClickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonDefaults
+import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.ListItem
 import androidx.compose.material3.ListItemDefaults
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.OutlinedCard
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
 import androidx.compose.material3.TimePicker
@@ -40,7 +40,7 @@ import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardCapitalization
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
-import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.tooling.preview.PreviewLightDark
 import androidx.compose.ui.unit.dp
 import com.shub39.grit.R
 import com.shub39.grit.core.presentation.GritDialog
@@ -50,10 +50,11 @@ import com.shub39.grit.habits.domain.Habit
 import com.shub39.grit.habits.domain.HabitStatus
 import com.shub39.grit.habits.presentation.AnalyticsSheet
 import com.shub39.grit.habits.presentation.HabitsPageAction
+import java.time.LocalDate
 import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
 
-@OptIn(ExperimentalMaterial3Api::class, ExperimentalFoundationApi::class)
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun HabitCard(
     habit: Habit,
@@ -82,23 +83,16 @@ fun HabitCard(
         label = "cardBackground"
     )
 
-    OutlinedCard(
-        shape = MaterialTheme.shapes.large,
+    Card(
+        shape = MaterialTheme.shapes.extraLarge,
         colors = CardDefaults.outlinedCardColors(
-            containerColor = MaterialTheme.colorScheme.onPrimary
-        ),
-        border = CardDefaults.outlinedCardBorder(
-            enabled = completed
+            containerColor = cardBackground.copy(alpha = 0.7f),
+            contentColor = cardContent
         )
     ) {
         ListItem(
             modifier = Modifier
-                .clip(MaterialTheme.shapes.large)
-                .combinedClickable(
-                    onClick = { action(HabitsPageAction.InsertStatus(habit)) },
-                    onLongClick = { showEditDialog = true },
-                    onDoubleClick = { showAnalyticsSheet = true }
-                ),
+                .clip(MaterialTheme.shapes.extraLarge),
             colors = ListItemDefaults.colors(
                 containerColor = cardBackground,
                 headlineColor = cardContent,
@@ -156,6 +150,47 @@ fun HabitCard(
             dates = statusList.map { it.date },
             modifier = Modifier.padding(8.dp)
         )
+
+        Row(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(start = 8.dp, end = 8.dp, bottom = 8.dp),
+            horizontalArrangement = Arrangement.spacedBy(8.dp)
+        ) {
+            Button(
+                onClick = { showEditDialog = true }
+            ) {
+                Icon(
+                    painter = painterResource(R.drawable.round_settings_24),
+                    contentDescription = null
+                )
+            }
+
+            Button(
+                onClick = { action(HabitsPageAction.InsertStatus(habit)) },
+                modifier = Modifier.weight(1f),
+                colors = if (completed) {
+                    ButtonDefaults.buttonColors()
+                } else {
+                    ButtonDefaults.elevatedButtonColors()
+                }
+            ) {
+                Text(
+                    text = stringResource(
+                        if (completed) R.string.mark_done else R.string.mark_undone
+                    )
+                )
+            }
+
+            Button(
+                onClick = { showAnalyticsSheet = true }
+            ) {
+                Icon(
+                    painter = painterResource(R.drawable.round_analytics_24),
+                    contentDescription = null
+                )
+            }
+        }
     }
 
     // delete dialog
@@ -287,7 +322,7 @@ fun HabitCard(
     }
 }
 
-@Preview
+@PreviewLightDark
 @Composable
 private fun HabitCardPreview() {
     GritTheme {
@@ -299,7 +334,13 @@ private fun HabitCardPreview() {
                     description = "Description for Habit",
                     time = LocalDateTime.now()
                 ),
-                statusList = listOf(),
+                statusList = (0..100).map {
+                    HabitStatus(
+                        id = it.toLong(),
+                        habitId = 1,
+                        date = LocalDate.now().minusDays(it.toLong())
+                    )
+                },
                 completed = true
             ) { }
 
@@ -312,7 +353,7 @@ private fun HabitCardPreview() {
                     description = "Description for Habit",
                     time = LocalDateTime.now()
                 ),
-                statusList = listOf(),
+                statusList = emptyList(),
                 completed = false
             ) { }
         }

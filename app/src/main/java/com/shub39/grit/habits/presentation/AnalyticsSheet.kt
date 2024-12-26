@@ -77,7 +77,6 @@ fun AnalyticsSheet(
 
             // needs work, maybe will create my own charting system
             WeeklyComparisonChart(weeklyData)
-
         }
     }
 }
