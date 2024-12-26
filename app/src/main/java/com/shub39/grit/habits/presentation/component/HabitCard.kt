@@ -1,9 +1,7 @@
 package com.shub39.grit.habits.presentation.component
 
-import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.AnimatedContent
 import androidx.compose.animation.animateColorAsState
-import androidx.compose.animation.slideInHorizontally
-import androidx.compose.animation.slideOutHorizontally
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -14,11 +12,11 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material3.Button
-import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.ListItem
 import androidx.compose.material3.ListItemDefaults
 import androidx.compose.material3.MaterialTheme
@@ -45,6 +43,7 @@ import androidx.compose.ui.unit.dp
 import com.shub39.grit.R
 import com.shub39.grit.core.presentation.GritDialog
 import com.shub39.grit.core.presentation.GritTheme
+import com.shub39.grit.core.presentation.countConsecutiveDaysBeforeLast
 import com.shub39.grit.core.presentation.localToTimePickerState
 import com.shub39.grit.habits.domain.Habit
 import com.shub39.grit.habits.domain.HabitStatus
@@ -84,28 +83,29 @@ fun HabitCard(
     )
 
     Card(
-        shape = MaterialTheme.shapes.extraLarge,
+        shape = MaterialTheme.shapes.large,
         colors = CardDefaults.outlinedCardColors(
             containerColor = cardBackground.copy(alpha = 0.7f),
             contentColor = cardContent
-        )
+        ),
+        onClick = { action(HabitsPageAction.InsertStatus(habit)) }
     ) {
         ListItem(
             modifier = Modifier
-                .clip(MaterialTheme.shapes.extraLarge),
+                .clip(MaterialTheme.shapes.large),
             colors = ListItemDefaults.colors(
                 containerColor = cardBackground,
                 headlineColor = cardContent,
                 trailingIconColor = cardContent
             ),
             leadingContent = {
-                AnimatedVisibility(
-                    visible = completed,
-                    enter = slideInHorizontally(),
-                    exit = slideOutHorizontally()
+                AnimatedContent(
+                    targetState = completed
                 ) {
                     Icon(
-                        painterResource(R.drawable.round_check_circle_24),
+                        painter = painterResource(
+                            if (it) R.drawable.round_check_circle_24 else R.drawable.outline_circle_24
+                        ),
                         contentDescription = null,
                     )
                 }
@@ -148,16 +148,30 @@ fun HabitCard(
 
         WeekActivity(
             dates = statusList.map { it.date },
-            modifier = Modifier.padding(8.dp)
+            modifier = Modifier.padding(start = 8.dp, end = 8.dp, top = 8.dp)
         )
 
         Row(
             modifier = Modifier
-                .fillMaxWidth()
-                .padding(start = 8.dp, end = 8.dp, bottom = 8.dp),
-            horizontalArrangement = Arrangement.spacedBy(8.dp)
+                .padding(start = 16.dp)
+                .fillMaxWidth(),
+            horizontalArrangement = Arrangement.End,
+            verticalAlignment = Alignment.CenterVertically
         ) {
-            Button(
+            Row {
+                Icon(
+                    painter = painterResource(R.drawable.round_local_fire_department_24),
+                    contentDescription = null
+                )
+
+                Text(
+                    text = countConsecutiveDaysBeforeLast(statusList.map { it.date }).toString()
+                )
+            }
+
+            Spacer(modifier = Modifier.weight(1f))
+
+            IconButton(
                 onClick = { showEditDialog = true }
             ) {
                 Icon(
@@ -166,23 +180,7 @@ fun HabitCard(
                 )
             }
 
-            Button(
-                onClick = { action(HabitsPageAction.InsertStatus(habit)) },
-                modifier = Modifier.weight(1f),
-                colors = if (completed) {
-                    ButtonDefaults.buttonColors()
-                } else {
-                    ButtonDefaults.elevatedButtonColors()
-                }
-            ) {
-                Text(
-                    text = stringResource(
-                        if (completed) R.string.mark_done else R.string.mark_undone
-                    )
-                )
-            }
-
-            Button(
+            IconButton(
                 onClick = { showAnalyticsSheet = true }
             ) {
                 Icon(
