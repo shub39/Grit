@@ -48,8 +48,8 @@ import com.shub39.grit.core.presentation.GritTheme
 import com.shub39.grit.core.presentation.localToTimePickerState
 import com.shub39.grit.habits.domain.Habit
 import com.shub39.grit.habits.domain.HabitStatus
+import com.shub39.grit.habits.presentation.AnalyticsSheet
 import com.shub39.grit.habits.presentation.HabitsPageAction
-import lib.shub39.heatmaps.calendar.bool.WeekActivity
 import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
 
