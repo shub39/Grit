@@ -101,7 +101,7 @@ dependencies {
     implementation(libs.androidx.datastore.preferences)
     implementation(libs.koin.androidx.compose)
     implementation(libs.charts)
-    // implementation(libs.reorderable)
+    implementation(libs.reorderable)
 
 }
 

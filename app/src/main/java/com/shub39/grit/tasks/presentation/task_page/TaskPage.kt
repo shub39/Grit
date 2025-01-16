@@ -1,42 +1,40 @@
 package com.shub39.grit.tasks.presentation.task_page
 
 import android.content.res.Configuration
+import androidx.compose.animation.AnimatedContent
 import androidx.compose.animation.AnimatedVisibility
-import androidx.compose.animation.core.animateDpAsState
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
-import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.widthIn
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material3.AssistChip
 import androidx.compose.material3.Button
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.FilterChip
+import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
+import androidx.compose.material3.IconButtonDefaults
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
-import androidx.compose.material3.pulltorefresh.PullToRefreshBox
-import androidx.compose.material3.pulltorefresh.rememberPullToRefreshState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -52,14 +50,14 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.shub39.grit.R
-import com.shub39.grit.core.presentation.Empty
 import com.shub39.grit.core.presentation.GritDialog
 import com.shub39.grit.core.presentation.GritTheme
 import com.shub39.grit.tasks.domain.Category
 import com.shub39.grit.tasks.domain.CategoryColors
 import com.shub39.grit.tasks.domain.Task
 import com.shub39.grit.tasks.presentation.component.TaskCard
-import kotlinx.coroutines.launch
+import sh.calvin.reorderable.ReorderableItem
+import sh.calvin.reorderable.rememberReorderableLazyListState
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -67,20 +65,19 @@ fun TaskPage(
     state: TaskPageState,
     action: (TaskPageAction) -> Unit,
 ) {
-    // dialog controllers
     var showTaskAddDialog by remember { mutableStateOf(false) }
     var showCategoryAddDialog by remember { mutableStateOf(false) }
     var showDeleteDialog by remember { mutableStateOf(false) }
 
-    // remembered states and scopes
-    val addState = rememberPullToRefreshState()
-    val coroutineScope = rememberCoroutineScope()
-
-    // animated size of the pull to refresh button
-    val addSize by animateDpAsState(
-        targetValue = if (addState.distanceFraction != 0f) 64.dp else 0.dp,
-        label = "addSize"
-    )
+    var tasks by remember { mutableStateOf(state.tasks[state.currentCategory] ?: emptyList()) }
+    var editState by remember { mutableStateOf(false) }
+    val lazyListState = rememberLazyListState()
+    val reorderableListState = rememberReorderableLazyListState(lazyListState) { from, to ->
+        //TaskPageAction.MoveTask(from.index, to.index)
+        tasks = tasks.toMutableList().apply {
+            add(to.index, removeAt(from.index))
+        }
+    }
 
     Box(
         modifier = Modifier.fillMaxSize(),
@@ -98,14 +95,31 @@ fun TaskPage(
                     )
                 },
                 actions = {
-                    AnimatedVisibility(
-                        visible = state.completedTasks.isNotEmpty()
-                    ) {
+                    Row {
+                        AnimatedVisibility(
+                            visible = state.completedTasks.isNotEmpty()
+                        ) {
+                            IconButton(
+                                onClick = { showDeleteDialog = true },
+                            ) {
+                                Icon(
+                                    painter = painterResource(R.drawable.round_delete_forever_24),
+                                    contentDescription = null
+                                )
+                            }
+                        }
+
                         IconButton(
-                            onClick = { showDeleteDialog = true }
+                            onClick = { editState = !editState },
+                            colors = if (editState) {
+                                IconButtonDefaults.filledIconButtonColors()
+                            } else {
+                                IconButtonDefaults.iconButtonColors()
+                            },
+                            enabled = !state.tasks[state.currentCategory].isNullOrEmpty()
                         ) {
                             Icon(
-                                painter = painterResource(R.drawable.round_delete_forever_24),
+                                painter = painterResource(R.drawable.baseline_reorder_24),
                                 contentDescription = null
                             )
                         }
@@ -120,7 +134,10 @@ fun TaskPage(
                 items(state.tasks.keys.toList(), key = { it.id }) {
                     FilterChip(
                         selected = it == state.currentCategory,
-                        onClick = { action(TaskPageAction.ChangeCategory(it)) },
+                        onClick = {
+                            action(TaskPageAction.ChangeCategory(it))
+                            editState = false
+                        },
                         label = { Text(it.name) }
                     )
                 }
@@ -138,62 +155,53 @@ fun TaskPage(
                 }
             }
 
-            // Using pull to refresh as an interactive indicator to add tasks
-            PullToRefreshBox(
-                isRefreshing = false,
-                onRefresh = {
-                    coroutineScope.launch {
-                        addState.animateToHidden()
-                    }
-                    showTaskAddDialog = true
-                },
-                state = addState,
-                modifier = Modifier.fillMaxSize(),
-                indicator = {}
-            ) {
-                LazyColumn(
-                    modifier = Modifier
-                        .fillMaxSize()
-                ) {
-                    item {
-                        Button(
-                            onClick = {},
-                            modifier = Modifier
-                                .fillMaxWidth()
-                                .padding(addSize / 4)
-                                .height(addSize)
-                        ) {
-                            Icon(
-                                painter = painterResource(R.drawable.round_add_24),
-                                contentDescription = null
-                            )
-                        }
-                    }
-
-                    // tasks
-                    if (state.currentCategory != null) {
-                        val items = state.tasks[state.currentCategory] ?: emptyList()
-
-                        items(items, key = { it.id }) { task ->
-                            TaskCard(
-                                task = task,
-                                onStatusChange = { updatedTask ->
-                                    action(TaskPageAction.UpdateTaskStatus(updatedTask))
-                                },
-                            )
-                        }
-
-                        if (items.isEmpty()) {
-                            item {
-                                Empty()
+            AnimatedContent(
+                targetState = state.currentCategory
+            ) { category ->
+                if (category != null) {
+                    LazyColumn(
+                        modifier = Modifier.fillMaxSize(),
+                        state = lazyListState
+                    ) {
+                        items(state.tasks[category] ?: emptyList(), key = { it.id }) { task ->
+                            ReorderableItem(reorderableListState, key = { task.id }) { isDragging ->
+                                TaskCard(
+                                    task = task,
+                                    onStatusChange = { updatedTask ->
+                                        action(TaskPageAction.UpdateTaskStatus(updatedTask))
+                                    },
+                                    dragState = editState,
+                                    scope = this
+                                )
                             }
                         }
                     }
+                }
+            }
+        }
 
-                    // to leave some space in the bottom, idk looks good
-                    item {
-                        Spacer(modifier = Modifier.padding(60.dp))
-                    }
+        FloatingActionButton(
+            modifier = Modifier
+                .align(Alignment.BottomEnd)
+                .padding(16.dp),
+            onClick = { showTaskAddDialog = true }
+        ) {
+            Row(
+                modifier = Modifier.padding(16.dp),
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                Icon(
+                    painter = painterResource(R.drawable.round_add_24),
+                    contentDescription = null
+                )
+
+                AnimatedVisibility(
+                    visible = state.tasks[state.currentCategory].isNullOrEmpty()
+                ) {
+                    Text(
+                        text = stringResource(R.string.add_task),
+                        modifier = Modifier.padding(start = 8.dp)
+                    )
                 }
             }
         }

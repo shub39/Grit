@@ -82,6 +82,10 @@ class TaskListViewModel(
                 is TaskPageAction.AddCategory -> {
                     addCategory(action.category)
                 }
+
+                is TaskPageAction.MoveTask -> {
+
+                }
             }
         }
     }
