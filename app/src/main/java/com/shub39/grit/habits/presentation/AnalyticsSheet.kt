@@ -21,7 +21,6 @@ import com.shub39.grit.habits.domain.Habit
 import com.shub39.grit.habits.domain.HabitStatus
 import com.shub39.grit.habits.presentation.component.AnalyticsCard
 import com.shub39.grit.habits.presentation.component.BooleanHeatMap
-import com.shub39.grit.habits.presentation.component.WeeklyComparisonChart
 import com.shub39.grit.habits.presentation.component.prepareWeeklyData
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -74,9 +73,6 @@ fun AnalyticsSheet(
             }
 
             Spacer(modifier = Modifier.padding(8.dp))
-
-            // needs work, maybe will create my own charting system
-            WeeklyComparisonChart(weeklyData)
         }
     }
 }

@@ -1,6 +1,5 @@
 [versions]
 agp = "8.8.0"
-charts = "0.2.4-alpha"
 coreSplashscreen = "1.0.1"
 koinAndroidxCompose = "4.0.0"
 kotlin = "2.1.0"
@@ -45,7 +44,6 @@ androidx-room-rxjava3 = { module = "androidx.room:room-rxjava3", version.ref = "
 androidx-room-testing = { module = "androidx.room:room-testing", version.ref = "roomTesting" }
 androidx-runtime-livedata = { module = "androidx.compose.runtime:runtime-livedata", version.ref = "runtimeLivedata" }
 androidx-work-runtime-ktx = { module = "androidx.work:work-runtime-ktx", version.ref = "workRuntimeKtx" }
-charts = { module = "com.github.tehras:charts", version.ref = "charts" }
 junit = { group = "junit", name = "junit", version.ref = "junit" }
 androidx-junit = { group = "androidx.test.ext", name = "junit", version.ref = "junitVersion" }
 androidx-espresso-core = { group = "androidx.test.espresso", name = "espresso-core", version.ref = "espressoCore" }

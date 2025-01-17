@@ -99,7 +99,6 @@ dependencies {
     testImplementation(libs.androidx.room.testing)
     implementation(libs.androidx.room.paging)
     implementation(libs.koin.androidx.compose)
-    implementation(libs.charts)
     implementation(libs.reorderable)
 
 }

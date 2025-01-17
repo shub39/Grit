@@ -2,8 +2,6 @@ package com.shub39.grit.tasks.presentation
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.shub39.grit.core.presentation.settings.SettingsAction
-import com.shub39.grit.core.presentation.settings.SettingsState
 import com.shub39.grit.tasks.domain.Category
 import com.shub39.grit.tasks.domain.CategoryColors
 import com.shub39.grit.tasks.domain.Task
@@ -27,7 +25,6 @@ class TaskListViewModel(
 
     private var savedJob: Job? = null
     private val _tasksState = MutableStateFlow(TaskPageState())
-    private val _tasksSettings = MutableStateFlow(SettingsState())
 
     val tasksState = _tasksState.asStateFlow()
         .onStart {
@@ -38,13 +35,6 @@ class TaskListViewModel(
             viewModelScope,
             SharingStarted.WhileSubscribed(5000),
             TaskPageState()
-        )
-
-    val tasksSettings = _tasksSettings.asStateFlow()
-        .stateIn(
-            viewModelScope,
-            SharingStarted.WhileSubscribed(5000),
-            SettingsState()
         )
 
     // handles actions from task page
@@ -72,7 +62,7 @@ class TaskListViewModel(
                 }
 
                 is TaskPageAction.AddCategory -> {
-                    addCategory(action.category)
+                    upsertCategory(action.category)
                 }
 
                 is TaskPageAction.ReorderTasks -> {
@@ -80,14 +70,20 @@ class TaskListViewModel(
                         upsertTask(task.second.copy(index = task.first))
                     }
                 }
-            }
-        }
-    }
 
-    fun tasksSettingsAction(action: SettingsAction) {
-        viewModelScope.launch {
-            when (action) {
-                is SettingsAction.DeleteCategory -> {
+                is TaskPageAction.ReorderCategories -> {
+                    for (category in action.mapping) {
+                        upsertCategory(category.second.copy(index = category.first))
+                    }
+
+                    _tasksState.update {
+                        it.copy(
+                            currentCategory = it.tasks.keys.firstOrNull()
+                        )
+                    }
+                }
+
+                is TaskPageAction.DeleteCategory -> {
                     deleteCategory(action.category)
                 }
             }
@@ -114,12 +110,6 @@ class TaskListViewModel(
                     }
                 }
 
-                _tasksSettings.update {
-                    it.copy(
-                        categories = tasks.keys.toList()
-                    )
-                }
-
                 if (tasks.isEmpty()) {
                     addDefault()
                 }
@@ -128,7 +118,7 @@ class TaskListViewModel(
     }
 
     private suspend fun addDefault() {
-        addCategory(Category(name = "Misc", color = CategoryColors.GRAY.color))
+        upsertCategory(Category(name = "Misc", color = CategoryColors.GRAY.color))
     }
 
     private suspend fun upsertTask(task: Task) {
@@ -141,7 +131,7 @@ class TaskListViewModel(
         }
     }
 
-    private suspend fun addCategory(category: Category) {
+    private suspend fun upsertCategory(category: Category) {
         repo.upsertCategory(category)
     }
 

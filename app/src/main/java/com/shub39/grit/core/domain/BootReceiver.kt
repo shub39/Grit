@@ -5,7 +5,7 @@ import android.content.Context
 import android.content.Intent
 import android.util.Log
 import com.shub39.grit.habits.data.database.HabitDatabase
-import com.shub39.grit.core.data.mappers.toHabit
+import com.shub39.grit.core.data.toHabit
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.SupervisorJob

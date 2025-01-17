@@ -26,6 +26,7 @@ import java.time.LocalDate
 import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
 import java.time.temporal.ChronoUnit
+import kotlin.random.Random
 
 fun openLinkInBrowser(context: Context, url: String) {
     val intent = Intent(Intent.ACTION_VIEW, Uri.parse(url))
@@ -174,5 +175,16 @@ fun habitNotification(context: Context, habitEntity: HabitEntity) {
         }
 
         notify(habitEntity.id.hashCode(), builder.build())
+    }
+}
+
+fun getRandomLine(): String {
+    return when(Random.nextInt(0, 6)) {
+        1 -> "I got the entire year of 2024 on a Diary"
+        2 -> "It's easier to get things done when you have to think less"
+        3 -> "Plotting and scheming"
+        4 -> "I love marmots"
+        5 -> "What picture comes to your mind when you hear the word 'Grit'?"
+        else -> "For me it's a train that breaks through everything to reach its illusion of a destination"
     }
 }

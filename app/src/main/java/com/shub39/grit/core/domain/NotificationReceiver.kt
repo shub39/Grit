@@ -9,7 +9,7 @@ import com.shub39.grit.habits.data.database.HabitEntity
 import com.shub39.grit.habits.data.database.HabitDatabase
 import com.shub39.grit.habits.data.database.HabitStatusEntity
 import com.shub39.grit.tasks.data.database.TaskDatabase
-import com.shub39.grit.core.data.mappers.toHabit
+import com.shub39.grit.core.data.toHabit
 import com.shub39.grit.core.presentation.habitNotification
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers

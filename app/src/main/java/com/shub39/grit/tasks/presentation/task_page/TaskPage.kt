@@ -126,27 +126,31 @@ fun TaskPage(
                 horizontalArrangement = Arrangement.spacedBy(8.dp),
                 contentPadding = PaddingValues(bottom = 8.dp, start = 8.dp, end = 8.dp)
             ) {
-                items(state.tasks.keys.toList(), key = { it.id }) {
+                items(state.tasks.keys.toList(), key = { it.id }) { category ->
                     FilterChip(
-                        selected = it == state.currentCategory,
+                        selected = category == state.currentCategory,
                         onClick = {
-                            action(TaskPageAction.ChangeCategory(it))
+                            action(TaskPageAction.ChangeCategory(category))
                             editState = false
                         },
-                        label = { Text(it.name) }
+                        label = { Text(category.name) }
                     )
                 }
 
                 item {
-                    AssistChip(
-                        onClick = { showCategoryAddDialog = true },
-                        label = {
-                            Icon(
-                                painter = painterResource(R.drawable.round_add_24),
-                                contentDescription = null
-                            )
-                        }
-                    )
+                    AnimatedVisibility(
+                        visible = !editState
+                    ) {
+                        AssistChip(
+                            onClick = { showCategoryAddDialog = true },
+                            label = {
+                                Icon(
+                                    painter = painterResource(R.drawable.round_add_24),
+                                    contentDescription = null
+                                )
+                            }
+                        )
+                    }
                 }
             }
 

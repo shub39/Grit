@@ -1,9 +1,9 @@
 package com.shub39.grit.tasks.data.repository
 
-import com.shub39.grit.core.data.mappers.toCategory
-import com.shub39.grit.core.data.mappers.toCategoryEntity
-import com.shub39.grit.core.data.mappers.toTask
-import com.shub39.grit.core.data.mappers.toTaskEntity
+import com.shub39.grit.core.data.toCategory
+import com.shub39.grit.core.data.toCategoryEntity
+import com.shub39.grit.core.data.toTask
+import com.shub39.grit.core.data.toTaskEntity
 import com.shub39.grit.tasks.data.database.CategoryDao
 import com.shub39.grit.tasks.data.database.TasksDao
 import com.shub39.grit.tasks.domain.Category
