@@ -1,38 +1,36 @@
 package com.shub39.grit.habits.presentation
 
-import android.content.res.Configuration
+import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.animateContentSize
-import androidx.compose.animation.core.animateDpAsState
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.widthIn
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.lazy.itemsIndexed
+import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material3.Button
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
+import androidx.compose.material3.IconButtonDefaults
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
-import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TimePicker
 import androidx.compose.material3.TimePickerState
 import androidx.compose.material3.TopAppBar
-import androidx.compose.material3.pulltorefresh.PullToRefreshBox
-import androidx.compose.material3.pulltorefresh.rememberPullToRefreshState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -41,19 +39,16 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardCapitalization
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.shub39.grit.R
 import com.shub39.grit.core.presentation.Empty
 import com.shub39.grit.core.presentation.GritDialog
-import com.shub39.grit.core.presentation.GritTheme
 import com.shub39.grit.core.presentation.showAddNotification
 import com.shub39.grit.core.presentation.timePickerStateToLocalDateTime
 import com.shub39.grit.habits.domain.Habit
-import com.shub39.grit.habits.domain.HabitStatus
 import com.shub39.grit.habits.presentation.component.HabitCard
-import kotlinx.coroutines.launch
-import java.time.LocalDateTime
+import sh.calvin.reorderable.ReorderableItem
+import sh.calvin.reorderable.rememberReorderableLazyListState
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -63,15 +58,14 @@ fun HabitsPage(
 ) {
     val context = LocalContext.current
 
-    // controllers, states and scopes
     var showAddHabitDialog by remember { mutableStateOf(false) }
-    val addState = rememberPullToRefreshState()
-    val coroutineScope = rememberCoroutineScope()
 
-    val addSize by animateDpAsState(
-        targetValue = if (addState.distanceFraction != 0f) 64.dp else 0.dp,
-        label = "button size"
-    )
+    var editState by remember { mutableStateOf(false) }
+
+    var habits by remember(state.habitsWithStatuses) { mutableStateOf(state.habitsWithStatuses.entries.toList()) }
+    val lazyListState = rememberLazyListState()
+    val reorderableListState =
+        rememberReorderableLazyListState(lazyListState) { _, _ -> }
 
     Box(
         modifier = Modifier.fillMaxSize(),
@@ -85,62 +79,95 @@ fun HabitsPage(
             TopAppBar(
                 title = {
                     Text(text = stringResource(id = R.string.habits))
+                },
+                actions = {
+                    IconButton(
+                        onClick = { editState = !editState },
+                        colors = if (editState) {
+                            IconButtonDefaults.filledIconButtonColors()
+                        } else {
+                            IconButtonDefaults.iconButtonColors()
+                        },
+                        enabled = state.habitsWithStatuses.isNotEmpty()
+                    ) {
+                        Icon(
+                            painter = painterResource(R.drawable.baseline_reorder_24),
+                            contentDescription = null
+                        )
+                    }
                 }
             )
 
-            PullToRefreshBox(
-                isRefreshing = false,
-                onRefresh = {
-                    coroutineScope.launch {
-                        addState.animateToHidden()
-                    }
-                    showAddHabitDialog = true
-                },
-                state = addState,
-                indicator = {}
+            LazyColumn(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .animateContentSize(),
+                verticalArrangement = Arrangement.spacedBy(8.dp),
+                contentPadding = PaddingValues(horizontal = 16.dp)
             ) {
-                LazyColumn(
-                    modifier = Modifier
-                        .fillMaxSize()
-                        .animateContentSize(),
-                    verticalArrangement = Arrangement.spacedBy(8.dp),
-                    contentPadding = PaddingValues(horizontal = 16.dp)
-                ) {
-                    // add button
-                    item {
-                        Button(
-                            onClick = {},
-                            modifier = Modifier
-                                .fillMaxWidth()
-                                .padding(addSize / 4)
-                                .height(addSize)
-                        ) {
-                            Icon(
-                                painter = painterResource(R.drawable.round_add_24),
-                                contentDescription = null
-                            )
-                        }
-                    }
-
-                    // habits
-                    items(state.habitsWithStatuses.entries.toList(), key = { it.key.id }) {
+                // habits
+                itemsIndexed(habits, key = { _, it -> it.key.id }) { index, habit ->
+                    ReorderableItem(reorderableListState, key = { habit.key.id }) {
                         HabitCard(
-                            habit = it.key,
-                            statusList = it.value,
-                            completed = state.completedHabits.contains(it.key),
+                            habit = habit.key,
+                            statusList = habit.value,
+                            completed = state.completedHabits.contains(habit.key),
                             action = action,
+                            editState = editState,
+                            onMoveUp = {
+                                if (index > 0) {
+                                    habits = habits.toMutableList().apply {
+                                        add(index - 1, removeAt(index))
+                                    }
+
+                                    action(HabitsPageAction.ReorderHabits(habits.mapIndexed { index, entry -> index to entry.key }))
+                                }
+                            },
+                            onMoveDown = {
+                                if (index < habits.size - 1) {
+                                    habits = habits.toMutableList().apply {
+                                        add(index + 1, removeAt(index))
+                                    }
+
+                                    action(HabitsPageAction.ReorderHabits(habits.mapIndexed { index, entry -> index to entry.key }))
+                                }
+                            }
                         )
                     }
+                }
 
-                    // when no habits
-                    if (state.habitsWithStatuses.isEmpty() && !showAddHabitDialog) {
-                        item {
-                            Empty()
-                        }
+                // when no habits
+                if (state.habitsWithStatuses.isEmpty() && !showAddHabitDialog) {
+                    item {
+                        Empty()
                     }
+                }
 
-                    // ui sweetener
-                    item { Spacer(modifier = Modifier.padding(60.dp)) }
+                // ui sweetener
+                item { Spacer(modifier = Modifier.padding(60.dp)) }
+            }
+        }
+
+        FloatingActionButton(
+            onClick = { showAddHabitDialog = true },
+            modifier = Modifier
+                .padding(16.dp)
+                .align(Alignment.BottomEnd)
+        ) {
+            Row(
+                modifier = Modifier.padding(16.dp),
+                horizontalArrangement = Arrangement.spacedBy(8.dp),
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                Icon(
+                    painter = painterResource(R.drawable.round_add_24),
+                    contentDescription = null
+                )
+
+                AnimatedVisibility(
+                    visible = state.habitsWithStatuses.isEmpty()
+                ) {
+                    Text(text = stringResource(id = R.string.add_habit))
                 }
             }
         }
@@ -203,7 +230,8 @@ fun HabitsPage(
                     val habitEntity = Habit(
                         title = newHabitName,
                         description = newHabitDescription,
-                        time = timePickerStateToLocalDateTime(timePickerState)
+                        time = timePickerStateToLocalDateTime(timePickerState),
+                        index = habits.size
                     )
                     showAddHabitDialog = false
                     action(HabitsPageAction.AddHabit(habitEntity))
@@ -212,40 +240,6 @@ fun HabitsPage(
                 enabled = newHabitName.isNotBlank() && newHabitDescription.isNotBlank() && newHabitName.length < 20 && newHabitDescription.length < 50,
             ) {
                 Text(text = stringResource(id = R.string.add_habit))
-            }
-        }
-    }
-}
-
-@Preview(
-    showBackground = true, backgroundColor = 0xFFFFFFFF,
-    device = "spec:width=411dp,height=891dp", showSystemUi = true,
-    uiMode = Configuration.UI_MODE_NIGHT_YES or Configuration.UI_MODE_TYPE_NORMAL
-)
-@Composable
-private fun HabitsPagePreview() {
-    GritTheme {
-        Scaffold { padd ->
-            Box(Modifier.padding(padd)) {
-                HabitsPage(
-                    state = HabitPageState(
-                        habitsWithStatuses = (0L..100L).associate { habitId ->
-                            Habit(
-                                id = habitId,
-                                title = "Habit no $habitId",
-                                description = "Description no $habitId",
-                                time = LocalDateTime.now()
-                            ) to (0L..10L).map {
-                                HabitStatus(
-                                    id = it * 2,
-                                    habitId = habitId,
-                                    date = LocalDateTime.now().toLocalDate().minusDays(it)
-                                )
-                            }
-                        }
-                    ),
-                    action = {},
-                )
             }
         }
     }

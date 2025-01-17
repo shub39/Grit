@@ -2,7 +2,6 @@
 agp = "8.8.0"
 charts = "0.2.4-alpha"
 coreSplashscreen = "1.0.1"
-datastorePreferences = "1.1.2"
 koinAndroidxCompose = "4.0.0"
 kotlin = "2.1.0"
 ksp = "2.1.0-1.0.29"
@@ -35,7 +34,6 @@ serialization = "1.7.3"
 [libraries]
 androidx-material3 = { module = "androidx.compose.material3:material3", version.ref = "material3" }
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
-androidx-datastore-preferences = { module = "androidx.datastore:datastore-preferences", version.ref = "datastorePreferences" }
 androidx-core-splashscreen = { module = "androidx.core:core-splashscreen", version.ref = "coreSplashscreen" }
 androidx-lifecycle-viewmodel-ktx = { module = "androidx.lifecycle:lifecycle-viewmodel-ktx", version.ref = "lifecycleViewmodelKtx" }
 androidx-room-compiler = { module = "androidx.room:room-compiler", version.ref = "roomCompiler" }

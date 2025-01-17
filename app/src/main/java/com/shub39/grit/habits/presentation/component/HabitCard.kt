@@ -1,16 +1,18 @@
 package com.shub39.grit.habits.presentation.component
 
 import androidx.compose.animation.AnimatedContent
+import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.animateColorAsState
 import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.text.KeyboardOptions
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.KeyboardArrowDown
+import androidx.compose.material.icons.filled.KeyboardArrowUp
 import androidx.compose.material3.Button
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
@@ -38,19 +40,15 @@ import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardCapitalization
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
-import androidx.compose.ui.tooling.preview.PreviewLightDark
 import androidx.compose.ui.unit.dp
 import com.shub39.grit.R
 import com.shub39.grit.core.presentation.GritDialog
-import com.shub39.grit.core.presentation.GritTheme
 import com.shub39.grit.core.presentation.countConsecutiveDaysBeforeLast
 import com.shub39.grit.core.presentation.localToTimePickerState
 import com.shub39.grit.habits.domain.Habit
 import com.shub39.grit.habits.domain.HabitStatus
 import com.shub39.grit.habits.presentation.AnalyticsSheet
 import com.shub39.grit.habits.presentation.HabitsPageAction
-import java.time.LocalDate
-import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -60,6 +58,9 @@ fun HabitCard(
     statusList: List<HabitStatus>,
     completed: Boolean,
     action: (HabitsPageAction) -> Unit,
+    editState: Boolean = false,
+    onMoveUp: () -> Unit = {},
+    onMoveDown: () -> Unit = {}
 ) {
     // controllers
     var showEditDialog by remember { mutableStateOf(false) }
@@ -96,7 +97,6 @@ fun HabitCard(
             colors = ListItemDefaults.colors(
                 containerColor = cardBackground,
                 headlineColor = cardContent,
-                trailingIconColor = cardContent
             ),
             leadingContent = {
                 AnimatedContent(
@@ -170,6 +170,30 @@ fun HabitCard(
             }
 
             Spacer(modifier = Modifier.weight(1f))
+
+            AnimatedVisibility(
+                visible = editState
+            ) {
+                Row {
+                    IconButton(
+                        onClick = onMoveUp
+                    ) {
+                        Icon(
+                            imageVector = Icons.Default.KeyboardArrowUp,
+                            contentDescription = null
+                        )
+                    }
+
+                    IconButton(
+                        onClick = onMoveDown
+                    ) {
+                        Icon(
+                            imageVector = Icons.Default.KeyboardArrowDown,
+                            contentDescription = null
+                        )
+                    }
+                }
+            }
 
             IconButton(
                 onClick = { showEditDialog = true }
@@ -306,54 +330,17 @@ fun HabitCard(
                                     title = newHabitTitle,
                                     description = newHabitDescription,
                                     time = habit.time.withHour(timePickerState.hour)
-                                        .withMinute(timePickerState.minute)
+                                        .withMinute(timePickerState.minute),
+                                    index = habit.index
                                 )
                             )
                         )
                     },
-                    enabled = newHabitDescription.isNotBlank() && newHabitDescription.length <= 50 && newHabitTitle.length <= 20,
+                    enabled = newHabitDescription.isNotBlank() && newHabitDescription.length <= 50 && newHabitTitle.length <= 20 && newHabitTitle.isNotBlank(),
                 ) {
                     Text(text = stringResource(id = R.string.update))
                 }
             }
-        }
-    }
-}
-
-@PreviewLightDark
-@Composable
-private fun HabitCardPreview() {
-    GritTheme {
-        Column {
-            HabitCard(
-                habit = Habit(
-                    id = 1,
-                    title = "A Habit",
-                    description = "Description for Habit",
-                    time = LocalDateTime.now()
-                ),
-                statusList = (0..100).map {
-                    HabitStatus(
-                        id = it.toLong(),
-                        habitId = 1,
-                        date = LocalDate.now().minusDays(it.toLong())
-                    )
-                },
-                completed = true
-            ) { }
-
-            Spacer(modifier = Modifier.height(16.dp))
-
-            HabitCard(
-                habit = Habit(
-                    id = 1,
-                    title = "A Habit",
-                    description = "Description for Habit",
-                    time = LocalDateTime.now()
-                ),
-                statusList = emptyList(),
-                completed = false
-            ) { }
         }
     }
 }

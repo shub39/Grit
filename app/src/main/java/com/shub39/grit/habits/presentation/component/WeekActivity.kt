@@ -13,7 +13,6 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.unit.dp
 import java.time.DayOfWeek
 import java.time.LocalDate
@@ -38,24 +37,26 @@ fun WeekActivity(
                 val enabled = day.isBefore(currentDate) || day.isEqual(currentDate)
 
                 Card(
-                    colors = CardDefaults.cardColors(
-                        containerColor = if (enabled) {
-                            MaterialTheme.colorScheme.tertiaryContainer
-                        } else {
-                            MaterialTheme.colorScheme.secondaryContainer
-                        },
-                        contentColor = if (enabled) {
-                            MaterialTheme.colorScheme.onTertiaryContainer
-                        } else {
-                            MaterialTheme.colorScheme.onSecondaryContainer
-                        }
-                    ),
-                    shape = if (isHighlighted) MaterialTheme.shapes.extraLarge else MaterialTheme.shapes.medium
+                    colors = if (isHighlighted) {
+                        CardDefaults.cardColors(
+                            containerColor = MaterialTheme.colorScheme.onPrimaryContainer,
+                            contentColor = MaterialTheme.colorScheme.primaryContainer
+                        )
+                    } else if (enabled) {
+                        CardDefaults.cardColors(
+                            containerColor = MaterialTheme.colorScheme.primaryContainer,
+                            contentColor = MaterialTheme.colorScheme.onPrimaryContainer
+                        )
+                    } else {
+                        CardDefaults.cardColors(
+                            containerColor = MaterialTheme.colorScheme.primaryContainer.copy(alpha = 0.5f),
+                            contentColor = MaterialTheme.colorScheme.onPrimaryContainer.copy(alpha = 0.5f)
+                        )
+                    },
                 ) {
                     Text(
                         text = day.dayOfWeek.name.take(3),
                         modifier = Modifier.padding(8.dp),
-                        textDecoration = if (isHighlighted) TextDecoration.LineThrough else null
                     )
                 }
             }

@@ -40,7 +40,8 @@ class NotificationReceiver : BroadcastReceiver() {
                         id = habitId,
                         title = habitTitle,
                         description = habitDescription,
-                        time = LocalDateTime.now()
+                        time = LocalDateTime.now(),
+                        index = 0
                     )
 
                     // check if habit is completed today, if not then shows notification

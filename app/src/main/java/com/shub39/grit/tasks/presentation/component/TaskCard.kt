@@ -76,25 +76,24 @@ fun TaskCard(
 
     Card(
         modifier = Modifier
-                .fillMaxWidth()
-                .padding(start = 16.dp, end = 16.dp, bottom = 8.dp)
-                .combinedClickable(
-                    // change status on click
-                    onClick = {
-                        if (!dragState) {
-                            taskStatus = !taskStatus
-                            task.status = !task.status
-                            onStatusChange(task)
-                        }
-                    },
-                    // edit on click and hold
-                    onLongClick = {
-                        if (!dragState) {
-                            showEditDialog = true
-                        }
+            .fillMaxWidth()
+            .padding(start = 16.dp, end = 16.dp, bottom = 8.dp)
+            .combinedClickable(
+                // change status on click
+                onClick = {
+                    if (!dragState) {
+                        taskStatus = !taskStatus
+                        task.status = !task.status
+                        onStatusChange(task)
                     }
-                )
-        ,
+                },
+                // edit on click and hold
+                onLongClick = {
+                    if (!dragState) {
+                        showEditDialog = true
+                    }
+                }
+            ),
         colors = cardColors,
         shape = MaterialTheme.shapes.large,
     ) {
@@ -117,14 +116,14 @@ fun TaskCard(
                 modifier = Modifier.fillMaxWidth(0.7f)
             )
 
-            AnimatedVisibility (
+            AnimatedVisibility(
                 visible = dragState
             ) {
                 Row {
                     Icon(
                         imageVector = Icons.Default.KeyboardArrowUp,
                         contentDescription = null,
-                        modifier = Modifier.clickable{ moveUp() }
+                        modifier = Modifier.clickable { moveUp() }
                     )
 
                     Spacer(modifier = Modifier.width(8.dp))
@@ -132,7 +131,7 @@ fun TaskCard(
                     Icon(
                         imageVector = Icons.Default.KeyboardArrowDown,
                         contentDescription = null,
-                        modifier = Modifier.clickable{ moveDown() }
+                        modifier = Modifier.clickable { moveDown() }
                     )
                 }
             }
@@ -170,7 +169,8 @@ fun TaskCard(
                     task.title = newTitle
                     onStatusChange(task)
                     showEditDialog = false
-                }
+                },
+                enabled = newTitle.isNotBlank() && newTitle.length <= 100
             ) {
                 Text(stringResource(R.string.edit_task))
             }

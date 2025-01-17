@@ -9,5 +9,6 @@ data class HabitEntity(
     @PrimaryKey(autoGenerate = true) val id: Long = 0,
     val title: String,
     val description: String,
+    val index: Int,
     val time: LocalDateTime
 )

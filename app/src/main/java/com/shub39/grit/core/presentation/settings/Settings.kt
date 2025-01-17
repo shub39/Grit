@@ -3,7 +3,6 @@ package com.shub39.grit.core.presentation.settings
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
@@ -13,10 +12,7 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.material3.BasicAlertDialog
 import androidx.compose.material3.Button
 import androidx.compose.material3.Card
-import androidx.compose.material3.DropdownMenu
-import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.ListItem
@@ -38,7 +34,6 @@ import androidx.wear.compose.material.Text
 import com.shub39.grit.R
 import com.shub39.grit.core.presentation.GritTheme
 import com.shub39.grit.tasks.domain.Category
-import com.shub39.grit.tasks.domain.ClearPreferences
 
 // for some reason the ListItem and TopAppBar composables wont style
 // the text according to their defaults, need to investigate this
@@ -69,59 +64,6 @@ fun Settings(
                     )
                 }
             )
-
-            ListItem(
-                headlineContent = {
-                    Text(
-                        text = stringResource(R.string.clear_preference),
-                        style = MaterialTheme.typography.titleMedium,
-                        color = MaterialTheme.colorScheme.onBackground
-                    )
-                },
-                supportingContent = {
-                    Text(
-                        text = stringResource(R.string.clear_preference_exp),
-                        style = MaterialTheme.typography.bodyMedium,
-                        color = MaterialTheme.colorScheme.onBackground.copy(alpha = 0.8f)
-                    )
-                },
-                trailingContent = {
-                    var expanded by remember { mutableStateOf(false) }
-
-                    Row {
-                        Button(
-                            onClick = { expanded = true }
-                        ) {
-                            Text(
-                                text = state.currentClearPreference,
-                                color = MaterialTheme.colorScheme.surface
-                            )
-                        }
-
-                        DropdownMenu(
-                            expanded = expanded,
-                            onDismissRequest = { expanded = false }
-                        ) {
-                            ClearPreferences.entries.forEach { preference ->
-                                DropdownMenuItem(
-                                    text = {
-                                        Text(
-                                            text = preference.value,
-                                            color = MaterialTheme.colorScheme.onSurface
-                                        )
-                                    },
-                                    onClick = {
-                                        action(SettingsAction.UpdateClearPreference(preference.value))
-                                        expanded = false
-                                    }
-                                )
-                            }
-                        }
-                    }
-                }
-            )
-
-            HorizontalDivider()
 
             ListItem(
                 headlineContent = {

@@ -2,8 +2,6 @@ package com.shub39.grit.tasks.presentation
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.shub39.grit.core.data.GritDatastore
-import com.shub39.grit.core.domain.NotificationAlarmScheduler
 import com.shub39.grit.core.presentation.settings.SettingsAction
 import com.shub39.grit.core.presentation.settings.SettingsState
 import com.shub39.grit.tasks.domain.Category
@@ -24,13 +22,10 @@ import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 
 class TaskListViewModel(
-    private val repo: TaskRepo,
-    private val scheduler: NotificationAlarmScheduler,
-    private val datastore: GritDatastore
+    private val repo: TaskRepo
 ) : ViewModel() {
 
     private var savedJob: Job? = null
-    private var settingsJob: Job? = null
     private val _tasksState = MutableStateFlow(TaskPageState())
     private val _tasksSettings = MutableStateFlow(SettingsState())
 
@@ -46,9 +41,6 @@ class TaskListViewModel(
         )
 
     val tasksSettings = _tasksSettings.asStateFlow()
-        .onStart {
-            observeSettings()
-        }
         .stateIn(
             viewModelScope,
             SharingStarted.WhileSubscribed(5000),
@@ -95,31 +87,11 @@ class TaskListViewModel(
     fun tasksSettingsAction(action: SettingsAction) {
         viewModelScope.launch {
             when (action) {
-                is SettingsAction.UpdateClearPreference -> {
-                    cancelScheduleDeletion(_tasksSettings.value.currentClearPreference)
-                    datastore.setClearPreferences(action.clearPreference)
-                    scheduleDeletion(action.clearPreference)
-                }
-
                 is SettingsAction.DeleteCategory -> {
                     deleteCategory(action.category)
                 }
             }
         }
-    }
-
-    private fun observeSettings() {
-        settingsJob?.cancel()
-        settingsJob = datastore
-            .clearPreferences()
-            .onEach { preference ->
-                _tasksSettings.update { settings ->
-                    settings.copy(
-                        currentClearPreference = preference,
-                    )
-                }
-            }
-            .launchIn(viewModelScope)
     }
 
     private fun observeTasks() {
@@ -183,14 +155,5 @@ class TaskListViewModel(
         }
 
         repo.deleteCategory(category)
-    }
-
-    // schedule deletion to user preference, needs testing
-    private fun scheduleDeletion(preference: String) {
-        scheduler.schedule(preference)
-    }
-
-    private fun cancelScheduleDeletion(preference: String) {
-        scheduler.cancel(preference)
     }
 }

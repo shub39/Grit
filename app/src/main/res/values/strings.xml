@@ -48,4 +48,5 @@
     <string name="edit_categories">Edit categories</string>
     <string name="delete_category">Are you sure? all tasks in this category will be deleted</string>
     <string name="add_category">Add Category</string>
+    <string name="add">Add Something</string>
 </resources>

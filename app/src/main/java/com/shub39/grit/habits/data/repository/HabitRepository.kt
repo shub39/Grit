@@ -28,7 +28,7 @@ class HabitRepository(
 
     override fun getHabitStatus(): Flow<Map<Habit, List<HabitStatus>>> {
         val habits = habitDao.getAllHabitsFlow().map { habits ->
-            habits.map { it.toHabit() }
+            habits.map { it.toHabit() }.sortedBy { it.index }
         }
         val habitStatuses = habitStatusDao
             .getAllHabitStatuses()

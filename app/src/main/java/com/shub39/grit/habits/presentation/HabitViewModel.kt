@@ -56,6 +56,12 @@ class HabitViewModel(
                 is HabitsPageAction.UpdateHabit -> {
                     addHabit(action.habit)
                 }
+
+                is HabitsPageAction.ReorderHabits -> {
+                    for (habit in action.pairs) {
+                        addHabit(habit.second.copy(index = habit.first))
+                    }
+                }
             }
         }
     }

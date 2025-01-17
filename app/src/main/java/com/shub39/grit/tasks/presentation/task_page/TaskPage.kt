@@ -8,6 +8,7 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
@@ -51,6 +52,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.shub39.grit.R
+import com.shub39.grit.core.presentation.Empty
 import com.shub39.grit.core.presentation.GritDialog
 import com.shub39.grit.core.presentation.GritTheme
 import com.shub39.grit.tasks.domain.Category
@@ -203,6 +205,14 @@ fun TaskPage(
                                 )
                             }
                         }
+
+                        item {
+                            if (tasks.isEmpty()) {
+                                Empty()
+                            } else {
+                                Spacer(modifier = Modifier.padding(60.dp))
+                            }
+                        }
                     }
                 }
             }
@@ -351,7 +361,7 @@ fun TaskPage(
                         )
                     }
                 },
-                enabled = newTask.isNotEmpty()
+                enabled = newTask.isNotEmpty() && newTask.length <= 100
             ) {
                 Text(
                     text = stringResource(id = R.string.add_task),
