@@ -63,6 +63,12 @@ class TaskListViewModel(
 
                 is TaskPageAction.AddCategory -> {
                     upsertCategory(action.category)
+
+                    _tasksState.update {
+                        it.copy(
+                            currentCategory = it.tasks.keys.firstOrNull()
+                        )
+                    }
                 }
 
                 is TaskPageAction.ReorderTasks -> {
@@ -85,6 +91,12 @@ class TaskListViewModel(
 
                 is TaskPageAction.DeleteCategory -> {
                     deleteCategory(action.category)
+
+                    _tasksState.update {
+                        it.copy(
+                            currentCategory = it.tasks.keys.firstOrNull()
+                        )
+                    }
                 }
             }
         }
