@@ -3,13 +3,18 @@ package com.shub39.grit.tasks.presentation.component
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.animateColorAsState
 import androidx.compose.foundation.ExperimentalFoundationApi
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.combinedClickable
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.text.KeyboardOptions
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.KeyboardArrowDown
+import androidx.compose.material.icons.filled.KeyboardArrowUp
 import androidx.compose.material3.Button
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
@@ -28,7 +33,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
-import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.ImeAction
@@ -38,15 +42,15 @@ import androidx.compose.ui.unit.dp
 import com.shub39.grit.R
 import com.shub39.grit.core.presentation.GritDialog
 import com.shub39.grit.tasks.domain.Task
-import sh.calvin.reorderable.ReorderableCollectionItemScope
 
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
 fun TaskCard(
     task: Task,
-    scope: ReorderableCollectionItemScope,
     onStatusChange: (Task) -> Unit,
-    dragState: Boolean = false
+    dragState: Boolean = false,
+    moveUp: () -> Unit = {},
+    moveDown: () -> Unit = {}
 ) {
     var taskStatus by remember { mutableStateOf(task.status) }
     var showEditDialog by remember { mutableStateOf(false) }
@@ -71,9 +75,7 @@ fun TaskCard(
     )
 
     Card(
-        modifier = with(scope) {
-            Modifier
-                .draggableHandle()
+        modifier = Modifier
                 .fillMaxWidth()
                 .padding(start = 16.dp, end = 16.dp, bottom = 8.dp)
                 .combinedClickable(
@@ -92,27 +94,17 @@ fun TaskCard(
                         }
                     }
                 )
-        },
+        ,
         colors = cardColors,
-        shape = MaterialTheme.shapes.large
+        shape = MaterialTheme.shapes.large,
     ) {
         Row(
             verticalAlignment = Alignment.CenterVertically,
-            modifier = Modifier.padding(16.dp)
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(16.dp),
+            horizontalArrangement = Arrangement.SpaceBetween
         ) {
-            AnimatedVisibility (
-                visible = dragState
-            ) {
-                Row {
-                    Icon(
-                        painter = painterResource(R.drawable.baseline_drag_indicator_24),
-                        contentDescription = null
-                    )
-
-                    Spacer(modifier = Modifier.width(8.dp))
-                }
-            }
-
             Text(
                 text = task.title,
                 style = MaterialTheme.typography.bodyLarge,
@@ -121,8 +113,29 @@ fun TaskCard(
                     TextDecoration.LineThrough
                 } else {
                     TextDecoration.None
-                }
+                },
+                modifier = Modifier.fillMaxWidth(0.7f)
             )
+
+            AnimatedVisibility (
+                visible = dragState
+            ) {
+                Row {
+                    Icon(
+                        imageVector = Icons.Default.KeyboardArrowUp,
+                        contentDescription = null,
+                        modifier = Modifier.clickable{ moveUp() }
+                    )
+
+                    Spacer(modifier = Modifier.width(8.dp))
+
+                    Icon(
+                        imageVector = Icons.Default.KeyboardArrowDown,
+                        contentDescription = null,
+                        modifier = Modifier.clickable{ moveDown() }
+                    )
+                }
+            }
         }
     }
 

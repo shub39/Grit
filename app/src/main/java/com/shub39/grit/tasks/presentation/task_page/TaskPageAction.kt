@@ -8,6 +8,6 @@ sealed interface TaskPageAction {
     data class AddCategory(val category: Category): TaskPageAction
     data class ChangeCategory(val category: Category): TaskPageAction
     data object DeleteTasks: TaskPageAction
-    data class MoveTask(val from: Int, val to: Int): TaskPageAction
+    data class ReorderTasks(val mapping: List<Pair<Int, Task>>): TaskPageAction
     data class AddTask(val task: Task): TaskPageAction
 }

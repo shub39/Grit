@@ -48,6 +48,7 @@ fun Task.toTaskEntity(): TaskEntity {
         id = id,
         categoryId = categoryId,
         title = title,
+        index = index,
         status = status
     )
 }
@@ -57,6 +58,7 @@ fun TaskEntity.toTask(): Task {
         id = id,
         categoryId = categoryId,
         title = title,
+        index = index,
         status = status
     )
 }
@@ -65,6 +67,7 @@ fun CategoryEntity.toCategory(): Category {
     return Category(
         id = id,
         name = name,
+        index = index,
         color = color
     )
 }
@@ -73,6 +76,7 @@ fun Category.toCategoryEntity(): CategoryEntity {
     return CategoryEntity(
         id = id,
         name = name,
-        color = color
+        color = color,
+        index = index
     )
 }

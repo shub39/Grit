@@ -4,14 +4,14 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.shub39.grit.core.data.GritDatastore
 import com.shub39.grit.core.domain.NotificationAlarmScheduler
+import com.shub39.grit.core.presentation.settings.SettingsAction
+import com.shub39.grit.core.presentation.settings.SettingsState
 import com.shub39.grit.tasks.domain.Category
 import com.shub39.grit.tasks.domain.CategoryColors
 import com.shub39.grit.tasks.domain.Task
 import com.shub39.grit.tasks.domain.TaskRepo
 import com.shub39.grit.tasks.presentation.task_page.TaskPageAction
 import com.shub39.grit.tasks.presentation.task_page.TaskPageState
-import com.shub39.grit.core.presentation.settings.SettingsAction
-import com.shub39.grit.core.presentation.settings.SettingsState
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
@@ -83,8 +83,10 @@ class TaskListViewModel(
                     addCategory(action.category)
                 }
 
-                is TaskPageAction.MoveTask -> {
-
+                is TaskPageAction.ReorderTasks -> {
+                    for (task in action.mapping) {
+                        upsertTask(task.second.copy(index = task.first))
+                    }
                 }
             }
         }

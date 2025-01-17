@@ -15,6 +15,7 @@ import androidx.compose.foundation.layout.widthIn
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material3.AssistChip
@@ -69,15 +70,7 @@ fun TaskPage(
     var showCategoryAddDialog by remember { mutableStateOf(false) }
     var showDeleteDialog by remember { mutableStateOf(false) }
 
-    var tasks by remember { mutableStateOf(state.tasks[state.currentCategory] ?: emptyList()) }
     var editState by remember { mutableStateOf(false) }
-    val lazyListState = rememberLazyListState()
-    val reorderableListState = rememberReorderableLazyListState(lazyListState) { from, to ->
-        //TaskPageAction.MoveTask(from.index, to.index)
-        tasks = tasks.toMutableList().apply {
-            add(to.index, removeAt(from.index))
-        }
-    }
 
     Box(
         modifier = Modifier.fillMaxSize(),
@@ -159,19 +152,54 @@ fun TaskPage(
                 targetState = state.currentCategory
             ) { category ->
                 if (category != null) {
+                    var tasks by remember(state.tasks) {
+                        mutableStateOf(
+                            state.tasks[category] ?: emptyList()
+                        )
+                    }
+
+                    val lazyListState = rememberLazyListState()
+                    val reorderableListState =
+                        rememberReorderableLazyListState(lazyListState) { _, _ -> }
+
                     LazyColumn(
                         modifier = Modifier.fillMaxSize(),
                         state = lazyListState
                     ) {
-                        items(state.tasks[category] ?: emptyList(), key = { it.id }) { task ->
-                            ReorderableItem(reorderableListState, key = { task.id }) { isDragging ->
+                        itemsIndexed(tasks, key = { _, it -> it.id }) { index, task ->
+                            ReorderableItem(reorderableListState, key = { task.id }) {
                                 TaskCard(
                                     task = task,
                                     onStatusChange = { updatedTask ->
+                                        if (updatedTask.status) {
+                                            tasks = tasks.toMutableList().apply {
+                                                add(tasks.size - 1, removeAt(index))
+                                            }
+
+                                            action(TaskPageAction.ReorderTasks(tasks.mapIndexed { index, task -> index to task }))
+                                        }
+
                                         action(TaskPageAction.UpdateTaskStatus(updatedTask))
                                     },
                                     dragState = editState,
-                                    scope = this
+                                    moveUp = {
+                                        if (index > 0) {
+                                            tasks = tasks.toMutableList().apply {
+                                                add(index - 1, removeAt(index))
+                                            }
+
+                                            action(TaskPageAction.ReorderTasks(tasks.mapIndexed { index, task -> index to task }))
+                                        }
+                                    },
+                                    moveDown = {
+                                        if (index < tasks.size - 1) {
+                                            tasks = tasks.toMutableList().apply {
+                                                add(index + 1, removeAt(index))
+                                            }
+
+                                            action(TaskPageAction.ReorderTasks(tasks.mapIndexed { index, task -> index to task }))
+                                        }
+                                    }
                                 )
                             }
                         }
@@ -316,7 +344,8 @@ fun TaskPage(
                                 Task(
                                     categoryId = state.currentCategory.id,
                                     title = newTask,
-                                    status = false
+                                    status = false,
+                                    index = state.tasks[state.currentCategory]?.size ?: 0
                                 )
                             )
                         )

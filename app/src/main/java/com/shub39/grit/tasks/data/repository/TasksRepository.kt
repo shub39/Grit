@@ -19,10 +19,10 @@ class TasksRepository(
 ): TaskRepo {
     override fun getTasks(): Flow<Map<Category, List<Task>>> {
         val tasksFlow = tasksDao.getTasksFlow().map { entities ->
-            entities.map { it.toTask() }
+            entities.map { it.toTask() }.sortedBy { it.index }
         }
         val categoriesFlow = categoryDao.getCategories().map { entities ->
-            entities.map { it.toCategory() }
+            entities.map { it.toCategory() }.sortedBy { it.index }
         }
 
         return tasksFlow.combine(categoriesFlow) { tasks, categories ->
