@@ -22,13 +22,16 @@ import androidx.compose.ui.res.stringResource
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
+import androidx.navigation.compose.navigation
 import androidx.navigation.compose.rememberNavController
 import com.shub39.grit.R
+import com.shub39.grit.core.presentation.AboutPage
+import com.shub39.grit.core.presentation.SettingsPage
 import com.shub39.grit.habits.presentation.HabitViewModel
 import com.shub39.grit.habits.presentation.HabitsPage
+import com.shub39.grit.tasks.presentation.EditCategories
 import com.shub39.grit.tasks.presentation.TaskListViewModel
 import com.shub39.grit.tasks.presentation.task_page.TaskPage
-import com.shub39.grit.core.presentation.settings.Settings
 import org.koin.androidx.compose.koinViewModel
 
 @Composable
@@ -40,7 +43,6 @@ fun Grit(
     var currentRoute: Routes by remember { mutableStateOf(Routes.TasksPage) }
 
     val taskPageState by tvm.tasksState.collectAsStateWithLifecycle()
-    val taskSettingsState by tvm.tasksSettings.collectAsStateWithLifecycle()
     val habitsPageState by hvm.habitsPageState.collectAsStateWithLifecycle()
 
     val navigator = { route: Routes ->
@@ -59,7 +61,7 @@ fun Grit(
                 listOf(
                     Routes.TasksPage,
                     Routes.HabitsPage,
-                    Routes.Settings
+                    Routes.SettingsGraph
                 ).forEach { route ->
                     NavigationBarItem(
                         selected = currentRoute == route,
@@ -71,8 +73,8 @@ fun Grit(
                                 painter = painterResource(
                                     when (route) {
                                         Routes.HabitsPage -> R.drawable.round_alarm_24
-                                        Routes.Settings -> R.drawable.round_settings_24
                                         Routes.TasksPage -> R.drawable.round_checklist_24
+                                        else -> R.drawable.round_settings_24
                                     }
                                 ),
                                 contentDescription = null,
@@ -83,8 +85,8 @@ fun Grit(
                                 text = stringResource(
                                     when (route) {
                                         Routes.HabitsPage -> R.string.habits
-                                        Routes.Settings -> R.string.settings
                                         Routes.TasksPage -> R.string.tasks
+                                        else -> R.string.settings
                                     }
                                 )
                             )
@@ -115,13 +117,32 @@ fun Grit(
                 )
             }
 
-            composable<Routes.Settings> {
-                currentRoute = Routes.Settings
+            navigation<Routes.SettingsGraph>(
+                startDestination = Routes.Settings
+            ) {
+                composable<Routes.Settings> {
+                    currentRoute = Routes.SettingsGraph
 
-                Settings(
-                    state = taskSettingsState,
-                    action = tvm::tasksSettingsAction
-                )
+                    SettingsPage(
+                        onCategoryClick = { navController.navigate(Routes.Categories) },
+                        onAboutClick = { navController.navigate(Routes.About) }
+                    )
+                }
+
+                composable<Routes.About> {
+                    currentRoute = Routes.SettingsGraph
+
+                    AboutPage()
+                }
+
+                composable<Routes.Categories> {
+                    currentRoute = Routes.SettingsGraph
+
+                    EditCategories(
+                        state = taskPageState,
+                        action = tvm::taskPageAction
+                    )
+                }
             }
 
             composable<Routes.HabitsPage> {
@@ -129,9 +150,7 @@ fun Grit(
 
                 HabitsPage(
                     state = habitsPageState,
-                    action = hvm::habitsPageAction,
-                    onSettingsClick = {
-                    }
+                    action = hvm::habitsPageAction
                 )
             }
         }

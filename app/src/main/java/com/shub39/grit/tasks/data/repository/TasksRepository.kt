@@ -1,9 +1,9 @@
 package com.shub39.grit.tasks.data.repository
 
-import com.shub39.grit.core.data.mappers.toCategory
-import com.shub39.grit.core.data.mappers.toCategoryEntity
-import com.shub39.grit.core.data.mappers.toTask
-import com.shub39.grit.core.data.mappers.toTaskEntity
+import com.shub39.grit.core.data.toCategory
+import com.shub39.grit.core.data.toCategoryEntity
+import com.shub39.grit.core.data.toTask
+import com.shub39.grit.core.data.toTaskEntity
 import com.shub39.grit.tasks.data.database.CategoryDao
 import com.shub39.grit.tasks.data.database.TasksDao
 import com.shub39.grit.tasks.domain.Category
@@ -19,10 +19,10 @@ class TasksRepository(
 ): TaskRepo {
     override fun getTasks(): Flow<Map<Category, List<Task>>> {
         val tasksFlow = tasksDao.getTasksFlow().map { entities ->
-            entities.map { it.toTask() }
+            entities.map { it.toTask() }.sortedBy { it.index }
         }
         val categoriesFlow = categoryDao.getCategories().map { entities ->
-            entities.map { it.toCategory() }
+            entities.map { it.toCategory() }.sortedBy { it.index }
         }
 
         return tasksFlow.combine(categoriesFlow) { tasks, categories ->

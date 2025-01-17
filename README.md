@@ -13,11 +13,6 @@
 > [<img src="https://m3-markdown-badges.vercel.app/issues/1/2/shub39/Grit">]()
 > [<img src="https://ziadoua.github.io/m3-Markdown-Badges/badges/Discord/discord2.svg">](https://discord.gg/https://discord.gg/nxA2hgtEKf)
 
-> [!NOTE]
-> This app is personalised for my use and some versions might break or 
-> corrupt past data you have saved. Please reconsider using this as 
-> your main habit tracker/tasks app 
-
 > ### Get On
 >[<img src="https://f-droid.org/badge/get-it-on.png" alt="Get it on F-Droid" height="80">](https://f-droid.org/packages/com.shub39.grit)
 >[<img src="https://gitlab.com/IzzyOnDroid/repo/-/raw/master/assets/IzzyOnDroid.png" height="80">](https://apt.izzysoft.de/packages/com.shub39.grit/latest)
@@ -30,13 +25,11 @@
 | ![Image 3](fastlane/metadata/android/en-US/images/phoneScreenshots/3.png) | ![Image 4](fastlane/metadata/android/en-US/images/phoneScreenshots/4.png) |
 | ![Image 5](fastlane/metadata/android/en-US/images/phoneScreenshots/5.png) | ![Image 6](fastlane/metadata/android/en-US/images/phoneScreenshots/6.png) |
 
-## Features / Road Map 🛣️
+## Features
 >- [x] Todo List
 >- [x] Habit Tracking
->- [x] Analytics
->- [x] Notifications
->- [ ] Widgets
->- [ ] Progress Sharing
+>- [x] Analytics with Habit Maps
+>- [x] Notification Reminders
 
 ## Motivation 💭
 There are plenty of todo list and habit tracker apps for android. Some have the features I love while some have good UI design.
@@ -50,8 +43,7 @@ I eventually want to turn this app into a productivity hub with many social feat
 >- Alarm Manager API
 >- Kotlin Coroutines
 >- MVVM architecture
->- [HeatMaps](https://github.com/shub39/HeatMaps) for Heat Maps!
->- [charts](https://github.com/tehras/charts) for making charts!
+>- [Reorderable](https://github.com/Calvin-LL/Reorderable) for reorderable lists!
 
 ## Support 💕
 > ### If you loved this app, consider donating. I'm an undergrad trying to get some pocket money

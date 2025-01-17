@@ -21,5 +21,6 @@ data class TaskEntity(
     @PrimaryKey(autoGenerate = true) val id: Long = 0,
     val categoryId: Long,
     var title: String,
-    var status: Boolean = false
+    var status: Boolean = false,
+    var index: Int = 0
 )
