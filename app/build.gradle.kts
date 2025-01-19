@@ -100,6 +100,8 @@ dependencies {
     implementation(libs.androidx.room.paging)
     implementation(libs.koin.androidx.compose)
     implementation(libs.reorderable)
+    implementation(libs.androidx.glance.appwidget)
+    implementation(libs.androidx.glance.material3)
 
 }
 
