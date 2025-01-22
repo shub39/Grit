@@ -1,6 +1,7 @@
 [versions]
 agp = "8.8.0"
 coreSplashscreen = "1.0.1"
+glanceAppwidget = "1.1.1"
 koinAndroidxCompose = "4.0.0"
 kotlin = "2.1.0"
 ksp = "2.1.0-1.0.29"
@@ -31,6 +32,8 @@ workRuntimeKtx = "2.10.0"
 serialization = "1.7.3"
 
 [libraries]
+androidx-glance-appwidget = { module = "androidx.glance:glance-appwidget", version.ref = "glanceAppwidget" }
+androidx-glance-material3 = { module = "androidx.glance:glance-material3", version.ref = "glanceAppwidget" }
 androidx-material3 = { module = "androidx.compose.material3:material3", version.ref = "material3" }
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
 androidx-core-splashscreen = { module = "androidx.core:core-splashscreen", version.ref = "coreSplashscreen" }

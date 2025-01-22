@@ -53,21 +53,33 @@ fun getNextMonday(): LocalDateTime {
     return nextMonday.withHour(0).withMinute(0)
 }
 
-fun countConsecutiveDaysBeforeLast(dates: List<LocalDate>): Int {
-    if (dates.size < 2) return 0
+fun countCurrentStreak(dates: List<LocalDate>): Int {
+    if (dates.isEmpty()) return 0
+
+    val today = LocalDate.now()
     val sortedDates = dates.sorted()
-    var consecutiveCount = 0
+    val lastDate = sortedDates.last()
+
+    if (ChronoUnit.DAYS.between(lastDate, today) > 1L) {
+        return 0
+    }
+
+    var streak = 1
+
     for (i in sortedDates.size - 2 downTo 0) {
         val currentDate = sortedDates[i]
         val nextDate = sortedDates[i + 1]
+
         if (ChronoUnit.DAYS.between(currentDate, nextDate) == 1L) {
-            consecutiveCount++
+            streak++
         } else {
             break
         }
     }
-    return consecutiveCount
+
+    return streak
 }
+
 
 fun countBestStreak(dates: List<LocalDate>): Int {
     if (dates.isEmpty()) return 0
