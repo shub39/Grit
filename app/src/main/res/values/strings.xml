@@ -50,4 +50,5 @@
     <string name="add_category">Add Category</string>
     <string name="add">Add Something</string>
     <string name="about">About app</string>
+    <string name="select_habit">Select Habit</string>
 </resources>

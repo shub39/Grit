@@ -1,88 +1,144 @@
 package com.shub39.grit.core.presentation.widgets
 
 import android.content.Context
-import androidx.compose.runtime.Composable
-import androidx.datastore.core.DataStore
-import androidx.datastore.core.DataStoreFactory
-import androidx.datastore.core.Serializer
-import androidx.datastore.dataStoreFile
+import androidx.compose.ui.unit.dp
+import androidx.datastore.preferences.core.Preferences
+import androidx.datastore.preferences.core.longPreferencesKey
 import androidx.glance.GlanceId
+import androidx.glance.GlanceModifier
 import androidx.glance.GlanceTheme
+import androidx.glance.ImageProvider
+import androidx.glance.action.ActionParameters
+import androidx.glance.action.actionParametersOf
 import androidx.glance.appwidget.GlanceAppWidget
 import androidx.glance.appwidget.GlanceAppWidgetReceiver
+import androidx.glance.appwidget.action.ActionCallback
+import androidx.glance.appwidget.action.actionRunCallback
+import androidx.glance.appwidget.components.CircleIconButton
+import androidx.glance.appwidget.components.Scaffold
+import androidx.glance.appwidget.components.TitleBar
 import androidx.glance.appwidget.provideContent
-import androidx.glance.state.GlanceStateDefinition
+import androidx.glance.appwidget.state.updateAppWidgetState
+import androidx.glance.currentState
+import androidx.glance.layout.Alignment
+import androidx.glance.layout.Column
+import androidx.glance.layout.Row
+import androidx.glance.layout.Spacer
+import androidx.glance.layout.fillMaxSize
+import androidx.glance.layout.size
+import androidx.glance.text.Text
+import com.shub39.grit.R
+import com.shub39.grit.core.presentation.countConsecutiveDaysBeforeLast
 import com.shub39.grit.habits.data.database.HabitDatabase
-import com.shub39.grit.habits.data.database.HabitEntity
-import com.shub39.grit.habits.data.database.HabitStatusEntity
-import java.io.DataInputStream
-import java.io.DataOutputStream
-import java.io.File
-import java.io.IOException
-import java.io.InputStream
-import java.io.OutputStream
+import kotlinx.coroutines.flow.first
 
 class GritWidgetReceiver : GlanceAppWidgetReceiver() {
     override val glanceAppWidget: GlanceAppWidget = GritHabitWidget()
 }
 
+private val directionKey = ActionParameters.Key<String>("DirectionKey")
+
 class GritHabitWidget : GlanceAppWidget() {
+
     override suspend fun provideGlance(context: Context, id: GlanceId) {
         val database = HabitDatabase.getDatabase(context)
         val habits = database.habitDao().getAllHabits()
-
-        val habit = habits.firstOrNull()
-        val state = HabitWidgetState.getDataStore(context, id.toString()).data
-        val habitStatuses = habit?.let { database.habitStatusDao().getStatusForHabit(it.id) }
+        val habitStatuses = database.habitStatusDao().getAllHabitStatuses().first()
+        val habitIds = habits.map { it.id }
 
         provideContent {
+            val state = currentState<Preferences>()
+            val currentHabitId = state[longPreferencesKey(id.toString())] ?: habitIds.firstOrNull()
+
+            val habit = habits.find { it.id == currentHabitId }
+            val dates = habitStatuses.filter { it.habitId == currentHabitId }.map { it.date }
+
             GlanceTheme {
-                HabitMapWidget(
-                    habits = habits,
-                    habitStatuses = habitStatuses
-                )
+                Scaffold(
+                    titleBar = {
+                        TitleBar(
+                            title = habit?.title ?: "No Habit",
+                            startIcon = ImageProvider(R.drawable.round_alarm_24),
+                            actions = {
+                                CircleIconButton(
+                                    imageProvider = ImageProvider(R.drawable.round_arrow_back_ios_24),
+                                    onClick = actionRunCallback<UpdateIndexAction>(
+                                        actionParametersOf(
+                                            directionKey to "previous"
+                                        )
+                                    ),
+                                    backgroundColor = null,
+                                    contentDescription = "Left Arrow",
+                                    modifier = GlanceModifier.size(36.dp)
+                                )
+
+                                Spacer(modifier = GlanceModifier.size(8.dp))
+
+                                CircleIconButton(
+                                    imageProvider = ImageProvider(R.drawable.round_arrow_forward_ios_24),
+                                    onClick = actionRunCallback<UpdateIndexAction>(
+                                        actionParametersOf(
+                                            directionKey to "next"
+                                        )
+                                    ),
+                                    backgroundColor = null,
+                                    contentDescription = "Right Arrow",
+                                    modifier = GlanceModifier.size(36.dp)
+                                )
+
+                                Spacer(modifier = GlanceModifier.size(8.dp))
+                            }
+                        )
+                    }
+                ) {
+                    Row(
+                        modifier = GlanceModifier.fillMaxSize(),
+                        verticalAlignment = Alignment.CenterVertically,
+                        horizontalAlignment = Alignment.CenterHorizontally
+                    ) {
+                        Column {
+                            CircleIconButton(
+                                imageProvider = ImageProvider(R.drawable.round_local_fire_department_24),
+                                contentDescription = "Streak",
+                                backgroundColor = null,
+                                onClick = {}
+                            )
+
+                            Text(
+                                text = countConsecutiveDaysBeforeLast(dates).toString()
+                            )
+                        }
+                    }
+                }
             }
         }
     }
+}
 
-    @Composable
-    private fun HabitMapWidget(
-        habits: List<HabitEntity>,
-        habitStatuses: List<HabitStatusEntity>?
+class UpdateIndexAction : ActionCallback {
+    override suspend fun onAction(
+        context: Context,
+        glanceId: GlanceId,
+        parameters: ActionParameters
     ) {
+        val database = HabitDatabase.getDatabase(context)
+        val habits = database.habitDao().getAllHabits()
+        val habitIds = habits.map { it.id }
 
-    }
-}
+        val direction = parameters[directionKey] ?: return
+        updateAppWidgetState(context, glanceId) { prefs ->
+            val currentId = prefs[longPreferencesKey(glanceId.toString())] ?: habitIds.first()
+            val currentIndex = habitIds.indexOf(currentId)
 
-object HabitWidgetState : GlanceStateDefinition<Long> {
+            val newIndex = when (direction) {
+                "previous" -> (currentIndex - 1).coerceAtLeast(0) // Prevent going out of bounds
+                "next" -> (currentIndex + 1).coerceAtMost(habitIds.size - 1) // Prevent overflow
+                else -> currentIndex
+            }
 
-    private const val DATASTORE_FILE_NAME_PREFIX = "habit_widget_id_"
-
-    override suspend fun getDataStore(context: Context, fileKey: String): DataStore<Long> =
-        DataStoreFactory.create(
-            serializer = LongSerializer(defaultValue = 0L),
-            produceFile = { getLocation(context, fileKey) }
-        )
-
-    override fun getLocation(context: Context, fileKey: String): File =
-        context.dataStoreFile(DATASTORE_FILE_NAME_PREFIX + fileKey.lowercase())
-
-}
-
-private class LongSerializer(override val defaultValue: Long) : Serializer<Long> {
-    override suspend fun readFrom(input: InputStream): Long {
-        return try {
-            DataInputStream(input).use { it.readLong() }
-        } catch (e: IOException) {
-            defaultValue
+            prefs[longPreferencesKey(glanceId.toString())] = habitIds[newIndex]
         }
-    }
 
-    override suspend fun writeTo(t: Long, output: OutputStream) {
-        try {
-            DataOutputStream(output).use { it.writeLong(t) }
-        } catch (e: IOException) {
-            e.printStackTrace()
-        }
+        GritHabitWidget().update(context, glanceId)
     }
 }
