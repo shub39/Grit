@@ -43,7 +43,7 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import com.shub39.grit.R
 import com.shub39.grit.core.presentation.GritDialog
-import com.shub39.grit.core.presentation.countConsecutiveDaysBeforeLast
+import com.shub39.grit.core.presentation.countCurrentStreak
 import com.shub39.grit.core.presentation.localToTimePickerState
 import com.shub39.grit.habits.domain.Habit
 import com.shub39.grit.habits.domain.HabitStatus
@@ -89,7 +89,9 @@ fun HabitCard(
             containerColor = cardBackground.copy(alpha = 0.7f),
             contentColor = cardContent
         ),
-        onClick = { action(HabitsPageAction.InsertStatus(habit)) }
+        onClick = {
+            action(HabitsPageAction.InsertStatus(habit))
+        }
     ) {
         ListItem(
             modifier = Modifier
@@ -165,7 +167,7 @@ fun HabitCard(
                 )
 
                 Text(
-                    text = countConsecutiveDaysBeforeLast(statusList.map { it.date }).toString()
+                    text = countCurrentStreak(statusList.map { it.date }).toString()
                 )
             }
 

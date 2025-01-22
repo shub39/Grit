@@ -1,11 +1,11 @@
 package com.shub39.grit.habits.data.repository
 
-import com.shub39.grit.habits.data.database.HabitDao
-import com.shub39.grit.habits.data.database.HabitStatusDao
 import com.shub39.grit.core.data.toHabit
 import com.shub39.grit.core.data.toHabitEntity
 import com.shub39.grit.core.data.toHabitStatus
 import com.shub39.grit.core.data.toHabitStatusEntity
+import com.shub39.grit.habits.data.database.HabitDao
+import com.shub39.grit.habits.data.database.HabitStatusDao
 import com.shub39.grit.habits.domain.Habit
 import com.shub39.grit.habits.domain.HabitRepo
 import com.shub39.grit.habits.domain.HabitStatus
