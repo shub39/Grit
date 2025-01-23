@@ -18,6 +18,7 @@ import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.lazy.rememberLazyListState
+import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material3.AssistChip
 import androidx.compose.material3.Button
@@ -341,9 +342,13 @@ fun TaskPage(
                 shape = MaterialTheme.shapes.medium,
                 keyboardOptions = KeyboardOptions.Default.copy(
                     capitalization = KeyboardCapitalization.Sentences,
-                    imeAction = ImeAction.Done
+                    imeAction = ImeAction.None
                 ),
-                singleLine = true,
+                keyboardActions = KeyboardActions(
+                    onAny = {
+                        newTask.plus("\n")
+                    }
+                ),
                 modifier = Modifier.focusRequester(focusRequester),
                 label = { Text(text = stringResource(id = R.string.add_task)) }
             )

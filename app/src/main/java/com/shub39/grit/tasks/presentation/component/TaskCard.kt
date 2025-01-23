@@ -11,6 +11,7 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.KeyboardArrowDown
@@ -155,13 +156,18 @@ fun TaskCard(
             OutlinedTextField(
                 value = newTitle,
                 onValueChange = { newTitle = it },
-                singleLine = true,
                 shape = MaterialTheme.shapes.medium,
-                modifier = Modifier.focusRequester(focusRequester),
                 keyboardOptions = KeyboardOptions.Default.copy(
                     capitalization = KeyboardCapitalization.Sentences,
-                    imeAction = ImeAction.Done
-                )
+                    imeAction = ImeAction.None
+                ),
+                keyboardActions = KeyboardActions(
+                    onAny = {
+                        newTitle.plus("\n")
+                    }
+                ),
+                modifier = Modifier.focusRequester(focusRequester),
+                label = { Text(text = stringResource(id = R.string.add_task)) }
             )
 
             Button(

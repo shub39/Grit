@@ -51,4 +51,6 @@
     <string name="add">Add Something</string>
     <string name="about">About app</string>
     <string name="select_habit">Select Habit</string>
+    <string name="habit_map">Habit Map</string>
+    <string name="habit_stats">Habit Stats</string>
 </resources>

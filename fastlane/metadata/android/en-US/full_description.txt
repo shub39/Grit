@@ -5,4 +5,5 @@ Features
 - ToDo List with categories
 - Habit tracker with scheduled notifications
 - Habit map to visualise progress
+- Homescreen widgets
 - Material3 theme and look

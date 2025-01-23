@@ -30,6 +30,7 @@
 >- [x] Habit Tracking
 >- [x] Analytics with Habit Maps
 >- [x] Notification Reminders
+>- [x] Widgets
 
 ## Motivation 💭
 There are plenty of todo list and habit tracker apps for android. Some have the features I love while some have good UI design.
@@ -44,6 +45,7 @@ I eventually want to turn this app into a productivity hub with many social feat
 >- Kotlin Coroutines
 >- MVVM architecture
 >- [Reorderable](https://github.com/Calvin-LL/Reorderable) for reorderable lists!
+>- [Glance](https://developer.android.com/develop/ui/compose/glance/create-app-widget) for widgets
 
 ## Support 💕
 > ### If you loved this app, consider donating. I'm an undergrad trying to get some pocket money

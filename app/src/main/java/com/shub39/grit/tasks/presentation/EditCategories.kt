@@ -168,7 +168,7 @@ fun EditCategories(
                         GritDialog(
                             onDismissRequest = { showEditDialog = false }
                         ) {
-                            var name by remember { mutableStateOf("") }
+                            var name by remember { mutableStateOf(category.name) }
                             val keyboardController = LocalSoftwareKeyboardController.current
                             val focusRequester = remember { FocusRequester() }
 
