@@ -4,8 +4,9 @@ import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
 import android.util.Log
-import com.shub39.grit.habits.data.database.HabitDatabase
+import androidx.sqlite.driver.bundled.BundledSQLiteDriver
 import com.shub39.grit.core.data.toHabit
+import com.shub39.grit.habits.data.database.HabitDbFactory
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.SupervisorJob
@@ -18,7 +19,7 @@ class BootReceiver : BroadcastReceiver() {
     override fun onReceive(context: Context, intent: Intent?) {
         if (intent?.action == Intent.ACTION_BOOT_COMPLETED) {
             val scheduler = NotificationAlarmScheduler(context)
-            val habitDatabase = HabitDatabase.getDatabase(context)
+            val habitDatabase = HabitDbFactory(context).create().setDriver(BundledSQLiteDriver()).build()
             val habitDao = habitDatabase.habitDao()
 
             receiverScope.launch {

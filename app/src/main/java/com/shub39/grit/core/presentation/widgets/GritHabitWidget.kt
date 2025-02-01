@@ -35,10 +35,11 @@ import androidx.glance.text.FontWeight
 import androidx.glance.text.Text
 import androidx.glance.text.TextAlign
 import androidx.glance.text.TextStyle
+import androidx.sqlite.driver.bundled.BundledSQLiteDriver
 import com.shub39.grit.R
 import com.shub39.grit.core.presentation.countBestStreak
 import com.shub39.grit.core.presentation.countCurrentStreak
-import com.shub39.grit.habits.data.database.HabitDatabase
+import com.shub39.grit.habits.data.database.HabitDbFactory
 import kotlinx.coroutines.flow.first
 import java.time.format.DateTimeFormatter
 
@@ -51,7 +52,7 @@ private val directionKey = ActionParameters.Key<String>("DirectionKey")
 class GritHabitWidget : GlanceAppWidget() {
 
     override suspend fun provideGlance(context: Context, id: GlanceId) {
-        val database = HabitDatabase.getDatabase(context)
+        val database = HabitDbFactory(context).create().setDriver(BundledSQLiteDriver()).build()
         val habits = database.habitDao().getAllHabits()
         val habitStatuses = database.habitStatusDao().getAllHabitStatuses().first()
         val habitIds = habits.map { it.id }
@@ -259,7 +260,7 @@ class UpdateIndexAction : ActionCallback {
         glanceId: GlanceId,
         parameters: ActionParameters
     ) {
-        val database = HabitDatabase.getDatabase(context)
+        val database = HabitDbFactory(context).create().setDriver(BundledSQLiteDriver()).build()
         val habits = database.habitDao().getAllHabits()
         val habitIds = habits.map { it.id }
 

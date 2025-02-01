@@ -5,12 +5,12 @@ import android.content.Context
 import android.content.Intent
 import android.util.Log
 import androidx.core.app.NotificationManagerCompat
-import com.shub39.grit.habits.data.database.HabitEntity
-import com.shub39.grit.habits.data.database.HabitDatabase
-import com.shub39.grit.habits.data.database.HabitStatusEntity
-import com.shub39.grit.tasks.data.database.TaskDatabase
+import androidx.sqlite.driver.bundled.BundledSQLiteDriver
 import com.shub39.grit.core.data.toHabit
 import com.shub39.grit.core.presentation.habitNotification
+import com.shub39.grit.habits.data.database.HabitDbFactory
+import com.shub39.grit.habits.data.database.HabitEntity
+import com.shub39.grit.habits.data.database.HabitStatusEntity
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.SupervisorJob
@@ -25,7 +25,7 @@ class NotificationReceiver : BroadcastReceiver() {
     override fun onReceive(context: Context, intent: Intent?) {
         Log.d(tag, "Received intent")
         val scheduler = NotificationAlarmScheduler(context)
-        val habitDatabase = HabitDatabase.getDatabase(context)
+        val habitDatabase = HabitDbFactory(context).create().setDriver(BundledSQLiteDriver()).build()
         val habitStatusDao = habitDatabase.habitStatusDao()
 
         if (intent != null) {
@@ -59,21 +59,6 @@ class NotificationReceiver : BroadcastReceiver() {
                     }
 
                     scheduler.schedule(habitEntity.toHabit())
-                }
-
-                IntentActions.TASKS_DELETION.action -> {
-                    Log.d(tag, "Tasks deletion received")
-                    val taskDatabase = TaskDatabase.getDatabase(context)
-                    val preference = intent.getStringExtra("preference") ?: return
-                    val taskDao = taskDatabase.taskDao()
-
-                    // deletes all tasks
-                    receiverScope.launch {
-                        taskDao.deleteAllTasks()
-                        Log.d(tag, "Deleted all tasks")
-                    }
-
-                    scheduler.schedule(preference)
                 }
 
                 IntentActions.ADD_HABIT_STATUS.action -> {
