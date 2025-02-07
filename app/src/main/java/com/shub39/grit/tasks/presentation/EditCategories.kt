@@ -41,8 +41,8 @@ import androidx.compose.ui.text.input.KeyboardCapitalization
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import com.shub39.grit.R
-import com.shub39.grit.core.presentation.BetterIconButton
-import com.shub39.grit.core.presentation.GritDialog
+import com.shub39.grit.core.presentation.components.BetterIconButton
+import com.shub39.grit.core.presentation.components.GritDialog
 import com.shub39.grit.tasks.presentation.task_page.TaskPageAction
 import com.shub39.grit.tasks.presentation.task_page.TaskPageState
 import sh.calvin.reorderable.ReorderableItem

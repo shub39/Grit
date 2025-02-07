@@ -1,4 +1,4 @@
-package com.shub39.grit.core.presentation
+package com.shub39.grit.core.presentation.settings
 
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -18,12 +18,14 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import com.shub39.grit.R
+import com.shub39.grit.core.presentation.components.BetterIconButton
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun SettingsPage(
     onCategoryClick: () -> Unit,
-    onAboutClick: () -> Unit
+    onAboutClick: () -> Unit,
+    onLookAndFeelClick: () -> Unit
 ) {
     Box(
         modifier = Modifier.fillMaxSize(),
@@ -78,6 +80,31 @@ fun SettingsPage(
                         trailingContent = {
                             BetterIconButton (
                                 onClick = onAboutClick
+                            ) {
+                                Icon(
+                                    imageVector = Icons.AutoMirrored.Filled.KeyboardArrowRight,
+                                    contentDescription = null
+                                )
+                            }
+                        }
+                    )
+                }
+
+                item {
+                    ListItem(
+                        headlineContent = {
+                            Text(
+                                text = stringResource(R.string.look_and_feel)
+                            )
+                        },
+                        supportingContent = {
+                            Text(
+                                text = stringResource(R.string.look_and_feel_desc)
+                            )
+                        },
+                        trailingContent = {
+                            BetterIconButton (
+                                onClick = onLookAndFeelClick
                             ) {
                                 Icon(
                                     imageVector = Icons.AutoMirrored.Filled.KeyboardArrowRight,

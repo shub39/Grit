@@ -20,8 +20,7 @@ class DataStoreImpl(
 ) : GritDatastore {
 
     companion object {
-        private val isDarkThemeKey = stringPreferencesKey("dark_theme")
-        private val isMaterialYou = booleanPreferencesKey("material_you")
+        private val isDarkThemeKey = stringPreferencesKey("use_dark_theme")
         private val seedColorKey = intPreferencesKey("seed_color")
         private val amoledKey = booleanPreferencesKey("amoled")
         private val paletteKey = stringPreferencesKey("palette")
@@ -39,16 +38,7 @@ class DataStoreImpl(
     }
     override suspend fun setDarkThemePref(pref: Boolean?) {
         datastore.edit { prefs ->
-            prefs[isDarkThemeKey] = prefs.toString()
-        }
-    }
-
-    override fun getMaterialYouPref(): Flow<Boolean> = datastore.data.map { prefs ->
-        prefs[isMaterialYou] ?: false
-    }
-    override suspend fun setMaterialYou(pref: Boolean) {
-        datastore.edit { prefs ->
-            prefs[isMaterialYou] = pref
+            prefs[isDarkThemeKey] = pref.toString()
         }
     }
 

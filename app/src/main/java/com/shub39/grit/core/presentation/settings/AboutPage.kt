@@ -1,4 +1,4 @@
-package com.shub39.grit.core.presentation
+package com.shub39.grit.core.presentation.settings
 
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -23,6 +23,9 @@ import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import com.shub39.grit.R
+import com.shub39.grit.core.presentation.components.BetterIconButton
+import com.shub39.grit.core.presentation.getRandomLine
+import com.shub39.grit.core.presentation.openLinkInBrowser
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable

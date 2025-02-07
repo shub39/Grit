@@ -5,7 +5,6 @@ import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
-import com.shub39.grit.core.presentation.GritTheme
 import com.shub39.grit.core.presentation.createNotificationChannel
 import org.koin.compose.KoinContext
 
@@ -19,11 +18,9 @@ class MainActivity : ComponentActivity() {
         enableEdgeToEdge()
 
         setContent {
-            GritTheme {
-                // Initialising KoinContext, because of log warnings
-                KoinContext {
-                    Grit()
-                }
+            // Initialising KoinContext, because of log warnings
+            KoinContext {
+                Grit()
             }
         }
     }
