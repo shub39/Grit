@@ -53,9 +53,9 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.shub39.grit.R
-import com.shub39.grit.core.presentation.Empty
-import com.shub39.grit.core.presentation.GritDialog
-import com.shub39.grit.core.presentation.GritTheme
+import com.shub39.grit.core.presentation.components.Empty
+import com.shub39.grit.core.presentation.components.GritDialog
+import com.shub39.grit.core.presentation.theme.GritTheme
 import com.shub39.grit.tasks.domain.Category
 import com.shub39.grit.tasks.domain.CategoryColors
 import com.shub39.grit.tasks.domain.Task

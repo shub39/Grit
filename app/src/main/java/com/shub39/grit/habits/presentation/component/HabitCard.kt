@@ -42,7 +42,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import com.shub39.grit.R
-import com.shub39.grit.core.presentation.GritDialog
+import com.shub39.grit.core.presentation.components.GritDialog
 import com.shub39.grit.core.presentation.countCurrentStreak
 import com.shub39.grit.core.presentation.localToTimePickerState
 import com.shub39.grit.habits.domain.Habit

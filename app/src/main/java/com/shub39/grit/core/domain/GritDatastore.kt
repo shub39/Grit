@@ -8,9 +8,6 @@ interface GritDatastore {
     fun getDarkThemePref(): Flow<Boolean?>
     suspend fun setDarkThemePref(pref: Boolean?)
 
-    fun getMaterialYouPref(): Flow<Boolean>
-    suspend fun setMaterialYou(pref: Boolean)
-
     fun getSeedColorFlow(): Flow<Int>
     suspend fun setSeedColor(color: Int)
 
