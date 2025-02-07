@@ -53,4 +53,14 @@
     <string name="select_habit">Select Habit</string>
     <string name="habit_map">Habit Map</string>
     <string name="habit_stats">Habit Stats</string>
+    <string name="look_and_feel">Look and Feel</string>
+    <string name="use_system_theme">Use System Theme</string>
+    <string name="use_system_theme_desc">Use System theme as app theme</string>
+    <string name="use_dark_theme">Use Dark Theme</string>
+    <string name="use_amoled">Amoled palette</string>
+    <string name="use_amoled_desc">Best experienced on AMOLED displays</string>
+    <string name="select_seed">Select Seed color</string>
+    <string name="select_seed_desc">Select color to generate palette from</string>
+    <string name="palette_style">Palette Style</string>
+    <string name="look_and_feel_desc">Customise the app in various ways</string>
 </resources>
