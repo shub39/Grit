@@ -2,6 +2,9 @@ package com.shub39.grit.di
 
 import androidx.sqlite.driver.bundled.BundledSQLiteDriver
 import com.shub39.grit.core.domain.AlarmScheduler
+import com.shub39.grit.core.data.DatastoreFactory
+import com.shub39.grit.core.data.DataStoreImpl
+import com.shub39.grit.core.domain.GritDatastore
 import com.shub39.grit.habits.data.database.HabitDatabase
 import com.shub39.grit.habits.data.database.HabitDbFactory
 import com.shub39.grit.tasks.data.database.TaskDatabase
@@ -44,6 +47,11 @@ val appModule = module {
 
     singleOf(::HabitRepository).bind<HabitRepo>()
     singleOf(::TasksRepository).bind<TaskRepo>()
+
+    // Datastore
+    singleOf(::DatastoreFactory)
+    single { get<DatastoreFactory>().getPreferencesDataStore() }
+    singleOf(::DataStoreImpl).bind<GritDatastore>()
 
     // scheduler
     singleOf(::NotificationAlarmScheduler).bind<AlarmScheduler>()
