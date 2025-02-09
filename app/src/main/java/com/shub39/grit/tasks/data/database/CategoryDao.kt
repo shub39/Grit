@@ -9,7 +9,10 @@ import kotlinx.coroutines.flow.Flow
 @Dao
 interface CategoryDao {
     @Query("SELECT * FROM categories")
-    fun getCategories(): Flow<List<CategoryEntity>>
+    fun getCategoriesFlow(): Flow<List<CategoryEntity>>
+
+    @Query("SELECT * FROM categories")
+    suspend fun getCategories(): List<CategoryEntity>
 
     @Upsert
     suspend fun upsertCategory(categoryEntity: CategoryEntity)

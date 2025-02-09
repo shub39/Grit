@@ -17,11 +17,11 @@ class TasksRepository(
     private val tasksDao: TasksDao,
     private val categoryDao: CategoryDao
 ): TaskRepo {
-    override fun getTasks(): Flow<Map<Category, List<Task>>> {
+    override fun getTasksFlow(): Flow<Map<Category, List<Task>>> {
         val tasksFlow = tasksDao.getTasksFlow().map { entities ->
             entities.map { it.toTask() }.sortedBy { it.index }
         }
-        val categoriesFlow = categoryDao.getCategories().map { entities ->
+        val categoriesFlow = categoryDao.getCategoriesFlow().map { entities ->
             entities.map { it.toCategory() }.sortedBy { it.index }
         }
 
@@ -30,6 +30,14 @@ class TasksRepository(
                 tasks.filter { it.categoryId == category.id }
             }
         }
+    }
+
+    override suspend fun getTasks(): List<Task> {
+       return tasksDao.getTasks().map { it.toTask() }
+    }
+
+    override suspend fun getCategories(): List<Category> {
+        return categoryDao.getCategories().map { it.toCategory() }
     }
 
     override suspend fun upsertTask(task: Task) {

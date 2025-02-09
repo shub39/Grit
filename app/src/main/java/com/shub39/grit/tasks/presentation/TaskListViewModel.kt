@@ -105,7 +105,7 @@ class TaskListViewModel(
     private fun observeTasks() {
         savedJob?.cancel()
         savedJob = repo
-            .getTasks()
+            .getTasksFlow()
             .onEach { tasks ->
                 _tasksState.update { task ->
                     task.copy(

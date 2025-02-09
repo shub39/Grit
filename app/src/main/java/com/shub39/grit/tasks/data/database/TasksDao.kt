@@ -11,6 +11,9 @@ interface TasksDao {
     @Query("SELECT * FROM task")
     fun getTasksFlow(): Flow<List<TaskEntity>>
 
+    @Query("SELECT * FROM task")
+    fun getTasks(): List<TaskEntity>
+
     @Upsert
     suspend fun upsertTask(taskEntity: TaskEntity)
 

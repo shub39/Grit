@@ -26,6 +26,14 @@ class HabitRepository(
         habitDao.deleteHabit(habitId)
     }
 
+    override suspend fun getHabits(): List<Habit> {
+        return habitDao.getAllHabits().map { it.toHabit() }
+    }
+
+    override suspend fun getHabitStatuses(): List<HabitStatus> {
+        return habitStatusDao.getHabitStatuses().map { it.toHabitStatus() }
+    }
+
     override fun getHabitStatus(): Flow<Map<Habit, List<HabitStatus>>> {
         val habits = habitDao.getAllHabitsFlow().map { habits ->
             habits.map { it.toHabit() }.sortedBy { it.index }
