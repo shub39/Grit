@@ -52,6 +52,8 @@ class ExportImpl(
             "Grit"
         )
 
+        if (!exportFolder.exists() || !exportFolder.isDirectory) exportFolder.mkdirs()
+
         val time = LocalDateTime.now().toString().replace(":", "").replace(" ", "")
         val file = File(exportFolder, "Grit-Export-$time.json")
 

@@ -26,6 +26,7 @@ import androidx.navigation.compose.navigation
 import androidx.navigation.compose.rememberNavController
 import com.shub39.grit.R
 import com.shub39.grit.core.presentation.settings.AboutPage
+import com.shub39.grit.core.presentation.settings.Backup
 import com.shub39.grit.core.presentation.settings.LookAndFeelPage
 import com.shub39.grit.core.presentation.settings.SettingsPage
 import com.shub39.grit.core.presentation.theme.GritTheme
@@ -129,7 +130,8 @@ fun Grit(
                         SettingsPage(
                             onCategoryClick = { navController.navigate(Routes.Categories) },
                             onAboutClick = { navController.navigate(Routes.About) },
-                            onLookAndFeelClick = { navController.navigate(Routes.LookAndFeel) }
+                            onLookAndFeelClick = { navController.navigate(Routes.LookAndFeel) },
+                            onBackupClick = { navController.navigate(Routes.Backup) }
                         )
                     }
 
@@ -152,6 +154,12 @@ fun Grit(
                         currentRoute = Routes.SettingsGraph
 
                         LookAndFeelPage()
+                    }
+
+                    composable<Routes.Backup> {
+                        currentRoute = Routes.SettingsGraph
+
+                        Backup()
                     }
                 }
 
