@@ -25,7 +25,8 @@ import com.shub39.grit.core.presentation.components.BetterIconButton
 fun SettingsPage(
     onCategoryClick: () -> Unit,
     onAboutClick: () -> Unit,
-    onLookAndFeelClick: () -> Unit
+    onLookAndFeelClick: () -> Unit,
+    onBackupClick: () -> Unit
 ) {
     Box(
         modifier = Modifier.fillMaxSize(),
@@ -74,12 +75,17 @@ fun SettingsPage(
                     ListItem(
                         headlineContent = {
                             Text(
-                                text = stringResource(R.string.about)
+                                text = stringResource(R.string.look_and_feel)
+                            )
+                        },
+                        supportingContent = {
+                            Text(
+                                text = stringResource(R.string.look_and_feel_desc)
                             )
                         },
                         trailingContent = {
                             BetterIconButton (
-                                onClick = onAboutClick
+                                onClick = onLookAndFeelClick
                             ) {
                                 Icon(
                                     imageVector = Icons.AutoMirrored.Filled.KeyboardArrowRight,
@@ -94,17 +100,37 @@ fun SettingsPage(
                     ListItem(
                         headlineContent = {
                             Text(
-                                text = stringResource(R.string.look_and_feel)
+                                text = stringResource(R.string.backup)
                             )
                         },
                         supportingContent = {
                             Text(
-                                text = stringResource(R.string.look_and_feel_desc)
+                                text = stringResource(R.string.backup_desc)
                             )
                         },
                         trailingContent = {
                             BetterIconButton (
-                                onClick = onLookAndFeelClick
+                                onClick = onBackupClick
+                            ) {
+                                Icon(
+                                    imageVector = Icons.AutoMirrored.Filled.KeyboardArrowRight,
+                                    contentDescription = null
+                                )
+                            }
+                        }
+                    )
+                }
+
+                item {
+                    ListItem(
+                        headlineContent = {
+                            Text(
+                                text = stringResource(R.string.about)
+                            )
+                        },
+                        trailingContent = {
+                            BetterIconButton (
+                                onClick = onAboutClick
                             ) {
                                 Icon(
                                     imageVector = Icons.AutoMirrored.Filled.KeyboardArrowRight,

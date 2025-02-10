@@ -20,4 +20,6 @@ sealed interface Routes {
     data object Categories: Routes
     @Serializable
     data object LookAndFeel: Routes
+    @Serializable
+    data object Backup: Routes
 }

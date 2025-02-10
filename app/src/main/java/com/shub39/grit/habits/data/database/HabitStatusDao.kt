@@ -10,6 +10,9 @@ import java.time.LocalDate
 @Dao
 interface HabitStatusDao {
     @Query("SELECT * FROM habit_status")
+    suspend fun getHabitStatuses(): List<HabitStatusEntity>
+
+    @Query("SELECT * FROM habit_status")
     fun getAllHabitStatuses(): Flow<List<HabitStatusEntity>>
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
