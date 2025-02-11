@@ -27,6 +27,7 @@ class DataStoreImpl(
         private val startOfWeekKey = stringPreferencesKey("start_of_week")
         private val startingPageKey = stringPreferencesKey("starting_page")
         private val is24HrKey = booleanPreferencesKey("is_24Hr")
+        private val materialYouKey = booleanPreferencesKey("material_you")
     }
 
     override fun getDarkThemePref(): Flow<Boolean?> = datastore.data.map { prefs ->
@@ -96,6 +97,15 @@ class DataStoreImpl(
     override suspend fun setIs24Hr(pref: Boolean) {
         datastore.edit { prefs ->
             prefs[is24HrKey] = pref
+        }
+    }
+
+    override fun getMaterialYouFlow(): Flow<Boolean> = datastore.data.map { prefs ->
+        prefs[materialYouKey] ?: false
+    }
+    override suspend fun setMaterialYou(pref: Boolean) {
+        datastore.edit { prefs ->
+            prefs[materialYouKey] = pref
         }
     }
 }

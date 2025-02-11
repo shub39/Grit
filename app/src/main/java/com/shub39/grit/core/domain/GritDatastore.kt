@@ -25,4 +25,7 @@ interface GritDatastore {
 
     fun getIs24Hr(): Flow<Boolean>
     suspend fun setIs24Hr(pref: Boolean)
+
+    fun getMaterialYouFlow(): Flow<Boolean>
+    suspend fun setMaterialYou(pref: Boolean)
 }

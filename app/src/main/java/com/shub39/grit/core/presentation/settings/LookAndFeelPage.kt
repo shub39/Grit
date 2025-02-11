@@ -88,6 +88,7 @@ fun LookAndFeelPage(
     val isAmoled by datastore.getAmoledPref().collectAsState(false)
     val paletteStyle by datastore.getPaletteStyle().collectAsState(PaletteStyle.TonalSpot)
     val seedColor by datastore.getSeedColorFlow().collectAsState(Color.White.toArgb())
+    val isMaterialYou by datastore.getMaterialYouFlow().collectAsState(false)
 
     val coroutineScope = rememberCoroutineScope()
 
@@ -185,6 +186,31 @@ fun LookAndFeelPage(
                 ListItem(
                     headlineContent = {
                         Text(
+                            text = stringResource(R.string.material_theme)
+                        )
+                    },
+                    supportingContent = {
+                        Text(
+                            text = stringResource(R.string.material_theme_desc)
+                        )
+                    },
+                    trailingContent = {
+                        Switch(
+                            checked = isMaterialYou,
+                            onCheckedChange = {
+                                coroutineScope.launch {
+                                    datastore.setMaterialYou(it)
+                                }
+                            }
+                        )
+                    }
+                )
+            }
+
+            item {
+                ListItem(
+                    headlineContent = {
+                        Text(
                             text = stringResource(R.string.select_seed)
                         )
                     },
@@ -199,7 +225,8 @@ fun LookAndFeelPage(
                             colors = IconButtonDefaults.iconButtonColors(
                                 containerColor = Color(seedColor),
                                 contentColor = contentColorFor(Color(seedColor))
-                            )
+                            ),
+                            enabled = !isMaterialYou
                         ) {
                             Icon(
                                 imageVector = Icons.Default.Create,
@@ -228,7 +255,7 @@ fun LookAndFeelPage(
                         ) {
                             PaletteStyle.entries.toList().forEach { style ->
                                 val scheme = rememberDynamicColorScheme(
-                                    primary = Color(seedColor),
+                                    primary = if (isMaterialYou) MaterialTheme.colorScheme.primary else Color(seedColor),
                                     isDark = isDark == true,
                                     isAmoled = isAmoled,
                                     style = style
