@@ -1,5 +1,6 @@
 package com.shub39.grit.core.presentation.settings
 
+import android.os.Build
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.core.Spring
 import androidx.compose.animation.core.spring
@@ -60,6 +61,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.toArgb
+import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
@@ -96,7 +98,6 @@ fun LookAndFeelPage(
         modifier = Modifier
             .widthIn(max = 700.dp)
             .fillMaxSize(),
-
     ) {
         TopAppBar(
             title = {
@@ -255,7 +256,9 @@ fun LookAndFeelPage(
                         ) {
                             PaletteStyle.entries.toList().forEach { style ->
                                 val scheme = rememberDynamicColorScheme(
-                                    primary = if (isMaterialYou) MaterialTheme.colorScheme.primary else Color(seedColor),
+                                    primary = if (isMaterialYou && Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
+                                        colorResource(android.R.color.system_accent1_200)
+                                    } else Color(seedColor),
                                     isDark = isDark == true,
                                     isAmoled = isAmoled,
                                     style = style

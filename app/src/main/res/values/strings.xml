@@ -71,4 +71,6 @@
     <string name="restore_desc">Restore tasks and habits from selected file</string>
     <string name="choose_file">Choose file</string>
     <string name="material_theme_desc">Use colors based on wallpaper</string>
+    <string name="show_habits">Show habits first</string>
+    <string name="show_habits_desc">show habits page first at app startup</string>
 </resources>

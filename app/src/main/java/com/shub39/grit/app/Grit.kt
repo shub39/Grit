@@ -12,6 +12,7 @@ import androidx.compose.material3.NavigationBarItem
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -25,6 +26,8 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.navigation
 import androidx.navigation.compose.rememberNavController
 import com.shub39.grit.R
+import com.shub39.grit.core.domain.GritDatastore
+import com.shub39.grit.core.domain.Pages
 import com.shub39.grit.core.presentation.settings.AboutPage
 import com.shub39.grit.core.presentation.settings.Backup
 import com.shub39.grit.core.presentation.settings.LookAndFeelPage
@@ -36,17 +39,21 @@ import com.shub39.grit.tasks.presentation.EditCategories
 import com.shub39.grit.tasks.presentation.TaskListViewModel
 import com.shub39.grit.tasks.presentation.task_page.TaskPage
 import org.koin.androidx.compose.koinViewModel
+import org.koin.compose.koinInject
 
 @Composable
 fun Grit(
     tvm: TaskListViewModel = koinViewModel(),
-    hvm: HabitViewModel = koinViewModel()
+    hvm: HabitViewModel = koinViewModel(),
+    datastore: GritDatastore = koinInject()
 ) {
     val navController = rememberNavController()
     var currentRoute: Routes by remember { mutableStateOf(Routes.TasksPage) }
 
     val taskPageState by tvm.tasksState.collectAsStateWithLifecycle()
     val habitsPageState by hvm.habitsPageState.collectAsStateWithLifecycle()
+
+    val startingPage by datastore.getStartingPagePref().collectAsState(Pages.Tasks)
 
     val navigator = { route: Routes ->
         if (currentRoute != route) {
@@ -103,7 +110,10 @@ fun Grit(
         ) { padding ->
             NavHost(
                 navController = navController,
-                startDestination = Routes.TasksPage,
+                startDestination = when (startingPage) {
+                    Pages.Tasks -> Routes.TasksPage
+                    Pages.Habits -> Routes.HabitsPage
+                },
                 modifier = Modifier
                     .padding(padding)
                     .background(MaterialTheme.colorScheme.background),
