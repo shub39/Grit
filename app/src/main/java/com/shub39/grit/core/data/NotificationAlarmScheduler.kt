@@ -62,19 +62,4 @@ class NotificationAlarmScheduler(
 
         Log.d(tag, "Cancelled notification for ${item.title}")
     }
-
-    // cancel task deletion
-    override fun cancel(preference: String) {
-        alarmManager.cancel(
-            PendingIntent.getBroadcast(
-                context,
-                preference.hashCode(),
-                Intent(context, NotificationReceiver::class.java),
-                PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE
-            )
-        )
-
-        Log.d(tag, "Cancelled notification for $preference")
-    }
-
 }

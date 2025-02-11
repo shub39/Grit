@@ -183,29 +183,31 @@ fun LookAndFeelPage(
                 )
             }
 
-            item {
-                ListItem(
-                    headlineContent = {
-                        Text(
-                            text = stringResource(R.string.material_theme)
-                        )
-                    },
-                    supportingContent = {
-                        Text(
-                            text = stringResource(R.string.material_theme_desc)
-                        )
-                    },
-                    trailingContent = {
-                        Switch(
-                            checked = isMaterialYou,
-                            onCheckedChange = {
-                                coroutineScope.launch {
-                                    datastore.setMaterialYou(it)
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
+                item {
+                    ListItem(
+                        headlineContent = {
+                            Text(
+                                text = stringResource(R.string.material_theme)
+                            )
+                        },
+                        supportingContent = {
+                            Text(
+                                text = stringResource(R.string.material_theme_desc)
+                            )
+                        },
+                        trailingContent = {
+                            Switch(
+                                checked = isMaterialYou,
+                                onCheckedChange = {
+                                    coroutineScope.launch {
+                                        datastore.setMaterialYou(it)
+                                    }
                                 }
-                            }
-                        )
-                    }
-                )
+                            )
+                        }
+                    )
+                }
             }
 
             item {

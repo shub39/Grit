@@ -8,7 +8,4 @@ interface AlarmScheduler {
 
     // cancel habit notifications
     fun cancel(item: Habit)
-
-    // cancel task deletion
-    fun cancel(preference: String)
 }
