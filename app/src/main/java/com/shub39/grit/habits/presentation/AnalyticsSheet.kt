@@ -7,6 +7,7 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -48,153 +49,159 @@ fun AnalyticsSheet(
     ModalBottomSheet(
         onDismissRequest = { onDismiss() }
     ) {
-        Column(
+        LazyColumn(
             modifier = Modifier
                 .padding(start = 16.dp, end = 16.dp, top = 8.dp, bottom = 8.dp),
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
-            Text(
-                text = habit.title,
-                style = MaterialTheme.typography.titleLarge,
-            )
-
-            Text(
-                text = habit.description,
-                style = MaterialTheme.typography.bodyLarge
-            )
-
-            Spacer(modifier = Modifier.padding(8.dp))
-
-            AnalyticsCard(title = stringResource(R.string.habit_map)) {
-                BooleanHeatMap(
-                    dates = statusList.map { it.date },
-                    modifier = Modifier
-                        .padding(16.dp)
-                        .fillMaxWidth(),
-                    editEnabled = true,
-                    onClick = { date ->
-                        action(HabitsPageAction.InsertStatus(habit, date))
-                        updateTrigger = !updateTrigger
-                    }
+            item {
+                Text(
+                    text = habit.title,
+                    style = MaterialTheme.typography.titleLarge,
                 )
+
+                Text(
+                    text = habit.description,
+                    style = MaterialTheme.typography.bodyLarge
+                )
+
+                Spacer(modifier = Modifier.padding(8.dp))
             }
 
-            Spacer(modifier = Modifier.padding(8.dp))
-
-            AnalyticsCard(title = stringResource(R.string.habit_stats)) {
-                Row(
-                    modifier = Modifier
-                        .padding(6.dp)
-                        .fillMaxWidth()
-                ) {
-                    Card(
+            item {
+                AnalyticsCard(title = stringResource(R.string.habit_map)) {
+                    BooleanHeatMap(
+                        dates = statusList.map { it.date },
                         modifier = Modifier
-                            .padding(6.dp)
-                            .height(150.dp)
-                            .weight(1f),
-                        colors = CardDefaults.cardColors(
-                            contentColor = MaterialTheme.colorScheme.onSecondaryContainer,
-                            containerColor = MaterialTheme.colorScheme.secondaryContainer
-                        )
-                    ) {
-                        Column(
-                            modifier = Modifier
-                                .fillMaxWidth()
-                                .padding(16.dp),
-                            verticalArrangement = Arrangement.spacedBy(8.dp),
-                            horizontalAlignment = Alignment.CenterHorizontally
-                        ) {
-                            Icon(
-                                painter = painterResource(R.drawable.round_local_fire_department_24),
-                                contentDescription = "Streak"
-                            )
-
-                            Text(
-                                text = countCurrentStreak(statusList.map { it.date }).toString(),
-                                style = MaterialTheme.typography.titleLarge,
-                                fontWeight = FontWeight.Bold
-                            )
-
-                            Text(
-                                text = stringResource(R.string.streak),
-                                textAlign = TextAlign.Center
-                            )
+                            .padding(16.dp)
+                            .fillMaxWidth(),
+                        editEnabled = true,
+                        onClick = { date ->
+                            action(HabitsPageAction.InsertStatus(habit, date))
+                            updateTrigger = !updateTrigger
                         }
-                    }
+                    )
+                }
 
-                    Card(
+                Spacer(modifier = Modifier.padding(8.dp))
+            }
+
+            item {
+                AnalyticsCard(title = stringResource(R.string.habit_stats)) {
+                    Row(
                         modifier = Modifier
                             .padding(6.dp)
-                            .height(150.dp)
-                            .weight(1f),
-                        colors = CardDefaults.cardColors(
-                            contentColor = MaterialTheme.colorScheme.onSecondaryContainer,
-                            containerColor = MaterialTheme.colorScheme.secondaryContainer
-                        )
+                            .fillMaxWidth()
                     ) {
-                        Column(
+                        Card(
                             modifier = Modifier
-                                .fillMaxWidth()
-                                .padding(16.dp),
-                            verticalArrangement = Arrangement.spacedBy(8.dp),
-                            horizontalAlignment = Alignment.CenterHorizontally
+                                .padding(6.dp)
+                                .height(150.dp)
+                                .weight(1f),
+                            colors = CardDefaults.cardColors(
+                                contentColor = MaterialTheme.colorScheme.onSecondaryContainer,
+                                containerColor = MaterialTheme.colorScheme.secondaryContainer
+                            )
                         ) {
-                            Icon(
-                                painter = painterResource(R.drawable.round_local_fire_department_24),
-                                contentDescription = "Streak",
-                            )
+                            Column(
+                                modifier = Modifier
+                                    .fillMaxWidth()
+                                    .padding(16.dp),
+                                verticalArrangement = Arrangement.spacedBy(8.dp),
+                                horizontalAlignment = Alignment.CenterHorizontally
+                            ) {
+                                Icon(
+                                    painter = painterResource(R.drawable.round_local_fire_department_24),
+                                    contentDescription = "Streak"
+                                )
 
-                            Text(
-                                text = countBestStreak(statusList.map { it.date }).toString(),
-                                style = MaterialTheme.typography.titleLarge,
-                                fontWeight = FontWeight.Bold
-                            )
+                                Text(
+                                    text = countCurrentStreak(statusList.map { it.date }).toString(),
+                                    style = MaterialTheme.typography.titleLarge,
+                                    fontWeight = FontWeight.Bold
+                                )
 
-                            Text(
-                                text = stringResource(R.string.best_streak),
-                                textAlign = TextAlign.Center
-                            )
+                                Text(
+                                    text = stringResource(R.string.streak),
+                                    textAlign = TextAlign.Center
+                                )
+                            }
                         }
-                    }
 
-                    Card(
-                        modifier = Modifier
-                            .padding(6.dp)
-                            .height(150.dp)
-                            .weight(1f),
-                        colors = CardDefaults.cardColors(
-                            contentColor = MaterialTheme.colorScheme.onSecondaryContainer,
-                            containerColor = MaterialTheme.colorScheme.secondaryContainer
-                        )
-                    ) {
-                        Column(
+                        Card(
                             modifier = Modifier
-                                .fillMaxWidth()
-                                .padding(16.dp),
-                            verticalArrangement = Arrangement.spacedBy(8.dp),
-                            horizontalAlignment = Alignment.CenterHorizontally
+                                .padding(6.dp)
+                                .height(150.dp)
+                                .weight(1f),
+                            colors = CardDefaults.cardColors(
+                                contentColor = MaterialTheme.colorScheme.onSecondaryContainer,
+                                containerColor = MaterialTheme.colorScheme.secondaryContainer
+                            )
                         ) {
-                            Icon(
-                                painter = painterResource(R.drawable.baseline_flag_circle_24),
-                                contentDescription = "Flag"
-                            )
+                            Column(
+                                modifier = Modifier
+                                    .fillMaxWidth()
+                                    .padding(16.dp),
+                                verticalArrangement = Arrangement.spacedBy(8.dp),
+                                horizontalAlignment = Alignment.CenterHorizontally
+                            ) {
+                                Icon(
+                                    painter = painterResource(R.drawable.round_local_fire_department_24),
+                                    contentDescription = "Streak",
+                                )
 
-                            Text(
-                                text = habit.time.format(DateTimeFormatter.ofPattern("dd")),
-                                style = MaterialTheme.typography.titleLarge,
-                                fontWeight = FontWeight.Bold
-                            )
+                                Text(
+                                    text = countBestStreak(statusList.map { it.date }).toString(),
+                                    style = MaterialTheme.typography.titleLarge,
+                                    fontWeight = FontWeight.Bold
+                                )
 
-                            Text(
-                                text = habit.time.format(DateTimeFormatter.ofPattern("MMM\nu")),
-                                textAlign = TextAlign.Center
+                                Text(
+                                    text = stringResource(R.string.best_streak),
+                                    textAlign = TextAlign.Center
+                                )
+                            }
+                        }
+
+                        Card(
+                            modifier = Modifier
+                                .padding(6.dp)
+                                .height(150.dp)
+                                .weight(1f),
+                            colors = CardDefaults.cardColors(
+                                contentColor = MaterialTheme.colorScheme.onSecondaryContainer,
+                                containerColor = MaterialTheme.colorScheme.secondaryContainer
                             )
+                        ) {
+                            Column(
+                                modifier = Modifier
+                                    .fillMaxWidth()
+                                    .padding(16.dp),
+                                verticalArrangement = Arrangement.spacedBy(8.dp),
+                                horizontalAlignment = Alignment.CenterHorizontally
+                            ) {
+                                Icon(
+                                    painter = painterResource(R.drawable.baseline_flag_circle_24),
+                                    contentDescription = "Flag"
+                                )
+
+                                Text(
+                                    text = habit.time.format(DateTimeFormatter.ofPattern("dd")),
+                                    style = MaterialTheme.typography.titleLarge,
+                                    fontWeight = FontWeight.Bold
+                                )
+
+                                Text(
+                                    text = habit.time.format(DateTimeFormatter.ofPattern("MMM\nu")),
+                                    textAlign = TextAlign.Center
+                                )
+                            }
                         }
                     }
                 }
-            }
 
-            Spacer(modifier = Modifier.padding(8.dp))
+                Spacer(modifier = Modifier.padding(8.dp))
+            }
         }
     }
 }

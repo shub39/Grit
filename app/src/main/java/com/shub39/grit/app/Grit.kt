@@ -59,7 +59,12 @@ fun Grit(
         if (currentRoute != route) {
             navController.navigate(route) {
                 launchSingleTop = true
-                popUpTo(Routes.TasksPage) { saveState = true }
+                popUpTo(
+                    when (startingPage) {
+                       Pages.Habits -> Routes.HabitsPage
+                       Pages.Tasks -> Routes.TasksPage
+                    }
+                ) { saveState = true }
                 restoreState = true
             }
         }

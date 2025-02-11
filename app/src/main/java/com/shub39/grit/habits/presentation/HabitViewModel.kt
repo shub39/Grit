@@ -3,6 +3,7 @@ package com.shub39.grit.habits.presentation
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.shub39.grit.core.domain.AlarmScheduler
+import com.shub39.grit.core.domain.GritDatastore
 import com.shub39.grit.habits.domain.Habit
 import com.shub39.grit.habits.domain.HabitRepo
 import com.shub39.grit.habits.domain.HabitStatus
@@ -20,16 +21,19 @@ import java.time.LocalDate
 
 class HabitViewModel(
     private val scheduler: AlarmScheduler,
-    private val repo: HabitRepo
+    private val repo: HabitRepo,
+    private val datastore: GritDatastore
 ) : ViewModel() {
 
     private var habitStatusJob: Job? = null
+    private var observeJob: Job? = null
 
     private val _habitState = MutableStateFlow(HabitPageState())
 
     val habitsPageState = _habitState.asStateFlow()
         .onStart {
             observeHabitStatuses()
+            observeIs24Hr()
         }
         .stateIn(
             viewModelScope,
@@ -77,6 +81,20 @@ class HabitViewModel(
                         completedHabits = habitWithStatuses.keys.filter { habit ->
                             habitWithStatuses[habit]?.any { it.date == LocalDate.now() } == true
                         }
+                    )
+                }
+            }
+            .launchIn(viewModelScope)
+    }
+
+    private fun observeIs24Hr() {
+        observeJob?.cancel()
+        observeJob = datastore
+            .getIs24Hr()
+            .onEach { pref ->
+                _habitState.update {
+                    it.copy(
+                        is24Hr = pref
                     )
                 }
             }

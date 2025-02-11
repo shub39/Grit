@@ -40,6 +40,7 @@ fun SettingsPage(
     val coroutineScope = rememberCoroutineScope()
 
     val startingPage by datastore.getStartingPagePref().collectAsState(Pages.Tasks)
+    val is24Hr by datastore.getIs24Hr().collectAsState(false)
 
     Box(
         modifier = Modifier.fillMaxSize(),
@@ -59,31 +60,6 @@ fun SettingsPage(
             )
 
             LazyColumn(modifier = Modifier.fillMaxSize()) {
-                item {
-                    ListItem(
-                        headlineContent = {
-                            Text(
-                                text = stringResource(R.string.categories)
-                            )
-                        },
-                        supportingContent = {
-                            Text(
-                                text = stringResource(R.string.edit_categories)
-                            )
-                        },
-                        trailingContent = {
-                            BetterIconButton (
-                                onClick = onCategoryClick
-                            ) {
-                                Icon(
-                                    imageVector = Icons.AutoMirrored.Filled.KeyboardArrowRight,
-                                    contentDescription = null
-                                )
-                            }
-                        }
-                    )
-                }
-
                 item {
                     ListItem(
                         headlineContent = {
@@ -109,6 +85,56 @@ fun SettingsPage(
                                     }
                                 }
                             )
+                        }
+                    )
+                }
+
+                item {
+                    ListItem(
+                        headlineContent = {
+                            Text(
+                                text = stringResource(R.string.use_24Hr)
+                            )
+                        },
+                        supportingContent = {
+                            Text(
+                                text = stringResource(R.string.use_24Hr_desc)
+                            )
+                        },
+                        trailingContent = {
+                            Switch(
+                                checked = is24Hr,
+                                onCheckedChange = {
+                                    coroutineScope.launch {
+                                        datastore.setIs24Hr(it)
+                                    }
+                                }
+                            )
+                        }
+                    )
+                }
+
+                item {
+                    ListItem(
+                        headlineContent = {
+                            Text(
+                                text = stringResource(R.string.categories)
+                            )
+                        },
+                        supportingContent = {
+                            Text(
+                                text = stringResource(R.string.edit_categories)
+                            )
+                        },
+                        trailingContent = {
+                            BetterIconButton (
+                                onClick = onCategoryClick
+                            ) {
+                                Icon(
+                                    imageVector = Icons.AutoMirrored.Filled.KeyboardArrowRight,
+                                    contentDescription = null
+                                )
+                            }
                         }
                     )
                 }

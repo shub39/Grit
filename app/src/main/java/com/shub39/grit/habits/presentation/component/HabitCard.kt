@@ -25,6 +25,7 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
 import androidx.compose.material3.TimePicker
+import androidx.compose.material3.TimePickerState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -44,7 +45,6 @@ import androidx.compose.ui.unit.dp
 import com.shub39.grit.R
 import com.shub39.grit.core.presentation.components.GritDialog
 import com.shub39.grit.core.presentation.countCurrentStreak
-import com.shub39.grit.core.presentation.localToTimePickerState
 import com.shub39.grit.habits.domain.Habit
 import com.shub39.grit.habits.domain.HabitStatus
 import com.shub39.grit.habits.presentation.AnalyticsSheet
@@ -59,6 +59,7 @@ fun HabitCard(
     completed: Boolean,
     action: (HabitsPageAction) -> Unit,
     editState: Boolean = false,
+    is24Hr: Boolean = false,
     onMoveUp: () -> Unit = {},
     onMoveDown: () -> Unit = {}
 ) {
@@ -263,7 +264,7 @@ fun HabitCard(
     if (showEditDialog) {
         var newHabitTitle by remember { mutableStateOf(habit.title) }
         var newHabitDescription by remember { mutableStateOf(habit.description) }
-        val timePickerState = remember { localToTimePickerState(habit.time) }
+        val timePickerState = remember { TimePickerState(initialHour = habit.time.hour, initialMinute = habit.time.minute, is24Hour = is24Hr) }
 
         GritDialog(
             onDismissRequest = { showEditDialog = false }

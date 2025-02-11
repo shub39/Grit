@@ -113,6 +113,7 @@ fun HabitsPage(
                             statusList = habit.value,
                             completed = state.completedHabits.contains(habit.key),
                             action = action,
+                            is24Hr = state.is24Hr,
                             editState = editState,
                             onMoveUp = {
                                 if (index > 0) {
@@ -177,7 +178,7 @@ fun HabitsPage(
     if (showAddHabitDialog) {
         var newHabitName by remember { mutableStateOf("") }
         var newHabitDescription by remember { mutableStateOf("") }
-        val timePickerState = remember { TimePickerState(12, 0, false) }
+        val timePickerState = remember { TimePickerState(12, 0, state.is24Hr) }
         val isHabitPresent = { state.habitsWithStatuses.any { it.key.title == newHabitName } }
 
         GritDialog(

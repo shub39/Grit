@@ -73,4 +73,6 @@
     <string name="material_theme_desc">Use colors based on wallpaper</string>
     <string name="show_habits">Show habits first</string>
     <string name="show_habits_desc">show habits page first at app startup</string>
+    <string name="use_24Hr">Use 24 hr clock</string>
+    <string name="use_24Hr_desc">Use 24 hr clock to set time</string>
 </resources>
