@@ -50,7 +50,3 @@ I eventually want to turn this app into a productivity hub with many social feat
 ## Support 💕
 > ### If you loved this app, consider donating. I'm an undergrad trying to get some pocket money
 > [<img alt="bmc-button" src="https://ziadoua.github.io/m3-Markdown-Badges/badges/BuyMeACoffee/buymeacoffee3.svg">](https://www.buymeacoffee.com/shub39)
-
-## Star History 🌟
-
-[![Star History Chart](https://api.star-history.com/svg?repos=shub39/Grit&type=Date)](https://star-history.com/#shub39/Grit&Date)
