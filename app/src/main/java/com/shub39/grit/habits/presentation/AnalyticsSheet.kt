@@ -34,6 +34,7 @@ import com.shub39.grit.habits.domain.Habit
 import com.shub39.grit.habits.domain.HabitStatus
 import com.shub39.grit.habits.presentation.component.AnalyticsCard
 import com.shub39.grit.habits.presentation.component.BooleanHeatMap
+import java.time.DayOfWeek
 import java.time.format.DateTimeFormatter
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -42,6 +43,7 @@ fun AnalyticsSheet(
     habit: Habit,
     statusList: List<HabitStatus>,
     onDismiss: () -> Unit,
+    staringDay: DayOfWeek = DayOfWeek.MONDAY,
     action: (HabitsPageAction) -> Unit
 ) {
     var updateTrigger by remember { mutableStateOf(false) }
@@ -79,7 +81,8 @@ fun AnalyticsSheet(
                         onClick = { date ->
                             action(HabitsPageAction.InsertStatus(habit, date))
                             updateTrigger = !updateTrigger
-                        }
+                        },
+                        startFrom = staringDay
                     )
                 }
 

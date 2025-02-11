@@ -33,7 +33,7 @@ class HabitViewModel(
     val habitsPageState = _habitState.asStateFlow()
         .onStart {
             observeHabitStatuses()
-            observeIs24Hr()
+            observeDataStore()
         }
         .stateIn(
             viewModelScope,
@@ -87,18 +87,31 @@ class HabitViewModel(
             .launchIn(viewModelScope)
     }
 
-    private fun observeIs24Hr() {
+    private fun observeDataStore() = viewModelScope.launch {
         observeJob?.cancel()
-        observeJob = datastore
-            .getIs24Hr()
-            .onEach { pref ->
-                _habitState.update {
-                    it.copy(
-                        is24Hr = pref
-                    )
+        observeJob = launch {
+            datastore
+                .getStartOfTheWeekPref()
+                .onEach { pref ->
+                    _habitState.update {
+                        it.copy(
+                            startingDay = pref
+                        )
+                    }
                 }
-            }
-            .launchIn(viewModelScope)
+                .launchIn(viewModelScope)
+
+            datastore
+                .getIs24Hr()
+                .onEach { pref ->
+                    _habitState.update {
+                        it.copy(
+                            is24Hr = pref
+                        )
+                    }
+                }
+                .launchIn(viewModelScope)
+        }
     }
 
     private suspend fun addHabit(habit: Habit) {

@@ -16,14 +16,16 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import java.time.DayOfWeek
 import java.time.LocalDate
+import java.time.temporal.TemporalAdjusters
 
 @Composable
 fun WeekActivity(
     dates: List<LocalDate>,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
+    startingDay: DayOfWeek = DayOfWeek.MONDAY
 ) {
     val currentDate = LocalDate.now()
-    val startOfWeek = currentDate.with(DayOfWeek.MONDAY)
+    val startOfWeek = currentDate.with(TemporalAdjusters.previousOrSame(startingDay))
     val currentWeekDates = (0..6).map { startOfWeek.plusDays(it.toLong()) }
 
     Box(modifier = modifier) {

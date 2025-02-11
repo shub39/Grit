@@ -114,6 +114,7 @@ fun HabitsPage(
                             completed = state.completedHabits.contains(habit.key),
                             action = action,
                             is24Hr = state.is24Hr,
+                            startingDay = state.startingDay,
                             editState = editState,
                             onMoveUp = {
                                 if (index > 0) {

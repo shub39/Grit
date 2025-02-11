@@ -49,6 +49,7 @@ import com.shub39.grit.habits.domain.Habit
 import com.shub39.grit.habits.domain.HabitStatus
 import com.shub39.grit.habits.presentation.AnalyticsSheet
 import com.shub39.grit.habits.presentation.HabitsPageAction
+import java.time.DayOfWeek
 import java.time.format.DateTimeFormatter
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -60,6 +61,7 @@ fun HabitCard(
     action: (HabitsPageAction) -> Unit,
     editState: Boolean = false,
     is24Hr: Boolean = false,
+    startingDay: DayOfWeek = DayOfWeek.MONDAY,
     onMoveUp: () -> Unit = {},
     onMoveDown: () -> Unit = {}
 ) {
@@ -151,7 +153,8 @@ fun HabitCard(
 
         WeekActivity(
             dates = statusList.map { it.date },
-            modifier = Modifier.padding(start = 8.dp, end = 8.dp, top = 8.dp)
+            modifier = Modifier.padding(start = 8.dp, end = 8.dp, top = 8.dp),
+            startingDay = startingDay
         )
 
         Row(
@@ -257,7 +260,8 @@ fun HabitCard(
             habit = habit,
             statusList = statusList,
             onDismiss = { showAnalyticsSheet = false },
-            action = action
+            action = action,
+            staringDay = startingDay
         )
     }
 
