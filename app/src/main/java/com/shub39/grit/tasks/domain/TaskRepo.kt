@@ -10,6 +10,8 @@ interface TaskRepo {
 
     suspend fun upsertTask(task: Task)
     suspend fun deleteTask(task: Task)
+    suspend fun deleteAllTasks()
     suspend fun upsertCategory(category: Category)
     suspend fun deleteCategory(category: Category)
+    suspend fun deleteAllCategories()
 }

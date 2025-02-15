@@ -42,6 +42,11 @@ class RestoreImpl(
 
             val jsonDeserialized = json.decodeFromString<ExportSchema>(file.readText())
 
+            taskRepo.deleteAllTasks()
+            taskRepo.deleteAllCategories()
+            habitRepo.deleteAllHabits()
+            habitRepo.deleteAllHabitStatus()
+
             withContext(Dispatchers.IO) {
                 awaitAll(
                     async {

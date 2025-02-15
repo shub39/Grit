@@ -3,6 +3,10 @@
 # Grit 
 ### A simple ToDo list and Habit Tracker
 
+> [!NOTE]
+> Due to being busy with other work, I'm short on time and motivation to add more features to this app
+> because it's good enough for my use case and I like to work on other more exciting stuff with the little 
+> free time I get. If you really like this app, please consider donating or contributing code
 
 > [<img src="https://ziadoua.github.io/m3-Markdown-Badges/badges/Android/android2.svg">]()
 > [<img src="https://ziadoua.github.io/m3-Markdown-Badges/badges/AndroidStudio/androidstudio3.svg">]()
@@ -46,7 +50,13 @@ I eventually want to turn this app into a productivity hub with many social feat
 >- MVVM architecture
 >- [Reorderable](https://github.com/Calvin-LL/Reorderable) for reorderable lists!
 >- [Glance](https://developer.android.com/develop/ui/compose/glance/create-app-widget) for widgets
+>- [MaterialKolor](https://github.com/jordond/MaterialKolor) for generating color palettes
+>- [Colorpicker-compose](https://github.com/skydoves/colorpicker-compose) for the color picker
 
 ## Support 💕
 > ### If you loved this app, consider donating. I'm an undergrad trying to get some pocket money
 > [<img alt="bmc-button" src="https://ziadoua.github.io/m3-Markdown-Badges/badges/BuyMeACoffee/buymeacoffee3.svg">](https://www.buymeacoffee.com/shub39)
+
+
+## Stargazers over time ✨
+[![Stargazers over time](https://starchart.cc/shub39/Grit.svg?background=%23282828&axis=%23f2dfd3&line=%23ffb780)](https://starchart.cc/shub39/Grit)

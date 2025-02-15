@@ -26,6 +26,10 @@ class HabitRepository(
         habitDao.deleteHabit(habitId)
     }
 
+    override suspend fun deleteAllHabits() {
+        habitDao.deleteAllHabits()
+    }
+
     override suspend fun getHabits(): List<Habit> {
         return habitDao.getAllHabits().map { it.toHabit() }
     }
@@ -57,5 +61,9 @@ class HabitRepository(
 
     override suspend fun deleteHabitStatus(id: Long, date: LocalDate) {
         habitStatusDao.deleteStatus(id, date)
+    }
+
+    override suspend fun deleteAllHabitStatus() {
+        habitStatusDao.deleteAllHabitStatus()
     }
 }

@@ -23,4 +23,7 @@ interface HabitStatusDao {
 
     @Query("DELETE FROM habit_status WHERE habitId = :habitId AND date = :date")
     suspend fun deleteStatus(habitId: Long, date: LocalDate)
+
+    @Query("DELETE FROM habit_status")
+    suspend fun deleteAllHabitStatus()
 }
