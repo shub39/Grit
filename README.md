@@ -53,10 +53,5 @@ I eventually want to turn this app into a productivity hub with many social feat
 >- [MaterialKolor](https://github.com/jordond/MaterialKolor) for generating color palettes
 >- [Colorpicker-compose](https://github.com/skydoves/colorpicker-compose) for the color picker
 
-## Support 💕
-> ### If you loved this app, consider donating. I'm an undergrad trying to get some pocket money
-> [<img alt="bmc-button" src="https://ziadoua.github.io/m3-Markdown-Badges/badges/BuyMeACoffee/buymeacoffee3.svg">](https://www.buymeacoffee.com/shub39)
-
-
 ## Stargazers over time ✨
 [![Stargazers over time](https://starchart.cc/shub39/Grit.svg?background=%23282828&axis=%23f2dfd3&line=%23ffb780)](https://starchart.cc/shub39/Grit)
