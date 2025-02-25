@@ -10,7 +10,7 @@
     <string name="urgent">Urgent</string>
     <string name="add_task">Add Task</string>
     <string name="add_urgent_task">Add Urgent</string>
-    <string name="add_habit">Add new Habit</string>
+    <string name="add_habit">Add New Habit</string>
     <string name="update">Update</string>
     <string name="update_description">Update Description</string>
     <string name="delete">Delete</string>
@@ -46,7 +46,7 @@
     <string name="clear_preference_exp">periodically clear tasks</string>
     <string name="categories">Categories</string>
     <string name="edit_categories">Edit Task categories</string>
-    <string name="delete_category">Are you sure? all tasks in this category will be deleted</string>
+    <string name="delete_category">Are you sure? All tasks in this category will be deleted</string>
     <string name="add_category">Add Category</string>
     <string name="add">Add Something</string>
     <string name="about">About app</string>
@@ -72,7 +72,7 @@
     <string name="choose_file">Choose file</string>
     <string name="material_theme_desc">Use colors based on wallpaper</string>
     <string name="show_habits">Show habits first</string>
-    <string name="show_habits_desc">show habits page first at app startup</string>
+    <string name="show_habits_desc">Show habits page first at app startup</string>
     <string name="use_24Hr">Use 24 hr clock</string>
     <string name="use_24Hr_desc">Use 24 hr clock to set time</string>
     <string name="staring_day">Start weeks from Sundays</string>
