@@ -11,8 +11,8 @@
     <string name="add_task">Add Task</string>
     <string name="add_urgent_task">Add Urgent</string>
     <string name="add_habit">Add New Habit</string>
-    <string name="update">Update</string>
-    <string name="update_description">Update Description</string>
+    <string name="update">Edit</string>
+    <string name="update_description">Edit Description</string>
     <string name="delete">Delete</string>
     <string name="task_deleted">Task Deleted</string>
     <string name="delete_warning">Are you sure you want to delete this Habit? all progress will be lost forever</string>
@@ -42,7 +42,7 @@
     <string name="delete_tasks">Are you sure you want to delete all completed tasks?</string>
     <string name="channel_name">Habits Channel</string>
     <string name="channel_description">Notification channel for habit status update</string>
-    <string name="update_title">Update Title</string>
+    <string name="update_title">Edit Title</string>
     <string name="clear_preference_exp">periodically clear tasks</string>
     <string name="categories">Categories</string>
     <string name="edit_categories">Edit Task categories</string>
