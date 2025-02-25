@@ -167,7 +167,7 @@ fun TaskCard(
                     }
                 ),
                 modifier = Modifier.focusRequester(focusRequester),
-                label = { Text(text = stringResource(id = R.string.add_task)) }
+                label = { Text(text = stringResource(id = R.string.edit_task)) }
             )
 
             Button(
