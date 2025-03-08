@@ -41,6 +41,7 @@ import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardCapitalization
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.shub39.grit.R
 import com.shub39.grit.core.presentation.components.GritDialog
@@ -50,6 +51,7 @@ import com.shub39.grit.habits.domain.HabitStatus
 import com.shub39.grit.habits.presentation.AnalyticsSheet
 import com.shub39.grit.habits.presentation.HabitsPageAction
 import java.time.DayOfWeek
+import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -350,4 +352,21 @@ fun HabitCard(
             }
         }
     }
+}
+
+@Preview
+@Composable
+fun HabitCardPreview() {
+    HabitCard(
+        habit = Habit(
+            id = 1,
+            title = "Test Habit",
+            description = "A test Habit",
+            time = LocalDateTime.now(),
+            index = 1
+        ),
+        statusList = emptyList(),
+        completed = true,
+        action = {}
+    )
 }
