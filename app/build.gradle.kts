@@ -1,3 +1,5 @@
+import java.io.ByteArrayOutputStream
+
 plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.jetbrains.kotlin.android)
@@ -7,6 +9,7 @@ plugins {
 }
 
 val appName = "Grit"
+val gitHash = execute("git", "rev-parse", "HEAD").take(7)
 
 android {
     namespace = "com.shub39.grit"
@@ -29,11 +32,25 @@ android {
         release {
             resValue("string", "app_name", appName)
             isMinifyEnabled = true
+            isShrinkResources = true
             proguardFiles(
                 getDefaultProguardFile("proguard-android-optimize.txt"),
                 "proguard-rules.pro"
             )
         }
+
+        create("beta"){
+            resValue("string", "app_name", "$appName Beta")
+            applicationIdSuffix = ".beta"
+            isMinifyEnabled = true
+            isShrinkResources = true
+            versionNameSuffix = "-beta-$gitHash"
+            proguardFiles(
+                getDefaultProguardFile("proguard-android-optimize.txt"),
+                "proguard-rules.pro"
+            )
+        }
+
         debug {
             resValue("string", "app_name", "$appName Debug")
             applicationIdSuffix = ".debug"
@@ -88,4 +105,13 @@ java {
     toolchain {
         languageVersion = JavaLanguageVersion.of(17)
     }
+}
+
+fun execute(vararg command: String): String {
+    val outputStream = ByteArrayOutputStream()
+    project.exec {
+        commandLine(*command)
+        standardOutput = outputStream
+    }
+    return outputStream.toString().trim()
 }
