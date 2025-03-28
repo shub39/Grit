@@ -1,3 +1,12 @@
+# 2.0.0 Planned stuff
+- Have a set of constant unchanging features
+- Fix navigation and UI
+- Widgets
+- fix code for notification and workmanager
+- better analytics UI
+- Update screenshots and metadata
+
+
 ![](fastlane/metadata/android/en-US/images/icon200x200.png)
 
 # Grit 
