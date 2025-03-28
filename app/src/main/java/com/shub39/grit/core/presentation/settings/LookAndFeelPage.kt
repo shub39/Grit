@@ -253,7 +253,7 @@ fun LookAndFeelPage(
                         Row(
                             modifier = Modifier
                                 .horizontalScroll(scrollState)
-                                .padding(8.dp),
+                                .padding(vertical = 8.dp),
                             horizontalArrangement = Arrangement.spacedBy(8.dp),
                         ) {
                             PaletteStyle.entries.toList().forEach { style ->

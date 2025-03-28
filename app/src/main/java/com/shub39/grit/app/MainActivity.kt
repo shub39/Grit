@@ -18,7 +18,7 @@ class MainActivity : ComponentActivity() {
         enableEdgeToEdge()
 
         setContent {
-            // Initialising KoinContext, because of log warnings
+            // Initialising KoinContext, because of warnings
             KoinContext {
                 Grit()
             }
