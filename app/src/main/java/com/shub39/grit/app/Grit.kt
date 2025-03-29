@@ -23,19 +23,14 @@ import androidx.compose.ui.res.stringResource
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
-import androidx.navigation.compose.navigation
 import androidx.navigation.compose.rememberNavController
 import com.shub39.grit.R
 import com.shub39.grit.core.domain.GritDatastore
 import com.shub39.grit.core.domain.Pages
-import com.shub39.grit.core.presentation.settings.AboutPage
-import com.shub39.grit.core.presentation.settings.Backup
-import com.shub39.grit.core.presentation.settings.LookAndFeelPage
-import com.shub39.grit.core.presentation.settings.SettingsPage
+import com.shub39.grit.core.presentation.settings.Settings
 import com.shub39.grit.core.presentation.theme.GritTheme
 import com.shub39.grit.habits.presentation.HabitViewModel
 import com.shub39.grit.habits.presentation.HabitsPage
-import com.shub39.grit.tasks.presentation.EditCategories
 import com.shub39.grit.tasks.presentation.TaskListViewModel
 import com.shub39.grit.tasks.presentation.task_page.TaskPage
 import org.koin.androidx.compose.koinViewModel
@@ -61,8 +56,8 @@ fun Grit(
                 launchSingleTop = true
                 popUpTo(
                     when (startingPage) {
-                       Pages.Habits -> Routes.HabitsPage
-                       Pages.Tasks -> Routes.TasksPage
+                        Pages.Habits -> Routes.HabitsPage
+                        Pages.Tasks -> Routes.TasksPage
                     }
                 ) { saveState = true }
                 restoreState = true
@@ -77,7 +72,7 @@ fun Grit(
                     listOf(
                         Routes.TasksPage,
                         Routes.HabitsPage,
-                        Routes.SettingsGraph
+                        Routes.SettingsPages
                     ).forEach { route ->
                         NavigationBarItem(
                             selected = currentRoute == route,
@@ -136,46 +131,10 @@ fun Grit(
                     )
                 }
 
-                navigation<Routes.SettingsGraph>(
-                    startDestination = Routes.Settings
-                ) {
-                    composable<Routes.Settings> {
-                        currentRoute = Routes.SettingsGraph
+                composable<Routes.SettingsPages> {
+                    currentRoute = Routes.SettingsPages
 
-                        SettingsPage(
-                            onCategoryClick = { navController.navigate(Routes.Categories) },
-                            onAboutClick = { navController.navigate(Routes.About) },
-                            onLookAndFeelClick = { navController.navigate(Routes.LookAndFeel) },
-                            onBackupClick = { navController.navigate(Routes.Backup) }
-                        )
-                    }
-
-                    composable<Routes.About> {
-                        currentRoute = Routes.SettingsGraph
-
-                        AboutPage()
-                    }
-
-                    composable<Routes.Categories> {
-                        currentRoute = Routes.SettingsGraph
-
-                        EditCategories(
-                            state = taskPageState,
-                            action = tvm::taskPageAction
-                        )
-                    }
-
-                    composable<Routes.LookAndFeel> {
-                        currentRoute = Routes.SettingsGraph
-
-                        LookAndFeelPage()
-                    }
-
-                    composable<Routes.Backup> {
-                        currentRoute = Routes.SettingsGraph
-
-                        Backup()
-                    }
+                    Settings()
                 }
 
                 composable<Routes.HabitsPage> {
@@ -189,5 +148,4 @@ fun Grit(
             }
         }
     }
-
 }

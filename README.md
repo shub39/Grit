@@ -1,6 +1,8 @@
 # 2.0.0 Planned stuff
 - Have a set of constant unchanging features
-- Fix navigation and UI
+- ~~Fix navigation~~ and UI
+- About Libraries
+- Add Categories editing to tasks page
 - Widgets
 - fix code for notification and workmanager
 - better analytics UI

@@ -30,8 +30,7 @@ import java.time.DayOfWeek
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun SettingsPage(
-    onCategoryClick: () -> Unit,
+fun RootPage(
     onAboutClick: () -> Unit,
     onLookAndFeelClick: () -> Unit,
     onBackupClick: () -> Unit,
@@ -131,31 +130,6 @@ fun SettingsPage(
                                 }
                             }
                         )
-                    }
-                )
-            }
-
-            item {
-                ListItem(
-                    headlineContent = {
-                        Text(
-                            text = stringResource(R.string.categories)
-                        )
-                    },
-                    supportingContent = {
-                        Text(
-                            text = stringResource(R.string.edit_categories)
-                        )
-                    },
-                    trailingContent = {
-                        BetterIconButton(
-                            onClick = onCategoryClick
-                        ) {
-                            Icon(
-                                imageVector = Icons.AutoMirrored.Filled.KeyboardArrowRight,
-                                contentDescription = null
-                            )
-                        }
                     }
                 )
             }

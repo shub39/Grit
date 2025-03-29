@@ -11,15 +11,5 @@ sealed interface Routes {
     data object  TasksPage: Routes
 
     @Serializable
-    data object SettingsGraph: Routes
-    @Serializable
-    data object Settings: Routes
-    @Serializable
-    data object About: Routes
-    @Serializable
-    data object Categories: Routes
-    @Serializable
-    data object LookAndFeel: Routes
-    @Serializable
-    data object Backup: Routes
+    data object SettingsPages: Routes
 }
