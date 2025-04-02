@@ -11,4 +11,6 @@ sealed interface SettingsRoutes {
     data object LookAndFeel: SettingsRoutes
     @Serializable
     data object Backup: SettingsRoutes
+    @Serializable
+    data object AboutLibraries: SettingsRoutes
 }

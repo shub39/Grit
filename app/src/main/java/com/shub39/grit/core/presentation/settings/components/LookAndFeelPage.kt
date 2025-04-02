@@ -1,4 +1,4 @@
-package com.shub39.grit.core.presentation.settings
+package com.shub39.grit.core.presentation.settings.components
 
 import android.os.Build
 import androidx.compose.animation.AnimatedVisibility

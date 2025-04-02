@@ -29,16 +29,16 @@ import com.shub39.grit.core.domain.GritDatastore
 import com.shub39.grit.core.domain.Pages
 import com.shub39.grit.core.presentation.settings.Settings
 import com.shub39.grit.core.presentation.theme.GritTheme
-import com.shub39.grit.habits.presentation.HabitViewModel
+import com.shub39.grit.viewmodels.HabitViewModel
 import com.shub39.grit.habits.presentation.HabitsPage
-import com.shub39.grit.tasks.presentation.TaskListViewModel
+import com.shub39.grit.viewmodels.TasksViewModel
 import com.shub39.grit.tasks.presentation.task_page.TaskPage
 import org.koin.androidx.compose.koinViewModel
 import org.koin.compose.koinInject
 
 @Composable
 fun Grit(
-    tvm: TaskListViewModel = koinViewModel(),
+    tvm: TasksViewModel = koinViewModel(),
     hvm: HabitViewModel = koinViewModel(),
     datastore: GritDatastore = koinInject()
 ) {

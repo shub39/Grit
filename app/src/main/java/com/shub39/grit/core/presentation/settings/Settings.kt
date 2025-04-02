@@ -13,6 +13,11 @@ import androidx.navigation.compose.rememberNavController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import com.shub39.grit.core.presentation.components.PageFill
+import com.shub39.grit.core.presentation.settings.components.AboutLibraries
+import com.shub39.grit.core.presentation.settings.components.AboutPage
+import com.shub39.grit.core.presentation.settings.components.Backup
+import com.shub39.grit.core.presentation.settings.components.LookAndFeelPage
+import com.shub39.grit.core.presentation.settings.components.RootPage
 
 @Composable
 fun Settings() = PageFill {
@@ -61,6 +66,10 @@ fun Settings() = PageFill {
 
         composable<SettingsRoutes.Backup> {
             Backup()
+        }
+
+        composable<SettingsRoutes.AboutLibraries> {
+            AboutLibraries()
         }
     }
 }

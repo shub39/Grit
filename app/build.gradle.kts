@@ -1,15 +1,15 @@
-import java.io.ByteArrayOutputStream
-
 plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.jetbrains.kotlin.android)
     alias(libs.plugins.compose.compiler)
     alias(libs.plugins.ksp)
     alias(libs.plugins.kotlin.serialization)
+    alias(libs.plugins.aboutLibraries)
 }
 
 val appName = "Grit"
-val gitHash = execute("git", "rev-parse", "HEAD").take(7)
+val appVersionCode = 2000
+val appVersionName = "2.0.0"
 
 android {
     namespace = "com.shub39.grit"
@@ -19,8 +19,8 @@ android {
         applicationId = "com.shub39.grit"
         minSdk = 29
         targetSdk = 35
-        versionCode = 160
-        versionName = "1.6.0"
+        versionCode = appVersionCode
+        versionName = appVersionName
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
         vectorDrawables {
@@ -44,7 +44,7 @@ android {
             applicationIdSuffix = ".beta"
             isMinifyEnabled = true
             isShrinkResources = true
-            versionNameSuffix = "-beta-$gitHash"
+            versionNameSuffix = "-beta"
             proguardFiles(
                 getDefaultProguardFile("proguard-android-optimize.txt"),
                 "proguard-rules.pro"
@@ -80,11 +80,18 @@ android {
     }
 }
 
-dependencies {
+aboutLibraries {
+    // Remove the "generated" timestamp to allow for reproducible builds; from kaajjo/LibreSudoku
+    excludeFields = arrayOf("generated")
+}
 
+dependencies {
     implementation(libs.androidx.navigation.compose)
     implementation(libs.androidx.material3)
     implementation(libs.androidx.ui.tooling.preview)
+    implementation(libs.androidx.ui.tooling)
+    implementation(libs.androidx.ui.graphics)
+    implementation(libs.androidx.ui)
     implementation(libs.androidx.core.splashscreen)
     implementation(libs.kotlinx.serialization.json)
     implementation(libs.androidx.room.runtime)
@@ -98,20 +105,11 @@ dependencies {
     implementation(libs.materialKolor)
     implementation(libs.colorpicker.compose)
     implementation(libs.androidx.datastore.preferences.core)
-
+    implementation(libs.aboutLibraries)
 }
 
 java {
     toolchain {
         languageVersion = JavaLanguageVersion.of(17)
     }
-}
-
-fun execute(vararg command: String): String {
-    val outputStream = ByteArrayOutputStream()
-    project.exec {
-        commandLine(*command)
-        standardOutput = outputStream
-    }
-    return outputStream.toString().trim()
 }

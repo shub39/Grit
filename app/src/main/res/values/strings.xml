@@ -76,4 +76,5 @@
     <string name="use_24Hr">Use 24 hr clock</string>
     <string name="use_24Hr_desc">Use 24 hr clock to set time</string>
     <string name="staring_day">Start weeks from Sundays</string>
+    <string name="about_libraries">About Libraries</string>
 </resources>

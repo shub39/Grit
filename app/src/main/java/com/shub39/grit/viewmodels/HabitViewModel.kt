@@ -1,4 +1,4 @@
-package com.shub39.grit.habits.presentation
+package com.shub39.grit.viewmodels
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -7,6 +7,8 @@ import com.shub39.grit.core.domain.GritDatastore
 import com.shub39.grit.habits.domain.Habit
 import com.shub39.grit.habits.domain.HabitRepo
 import com.shub39.grit.habits.domain.HabitStatus
+import com.shub39.grit.habits.presentation.HabitPageState
+import com.shub39.grit.habits.presentation.HabitsPageAction
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
@@ -37,7 +39,7 @@ class HabitViewModel(
         }
         .stateIn(
             viewModelScope,
-            SharingStarted.WhileSubscribed(5000),
+            SharingStarted.Companion.WhileSubscribed(5000),
             HabitPageState()
         )
 

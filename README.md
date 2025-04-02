@@ -1,14 +1,3 @@
-# 2.0.0 Planned stuff
-- Have a set of constant unchanging features
-- ~~Fix navigation~~ and UI
-- About Libraries
-- Add Categories editing to tasks page
-- Widgets
-- fix code for notification and workmanager
-- better analytics UI
-- Update screenshots and metadata
-
-
 ![](fastlane/metadata/android/en-US/images/icon200x200.png)
 
 # Grit 
@@ -30,7 +19,7 @@
 
 > ### Get On
 > [<img src="https://f-droid.org/badge/get-it-on.png" alt="Get it on F-Droid" height="80">](https://f-droid.org/packages/com.shub39.grit)
-> [<img src="https://gitlab.com/IzzyOnDroid/repo/-/raw/master/assets/IzzyOnDroid.png" height="80">](https://apt.izzysoft.de/packages/com.shub39.grit/latest)
+> [<img src="https://gitlab.com/IzzyOnDroid/repo/-/raw/master/assets/IzzyOnDroid.png" height="80">](https://apt.izzysoft.de/packages/com.shub39.grit)
 > [<img src="https://www.openapk.net/images/openapk-badge.png" height=80>](https://www.openapk.net/dharmik/com.shub39.grit/)
 > [<img src="https://www.androidfreeware.net/images/androidfreeware-badge.png" height=80>](https://www.androidfreeware.net/download-grit-apk.html)
 >### Or Download latest from [Releases](https://github.com/shub39/Grit/releases/latest)
