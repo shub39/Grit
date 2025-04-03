@@ -12,7 +12,6 @@ import androidx.compose.material3.NavigationBarItem
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -25,7 +24,6 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import com.shub39.grit.R
-import com.shub39.grit.core.domain.GritDatastore
 import com.shub39.grit.core.domain.Pages
 import com.shub39.grit.core.presentation.settings.Settings
 import com.shub39.grit.core.presentation.theme.GritTheme
@@ -33,29 +31,28 @@ import com.shub39.grit.viewmodels.HabitViewModel
 import com.shub39.grit.habits.presentation.HabitsPage
 import com.shub39.grit.viewmodels.TasksViewModel
 import com.shub39.grit.tasks.presentation.task_page.TaskPage
+import com.shub39.grit.viewmodels.SettingsViewModel
 import org.koin.androidx.compose.koinViewModel
-import org.koin.compose.koinInject
 
 @Composable
 fun Grit(
     tvm: TasksViewModel = koinViewModel(),
     hvm: HabitViewModel = koinViewModel(),
-    datastore: GritDatastore = koinInject()
+    svm: SettingsViewModel = koinViewModel()
 ) {
     val navController = rememberNavController()
     var currentRoute: Routes by remember { mutableStateOf(Routes.TasksPage) }
 
-    val taskPageState by tvm.tasksState.collectAsStateWithLifecycle()
-    val habitsPageState by hvm.habitsPageState.collectAsStateWithLifecycle()
-
-    val startingPage by datastore.getStartingPagePref().collectAsState(Pages.Tasks)
+    val taskPageState by tvm.state.collectAsStateWithLifecycle()
+    val habitsPageState by hvm.state.collectAsStateWithLifecycle()
+    val settingsState by svm.state.collectAsStateWithLifecycle()
 
     val navigator = { route: Routes ->
         if (currentRoute != route) {
             navController.navigate(route) {
                 launchSingleTop = true
                 popUpTo(
-                    when (startingPage) {
+                    when (settingsState.startingPage) {
                         Pages.Habits -> Routes.HabitsPage
                         Pages.Tasks -> Routes.TasksPage
                     }
@@ -65,7 +62,9 @@ fun Grit(
         }
     }
 
-    GritTheme {
+    GritTheme(
+        theme = settingsState.theme
+    ) {
         Scaffold(
             bottomBar = {
                 BottomAppBar {
@@ -110,7 +109,7 @@ fun Grit(
         ) { padding ->
             NavHost(
                 navController = navController,
-                startDestination = when (startingPage) {
+                startDestination = when (settingsState.startingPage) {
                     Pages.Tasks -> Routes.TasksPage
                     Pages.Habits -> Routes.HabitsPage
                 },

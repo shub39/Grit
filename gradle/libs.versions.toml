@@ -13,7 +13,7 @@ room = "2.7.0-rc03"
 sqlite = "2.5.0-rc03"
 navigation = "2.8.9"
 serialization = "1.7.3"
-materialKolor = "2.0.1"
+materialKolor = "2.1.1"
 aboutLibraries = '11.5.0'
 
 [libraries]

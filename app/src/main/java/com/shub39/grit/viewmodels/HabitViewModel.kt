@@ -10,7 +10,6 @@ import com.shub39.grit.habits.domain.HabitStatus
 import com.shub39.grit.habits.presentation.HabitPageState
 import com.shub39.grit.habits.presentation.HabitsPageAction
 import kotlinx.coroutines.Job
-import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.launchIn
@@ -22,6 +21,7 @@ import kotlinx.coroutines.launch
 import java.time.LocalDate
 
 class HabitViewModel(
+    stateLayer: StateLayer,
     private val scheduler: AlarmScheduler,
     private val repo: HabitRepo,
     private val datastore: GritDatastore
@@ -30,9 +30,9 @@ class HabitViewModel(
     private var habitStatusJob: Job? = null
     private var observeJob: Job? = null
 
-    private val _habitState = MutableStateFlow(HabitPageState())
+    private val _state = stateLayer.habitsState
 
-    val habitsPageState = _habitState.asStateFlow()
+    val state = _state.asStateFlow()
         .onStart {
             observeHabitStatuses()
             observeDataStore()
@@ -77,7 +77,7 @@ class HabitViewModel(
         habitStatusJob = repo
             .getHabitStatus()
             .onEach { habitWithStatuses ->
-                _habitState.update { habitPageState ->
+                _state.update { habitPageState ->
                     habitPageState.copy(
                         habitsWithStatuses = habitWithStatuses,
                         completedHabits = habitWithStatuses.keys.filter { habit ->
@@ -95,7 +95,7 @@ class HabitViewModel(
             datastore
                 .getStartOfTheWeekPref()
                 .onEach { pref ->
-                    _habitState.update {
+                    _state.update {
                         it.copy(
                             startingDay = pref
                         )
@@ -106,7 +106,7 @@ class HabitViewModel(
             datastore
                 .getIs24Hr()
                 .onEach { pref ->
-                    _habitState.update {
+                    _state.update {
                         it.copy(
                             is24Hr = pref
                         )
@@ -142,7 +142,7 @@ class HabitViewModel(
     }
 
     private fun isHabitCompleted(habit: Habit, date: LocalDate): Boolean {
-        return _habitState.value.habitsWithStatuses[habit]?.any { it.date == date } == true
+        return _state.value.habitsWithStatuses[habit]?.any { it.date == date } == true
     }
 
 }

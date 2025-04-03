@@ -9,6 +9,7 @@ import androidx.datastore.preferences.core.edit
 import androidx.datastore.preferences.core.intPreferencesKey
 import androidx.datastore.preferences.core.stringPreferencesKey
 import com.materialkolor.PaletteStyle
+import com.shub39.grit.core.domain.AppTheme
 import com.shub39.grit.core.domain.GritDatastore
 import com.shub39.grit.core.domain.Pages
 import kotlinx.coroutines.flow.Flow
@@ -20,7 +21,7 @@ class DataStoreImpl(
 ) : GritDatastore {
 
     companion object {
-        private val isDarkThemeKey = stringPreferencesKey("use_dark_theme")
+        private val appThemeKey = stringPreferencesKey("app_theme")
         private val seedColorKey = intPreferencesKey("seed_color")
         private val amoledKey = booleanPreferencesKey("amoled")
         private val paletteKey = stringPreferencesKey("palette")
@@ -30,16 +31,13 @@ class DataStoreImpl(
         private val materialYouKey = booleanPreferencesKey("material_you")
     }
 
-    override fun getDarkThemePref(): Flow<Boolean?> = datastore.data.map { prefs ->
-        when (prefs[isDarkThemeKey]) {
-            "true" -> true
-            "false" -> false
-            else -> null
-        }
+    override fun getAppThemeFlow(): Flow<AppTheme> = datastore.data.map { prefs ->
+        val appTheme = prefs[appThemeKey] ?: AppTheme.SYSTEM.name
+        AppTheme.valueOf(appTheme)
     }
-    override suspend fun setDarkThemePref(pref: Boolean?) {
+    override suspend fun setAppTheme(theme: AppTheme) {
         datastore.edit { prefs ->
-            prefs[isDarkThemeKey] = pref.toString()
+            prefs[appThemeKey] = theme.name
         }
     }
 
@@ -53,7 +51,7 @@ class DataStoreImpl(
     }
 
     override fun getAmoledPref(): Flow<Boolean> = datastore.data.map { prefs ->
-        prefs[amoledKey] ?: false
+        prefs[amoledKey] == true
     }
     override suspend fun setAmoledPref(pref: Boolean) {
         datastore.edit { prefs ->
@@ -92,7 +90,7 @@ class DataStoreImpl(
     }
 
     override fun getIs24Hr(): Flow<Boolean> = datastore.data.map { prefs ->
-        prefs[is24HrKey] ?: false
+        prefs[is24HrKey] == true
     }
     override suspend fun setIs24Hr(pref: Boolean) {
         datastore.edit { prefs ->
@@ -101,7 +99,7 @@ class DataStoreImpl(
     }
 
     override fun getMaterialYouFlow(): Flow<Boolean> = datastore.data.map { prefs ->
-        prefs[materialYouKey] ?: false
+        prefs[materialYouKey] == true
     }
     override suspend fun setMaterialYou(pref: Boolean) {
         datastore.edit { prefs ->
