@@ -126,14 +126,17 @@ fun Grit(
 
                     TaskPage(
                         state = taskPageState,
-                        action = tvm::taskPageAction
+                        onAction = tvm::taskPageAction
                     )
                 }
 
                 composable<Routes.SettingsPages> {
                     currentRoute = Routes.SettingsPages
 
-                    Settings()
+                    Settings(
+                        state = settingsState,
+                        onAction = svm::onAction
+                    )
                 }
 
                 composable<Routes.HabitsPage> {
@@ -141,7 +144,7 @@ fun Grit(
 
                     HabitsPage(
                         state = habitsPageState,
-                        action = hvm::habitsPageAction
+                        onAction = hvm::habitsPageAction
                     )
                 }
             }

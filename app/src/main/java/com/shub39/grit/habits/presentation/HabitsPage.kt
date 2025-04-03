@@ -54,7 +54,7 @@ import sh.calvin.reorderable.rememberReorderableLazyListState
 @Composable
 fun HabitsPage(
     state: HabitPageState,
-    action: (HabitsPageAction) -> Unit,
+    onAction: (HabitsPageAction) -> Unit,
 ) {
     val context = LocalContext.current
 
@@ -112,7 +112,7 @@ fun HabitsPage(
                             habit = habit.key,
                             statusList = habit.value,
                             completed = state.completedHabits.contains(habit.key),
-                            action = action,
+                            action = onAction,
                             is24Hr = state.is24Hr,
                             startingDay = state.startingDay,
                             editState = editState,
@@ -122,7 +122,7 @@ fun HabitsPage(
                                         add(index - 1, removeAt(index))
                                     }
 
-                                    action(HabitsPageAction.ReorderHabits(habits.mapIndexed { index, entry -> index to entry.key }))
+                                    onAction(HabitsPageAction.ReorderHabits(habits.mapIndexed { index, entry -> index to entry.key }))
                                 }
                             },
                             onMoveDown = {
@@ -131,7 +131,7 @@ fun HabitsPage(
                                         add(index + 1, removeAt(index))
                                     }
 
-                                    action(HabitsPageAction.ReorderHabits(habits.mapIndexed { index, entry -> index to entry.key }))
+                                    onAction(HabitsPageAction.ReorderHabits(habits.mapIndexed { index, entry -> index to entry.key }))
                                 }
                             }
                         )
@@ -236,7 +236,7 @@ fun HabitsPage(
                         index = habits.size
                     )
                     showAddHabitDialog = false
-                    action(HabitsPageAction.AddHabit(habitEntity))
+                    onAction(HabitsPageAction.AddHabit(habitEntity))
                     showAddNotification(context, habitEntity)
                 },
                 enabled = newHabitName.isNotBlank() && newHabitDescription.isNotBlank() && newHabitName.length < 20 && newHabitDescription.length < 50,

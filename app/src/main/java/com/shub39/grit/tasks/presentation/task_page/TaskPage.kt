@@ -67,7 +67,7 @@ import sh.calvin.reorderable.rememberReorderableLazyListState
 @Composable
 fun TaskPage(
     state: TaskPageState,
-    action: (TaskPageAction) -> Unit,
+    onAction: (TaskPageAction) -> Unit,
 ) {
     var showTaskAddDialog by remember { mutableStateOf(false) }
     var showCategoryAddDialog by remember { mutableStateOf(false) }
@@ -131,7 +131,7 @@ fun TaskPage(
                     FilterChip(
                         selected = category == state.currentCategory,
                         onClick = {
-                            action(TaskPageAction.ChangeCategory(category))
+                            onAction(TaskPageAction.ChangeCategory(category))
                             editState = false
                         },
                         label = { Text(category.name) }
@@ -183,10 +183,10 @@ fun TaskPage(
                                                 add(tasks.size - 1, removeAt(index))
                                             }
 
-                                            action(TaskPageAction.ReorderTasks(tasks.mapIndexed { index, task -> index to task }))
+                                            onAction(TaskPageAction.ReorderTasks(tasks.mapIndexed { index, task -> index to task }))
                                         }
 
-                                        action(TaskPageAction.UpdateTaskStatus(updatedTask))
+                                        onAction(TaskPageAction.UpdateTaskStatus(updatedTask))
                                     },
                                     dragState = editState,
                                     moveUp = {
@@ -195,7 +195,7 @@ fun TaskPage(
                                                 add(index - 1, removeAt(index))
                                             }
 
-                                            action(TaskPageAction.ReorderTasks(tasks.mapIndexed { index, task -> index to task }))
+                                            onAction(TaskPageAction.ReorderTasks(tasks.mapIndexed { index, task -> index to task }))
                                         }
                                     },
                                     moveDown = {
@@ -204,7 +204,7 @@ fun TaskPage(
                                                 add(index + 1, removeAt(index))
                                             }
 
-                                            action(TaskPageAction.ReorderTasks(tasks.mapIndexed { index, task -> index to task }))
+                                            onAction(TaskPageAction.ReorderTasks(tasks.mapIndexed { index, task -> index to task }))
                                         }
                                     }
                                 )
@@ -268,7 +268,7 @@ fun TaskPage(
 
             Button(
                 onClick = {
-                    action(TaskPageAction.DeleteTasks)
+                    onAction(TaskPageAction.DeleteTasks)
                     showDeleteDialog = false
                 }
             ) {
@@ -305,7 +305,7 @@ fun TaskPage(
 
             Button(
                 onClick = {
-                    action(
+                    onAction(
                         TaskPageAction.AddCategory(
                             Category(
                                 name = name,
@@ -358,7 +358,7 @@ fun TaskPage(
                     showTaskAddDialog = false
 
                     if (state.currentCategory != null) {
-                        action(
+                        onAction(
                             TaskPageAction.AddTask(
                                 Task(
                                     categoryId = state.currentCategory.id,
@@ -411,7 +411,7 @@ private fun TaskPagePreview() {
                             }
                         }
                     ),
-                    action = {},
+                    onAction = {},
                 )
             }
         }

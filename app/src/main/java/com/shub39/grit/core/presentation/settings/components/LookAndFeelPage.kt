@@ -11,19 +11,17 @@ import androidx.compose.animation.scaleOut
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.horizontalScroll
+import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.widthIn
-import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.CircleShape
@@ -31,9 +29,6 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Create
 import androidx.compose.material.icons.outlined.Check
-import androidx.compose.material3.BasicAlertDialog
-import androidx.compose.material3.Button
-import androidx.compose.material3.Card
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -50,49 +45,37 @@ import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.contentColorFor
 import androidx.compose.material3.rememberTooltipState
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.toArgb
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
-import com.github.skydoves.colorpicker.compose.AlphaTile
-import com.github.skydoves.colorpicker.compose.BrightnessSlider
-import com.github.skydoves.colorpicker.compose.HsvColorPicker
-import com.github.skydoves.colorpicker.compose.rememberColorPickerController
 import com.materialkolor.PaletteStyle
 import com.materialkolor.ktx.from
 import com.materialkolor.palettes.TonalPalette
 import com.materialkolor.rememberDynamicColorScheme
 import com.shub39.grit.R
-import com.shub39.grit.core.domain.GritDatastore
+import com.shub39.grit.core.domain.AppTheme
+import com.shub39.grit.core.presentation.components.ColorPickerDialog
 import com.shub39.grit.core.presentation.components.PageFill
-import kotlinx.coroutines.launch
-import org.koin.compose.koinInject
+import com.shub39.grit.core.presentation.settings.SettingsAction
+import com.shub39.grit.core.presentation.settings.SettingsState
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun LookAndFeelPage(
-    datastore: GritDatastore = koinInject()
+    state: SettingsState,
+    onAction: (SettingsAction) -> Unit,
 ) = PageFill {
+
     var colorPickerDialog by remember { mutableStateOf(false) }
-
-    val isDark by datastore.getDarkThemePref().collectAsState(false)
-    val isAmoled by datastore.getAmoledPref().collectAsState(false)
-    val paletteStyle by datastore.getPaletteStyle().collectAsState(PaletteStyle.TonalSpot)
-    val seedColor by datastore.getSeedColorFlow().collectAsState(Color.White.toArgb())
-    val isMaterialYou by datastore.getMaterialYouFlow().collectAsState(false)
-
-    val coroutineScope = rememberCoroutineScope()
+    var appThemeDialog by remember { mutableStateOf(false) }
 
     Column(
         modifier = Modifier
@@ -114,46 +97,23 @@ fun LookAndFeelPage(
                 ListItem(
                     headlineContent = {
                         Text(
-                            text = stringResource(R.string.use_system_theme)
+                            text = stringResource(R.string.app_theme)
                         )
                     },
                     supportingContent = {
                         Text(
-                            text = stringResource(R.string.use_system_theme_desc)
+                            text = stringResource(R.string.app_theme_desc)
                         )
                     },
                     trailingContent = {
-                        Switch(
-                            checked = isDark == null,
-                            onCheckedChange = {
-                                coroutineScope.launch {
-                                    datastore.setDarkThemePref(
-                                        if (it) null else true
-                                    )
-                                }
-                            }
-                        )
-                    }
-                )
-            }
-
-            item {
-                ListItem(
-                    headlineContent = {
-                        Text(
-                            text = stringResource(R.string.use_dark_theme)
-                        )
-                    },
-                    trailingContent = {
-                        Switch(
-                            checked = isDark == true,
-                            enabled = isDark != null,
-                            onCheckedChange = {
-                                coroutineScope.launch {
-                                    datastore.setDarkThemePref(it)
-                                }
-                            }
-                        )
+                        IconButton(
+                            onClick = { appThemeDialog = true }
+                        ) {
+                            Icon(
+                                imageVector = Icons.Default.Create,
+                                contentDescription = "Select Theme"
+                            )
+                        }
                     }
                 )
             }
@@ -172,11 +132,11 @@ fun LookAndFeelPage(
                     },
                     trailingContent = {
                         Switch(
-                            checked = isAmoled,
+                            checked = state.theme.isAmoled,
                             onCheckedChange = {
-                                coroutineScope.launch {
-                                    datastore.setAmoledPref(it)
-                                }
+                                onAction(
+                                    SettingsAction.ChangeAmoled(it)
+                                )
                             }
                         )
                     }
@@ -198,11 +158,11 @@ fun LookAndFeelPage(
                         },
                         trailingContent = {
                             Switch(
-                                checked = isMaterialYou,
+                                checked = state.theme.isMaterialYou,
                                 onCheckedChange = {
-                                    coroutineScope.launch {
-                                        datastore.setMaterialYou(it)
-                                    }
+                                    onAction(
+                                        SettingsAction.ChangeMaterialYou(it)
+                                    )
                                 }
                             )
                         }
@@ -226,10 +186,10 @@ fun LookAndFeelPage(
                         IconButton(
                             onClick = { colorPickerDialog = true },
                             colors = IconButtonDefaults.iconButtonColors(
-                                containerColor = Color(seedColor),
-                                contentColor = contentColorFor(Color(seedColor))
+                                containerColor = state.theme.seedColor,
+                                contentColor = contentColorFor(state.theme.seedColor)
                             ),
-                            enabled = !isMaterialYou
+                            enabled = !state.theme.isMaterialYou
                         ) {
                             Icon(
                                 imageVector = Icons.Default.Create,
@@ -258,20 +218,24 @@ fun LookAndFeelPage(
                         ) {
                             PaletteStyle.entries.toList().forEach { style ->
                                 val scheme = rememberDynamicColorScheme(
-                                    primary = if (isMaterialYou && Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
+                                    primary = if (state.theme.isMaterialYou && Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
                                         colorResource(android.R.color.system_accent1_200)
-                                    } else Color(seedColor),
-                                    isDark = isDark == true,
-                                    isAmoled = isAmoled,
+                                    } else state.theme.seedColor,
+                                    isDark = when (state.theme.appTheme) {
+                                        AppTheme.SYSTEM -> isSystemInDarkTheme()
+                                        AppTheme.DARK -> true
+                                        AppTheme.LIGHT -> false
+                                    },
+                                    isAmoled = state.theme.isAmoled,
                                     style = style
                                 )
 
                                 SelectableMiniPalette(
-                                    selected = paletteStyle == style,
+                                    selected = state.theme.paletteStyle == style,
                                     onClick = {
-                                        coroutineScope.launch {
-                                            datastore.setPaletteStyle(style)
-                                        }
+                                        onAction(
+                                            SettingsAction.ChangePaletteStyle(style)
+                                        )
                                     },
                                     contentDescription = { style.name },
                                     accents = listOf(
@@ -289,64 +253,11 @@ fun LookAndFeelPage(
     }
 
     if (colorPickerDialog) {
-        val controller = rememberColorPickerController()
-
-        BasicAlertDialog(
-            onDismissRequest = { colorPickerDialog = false }
-        ) {
-            Card(
-                shape = MaterialTheme.shapes.extraLarge
-            ) {
-                Column(
-                    modifier = Modifier
-                        .wrapContentSize()
-                        .padding(16.dp),
-                    horizontalAlignment = Alignment.CenterHorizontally,
-                    verticalArrangement = Arrangement.Center
-                ) {
-                    HsvColorPicker(
-                        modifier = Modifier
-                            .width(350.dp)
-                            .height(300.dp)
-                            .padding(top = 10.dp),
-                        initialColor = Color(seedColor),
-                        controller = controller
-                    )
-
-                    BrightnessSlider(
-                        modifier = Modifier
-                            .padding(top = 10.dp)
-                            .height(35.dp),
-                        initialColor = Color(seedColor),
-                        controller = controller
-                    )
-
-                    AlphaTile(
-                        modifier = Modifier
-                            .size(80.dp)
-                            .padding(vertical = 10.dp)
-                            .clip(RoundedCornerShape(6.dp)),
-                        controller = controller
-                    )
-
-                    Button(
-                        onClick = {
-                            coroutineScope.launch {
-                                datastore.setSeedColor(controller.selectedColor.value.toArgb())
-                            }
-
-                            colorPickerDialog = false
-                        }
-                    ) {
-                        Text(
-                            text = stringResource(R.string.done),
-                            modifier = Modifier.fillMaxWidth(),
-                            textAlign = TextAlign.Center
-                        )
-                    }
-                }
-            }
-        }
+        ColorPickerDialog(
+            initialColor = state.theme.seedColor,
+            onSelect = { onAction(SettingsAction.ChangeSeedColor(it)) },
+            onDismiss = { colorPickerDialog = false }
+        )
     }
 }
 

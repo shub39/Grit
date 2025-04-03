@@ -20,29 +20,26 @@ import com.shub39.grit.core.presentation.settings.components.LookAndFeelPage
 import com.shub39.grit.core.presentation.settings.components.RootPage
 
 @Composable
-fun Settings() = PageFill {
-    val navcontroller = rememberNavController()
+fun Settings(
+    state: SettingsState,
+    onAction: (SettingsAction) -> Unit
+) = PageFill {
+    val navController = rememberNavController()
 
     NavHost(
-        navController = navcontroller,
+        navController = navController,
         startDestination = SettingsRoutes.Root,
         modifier = Modifier
             .background(MaterialTheme.colorScheme.background)
             .fillMaxSize(),
         enterTransition = {
-            slideInHorizontally(
-                initialOffsetX = { it }
-            ) + fadeIn()
+            slideInHorizontally(initialOffsetX = { it }) + fadeIn()
         },
         exitTransition = {
-            slideOutHorizontally(
-                targetOffsetX = { -it }
-            ) + fadeOut()
+            slideOutHorizontally(targetOffsetX = { -it }) + fadeOut()
         },
         popEnterTransition = {
-            slideInHorizontally(
-                initialOffsetX = { -it }
-            ) + fadeIn()
+            slideInHorizontally(initialOffsetX = { -it }) + fadeIn()
         },
         popExitTransition = {
             slideOutHorizontally(targetOffsetX = { it }) + fadeOut()
@@ -50,9 +47,9 @@ fun Settings() = PageFill {
     ) {
         composable<SettingsRoutes.Root> {
             RootPage(
-                onAboutClick = { navcontroller.navigate(SettingsRoutes.About) },
-                onLookAndFeelClick = { navcontroller.navigate(SettingsRoutes.LookAndFeel) },
-                onBackupClick = { navcontroller.navigate(SettingsRoutes.Backup) },
+                state = state,
+                onAction = onAction,
+                onNavigate = { navController.navigate(it) }
             )
         }
 
@@ -61,7 +58,10 @@ fun Settings() = PageFill {
         }
 
         composable<SettingsRoutes.LookAndFeel> {
-            LookAndFeelPage()
+            LookAndFeelPage(
+                state = state,
+                onAction = onAction
+            )
         }
 
         composable<SettingsRoutes.Backup> {
