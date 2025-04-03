@@ -58,7 +58,7 @@ fun Backup(
 
     Column(
         modifier = Modifier
-            .widthIn(max = 700.dp)
+            .widthIn(max = 500.dp)
             .fillMaxSize()
     ) {
         TopAppBar(

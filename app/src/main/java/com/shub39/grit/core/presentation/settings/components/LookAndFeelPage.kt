@@ -36,6 +36,7 @@ import androidx.compose.material3.IconButtonDefaults
 import androidx.compose.material3.ListItem
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.PlainTooltip
+import androidx.compose.material3.RadioButton
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Switch
 import androidx.compose.material3.Text
@@ -63,6 +64,7 @@ import com.materialkolor.rememberDynamicColorScheme
 import com.shub39.grit.R
 import com.shub39.grit.core.domain.AppTheme
 import com.shub39.grit.core.presentation.components.ColorPickerDialog
+import com.shub39.grit.core.presentation.components.GritDialog
 import com.shub39.grit.core.presentation.components.PageFill
 import com.shub39.grit.core.presentation.settings.SettingsAction
 import com.shub39.grit.core.presentation.settings.SettingsState
@@ -79,7 +81,7 @@ fun LookAndFeelPage(
 
     Column(
         modifier = Modifier
-            .widthIn(max = 700.dp)
+            .widthIn(max = 500.dp)
             .fillMaxSize(),
     ) {
         TopAppBar(
@@ -248,6 +250,36 @@ fun LookAndFeelPage(
                         }
                     }
                 )
+            }
+        }
+    }
+
+    if (appThemeDialog) {
+        GritDialog(
+            onDismissRequest = { appThemeDialog = false }
+        ) {
+            AppTheme.entries.forEach { appTheme ->
+                Row(
+                    verticalAlignment = Alignment.CenterVertically,
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .clickable {
+                            onAction(SettingsAction.ChangeAppTheme(appTheme))
+                            appThemeDialog = false
+                        }
+                ) {
+                    RadioButton(
+                        selected = state.theme.appTheme == appTheme,
+                        onClick = {
+                            onAction(SettingsAction.ChangeAppTheme(appTheme))
+                            appThemeDialog = false
+                        }
+                    )
+
+                    Text(
+                        text = stringResource(appTheme.fullName)
+                    )
+                }
             }
         }
     }

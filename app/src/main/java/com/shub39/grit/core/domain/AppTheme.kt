@@ -4,7 +4,7 @@ import androidx.annotation.StringRes
 import com.shub39.grit.R
 
 enum class AppTheme(
-    @StringRes fullName: Int
+    @StringRes val fullName: Int
 ) {
     SYSTEM(R.string.system),
     DARK(R.string.dark),
