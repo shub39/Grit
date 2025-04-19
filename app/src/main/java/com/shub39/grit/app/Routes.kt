@@ -12,4 +12,12 @@ sealed interface Routes {
 
     @Serializable
     data object SettingsPages: Routes
+
+    companion object {
+        val allRoutes = listOf(
+            TasksPage,
+            HabitsPage,
+            SettingsPages
+        )
+    }
 }

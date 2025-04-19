@@ -73,11 +73,7 @@ fun Grit(
                 BottomAppBar(
                     modifier = Modifier.clip(RoundedCornerShape(topStart = 20.dp, topEnd = 20.dp))
                 ) {
-                    listOf(
-                        Routes.TasksPage,
-                        Routes.HabitsPage,
-                        Routes.SettingsPages
-                    ).forEach { route ->
+                    Routes.allRoutes.forEach { route ->
                         NavigationBarItem(
                             selected = currentRoute == route,
                             onClick = {
