@@ -17,9 +17,11 @@ import com.shub39.grit.habits.data.repository.HabitRepository
 import com.shub39.grit.core.data.NotificationAlarmScheduler
 import com.shub39.grit.habits.domain.HabitRepo
 import com.shub39.grit.tasks.data.repository.TasksRepository
-import com.shub39.grit.habits.presentation.HabitViewModel
+import com.shub39.grit.viewmodels.HabitViewModel
 import com.shub39.grit.tasks.domain.TaskRepo
-import com.shub39.grit.tasks.presentation.TaskListViewModel
+import com.shub39.grit.viewmodels.SettingsViewModel
+import com.shub39.grit.viewmodels.StateLayer
+import com.shub39.grit.viewmodels.TasksViewModel
 import org.koin.core.module.dsl.singleOf
 import org.koin.core.module.dsl.viewModelOf
 import org.koin.dsl.bind
@@ -64,6 +66,8 @@ val appModule = module {
     singleOf(::NotificationAlarmScheduler).bind<AlarmScheduler>()
 
     // view models
+    singleOf(::StateLayer)
+    viewModelOf(::SettingsViewModel)
     viewModelOf(::HabitViewModel)
-    viewModelOf(::TaskListViewModel)
+    viewModelOf(::TasksViewModel)
 }

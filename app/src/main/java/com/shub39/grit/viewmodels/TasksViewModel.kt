@@ -1,4 +1,4 @@
-package com.shub39.grit.tasks.presentation
+package com.shub39.grit.viewmodels
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -9,7 +9,6 @@ import com.shub39.grit.tasks.domain.TaskRepo
 import com.shub39.grit.tasks.presentation.task_page.TaskPageAction
 import com.shub39.grit.tasks.presentation.task_page.TaskPageState
 import kotlinx.coroutines.Job
-import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.launchIn
@@ -19,21 +18,22 @@ import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 
-class TaskListViewModel(
+class TasksViewModel(
+    stateLayer: StateLayer,
     private val repo: TaskRepo
 ) : ViewModel() {
 
     private var savedJob: Job? = null
-    private val _tasksState = MutableStateFlow(TaskPageState())
+    private val _state = stateLayer.tasksState
 
-    val tasksState = _tasksState.asStateFlow()
+    val state = _state.asStateFlow()
         .onStart {
             // runs when flow starts
             observeTasks()
         }
         .stateIn(
             viewModelScope,
-            SharingStarted.WhileSubscribed(5000),
+            SharingStarted.Companion.WhileSubscribed(5000),
             TaskPageState()
         )
 
@@ -54,7 +54,7 @@ class TaskListViewModel(
                 }
 
                 is TaskPageAction.ChangeCategory -> {
-                    _tasksState.update {
+                    _state.update {
                         it.copy(
                             currentCategory = action.category
                         )
@@ -64,7 +64,7 @@ class TaskListViewModel(
                 is TaskPageAction.AddCategory -> {
                     upsertCategory(action.category)
 
-                    _tasksState.update {
+                    _state.update {
                         it.copy(
                             currentCategory = it.tasks.keys.firstOrNull()
                         )
@@ -82,7 +82,7 @@ class TaskListViewModel(
                         upsertCategory(category.second.copy(index = category.first))
                     }
 
-                    _tasksState.update {
+                    _state.update {
                         it.copy(
                             currentCategory = it.tasks.keys.firstOrNull()
                         )
@@ -92,7 +92,7 @@ class TaskListViewModel(
                 is TaskPageAction.DeleteCategory -> {
                     deleteCategory(action.category)
 
-                    _tasksState.update {
+                    _state.update {
                         it.copy(
                             currentCategory = it.tasks.keys.firstOrNull()
                         )
@@ -107,15 +107,15 @@ class TaskListViewModel(
         savedJob = repo
             .getTasksFlow()
             .onEach { tasks ->
-                _tasksState.update { task ->
+                _state.update { task ->
                     task.copy(
                         tasks = tasks,
                         completedTasks = tasks.values.flatten().filter { it.status },
                     )
                 }
 
-                if (_tasksState.value.currentCategory == null) {
-                    _tasksState.update {
+                if (_state.value.currentCategory == null) {
+                    _state.update {
                         it.copy(
                             currentCategory = tasks.keys.firstOrNull()
                         )
@@ -138,7 +138,7 @@ class TaskListViewModel(
     }
 
     private suspend fun deleteTasks() {
-        for (task in _tasksState.value.completedTasks) {
+        for (task in _state.value.completedTasks) {
             repo.deleteTask(task)
         }
     }
@@ -148,8 +148,8 @@ class TaskListViewModel(
     }
 
     private suspend fun deleteCategory(category: Category) {
-        if (_tasksState.value.currentCategory == category) {
-            _tasksState.update {
+        if (_state.value.currentCategory == category) {
+            _state.update {
                 it.copy(
                     currentCategory = it.tasks.keys.first()
                 )

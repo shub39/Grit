@@ -1,4 +1,4 @@
-package com.shub39.grit.core.presentation.settings
+package com.shub39.grit.core.presentation.settings.components
 
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
@@ -13,35 +13,25 @@ import androidx.compose.material3.Switch
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.collectAsState
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import com.shub39.grit.R
-import com.shub39.grit.core.domain.GritDatastore
 import com.shub39.grit.core.domain.Pages
 import com.shub39.grit.core.presentation.components.BetterIconButton
 import com.shub39.grit.core.presentation.components.PageFill
-import kotlinx.coroutines.launch
-import org.koin.compose.koinInject
+import com.shub39.grit.core.presentation.settings.SettingsAction
+import com.shub39.grit.core.presentation.settings.SettingsRoutes
+import com.shub39.grit.core.presentation.settings.SettingsState
 import java.time.DayOfWeek
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun SettingsPage(
-    onCategoryClick: () -> Unit,
-    onAboutClick: () -> Unit,
-    onLookAndFeelClick: () -> Unit,
-    onBackupClick: () -> Unit,
-    datastore: GritDatastore = koinInject()
+fun RootPage(
+    state: SettingsState,
+    onAction: (SettingsAction) -> Unit,
+    onNavigate: (SettingsRoutes) -> Unit,
 ) = PageFill {
-    val coroutineScope = rememberCoroutineScope()
-
-    val startingPage by datastore.getStartingPagePref().collectAsState(Pages.Tasks)
-    val is24Hr by datastore.getIs24Hr().collectAsState(false)
-    val startingDay by datastore.getStartOfTheWeekPref().collectAsState(DayOfWeek.MONDAY)
 
     Column(
         modifier = Modifier
@@ -71,15 +61,9 @@ fun SettingsPage(
                     },
                     trailingContent = {
                         Switch(
-                            checked = startingPage == Pages.Habits,
+                            checked = state.startingPage == Pages.Habits,
                             onCheckedChange = {
-                                coroutineScope.launch {
-                                    if (it) {
-                                        datastore.setStartingPage(Pages.Habits)
-                                    } else {
-                                        datastore.setStartingPage(Pages.Tasks)
-                                    }
-                                }
+                                onAction(SettingsAction.ChangeStartingPage(Pages.Habits))
                             }
                         )
                     }
@@ -95,15 +79,11 @@ fun SettingsPage(
                     },
                     trailingContent = {
                         Switch(
-                            checked = startingDay == DayOfWeek.SUNDAY,
+                            checked = state.startOfTheWeek == DayOfWeek.SUNDAY,
                             onCheckedChange = {
-                                coroutineScope.launch {
-                                    if (it) {
-                                        datastore.setStartOfWeek(DayOfWeek.SUNDAY)
-                                    } else {
-                                        datastore.setStartOfWeek(DayOfWeek.MONDAY)
-                                    }
-                                }
+                                onAction(
+                                    SettingsAction.ChangeStartOfTheWeek(if (it) DayOfWeek.SUNDAY else DayOfWeek.MONDAY)
+                                )
                             }
                         )
                     }
@@ -124,38 +104,11 @@ fun SettingsPage(
                     },
                     trailingContent = {
                         Switch(
-                            checked = is24Hr,
+                            checked = state.is24Hr,
                             onCheckedChange = {
-                                coroutineScope.launch {
-                                    datastore.setIs24Hr(it)
-                                }
+                                onAction(SettingsAction.ChangeIs24Hr(it))
                             }
                         )
-                    }
-                )
-            }
-
-            item {
-                ListItem(
-                    headlineContent = {
-                        Text(
-                            text = stringResource(R.string.categories)
-                        )
-                    },
-                    supportingContent = {
-                        Text(
-                            text = stringResource(R.string.edit_categories)
-                        )
-                    },
-                    trailingContent = {
-                        BetterIconButton(
-                            onClick = onCategoryClick
-                        ) {
-                            Icon(
-                                imageVector = Icons.AutoMirrored.Filled.KeyboardArrowRight,
-                                contentDescription = null
-                            )
-                        }
                     }
                 )
             }
@@ -174,7 +127,7 @@ fun SettingsPage(
                     },
                     trailingContent = {
                         BetterIconButton(
-                            onClick = onLookAndFeelClick
+                            onClick = { onNavigate(SettingsRoutes.LookAndFeel) }
                         ) {
                             Icon(
                                 imageVector = Icons.AutoMirrored.Filled.KeyboardArrowRight,
@@ -199,7 +152,7 @@ fun SettingsPage(
                     },
                     trailingContent = {
                         BetterIconButton(
-                            onClick = onBackupClick
+                            onClick = { onNavigate(SettingsRoutes.Backup) }
                         ) {
                             Icon(
                                 imageVector = Icons.AutoMirrored.Filled.KeyboardArrowRight,
@@ -219,7 +172,7 @@ fun SettingsPage(
                     },
                     trailingContent = {
                         BetterIconButton(
-                            onClick = onAboutClick
+                            onClick = { onNavigate(SettingsRoutes.About) }
                         ) {
                             Icon(
                                 imageVector = Icons.AutoMirrored.Filled.KeyboardArrowRight,

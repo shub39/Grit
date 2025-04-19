@@ -1,4 +1,4 @@
-package com.shub39.grit.core.presentation.settings
+package com.shub39.grit.core.presentation.settings.components
 
 import android.net.Uri
 import androidx.activity.compose.rememberLauncherForActivityResult
@@ -58,7 +58,7 @@ fun Backup(
 
     Column(
         modifier = Modifier
-            .widthIn(max = 700.dp)
+            .widthIn(max = 500.dp)
             .fillMaxSize()
     ) {
         TopAppBar(
