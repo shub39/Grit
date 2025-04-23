@@ -72,7 +72,6 @@ fun TaskPage(
     var showTaskAddDialog by remember { mutableStateOf(false) }
     var showCategoryAddDialog by remember { mutableStateOf(false) }
     var showDeleteDialog by remember { mutableStateOf(false) }
-
     var editState by remember { mutableStateOf(false) }
 
     Box(
@@ -388,30 +387,45 @@ fun TaskPage(
     uiMode = Configuration.UI_MODE_NIGHT_YES or Configuration.UI_MODE_TYPE_NORMAL
 )
 @Composable
-private fun TaskPagePreview() {
+private fun Preview() {
+    val data = (0L..10L).associate { category ->
+        Category(
+            id = category,
+            name = "Category: $category",
+            color = "gray"
+        ) to (0L..100L).map {
+            Task(
+                id = it,
+                categoryId = category,
+                title = "$category $it",
+                status = it % 2L == 0L
+            )
+        }
+    }
+    var state by remember {
+        mutableStateOf(
+            TaskPageState(
+                currentCategory = data.keys.first(),
+                tasks = data
+            )
+        )
+    }
+
     GritTheme {
         Scaffold { padding ->
             Box(
                 modifier = Modifier.padding(padding)
             ) {
                 TaskPage(
-                    state = TaskPageState(
-                        tasks = (0L..10L).associate { category ->
-                            Category(
-                                id = category,
-                                name = "Category: $category",
-                                color = "gray"
-                            ) to (0L..10L).map {
-                                Task(
-                                    id = it,
-                                    categoryId = category,
-                                    title = "$category $it",
-                                    status = it % 2L == 0L
-                                )
+                    state = state,
+                    onAction = {
+                        when (it) {
+                            is TaskPageAction.ChangeCategory -> {
+                                state = state.copy(currentCategory = it.category)
                             }
+                            else -> {}
                         }
-                    ),
-                    onAction = {},
+                    },
                 )
             }
         }
