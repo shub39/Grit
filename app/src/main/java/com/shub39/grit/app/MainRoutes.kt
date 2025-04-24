@@ -3,20 +3,20 @@ package com.shub39.grit.app
 import kotlinx.serialization.Serializable
 
 @Serializable
-sealed interface Routes {
+sealed interface MainRoutes {
     @Serializable
-    data object HabitsPage: Routes
+    data object HabitsPages: MainRoutes
 
     @Serializable
-    data object  TasksPage: Routes
+    data object  TaskPages: MainRoutes
 
     @Serializable
-    data object SettingsPages: Routes
+    data object SettingsPages: MainRoutes
 
     companion object {
         val allRoutes = listOf(
-            TasksPage,
-            HabitsPage,
+            TaskPages,
+            HabitsPages,
             SettingsPages
         )
     }

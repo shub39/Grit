@@ -2,7 +2,7 @@ package com.shub39.grit.viewmodels
 
 import com.shub39.grit.core.presentation.settings.SettingsState
 import com.shub39.grit.habits.presentation.HabitPageState
-import com.shub39.grit.tasks.presentation.task_page.TaskPageState
+import com.shub39.grit.tasks.presentation.TaskPageState
 import kotlinx.coroutines.flow.MutableStateFlow
 
 class StateLayer {

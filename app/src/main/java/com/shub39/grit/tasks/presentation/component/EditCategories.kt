@@ -1,4 +1,4 @@
-package com.shub39.grit.tasks.presentation
+package com.shub39.grit.tasks.presentation.component
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -43,8 +43,8 @@ import androidx.compose.ui.unit.dp
 import com.shub39.grit.R
 import com.shub39.grit.core.presentation.components.BetterIconButton
 import com.shub39.grit.core.presentation.components.GritDialog
-import com.shub39.grit.tasks.presentation.task_page.TaskPageAction
-import com.shub39.grit.tasks.presentation.task_page.TaskPageState
+import com.shub39.grit.tasks.presentation.TaskPageAction
+import com.shub39.grit.tasks.presentation.TaskPageState
 import sh.calvin.reorderable.ReorderableItem
 import sh.calvin.reorderable.rememberReorderableLazyListState
 
@@ -52,7 +52,7 @@ import sh.calvin.reorderable.rememberReorderableLazyListState
 @Composable
 fun EditCategories(
     state: TaskPageState,
-    action: (TaskPageAction) -> Unit
+    onAction: (TaskPageAction) -> Unit
 ) {
     var categories by remember(state.tasks) { mutableStateOf(state.tasks.keys.toList()) }
 
@@ -62,7 +62,7 @@ fun EditCategories(
             add(to.index, removeAt(from.index))
         }
 
-        action(TaskPageAction.ReorderCategories(categories.mapIndexed { index, category -> index to category }))
+        onAction(TaskPageAction.ReorderCategories(categories.mapIndexed { index, category -> index to category }))
     }
 
     Box(
@@ -155,7 +155,7 @@ fun EditCategories(
 
                             Button(
                                 onClick = {
-                                    action(TaskPageAction.DeleteCategory(category))
+                                    onAction(TaskPageAction.DeleteCategory(category))
                                     showDeleteDialog = false
                                 }
                             ) {
@@ -192,7 +192,7 @@ fun EditCategories(
 
                             Button(
                                 onClick = {
-                                    action(
+                                    onAction(
                                         TaskPageAction.AddCategory(
                                             category.copy(
                                                 name = name

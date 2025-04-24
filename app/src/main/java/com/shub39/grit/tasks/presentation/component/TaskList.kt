@@ -1,8 +1,9 @@
-package com.shub39.grit.tasks.presentation.task_page
+package com.shub39.grit.tasks.presentation.component
 
-import android.content.res.Configuration
 import androidx.compose.animation.AnimatedContent
 import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.fadeIn
+import androidx.compose.animation.fadeOut
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -30,7 +31,6 @@ import androidx.compose.material3.IconButton
 import androidx.compose.material3.IconButtonDefaults
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
-import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
@@ -50,24 +50,24 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardCapitalization
 import androidx.compose.ui.text.style.TextAlign
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.shub39.grit.R
 import com.shub39.grit.core.presentation.components.Empty
 import com.shub39.grit.core.presentation.components.GritDialog
-import com.shub39.grit.core.presentation.theme.GritTheme
 import com.shub39.grit.tasks.domain.Category
 import com.shub39.grit.tasks.domain.CategoryColors
 import com.shub39.grit.tasks.domain.Task
-import com.shub39.grit.tasks.presentation.component.TaskCard
+import com.shub39.grit.tasks.presentation.TaskPageAction
+import com.shub39.grit.tasks.presentation.TaskPageState
 import sh.calvin.reorderable.ReorderableItem
 import sh.calvin.reorderable.rememberReorderableLazyListState
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun TaskPage(
+fun TaskList(
     state: TaskPageState,
     onAction: (TaskPageAction) -> Unit,
+    onNavigateToEditCategories: () -> Unit
 ) {
     var showTaskAddDialog by remember { mutableStateOf(false) }
     var showCategoryAddDialog by remember { mutableStateOf(false) }
@@ -139,7 +139,9 @@ fun TaskPage(
 
                 item {
                     AnimatedVisibility(
-                        visible = !editState
+                        visible = !editState,
+                        enter = fadeIn(),
+                        exit = fadeOut()
                     ) {
                         AssistChip(
                             onClick = { showCategoryAddDialog = true },
@@ -147,6 +149,24 @@ fun TaskPage(
                                 Icon(
                                     painter = painterResource(R.drawable.round_add_24),
                                     contentDescription = null
+                                )
+                            }
+                        )
+                    }
+                }
+
+                item {
+                    AnimatedVisibility(
+                        visible = !editState,
+                        enter = fadeIn(),
+                        exit = fadeOut()
+                    ) {
+                        AssistChip(
+                            onClick = onNavigateToEditCategories,
+                            label = {
+                                Icon(
+                                    painter = painterResource(R.drawable.baseline_edit_square_24),
+                                    contentDescription = "Edit Categories"
                                 )
                             }
                         )
@@ -375,57 +395,6 @@ fun TaskPage(
                     text = stringResource(id = R.string.add_task),
                     style = MaterialTheme.typography.labelMedium,
                     fontWeight = FontWeight.Bold,
-                )
-            }
-        }
-    }
-}
-
-@Preview(
-    showSystemUi = true, showBackground = true, backgroundColor = 0xFFFFFFFF,
-    device = "spec:width=411dp,height=891dp",
-    uiMode = Configuration.UI_MODE_NIGHT_YES or Configuration.UI_MODE_TYPE_NORMAL
-)
-@Composable
-private fun Preview() {
-    val data = (0L..10L).associate { category ->
-        Category(
-            id = category,
-            name = "Category: $category",
-            color = "gray"
-        ) to (0L..100L).map {
-            Task(
-                id = it,
-                categoryId = category,
-                title = "$category $it",
-                status = it % 2L == 0L
-            )
-        }
-    }
-    var state by remember {
-        mutableStateOf(
-            TaskPageState(
-                currentCategory = data.keys.first(),
-                tasks = data
-            )
-        )
-    }
-
-    GritTheme {
-        Scaffold { padding ->
-            Box(
-                modifier = Modifier.padding(padding)
-            ) {
-                TaskPage(
-                    state = state,
-                    onAction = {
-                        when (it) {
-                            is TaskPageAction.ChangeCategory -> {
-                                state = state.copy(currentCategory = it.category)
-                            }
-                            else -> {}
-                        }
-                    },
                 )
             }
         }
