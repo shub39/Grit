@@ -12,6 +12,8 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.text.KeyboardOptions
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material3.Button
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
@@ -52,7 +54,8 @@ import sh.calvin.reorderable.rememberReorderableLazyListState
 @Composable
 fun EditCategories(
     state: TaskPageState,
-    onAction: (TaskPageAction) -> Unit
+    onAction: (TaskPageAction) -> Unit,
+    onNavigateBack: () -> Unit
 ) {
     var categories by remember(state.tasks) { mutableStateOf(state.tasks.keys.toList()) }
 
@@ -79,6 +82,16 @@ fun EditCategories(
                     Text(
                         text = stringResource(R.string.categories)
                     )
+                },
+                navigationIcon = {
+                    IconButton(
+                        onClick = onNavigateBack
+                    ) {
+                        Icon(
+                            imageVector = Icons.AutoMirrored.Filled.ArrowBack,
+                            contentDescription = "Navigate Back"
+                        )
+                    }
                 }
             )
 

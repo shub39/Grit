@@ -53,7 +53,8 @@ fun Tasks(
         composable<TasksRoutes.EditCategories> {
             EditCategories(
                 state = state,
-                onAction = onAction
+                onAction = onAction,
+                onNavigateBack = { navController.navigateUp() }
             )
         }
     }
@@ -66,7 +67,7 @@ fun Tasks(
 )
 @Composable
 private fun Preview() {
-    val data = (0L..10L).associate { category ->
+    val data = (0L..3L).associate { category ->
         Category(
             id = category,
             name = "Category: $category",
