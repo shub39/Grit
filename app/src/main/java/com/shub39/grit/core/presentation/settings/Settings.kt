@@ -9,6 +9,7 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.tooling.preview.PreviewLightDark
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
@@ -18,6 +19,7 @@ import com.shub39.grit.core.presentation.settings.components.AboutPage
 import com.shub39.grit.core.presentation.settings.components.Backup
 import com.shub39.grit.core.presentation.settings.components.LookAndFeelPage
 import com.shub39.grit.core.presentation.settings.components.RootPage
+import com.shub39.grit.core.presentation.theme.GritTheme
 
 @Composable
 fun Settings(
@@ -54,22 +56,42 @@ fun Settings(
         }
 
         composable<SettingsRoutes.About> {
-            AboutPage()
+            AboutPage(
+                onNavigateBack = { navController.navigateUp() }
+            )
         }
 
         composable<SettingsRoutes.LookAndFeel> {
             LookAndFeelPage(
                 state = state,
-                onAction = onAction
+                onAction = onAction,
+                onNavigateBack = { navController.navigateUp() }
             )
         }
 
         composable<SettingsRoutes.Backup> {
-            Backup()
+            Backup(
+                state = state,
+                onAction = onAction,
+                onNavigateBack = { navController.navigateUp() }
+            )
         }
 
         composable<SettingsRoutes.AboutLibraries> {
-            AboutLibraries()
+            AboutLibraries(
+                onNavigateBack = { navController.navigateUp() }
+            )
         }
+    }
+}
+
+@PreviewLightDark
+@Composable
+fun Preview() {
+    GritTheme {
+        Settings(
+            state = SettingsState(),
+            onAction = {}
+        )
     }
 }

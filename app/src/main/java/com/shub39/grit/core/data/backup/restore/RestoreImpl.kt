@@ -26,7 +26,7 @@ class RestoreImpl(
     private val habitRepo: HabitRepo,
     private val context: Context
 ): RestoreRepo {
-    override suspend fun restoreSongs(uri: Uri): RestoreResult {
+    override suspend fun restoreData(uri: Uri): RestoreResult {
         return try {
             val file = kotlin.io.path.createTempFile()
 
