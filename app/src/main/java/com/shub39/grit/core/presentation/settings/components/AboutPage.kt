@@ -3,13 +3,16 @@ package com.shub39.grit.core.presentation.settings.components
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.widthIn
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
+import androidx.compose.material3.Card
+import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.FilledIconButton
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.ListItem
@@ -64,22 +67,33 @@ fun AboutPage(
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
             item {
-                Icon(
-                    painter = painterResource(R.drawable.ic_launcher_foreground),
-                    tint = MaterialTheme.colorScheme.primary,
-                    modifier = Modifier.size(300.dp),
-                    contentDescription = null
-                )
-            }
+                Card(
+                    shape = MaterialTheme.shapes.extraLarge,
+                    modifier = Modifier.padding(16.dp),
+                    colors = CardDefaults.cardColors(
+                        containerColor = MaterialTheme.colorScheme.primaryContainer,
+                        contentColor = MaterialTheme.colorScheme.onPrimaryContainer
+                    )
+                ) {
+                    Column(
+                        modifier = Modifier
+                            .padding(16.dp)
+                            .fillMaxWidth(),
+                        horizontalAlignment = Alignment.CenterHorizontally
+                    ) {
+                        Icon(
+                            painter = painterResource(R.drawable.ic_launcher_foreground),
+                            contentDescription = "App Icon",
+                            modifier = Modifier.size(150.dp)
+                        )
 
-            item {
-                ListItem(
-                    headlineContent = {
-                        Text(text = stringResource(R.string.app_name))
-                    },
-                    trailingContent = {
+                        Text(
+                            text = stringResource(R.string.app_name),
+                            style = MaterialTheme.typography.titleMedium
+                        )
+
                         Row {
-                            FilledIconButton(
+                            IconButton(
                                 onClick = {
                                     uriHandler.openUri("https://github.com/shub39/Grit")
                                 }
@@ -91,7 +105,7 @@ fun AboutPage(
                                 )
                             }
 
-                            FilledIconButton(
+                            IconButton(
                                 onClick = {
                                     uriHandler.openUri("https://discord.gg/https://discord.gg/nxA2hgtEKf")
                                 }
@@ -104,13 +118,16 @@ fun AboutPage(
                             }
                         }
                     }
-                )
+                }
             }
 
             item {
                 ListItem(
                     headlineContent = {
                         Text("Made By shub39")
+                    },
+                    trailingContent = {
+
                     },
                     supportingContent = {
                         Text(

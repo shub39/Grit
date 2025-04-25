@@ -8,7 +8,7 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.KeyboardArrowRight
 import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.FilledIconButton
+import androidx.compose.material3.FilledTonalIconButton
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.ListItem
@@ -136,7 +136,7 @@ fun RootPage(
                         )
                     },
                     trailingContent = {
-                        FilledIconButton(
+                        FilledTonalIconButton(
                             onClick = { onNavigate(SettingsRoutes.LookAndFeel) }
                         ) {
                             Icon(
@@ -161,7 +161,7 @@ fun RootPage(
                         )
                     },
                     trailingContent = {
-                        FilledIconButton(
+                        FilledTonalIconButton(
                             onClick = { onNavigate(SettingsRoutes.Backup) }
                         ) {
                             Icon(
@@ -181,7 +181,7 @@ fun RootPage(
                         )
                     },
                     trailingContent = {
-                        FilledIconButton(
+                        FilledTonalIconButton(
                             onClick = { onNavigate(SettingsRoutes.About) }
                         ) {
                             Icon(
@@ -201,7 +201,7 @@ fun RootPage(
                         )
                     },
                     trailingContent = {
-                        FilledIconButton(
+                        FilledTonalIconButton(
                             onClick = { onNavigate(SettingsRoutes.AboutLibraries) }
                         ) {
                             Icon(
