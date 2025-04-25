@@ -1,5 +1,5 @@
 [versions]
-agp = "8.9.1"
+agp = "8.9.2"
 splashscreen = "1.0.1"
 datastore = "1.1.4"
 colorpicker = "1.1.2"

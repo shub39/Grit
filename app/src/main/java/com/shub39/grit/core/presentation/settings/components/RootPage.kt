@@ -63,7 +63,9 @@ fun RootPage(
                         Switch(
                             checked = state.startingPage == Pages.Habits,
                             onCheckedChange = {
-                                onAction(SettingsAction.ChangeStartingPage(Pages.Habits))
+                                onAction(SettingsAction.ChangeStartingPage(
+                                    if (it) Pages.Habits else Pages.Tasks
+                                ))
                             }
                         )
                     }

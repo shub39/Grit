@@ -6,8 +6,8 @@ import com.shub39.grit.tasks.domain.Category
 import com.shub39.grit.tasks.domain.CategoryColors
 import com.shub39.grit.tasks.domain.Task
 import com.shub39.grit.tasks.domain.TaskRepo
-import com.shub39.grit.tasks.presentation.task_page.TaskPageAction
-import com.shub39.grit.tasks.presentation.task_page.TaskPageState
+import com.shub39.grit.tasks.presentation.TaskPageAction
+import com.shub39.grit.tasks.presentation.TaskPageState
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.asStateFlow

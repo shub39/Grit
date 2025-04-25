@@ -1,4 +1,4 @@
-package com.shub39.grit.tasks.presentation
+package com.shub39.grit.tasks.presentation.component
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -12,6 +12,8 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.text.KeyboardOptions
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material3.Button
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
@@ -43,8 +45,8 @@ import androidx.compose.ui.unit.dp
 import com.shub39.grit.R
 import com.shub39.grit.core.presentation.components.BetterIconButton
 import com.shub39.grit.core.presentation.components.GritDialog
-import com.shub39.grit.tasks.presentation.task_page.TaskPageAction
-import com.shub39.grit.tasks.presentation.task_page.TaskPageState
+import com.shub39.grit.tasks.presentation.TaskPageAction
+import com.shub39.grit.tasks.presentation.TaskPageState
 import sh.calvin.reorderable.ReorderableItem
 import sh.calvin.reorderable.rememberReorderableLazyListState
 
@@ -52,7 +54,8 @@ import sh.calvin.reorderable.rememberReorderableLazyListState
 @Composable
 fun EditCategories(
     state: TaskPageState,
-    action: (TaskPageAction) -> Unit
+    onAction: (TaskPageAction) -> Unit,
+    onNavigateBack: () -> Unit
 ) {
     var categories by remember(state.tasks) { mutableStateOf(state.tasks.keys.toList()) }
 
@@ -62,7 +65,7 @@ fun EditCategories(
             add(to.index, removeAt(from.index))
         }
 
-        action(TaskPageAction.ReorderCategories(categories.mapIndexed { index, category -> index to category }))
+        onAction(TaskPageAction.ReorderCategories(categories.mapIndexed { index, category -> index to category }))
     }
 
     Box(
@@ -79,6 +82,16 @@ fun EditCategories(
                     Text(
                         text = stringResource(R.string.categories)
                     )
+                },
+                navigationIcon = {
+                    IconButton(
+                        onClick = onNavigateBack
+                    ) {
+                        Icon(
+                            imageVector = Icons.AutoMirrored.Filled.ArrowBack,
+                            contentDescription = "Navigate Back"
+                        )
+                    }
                 }
             )
 
@@ -155,7 +168,7 @@ fun EditCategories(
 
                             Button(
                                 onClick = {
-                                    action(TaskPageAction.DeleteCategory(category))
+                                    onAction(TaskPageAction.DeleteCategory(category))
                                     showDeleteDialog = false
                                 }
                             ) {
@@ -192,7 +205,7 @@ fun EditCategories(
 
                             Button(
                                 onClick = {
-                                    action(
+                                    onAction(
                                         TaskPageAction.AddCategory(
                                             category.copy(
                                                 name = name

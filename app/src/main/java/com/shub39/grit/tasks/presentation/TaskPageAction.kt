@@ -1,4 +1,4 @@
-package com.shub39.grit.tasks.presentation.task_page
+package com.shub39.grit.tasks.presentation
 
 import com.shub39.grit.tasks.domain.Category
 import com.shub39.grit.tasks.domain.Task
