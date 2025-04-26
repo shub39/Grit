@@ -185,12 +185,16 @@ fun habitNotification(context: Context, habitEntity: HabitEntity) {
 }
 
 fun getRandomLine(): String {
-    return when(Random.nextInt(0, 6)) {
-        1 -> "I got the entire year of 2024 on a Diary"
-        2 -> "It's easier to get things done when you have to think less"
-        3 -> "Plotting and scheming"
-        4 -> "I love marmots"
-        5 -> "What picture comes to your mind when you hear the word 'Grit'?"
-        else -> "For me it's a train that breaks through everything to reach its illusion of a destination"
+    return when(Random.nextInt(0, 10)) {
+        1 -> "\uD83D\uDCA3\uFE0F Bombardino Crocodilo"
+        2 -> "\uD83C\uDF33 Brr Brr Patapim"
+        3 -> "\uD83C\uDF35 Lirili Larila"
+        4 -> "\uD83D\uDE3A Trippi Troppi"
+        5 -> "☕\uFE0F Capucino Assassaino"
+        6 -> "\uD83D\uDC1F\uFE0F Trulimero Trulichina"
+        7 -> "\uD83D\uDC80 Tung Tung Tung Sahur"
+        8 -> "\uD83E\uDD8D Chimpanzini Bananini"
+        9 -> "\uD83E\uDD92 Giraffa Celeste"
+        else -> "\uD83E\uDD88 Tralalero Tralala"
     }
 }

@@ -13,6 +13,7 @@ import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.FilledTonalIconButton
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.ListItem
@@ -22,6 +23,7 @@ import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalUriHandler
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
@@ -31,6 +33,12 @@ import androidx.compose.ui.unit.dp
 import com.shub39.grit.R
 import com.shub39.grit.core.presentation.components.PageFill
 import com.shub39.grit.core.presentation.getRandomLine
+import compose.icons.FontAwesomeIcons
+import compose.icons.fontawesomeicons.Brands
+import compose.icons.fontawesomeicons.Solid
+import compose.icons.fontawesomeicons.brands.Discord
+import compose.icons.fontawesomeicons.brands.Github
+import compose.icons.fontawesomeicons.solid.Coffee
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -38,6 +46,7 @@ fun AboutPage(
     onNavigateBack: () -> Unit
 ) = PageFill {
     val uriHandler = LocalUriHandler.current
+    val context = LocalContext.current
 
     Column(
         modifier = Modifier
@@ -89,7 +98,12 @@ fun AboutPage(
 
                         Text(
                             text = stringResource(R.string.app_name),
-                            style = MaterialTheme.typography.titleMedium
+                            style = MaterialTheme.typography.titleLarge
+                        )
+
+                        Text(
+                            text = context.packageName,
+                            style = MaterialTheme.typography.bodyLarge
                         )
 
                         Row {
@@ -99,7 +113,7 @@ fun AboutPage(
                                 }
                             ) {
                                 Icon(
-                                    painter = painterResource(R.drawable.github_mark),
+                                    imageVector = FontAwesomeIcons.Brands.Github,
                                     modifier = Modifier.size(24.dp),
                                     contentDescription = "Github"
                                 )
@@ -111,7 +125,7 @@ fun AboutPage(
                                 }
                             ) {
                                 Icon(
-                                    painter = painterResource(R.drawable.discord_svgrepo_com),
+                                    imageVector = FontAwesomeIcons.Brands.Discord,
                                     modifier = Modifier.size(24.dp),
                                     contentDescription = "Discord"
                                 )
@@ -127,7 +141,31 @@ fun AboutPage(
                         Text("Made By shub39")
                     },
                     trailingContent = {
+                        Row {
+                            FilledTonalIconButton(
+                                onClick = {
+                                    uriHandler.openUri("https://github.com/shub39")
+                                }
+                            ) {
+                                Icon(
+                                    imageVector = FontAwesomeIcons.Brands.Github,
+                                    contentDescription = "Github",
+                                    modifier = Modifier.size(24.dp)
+                                )
+                            }
 
+                            FilledTonalIconButton(
+                                onClick = {
+                                    uriHandler.openUri("https://buymeacoffee.com/shub39")
+                                }
+                            ) {
+                                Icon(
+                                    imageVector = FontAwesomeIcons.Solid.Coffee,
+                                    contentDescription = "Github",
+                                    modifier = Modifier.size(24.dp)
+                                )
+                            }
+                        }
                     },
                     supportingContent = {
                         Text(
