@@ -1,4 +1,4 @@
-package com.shub39.grit.habits.presentation
+package com.shub39.grit.habits.presentation.component
 
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.animateContentSize
@@ -46,13 +46,14 @@ import com.shub39.grit.core.presentation.components.GritDialog
 import com.shub39.grit.core.presentation.showAddNotification
 import com.shub39.grit.core.presentation.timePickerStateToLocalDateTime
 import com.shub39.grit.habits.domain.Habit
-import com.shub39.grit.habits.presentation.component.HabitCard
+import com.shub39.grit.habits.presentation.HabitPageState
+import com.shub39.grit.habits.presentation.HabitsPageAction
 import sh.calvin.reorderable.ReorderableItem
 import sh.calvin.reorderable.rememberReorderableLazyListState
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun HabitsPage(
+fun HabitsList(
     state: HabitPageState,
     onAction: (HabitsPageAction) -> Unit,
 ) {

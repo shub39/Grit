@@ -107,6 +107,7 @@ dependencies {
     implementation(libs.androidx.datastore.preferences.core)
     implementation(libs.aboutLibraries)
     implementation(libs.composeIcons.fontAwesome)
+    implementation(libs.compose.charts)
 }
 
 java {

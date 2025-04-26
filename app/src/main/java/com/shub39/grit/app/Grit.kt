@@ -30,11 +30,11 @@ import com.shub39.grit.R
 import com.shub39.grit.core.domain.Pages
 import com.shub39.grit.core.presentation.settings.Settings
 import com.shub39.grit.core.presentation.theme.GritTheme
-import com.shub39.grit.viewmodels.HabitViewModel
-import com.shub39.grit.habits.presentation.HabitsPage
+import com.shub39.grit.habits.presentation.Habits
 import com.shub39.grit.tasks.presentation.Tasks
-import com.shub39.grit.viewmodels.TasksViewModel
+import com.shub39.grit.viewmodels.HabitViewModel
 import com.shub39.grit.viewmodels.SettingsViewModel
+import com.shub39.grit.viewmodels.TasksViewModel
 import org.koin.androidx.compose.koinViewModel
 
 @Composable
@@ -143,7 +143,7 @@ fun Grit(
                 composable<MainRoutes.HabitsPages> {
                     currentRoute = MainRoutes.HabitsPages
 
-                    HabitsPage(
+                    Habits(
                         state = habitsPageState,
                         onAction = hvm::habitsPageAction
                     )

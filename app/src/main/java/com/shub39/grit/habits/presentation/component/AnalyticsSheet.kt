@@ -1,4 +1,4 @@
-package com.shub39.grit.habits.presentation
+package com.shub39.grit.habits.presentation.component
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -32,8 +32,7 @@ import com.shub39.grit.core.presentation.countBestStreak
 import com.shub39.grit.core.presentation.countCurrentStreak
 import com.shub39.grit.habits.domain.Habit
 import com.shub39.grit.habits.domain.HabitStatus
-import com.shub39.grit.habits.presentation.component.AnalyticsCard
-import com.shub39.grit.habits.presentation.component.BooleanHeatMap
+import com.shub39.grit.habits.presentation.HabitsPageAction
 import java.time.DayOfWeek
 import java.time.format.DateTimeFormatter
 
