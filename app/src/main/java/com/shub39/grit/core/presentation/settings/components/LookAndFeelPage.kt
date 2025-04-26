@@ -27,6 +27,7 @@ import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.filled.Create
 import androidx.compose.material.icons.outlined.Check
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -74,6 +75,7 @@ import com.shub39.grit.core.presentation.settings.SettingsState
 fun LookAndFeelPage(
     state: SettingsState,
     onAction: (SettingsAction) -> Unit,
+    onNavigateBack: () -> Unit
 ) = PageFill {
 
     var colorPickerDialog by remember { mutableStateOf(false) }
@@ -89,6 +91,16 @@ fun LookAndFeelPage(
                 Text(
                     text = stringResource(R.string.look_and_feel)
                 )
+            },
+            navigationIcon = {
+                IconButton(
+                    onClick = onNavigateBack
+                ) {
+                    Icon(
+                        imageVector = Icons.AutoMirrored.Default.ArrowBack,
+                        contentDescription = "Navigate Back"
+                    )
+                }
             }
         )
 

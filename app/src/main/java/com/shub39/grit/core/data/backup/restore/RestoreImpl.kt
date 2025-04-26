@@ -26,7 +26,7 @@ class RestoreImpl(
     private val habitRepo: HabitRepo,
     private val context: Context
 ): RestoreRepo {
-    override suspend fun restoreSongs(uri: Uri): RestoreResult {
+    override suspend fun restoreData(uri: Uri): RestoreResult {
         return try {
             val file = kotlin.io.path.createTempFile()
 
@@ -41,11 +41,6 @@ class RestoreImpl(
             }
 
             val jsonDeserialized = json.decodeFromString<ExportSchema>(file.readText())
-
-            taskRepo.deleteAllTasks()
-            taskRepo.deleteAllCategories()
-            habitRepo.deleteAllHabits()
-            habitRepo.deleteAllHabitStatus()
 
             withContext(Dispatchers.IO) {
                 awaitAll(

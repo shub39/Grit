@@ -49,7 +49,7 @@
     <string name="delete_category">Are you sure? All tasks in this category will be deleted</string>
     <string name="add_category">Add Category</string>
     <string name="add">Add Something</string>
-    <string name="about">About app</string>
+    <string name="about">About App</string>
     <string name="select_habit">Select Habit</string>
     <string name="habit_map">Habit Map</string>
     <string name="habit_stats">Habit Stats</string>

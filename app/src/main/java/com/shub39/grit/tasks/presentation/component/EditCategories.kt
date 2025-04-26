@@ -16,6 +16,7 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material3.Button
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.FilledIconButton
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.ListItem
@@ -43,7 +44,6 @@ import androidx.compose.ui.text.input.KeyboardCapitalization
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import com.shub39.grit.R
-import com.shub39.grit.core.presentation.components.BetterIconButton
 import com.shub39.grit.core.presentation.components.GritDialog
 import com.shub39.grit.tasks.presentation.TaskPageAction
 import com.shub39.grit.tasks.presentation.TaskPageState
@@ -128,7 +128,7 @@ fun EditCategories(
                             },
                             trailingContent = {
                                 Row {
-                                    BetterIconButton(
+                                    FilledIconButton(
                                         onClick = { showDeleteDialog = true },
                                         enabled = categories.size > 1
                                     ) {
@@ -138,7 +138,7 @@ fun EditCategories(
                                         )
                                     }
 
-                                    BetterIconButton(
+                                    FilledIconButton(
                                         onClick = { showEditDialog = true }
                                     ) {
                                         Icon(

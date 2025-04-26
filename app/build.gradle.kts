@@ -106,6 +106,7 @@ dependencies {
     implementation(libs.colorpicker.compose)
     implementation(libs.androidx.datastore.preferences.core)
     implementation(libs.aboutLibraries)
+    implementation(libs.composeIcons.fontAwesome)
 }
 
 java {

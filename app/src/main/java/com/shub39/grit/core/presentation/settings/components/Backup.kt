@@ -10,46 +10,44 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.widthIn
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.filled.CheckCircle
 import androidx.compose.material.icons.filled.Warning
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.ListItem
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import com.shub39.grit.R
-import com.shub39.grit.core.domain.backup.ExportRepo
 import com.shub39.grit.core.domain.backup.ExportState
-import com.shub39.grit.core.domain.backup.RestoreRepo
-import com.shub39.grit.core.domain.backup.RestoreResult
 import com.shub39.grit.core.domain.backup.RestoreState
-import com.shub39.grit.core.presentation.components.BetterIconButton
 import com.shub39.grit.core.presentation.components.PageFill
-import kotlinx.coroutines.launch
-import org.koin.compose.koinInject
+import com.shub39.grit.core.presentation.settings.SettingsAction
+import com.shub39.grit.core.presentation.settings.SettingsState
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun Backup(
-    exportRepo: ExportRepo = koinInject(),
-    restoreRepo: RestoreRepo = koinInject()
+    state: SettingsState,
+    onAction: (SettingsAction) -> Unit,
+    onNavigateBack: () -> Unit
 ) = PageFill {
-    val coroutineScope = rememberCoroutineScope()
-
-    var exportState by remember { mutableStateOf(ExportState.IDLE) }
-    var restoreState by remember { mutableStateOf(RestoreState.IDLE) }
+    LaunchedEffect(Unit) {
+        onAction(SettingsAction.OnResetBackupState)
+    }
 
     var uri by remember { mutableStateOf<Uri?>(null) }
     val launcher = rememberLauncherForActivityResult(
@@ -66,6 +64,16 @@ fun Backup(
                 Text(
                     text = stringResource(R.string.backup)
                 )
+            },
+            navigationIcon = {
+                IconButton(
+                    onClick = onNavigateBack
+                ) {
+                    Icon(
+                        imageVector = Icons.AutoMirrored.Default.ArrowBack,
+                        contentDescription = "Navigate Back"
+                    )
+                }
             }
         )
 
@@ -85,25 +93,22 @@ fun Backup(
                         )
                     },
                     trailingContent = {
-                        BetterIconButton(
-                            onClick = {
-                                if (exportState == ExportState.IDLE) {
-                                    coroutineScope.launch {
-                                        exportState = ExportState.EXPORTING
-
-                                        exportRepo.exportToJson()
-
-                                        exportState = ExportState.EXPORTED
-                                    }
-                                }
-                            }
+                        IconButton(
+                            onClick = { onAction(SettingsAction.OnExport) },
+                            enabled = state.backupState.exportState == ExportState.IDLE
                         ) {
-                            when (exportState) {
+                            when (state.backupState.exportState) {
                                 ExportState.IDLE -> Icon(
                                     painter = painterResource(R.drawable.round_play_arrow_24),
                                     contentDescription = "Start"
                                 )
-                                ExportState.EXPORTING -> CircularProgressIndicator(modifier = Modifier.size(24.dp))
+
+                                ExportState.EXPORTING -> CircularProgressIndicator(
+                                    modifier = Modifier.size(
+                                        24.dp
+                                    )
+                                )
+
                                 ExportState.EXPORTED -> Icon(
                                     imageVector = Icons.Default.CheckCircle,
                                     contentDescription = "Done"
@@ -136,33 +141,25 @@ fun Backup(
                                 )
                             }
                         } else {
-                            BetterIconButton(
-                                onClick = {
-                                    if (restoreState == RestoreState.IDLE) {
-                                        coroutineScope.launch {
-                                            restoreState = RestoreState.RESTORING
-
-                                            val result = restoreRepo.restoreSongs(uri!!)
-
-                                            restoreState = if (result == RestoreResult.Success) {
-                                                RestoreState.RESTORED
-                                            } else {
-                                                RestoreState.FAILURE
-                                            }
-                                        }
-                                    }
-                                }
+                            IconButton(
+                                onClick = { onAction(SettingsAction.OnRestore(uri!!)) },
+                                enabled = state.backupState.restoreState == RestoreState.IDLE
                             ) {
-                                when (restoreState) {
+                                when (state.backupState.restoreState) {
                                     RestoreState.IDLE -> Icon(
                                         painter = painterResource(R.drawable.round_play_arrow_24),
                                         contentDescription = "Start"
                                     )
-                                    RestoreState.RESTORING -> CircularProgressIndicator(modifier = Modifier.size(24.dp))
+
+                                    RestoreState.RESTORING -> CircularProgressIndicator(
+                                        modifier = Modifier.size(24.dp)
+                                    )
+
                                     RestoreState.RESTORED -> Icon(
                                         imageVector = Icons.Default.CheckCircle,
                                         contentDescription = "Done"
                                     )
+
                                     RestoreState.FAILURE -> Icon(
                                         imageVector = Icons.Default.Warning,
                                         contentDescription = "Fail"

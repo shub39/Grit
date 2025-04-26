@@ -5,6 +5,12 @@ import androidx.compose.ui.graphics.toArgb
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.shub39.grit.core.domain.GritDatastore
+import com.shub39.grit.core.domain.backup.ExportRepo
+import com.shub39.grit.core.domain.backup.ExportState
+import com.shub39.grit.core.domain.backup.RestoreRepo
+import com.shub39.grit.core.domain.backup.RestoreResult
+import com.shub39.grit.core.domain.backup.RestoreState
+import com.shub39.grit.core.presentation.settings.BackupState
 import com.shub39.grit.core.presentation.settings.SettingsAction
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.SharingStarted
@@ -18,8 +24,10 @@ import kotlinx.coroutines.launch
 
 class SettingsViewModel(
     stateLayer: StateLayer,
+    private val exportRepo: ExportRepo,
+    private val restoreRepo: RestoreRepo,
     private val datastore: GritDatastore
-): ViewModel() {
+) : ViewModel() {
 
     private var observeJob: Job? = null
 
@@ -36,13 +44,67 @@ class SettingsViewModel(
     fun onAction(action: SettingsAction) = viewModelScope.launch {
         when (action) {
             is SettingsAction.ChangeAmoled -> datastore.setAmoledPref(action.pref)
+
             is SettingsAction.ChangeAppTheme -> datastore.setAppTheme(action.appTheme)
+
             is SettingsAction.ChangeIs24Hr -> datastore.setIs24Hr(action.pref)
+
             is SettingsAction.ChangeMaterialYou -> datastore.setMaterialYou(action.pref)
+
             is SettingsAction.ChangePaletteStyle -> datastore.setPaletteStyle(action.style)
+
             is SettingsAction.ChangeSeedColor -> datastore.setSeedColor(action.color.toArgb())
+
             is SettingsAction.ChangeStartOfTheWeek -> datastore.setStartOfWeek(action.pref)
+
             is SettingsAction.ChangeStartingPage -> datastore.setStartingPage(action.page)
+
+            SettingsAction.OnResetBackupState -> {
+                _state.update { it.copy(backupState = BackupState()) }
+            }
+
+            SettingsAction.OnExport -> {
+                _state.update {
+                    it.copy(
+                        backupState = it.backupState.copy(
+                            exportState = ExportState.EXPORTING
+                        )
+                    )
+                }
+
+                exportRepo.exportToJson()
+
+                _state.update {
+                    it.copy(
+                        backupState = it.backupState.copy(
+                            exportState = ExportState.EXPORTED
+                        )
+                    )
+                }
+            }
+
+            is SettingsAction.OnRestore -> {
+                _state.update {
+                    it.copy(
+                        backupState = it.backupState.copy(
+                            restoreState = RestoreState.RESTORING
+                        )
+                    )
+                }
+
+                val result = restoreRepo.restoreData(action.uri)
+
+                _state.update {
+                    it.copy(
+                        backupState = it.backupState.copy(
+                            restoreState = when (result) {
+                                is RestoreResult.Failure -> RestoreState.FAILURE
+                                RestoreResult.Success -> RestoreState.RESTORED
+                            }
+                        )
+                    )
+                }
+            }
         }
     }
 

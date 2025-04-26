@@ -2,11 +2,14 @@ package com.shub39.grit.core.presentation.settings.components
 
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.widthIn
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.KeyboardArrowRight
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.FilledTonalIconButton
+import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.ListItem
 import androidx.compose.material3.Switch
@@ -18,7 +21,6 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import com.shub39.grit.R
 import com.shub39.grit.core.domain.Pages
-import com.shub39.grit.core.presentation.components.BetterIconButton
 import com.shub39.grit.core.presentation.components.PageFill
 import com.shub39.grit.core.presentation.settings.SettingsAction
 import com.shub39.grit.core.presentation.settings.SettingsRoutes
@@ -30,7 +32,7 @@ import java.time.DayOfWeek
 fun RootPage(
     state: SettingsState,
     onAction: (SettingsAction) -> Unit,
-    onNavigate: (SettingsRoutes) -> Unit,
+    onNavigate: (SettingsRoutes) -> Unit
 ) = PageFill {
 
     Column(
@@ -116,6 +118,12 @@ fun RootPage(
             }
 
             item {
+                HorizontalDivider(
+                    modifier = Modifier.padding(32.dp)
+                )
+            }
+
+            item {
                 ListItem(
                     headlineContent = {
                         Text(
@@ -128,7 +136,7 @@ fun RootPage(
                         )
                     },
                     trailingContent = {
-                        BetterIconButton(
+                        FilledTonalIconButton(
                             onClick = { onNavigate(SettingsRoutes.LookAndFeel) }
                         ) {
                             Icon(
@@ -153,7 +161,7 @@ fun RootPage(
                         )
                     },
                     trailingContent = {
-                        BetterIconButton(
+                        FilledTonalIconButton(
                             onClick = { onNavigate(SettingsRoutes.Backup) }
                         ) {
                             Icon(
@@ -173,8 +181,28 @@ fun RootPage(
                         )
                     },
                     trailingContent = {
-                        BetterIconButton(
+                        FilledTonalIconButton(
                             onClick = { onNavigate(SettingsRoutes.About) }
+                        ) {
+                            Icon(
+                                imageVector = Icons.AutoMirrored.Filled.KeyboardArrowRight,
+                                contentDescription = null
+                            )
+                        }
+                    }
+                )
+            }
+
+            item {
+                ListItem(
+                    headlineContent = {
+                        Text(
+                            text = stringResource(R.string.about_libraries)
+                        )
+                    },
+                    trailingContent = {
+                        FilledTonalIconButton(
+                            onClick = { onNavigate(SettingsRoutes.AboutLibraries) }
                         ) {
                             Icon(
                                 imageVector = Icons.AutoMirrored.Filled.KeyboardArrowRight,

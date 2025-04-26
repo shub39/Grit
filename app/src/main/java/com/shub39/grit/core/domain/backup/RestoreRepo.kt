@@ -3,7 +3,7 @@ package com.shub39.grit.core.domain.backup
 import android.net.Uri
 
 interface RestoreRepo {
-    suspend fun restoreSongs(uri: Uri): RestoreResult
+    suspend fun restoreData(uri: Uri): RestoreResult
 }
 
 sealed class RestoreResult {
