@@ -53,6 +53,29 @@ fun RootPage(
                 ListItem(
                     headlineContent = {
                         Text(
+                            text = stringResource(R.string.pause_notifications)
+                        )
+                    },
+                    supportingContent = {
+                        Text(
+                            text = stringResource(R.string.pause_notifications_desc)
+                        )
+                    },
+                    trailingContent = {
+                        Switch(
+                            checked = state.pauseNotifications,
+                            onCheckedChange = {
+                                onAction(SettingsAction.ChangePauseNotifications(it))
+                            }
+                        )
+                    }
+                )
+            }
+
+            item {
+                ListItem(
+                    headlineContent = {
+                        Text(
                             text = stringResource(R.string.show_habits)
                         )
                     },

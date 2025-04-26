@@ -29,6 +29,7 @@ class DataStoreImpl(
         private val startingPageKey = stringPreferencesKey("starting_page")
         private val is24HrKey = booleanPreferencesKey("is_24Hr")
         private val materialYouKey = booleanPreferencesKey("material_you")
+        private val notificationsKey = booleanPreferencesKey("notifications")
     }
 
     override fun getAppThemeFlow(): Flow<AppTheme> = datastore.data.map { prefs ->
@@ -104,6 +105,15 @@ class DataStoreImpl(
     override suspend fun setMaterialYou(pref: Boolean) {
         datastore.edit { prefs ->
             prefs[materialYouKey] = pref
+        }
+    }
+
+    override fun getNotificationsFlow(): Flow<Boolean> = datastore.data.map { prefs ->
+        prefs[notificationsKey] == true
+    }
+    override suspend fun setNotifications(pref: Boolean) {
+        datastore.edit { prefs ->
+            prefs[notificationsKey] = pref
         }
     }
 }

@@ -105,12 +105,24 @@ class SettingsViewModel(
                     )
                 }
             }
+
+            is SettingsAction.ChangePauseNotifications -> datastore.setNotifications(action.pref)
         }
     }
 
     private fun observeJob() = viewModelScope.launch {
         observeJob?.cancel()
         observeJob = launch {
+            datastore.getNotificationsFlow()
+                .onEach { pref ->
+                    _state.update {
+                        it.copy(
+                            pauseNotifications = pref
+                        )
+                    }
+                }
+                .launchIn(this)
+
             datastore.getAppThemeFlow()
                 .onEach { flow ->
                     _state.update {

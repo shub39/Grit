@@ -15,6 +15,7 @@ sealed interface SettingsAction {
     data class ChangeStartOfTheWeek(val pref: DayOfWeek) : SettingsAction
     data class ChangeIs24Hr(val pref: Boolean) : SettingsAction
     data class ChangeStartingPage(val page: Pages) : SettingsAction
+    data class ChangePauseNotifications(val pref: Boolean) : SettingsAction
 
     data class ChangeAppTheme(val appTheme: AppTheme): SettingsAction
     data class ChangeSeedColor(val color: Color) : SettingsAction

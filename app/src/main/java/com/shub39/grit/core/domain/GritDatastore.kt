@@ -28,4 +28,7 @@ interface GritDatastore {
 
     fun getMaterialYouFlow(): Flow<Boolean>
     suspend fun setMaterialYou(pref: Boolean)
+
+    fun getNotificationsFlow(): Flow<Boolean>
+    suspend fun setNotifications(pref: Boolean)
 }

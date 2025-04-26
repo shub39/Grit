@@ -7,6 +7,7 @@ import com.shub39.grit.core.data.backup.toCategory
 import com.shub39.grit.core.data.backup.toHabit
 import com.shub39.grit.core.data.backup.toHabitStatus
 import com.shub39.grit.core.data.backup.toTask
+import com.shub39.grit.core.domain.AlarmScheduler
 import com.shub39.grit.core.domain.backup.RestoreFailedException
 import com.shub39.grit.core.domain.backup.RestoreRepo
 import com.shub39.grit.core.domain.backup.RestoreResult
@@ -24,6 +25,7 @@ import kotlin.io.path.readText
 class RestoreImpl(
     private val taskRepo: TaskRepo,
     private val habitRepo: HabitRepo,
+    private val alarmScheduler: AlarmScheduler,
     private val context: Context
 ): RestoreRepo {
     override suspend fun restoreData(uri: Uri): RestoreResult {
@@ -45,8 +47,11 @@ class RestoreImpl(
             withContext(Dispatchers.IO) {
                 awaitAll(
                     async {
+                        habitRepo.getHabits().forEach { alarmScheduler.cancel(it) }
+
                         jsonDeserialized.habits.map { it.toHabit() }.forEach {
                             habitRepo.upsertHabit(it)
+                            alarmScheduler.schedule(it)
                         }
                     },
                     async {

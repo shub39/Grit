@@ -82,4 +82,6 @@
     <string name="light">Light</string>
     <string name="app_theme">App Theme</string>
     <string name="app_theme_desc">Select App Theme</string>
+    <string name="pause_notifications">Pause Notifications</string>
+    <string name="pause_notifications_desc">Pause all app notifications</string>
 </resources>

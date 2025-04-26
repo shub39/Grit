@@ -10,6 +10,7 @@ data class SettingsState(
     val theme: Theme = Theme(),
     val is24Hr: Boolean = false,
     val startOfTheWeek: DayOfWeek = DayOfWeek.MONDAY,
+    val pauseNotifications: Boolean = false,
     val startingPage: Pages = Pages.Tasks,
     val backupState: BackupState = BackupState()
 )

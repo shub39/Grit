@@ -34,6 +34,7 @@ class HabitViewModel(
 
     val state = _state.asStateFlow()
         .onStart {
+            refreshAlarms()
             observeHabitStatuses()
             observeDataStore()
         }
@@ -48,7 +49,7 @@ class HabitViewModel(
         viewModelScope.launch {
             when (action) {
                 is HabitsPageAction.AddHabit -> {
-                    addHabit(action.habit)
+                    upsertHabit(action.habit)
                 }
 
                 is HabitsPageAction.DeleteHabit -> {
@@ -60,16 +61,23 @@ class HabitViewModel(
                 }
 
                 is HabitsPageAction.UpdateHabit -> {
-                    addHabit(action.habit)
+                    upsertHabit(action.habit)
                 }
 
                 is HabitsPageAction.ReorderHabits -> {
                     for (habit in action.pairs) {
-                        addHabit(habit.second.copy(index = habit.first))
+                        upsertHabit(habit.second.copy(index = habit.first))
                     }
                 }
             }
         }
+    }
+
+    private fun refreshAlarms() = viewModelScope.launch {
+        val habits = repo.getHabits()
+
+        habits.forEach { scheduler.cancel(it) }
+        habits.forEach { scheduler.schedule(it) }
     }
 
     private fun observeHabitStatuses() {
@@ -116,7 +124,7 @@ class HabitViewModel(
         }
     }
 
-    private suspend fun addHabit(habit: Habit) {
+    private suspend fun upsertHabit(habit: Habit) {
         repo.upsertHabit(habit)
         scheduler.schedule(habit)
     }
