@@ -1,7 +1,7 @@
 [versions]
 agp = "8.9.2"
 splashscreen = "1.0.1"
-datastore = "1.1.5"
+datastore = "1.2.0-alpha01"
 colorpicker = "1.1.2"
 glance = "1.1.1"
 koin = "4.0.1"
