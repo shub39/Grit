@@ -19,6 +19,7 @@ import com.shub39.grit.core.presentation.components.PageFill
 import com.shub39.grit.core.presentation.theme.GritTheme
 import com.shub39.grit.habits.domain.Habit
 import com.shub39.grit.habits.domain.HabitStatus
+import com.shub39.grit.habits.presentation.component.AnalyticsPage
 import com.shub39.grit.habits.presentation.component.HabitsList
 import java.time.LocalDate
 import java.time.LocalDateTime
@@ -41,12 +42,17 @@ fun Habits(
         composable<HabitRoutes.HabitList> {
             HabitsList(
                 state = state,
-                onAction = onAction
+                onAction = onAction,
+                onNavigateToAnalytics = { navController.navigate(HabitRoutes.HabitAnalytics) }
             )
         }
 
         composable<HabitRoutes.HabitAnalytics> {
-
+            AnalyticsPage(
+                state = state,
+                onAction = onAction,
+                onNavigateBack = { navController.navigateUp() }
+            )
         }
     }
 }
@@ -79,7 +85,16 @@ private fun Preview() {
             ) {
                 Habits(
                     state = state,
-                    onAction = {}
+                    onAction = {
+                        when (it) {
+                            is HabitsPageAction.PrepareAnalytics -> {
+                                state = state.copy(
+                                    analyticsHabitId = it.habit.id
+                                )
+                            }
+                            else -> {}
+                        }
+                    }
                 )
             }
         }
