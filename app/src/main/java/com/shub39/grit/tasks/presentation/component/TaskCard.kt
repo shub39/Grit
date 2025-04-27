@@ -3,23 +3,16 @@ package com.shub39.grit.tasks.presentation.component
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.animateColorAsState
 import androidx.compose.foundation.ExperimentalFoundationApi
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.combinedClickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.KeyboardArrowDown
-import androidx.compose.material.icons.filled.KeyboardArrowUp
 import androidx.compose.material3.Button
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
-import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
@@ -50,8 +43,8 @@ fun TaskCard(
     task: Task,
     onStatusChange: (Task) -> Unit,
     dragState: Boolean = false,
-    moveUp: () -> Unit = {},
-    moveDown: () -> Unit = {}
+    reorderIcon: @Composable () -> Unit,
+    modifier: Modifier
 ) {
     var taskStatus by remember { mutableStateOf(task.status) }
     var showEditDialog by remember { mutableStateOf(false) }
@@ -76,7 +69,7 @@ fun TaskCard(
     )
 
     Card(
-        modifier = Modifier
+        modifier = modifier
             .fillMaxWidth()
             .padding(start = 16.dp, end = 16.dp, bottom = 8.dp)
             .combinedClickable(
@@ -120,21 +113,7 @@ fun TaskCard(
             AnimatedVisibility(
                 visible = dragState
             ) {
-                Row {
-                    Icon(
-                        imageVector = Icons.Default.KeyboardArrowUp,
-                        contentDescription = null,
-                        modifier = Modifier.clickable { moveUp() }
-                    )
-
-                    Spacer(modifier = Modifier.width(8.dp))
-
-                    Icon(
-                        imageVector = Icons.Default.KeyboardArrowDown,
-                        contentDescription = null,
-                        modifier = Modifier.clickable { moveDown() }
-                    )
-                }
+                reorderIcon()
             }
         }
     }
