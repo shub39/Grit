@@ -137,6 +137,15 @@ fun AnalyticsPage(
         ) {
             item {
                 AnalyticsCard {
+                    Text(
+                        text = stringResource(R.string.overview),
+                        style = MaterialTheme.typography.titleMedium
+                    )
+                }
+            }
+
+            item {
+                AnalyticsCard {
                     HeatMapCalendar(
                         state = heatMapState,
                         weekHeader = {
@@ -190,12 +199,6 @@ fun AnalyticsPage(
                             }
                         }
                     )
-                }
-            }
-
-            item {
-                AnalyticsCard {
-
                 }
             }
         }
