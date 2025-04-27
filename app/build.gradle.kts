@@ -108,6 +108,7 @@ dependencies {
     implementation(libs.aboutLibraries)
     implementation(libs.composeIcons.fontAwesome)
     implementation(libs.compose.charts)
+    implementation(libs.calendar)
 }
 
 java {

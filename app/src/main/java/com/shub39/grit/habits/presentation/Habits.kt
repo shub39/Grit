@@ -92,6 +92,7 @@ private fun Preview() {
                                     analyticsHabitId = it.habit.id
                                 )
                             }
+
                             else -> {}
                         }
                     }

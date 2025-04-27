@@ -3,9 +3,13 @@ package com.shub39.grit.habits.presentation.component
 import androidx.compose.animation.AnimatedContent
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.animateColorAsState
+import androidx.compose.foundation.background
 import androidx.compose.foundation.basicMarquee
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Card
@@ -24,6 +28,8 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
+import com.kizitonwose.calendar.compose.WeekCalendar
+import com.kizitonwose.calendar.compose.weekcalendar.rememberWeekCalendarState
 import com.shub39.grit.R
 import com.shub39.grit.core.presentation.countCurrentStreak
 import com.shub39.grit.habits.domain.Habit
@@ -45,6 +51,7 @@ fun HabitCard(
     reorderHandle: @Composable () -> Unit,
     modifier: Modifier
 ) {
+    val primary = MaterialTheme.colorScheme.primary
     // animated colors
     val cardContent by animateColorAsState(
         targetValue = when (completed) {
@@ -59,6 +66,13 @@ fun HabitCard(
             else -> MaterialTheme.colorScheme.surfaceContainerHighest
         },
         label = "cardBackground"
+    )
+
+    val weekState = rememberWeekCalendarState(
+        startDate = habit.time.toLocalDate().minusMonths(100),
+        endDate = habit.time.toLocalDate(),
+        firstVisibleWeekDate = habit.time.toLocalDate(),
+        firstDayOfWeek = startingDay
     )
 
     Card(
@@ -150,10 +164,42 @@ fun HabitCard(
             }
         )
 
-        WeekActivity(
-            dates = statusList.map { it.date },
+        WeekCalendar(
             modifier = Modifier.padding(8.dp),
-            startingDay = startingDay
+            state = weekState,
+            dayContent = { weekDay ->
+                val done = statusList.any { it.date == weekDay.date }
+
+                Box(
+                    modifier = Modifier
+                        .aspectRatio(1f)
+                        .padding(2.dp)
+                        .then(
+                            if (done) Modifier.background(
+                                color = primary.copy(alpha = 0.2f),
+                                shape = MaterialTheme.shapes.large
+                            ) else Modifier
+                        ),
+                    contentAlignment = Alignment.Center
+                ) {
+                    Column(
+                        modifier = Modifier.padding(4.dp),
+                        horizontalAlignment = Alignment.CenterHorizontally
+                    ) {
+                        Text(
+                            text = weekDay.date.dayOfMonth.toString(),
+                            style = MaterialTheme.typography.bodyMedium,
+                            color = if (done) primary else MaterialTheme.colorScheme.onSurface
+                        )
+
+                        Text(
+                            text = weekDay.date.dayOfWeek.toString().take(3),
+                            style = MaterialTheme.typography.bodySmall,
+                            color = if (done) primary else MaterialTheme.colorScheme.onSurface
+                        )
+                    }
+                }
+            }
         )
     }
 }
