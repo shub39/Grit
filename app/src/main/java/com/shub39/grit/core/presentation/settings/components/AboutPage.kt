@@ -1,5 +1,6 @@
 package com.shub39.grit.core.presentation.settings.components
 
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
@@ -21,6 +22,10 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
@@ -47,6 +52,8 @@ fun AboutPage(
 ) = PageFill {
     val uriHandler = LocalUriHandler.current
     val context = LocalContext.current
+
+    var supportText by remember { mutableStateOf(getRandomLine()) }
 
     Column(
         modifier = Modifier
@@ -137,6 +144,9 @@ fun AboutPage(
 
             item {
                 ListItem(
+                    modifier = Modifier.clickable {
+                        supportText = "Donate so I can afford therapy"
+                    },
                     headlineContent = {
                         Text("Made By shub39")
                     },
@@ -169,7 +179,7 @@ fun AboutPage(
                     },
                     supportingContent = {
                         Text(
-                            text = getRandomLine(),
+                            text = supportText,
                             fontStyle = FontStyle.Italic,
                             fontWeight = FontWeight.Thin
                         )

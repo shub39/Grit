@@ -24,7 +24,7 @@
     <string name="mark_done">Mark Done</string>
     <string name="days_completed">Days Completed</string>
     <string name="streak">Current Streak</string>
-    <string name="best_streak">Best Streak</string>
+    <string name="best_streak">Best Streak: %1$d</string>
     <string name="since">Since</string>
     <string name="goals">Goals</string>
     <string name="settings">Settings</string>
@@ -32,6 +32,7 @@
     <string name="new_habit">New Habit </string>
     <string name="at">Reminder at </string>
     <string name="habit_exists">Habit Already Exists</string>
+    <string name="days_ago_format">%1$d Day(s) ago…</string>
     <string name="too_long">Too Long</string>
     <string name="edit_task">Edit Task</string>
     <string name="tasks_guide_1">Tap to mark as done</string>
@@ -84,4 +85,8 @@
     <string name="app_theme_desc">Select App Theme</string>
     <string name="pause_notifications">Pause Notifications</string>
     <string name="pause_notifications_desc">Pause all app notifications</string>
+    <string name="overview">Overview</string>
+    <string name="started_on">Started On</string>
+    <string name="weekly_graph">Weekly Comparision</string>
+    <string name="not_enough_data">Not enough data</string>
 </resources>

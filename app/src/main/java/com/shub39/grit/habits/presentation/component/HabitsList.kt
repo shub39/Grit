@@ -56,17 +56,25 @@ import sh.calvin.reorderable.rememberReorderableLazyListState
 fun HabitsList(
     state: HabitPageState,
     onAction: (HabitsPageAction) -> Unit,
+    onNavigateToAnalytics: () -> Unit
 ) {
     val context = LocalContext.current
 
     var showAddHabitDialog by remember { mutableStateOf(false) }
+    var showAllAnalytics by remember { mutableStateOf(false) }
 
     var editState by remember { mutableStateOf(false) }
 
     var habits by remember(state.habitsWithStatuses) { mutableStateOf(state.habitsWithStatuses.entries.toList()) }
     val lazyListState = rememberLazyListState()
     val reorderableListState =
-        rememberReorderableLazyListState(lazyListState) { _, _ -> }
+        rememberReorderableLazyListState(lazyListState) { from, to ->
+            habits = habits.toMutableList().apply {
+                add(to.index, removeAt(from.index))
+            }
+
+            onAction(HabitsPageAction.ReorderHabits(habits.mapIndexed { index, entry -> index to entry.key }))
+        }
 
     Box(
         modifier = Modifier.fillMaxSize(),
@@ -100,6 +108,7 @@ fun HabitsList(
             )
 
             LazyColumn(
+                state = lazyListState,
                 modifier = Modifier
                     .fillMaxSize()
                     .animateContentSize(),
@@ -108,42 +117,34 @@ fun HabitsList(
             ) {
                 // habits
                 itemsIndexed(habits, key = { _, it -> it.key.id }) { index, habit ->
-                    ReorderableItem(reorderableListState, key = { habit.key.id }) {
+                    ReorderableItem(reorderableListState, key = habit.key.id) {
                         HabitCard(
                             habit = habit.key,
                             statusList = habit.value,
                             completed = state.completedHabits.contains(habit.key),
                             action = onAction,
-                            is24Hr = state.is24Hr,
                             startingDay = state.startingDay,
                             editState = editState,
-                            onMoveUp = {
-                                if (index > 0) {
-                                    habits = habits.toMutableList().apply {
-                                        add(index - 1, removeAt(index))
-                                    }
-
-                                    onAction(HabitsPageAction.ReorderHabits(habits.mapIndexed { index, entry -> index to entry.key }))
+                            onNavigateToAnalytics = onNavigateToAnalytics,
+                            reorderHandle = {
+                                IconButton(
+                                    modifier = Modifier.draggableHandle(),
+                                    onClick = {}
+                                ) {
+                                    Icon(
+                                        painter = painterResource(R.drawable.baseline_drag_indicator_24),
+                                        contentDescription = null
+                                    )
                                 }
                             },
-                            onMoveDown = {
-                                if (index < habits.size - 1) {
-                                    habits = habits.toMutableList().apply {
-                                        add(index + 1, removeAt(index))
-                                    }
-
-                                    onAction(HabitsPageAction.ReorderHabits(habits.mapIndexed { index, entry -> index to entry.key }))
-                                }
-                            }
+                            modifier = Modifier
                         )
                     }
                 }
 
                 // when no habits
                 if (state.habitsWithStatuses.isEmpty() && !showAddHabitDialog) {
-                    item {
-                        Empty()
-                    }
+                    item { Empty() }
                 }
 
                 // ui sweetener
@@ -151,29 +152,53 @@ fun HabitsList(
             }
         }
 
-        FloatingActionButton(
-            onClick = { showAddHabitDialog = true },
+        Row(
             modifier = Modifier
                 .padding(16.dp)
-                .align(Alignment.BottomEnd)
+                .align(Alignment.BottomEnd),
+            horizontalArrangement = Arrangement.spacedBy(8.dp)
         ) {
-            Row(
-                modifier = Modifier.padding(16.dp),
-                horizontalArrangement = Arrangement.spacedBy(8.dp),
-                verticalAlignment = Alignment.CenterVertically
+            AnimatedVisibility(
+                visible = state.habitsWithStatuses.isNotEmpty()
             ) {
-                Icon(
-                    painter = painterResource(R.drawable.round_add_24),
-                    contentDescription = null
-                )
-
-                AnimatedVisibility(
-                    visible = state.habitsWithStatuses.isEmpty()
+                FloatingActionButton(
+                    onClick = { showAllAnalytics = true }
                 ) {
-                    Text(text = stringResource(id = R.string.add_habit))
+                    Icon(
+                        painter = painterResource(R.drawable.round_analytics_24),
+                        contentDescription = "All Analytics"
+                    )
+                }
+            }
+
+            FloatingActionButton(
+                onClick = { showAddHabitDialog = true }
+            ) {
+                Row(
+                    modifier = Modifier.padding(16.dp),
+                    horizontalArrangement = Arrangement.spacedBy(8.dp),
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
+                    Icon(
+                        painter = painterResource(R.drawable.round_add_24),
+                        contentDescription = null
+                    )
+
+                    AnimatedVisibility(
+                        visible = state.habitsWithStatuses.isEmpty()
+                    ) {
+                        Text(text = stringResource(id = R.string.add_habit))
+                    }
                 }
             }
         }
+    }
+
+    if (showAllAnalytics) {
+        AllAnalyticsSheet(
+            state = state,
+            onDismiss = { showAllAnalytics = false }
+        )
     }
 
     // add dialog

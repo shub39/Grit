@@ -2,7 +2,6 @@ package com.shub39.grit.app
 
 import kotlinx.serialization.Serializable
 
-@Serializable
 sealed interface MainRoutes {
     @Serializable
     data object HabitsPages: MainRoutes

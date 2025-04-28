@@ -171,21 +171,25 @@ fun TaskList(
             ) { category ->
                 if (category != null) {
                     var tasks by remember(state.tasks) {
-                        mutableStateOf(
-                            state.tasks[category] ?: emptyList()
-                        )
+                        mutableStateOf(state.tasks[category] ?: emptyList())
                     }
 
                     val lazyListState = rememberLazyListState()
                     val reorderableListState =
-                        rememberReorderableLazyListState(lazyListState) { _, _ -> }
+                        rememberReorderableLazyListState(lazyListState) { from, to ->
+                            tasks = tasks.toMutableList().apply {
+                                add(to.index, removeAt(from.index))
+                            }
+
+                            onAction(TaskPageAction.ReorderTasks(tasks.mapIndexed { index, task -> index to task }))
+                        }
 
                     LazyColumn(
                         modifier = Modifier.fillMaxSize(),
                         state = lazyListState
                     ) {
                         itemsIndexed(tasks, key = { _, it -> it.id }) { index, task ->
-                            ReorderableItem(reorderableListState, key = { task.id }) {
+                            ReorderableItem(reorderableListState, key = task.id) {
                                 TaskCard(
                                     task = task,
                                     onStatusChange = { updatedTask ->
@@ -200,24 +204,14 @@ fun TaskList(
                                         onAction(TaskPageAction.UpdateTaskStatus(updatedTask))
                                     },
                                     dragState = editState,
-                                    moveUp = {
-                                        if (index > 0) {
-                                            tasks = tasks.toMutableList().apply {
-                                                add(index - 1, removeAt(index))
-                                            }
-
-                                            onAction(TaskPageAction.ReorderTasks(tasks.mapIndexed { index, task -> index to task }))
-                                        }
+                                    reorderIcon = {
+                                        Icon(
+                                            painter = painterResource(R.drawable.baseline_drag_indicator_24),
+                                            contentDescription = "Drag",
+                                            modifier = Modifier.draggableHandle()
+                                        )
                                     },
-                                    moveDown = {
-                                        if (index < tasks.size - 1) {
-                                            tasks = tasks.toMutableList().apply {
-                                                add(index + 1, removeAt(index))
-                                            }
-
-                                            onAction(TaskPageAction.ReorderTasks(tasks.mapIndexed { index, task -> index to task }))
-                                        }
-                                    }
+                                    modifier = Modifier
                                 )
                             }
                         }

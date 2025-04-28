@@ -69,10 +69,19 @@ class HabitViewModel(
                         upsertHabit(habit.second.copy(index = habit.first))
                     }
                 }
+
+                is HabitsPageAction.PrepareAnalytics -> {
+                    _state.update {
+                        it.copy(
+                            analyticsHabitId = action.habit.id
+                        )
+                    }
+                }
             }
         }
     }
 
+    // reschedule all alarms
     private fun refreshAlarms() = viewModelScope.launch {
         val habits = repo.getHabits()
 
