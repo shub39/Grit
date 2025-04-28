@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <style name="Theme.Grit.Splash" parent="Theme.SplashScreen">
+        <item name="windowSplashScreenAnimatedIcon">@drawable/ic_launcher_foreground_light</item>
+        <item name="windowSplashScreenBackground">@android:color/system_accent1_200</item>
+        <item name="postSplashScreenTheme">@style/Theme.Grit</item>
+    </style>
+</resources>

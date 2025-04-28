@@ -61,6 +61,7 @@ fun HabitsList(
     val context = LocalContext.current
 
     var showAddHabitDialog by remember { mutableStateOf(false) }
+    var showAllAnalytics by remember { mutableStateOf(false) }
 
     var editState by remember { mutableStateOf(false) }
 
@@ -151,29 +152,53 @@ fun HabitsList(
             }
         }
 
-        FloatingActionButton(
-            onClick = { showAddHabitDialog = true },
+        Row(
             modifier = Modifier
                 .padding(16.dp)
-                .align(Alignment.BottomEnd)
+                .align(Alignment.BottomEnd),
+            horizontalArrangement = Arrangement.spacedBy(8.dp)
         ) {
-            Row(
-                modifier = Modifier.padding(16.dp),
-                horizontalArrangement = Arrangement.spacedBy(8.dp),
-                verticalAlignment = Alignment.CenterVertically
+            AnimatedVisibility(
+                visible = state.habitsWithStatuses.isNotEmpty()
             ) {
-                Icon(
-                    painter = painterResource(R.drawable.round_add_24),
-                    contentDescription = null
-                )
-
-                AnimatedVisibility(
-                    visible = state.habitsWithStatuses.isEmpty()
+                FloatingActionButton(
+                    onClick = { showAllAnalytics = true }
                 ) {
-                    Text(text = stringResource(id = R.string.add_habit))
+                    Icon(
+                        painter = painterResource(R.drawable.round_analytics_24),
+                        contentDescription = "All Analytics"
+                    )
+                }
+            }
+
+            FloatingActionButton(
+                onClick = { showAddHabitDialog = true }
+            ) {
+                Row(
+                    modifier = Modifier.padding(16.dp),
+                    horizontalArrangement = Arrangement.spacedBy(8.dp),
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
+                    Icon(
+                        painter = painterResource(R.drawable.round_add_24),
+                        contentDescription = null
+                    )
+
+                    AnimatedVisibility(
+                        visible = state.habitsWithStatuses.isEmpty()
+                    ) {
+                        Text(text = stringResource(id = R.string.add_habit))
+                    }
                 }
             }
         }
+    }
+
+    if (showAllAnalytics) {
+        AllAnalyticsSheet(
+            state = state,
+            onDismiss = { showAllAnalytics = false }
+        )
     }
 
     // add dialog

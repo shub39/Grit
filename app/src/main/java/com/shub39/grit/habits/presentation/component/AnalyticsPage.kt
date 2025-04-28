@@ -159,15 +159,16 @@ fun AnalyticsPage(
             contentPadding = PaddingValues(start = 16.dp, end = 16.dp, top = 32.dp, bottom = 16.dp)
         ) {
             item {
-                Text(
-                    text = currentHabit.description,
-                    style = MaterialTheme.typography.bodyLarge
+                ListItem(
+                    headlineContent = {
+                        Text(text = currentHabit.description)
+                    }
                 )
             }
 
             item {
                 ListItem(
-                    leadingContent = {
+                    trailingContent = {
                         Icon(
                             painter = painterResource(R.drawable.baseline_flag_circle_24),
                             contentDescription = "Flag",
@@ -188,7 +189,7 @@ fun AnalyticsPage(
 
             item {
                 ListItem(
-                    leadingContent = {
+                    trailingContent = {
                         Icon(
                             painter = painterResource(R.drawable.round_local_fire_department_24),
                             contentDescription = "Streak",
@@ -265,7 +266,7 @@ fun AnalyticsPage(
                                     .then(
                                         if (done) Modifier.background(
                                             color = primary.copy(alpha = 0.2f),
-                                            shape = MaterialTheme.shapes.large
+                                            shape = MaterialTheme.shapes.small
                                         ) else Modifier
                                     ),
                                 contentAlignment = Alignment.Center

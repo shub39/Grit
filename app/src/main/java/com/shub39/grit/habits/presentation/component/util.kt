@@ -1,5 +1,6 @@
 package com.shub39.grit.habits.presentation.component
 
+import com.shub39.grit.habits.domain.Habit
 import com.shub39.grit.habits.domain.HabitStatus
 import java.time.DayOfWeek
 import java.time.LocalDate
@@ -28,6 +29,16 @@ fun prepareLineChartData(
     }.takeLast(10)
 
     return if (values.size < 2) emptyList() else values
+}
+
+fun prepareHeatMapData(
+    habitData: Map<Habit, List<HabitStatus>>
+):  Map<LocalDate, Int> {
+    val allDates = habitData.values.flatten().map { it.date }
+    val dateFrequency = allDates.groupingBy { it }
+        .eachCount()
+
+    return dateFrequency
 }
 
 fun getOrdinalSuffix(day: Int): String {
