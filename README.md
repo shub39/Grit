@@ -1,12 +1,7 @@
 ![](fastlane/metadata/android/en-US/images/icon200x200.png)
 
 # Grit 
-### A simple ToDo list and Habit Tracker
-
-> [!NOTE]
-> Due to being busy with other work, I'm short on time and motivation to add more features to this app
-> because it's good enough for my use case and I like to work on other more exciting stuff with the little 
-> free time I get. If you really like this app, please consider donating or contributing code
+### A simple ToDo list and Daily Habit Tracker
 
 > [<img src="https://ziadoua.github.io/m3-Markdown-Badges/badges/Android/android2.svg">]()
 > [<img src="https://ziadoua.github.io/m3-Markdown-Badges/badges/AndroidStudio/androidstudio3.svg">]()
@@ -33,10 +28,12 @@
 
 ## Features
 >- [x] Todo List
->- [x] Habit Tracking
+>- [x] Daily Habit Tracking
 >- [x] Analytics with Habit Maps
 >- [x] Notification Reminders
 >- [x] Widgets
+
+Check out planned changes in [RoadMap](https://github.com/shub39/Grit/discussions/66)
 
 ## Motivation 💭
 There are plenty of todo list and habit tracker apps for android. Some have the features I love while some have good UI design.
@@ -50,6 +47,8 @@ I eventually want to turn this app into a productivity hub with many social feat
 >- Alarm Manager API
 >- Kotlin Coroutines
 >- MVVM architecture
+>- [ComposeCharts](https://ehsannarmani.github.io/ComposeCharts/) for the Line Chart
+>- [Calendar](https://github.com/kizitonwose/Calendar) for the HeatMap
 >- [Reorderable](https://github.com/Calvin-LL/Reorderable) for reorderable lists!
 >- [Glance](https://developer.android.com/develop/ui/compose/glance/create-app-widget) for widgets
 >- [MaterialKolor](https://github.com/jordond/MaterialKolor) for generating color palettes

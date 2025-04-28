@@ -1,1 +1,1 @@
-A ToDo List and Habit Tracker app that helps you visualise your progress
+A Simple ToDo List and Daily Habit Tracker

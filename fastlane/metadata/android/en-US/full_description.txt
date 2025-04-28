@@ -1,9 +1,9 @@
-Grit is a ToDo List and habit tracker app that lets you visualise your progress
+Grit is a ToDo List and Daily habit tracker app that lets you visualise your progress
 
 Features
 
 - ToDo List with categories
-- Habit tracker with scheduled notifications
+- Daily Habit tracker with scheduled notifications
 - Habit map to visualise progress
 - Homescreen widgets
 - Material3 theme and look
