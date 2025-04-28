@@ -66,7 +66,7 @@ private fun Preview() {
                 id = habitId,
                 title = "Habit $habitId",
                 description = "This is Habit no: $habitId",
-                time = LocalDateTime.now(),
+                time = LocalDateTime.now().minusDays(habitId),
                 index = habitId.toInt()
             ) to (0L .. 20L).map {
                 HabitStatus(
@@ -90,6 +90,20 @@ private fun Preview() {
                             is HabitsPageAction.PrepareAnalytics -> {
                                 state = state.copy(
                                     analyticsHabitId = it.habit.id
+                                )
+                            }
+
+                            is HabitsPageAction.InsertStatus -> {
+                                state = state.copy(
+                                    habitsWithStatuses = state.habitsWithStatuses.mapValues { (habit, statuses) ->
+                                        if (habit.id == it.habit.id) {
+                                            if (statuses.any { status -> status.date == it.date }) {
+                                                statuses.filter { status -> status.date != it.date }
+                                            } else {
+                                                statuses + HabitStatus(habitId = habit.id, date = it.date)
+                                            }
+                                        } else statuses
+                                    }
                                 )
                             }
 

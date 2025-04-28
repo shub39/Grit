@@ -8,6 +8,7 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.widthIn
@@ -19,6 +20,7 @@ import androidx.compose.material3.Button
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
+import androidx.compose.material3.ListItem
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.MediumTopAppBar
 import androidx.compose.material3.OutlinedTextField
@@ -26,7 +28,9 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TimePicker
 import androidx.compose.material3.TimePickerState
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.saveable.rememberSaveable
@@ -46,11 +50,16 @@ import com.kizitonwose.calendar.compose.heatmapcalendar.rememberHeatMapCalendarS
 import com.shub39.grit.R
 import com.shub39.grit.core.presentation.components.GritDialog
 import com.shub39.grit.core.presentation.components.PageFill
+import com.shub39.grit.core.presentation.countBestStreak
+import com.shub39.grit.core.presentation.countCurrentStreak
 import com.shub39.grit.habits.domain.Habit
 import com.shub39.grit.habits.presentation.HabitPageState
 import com.shub39.grit.habits.presentation.HabitsPageAction
+import ir.ehsannarmani.compose_charts.LineChart
+import ir.ehsannarmani.compose_charts.models.AnimationMode
 import java.time.LocalDate
 import java.time.YearMonth
+import java.time.temporal.ChronoUnit
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -63,12 +72,16 @@ fun AnalyticsPage(
     val today = LocalDate.now()
     val currentMonth = remember { YearMonth.now() }
 
-    val currentHabit by remember {
+    val currentHabit by remember(state.habitsWithStatuses) {
         mutableStateOf(state.habitsWithStatuses.keys.find { it.id == state.analyticsHabitId }!!)
     }
-    val statuses by remember {
+    val statuses by remember(state.habitsWithStatuses) {
         mutableStateOf(state.habitsWithStatuses[currentHabit]!!)
     }
+
+    var lineChartData by remember { mutableStateOf(prepareLineChartData(statuses)) }
+    var currentStreak by remember { mutableIntStateOf(countCurrentStreak(statuses.map { it.date })) }
+    var bestStreak by remember { mutableIntStateOf(countBestStreak(statuses.map { it.date })) }
 
     val heatMapState = rememberHeatMapCalendarState(
         startMonth = currentMonth.minusMonths(12),
@@ -80,6 +93,12 @@ fun AnalyticsPage(
     var editDialog by remember { mutableStateOf(false) }
     var deleteDialog by remember { mutableStateOf(false) }
 
+    LaunchedEffect(statuses) {
+        lineChartData = prepareLineChartData(statuses)
+        currentStreak = countCurrentStreak(statuses.map { it.date })
+        bestStreak = countBestStreak(statuses.map { it.date })
+    }
+
     Column(
         modifier = Modifier
             .widthIn(max = 500.dp)
@@ -87,15 +106,9 @@ fun AnalyticsPage(
     ) {
         MediumTopAppBar(
             title = {
-                Column {
-                    Text(
-                        text = currentHabit.title
-                    )
-                    Text(
-                        text = currentHabit.description,
-                        style = MaterialTheme.typography.bodySmall
-                    )
-                }
+                Text(
+                    text = currentHabit.title
+                )
             },
             navigationIcon = {
                 IconButton(
@@ -133,15 +146,57 @@ fun AnalyticsPage(
                 .fillMaxSize()
                 .animateContentSize(),
             verticalArrangement = Arrangement.spacedBy(8.dp),
-            contentPadding = PaddingValues(start = 16.dp, end = 16.dp, top = 32.dp)
+            contentPadding = PaddingValues(start = 16.dp, end = 16.dp, top = 32.dp, bottom = 16.dp)
         ) {
             item {
-                AnalyticsCard {
-                    Text(
-                        text = stringResource(R.string.overview),
-                        style = MaterialTheme.typography.titleMedium
-                    )
-                }
+                Text(
+                    text = currentHabit.description,
+                    style = MaterialTheme.typography.bodyLarge
+                )
+            }
+
+            item {
+                ListItem(
+                    leadingContent = {
+                        Icon(
+                            painter = painterResource(R.drawable.baseline_flag_circle_24),
+                            contentDescription = "Flag",
+                            modifier = Modifier.size(64.dp)
+                        )
+                    },
+                    overlineContent = {
+                        Text(text = stringResource(R.string.started_on))
+                    },
+                    headlineContent = {
+                        Text(text = formatDateWithOrdinal(currentHabit.time.toLocalDate()))
+                    },
+                    supportingContent = {
+                        Text(text = stringResource(R.string.days_ago_format, ChronoUnit.DAYS.between(currentHabit.time.toLocalDate(), today)))
+                    }
+                )
+            }
+
+            item {
+                ListItem(
+                    leadingContent = {
+                        Icon(
+                            painter = painterResource(R.drawable.round_local_fire_department_24),
+                            contentDescription = "Streak",
+                            modifier = Modifier.size(64.dp)
+                        )
+                    },
+                    overlineContent = {
+                        Text(text = stringResource(R.string.streak))
+                    },
+                    headlineContent = {
+                        Text(text = currentStreak.toString())
+                    },
+                    supportingContent = {
+                        Text(
+                            text = stringResource(R.string.best_streak, bestStreak)
+                        )
+                    }
+                )
             }
 
             item {
@@ -198,6 +253,16 @@ fun AnalyticsPage(
                                 )
                             }
                         }
+                    )
+                }
+            }
+
+            item {
+                AnalyticsCard {
+                    LineChart(
+                        data = lineChartData,
+                        modifier = Modifier.height(300.dp),
+                        animationMode = AnimationMode.Together(delayBuilder = { it * 500L })
                     )
                 }
             }
