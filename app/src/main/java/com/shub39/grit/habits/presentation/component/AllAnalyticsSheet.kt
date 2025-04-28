@@ -2,6 +2,7 @@ package com.shub39.grit.habits.presentation.component
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
@@ -13,9 +14,12 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import com.kizitonwose.calendar.compose.HeatMapCalendar
 import com.kizitonwose.calendar.compose.heatmapcalendar.rememberHeatMapCalendarState
+import com.shub39.grit.R
 import com.shub39.grit.habits.presentation.HabitPageState
 import java.time.YearMonth
 import java.time.format.TextStyle
@@ -43,6 +47,15 @@ fun AllAnalyticsSheet(
         onDismissRequest = onDismiss,
         modifier = modifier
     ) {
+        Text(
+            text = stringResource(R.string.habit_map),
+            style = MaterialTheme.typography.titleLarge,
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(16.dp),
+            textAlign = TextAlign.Center
+        )
+
         AnalyticsCard(
             modifier = Modifier
                 .padding(16.dp)
