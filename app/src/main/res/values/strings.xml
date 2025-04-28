@@ -87,4 +87,6 @@
     <string name="pause_notifications_desc">Pause all app notifications</string>
     <string name="overview">Overview</string>
     <string name="started_on">Started On</string>
+    <string name="weekly_graph">Weekly Comparision</string>
+    <string name="not_enough_data">Not enough data</string>
 </resources>

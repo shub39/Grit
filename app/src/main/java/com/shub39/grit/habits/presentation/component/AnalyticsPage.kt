@@ -38,6 +38,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.SolidColor
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
@@ -57,9 +58,18 @@ import com.shub39.grit.habits.presentation.HabitPageState
 import com.shub39.grit.habits.presentation.HabitsPageAction
 import ir.ehsannarmani.compose_charts.LineChart
 import ir.ehsannarmani.compose_charts.models.AnimationMode
+import ir.ehsannarmani.compose_charts.models.DotProperties
+import ir.ehsannarmani.compose_charts.models.DrawStyle
+import ir.ehsannarmani.compose_charts.models.GridProperties
+import ir.ehsannarmani.compose_charts.models.HorizontalIndicatorProperties
+import ir.ehsannarmani.compose_charts.models.LabelHelperProperties
+import ir.ehsannarmani.compose_charts.models.Line
+import ir.ehsannarmani.compose_charts.models.StrokeStyle
 import java.time.LocalDate
 import java.time.YearMonth
+import java.time.format.TextStyle
 import java.time.temporal.ChronoUnit
+import java.util.Locale
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -79,7 +89,7 @@ fun AnalyticsPage(
         mutableStateOf(state.habitsWithStatuses[currentHabit]!!)
     }
 
-    var lineChartData by remember { mutableStateOf(prepareLineChartData(statuses)) }
+    var lineChartData by remember { mutableStateOf(prepareLineChartData(state.startingDay, statuses)) }
     var currentStreak by remember { mutableIntStateOf(countCurrentStreak(statuses.map { it.date })) }
     var bestStreak by remember { mutableIntStateOf(countBestStreak(statuses.map { it.date })) }
 
@@ -94,7 +104,7 @@ fun AnalyticsPage(
     var deleteDialog by remember { mutableStateOf(false) }
 
     LaunchedEffect(statuses) {
-        lineChartData = prepareLineChartData(statuses)
+        lineChartData = prepareLineChartData(state.startingDay, statuses)
         currentStreak = countCurrentStreak(statuses.map { it.date })
         bestStreak = countBestStreak(statuses.map { it.date })
     }
@@ -203,6 +213,20 @@ fun AnalyticsPage(
                 AnalyticsCard {
                     HeatMapCalendar(
                         state = heatMapState,
+                        monthHeader = {
+                            Box(
+                                modifier = Modifier.padding(2.dp)
+                            ) {
+                                Text(
+                                    text = it.yearMonth.month.getDisplayName(
+                                        TextStyle.SHORT_STANDALONE,
+                                        Locale.getDefault()
+                                    ),
+                                    style = MaterialTheme.typography.bodyMedium,
+                                    modifier = Modifier.align(Alignment.Center)
+                                )
+                            }
+                        },
                         weekHeader = {
                             Box(
                                 modifier = Modifier
@@ -258,12 +282,51 @@ fun AnalyticsPage(
             }
 
             item {
-                AnalyticsCard {
-                    LineChart(
-                        data = lineChartData,
-                        modifier = Modifier.height(300.dp),
-                        animationMode = AnimationMode.Together(delayBuilder = { it * 500L })
-                    )
+                AnalyticsCard(
+                    modifier = Modifier.height(300.dp)
+                ) {
+                    if (lineChartData.isNotEmpty()) {
+                        LineChart(
+                            labelHelperProperties = LabelHelperProperties(
+                                textStyle = MaterialTheme.typography.bodyMedium.copy(color = primary)
+                            ),
+                            indicatorProperties = HorizontalIndicatorProperties(
+                                textStyle = MaterialTheme.typography.bodyMedium.copy(color = primary)
+                            ),
+                            gridProperties = GridProperties(
+                                enabled = true,
+                                xAxisProperties = GridProperties.AxisProperties(lineCount = 10),
+                                yAxisProperties = GridProperties.AxisProperties(lineCount = 7)
+                            ),
+                            data = listOf(
+                                Line(
+                                    label = stringResource(R.string.weekly_graph),
+                                    values = lineChartData,
+                                    color = SolidColor(primary),
+                                    dotProperties = DotProperties(
+                                        enabled = true,
+                                        color = SolidColor(primary),
+                                        strokeWidth = 4.dp,
+                                        radius = 7.dp,
+                                        strokeColor = SolidColor(primary.copy(alpha = 0.5f))
+                                    ),
+                                    drawStyle = DrawStyle.Stroke(
+                                        width = 3.dp,
+                                        strokeStyle = StrokeStyle.Dashed(intervals = floatArrayOf(10f, 10f), phase = 15f)
+                                    )
+                                )
+                            ),
+                            curvedEdges = false,
+                            animationMode = AnimationMode.Together(delayBuilder = { it * 500L })
+                        )
+                    } else {
+                        Box(
+                            modifier = Modifier.fillMaxSize(),
+                            contentAlignment = Alignment.Center
+                        ) {
+                            Text(text = stringResource(R.string.not_enough_data))
+                        }
+                    }
                 }
             }
         }
