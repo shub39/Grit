@@ -53,20 +53,18 @@ class RestoreImpl(
                             habitRepo.upsertHabit(it)
                             alarmScheduler.schedule(it)
                         }
-                    },
-                    async {
+
                         jsonDeserialized.habitStatus.map { it.toHabitStatus() }.forEach {
                             habitRepo.insertHabitStatus(it)
                         }
                     },
                     async {
-                        jsonDeserialized.tasks.map { it.toTask() }.forEach {
-                            taskRepo.upsertTask(it)
-                        }
-                    },
-                    async {
                         jsonDeserialized.categories.map { it.toCategory() }.forEach {
                             taskRepo.upsertCategory(it)
+                        }
+
+                        jsonDeserialized.tasks.map { it.toTask() }.forEach {
+                            taskRepo.upsertTask(it)
                         }
                     }
                 )
