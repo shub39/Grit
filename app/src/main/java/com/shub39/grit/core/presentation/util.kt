@@ -16,8 +16,8 @@ import androidx.core.app.NotificationManagerCompat
 import androidx.core.content.ContextCompat.getString
 import com.shub39.grit.R
 import com.shub39.grit.app.MainActivity
+import com.shub39.grit.core.data.NotificationReceiver
 import com.shub39.grit.core.domain.IntentActions
-import com.shub39.grit.core.domain.NotificationReceiver
 import com.shub39.grit.habits.data.database.HabitEntity
 import com.shub39.grit.habits.domain.Habit
 import java.time.DayOfWeek

@@ -1,12 +1,10 @@
-package com.shub39.grit.core.domain
+package com.shub39.grit.core.data
 
 import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
 import android.util.Log
 import androidx.sqlite.driver.bundled.BundledSQLiteDriver
-import com.shub39.grit.core.data.NotificationAlarmScheduler
-import com.shub39.grit.core.data.toHabit
 import com.shub39.grit.habits.data.database.HabitDbFactory
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
