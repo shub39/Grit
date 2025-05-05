@@ -14,9 +14,9 @@ reorderable = "2.4.2"
 room = "2.7.1"
 sqlite = "2.5.0"
 navigation = "2.8.9"
-serialization = "1.7.3"
+serialization = "1.8.1"
 materialKolor = "2.1.1"
-aboutLibraries = '11.5.0'
+aboutLibraries = "12.1.0"
 composeIcons = "1.1.1"
 
 [libraries]

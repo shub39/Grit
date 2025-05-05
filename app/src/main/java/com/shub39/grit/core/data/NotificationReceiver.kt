@@ -50,7 +50,7 @@ class NotificationReceiver : BroadcastReceiver(), KoinComponent {
                             index = 0
                         )
 
-                        // check if habit is completed today, if not then shows notification
+                        // check if habit is completed today, if not then show notification
                         val habitStatus = habitStatusDao.getStatusForHabit(habitId)
                         val time = LocalDateTime.now().toLocalDate()
 
