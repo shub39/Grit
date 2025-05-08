@@ -4,8 +4,10 @@ import com.shub39.grit.habits.domain.Habit
 
 interface AlarmScheduler {
     // Notification scheduler for Habits
-    fun schedule(item: Habit)
+    fun schedule(habit: Habit)
 
     // cancel habit notifications
-    fun cancel(item: Habit)
+    fun cancel(habit: Habit)
+
+    fun cancelAll()
 }

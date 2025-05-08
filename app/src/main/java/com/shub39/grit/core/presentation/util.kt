@@ -20,7 +20,6 @@ import com.shub39.grit.core.data.NotificationReceiver
 import com.shub39.grit.core.domain.IntentActions
 import com.shub39.grit.habits.data.database.HabitEntity
 import com.shub39.grit.habits.domain.Habit
-import java.time.DayOfWeek
 import java.time.LocalDate
 import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
@@ -28,23 +27,8 @@ import java.time.temporal.ChronoUnit
 import kotlin.random.Random
 
 @OptIn(ExperimentalMaterial3Api::class)
-fun localToTimePickerState(localTime: LocalDateTime): TimePickerState {
-    val hour = localTime.hour
-    val minute = localTime.minute
-    return TimePickerState(hour, minute, false)
-}
-
-@OptIn(ExperimentalMaterial3Api::class)
 fun timePickerStateToLocalDateTime(timePickerState: TimePickerState, date: LocalDate = LocalDate.now()): LocalDateTime {
     return LocalDateTime.of(date, java.time.LocalTime.of(timePickerState.hour, timePickerState.minute))
-}
-
-fun getNextMonday(): LocalDateTime {
-    var nextMonday = LocalDateTime.now().plusWeeks(1)
-    while (nextMonday.dayOfWeek != DayOfWeek.MONDAY) {
-        nextMonday = nextMonday.minusDays(1)
-    }
-    return nextMonday.withHour(0).withMinute(0)
 }
 
 fun countCurrentStreak(dates: List<LocalDate>): Int {
@@ -156,7 +140,7 @@ fun habitNotification(context: Context, habitEntity: HabitEntity) {
     }
     val pendingBroadcast = PendingIntent.getBroadcast(
         context,
-        habitEntity.id.hashCode(),
+        habitEntity.id.toInt(),
         intent,
         PendingIntent.FLAG_IMMUTABLE
     )

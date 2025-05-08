@@ -85,6 +85,7 @@ class HabitViewModel(
     private fun refreshAlarms() = viewModelScope.launch {
         val habits = repo.getHabits()
 
+        scheduler.cancelAll()
         habits.forEach { scheduler.cancel(it) }
         habits.forEach { scheduler.schedule(it) }
     }

@@ -38,10 +38,10 @@ class NotificationReceiver : BroadcastReceiver(), KoinComponent {
                 when (intent.action) {
                     IntentActions.HABIT_NOTIFICATION.action -> {
                         Log.d(tag, "Habit notification received")
-                        val habitId = intent.getLongExtra("3", -1)
+                        val habitId = intent.getLongExtra("habit_id", -1)
                         if (habitId < 0L) return@launch
-                        val habitTitle = intent.getStringExtra("1") ?: return@launch
-                        val habitDescription = intent.getStringExtra("2") ?: return@launch
+                        val habitTitle = intent.getStringExtra("habit_title") ?: return@launch
+                        val habitDescription = intent.getStringExtra("habit_description") ?: return@launch
                         val habitEntity = HabitEntity(
                             id = habitId,
                             title = habitTitle,
@@ -68,7 +68,7 @@ class NotificationReceiver : BroadcastReceiver(), KoinComponent {
                         val habitId = intent.getLongExtra("1", -1)
                         if (habitId < 0) return@launch
 
-                        NotificationManagerCompat.from(context).cancel(habitId.hashCode())
+                        NotificationManagerCompat.from(context).cancel(habitId.toInt())
 
                         try {
                             val habitStatusEntity = HabitStatusEntity(

@@ -4,65 +4,86 @@ import android.app.AlarmManager
 import android.app.PendingIntent
 import android.content.Context
 import android.content.Intent
+import android.os.Build
 import android.util.Log
+import androidx.annotation.RequiresApi
 import com.shub39.grit.core.domain.AlarmScheduler
 import com.shub39.grit.core.domain.IntentActions
 import com.shub39.grit.habits.domain.Habit
 import java.time.LocalDateTime
 import java.time.ZoneId
 import java.time.format.DateTimeFormatter
+import java.util.Locale
 
+//implementation of AlarmScheduler using AlarmManager
 class NotificationAlarmScheduler(
     private val context: Context
-): AlarmScheduler {
+) : AlarmScheduler {
 
     private val tag = "NotificationAlarmScheduler"
-    private val alarmManager = context.getSystemService(AlarmManager::class.java)
+    private val alarmManager = context.getSystemService(Context.ALARM_SERVICE) as AlarmManager
 
-    // schedule notifications for habit
-    override fun schedule(item: Habit) {
-        var time = item.time
+    override fun schedule(habit: Habit) {
+        var scheduleTime = habit.time
 
-        while (time.isBefore(LocalDateTime.now())) {
-            time = time.plusDays(1)
+        var attempt = 0
+        while (scheduleTime.isBefore(LocalDateTime.now()) && attempt < 365) {
+            scheduleTime = scheduleTime.plusDays(1)
+            attempt++
         }
 
-        val intent = Intent(context, NotificationReceiver::class.java).apply {
-            putExtra("1", item.title)
-            putExtra("2", item.description)
-            putExtra("3", item.id)
+        val notificationIntent = Intent(context, NotificationReceiver::class.java).apply {
             action = IntentActions.HABIT_NOTIFICATION.action
+            putExtra("habit_title", habit.title)
+            putExtra("habit_description", habit.description)
+            putExtra("habit_id", habit.id)
         }
+
+        val pendingIntent = PendingIntent.getBroadcast(
+            context,
+            habit.index,
+            notificationIntent,
+            PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE
+        )
 
         alarmManager.setExactAndAllowWhileIdle(
             AlarmManager.RTC_WAKEUP,
-            time.atZone(ZoneId.systemDefault()).toEpochSecond() * 1000,
-            PendingIntent.getBroadcast(
-                context,
-                item.id.hashCode(),
-                intent,
-                PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE
-            )
+            scheduleTime.atZone(ZoneId.systemDefault()).toEpochSecond() * 1000,
+            pendingIntent
         )
 
-        Log.d(tag, "Scheduled notification for ${time.format(DateTimeFormatter.ofPattern("dd/MM/ hh:mm a"))}")
+        Log.d(
+            tag,
+            "Scheduled: Habit '${habit.title}' at ${
+                scheduleTime.format(
+                    DateTimeFormatter.ofPattern(
+                        "dd/MM/yyyy hh:mm a",
+                        Locale.getDefault()
+                    )
+                )
+            }"
+        )
     }
 
-    // cancel habit notifications
-    override fun cancel(item: Habit) {
-        val intent = Intent(context, NotificationReceiver::class.java).apply {
+    override fun cancel(habit: Habit) {
+        val cancelIntent = Intent(context, NotificationReceiver::class.java).apply {
             action = IntentActions.HABIT_NOTIFICATION.action
         }
 
         val pendingIntent = PendingIntent.getBroadcast(
             context,
-            item.id.hashCode(),
-            intent,
+            habit.index,
+            cancelIntent,
             PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE
         )
 
         alarmManager.cancel(pendingIntent)
-
-        Log.d(tag, "Cancelled notification for ${item.title}")
+        Log.d(tag, "Cancelled: Habit '${habit.title}'")
     }
+
+    @RequiresApi(Build.VERSION_CODES.UPSIDE_DOWN_CAKE)
+    override fun cancelAll() {
+        alarmManager.cancelAll()
+    }
+
 }
