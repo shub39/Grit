@@ -48,6 +48,7 @@ class RestoreImpl(
                 awaitAll(
                     async {
                         habitRepo.getHabits().forEach { alarmScheduler.cancel(it) }
+                        alarmScheduler.cancelAll()
 
                         jsonDeserialized.habits.map { it.toHabit() }.forEach {
                             habitRepo.upsertHabit(it)

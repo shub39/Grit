@@ -8,8 +8,8 @@ plugins {
 }
 
 val appName = "Grit"
-val appVersionCode = 2000
-val appVersionName = "2.0.0"
+val appVersionCode = 2100
+val appVersionName = "2.1.0"
 
 android {
     namespace = "com.shub39.grit"
@@ -82,7 +82,7 @@ android {
 
 aboutLibraries {
     // Remove the "generated" timestamp to allow for reproducible builds; from kaajjo/LibreSudoku
-    excludeFields = arrayOf("generated")
+    export.excludeFields.add("generated")
 }
 
 dependencies {

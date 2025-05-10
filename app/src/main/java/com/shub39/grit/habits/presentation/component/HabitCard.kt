@@ -36,6 +36,7 @@ import com.shub39.grit.habits.domain.Habit
 import com.shub39.grit.habits.domain.HabitStatus
 import com.shub39.grit.habits.presentation.HabitsPageAction
 import java.time.DayOfWeek
+import java.time.LocalDate
 import java.time.format.DateTimeFormatter
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -69,9 +70,9 @@ fun HabitCard(
     )
 
     val weekState = rememberWeekCalendarState(
-        startDate = habit.time.toLocalDate().minusMonths(100),
-        endDate = habit.time.toLocalDate(),
-        firstVisibleWeekDate = habit.time.toLocalDate(),
+        startDate = habit.time.toLocalDate().minusMonths(12),
+        endDate = LocalDate.now(),
+        firstVisibleWeekDate = LocalDate.now(),
         firstDayOfWeek = startingDay
     )
 
