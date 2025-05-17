@@ -40,19 +40,8 @@ There are plenty of todo list and habit tracker apps for android. Some have the 
 While learning android I made this app for myself that brings together all the features that I like keeping everything simple. 
 I eventually want to turn this app into a productivity hub with many social features like progress sharing in the form of beautiful cards.
 
-## Tech Stack ⚒️
-
->- Material3 Design with Jetpack Compose
->- Database using ROOM Library
->- Alarm Manager API
->- Kotlin Coroutines
->- MVVM architecture
->- [ComposeCharts](https://ehsannarmani.github.io/ComposeCharts/) for the Line Chart
->- [Calendar](https://github.com/kizitonwose/Calendar) for the HeatMap
->- [Reorderable](https://github.com/Calvin-LL/Reorderable) for reorderable lists!
->- [Glance](https://developer.android.com/develop/ui/compose/glance/create-app-widget) for widgets
->- [MaterialKolor](https://github.com/jordond/MaterialKolor) for generating color palettes
->- [Colorpicker-compose](https://github.com/skydoves/colorpicker-compose) for the color picker
+## References and Inspiration 💡
+>- [Loop Habit Tracker](https://github.com/iSoron/uhabits)
 
 ## Stargazers over time ✨
 [![Stargazers over time](https://starchart.cc/shub39/Grit.svg?background=%23282828&axis=%23f2dfd3&line=%23ffb780)](https://starchart.cc/shub39/Grit)
