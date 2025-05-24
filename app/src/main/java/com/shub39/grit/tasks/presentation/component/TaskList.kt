@@ -2,6 +2,7 @@ package com.shub39.grit.tasks.presentation.component
 
 import androidx.compose.animation.AnimatedContent
 import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.core.animateDpAsState
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -12,23 +13,27 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.layout.widthIn
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Add
 import androidx.compose.material3.AssistChip
 import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonShapes
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.ExperimentalMaterial3ExpressiveApi
 import androidx.compose.material3.FilledTonalIconButton
 import androidx.compose.material3.FilledTonalIconToggleButton
 import androidx.compose.material3.FilterChip
 import androidx.compose.material3.FloatingActionButton
+import androidx.compose.material3.FloatingActionButtonDefaults
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconToggleButtonShapes
 import androidx.compose.material3.MaterialTheme
@@ -55,6 +60,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import com.shub39.grit.R
 import com.shub39.grit.core.presentation.components.Empty
+import com.shub39.grit.core.presentation.components.GritBottomSheet
 import com.shub39.grit.core.presentation.components.GritDialog
 import com.shub39.grit.tasks.domain.Category
 import com.shub39.grit.tasks.domain.CategoryColors
@@ -81,9 +87,7 @@ fun TaskList(
         contentAlignment = Alignment.Center
     ) {
         Column(
-            modifier = Modifier
-                .widthIn(max = 500.dp)
-                .fillMaxSize()
+            modifier = Modifier.fillMaxSize()
         ) {
             TopAppBar(
                 title = { Text(text = stringResource(R.string.tasks)) },
@@ -112,7 +116,7 @@ fun TaskList(
                             shapes = IconToggleButtonShapes(
                                 shape = CircleShape,
                                 checkedShape = MaterialTheme.shapes.small,
-                                pressedShape = MaterialTheme.shapes.small,
+                                pressedShape = MaterialTheme.shapes.extraSmall,
                             ),
                             onCheckedChange = { editState = it },
                             enabled = !state.tasks[state.currentCategory].isNullOrEmpty()
@@ -132,12 +136,17 @@ fun TaskList(
                 contentPadding = PaddingValues(bottom = 8.dp, start = 16.dp, end = 16.dp)
             ) {
                 items(state.tasks.keys.toList(), key = { it.id }) { category ->
+                    val chipCorner by animateDpAsState(
+                        targetValue = if (category == state.currentCategory) 20.dp else 5.dp
+                    )
+
                     FilterChip(
                         selected = category == state.currentCategory,
                         onClick = {
                             onAction(TaskPageAction.ChangeCategory(category))
                             editState = false
                         },
+                        shape = RoundedCornerShape(chipCorner),
                         label = { Text(category.name) }
                     )
                 }
@@ -237,7 +246,10 @@ fun TaskList(
             modifier = Modifier
                 .align(Alignment.BottomEnd)
                 .padding(16.dp),
-            onClick = { showTaskAddDialog = true }
+            onClick = { showTaskAddDialog = true },
+            shape = FloatingActionButtonDefaults.largeShape,
+            containerColor = MaterialTheme.colorScheme.primaryContainer,
+            contentColor = MaterialTheme.colorScheme.onPrimaryContainer
         ) {
             Row(
                 modifier = Modifier.padding(16.dp),
@@ -267,7 +279,7 @@ fun TaskList(
         ) {
             Icon(
                 painter = painterResource(R.drawable.round_warning_24),
-                contentDescription = null,
+                contentDescription = "Warning",
                 modifier = Modifier.size(64.dp)
             )
 
@@ -280,7 +292,12 @@ fun TaskList(
                 onClick = {
                     onAction(TaskPageAction.DeleteTasks)
                     showDeleteDialog = false
-                }
+                },
+                shapes = ButtonShapes(
+                    shape = MaterialTheme.shapes.extraLarge,
+                    pressedShape = MaterialTheme.shapes.small
+                ),
+                modifier = Modifier.fillMaxWidth()
             ) {
                 Text(stringResource(R.string.delete))
             }
@@ -297,9 +314,20 @@ fun TaskList(
             keyboardController?.show()
         }
 
-        GritDialog(
+        GritBottomSheet(
             onDismissRequest = { showCategoryAddDialog = false }
         ) {
+            Icon(
+                imageVector = Icons.Default.Add,
+                contentDescription = "Add"
+            )
+
+            Text(
+                text = stringResource(R.string.add_category),
+                style = MaterialTheme.typography.headlineSmall,
+                textAlign = TextAlign.Center
+            )
+
             OutlinedTextField(
                 value = name,
                 onValueChange = { name = it },
@@ -309,8 +337,9 @@ fun TaskList(
                     imeAction = ImeAction.Done
                 ),
                 singleLine = true,
-                modifier = Modifier.focusRequester(focusRequester),
-                label = { Text(text = stringResource(id = R.string.add_category)) }
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .focusRequester(focusRequester)
             )
 
             Button(
@@ -325,6 +354,11 @@ fun TaskList(
                     )
                     showCategoryAddDialog = false
                 },
+                shapes = ButtonShapes(
+                    shape = MaterialTheme.shapes.extraLarge,
+                    pressedShape = MaterialTheme.shapes.small
+                ),
+                modifier = Modifier.fillMaxWidth(),
                 enabled = name.isNotBlank() && name.length <= 20
             ) {
                 Text(text = stringResource(R.string.done))
@@ -343,9 +377,20 @@ fun TaskList(
             keyboardController?.show()
         }
 
-        GritDialog(
+        GritBottomSheet(
             onDismissRequest = { showTaskAddDialog = false }
         ) {
+            Icon(
+                imageVector = Icons.Default.Add,
+                contentDescription = "Add"
+            )
+
+            Text(
+                text = stringResource(id = R.string.add_task),
+                style = MaterialTheme.typography.headlineSmall,
+                textAlign = TextAlign.Center
+            )
+
             OutlinedTextField(
                 value = newTask,
                 onValueChange = { newTask = it },
@@ -359,8 +404,9 @@ fun TaskList(
                         newTask.plus("\n")
                     }
                 ),
-                modifier = Modifier.focusRequester(focusRequester),
-                label = { Text(text = stringResource(id = R.string.add_task)) }
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .focusRequester(focusRequester)
             )
 
             Button(
@@ -380,6 +426,11 @@ fun TaskList(
                         )
                     }
                 },
+                shapes = ButtonShapes(
+                    shape = MaterialTheme.shapes.extraLarge,
+                    pressedShape = MaterialTheme.shapes.small
+                ),
+                modifier = Modifier.fillMaxWidth(),
                 enabled = newTask.isNotEmpty() && newTask.length <= 100
             ) {
                 Text(

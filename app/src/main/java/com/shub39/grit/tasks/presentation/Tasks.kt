@@ -1,6 +1,5 @@
 package com.shub39.grit.tasks.presentation
 
-import android.content.res.Configuration
 import androidx.compose.animation.fadeOut
 import androidx.compose.animation.slideInVertically
 import androidx.compose.foundation.layout.Box
@@ -12,7 +11,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.tooling.preview.PreviewLightDark
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
@@ -60,11 +59,7 @@ fun Tasks(
     }
 }
 
-@Preview(
-    showSystemUi = true, showBackground = true, backgroundColor = 0xFFFFFFFF,
-    device = "spec:width=411dp,height=891dp",
-    uiMode = Configuration.UI_MODE_NIGHT_YES or Configuration.UI_MODE_TYPE_NORMAL
-)
+@PreviewLightDark
 @Composable
 private fun Preview() {
     val data = (0L..3L).associate { category ->
@@ -81,11 +76,13 @@ private fun Preview() {
             )
         }
     }
+
     var state by remember {
         mutableStateOf(
             TaskPageState(
                 currentCategory = data.keys.first(),
-                tasks = data
+                tasks = data,
+                completedTasks = data.values.first()
             )
         )
     }
@@ -102,6 +99,7 @@ private fun Preview() {
                             is TaskPageAction.ChangeCategory -> {
                                 state = state.copy(currentCategory = it.category)
                             }
+
                             else -> {}
                         }
                     },
