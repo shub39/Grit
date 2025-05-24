@@ -13,6 +13,7 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.widthIn
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
@@ -25,6 +26,7 @@ import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material3.AssistChip
+import androidx.compose.material3.AssistChipDefaults
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonShapes
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -77,8 +79,8 @@ fun TaskList(
     onAction: (TaskPageAction) -> Unit,
     onNavigateToEditCategories: () -> Unit
 ) {
-    var showTaskAddDialog by remember { mutableStateOf(false) }
-    var showCategoryAddDialog by remember { mutableStateOf(false) }
+    var showTaskAddSheet by remember { mutableStateOf(false) }
+    var showCategoryAddSheet by remember { mutableStateOf(false) }
     var showDeleteDialog by remember { mutableStateOf(false) }
     var editState by remember { mutableStateOf(false) }
 
@@ -87,7 +89,9 @@ fun TaskList(
         contentAlignment = Alignment.Center
     ) {
         Column(
-            modifier = Modifier.fillMaxSize()
+            modifier = Modifier
+                .widthIn(max = 500.dp)
+                .fillMaxSize()
         ) {
             TopAppBar(
                 title = { Text(text = stringResource(R.string.tasks)) },
@@ -156,12 +160,17 @@ fun TaskList(
                         horizontalArrangement = Arrangement.spacedBy(8.dp)
                     ) {
                         AssistChip(
-                            onClick = { showCategoryAddDialog = true },
+                            onClick = { showCategoryAddSheet = true },
                             enabled = !editState,
+                            colors = AssistChipDefaults.assistChipColors(
+                                containerColor = MaterialTheme.colorScheme.primaryContainer,
+                                labelColor = MaterialTheme.colorScheme.onPrimaryContainer
+                            ),
+                            border = AssistChipDefaults.assistChipBorder(false),
                             label = {
                                 Icon(
                                     painter = painterResource(R.drawable.round_add_24),
-                                    contentDescription = null
+                                    contentDescription = "Add Category"
                                 )
                             }
                         )
@@ -169,6 +178,11 @@ fun TaskList(
                         AssistChip(
                             onClick = onNavigateToEditCategories,
                             enabled = !editState,
+                            colors = AssistChipDefaults.assistChipColors(
+                                containerColor = MaterialTheme.colorScheme.primaryContainer,
+                                labelColor = MaterialTheme.colorScheme.onPrimaryContainer
+                            ),
+                            border = AssistChipDefaults.assistChipBorder(false),
                             label = {
                                 Icon(
                                     painter = painterResource(R.drawable.baseline_edit_square_24),
@@ -204,6 +218,10 @@ fun TaskList(
                     ) {
                         itemsIndexed(tasks, key = { _, it -> it.id }) { index, task ->
                             ReorderableItem(reorderableListState, key = task.id) {
+                                val cardCorners by animateDpAsState(
+                                    targetValue = if (it) 30.dp else 16.dp
+                                )
+
                                 TaskCard(
                                     task = task,
                                     onStatusChange = { updatedTask ->
@@ -225,6 +243,7 @@ fun TaskList(
                                             modifier = Modifier.draggableHandle()
                                         )
                                     },
+                                    shape = RoundedCornerShape(cardCorners),
                                     modifier = Modifier
                                 )
                             }
@@ -246,7 +265,7 @@ fun TaskList(
             modifier = Modifier
                 .align(Alignment.BottomEnd)
                 .padding(16.dp),
-            onClick = { showTaskAddDialog = true },
+            onClick = { showTaskAddSheet = true },
             shape = FloatingActionButtonDefaults.largeShape,
             containerColor = MaterialTheme.colorScheme.primaryContainer,
             contentColor = MaterialTheme.colorScheme.onPrimaryContainer
@@ -304,7 +323,7 @@ fun TaskList(
         }
     }
 
-    if (showCategoryAddDialog) {
+    if (showCategoryAddSheet) {
         var name by remember { mutableStateOf("") }
         val keyboardController = LocalSoftwareKeyboardController.current
         val focusRequester = remember { FocusRequester() }
@@ -315,7 +334,7 @@ fun TaskList(
         }
 
         GritBottomSheet(
-            onDismissRequest = { showCategoryAddDialog = false }
+            onDismissRequest = { showCategoryAddSheet = false }
         ) {
             Icon(
                 imageVector = Icons.Default.Add,
@@ -352,7 +371,7 @@ fun TaskList(
                             )
                         )
                     )
-                    showCategoryAddDialog = false
+                    showCategoryAddSheet = false
                 },
                 shapes = ButtonShapes(
                     shape = MaterialTheme.shapes.extraLarge,
@@ -367,7 +386,7 @@ fun TaskList(
     }
 
     // add dialog
-    if (showTaskAddDialog) {
+    if (showTaskAddSheet) {
         var newTask by remember { mutableStateOf("") }
         val keyboardController = LocalSoftwareKeyboardController.current
         val focusRequester = remember { FocusRequester() }
@@ -378,7 +397,7 @@ fun TaskList(
         }
 
         GritBottomSheet(
-            onDismissRequest = { showTaskAddDialog = false }
+            onDismissRequest = { showTaskAddSheet = false }
         ) {
             Icon(
                 imageVector = Icons.Default.Add,
@@ -411,7 +430,7 @@ fun TaskList(
 
             Button(
                 onClick = {
-                    showTaskAddDialog = false
+                    showTaskAddSheet = false
 
                     if (state.currentCategory != null) {
                         onAction(
