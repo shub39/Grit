@@ -9,7 +9,7 @@ glance = "1.1.1"
 koin = "4.0.1"
 kotlin = "2.1.20"
 ksp = "2.1.20-2.0.0"
-material3 = "1.3.2"
+material3 = "1.4.0-alpha15"
 reorderable = "2.4.2"
 room = "2.7.1"
 sqlite = "2.5.1"
@@ -18,6 +18,8 @@ serialization = "1.8.1"
 materialKolor = "2.1.1"
 aboutLibraries = "12.1.0"
 composeIcons = "1.1.1"
+compose = "1.8.2"
+materialIconsCore = "1.7.3"
 
 [libraries]
 # Android
@@ -31,11 +33,12 @@ androidx-room-runtime = { module = "androidx.room:room-runtime", version.ref = "
 calendar = { module = "com.kizitonwose.calendar:compose", version.ref = "calendar" }
 compose-charts = { module = "io.github.ehsannarmani:compose-charts", version.ref = "composeCharts" }
 sqlite-bundled = { module = "androidx.sqlite:sqlite-bundled", version.ref = "sqlite" }
-androidx-ui = { group = "androidx.compose.ui", name = "ui" }
-androidx-ui-graphics = { group = "androidx.compose.ui", name = "ui-graphics" }
-androidx-ui-tooling = { group = "androidx.compose.ui", name = "ui-tooling" }
-androidx-ui-tooling-preview = { group = "androidx.compose.ui", name = "ui-tooling-preview" }
+androidx-ui = { group = "androidx.compose.ui", name = "ui", version.ref = "compose" }
+androidx-ui-graphics = { group = "androidx.compose.ui", name = "ui-graphics", version.ref = "compose" }
+androidx-ui-tooling = { group = "androidx.compose.ui", name = "ui-tooling", version.ref = "compose" }
+androidx-ui-tooling-preview = { group = "androidx.compose.ui", name = "ui-tooling-preview", version.ref = "compose" }
 androidx-navigation-compose = { group = "androidx.navigation", name = "navigation-compose", version.ref = "navigation" }
+material-icons-core = { module = "org.jetbrains.compose.material:material-icons-core", version.ref = "materialIconsCore" }
 
 # Others
 koin-androidx-compose = { module = "io.insert-koin:koin-androidx-compose", version.ref = "koin" }

@@ -18,16 +18,19 @@ import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.lazy.rememberLazyListState
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material3.AssistChip
 import androidx.compose.material3.Button
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.ExperimentalMaterial3ExpressiveApi
+import androidx.compose.material3.FilledTonalIconButton
+import androidx.compose.material3.FilledTonalIconToggleButton
 import androidx.compose.material3.FilterChip
 import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Icon
-import androidx.compose.material3.IconButton
-import androidx.compose.material3.IconButtonDefaults
+import androidx.compose.material3.IconToggleButtonShapes
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
@@ -61,7 +64,7 @@ import com.shub39.grit.tasks.presentation.TaskPageState
 import sh.calvin.reorderable.ReorderableItem
 import sh.calvin.reorderable.rememberReorderableLazyListState
 
-@OptIn(ExperimentalMaterial3Api::class)
+@OptIn(ExperimentalMaterial3ExpressiveApi::class, ExperimentalMaterial3Api::class)
 @Composable
 fun TaskList(
     state: TaskPageState,
@@ -83,9 +86,10 @@ fun TaskList(
                 .fillMaxSize()
         ) {
             TopAppBar(
-                title = {
+                title = { Text(text = stringResource(R.string.tasks)) },
+                subtitle = {
                     Text(
-                        text = stringResource(R.string.tasks)
+                        text = "${state.completedTasks.size} " + stringResource(R.string.tasks_done)
                     )
                 },
                 actions = {
@@ -93,7 +97,7 @@ fun TaskList(
                         AnimatedVisibility(
                             visible = state.completedTasks.isNotEmpty()
                         ) {
-                            IconButton(
+                            FilledTonalIconButton(
                                 onClick = { showDeleteDialog = true },
                             ) {
                                 Icon(
@@ -103,13 +107,14 @@ fun TaskList(
                             }
                         }
 
-                        IconButton(
-                            onClick = { editState = !editState },
-                            colors = if (editState) {
-                                IconButtonDefaults.filledIconButtonColors()
-                            } else {
-                                IconButtonDefaults.iconButtonColors()
-                            },
+                        FilledTonalIconToggleButton(
+                            checked = editState,
+                            shapes = IconToggleButtonShapes(
+                                shape = CircleShape,
+                                checkedShape = MaterialTheme.shapes.small,
+                                pressedShape = MaterialTheme.shapes.small,
+                            ),
+                            onCheckedChange = { editState = it },
                             enabled = !state.tasks[state.currentCategory].isNullOrEmpty()
                         ) {
                             Icon(
