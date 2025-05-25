@@ -1,5 +1,6 @@
 package com.shub39.grit.tasks.presentation
 
+import androidx.compose.animation.core.tween
 import androidx.compose.animation.fadeOut
 import androidx.compose.animation.slideInVertically
 import androidx.compose.foundation.layout.Box
@@ -32,10 +33,10 @@ fun Tasks(
     NavHost(
         navController = navController,
         startDestination = TasksRoutes.TasksList,
-        enterTransition = { slideInVertically(initialOffsetY = { it / 2 }) },
-        exitTransition = { fadeOut() },
-        popEnterTransition = { slideInVertically(initialOffsetY = { it / 2 }) },
-        popExitTransition = { fadeOut() }
+        enterTransition = { slideInVertically(tween(500), initialOffsetY = { it / 2 }) },
+        exitTransition = { fadeOut(tween(500)) },
+        popEnterTransition = { slideInVertically(tween(500), initialOffsetY = { it / 2 }) },
+        popExitTransition = { fadeOut(tween(500)) }
     ) {
         composable<TasksRoutes.TasksList> {
             TaskList(

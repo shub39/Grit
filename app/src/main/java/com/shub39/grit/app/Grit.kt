@@ -6,9 +6,11 @@ import androidx.compose.animation.fadeOut
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material3.BottomAppBar
+import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.ExperimentalMaterial3ExpressiveApi
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.NavigationBar
 import androidx.compose.material3.NavigationBarItem
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
@@ -37,6 +39,7 @@ import com.shub39.grit.viewmodels.SettingsViewModel
 import com.shub39.grit.viewmodels.TasksViewModel
 import org.koin.androidx.compose.koinViewModel
 
+@OptIn(ExperimentalMaterial3Api::class, ExperimentalMaterial3ExpressiveApi::class)
 @Composable
 fun Grit(
     tvm: TasksViewModel = koinViewModel(),
@@ -70,15 +73,13 @@ fun Grit(
     ) {
         Scaffold(
             bottomBar = {
-                BottomAppBar(
+                NavigationBar(
                     modifier = Modifier.clip(RoundedCornerShape(topStart = 20.dp, topEnd = 20.dp))
                 ) {
                     MainRoutes.allRoutes.forEach { route ->
                         NavigationBarItem(
                             selected = currentRoute == route,
-                            onClick = {
-                                navigator(route)
-                            },
+                            onClick = { navigator(route) },
                             icon = {
                                 Icon(
                                     painter = painterResource(
