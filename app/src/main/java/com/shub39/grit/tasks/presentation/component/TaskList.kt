@@ -35,7 +35,6 @@ import androidx.compose.material3.FilledTonalIconButton
 import androidx.compose.material3.FilledTonalIconToggleButton
 import androidx.compose.material3.FilterChip
 import androidx.compose.material3.FloatingActionButton
-import androidx.compose.material3.FloatingActionButtonDefaults
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconToggleButtonShapes
 import androidx.compose.material3.MaterialTheme
@@ -219,7 +218,7 @@ fun TaskList(
                         itemsIndexed(tasks, key = { _, it -> it.id }) { index, task ->
                             ReorderableItem(reorderableListState, key = task.id) {
                                 val cardCorners by animateDpAsState(
-                                    targetValue = if (it) 30.dp else 16.dp
+                                    targetValue = if (it) 100.dp else 16.dp
                                 )
 
                                 TaskCard(
@@ -266,7 +265,6 @@ fun TaskList(
                 .align(Alignment.BottomEnd)
                 .padding(16.dp),
             onClick = { showTaskAddSheet = true },
-            shape = FloatingActionButtonDefaults.largeShape,
             containerColor = MaterialTheme.colorScheme.primaryContainer,
             contentColor = MaterialTheme.colorScheme.onPrimaryContainer
         ) {
