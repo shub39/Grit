@@ -10,9 +10,14 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Edit
 import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonShapes
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
+import androidx.compose.material3.ExperimentalMaterial3ExpressiveApi
+import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
@@ -26,28 +31,31 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.focus.focusRequester
+import androidx.compose.ui.graphics.Shape
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardCapitalization
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.unit.dp
 import com.shub39.grit.R
-import com.shub39.grit.core.presentation.components.GritDialog
+import com.shub39.grit.core.presentation.components.GritBottomSheet
 import com.shub39.grit.tasks.domain.Task
 
-@OptIn(ExperimentalFoundationApi::class)
+@OptIn(ExperimentalFoundationApi::class, ExperimentalMaterial3ExpressiveApi::class)
 @Composable
 fun TaskCard(
     task: Task,
     onStatusChange: (Task) -> Unit,
     dragState: Boolean = false,
     reorderIcon: @Composable () -> Unit,
+    shape: Shape,
     modifier: Modifier
 ) {
     var taskStatus by remember { mutableStateOf(task.status) }
-    var showEditDialog by remember { mutableStateOf(false) }
+    var showEditSheet by remember { mutableStateOf(false) }
 
     val cardContent by animateColorAsState(
         targetValue = when (taskStatus) {
@@ -84,12 +92,12 @@ fun TaskCard(
                 // edit on click and hold
                 onLongClick = {
                     if (!dragState) {
-                        showEditDialog = true
+                        showEditSheet = true
                     }
                 }
             ),
         colors = cardColors,
-        shape = MaterialTheme.shapes.large,
+        shape = shape,
     ) {
         Row(
             verticalAlignment = Alignment.CenterVertically,
@@ -119,7 +127,7 @@ fun TaskCard(
     }
 
     // edit dialog
-    if (showEditDialog) {
+    if (showEditSheet) {
         var newTitle by remember { mutableStateOf(task.title) }
         val keyboardController = LocalSoftwareKeyboardController.current
         val focusRequester = remember { FocusRequester() }
@@ -129,9 +137,20 @@ fun TaskCard(
             keyboardController?.show()
         }
 
-        GritDialog(
-            onDismissRequest = { showEditDialog = false }
+        GritBottomSheet(
+            onDismissRequest = { showEditSheet = false }
         ) {
+            Icon(
+                imageVector = Icons.Default.Edit,
+                contentDescription = "Edit"
+            )
+
+            Text(
+                text = stringResource(id = R.string.edit_task),
+                style = MaterialTheme.typography.headlineSmall,
+                textAlign = TextAlign.Center
+            )
+
             OutlinedTextField(
                 value = newTitle,
                 onValueChange = { newTitle = it },
@@ -145,7 +164,9 @@ fun TaskCard(
                         newTitle.plus("\n")
                     }
                 ),
-                modifier = Modifier.focusRequester(focusRequester),
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .focusRequester(focusRequester),
                 label = { Text(text = stringResource(id = R.string.edit_task)) }
             )
 
@@ -153,8 +174,13 @@ fun TaskCard(
                 onClick = {
                     task.title = newTitle
                     onStatusChange(task)
-                    showEditDialog = false
+                    showEditSheet = false
                 },
+                shapes = ButtonShapes(
+                    shape = MaterialTheme.shapes.extraLarge,
+                    pressedShape = MaterialTheme.shapes.small
+                ),
+                modifier = Modifier.fillMaxWidth(),
                 enabled = newTitle.isNotBlank() && newTitle.length <= 100
             ) {
                 Text(stringResource(R.string.edit_task))

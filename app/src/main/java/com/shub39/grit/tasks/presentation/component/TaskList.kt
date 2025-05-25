@@ -2,6 +2,7 @@ package com.shub39.grit.tasks.presentation.component
 
 import androidx.compose.animation.AnimatedContent
 import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.core.animateDpAsState
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -18,16 +19,24 @@ import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.lazy.rememberLazyListState
+import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Add
 import androidx.compose.material3.AssistChip
+import androidx.compose.material3.AssistChipDefaults
 import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonShapes
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.ExperimentalMaterial3ExpressiveApi
+import androidx.compose.material3.FilledTonalIconButton
+import androidx.compose.material3.FilledTonalIconToggleButton
 import androidx.compose.material3.FilterChip
 import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Icon
-import androidx.compose.material3.IconButton
-import androidx.compose.material3.IconButtonDefaults
+import androidx.compose.material3.IconToggleButtonShapes
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
@@ -52,6 +61,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import com.shub39.grit.R
 import com.shub39.grit.core.presentation.components.Empty
+import com.shub39.grit.core.presentation.components.GritBottomSheet
 import com.shub39.grit.core.presentation.components.GritDialog
 import com.shub39.grit.tasks.domain.Category
 import com.shub39.grit.tasks.domain.CategoryColors
@@ -61,15 +71,15 @@ import com.shub39.grit.tasks.presentation.TaskPageState
 import sh.calvin.reorderable.ReorderableItem
 import sh.calvin.reorderable.rememberReorderableLazyListState
 
-@OptIn(ExperimentalMaterial3Api::class)
+@OptIn(ExperimentalMaterial3ExpressiveApi::class, ExperimentalMaterial3Api::class)
 @Composable
 fun TaskList(
     state: TaskPageState,
     onAction: (TaskPageAction) -> Unit,
     onNavigateToEditCategories: () -> Unit
 ) {
-    var showTaskAddDialog by remember { mutableStateOf(false) }
-    var showCategoryAddDialog by remember { mutableStateOf(false) }
+    var showTaskAddSheet by remember { mutableStateOf(false) }
+    var showCategoryAddSheet by remember { mutableStateOf(false) }
     var showDeleteDialog by remember { mutableStateOf(false) }
     var editState by remember { mutableStateOf(false) }
 
@@ -83,9 +93,10 @@ fun TaskList(
                 .fillMaxSize()
         ) {
             TopAppBar(
-                title = {
+                title = { Text(text = stringResource(R.string.tasks)) },
+                subtitle = {
                     Text(
-                        text = stringResource(R.string.tasks)
+                        text = "${state.completedTasks.size} " + stringResource(R.string.tasks_done)
                     )
                 },
                 actions = {
@@ -93,7 +104,7 @@ fun TaskList(
                         AnimatedVisibility(
                             visible = state.completedTasks.isNotEmpty()
                         ) {
-                            IconButton(
+                            FilledTonalIconButton(
                                 onClick = { showDeleteDialog = true },
                             ) {
                                 Icon(
@@ -103,13 +114,14 @@ fun TaskList(
                             }
                         }
 
-                        IconButton(
-                            onClick = { editState = !editState },
-                            colors = if (editState) {
-                                IconButtonDefaults.filledIconButtonColors()
-                            } else {
-                                IconButtonDefaults.iconButtonColors()
-                            },
+                        FilledTonalIconToggleButton(
+                            checked = editState,
+                            shapes = IconToggleButtonShapes(
+                                shape = CircleShape,
+                                checkedShape = MaterialTheme.shapes.small,
+                                pressedShape = MaterialTheme.shapes.extraSmall,
+                            ),
+                            onCheckedChange = { editState = it },
                             enabled = !state.tasks[state.currentCategory].isNullOrEmpty()
                         ) {
                             Icon(
@@ -127,12 +139,17 @@ fun TaskList(
                 contentPadding = PaddingValues(bottom = 8.dp, start = 16.dp, end = 16.dp)
             ) {
                 items(state.tasks.keys.toList(), key = { it.id }) { category ->
+                    val chipCorner by animateDpAsState(
+                        targetValue = if (category == state.currentCategory) 20.dp else 5.dp
+                    )
+
                     FilterChip(
                         selected = category == state.currentCategory,
                         onClick = {
                             onAction(TaskPageAction.ChangeCategory(category))
                             editState = false
                         },
+                        shape = RoundedCornerShape(chipCorner),
                         label = { Text(category.name) }
                     )
                 }
@@ -142,12 +159,17 @@ fun TaskList(
                         horizontalArrangement = Arrangement.spacedBy(8.dp)
                     ) {
                         AssistChip(
-                            onClick = { showCategoryAddDialog = true },
+                            onClick = { showCategoryAddSheet = true },
                             enabled = !editState,
+                            colors = AssistChipDefaults.assistChipColors(
+                                containerColor = MaterialTheme.colorScheme.primaryContainer,
+                                labelColor = MaterialTheme.colorScheme.onPrimaryContainer
+                            ),
+                            border = AssistChipDefaults.assistChipBorder(false),
                             label = {
                                 Icon(
                                     painter = painterResource(R.drawable.round_add_24),
-                                    contentDescription = null
+                                    contentDescription = "Add Category"
                                 )
                             }
                         )
@@ -155,6 +177,11 @@ fun TaskList(
                         AssistChip(
                             onClick = onNavigateToEditCategories,
                             enabled = !editState,
+                            colors = AssistChipDefaults.assistChipColors(
+                                containerColor = MaterialTheme.colorScheme.primaryContainer,
+                                labelColor = MaterialTheme.colorScheme.onPrimaryContainer
+                            ),
+                            border = AssistChipDefaults.assistChipBorder(false),
                             label = {
                                 Icon(
                                     painter = painterResource(R.drawable.baseline_edit_square_24),
@@ -190,6 +217,10 @@ fun TaskList(
                     ) {
                         itemsIndexed(tasks, key = { _, it -> it.id }) { index, task ->
                             ReorderableItem(reorderableListState, key = task.id) {
+                                val cardCorners by animateDpAsState(
+                                    targetValue = if (it) 100.dp else 16.dp
+                                )
+
                                 TaskCard(
                                     task = task,
                                     onStatusChange = { updatedTask ->
@@ -211,6 +242,7 @@ fun TaskList(
                                             modifier = Modifier.draggableHandle()
                                         )
                                     },
+                                    shape = RoundedCornerShape(cardCorners),
                                     modifier = Modifier
                                 )
                             }
@@ -232,7 +264,9 @@ fun TaskList(
             modifier = Modifier
                 .align(Alignment.BottomEnd)
                 .padding(16.dp),
-            onClick = { showTaskAddDialog = true }
+            onClick = { showTaskAddSheet = true },
+            containerColor = MaterialTheme.colorScheme.primaryContainer,
+            contentColor = MaterialTheme.colorScheme.onPrimaryContainer
         ) {
             Row(
                 modifier = Modifier.padding(16.dp),
@@ -262,7 +296,7 @@ fun TaskList(
         ) {
             Icon(
                 painter = painterResource(R.drawable.round_warning_24),
-                contentDescription = null,
+                contentDescription = "Warning",
                 modifier = Modifier.size(64.dp)
             )
 
@@ -275,14 +309,19 @@ fun TaskList(
                 onClick = {
                     onAction(TaskPageAction.DeleteTasks)
                     showDeleteDialog = false
-                }
+                },
+                shapes = ButtonShapes(
+                    shape = MaterialTheme.shapes.extraLarge,
+                    pressedShape = MaterialTheme.shapes.small
+                ),
+                modifier = Modifier.fillMaxWidth()
             ) {
                 Text(stringResource(R.string.delete))
             }
         }
     }
 
-    if (showCategoryAddDialog) {
+    if (showCategoryAddSheet) {
         var name by remember { mutableStateOf("") }
         val keyboardController = LocalSoftwareKeyboardController.current
         val focusRequester = remember { FocusRequester() }
@@ -292,9 +331,20 @@ fun TaskList(
             keyboardController?.show()
         }
 
-        GritDialog(
-            onDismissRequest = { showCategoryAddDialog = false }
+        GritBottomSheet(
+            onDismissRequest = { showCategoryAddSheet = false }
         ) {
+            Icon(
+                imageVector = Icons.Default.Add,
+                contentDescription = "Add"
+            )
+
+            Text(
+                text = stringResource(R.string.add_category),
+                style = MaterialTheme.typography.headlineSmall,
+                textAlign = TextAlign.Center
+            )
+
             OutlinedTextField(
                 value = name,
                 onValueChange = { name = it },
@@ -304,8 +354,9 @@ fun TaskList(
                     imeAction = ImeAction.Done
                 ),
                 singleLine = true,
-                modifier = Modifier.focusRequester(focusRequester),
-                label = { Text(text = stringResource(id = R.string.add_category)) }
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .focusRequester(focusRequester)
             )
 
             Button(
@@ -318,8 +369,13 @@ fun TaskList(
                             )
                         )
                     )
-                    showCategoryAddDialog = false
+                    showCategoryAddSheet = false
                 },
+                shapes = ButtonShapes(
+                    shape = MaterialTheme.shapes.extraLarge,
+                    pressedShape = MaterialTheme.shapes.small
+                ),
+                modifier = Modifier.fillMaxWidth(),
                 enabled = name.isNotBlank() && name.length <= 20
             ) {
                 Text(text = stringResource(R.string.done))
@@ -328,7 +384,7 @@ fun TaskList(
     }
 
     // add dialog
-    if (showTaskAddDialog) {
+    if (showTaskAddSheet) {
         var newTask by remember { mutableStateOf("") }
         val keyboardController = LocalSoftwareKeyboardController.current
         val focusRequester = remember { FocusRequester() }
@@ -338,9 +394,20 @@ fun TaskList(
             keyboardController?.show()
         }
 
-        GritDialog(
-            onDismissRequest = { showTaskAddDialog = false }
+        GritBottomSheet(
+            onDismissRequest = { showTaskAddSheet = false }
         ) {
+            Icon(
+                imageVector = Icons.Default.Add,
+                contentDescription = "Add"
+            )
+
+            Text(
+                text = stringResource(id = R.string.add_task),
+                style = MaterialTheme.typography.headlineSmall,
+                textAlign = TextAlign.Center
+            )
+
             OutlinedTextField(
                 value = newTask,
                 onValueChange = { newTask = it },
@@ -354,13 +421,14 @@ fun TaskList(
                         newTask.plus("\n")
                     }
                 ),
-                modifier = Modifier.focusRequester(focusRequester),
-                label = { Text(text = stringResource(id = R.string.add_task)) }
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .focusRequester(focusRequester)
             )
 
             Button(
                 onClick = {
-                    showTaskAddDialog = false
+                    showTaskAddSheet = false
 
                     if (state.currentCategory != null) {
                         onAction(
@@ -375,6 +443,11 @@ fun TaskList(
                         )
                     }
                 },
+                shapes = ButtonShapes(
+                    shape = MaterialTheme.shapes.extraLarge,
+                    pressedShape = MaterialTheme.shapes.small
+                ),
+                modifier = Modifier.fillMaxWidth(),
                 enabled = newTask.isNotEmpty() && newTask.length <= 100
             ) {
                 Text(
