@@ -1,5 +1,6 @@
 package com.shub39.grit.habits.presentation
 
+import androidx.compose.animation.core.tween
 import androidx.compose.animation.fadeOut
 import androidx.compose.animation.slideInVertically
 import androidx.compose.foundation.layout.Box
@@ -34,10 +35,10 @@ fun Habits(
     NavHost(
         navController = navController,
         startDestination = HabitRoutes.HabitList,
-        enterTransition = { slideInVertically(initialOffsetY = { it / 2 }) },
-        exitTransition = { fadeOut() },
-        popEnterTransition = { slideInVertically(initialOffsetY = { it / 2 }) },
-        popExitTransition = { fadeOut() }
+        enterTransition = { slideInVertically(tween(300), initialOffsetY = { it / 2 }) },
+        exitTransition = { fadeOut(tween(300)) },
+        popEnterTransition = { slideInVertically(tween(300), initialOffsetY = { it / 2 }) },
+        popExitTransition = { fadeOut(tween(300)) }
     ) {
         composable<HabitRoutes.HabitList> {
             HabitsList(
@@ -60,22 +61,25 @@ fun Habits(
 @PreviewLightDark
 @Composable
 private fun Preview() {
-    var state by remember { mutableStateOf(HabitPageState(
-        habitsWithStatuses = (0L..10L).associate { habitId ->
-            Habit(
-                id = habitId,
-                title = "Habit $habitId",
-                description = "This is Habit no: $habitId",
-                time = LocalDateTime.now().minusDays(habitId),
-                index = habitId.toInt()
-            ) to (0L .. 20L).map {
-                HabitStatus(
-                    id = it,
-                    habitId = habitId,
-                    date = LocalDate.now().minusDays(it)
-                )
-            }
+    val habitsWithStatueses = (0L..10L).associate { habitId ->
+        Habit(
+            id = habitId,
+            title = "Habit $habitId",
+            description = "This is Habit no: $habitId",
+            time = LocalDateTime.now().minusDays(habitId),
+            index = habitId.toInt()
+        ) to (0L .. 20L).map {
+            HabitStatus(
+                id = it,
+                habitId = habitId,
+                date = LocalDate.now().minusDays(it)
+            )
         }
+    }
+
+    var state by remember { mutableStateOf(HabitPageState(
+        habitsWithStatuses = habitsWithStatueses,
+        completedHabits = habitsWithStatueses.keys.toList()
     )) }
 
     GritTheme {
@@ -103,7 +107,12 @@ private fun Preview() {
                                                 statuses + HabitStatus(habitId = habit.id, date = it.date)
                                             }
                                         } else statuses
-                                    }
+                                    },
+                                    completedHabits = if (state.completedHabits.contains(it.habit)) {
+                                        state.completedHabits - it.habit
+                                    } else if (it.date == LocalDate.now()) {
+                                        state.completedHabits + it.habit
+                                    } else state.completedHabits
                                 )
                             }
 

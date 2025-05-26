@@ -42,9 +42,7 @@ fun RootPage(
     ) {
         TopAppBar(
             title = {
-                Text(
-                    text = stringResource(R.string.settings)
-                )
+                Text(text = stringResource(R.string.settings))
             }
         )
 
@@ -193,6 +191,12 @@ fun RootPage(
                             )
                         }
                     }
+                )
+            }
+
+            item {
+                HorizontalDivider(
+                    modifier = Modifier.padding(32.dp)
                 )
             }
 

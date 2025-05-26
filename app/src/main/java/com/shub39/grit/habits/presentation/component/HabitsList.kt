@@ -2,6 +2,7 @@ package com.shub39.grit.habits.presentation.component
 
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.animateContentSize
+import androidx.compose.animation.core.animateDpAsState
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -14,13 +15,17 @@ import androidx.compose.foundation.layout.widthIn
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.lazy.rememberLazyListState
+import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material3.Button
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.ExperimentalMaterial3ExpressiveApi
+import androidx.compose.material3.FilledTonalIconToggleButton
 import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
-import androidx.compose.material3.IconButtonDefaults
+import androidx.compose.material3.IconToggleButtonShapes
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
@@ -34,6 +39,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
@@ -51,7 +57,7 @@ import com.shub39.grit.habits.presentation.HabitsPageAction
 import sh.calvin.reorderable.ReorderableItem
 import sh.calvin.reorderable.rememberReorderableLazyListState
 
-@OptIn(ExperimentalMaterial3Api::class)
+@OptIn(ExperimentalMaterial3Api::class, ExperimentalMaterial3ExpressiveApi::class)
 @Composable
 fun HabitsList(
     state: HabitPageState,
@@ -89,14 +95,20 @@ fun HabitsList(
                 title = {
                     Text(text = stringResource(id = R.string.habits))
                 },
+                subtitle = {
+                    Text(
+                        text = "${state.completedHabits.size}/${state.habitsWithStatuses.size} " + stringResource(R.string.completed)
+                    )
+                },
                 actions = {
-                    IconButton(
-                        onClick = { editState = !editState },
-                        colors = if (editState) {
-                            IconButtonDefaults.filledIconButtonColors()
-                        } else {
-                            IconButtonDefaults.iconButtonColors()
-                        },
+                    FilledTonalIconToggleButton(
+                        checked = editState,
+                        shapes = IconToggleButtonShapes(
+                            shape = CircleShape,
+                            checkedShape = MaterialTheme.shapes.small,
+                            pressedShape = MaterialTheme.shapes.extraSmall,
+                        ),
+                        onCheckedChange = { editState = it },
                         enabled = state.habitsWithStatuses.isNotEmpty()
                     ) {
                         Icon(
@@ -113,11 +125,15 @@ fun HabitsList(
                     .fillMaxSize()
                     .animateContentSize(),
                 verticalArrangement = Arrangement.spacedBy(8.dp),
-                contentPadding = PaddingValues(horizontal = 16.dp)
+                contentPadding = PaddingValues(16.dp)
             ) {
                 // habits
                 itemsIndexed(habits, key = { _, it -> it.key.id }) { index, habit ->
                     ReorderableItem(reorderableListState, key = habit.key.id) {
+                        val cardCorners by animateDpAsState(
+                            targetValue = if (it) 30.dp else 20.dp
+                        )
+
                         HabitCard(
                             habit = habit.key,
                             statusList = habit.value,
@@ -137,7 +153,7 @@ fun HabitsList(
                                     )
                                 }
                             },
-                            modifier = Modifier
+                            modifier = Modifier.clip(RoundedCornerShape(cardCorners))
                         )
                     }
                 }

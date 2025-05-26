@@ -77,14 +77,11 @@ fun HabitCard(
     )
 
     Card(
-        shape = MaterialTheme.shapes.large,
         colors = CardDefaults.outlinedCardColors(
-            containerColor = cardBackground.copy(alpha = 0.7f),
+            containerColor = cardBackground.copy(alpha = 0.8f),
             contentColor = cardContent
         ),
-        onClick = {
-            action(HabitsPageAction.InsertStatus(habit))
-        },
+        onClick = { action(HabitsPageAction.InsertStatus(habit)) },
         modifier = modifier
     ) {
         ListItem(
