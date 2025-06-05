@@ -73,7 +73,6 @@ fun HabitsList(
     onAction: (HabitsPageAction) -> Unit,
     onNavigateToAnalytics: () -> Unit
 ) {
-    val timeFormat = state.timeFormat
     val context = LocalContext.current
 
     var showAddHabitDialog by remember { mutableStateOf(false) }
@@ -156,7 +155,7 @@ fun HabitsList(
                             startingDay = state.startingDay,
                             editState = editState,
                             onNavigateToAnalytics = onNavigateToAnalytics,
-                            timeFormat = timeFormat,
+                            timeFormat = state.timeFormat,
                             reorderHandle = {
                                 IconButton(
                                     modifier = Modifier.draggableHandle(),
@@ -311,7 +310,7 @@ fun HabitsList(
                     )
 
                     Text(
-                        text = newHabitTime.format(DateTimeFormatter.ofPattern(timeFormat)),
+                        text = newHabitTime.format(DateTimeFormatter.ofPattern(state.timeFormat)),
                         style = MaterialTheme.typography.titleLarge
                     )
                 }
@@ -349,7 +348,11 @@ fun HabitsList(
             }
 
             if (timePickerDialog) {
-                val timePickerState = rememberTimePickerState()
+                val timePickerState = rememberTimePickerState(
+                    initialHour = newHabitTime.hour,
+                    initialMinute = newHabitTime.minute,
+                    is24Hour = state.is24Hr
+                )
 
                 GritDialog(
                     onDismissRequest = { timePickerDialog = false }
