@@ -492,11 +492,7 @@ fun AnalyticsPage(
                     )
 
                     Text(
-                        text = newHabitTime.format(
-                            DateTimeFormatter.ofPattern(
-                                if (state.is24Hr) "HH:mm" else "hh:mm a"
-                            )
-                        ),
+                        text = newHabitTime.format(DateTimeFormatter.ofPattern(state.timeFormat)),
                         style = MaterialTheme.typography.titleLarge
                     )
                 }
@@ -533,7 +529,11 @@ fun AnalyticsPage(
             }
 
             if (timePickerDialog) {
-                val timePickerState = rememberTimePickerState()
+                val timePickerState = rememberTimePickerState(
+                    initialHour = newHabitTime.hour,
+                    initialMinute = newHabitTime.minute,
+                    is24Hour = state.is24Hr
+                )
 
                 GritDialog(
                     onDismissRequest = { timePickerDialog = false }

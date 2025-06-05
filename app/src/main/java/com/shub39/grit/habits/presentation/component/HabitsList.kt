@@ -155,6 +155,7 @@ fun HabitsList(
                             startingDay = state.startingDay,
                             editState = editState,
                             onNavigateToAnalytics = onNavigateToAnalytics,
+                            timeFormat = state.timeFormat,
                             reorderHandle = {
                                 IconButton(
                                     modifier = Modifier.draggableHandle(),
@@ -309,9 +310,7 @@ fun HabitsList(
                     )
 
                     Text(
-                        text = newHabitTime.format(DateTimeFormatter.ofPattern(
-                            if (state.is24Hr) "HH:mm" else "hh:mm a"
-                        )),
+                        text = newHabitTime.format(DateTimeFormatter.ofPattern(state.timeFormat)),
                         style = MaterialTheme.typography.titleLarge
                     )
                 }
@@ -349,7 +348,11 @@ fun HabitsList(
             }
 
             if (timePickerDialog) {
-                val timePickerState = rememberTimePickerState()
+                val timePickerState = rememberTimePickerState(
+                    initialHour = newHabitTime.hour,
+                    initialMinute = newHabitTime.minute,
+                    is24Hour = state.is24Hr
+                )
 
                 GritDialog(
                     onDismissRequest = { timePickerDialog = false }
