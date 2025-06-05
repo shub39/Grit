@@ -267,7 +267,7 @@ fun HabitsList(
                     if (isHabitPresent()) {
                         Text(text = stringResource(id = R.string.habit_exists))
                     } else if (newHabitName.length <= 20) {
-                        Text(text = stringResource(id = R.string.add_habit))
+                        Text(text = stringResource(id = R.string.title))
                     } else {
                         Text(text = stringResource(id = R.string.too_long))
                     }
@@ -286,7 +286,7 @@ fun HabitsList(
                 onValueChange = { newHabitDescription = it },
                 label = {
                     if (newHabitName.length <= 50) {
-                        Text(text = stringResource(id = R.string.add_description))
+                        Text(text = stringResource(id = R.string.description))
                     } else {
                         Text(text = stringResource(id = R.string.too_long))
                     }
@@ -317,7 +317,7 @@ fun HabitsList(
                 }
 
                 FilledTonalIconButton(
-                    onClick = {}
+                    onClick = { timePickerDialog = true }
                 ) {
                     Icon(
                         imageVector = Icons.Default.Create,

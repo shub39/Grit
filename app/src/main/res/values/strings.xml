@@ -92,4 +92,7 @@
     <string name="sponsor">Sponsor</string>
     <string name="items_completed">completed</string>
     <string name="completed">Completed Today</string>
+    <string name="title">Title</string>
+    <string name="description">Description</string>
+    <string name="edit_habit">Edit Habit</string>
 </resources>
