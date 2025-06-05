@@ -12,12 +12,15 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.tooling.preview.PreviewLightDark
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
+import com.materialkolor.PaletteStyle
+import com.shub39.grit.core.domain.AppTheme
 import com.shub39.grit.core.presentation.components.PageFill
 import com.shub39.grit.core.presentation.theme.GritTheme
+import com.shub39.grit.core.presentation.theme.Theme
 import com.shub39.grit.habits.domain.Habit
 import com.shub39.grit.habits.domain.HabitStatus
 import com.shub39.grit.habits.presentation.component.AnalyticsPage
@@ -58,17 +61,17 @@ fun Habits(
     }
 }
 
-@PreviewLightDark
+@Preview
 @Composable
 private fun Preview() {
-    val habitsWithStatueses = (0L..10L).associate { habitId ->
+    val habitsWithStatueses = (0L..1L).associate { habitId ->
         Habit(
             id = habitId,
             title = "Habit $habitId",
             description = "This is Habit no: $habitId",
             time = LocalDateTime.now().minusDays(habitId),
             index = habitId.toInt()
-        ) to (0L .. 20L).map {
+        ) to (0L .. 10L).map {
             HabitStatus(
                 id = it,
                 habitId = habitId,
@@ -82,7 +85,13 @@ private fun Preview() {
         completedHabits = habitsWithStatueses.keys.toList()
     )) }
 
-    GritTheme {
+    GritTheme(
+        theme = Theme(
+            appTheme = AppTheme.DARK,
+            isMaterialYou = true,
+            paletteStyle = PaletteStyle.Expressive
+        )
+    ) {
         Scaffold { padding ->
             Box(
                 modifier = Modifier.padding(padding)

@@ -175,7 +175,7 @@ fun HabitCard(
                         .then(
                             if (done) Modifier.background(
                                 color = primary.copy(alpha = 0.2f),
-                                shape = MaterialTheme.shapes.large
+                                shape = MaterialTheme.shapes.medium
                             ) else Modifier
                         ),
                     contentAlignment = Alignment.Center

@@ -90,6 +90,6 @@
     <string name="weekly_graph">Weekly Comparison</string>
     <string name="not_enough_data">Not enough data</string>
     <string name="sponsor">Sponsor</string>
-    <string name="tasks_done">Task(s) completed</string>
+    <string name="items_completed">completed</string>
     <string name="completed">Completed Today</string>
 </resources>

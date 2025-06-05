@@ -12,12 +12,15 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.tooling.preview.PreviewLightDark
+import androidx.compose.ui.tooling.preview.PreviewDynamicColors
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
+import com.materialkolor.PaletteStyle
+import com.shub39.grit.core.domain.AppTheme
 import com.shub39.grit.core.presentation.components.PageFill
 import com.shub39.grit.core.presentation.theme.GritTheme
+import com.shub39.grit.core.presentation.theme.Theme
 import com.shub39.grit.tasks.domain.Category
 import com.shub39.grit.tasks.domain.Task
 import com.shub39.grit.tasks.presentation.component.EditCategories
@@ -60,7 +63,7 @@ fun Tasks(
     }
 }
 
-@PreviewLightDark
+@PreviewDynamicColors
 @Composable
 private fun Preview() {
     val data = (0L..3L).associate { category ->
@@ -88,7 +91,13 @@ private fun Preview() {
         )
     }
 
-    GritTheme {
+    GritTheme(
+        theme = Theme(
+            appTheme = AppTheme.DARK,
+            isMaterialYou = true,
+            paletteStyle = PaletteStyle.Expressive
+        )
+    ) {
         Scaffold { padding ->
             Box(
                 modifier = Modifier.padding(padding)

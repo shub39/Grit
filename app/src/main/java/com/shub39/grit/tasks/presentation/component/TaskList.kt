@@ -36,6 +36,7 @@ import androidx.compose.material3.FilledTonalIconToggleButton
 import androidx.compose.material3.FilterChip
 import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButtonShapes
 import androidx.compose.material3.IconToggleButtonShapes
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
@@ -96,7 +97,7 @@ fun TaskList(
                 title = { Text(text = stringResource(R.string.tasks)) },
                 subtitle = {
                     Text(
-                        text = "${state.completedTasks.size} " + stringResource(R.string.tasks_done)
+                        text = "${state.completedTasks.size} " + stringResource(R.string.items_completed)
                     )
                 },
                 actions = {
@@ -106,6 +107,10 @@ fun TaskList(
                         ) {
                             FilledTonalIconButton(
                                 onClick = { showDeleteDialog = true },
+                                shapes = IconButtonShapes(
+                                    shape = CircleShape,
+                                    pressedShape = MaterialTheme.shapes.small
+                                )
                             ) {
                                 Icon(
                                     painter = painterResource(R.drawable.round_delete_forever_24),
@@ -136,7 +141,7 @@ fun TaskList(
             LazyRow(
                 modifier = Modifier.fillMaxWidth(),
                 horizontalArrangement = Arrangement.spacedBy(8.dp),
-                contentPadding = PaddingValues(bottom = 8.dp, start = 16.dp, end = 16.dp)
+                contentPadding = PaddingValues(start = 16.dp, end = 16.dp)
             ) {
                 items(state.tasks.keys.toList(), key = { it.id }) { category ->
                     val chipCorner by animateDpAsState(

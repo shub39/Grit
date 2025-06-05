@@ -2,6 +2,8 @@ package com.shub39.grit.tasks.presentation.component
 
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.animateColorAsState
+import androidx.compose.animation.fadeIn
+import androidx.compose.animation.fadeOut
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.combinedClickable
 import androidx.compose.foundation.layout.Arrangement
@@ -119,7 +121,9 @@ fun TaskCard(
             )
 
             AnimatedVisibility(
-                visible = dragState
+                visible = dragState,
+                enter = fadeIn(),
+                exit = fadeOut()
             ) {
                 reorderIcon()
             }

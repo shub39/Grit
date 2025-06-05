@@ -10,6 +10,7 @@ import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.widthIn
 import androidx.compose.foundation.lazy.LazyColumn
@@ -18,9 +19,13 @@ import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardOptions
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Create
 import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonShapes
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.ExperimentalMaterial3ExpressiveApi
+import androidx.compose.material3.FilledTonalIconButton
 import androidx.compose.material3.FilledTonalIconToggleButton
 import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Icon
@@ -29,9 +34,9 @@ import androidx.compose.material3.IconToggleButtonShapes
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
-import androidx.compose.material3.TimePicker
-import androidx.compose.material3.TimePickerState
+import androidx.compose.material3.TimeInput
 import androidx.compose.material3.TopAppBar
+import androidx.compose.material3.rememberTimePickerState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -45,9 +50,11 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardCapitalization
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import com.shub39.grit.R
 import com.shub39.grit.core.presentation.components.Empty
+import com.shub39.grit.core.presentation.components.GritBottomSheet
 import com.shub39.grit.core.presentation.components.GritDialog
 import com.shub39.grit.core.presentation.showAddNotification
 import com.shub39.grit.core.presentation.timePickerStateToLocalDateTime
@@ -56,6 +63,8 @@ import com.shub39.grit.habits.presentation.HabitPageState
 import com.shub39.grit.habits.presentation.HabitsPageAction
 import sh.calvin.reorderable.ReorderableItem
 import sh.calvin.reorderable.rememberReorderableLazyListState
+import java.time.LocalDateTime
+import java.time.format.DateTimeFormatter
 
 @OptIn(ExperimentalMaterial3Api::class, ExperimentalMaterial3ExpressiveApi::class)
 @Composable
@@ -71,7 +80,7 @@ fun HabitsList(
 
     var editState by remember { mutableStateOf(false) }
 
-    var habits by remember(state.habitsWithStatuses) { mutableStateOf(state.habitsWithStatuses.entries.toList()) }
+    var habits = state.habitsWithStatuses.entries.toList()
     val lazyListState = rememberLazyListState()
     val reorderableListState =
         rememberReorderableLazyListState(lazyListState) { from, to ->
@@ -96,9 +105,13 @@ fun HabitsList(
                     Text(text = stringResource(id = R.string.habits))
                 },
                 subtitle = {
-                    Text(
-                        text = "${state.completedHabits.size}/${state.habitsWithStatuses.size} " + stringResource(R.string.completed)
-                    )
+                    Column {
+                        Text(
+                            text = "${state.completedHabits.size}/${state.habitsWithStatuses.size} " + stringResource(
+                                R.string.completed
+                            )
+                        )
+                    }
                 },
                 actions = {
                     FilledTonalIconToggleButton(
@@ -197,7 +210,7 @@ fun HabitsList(
                 ) {
                     Icon(
                         painter = painterResource(R.drawable.round_add_24),
-                        contentDescription = null
+                        contentDescription = "Add Habit"
                     )
 
                     AnimatedVisibility(
@@ -210,6 +223,7 @@ fun HabitsList(
         }
     }
 
+    // all analytics
     if (showAllAnalytics) {
         AllAnalyticsSheet(
             state = state,
@@ -221,12 +235,25 @@ fun HabitsList(
     if (showAddHabitDialog) {
         var newHabitName by remember { mutableStateOf("") }
         var newHabitDescription by remember { mutableStateOf("") }
-        val timePickerState = remember { TimePickerState(12, 0, state.is24Hr) }
+        var newHabitTime by remember { mutableStateOf(LocalDateTime.now()) }
         val isHabitPresent = { state.habitsWithStatuses.any { it.key.title == newHabitName } }
 
-        GritDialog(
+        var timePickerDialog by remember { mutableStateOf(false) }
+
+        GritBottomSheet(
             onDismissRequest = { showAddHabitDialog = false }
         ) {
+            Icon(
+                painter = painterResource(R.drawable.round_add_24),
+                contentDescription = "Add Habit"
+            )
+
+            Text(
+                text = stringResource(R.string.add_habit),
+                style = MaterialTheme.typography.headlineSmall,
+                textAlign = TextAlign.Center
+            )
+
             OutlinedTextField(
                 value = newHabitName,
                 onValueChange = { newHabitName = it },
@@ -235,6 +262,7 @@ fun HabitsList(
                     imeAction = ImeAction.Next
                 ),
                 shape = MaterialTheme.shapes.medium,
+                modifier = Modifier.fillMaxWidth(),
                 label = {
                     if (isHabitPresent()) {
                         Text(text = stringResource(id = R.string.habit_exists))
@@ -250,6 +278,7 @@ fun HabitsList(
             OutlinedTextField(
                 value = newHabitDescription,
                 shape = MaterialTheme.shapes.medium,
+                modifier = Modifier.fillMaxWidth(),
                 keyboardOptions = KeyboardOptions.Default.copy(
                     capitalization = KeyboardCapitalization.Sentences,
                     imeAction = ImeAction.Done
@@ -265,25 +294,97 @@ fun HabitsList(
                 isError = newHabitName.length > 50
             )
 
-            TimePicker(
-                state = timePickerState,
-            )
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                verticalAlignment = Alignment.CenterVertically,
+                horizontalArrangement = Arrangement.SpaceBetween
+            ) {
+                Row(
+                    horizontalArrangement = Arrangement.spacedBy(8.dp),
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
+                    Icon(
+                        painter = painterResource(R.drawable.round_alarm_24),
+                        contentDescription = "Alarm Icon"
+                    )
+
+                    Text(
+                        text = newHabitTime.format(DateTimeFormatter.ofPattern(
+                            if (state.is24Hr) "HH:mm" else "hh:mm a"
+                        )),
+                        style = MaterialTheme.typography.titleLarge
+                    )
+                }
+
+                FilledTonalIconButton(
+                    onClick = {}
+                ) {
+                    Icon(
+                        imageVector = Icons.Default.Create,
+                        contentDescription = "Pick Time"
+                    )
+                }
+            }
 
             Button(
                 onClick = {
                     val habitEntity = Habit(
                         title = newHabitName,
                         description = newHabitDescription,
-                        time = timePickerStateToLocalDateTime(timePickerState),
+                        time = newHabitTime,
                         index = habits.size
                     )
                     showAddHabitDialog = false
                     onAction(HabitsPageAction.AddHabit(habitEntity))
                     showAddNotification(context, habitEntity)
                 },
+                shapes = ButtonShapes(
+                    shape = MaterialTheme.shapes.extraLarge,
+                    pressedShape = MaterialTheme.shapes.small
+                ),
+                modifier = Modifier.fillMaxWidth(),
                 enabled = newHabitName.isNotBlank() && newHabitDescription.isNotBlank() && newHabitName.length < 20 && newHabitDescription.length < 50,
             ) {
                 Text(text = stringResource(id = R.string.add_habit))
+            }
+
+            if (timePickerDialog) {
+                val timePickerState = rememberTimePickerState()
+
+                GritDialog(
+                    onDismissRequest = { timePickerDialog = false }
+                ) {
+                    Icon(
+                        painter = painterResource(R.drawable.round_alarm_24),
+                        contentDescription = "Add Time"
+                    )
+
+                    Text(
+                        text = stringResource(R.string.select_time),
+                        style = MaterialTheme.typography.headlineSmall,
+                        textAlign = TextAlign.Center
+                    )
+
+                    Spacer(modifier = Modifier.padding(vertical = 4.dp))
+
+                    TimeInput(
+                        state = timePickerState
+                    )
+
+                    Button(
+                        onClick = {
+                            newHabitTime = timePickerStateToLocalDateTime(timePickerState)
+                            timePickerDialog = false
+                        },
+                        shapes = ButtonShapes(
+                            shape = MaterialTheme.shapes.extraLarge,
+                            pressedShape = MaterialTheme.shapes.small
+                        ),
+                        modifier = Modifier.fillMaxWidth()
+                    ) {
+                        Text(text = stringResource(R.string.done))
+                    }
+                }
             }
         }
     }
