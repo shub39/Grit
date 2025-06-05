@@ -73,6 +73,7 @@ fun HabitsList(
     onAction: (HabitsPageAction) -> Unit,
     onNavigateToAnalytics: () -> Unit
 ) {
+    val timeFormat = state.timeFormat
     val context = LocalContext.current
 
     var showAddHabitDialog by remember { mutableStateOf(false) }
@@ -155,6 +156,7 @@ fun HabitsList(
                             startingDay = state.startingDay,
                             editState = editState,
                             onNavigateToAnalytics = onNavigateToAnalytics,
+                            timeFormat = timeFormat,
                             reorderHandle = {
                                 IconButton(
                                     modifier = Modifier.draggableHandle(),
@@ -309,9 +311,7 @@ fun HabitsList(
                     )
 
                     Text(
-                        text = newHabitTime.format(DateTimeFormatter.ofPattern(
-                            if (state.is24Hr) "HH:mm" else "hh:mm a"
-                        )),
+                        text = newHabitTime.format(DateTimeFormatter.ofPattern(timeFormat)),
                         style = MaterialTheme.typography.titleLarge
                     )
                 }

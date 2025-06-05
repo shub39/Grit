@@ -50,7 +50,8 @@ fun HabitCard(
     editState: Boolean,
     startingDay: DayOfWeek,
     reorderHandle: @Composable () -> Unit,
-    modifier: Modifier
+    modifier: Modifier,
+    timeFormat: String
 ) {
     val primary = MaterialTheme.colorScheme.primary
     // animated colors
@@ -118,7 +119,7 @@ fun HabitCard(
             },
             supportingContent = {
                 Text(
-                    text = habit.time.format(DateTimeFormatter.ofPattern("hh:mm a"))
+                    text = habit.time.format(DateTimeFormatter.ofPattern(timeFormat))
                 )
             },
             trailingContent = {

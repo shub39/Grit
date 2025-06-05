@@ -126,7 +126,9 @@ class HabitViewModel(
                 .onEach { pref ->
                     _state.update {
                         it.copy(
-                            is24Hr = pref
+                            is24Hr = pref,
+                            timeFormat = if (pref) "HH:mm" else "hh:mm a",
+                            dateTimeFormat = if (pref) "dd/MM/yyyy HH:mm" else "dd/MM/yyyy hh:mm a",
                         )
                     }
                 }

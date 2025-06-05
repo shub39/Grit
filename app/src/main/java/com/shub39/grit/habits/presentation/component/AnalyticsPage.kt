@@ -492,11 +492,7 @@ fun AnalyticsPage(
                     )
 
                     Text(
-                        text = newHabitTime.format(
-                            DateTimeFormatter.ofPattern(
-                                if (state.is24Hr) "HH:mm" else "hh:mm a"
-                            )
-                        ),
+                        text = newHabitTime.format(DateTimeFormatter.ofPattern(state.timeFormat)),
                         style = MaterialTheme.typography.titleLarge
                     )
                 }
