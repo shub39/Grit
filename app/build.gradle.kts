@@ -8,17 +8,17 @@ plugins {
 }
 
 val appName = "Grit"
-val appVersionCode = 2110
-val appVersionName = "2.1.1"
+val appVersionCode = 2200
+val appVersionName = "2.2.0"
 
 android {
     namespace = "com.shub39.grit"
-    compileSdk = 35
+    compileSdk = 36
 
     defaultConfig {
         applicationId = "com.shub39.grit"
         minSdk = 29
-        targetSdk = 35
+        targetSdk = 36
         versionCode = appVersionCode
         versionName = appVersionName
 
@@ -65,6 +65,7 @@ android {
     }
     buildFeatures {
         compose = true
+        buildConfig = true
     }
     composeOptions {
         kotlinCompilerExtensionVersion = "1.5.14"

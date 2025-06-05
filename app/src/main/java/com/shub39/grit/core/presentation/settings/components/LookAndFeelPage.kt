@@ -10,11 +10,11 @@ import androidx.compose.animation.scaleIn
 import androidx.compose.animation.scaleOut
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.horizontalScroll
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -23,7 +23,8 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.widthIn
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.lazy.LazyRow
+import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
@@ -31,6 +32,7 @@ import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.filled.Create
 import androidx.compose.material.icons.outlined.Check
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.FilledTonalIconButton
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.IconButtonDefaults
@@ -57,6 +59,8 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.font.Font
+import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.unit.dp
 import com.materialkolor.PaletteStyle
 import com.materialkolor.ktx.from
@@ -64,6 +68,7 @@ import com.materialkolor.palettes.TonalPalette
 import com.materialkolor.rememberDynamicColorScheme
 import com.shub39.grit.R
 import com.shub39.grit.core.domain.AppTheme
+import com.shub39.grit.core.domain.Fonts
 import com.shub39.grit.core.presentation.components.ColorPickerDialog
 import com.shub39.grit.core.presentation.components.GritDialog
 import com.shub39.grit.core.presentation.components.PageFill
@@ -80,6 +85,7 @@ fun LookAndFeelPage(
 
     var colorPickerDialog by remember { mutableStateOf(false) }
     var appThemeDialog by remember { mutableStateOf(false) }
+    var fontPickerDialog by remember { mutableStateOf(false) }
 
     Column(
         modifier = Modifier
@@ -120,12 +126,37 @@ fun LookAndFeelPage(
                         )
                     },
                     trailingContent = {
-                        IconButton(
+                        FilledTonalIconButton(
                             onClick = { appThemeDialog = true }
                         ) {
                             Icon(
                                 imageVector = Icons.Default.Create,
                                 contentDescription = "Select Theme"
+                            )
+                        }
+                    }
+                )
+            }
+
+            item {
+                ListItem(
+                    headlineContent = {
+                        Text(
+                            text = stringResource(R.string.font)
+                        )
+                    },
+                    supportingContent = {
+                        Text(
+                            text = stringResource(R.string.font_desc)
+                        )
+                    },
+                    trailingContent = {
+                        FilledTonalIconButton(
+                            onClick = { fontPickerDialog = true }
+                        ) {
+                            Icon(
+                                imageVector = Icons.Default.Create,
+                                contentDescription = "Select font"
                             )
                         }
                     }
@@ -220,48 +251,76 @@ fun LookAndFeelPage(
                         Text(
                             text = stringResource(R.string.palette_style)
                         )
-                    },
-                    supportingContent = {
-                        val scrollState = rememberScrollState()
-
-                        Row(
-                            modifier = Modifier
-                                .horizontalScroll(scrollState)
-                                .padding(vertical = 8.dp),
-                            horizontalArrangement = Arrangement.spacedBy(8.dp),
-                        ) {
-                            PaletteStyle.entries.toList().forEach { style ->
-                                val scheme = rememberDynamicColorScheme(
-                                    primary = if (state.theme.isMaterialYou && Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
-                                        colorResource(android.R.color.system_accent1_200)
-                                    } else state.theme.seedColor,
-                                    isDark = when (state.theme.appTheme) {
-                                        AppTheme.SYSTEM -> isSystemInDarkTheme()
-                                        AppTheme.DARK -> true
-                                        AppTheme.LIGHT -> false
-                                    },
-                                    isAmoled = state.theme.isAmoled,
-                                    style = style
-                                )
-
-                                SelectableMiniPalette(
-                                    selected = state.theme.paletteStyle == style,
-                                    onClick = {
-                                        onAction(
-                                            SettingsAction.ChangePaletteStyle(style)
-                                        )
-                                    },
-                                    contentDescription = { style.name },
-                                    accents = listOf(
-                                        TonalPalette.from(scheme.primary),
-                                        TonalPalette.from(scheme.tertiary),
-                                        TonalPalette.from(scheme.secondary)
-                                    )
-                                )
-                            }
-                        }
                     }
                 )
+            }
+
+            item {
+                LazyRow(
+                    horizontalArrangement = Arrangement.spacedBy(8.dp),
+                    contentPadding = PaddingValues(horizontal = 16.dp)
+                ) {
+                    items(PaletteStyle.entries.toList(), key = { it.name }) { style ->
+                        val scheme = rememberDynamicColorScheme(
+                            primary = if (state.theme.isMaterialYou && Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
+                                colorResource(android.R.color.system_accent1_200)
+                            } else state.theme.seedColor,
+                            isDark = when (state.theme.appTheme) {
+                                AppTheme.SYSTEM -> isSystemInDarkTheme()
+                                AppTheme.DARK -> true
+                                AppTheme.LIGHT -> false
+                            },
+                            isAmoled = state.theme.isAmoled,
+                            style = style
+                        )
+
+                        SelectableMiniPalette(
+                            selected = state.theme.paletteStyle == style,
+                            onClick = {
+                                onAction(
+                                    SettingsAction.ChangePaletteStyle(style)
+                                )
+                            },
+                            contentDescription = { style.name },
+                            accents = listOf(
+                                TonalPalette.from(scheme.primary),
+                                TonalPalette.from(scheme.tertiary),
+                                TonalPalette.from(scheme.secondary)
+                            )
+                        )
+                    }
+                }
+            }
+        }
+    }
+
+    if (fontPickerDialog) {
+        GritDialog(
+            onDismissRequest = { fontPickerDialog = false }
+        ) {
+            Fonts.entries.forEach { font ->
+                Row(
+                    verticalAlignment = Alignment.CenterVertically,
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .clickable {
+                            onAction(SettingsAction.ChangeFontPref(font))
+                            fontPickerDialog = false
+                        }
+                ) {
+                    RadioButton(
+                        selected = state.theme.font == font,
+                        onClick = {
+                            onAction(SettingsAction.ChangeFontPref(font))
+                            fontPickerDialog = false
+                        }
+                    )
+
+                    Text(
+                        text = font.name,
+                        fontFamily = FontFamily(Font(font.resource))
+                    )
+                }
             }
         }
     }

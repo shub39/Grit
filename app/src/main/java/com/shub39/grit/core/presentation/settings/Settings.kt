@@ -9,17 +9,20 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.tooling.preview.PreviewLightDark
-import androidx.navigation.compose.rememberNavController
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
+import androidx.navigation.compose.rememberNavController
+import com.materialkolor.PaletteStyle
+import com.shub39.grit.core.domain.AppTheme
+import com.shub39.grit.core.domain.Fonts
 import com.shub39.grit.core.presentation.components.PageFill
 import com.shub39.grit.core.presentation.settings.components.AboutLibraries
-import com.shub39.grit.core.presentation.settings.components.AboutPage
 import com.shub39.grit.core.presentation.settings.components.Backup
 import com.shub39.grit.core.presentation.settings.components.LookAndFeelPage
 import com.shub39.grit.core.presentation.settings.components.RootPage
 import com.shub39.grit.core.presentation.theme.GritTheme
+import com.shub39.grit.core.presentation.theme.Theme
 
 @Composable
 fun Settings(
@@ -55,12 +58,6 @@ fun Settings(
             )
         }
 
-        composable<SettingsRoutes.About> {
-            AboutPage(
-                onNavigateBack = { navController.navigateUp() }
-            )
-        }
-
         composable<SettingsRoutes.LookAndFeel> {
             LookAndFeelPage(
                 state = state,
@@ -85,10 +82,16 @@ fun Settings(
     }
 }
 
-@PreviewLightDark
+@Preview
 @Composable
 fun Preview() {
-    GritTheme {
+    GritTheme(
+        theme = Theme(
+            appTheme = AppTheme.DARK,
+            font = Fonts.MANROPE,
+            paletteStyle = PaletteStyle.Expressive
+        )
+    ) {
         Settings(
             state = SettingsState(),
             onAction = {}

@@ -10,6 +10,7 @@ import androidx.datastore.preferences.core.intPreferencesKey
 import androidx.datastore.preferences.core.stringPreferencesKey
 import com.materialkolor.PaletteStyle
 import com.shub39.grit.core.domain.AppTheme
+import com.shub39.grit.core.domain.Fonts
 import com.shub39.grit.core.domain.GritDatastore
 import com.shub39.grit.core.domain.Pages
 import kotlinx.coroutines.flow.Flow
@@ -30,6 +31,7 @@ class DataStoreImpl(
         private val is24HrKey = booleanPreferencesKey("is_24Hr")
         private val materialYouKey = booleanPreferencesKey("material_you")
         private val notificationsKey = booleanPreferencesKey("notifications")
+        private val fontPrefKey = stringPreferencesKey("font")
     }
 
     override fun getAppThemeFlow(): Flow<AppTheme> = datastore.data.map { prefs ->
@@ -114,6 +116,16 @@ class DataStoreImpl(
     override suspend fun setNotifications(pref: Boolean) {
         datastore.edit { prefs ->
             prefs[notificationsKey] = pref
+        }
+    }
+
+    override fun getFontPrefFlow(): Flow<Fonts> = datastore.data.map { prefs ->
+        val font = prefs[fontPrefKey] ?: Fonts.POPPINS.name
+        Fonts.valueOf(font)
+    }
+    override suspend fun setFontPref(font: Fonts) {
+        datastore.edit { prefs ->
+            prefs[fontPrefKey] = font.name
         }
     }
 }

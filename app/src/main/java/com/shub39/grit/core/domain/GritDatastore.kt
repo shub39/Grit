@@ -31,4 +31,7 @@ interface GritDatastore {
 
     fun getNotificationsFlow(): Flow<Boolean>
     suspend fun setNotifications(pref: Boolean)
+
+    fun getFontPrefFlow(): Flow<Fonts>
+    suspend fun setFontPref(font: Fonts)
 }

@@ -107,6 +107,8 @@ class SettingsViewModel(
             }
 
             is SettingsAction.ChangePauseNotifications -> datastore.setNotifications(action.pref)
+
+            is SettingsAction.ChangeFontPref -> datastore.setFontPref(action.font)
         }
     }
 
@@ -129,6 +131,18 @@ class SettingsViewModel(
                         it.copy(
                             theme = it.theme.copy(
                                 appTheme = flow
+                            )
+                        )
+                    }
+                }
+                .launchIn(this)
+
+            datastore.getFontPrefFlow()
+                .onEach { flow ->
+                    _state.update {
+                        it.copy(
+                            theme = it.theme.copy(
+                                font = flow
                             )
                         )
                     }

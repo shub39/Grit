@@ -4,6 +4,7 @@ import android.net.Uri
 import androidx.compose.ui.graphics.Color
 import com.materialkolor.PaletteStyle
 import com.shub39.grit.core.domain.AppTheme
+import com.shub39.grit.core.domain.Fonts
 import com.shub39.grit.core.domain.Pages
 import java.time.DayOfWeek
 
@@ -18,6 +19,7 @@ sealed interface SettingsAction {
     data class ChangePauseNotifications(val pref: Boolean) : SettingsAction
 
     data class ChangeAppTheme(val appTheme: AppTheme): SettingsAction
+    data class ChangeFontPref(val font: Fonts): SettingsAction
     data class ChangeSeedColor(val color: Color) : SettingsAction
     data class ChangeAmoled(val pref: Boolean) : SettingsAction
     data class ChangePaletteStyle(val style: PaletteStyle) : SettingsAction

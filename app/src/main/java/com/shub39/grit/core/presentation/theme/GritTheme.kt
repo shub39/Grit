@@ -25,7 +25,7 @@ fun GritTheme(
         },
         withAmoled = theme.isAmoled,
         style = theme.paletteStyle,
-        typography = provideTypography(1f),
+        typography = provideTypography(1f, theme.font.resource),
         content = content
     )
 }

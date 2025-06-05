@@ -7,9 +7,6 @@ sealed interface SettingsRoutes {
     data object Root: SettingsRoutes
 
     @Serializable
-    data object About: SettingsRoutes
-
-    @Serializable
     data object LookAndFeel: SettingsRoutes
 
     @Serializable
