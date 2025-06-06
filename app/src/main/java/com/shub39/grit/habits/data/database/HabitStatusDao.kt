@@ -12,6 +12,9 @@ interface HabitStatusDao {
     @Query("SELECT * FROM habit_status")
     suspend fun getHabitStatuses(): List<HabitStatusEntity>
 
+    @Query("SELECT * FROM habit_status WHERE date = :date")
+    suspend fun getCompletedStatuses(date: LocalDate = LocalDate.now()): List<HabitStatusEntity>
+
     @Query("SELECT * FROM habit_status")
     fun getAllHabitStatuses(): Flow<List<HabitStatusEntity>>
 

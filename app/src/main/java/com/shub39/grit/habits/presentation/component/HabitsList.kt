@@ -80,6 +80,7 @@ fun HabitsList(
     var habits by remember(state.habitsWithStatuses) {
         mutableStateOf(state.habitsWithStatuses.entries.toList())
     }
+    var reorder by remember { mutableStateOf(false) }
     val lazyListState = rememberLazyListState()
     val reorderableListState =
         rememberReorderableLazyListState(lazyListState) { from, to ->
@@ -90,7 +91,9 @@ fun HabitsList(
 
     DisposableEffect(Unit) {
         onDispose {
-            onAction(HabitsPageAction.ReorderHabits(habits.mapIndexed { index, entry -> index to entry.key }))
+            if (reorder) {
+                onAction(HabitsPageAction.ReorderHabits(habits.mapIndexed { index, entry -> index to entry.key }))
+            }
         }
     }
 
@@ -159,7 +162,9 @@ fun HabitsList(
                                 Icon(
                                     painter = painterResource(R.drawable.baseline_drag_indicator_24),
                                     contentDescription = "Drag Indicator",
-                                    modifier = Modifier.draggableHandle()
+                                    modifier = Modifier.draggableHandle(
+                                        onDragStopped = { reorder = true }
+                                    )
                                 )
                             },
                             modifier = Modifier.padding(horizontal = 16.dp, vertical = 4.dp),

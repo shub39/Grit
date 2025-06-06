@@ -24,7 +24,7 @@ class HabitViewModel(
     stateLayer: StateLayer,
     private val scheduler: AlarmScheduler,
     private val repo: HabitRepo,
-    private val datastore: GritDatastore
+    private val datastore: GritDatastore,
 ) : ViewModel() {
 
     private var habitStatusJob: Job? = null

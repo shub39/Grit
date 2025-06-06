@@ -7,4 +7,4 @@
     android:minHeight="100dp"
     android:updatePeriodMillis="3600000"
     android:widgetCategory="home_screen"
-    android:resizeMode="none" />
+    android:resizeMode="vertical" />
