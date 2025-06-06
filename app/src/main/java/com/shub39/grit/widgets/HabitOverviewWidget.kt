@@ -2,6 +2,9 @@ package com.shub39.grit.widgets
 
 import android.content.Context
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.glance.GlanceId
@@ -16,6 +19,7 @@ import androidx.glance.appwidget.cornerRadius
 import androidx.glance.appwidget.lazy.LazyColumn
 import androidx.glance.appwidget.lazy.items
 import androidx.glance.appwidget.provideContent
+import androidx.glance.appwidget.updateAll
 import androidx.glance.background
 import androidx.glance.layout.Alignment
 import androidx.glance.layout.Box
@@ -32,30 +36,86 @@ import androidx.glance.text.TextStyle
 import com.shub39.grit.R
 import com.shub39.grit.app.MainActivity
 import com.shub39.grit.core.data.toHabit
+import com.shub39.grit.core.data.toHabitStatusEntity
 import com.shub39.grit.habits.data.database.HabitDao
 import com.shub39.grit.habits.data.database.HabitStatusDao
 import com.shub39.grit.habits.domain.Habit
+import com.shub39.grit.habits.domain.HabitStatus
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.distinctUntilChanged
+import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.launch
 import org.koin.core.component.KoinComponent
 import org.koin.core.component.get
+import java.time.LocalDate
 
 class HabitOverviewWidgetReceiver : GlanceAppWidgetReceiver() {
     override val glanceAppWidget: GlanceAppWidget = HabitOverviewWidget()
 }
 
+class HabitOverviewWidgetRepository(
+    private val context: Context,
+    private val statusDao: HabitStatusDao,
+    private val habitDao: HabitDao
+) {
+    suspend fun update() {
+        HabitOverviewWidget().updateAll(context)
+    }
+
+    suspend fun setStatus(id: Long) {
+        statusDao.insertHabitStatus(
+            habitStatusEntity = HabitStatus(
+                habitId = id,
+                date = LocalDate.now()
+            ).toHabitStatusEntity()
+        )
+    }
+
+    suspend fun deleteStatus(id: Long) {
+        statusDao.deleteStatus(
+            habitId = id,
+            date = LocalDate.now()
+        )
+    }
+
+    fun getHabits(): Flow<List<Habit>> {
+        return habitDao
+            .getAllHabitsFlow()
+            .map { flow -> flow.map { it.toHabit() } }
+            .distinctUntilChanged()
+    }
+
+    fun getHabitStatuses(): Flow<List<Long>> {
+        return statusDao
+            .getAllHabitStatuses()
+            .map { flow ->
+                flow.filter { it.date == LocalDate.now() }.map { it.habitId }
+            }
+            .distinctUntilChanged()
+    }
+}
+
 class HabitOverviewWidget : GlanceAppWidget(), KoinComponent {
     override suspend fun provideGlance(context: Context, id: GlanceId) {
-        val habitDao = get<HabitDao>()
-        val statusDao = get<HabitStatusDao>()
-
-        val habits = habitDao.getAllHabits().map { it.toHabit() }
-        val habitStatuses = statusDao.getCompletedStatuses().map { it.habitId }
+        val repo = get<HabitOverviewWidgetRepository>()
 
         provideContent {
+            val coroutineScope = rememberCoroutineScope()
+            val habits by repo.getHabits().collectAsState(initial = emptyList())
+            val completedHabitIds by repo.getHabitStatuses().collectAsState(initial = emptyList())
+
             GlanceTheme {
                 HabitListWidget(
                     context = context,
                     habits = habits,
-                    completedHabitIds = habitStatuses
+                    completedHabitIds = completedHabitIds,
+                    onHabitClick = { coroutineScope.launch {
+                        if (it in completedHabitIds) {
+                            repo.deleteStatus(it)
+                        } else {
+                            repo.setStatus(it)
+                        }
+                    }}
                 )
             }
         }
@@ -65,7 +125,8 @@ class HabitOverviewWidget : GlanceAppWidget(), KoinComponent {
     private fun HabitListWidget(
         context: Context,
         habits: List<Habit>,
-        completedHabitIds: List<Long>
+        completedHabitIds: List<Long>,
+        onHabitClick: (Long) -> Unit
     ) {
         Scaffold(
             modifier = GlanceModifier.fillMaxSize(),
@@ -105,26 +166,26 @@ class HabitOverviewWidget : GlanceAppWidget(), KoinComponent {
                 items(habits, itemId = { it.id }) { habit ->
                     val done = habit.id in completedHabitIds
 
-                    Column(
-                        modifier = GlanceModifier.clickable(actionStartActivity<MainActivity>())
-                    ) {
+                    Column {
                         Column(
                             modifier = GlanceModifier
                                 .fillMaxWidth()
                                 .padding(horizontal = 10.dp, vertical = 2.dp)
                                 .background(
-                                    if (done) GlanceTheme.colors.primaryContainer
+                                    if (done) GlanceTheme.colors.primary
                                     else GlanceTheme.colors.secondaryContainer
                                 )
                                 .cornerRadius(10.dp)
                                 .padding(4.dp)
+                                .clickable { onHabitClick(habit.id) }
                         ) {
                             Text(
                                 text = habit.title,
                                 modifier = GlanceModifier.fillMaxWidth(),
                                 style = TextStyle(
-                                    color = if (done) GlanceTheme.colors.onPrimaryContainer else GlanceTheme.colors.onSecondaryContainer,
-                                    fontSize = 16.sp
+                                    color = if (done) GlanceTheme.colors.onPrimary else GlanceTheme.colors.onSecondaryContainer,
+                                    fontSize = 16.sp,
+                                    fontWeight = FontWeight.Bold
                                 ),
                                 maxLines = 1
                             )
@@ -133,7 +194,7 @@ class HabitOverviewWidget : GlanceAppWidget(), KoinComponent {
                                 text = habit.description,
                                 modifier = GlanceModifier.fillMaxWidth(),
                                 style = TextStyle(
-                                    color = if (done) GlanceTheme.colors.onPrimaryContainer else GlanceTheme.colors.onSecondaryContainer,
+                                    color = if (done) GlanceTheme.colors.onPrimary else GlanceTheme.colors.onSecondaryContainer,
                                     fontSize = 12.sp
                                 ),
                                 maxLines = 1
@@ -155,8 +216,7 @@ class HabitOverviewWidget : GlanceAppWidget(), KoinComponent {
                                     .clickable(actionStartActivity<MainActivity>())
                                     .padding(horizontal = 16.dp, vertical = 8.dp),
                                 style = TextStyle(
-                                    color = GlanceTheme.colors.onSurface,
-                                    fontWeight = FontWeight.Bold,
+                                    color = GlanceTheme.colors.primary,
                                     fontSize = 20.sp
                                 )
                             )
