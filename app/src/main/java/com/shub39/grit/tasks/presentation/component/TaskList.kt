@@ -85,6 +85,15 @@ fun TaskList(
     var showDeleteDialog by remember { mutableStateOf(false) }
     var editState by remember { mutableStateOf(false) }
 
+    var tasks: List<Task> by remember { mutableStateOf(emptyList()) }
+    val lazyListState = rememberLazyListState()
+    val reorderableListState =
+        rememberReorderableLazyListState(lazyListState) { from, to ->
+            tasks = tasks.toMutableList().apply {
+                add(to.index, removeAt(from.index))
+            }
+        }
+
     Box(
         modifier = Modifier.fillMaxSize(),
         contentAlignment = Alignment.Center
@@ -152,6 +161,7 @@ fun TaskList(
                     FilterChip(
                         selected = category == state.currentCategory,
                         onClick = {
+                            onAction(TaskPageAction.ReorderTasks(tasks.mapIndexed { index, task -> index to task }))
                             onAction(TaskPageAction.ChangeCategory(category))
                             editState = false
                         },
@@ -203,22 +213,10 @@ fun TaskList(
                 targetState = state.currentCategory
             ) { category ->
                 if (category != null) {
-                    var tasks by remember {
-                        mutableStateOf(state.tasks[category] ?: emptyList())
-                    }
-
-                    val lazyListState = rememberLazyListState()
-                    val reorderableListState =
-                        rememberReorderableLazyListState(lazyListState) { from, to ->
-                            tasks = tasks.toMutableList().apply {
-                                add(to.index, removeAt(from.index))
-                            }
-                        }
+                    tasks = state.tasks[category] ?: emptyList()
 
                     DisposableEffect(Unit) {
-                        onDispose {
-                            onAction(TaskPageAction.ReorderTasks(tasks.mapIndexed { index, task -> index to task }))
-                        }
+                        onDispose { onAction(TaskPageAction.ReorderTasks(tasks.mapIndexed { index, task -> index to task })) }
                     }
 
                     LazyColumn(
@@ -234,6 +232,8 @@ fun TaskList(
                                 TaskCard(
                                     task = task,
                                     onStatusChange = { updatedTask ->
+                                        onAction(TaskPageAction.UpdateTaskStatus(updatedTask))
+
                                         if (updatedTask.status) {
                                             tasks = tasks.toMutableList().apply {
                                                 add(tasks.size - 1, removeAt(index))
@@ -241,8 +241,6 @@ fun TaskList(
 
                                             onAction(TaskPageAction.ReorderTasks(tasks.mapIndexed { index, task -> index to task }))
                                         }
-
-                                        onAction(TaskPageAction.UpdateTaskStatus(updatedTask))
                                     },
                                     dragState = editState,
                                     reorderIcon = {

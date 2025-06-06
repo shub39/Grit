@@ -77,7 +77,7 @@ fun HabitsList(
 
     var editState by remember { mutableStateOf(false) }
 
-    var habits by remember {
+    var habits by remember(state.habitsWithStatuses) {
         mutableStateOf(state.habitsWithStatuses.entries.toList())
     }
     val lazyListState = rememberLazyListState()
