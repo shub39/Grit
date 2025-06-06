@@ -26,6 +26,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.Shape
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import com.kizitonwose.calendar.compose.WeekCalendar
@@ -50,8 +51,9 @@ fun HabitCard(
     editState: Boolean,
     startingDay: DayOfWeek,
     reorderHandle: @Composable () -> Unit,
-    modifier: Modifier,
-    timeFormat: String
+    timeFormat: String,
+    shape: Shape,
+    modifier: Modifier = Modifier
 ) {
     val primary = MaterialTheme.colorScheme.primary
     // animated colors
@@ -83,6 +85,7 @@ fun HabitCard(
             contentColor = cardContent
         ),
         onClick = { action(HabitsPageAction.InsertStatus(habit)) },
+        shape = shape,
         modifier = modifier
     ) {
         ListItem(

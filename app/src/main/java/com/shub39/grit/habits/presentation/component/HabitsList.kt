@@ -1,12 +1,10 @@
 package com.shub39.grit.habits.presentation.component
 
 import androidx.compose.animation.AnimatedVisibility
-import androidx.compose.animation.animateContentSize
 import androidx.compose.animation.core.animateDpAsState
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
@@ -29,7 +27,6 @@ import androidx.compose.material3.FilledTonalIconButton
 import androidx.compose.material3.FilledTonalIconToggleButton
 import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Icon
-import androidx.compose.material3.IconButton
 import androidx.compose.material3.IconToggleButtonShapes
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
@@ -38,13 +35,13 @@ import androidx.compose.material3.TimeInput
 import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.rememberTimePickerState
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
@@ -80,16 +77,22 @@ fun HabitsList(
 
     var editState by remember { mutableStateOf(false) }
 
-    var habits = state.habitsWithStatuses.entries.toList()
+    var habits by remember {
+        mutableStateOf(state.habitsWithStatuses.entries.toList())
+    }
     val lazyListState = rememberLazyListState()
     val reorderableListState =
         rememberReorderableLazyListState(lazyListState) { from, to ->
             habits = habits.toMutableList().apply {
                 add(to.index, removeAt(from.index))
             }
+        }
 
+    DisposableEffect(Unit) {
+        onDispose {
             onAction(HabitsPageAction.ReorderHabits(habits.mapIndexed { index, entry -> index to entry.key }))
         }
+    }
 
     Box(
         modifier = Modifier.fillMaxSize(),
@@ -134,11 +137,7 @@ fun HabitsList(
 
             LazyColumn(
                 state = lazyListState,
-                modifier = Modifier
-                    .fillMaxSize()
-                    .animateContentSize(),
-                verticalArrangement = Arrangement.spacedBy(8.dp),
-                contentPadding = PaddingValues(16.dp)
+                modifier = Modifier.fillMaxSize()
             ) {
                 // habits
                 itemsIndexed(habits, key = { _, it -> it.key.id }) { index, habit ->
@@ -157,17 +156,14 @@ fun HabitsList(
                             onNavigateToAnalytics = onNavigateToAnalytics,
                             timeFormat = state.timeFormat,
                             reorderHandle = {
-                                IconButton(
-                                    modifier = Modifier.draggableHandle(),
-                                    onClick = {}
-                                ) {
-                                    Icon(
-                                        painter = painterResource(R.drawable.baseline_drag_indicator_24),
-                                        contentDescription = null
-                                    )
-                                }
+                                Icon(
+                                    painter = painterResource(R.drawable.baseline_drag_indicator_24),
+                                    contentDescription = "Drag Indicator",
+                                    modifier = Modifier.draggableHandle()
+                                )
                             },
-                            modifier = Modifier.clip(RoundedCornerShape(cardCorners))
+                            modifier = Modifier.padding(horizontal = 16.dp, vertical = 4.dp),
+                            shape = RoundedCornerShape(cardCorners)
                         )
                     }
                 }

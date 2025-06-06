@@ -12,12 +12,12 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
-import com.mikepenz.aboutlibraries.ui.compose.LibrariesContainer
-import com.mikepenz.aboutlibraries.ui.compose.LibraryDefaults
-import com.mikepenz.aboutlibraries.ui.compose.libraryColors
+import com.mikepenz.aboutlibraries.ui.compose.android.rememberLibraries
+import com.mikepenz.aboutlibraries.ui.compose.m3.LibrariesContainer
 import com.shub39.grit.R
 import com.shub39.grit.core.presentation.components.PageFill
 
@@ -31,6 +31,8 @@ fun AboutLibraries(
             .widthIn(max = 500.dp)
             .fillMaxSize()
     ) {
+        val libraries by rememberLibraries (R.raw.aboutlibraries)
+
         TopAppBar(
             title = { Text(stringResource(R.string.about_libraries)) },
             navigationIcon = {
@@ -46,14 +48,9 @@ fun AboutLibraries(
         )
 
         LibrariesContainer(
-            modifier = Modifier.fillMaxSize(),
-            colors = LibraryDefaults.libraryColors(
-                backgroundColor = MaterialTheme.colorScheme.background,
-                contentColor = MaterialTheme.colorScheme.onBackground,
-                badgeBackgroundColor = MaterialTheme.colorScheme.primary,
-                badgeContentColor = MaterialTheme.colorScheme.onPrimary,
-                dialogConfirmButtonColor = MaterialTheme.colorScheme.primary
-            )
+            libraries = libraries,
+            typography = MaterialTheme.typography,
+            modifier = Modifier.fillMaxSize()
         )
     }
 }

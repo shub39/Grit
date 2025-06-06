@@ -19,7 +19,6 @@ import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.ExperimentalMaterial3ExpressiveApi
 import androidx.compose.material3.FilledIconButton
 import androidx.compose.material3.FilledTonalIconButton
-import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.ListItem
 import androidx.compose.material3.ListItemDefaults
@@ -79,7 +78,7 @@ fun RootPage(
                         containerColor = MaterialTheme.colorScheme.primaryContainer,
                         contentColor = MaterialTheme.colorScheme.onPrimaryContainer
                     ),
-                    modifier = Modifier.padding(horizontal = 16.dp)
+                    modifier = Modifier.padding(16.dp)
                 ) {
                     ListItem(
                         modifier = Modifier.clip(MaterialTheme.shapes.medium),
@@ -149,13 +148,6 @@ fun RootPage(
                         }
                     }
                 }
-            }
-
-
-            item {
-                HorizontalDivider(
-                    modifier = Modifier.padding(32.dp)
-                )
             }
 
             item {
@@ -252,12 +244,6 @@ fun RootPage(
             }
 
             item {
-                HorizontalDivider(
-                    modifier = Modifier.padding(32.dp)
-                )
-            }
-
-            item {
                 ListItem(
                     headlineContent = {
                         Text(
@@ -304,12 +290,6 @@ fun RootPage(
                             )
                         }
                     }
-                )
-            }
-
-            item {
-                HorizontalDivider(
-                    modifier = Modifier.padding(32.dp)
                 )
             }
 

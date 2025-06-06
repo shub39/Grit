@@ -43,6 +43,7 @@ import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -202,7 +203,7 @@ fun TaskList(
                 targetState = state.currentCategory
             ) { category ->
                 if (category != null) {
-                    var tasks by remember(state.tasks) {
+                    var tasks by remember {
                         mutableStateOf(state.tasks[category] ?: emptyList())
                     }
 
@@ -212,9 +213,13 @@ fun TaskList(
                             tasks = tasks.toMutableList().apply {
                                 add(to.index, removeAt(from.index))
                             }
+                        }
 
+                    DisposableEffect(Unit) {
+                        onDispose {
                             onAction(TaskPageAction.ReorderTasks(tasks.mapIndexed { index, task -> index to task }))
                         }
+                    }
 
                     LazyColumn(
                         modifier = Modifier.fillMaxSize(),

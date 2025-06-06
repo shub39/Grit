@@ -111,6 +111,7 @@ dependencies {
     implementation(libs.compose.charts)
     implementation(libs.calendar)
     implementation(libs.material.icons.core)
+    implementation(libs.aboutlibraries.compose.m3)
 }
 
 java {
