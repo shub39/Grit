@@ -97,4 +97,5 @@
     <string name="edit_habit">Edit Habit</string>
     <string name="font">Font</string>
     <string name="font_desc">Select App Font</string>
+    <string name="habit_overview_widget">Habit Overview</string>
 </resources>
