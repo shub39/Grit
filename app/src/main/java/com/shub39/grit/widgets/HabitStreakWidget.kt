@@ -122,13 +122,13 @@ class HabitStreakWidget : GlanceAppWidget(), KoinComponent {
 
             val allHabits by repo.getHabits().collectAsState(emptyList())
             val allStatuses by repo.getHabitStatuses().collectAsState(emptyList())
-            val habitId = state[longPreferencesKey(id.toString())] ?: allHabits.firstOrNull()
+            val habitId = state[longPreferencesKey(id.toString())] ?: allHabits.firstOrNull()?.id
 
             val habit = allHabits.find { it.id == habitId } ?: allHabits.firstOrNull()
             val statuses = allStatuses.filter { it.habitId == habitId }.map { it.date }
 
             GlanceTheme {
-                HabitHeatMap(
+                HabitStreak(
                     context = context,
                     habit = habit,
                     statuses = statuses,
@@ -139,7 +139,7 @@ class HabitStreakWidget : GlanceAppWidget(), KoinComponent {
     }
 
     @Composable
-    fun HabitHeatMap(
+    fun HabitStreak(
         context: Context,
         habit: Habit?,
         statuses: List<LocalDate>,
