@@ -105,7 +105,7 @@ class HabitOverviewWidget : GlanceAppWidget(), KoinComponent {
             val completedHabitIds by repo.getHabitStatuses().collectAsState(initial = emptyList())
 
             GlanceTheme {
-                HabitListWidget(
+                HabitOverview(
                     context = context,
                     habits = habits,
                     completedHabitIds = completedHabitIds,
@@ -122,7 +122,7 @@ class HabitOverviewWidget : GlanceAppWidget(), KoinComponent {
     }
 
     @Composable
-    private fun HabitListWidget(
+    private fun HabitOverview(
         context: Context,
         habits: List<Habit>,
         completedHabitIds: List<Long>,
