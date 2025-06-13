@@ -202,7 +202,9 @@ class HabitStreakWidget : GlanceAppWidget(), KoinComponent {
                 }
             ) {
                 Row(
-                    verticalAlignment = Alignment.CenterVertically
+                    verticalAlignment = Alignment.CenterVertically,
+                    horizontalAlignment = Alignment.CenterHorizontally,
+                    modifier = GlanceModifier.fillMaxSize()
                 ) {
                     Column {
                         Text(
@@ -214,7 +216,7 @@ class HabitStreakWidget : GlanceAppWidget(), KoinComponent {
                             )
                         )
 
-                        Spacer(GlanceModifier.height(10.dp))
+                        Spacer(GlanceModifier.height(16.dp))
 
                         Row {
                             last5Days.forEach {

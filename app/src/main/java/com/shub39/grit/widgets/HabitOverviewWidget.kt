@@ -143,7 +143,8 @@ class HabitOverviewWidget : GlanceAppWidget(), KoinComponent {
                             color = GlanceTheme.colors.onPrimaryContainer,
                             fontWeight = FontWeight.Bold,
                             fontSize = 20.sp
-                        )
+                        ),
+                        modifier = GlanceModifier.clickable(actionStartActivity<MainActivity>())
                     )
 
                     Spacer(modifier = GlanceModifier.defaultWeight())

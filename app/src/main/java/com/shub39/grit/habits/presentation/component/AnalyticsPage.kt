@@ -23,6 +23,8 @@ import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.filled.Create
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonShapes
+import androidx.compose.material3.Card
+import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.ExperimentalMaterial3ExpressiveApi
 import androidx.compose.material3.FilledIconButton
@@ -30,8 +32,6 @@ import androidx.compose.material3.FilledTonalIconButton
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.IconButtonShapes
-import androidx.compose.material3.ListItem
-import androidx.compose.material3.ListItemDefaults
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedIconButton
 import androidx.compose.material3.OutlinedTextField
@@ -47,7 +47,6 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.SolidColor
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
@@ -176,77 +175,97 @@ fun AnalyticsPage(
             contentPadding = PaddingValues(16.dp)
         ) {
             item {
-                ListItem(
-                    modifier = Modifier.clip(MaterialTheme.shapes.medium),
-                    colors = ListItemDefaults.colors(
-                        containerColor = MaterialTheme.colorScheme.primaryContainer,
-                        headlineColor = MaterialTheme.colorScheme.onPrimaryContainer,
-                        trailingIconColor = MaterialTheme.colorScheme.onPrimaryContainer,
-                        overlineColor = MaterialTheme.colorScheme.onPrimaryContainer,
-                        supportingColor = MaterialTheme.colorScheme.onPrimaryContainer
-                    ),
-                    trailingContent = {
-                        Icon(
-                            painter = painterResource(R.drawable.baseline_flag_circle_24),
-                            contentDescription = "Flag",
-                            modifier = Modifier.size(64.dp)
+                Row(
+                    modifier = Modifier
+                        .height(200.dp)
+                        .fillMaxWidth(),
+                    verticalAlignment = Alignment.CenterVertically,
+                    horizontalArrangement = Arrangement.spacedBy(8.dp)
+                ) {
+                    Card(
+                        shape = MaterialTheme.shapes.extraLarge,
+                        modifier = Modifier.weight(1f),
+                        colors = CardDefaults.cardColors(
+                            contentColor = MaterialTheme.colorScheme.onPrimaryContainer,
+                            containerColor = MaterialTheme.colorScheme.primaryContainer
                         )
-                    },
-                    overlineContent = {
-                        Text(text = stringResource(R.string.started_on))
-                    },
-                    headlineContent = {
-                        Text(
-                            text = formatDateWithOrdinal(currentHabit.time.toLocalDate()),
-                            fontWeight = FontWeight.Bold
-                        )
-                    },
-                    supportingContent = {
-                        Text(
-                            text = stringResource(
-                                R.string.days_ago_format,
-                                ChronoUnit.DAYS.between(currentHabit.time.toLocalDate(), today)
-                            )
-                        )
-                    }
-                )
-            }
-
-            item {
-                ListItem(
-                    modifier = Modifier.clip(MaterialTheme.shapes.medium),
-                    colors = ListItemDefaults.colors(
-                        containerColor = MaterialTheme.colorScheme.secondaryContainer,
-                        headlineColor = MaterialTheme.colorScheme.onSecondaryContainer,
-                        trailingIconColor = MaterialTheme.colorScheme.onSecondaryContainer,
-                        overlineColor = MaterialTheme.colorScheme.onSecondaryContainer,
-                        supportingColor = MaterialTheme.colorScheme.onSecondaryContainer
-                    ),
-                    trailingContent = {
-                        Icon(
-                            painter = painterResource(R.drawable.round_local_fire_department_24),
-                            contentDescription = "Streak",
+                    ) {
+                        Column(
                             modifier = Modifier
-                                .padding(4.dp)
-                                .size(64.dp)
-                        )
-                    },
-                    overlineContent = {
-                        Text(text = stringResource(R.string.streak))
-                    },
-                    headlineContent = {
-                        Text(
-                            text = currentStreak.toString(),
-                            fontWeight = FontWeight.Bold,
-                            style = MaterialTheme.typography.titleLarge
-                        )
-                    },
-                    supportingContent = {
-                        Text(
-                            text = stringResource(R.string.best_streak, bestStreak)
-                        )
+                                .fillMaxSize()
+                                .padding(16.dp),
+                            horizontalAlignment = Alignment.CenterHorizontally,
+                            verticalArrangement = Arrangement.Center
+                        ) {
+                            Icon(
+                                painter = painterResource(R.drawable.baseline_flag_circle_24),
+                                contentDescription = "Flag",
+                                modifier = Modifier.size(64.dp)
+                            )
+
+                            Spacer(modifier = Modifier.height(8.dp))
+
+                            Text(
+                                text = stringResource(R.string.started_on),
+                                style = MaterialTheme.typography.titleSmall
+                            )
+
+                            Text(
+                                text = formatDateWithOrdinal(currentHabit.time.toLocalDate()),
+                                fontWeight = FontWeight.Bold,
+                                style = MaterialTheme.typography.bodyLarge
+                            )
+
+                            Text(
+                                text = stringResource(
+                                    R.string.days_ago_format,
+                                    ChronoUnit.DAYS.between(currentHabit.time.toLocalDate(), today)
+                                ),
+                                style = MaterialTheme.typography.bodyMedium
+                            )
+                        }
                     }
-                )
+
+                    Card(
+                        shape = MaterialTheme.shapes.extraLarge,
+                        modifier = Modifier.weight(1f),
+                        colors = CardDefaults.cardColors(
+                            contentColor = MaterialTheme.colorScheme.onSecondaryContainer,
+                            containerColor = MaterialTheme.colorScheme.secondaryContainer
+                        )
+                    ) {
+                        Column(
+                            modifier = Modifier
+                                .fillMaxSize()
+                                .padding(16.dp),
+                            horizontalAlignment = Alignment.CenterHorizontally,
+                            verticalArrangement = Arrangement.Center
+                        ) {
+                            Icon(
+                                painter = painterResource(R.drawable.round_local_fire_department_24),
+                                contentDescription = "Streak",
+                                modifier = Modifier
+                                    .size(64.dp)
+                            )
+
+                            Text(
+                                text = stringResource(R.string.streak),
+                                style = MaterialTheme.typography.titleSmall
+                            )
+
+                            Text(
+                                text = currentStreak.toString(),
+                                fontWeight = FontWeight.Bold,
+                                style = MaterialTheme.typography.titleLarge
+                            )
+
+                            Text(
+                                text = stringResource(R.string.best_streak, bestStreak),
+                                style = MaterialTheme.typography.bodyMedium
+                            )
+                        }
+                    }
+                }
             }
 
             item {
