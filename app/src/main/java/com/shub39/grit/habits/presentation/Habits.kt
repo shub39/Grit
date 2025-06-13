@@ -18,6 +18,7 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import com.materialkolor.PaletteStyle
 import com.shub39.grit.core.domain.AppTheme
+import com.shub39.grit.core.domain.Fonts
 import com.shub39.grit.core.presentation.components.PageFill
 import com.shub39.grit.core.presentation.theme.GritTheme
 import com.shub39.grit.core.presentation.theme.Theme
@@ -89,7 +90,8 @@ private fun Preview() {
         theme = Theme(
             appTheme = AppTheme.DARK,
             isMaterialYou = true,
-            paletteStyle = PaletteStyle.Expressive
+            font = Fonts.MANROPE,
+            paletteStyle = PaletteStyle.TonalSpot
         )
     ) {
         Scaffold { padding ->
