@@ -39,7 +39,7 @@ android {
             )
         }
 
-        create("beta"){
+        create("beta") {
             resValue("string", "app_name", "$appName Beta")
             applicationIdSuffix = ".beta"
             isMinifyEnabled = true
@@ -112,6 +112,7 @@ dependencies {
     implementation(libs.calendar)
     implementation(libs.material.icons.core)
     implementation(libs.aboutlibraries.compose.m3)
+    implementation(libs.androidx.biometric)
 }
 
 java {

@@ -19,6 +19,7 @@ import com.shub39.grit.tasks.data.database.TaskDbFactory
 import com.shub39.grit.tasks.data.repository.TasksRepository
 import com.shub39.grit.tasks.domain.TaskRepo
 import com.shub39.grit.viewmodels.HabitViewModel
+import com.shub39.grit.viewmodels.MainViewModel
 import com.shub39.grit.viewmodels.SettingsViewModel
 import com.shub39.grit.viewmodels.StateLayer
 import com.shub39.grit.viewmodels.TasksViewModel
@@ -73,6 +74,7 @@ val appModule = module {
 
     // view models
     singleOf(::StateLayer)
+    viewModelOf(::MainViewModel)
     viewModelOf(::SettingsViewModel)
     viewModelOf(::HabitViewModel)
     viewModelOf(::TasksViewModel)

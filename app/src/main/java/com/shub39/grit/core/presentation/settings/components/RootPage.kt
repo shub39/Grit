@@ -247,6 +247,24 @@ fun RootPage(
                 ListItem(
                     headlineContent = {
                         Text(
+                            text = stringResource(R.string.biometric_lock)
+                        )
+                    },
+                    trailingContent = {
+                        Switch(
+                            checked = state.biometric,
+                            onCheckedChange = {
+                                onAction(SettingsAction.ChangeBiometricLock(it))
+                            }
+                        )
+                    }
+                )
+            }
+
+            item {
+                ListItem(
+                    headlineContent = {
+                        Text(
                             text = stringResource(R.string.look_and_feel)
                         )
                     },

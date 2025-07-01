@@ -44,7 +44,7 @@ import org.koin.androidx.compose.koinViewModel
 fun Grit(
     tvm: TasksViewModel = koinViewModel(),
     hvm: HabitViewModel = koinViewModel(),
-    svm: SettingsViewModel = koinViewModel()
+    svm: SettingsViewModel
 ) {
     val navController = rememberNavController()
     var currentRoute: MainRoutes by remember { mutableStateOf(MainRoutes.TaskPages) }
