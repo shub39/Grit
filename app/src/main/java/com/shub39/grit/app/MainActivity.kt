@@ -4,7 +4,6 @@ import android.os.Bundle
 import android.widget.Toast
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
-import androidx.biometric.BiometricManager
 import androidx.biometric.BiometricPrompt
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
@@ -61,7 +60,7 @@ class MainActivity : FragmentActivity() {
                                 showContent = true
                             },
                             onError = { errorCode, errString ->
-                                handleBiometricError(errString) {
+                                handleBiometricError(errorCode, errString) {
                                     showContent = true
                                 }
                             }
@@ -105,11 +104,6 @@ class MainActivity : FragmentActivity() {
                     super.onAuthenticationError(errorCode, errString)
                     onError(errorCode, errString)
                 }
-
-                override fun onAuthenticationFailed() {
-                    super.onAuthenticationFailed()
-
-                }
             }
         )
 
@@ -123,19 +117,36 @@ class MainActivity : FragmentActivity() {
     }
 
     private fun handleBiometricError(
+        errorCode: Int,
         errString: CharSequence,
         onComplete: () -> Unit
     ) {
-        val biometricManager = BiometricManager.from(this)
-        if (biometricManager.canAuthenticate(Utils.getAuthenticators()) != BiometricManager.BIOMETRIC_SUCCESS) {
-            mainViewModel.setAppUnlocked(true)
-            settingsViewModel.onAction(SettingsAction.ChangeBiometricLock(false))
-            Toast.makeText(
-                this,
-                "Authentication error: $errString",
-                Toast.LENGTH_SHORT
-            ).show()
-            onComplete()
+        when (errorCode) {
+            BiometricPrompt.ERROR_USER_CANCELED,
+            BiometricPrompt.ERROR_NEGATIVE_BUTTON,
+            BiometricPrompt.ERROR_CANCELED -> {
+                Toast.makeText(this, "Authentication required to access Grit", Toast.LENGTH_SHORT)
+                    .show()
+                finish()
+            }
+
+            BiometricPrompt.ERROR_NO_BIOMETRICS,
+            BiometricPrompt.ERROR_HW_NOT_PRESENT,
+            BiometricPrompt.ERROR_HW_UNAVAILABLE -> {
+                mainViewModel.setAppUnlocked(true)
+                settingsViewModel.onAction(SettingsAction.ChangeBiometricLock(false))
+                Toast.makeText(
+                    this,
+                    "Biometric authentication not available. Disabling biometric lock.",
+                    Toast.LENGTH_LONG
+                ).show()
+                onComplete()
+            }
+
+            else -> {
+                Toast.makeText(this, "Authentication error: $errString", Toast.LENGTH_SHORT).show()
+                finish()
+            }
         }
     }
 }
