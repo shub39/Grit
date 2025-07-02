@@ -32,12 +32,14 @@ class DataStoreImpl(
         private val materialYouKey = booleanPreferencesKey("material_you")
         private val notificationsKey = booleanPreferencesKey("notifications")
         private val fontPrefKey = stringPreferencesKey("font")
+        private val biometricLockKey = booleanPreferencesKey("biometric")
     }
 
     override fun getAppThemeFlow(): Flow<AppTheme> = datastore.data.map { prefs ->
         val appTheme = prefs[appThemeKey] ?: AppTheme.SYSTEM.name
         AppTheme.valueOf(appTheme)
     }
+
     override suspend fun setAppTheme(theme: AppTheme) {
         datastore.edit { prefs ->
             prefs[appThemeKey] = theme.name
@@ -47,6 +49,7 @@ class DataStoreImpl(
     override fun getSeedColorFlow(): Flow<Int> = datastore.data.map { prefs ->
         prefs[seedColorKey] ?: Color.White.toArgb()
     }
+
     override suspend fun setSeedColor(color: Int) {
         datastore.edit { prefs ->
             prefs[seedColorKey] = color
@@ -56,6 +59,7 @@ class DataStoreImpl(
     override fun getAmoledPref(): Flow<Boolean> = datastore.data.map { prefs ->
         prefs[amoledKey] == true
     }
+
     override suspend fun setAmoledPref(pref: Boolean) {
         datastore.edit { prefs ->
             prefs[amoledKey] = pref
@@ -66,6 +70,7 @@ class DataStoreImpl(
         val style = prefs[paletteKey] ?: PaletteStyle.TonalSpot.name
         return@map PaletteStyle.valueOf(style)
     }
+
     override suspend fun setPaletteStyle(style: PaletteStyle) {
         datastore.edit { prefs ->
             prefs[paletteKey] = style.name
@@ -76,6 +81,7 @@ class DataStoreImpl(
         val dayOfWeek = prefs[startOfWeekKey] ?: DayOfWeek.MONDAY.name
         return@map DayOfWeek.valueOf(dayOfWeek)
     }
+
     override suspend fun setStartOfWeek(day: DayOfWeek) {
         datastore.edit { prefs ->
             prefs[startOfWeekKey] = day.name
@@ -86,6 +92,7 @@ class DataStoreImpl(
         val page = pref[startingPageKey] ?: Pages.Tasks.name
         return@map Pages.valueOf(page)
     }
+
     override suspend fun setStartingPage(page: Pages) {
         datastore.edit { prefs ->
             prefs[startingPageKey] = page.name
@@ -95,6 +102,7 @@ class DataStoreImpl(
     override fun getIs24Hr(): Flow<Boolean> = datastore.data.map { prefs ->
         prefs[is24HrKey] == true
     }
+
     override suspend fun setIs24Hr(pref: Boolean) {
         datastore.edit { prefs ->
             prefs[is24HrKey] = pref
@@ -104,6 +112,7 @@ class DataStoreImpl(
     override fun getMaterialYouFlow(): Flow<Boolean> = datastore.data.map { prefs ->
         prefs[materialYouKey] == true
     }
+
     override suspend fun setMaterialYou(pref: Boolean) {
         datastore.edit { prefs ->
             prefs[materialYouKey] = pref
@@ -113,6 +122,7 @@ class DataStoreImpl(
     override fun getNotificationsFlow(): Flow<Boolean> = datastore.data.map { prefs ->
         prefs[notificationsKey] == true
     }
+
     override suspend fun setNotifications(pref: Boolean) {
         datastore.edit { prefs ->
             prefs[notificationsKey] = pref
@@ -123,9 +133,20 @@ class DataStoreImpl(
         val font = prefs[fontPrefKey] ?: Fonts.POPPINS.name
         Fonts.valueOf(font)
     }
+
     override suspend fun setFontPref(font: Fonts) {
         datastore.edit { prefs ->
             prefs[fontPrefKey] = font.name
+        }
+    }
+
+    override fun getBiometricLockPref(): Flow<Boolean> = datastore.data.map { prefs ->
+        prefs[biometricLockKey] == true
+    }
+
+    override suspend fun setBiometricPref(pref: Boolean) {
+        datastore.edit { prefs ->
+            prefs[biometricLockKey] = pref
         }
     }
 }

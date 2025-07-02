@@ -98,4 +98,7 @@
     <string name="font">Font</string>
     <string name="font_desc">Select App Font</string>
     <string name="habit_overview_widget">Habit Overview</string>
+    <string name="biometric_lock">Biometric Lock</string>
+    <string name="biometric_lock_desc">Use biometric authentication to unlock app</string>
+    <string name="biometric_failed">Authentication required to use app</string>
 </resources>

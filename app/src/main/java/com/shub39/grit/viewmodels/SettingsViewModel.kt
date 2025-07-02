@@ -109,6 +109,8 @@ class SettingsViewModel(
             is SettingsAction.ChangePauseNotifications -> datastore.setNotifications(action.pref)
 
             is SettingsAction.ChangeFontPref -> datastore.setFontPref(action.font)
+
+            is SettingsAction.ChangeBiometricLock -> datastore.setBiometricPref(action.pref)
         }
     }
 
@@ -222,6 +224,16 @@ class SettingsViewModel(
                     _state.update {
                         it.copy(
                             startOfTheWeek = flow
+                        )
+                    }
+                }
+                .launchIn(this)
+
+            datastore.getBiometricLockPref()
+                .onEach { flow ->
+                    _state.update {
+                        it.copy(
+                            biometric = flow
                         )
                     }
                 }

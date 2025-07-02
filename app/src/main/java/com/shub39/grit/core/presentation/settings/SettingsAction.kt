@@ -18,10 +18,11 @@ sealed interface SettingsAction {
     data class ChangeStartingPage(val page: Pages) : SettingsAction
     data class ChangePauseNotifications(val pref: Boolean) : SettingsAction
 
-    data class ChangeAppTheme(val appTheme: AppTheme): SettingsAction
-    data class ChangeFontPref(val font: Fonts): SettingsAction
+    data class ChangeAppTheme(val appTheme: AppTheme) : SettingsAction
+    data class ChangeFontPref(val font: Fonts) : SettingsAction
     data class ChangeSeedColor(val color: Color) : SettingsAction
     data class ChangeAmoled(val pref: Boolean) : SettingsAction
     data class ChangePaletteStyle(val style: PaletteStyle) : SettingsAction
     data class ChangeMaterialYou(val pref: Boolean) : SettingsAction
+    data class ChangeBiometricLock(val pref: Boolean) : SettingsAction
 }

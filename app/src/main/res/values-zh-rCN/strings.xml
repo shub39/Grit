@@ -90,4 +90,5 @@
     <string name="weekly_graph">周度对比</string>
     <string name="not_enough_data">数据不足</string>
     <string name="sponsor">赞助支持</string>
+    <string name="biometric_lock">生物识别锁</string>
 </resources>

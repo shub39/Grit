@@ -34,4 +34,7 @@ interface GritDatastore {
 
     fun getFontPrefFlow(): Flow<Fonts>
     suspend fun setFontPref(font: Fonts)
+
+    fun getBiometricLockPref(): Flow<Boolean>
+    suspend fun setBiometricPref(pref: Boolean)
 }
