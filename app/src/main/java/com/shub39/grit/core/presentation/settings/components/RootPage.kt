@@ -29,6 +29,7 @@ import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalUriHandler
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
@@ -40,6 +41,7 @@ import com.shub39.grit.core.presentation.components.PageFill
 import com.shub39.grit.core.presentation.settings.SettingsAction
 import com.shub39.grit.core.presentation.settings.SettingsRoutes
 import com.shub39.grit.core.presentation.settings.SettingsState
+import com.shub39.grit.util.Utils
 import compose.icons.FontAwesomeIcons
 import compose.icons.fontawesomeicons.Brands
 import compose.icons.fontawesomeicons.Solid
@@ -55,6 +57,7 @@ fun RootPage(
     onAction: (SettingsAction) -> Unit,
     onNavigate: (SettingsRoutes) -> Unit
 ) = PageFill {
+    val context = LocalContext.current
     val uriHandler = LocalUriHandler.current
 
     Column(
@@ -243,22 +246,29 @@ fun RootPage(
                 )
             }
 
-            item {
-                ListItem(
-                    headlineContent = {
-                        Text(
-                            text = stringResource(R.string.biometric_lock)
-                        )
-                    },
-                    trailingContent = {
-                        Switch(
-                            checked = state.biometric,
-                            onCheckedChange = {
-                                onAction(SettingsAction.ChangeBiometricLock(it))
-                            }
-                        )
-                    }
-                )
+            if (Utils.authenticaticationAvailable(context)) {
+                item {
+                    ListItem(
+                        headlineContent = {
+                            Text(
+                                text = stringResource(R.string.biometric_lock)
+                            )
+                        },
+                        supportingContent = {
+                            Text(
+                                text = stringResource(R.string.biometric_lock_desc)
+                            )
+                        },
+                        trailingContent = {
+                            Switch(
+                                checked = state.biometric,
+                                onCheckedChange = {
+                                    onAction(SettingsAction.ChangeBiometricLock(it))
+                                }
+                            )
+                        }
+                    )
+                }
             }
 
             item {

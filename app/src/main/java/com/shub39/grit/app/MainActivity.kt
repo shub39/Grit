@@ -5,24 +5,20 @@ import android.widget.Toast
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import androidx.biometric.BiometricPrompt
-import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.material3.CircularProgressIndicator
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
-import androidx.compose.ui.Alignment
-import androidx.compose.ui.Modifier
 import androidx.core.content.ContextCompat
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import androidx.fragment.app.FragmentActivity
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import com.shub39.grit.R
+import com.shub39.grit.core.presentation.components.InitialLoading
 import com.shub39.grit.core.presentation.createNotificationChannel
 import com.shub39.grit.core.presentation.settings.SettingsAction
+import com.shub39.grit.core.presentation.theme.GritTheme
 import com.shub39.grit.util.Utils
 import com.shub39.grit.viewmodels.MainViewModel
 import com.shub39.grit.viewmodels.SettingsViewModel
@@ -40,7 +36,7 @@ class MainActivity : FragmentActivity() {
 
         setContent {
             val settingsState by settingsViewModel.state.collectAsStateWithLifecycle()
-            val isAppUnlocked by remember { mutableStateOf(mainViewModel.isAppUnlocked()) }
+            val isAppUnlocked by mainViewModel.isAppUnlocked.collectAsStateWithLifecycle()
             var showContent by remember { mutableStateOf(false) }
 
             LaunchedEffect(settingsState.biometric, isAppUnlocked) {
@@ -69,16 +65,13 @@ class MainActivity : FragmentActivity() {
                 }
             }
 
-            if (showContent) {
-                Grit(svm = settingsViewModel)
-            } else {
-                Box(
-                    modifier = Modifier
-                        .fillMaxSize()
-                        .background(MaterialTheme.colorScheme.background),
-                    contentAlignment = Alignment.Center
-                ) {
-                    CircularProgressIndicator()
+            GritTheme(
+                theme = settingsState.theme
+            ) {
+                if (showContent) {
+                    Grit(svm = settingsViewModel)
+                } else {
+                    InitialLoading()
                 }
             }
         }
@@ -108,8 +101,7 @@ class MainActivity : FragmentActivity() {
         )
 
         val promptInfo = BiometricPrompt.PromptInfo.Builder()
-            .setTitle("Authenticate to access Grit")
-            .setSubtitle("Use your biometric credential")
+            .setTitle(getString(R.string.biometric_lock))
             .setAllowedAuthenticators(Utils.getAuthenticators())
             .build()
 
@@ -125,7 +117,7 @@ class MainActivity : FragmentActivity() {
             BiometricPrompt.ERROR_USER_CANCELED,
             BiometricPrompt.ERROR_NEGATIVE_BUTTON,
             BiometricPrompt.ERROR_CANCELED -> {
-                Toast.makeText(this, "Authentication required to access Grit", Toast.LENGTH_SHORT)
+                Toast.makeText(this, getString(R.string.biometric_failed), Toast.LENGTH_SHORT)
                     .show()
                 finish()
             }
