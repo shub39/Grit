@@ -8,7 +8,7 @@ import androidx.biometric.BiometricManager.Authenticators.BIOMETRIC_WEAK
 import androidx.biometric.BiometricManager.Authenticators.DEVICE_CREDENTIAL
 
 object Utils {
-    fun getAuthenticators() = if (Build.VERSION.SDK_INT > Build.VERSION_CODES.R) {
+    fun getAuthenticators() = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
         BIOMETRIC_STRONG or DEVICE_CREDENTIAL
     } else {
         BIOMETRIC_WEAK
