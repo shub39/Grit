@@ -26,8 +26,17 @@ import com.shub39.grit.habits.domain.Habit
 import com.shub39.grit.habits.domain.HabitStatus
 import com.shub39.grit.habits.presentation.component.AnalyticsPage
 import com.shub39.grit.habits.presentation.component.HabitsList
+import kotlinx.serialization.Serializable
 import java.time.LocalDate
 import java.time.LocalDateTime
+
+private sealed interface HabitRoutes {
+    @Serializable
+    data object HabitList : HabitRoutes
+
+    @Serializable
+    data object HabitAnalytics : HabitRoutes
+}
 
 @Composable
 fun Habits(

@@ -39,7 +39,6 @@ import com.shub39.grit.R
 import com.shub39.grit.core.domain.Pages
 import com.shub39.grit.core.presentation.components.PageFill
 import com.shub39.grit.core.presentation.settings.SettingsAction
-import com.shub39.grit.core.presentation.settings.SettingsRoutes
 import com.shub39.grit.core.presentation.settings.SettingsState
 import com.shub39.grit.util.Utils
 import compose.icons.FontAwesomeIcons
@@ -55,7 +54,9 @@ import java.time.DayOfWeek
 fun RootPage(
     state: SettingsState,
     onAction: (SettingsAction) -> Unit,
-    onNavigate: (SettingsRoutes) -> Unit
+    onNavigateToLookAndFeel: () -> Unit,
+    onNavigateToBackup: () -> Unit,
+    onNavigateToAboutLibraries: () -> Unit
 ) = PageFill {
     val context = LocalContext.current
     val uriHandler = LocalUriHandler.current
@@ -285,7 +286,7 @@ fun RootPage(
                     },
                     trailingContent = {
                         FilledTonalIconButton(
-                            onClick = { onNavigate(SettingsRoutes.LookAndFeel) }
+                            onClick = onNavigateToLookAndFeel
                         ) {
                             Icon(
                                 imageVector = Icons.AutoMirrored.Filled.KeyboardArrowRight,
@@ -310,7 +311,7 @@ fun RootPage(
                     },
                     trailingContent = {
                         FilledTonalIconButton(
-                            onClick = { onNavigate(SettingsRoutes.Backup) }
+                            onClick = onNavigateToBackup
                         ) {
                             Icon(
                                 imageVector = Icons.AutoMirrored.Filled.KeyboardArrowRight,
@@ -330,7 +331,7 @@ fun RootPage(
                     },
                     trailingContent = {
                         FilledTonalIconButton(
-                            onClick = { onNavigate(SettingsRoutes.AboutLibraries) }
+                            onClick = onNavigateToAboutLibraries
                         ) {
                             Icon(
                                 imageVector = Icons.AutoMirrored.Filled.KeyboardArrowRight,

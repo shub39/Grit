@@ -25,6 +25,15 @@ import com.shub39.grit.tasks.domain.Category
 import com.shub39.grit.tasks.domain.Task
 import com.shub39.grit.tasks.presentation.component.EditCategories
 import com.shub39.grit.tasks.presentation.component.TaskList
+import kotlinx.serialization.Serializable
+
+private sealed interface TasksRoutes {
+    @Serializable
+    data object TasksList: TasksRoutes
+
+    @Serializable
+    data object EditCategories: TasksRoutes
+}
 
 @Composable
 fun Tasks(
