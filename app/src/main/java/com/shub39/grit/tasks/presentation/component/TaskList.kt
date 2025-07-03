@@ -111,10 +111,10 @@ fun TaskList(
                     )
                 },
                 actions = {
-                    AnimatedVisibility(
-                        visible = state.completedTasks.isNotEmpty()
-                    ) {
-                        Row {
+                    Row {
+                        AnimatedVisibility(
+                            visible = state.completedTasks.isNotEmpty()
+                        ) {
                             OutlinedIconButton(
                                 onClick = { showDeleteDialog = true },
                                 shapes = IconButtonShapes(
@@ -127,7 +127,11 @@ fun TaskList(
                                     contentDescription = null
                                 )
                             }
+                        }
 
+                        AnimatedVisibility(
+                            visible = tasks.isNotEmpty()
+                        ) {
                             FilledTonalIconToggleButton(
                                 checked = editState,
                                 shapes = IconToggleButtonShapes(

@@ -197,7 +197,9 @@ fun HabitsList(
                 visible = state.habitsWithStatuses.isNotEmpty()
             ) {
                 FloatingActionButton(
-                    onClick = { showAllAnalytics = true }
+                    onClick = { showAllAnalytics = true },
+                    containerColor = MaterialTheme.colorScheme.secondaryContainer,
+                    contentColor = MaterialTheme.colorScheme.onSecondaryContainer
                 ) {
                     Icon(
                         painter = painterResource(R.drawable.round_analytics_24),

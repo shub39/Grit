@@ -346,53 +346,46 @@ fun AnalyticsPage(
                 AnalyticsCard(
                     modifier = Modifier.height(300.dp)
                 ) {
-                    if (lineChartData.isNotEmpty()) {
-                        LineChart(
-                            labelHelperProperties = LabelHelperProperties(
-                                textStyle = MaterialTheme.typography.bodyMedium.copy(color = primary)
-                            ),
-                            indicatorProperties = HorizontalIndicatorProperties(
-                                textStyle = MaterialTheme.typography.bodyMedium.copy(color = primary)
-                            ),
-                            gridProperties = GridProperties(
-                                enabled = true,
-                                xAxisProperties = GridProperties.AxisProperties(lineCount = 10),
-                                yAxisProperties = GridProperties.AxisProperties(lineCount = 7)
-                            ),
-                            data = listOf(
-                                Line(
-                                    label = stringResource(R.string.weekly_graph),
-                                    values = lineChartData,
+                    LineChart(
+                        labelHelperProperties = LabelHelperProperties(
+                            textStyle = MaterialTheme.typography.bodyMedium.copy(color = primary)
+                        ),
+                        indicatorProperties = HorizontalIndicatorProperties(
+                            textStyle = MaterialTheme.typography.bodyMedium.copy(color = primary)
+                        ),
+                        gridProperties = GridProperties(
+                            enabled = true,
+                            xAxisProperties = GridProperties.AxisProperties(lineCount = 10),
+                            yAxisProperties = GridProperties.AxisProperties(lineCount = 7)
+                        ),
+                        data = listOf(
+                            Line(
+                                label = stringResource(R.string.weekly_graph),
+                                values = lineChartData,
+                                color = SolidColor(primary),
+                                dotProperties = DotProperties(
+                                    enabled = true,
                                     color = SolidColor(primary),
-                                    dotProperties = DotProperties(
-                                        enabled = true,
-                                        color = SolidColor(primary),
-                                        strokeWidth = 4.dp,
-                                        radius = 7.dp,
-                                        strokeColor = SolidColor(primary.copy(alpha = 0.5f))
-                                    ),
-                                    drawStyle = DrawStyle.Stroke(
-                                        width = 3.dp,
-                                        strokeStyle = StrokeStyle.Dashed(
-                                            intervals = floatArrayOf(
-                                                10f,
-                                                10f
-                                            ), phase = 15f
-                                        )
+                                    strokeWidth = 4.dp,
+                                    radius = 7.dp,
+                                    strokeColor = SolidColor(primary.copy(alpha = 0.5f))
+                                ),
+                                drawStyle = DrawStyle.Stroke(
+                                    width = 3.dp,
+                                    strokeStyle = StrokeStyle.Dashed(
+                                        intervals = floatArrayOf(
+                                            10f,
+                                            10f
+                                        ), phase = 15f
                                     )
                                 )
-                            ),
-                            curvedEdges = false,
-                            animationMode = AnimationMode.Together(delayBuilder = { it * 500L })
-                        )
-                    } else {
-                        Box(
-                            modifier = Modifier.fillMaxSize(),
-                            contentAlignment = Alignment.Center
-                        ) {
-                            Text(text = stringResource(R.string.not_enough_data))
-                        }
-                    }
+                            )
+                        ),
+                        maxValue = 7.0,
+                        minValue = 0.0,
+                        curvedEdges = false,
+                        animationMode = AnimationMode.Together(delayBuilder = { it * 500L })
+                    )
                 }
             }
         }

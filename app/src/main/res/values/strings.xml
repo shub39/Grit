@@ -102,4 +102,6 @@
     <string name="biometric_lock_desc">Use biometric authentication to unlock app</string>
     <string name="biometric_failed">Authentication required to use app</string>
     <string name="biometric_not_available">Biometric authentication not available. Disabling biometric lock.</string>
+    <string name="bmc">Buy me a coffee</string>
+    <string name="rate_on_play">Rate on Google Play</string>
 </resources>

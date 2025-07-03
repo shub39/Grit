@@ -1,52 +1,37 @@
 package com.shub39.grit.core.presentation.settings.components
 
-import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.widthIn
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.automirrored.filled.KeyboardArrowRight
-import androidx.compose.material3.Button
-import androidx.compose.material3.Card
-import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.ExperimentalMaterial3ExpressiveApi
-import androidx.compose.material3.FilledIconButton
-import androidx.compose.material3.FilledTonalIconButton
 import androidx.compose.material3.Icon
 import androidx.compose.material3.ListItem
-import androidx.compose.material3.ListItemDefaults
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Switch
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
 import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.platform.LocalUriHandler
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
-import com.shub39.grit.BuildConfig
 import com.shub39.grit.R
 import com.shub39.grit.core.domain.Pages
 import com.shub39.grit.core.presentation.components.PageFill
 import com.shub39.grit.core.presentation.settings.SettingsAction
 import com.shub39.grit.core.presentation.settings.SettingsState
 import compose.icons.FontAwesomeIcons
-import compose.icons.fontawesomeicons.Brands
 import compose.icons.fontawesomeicons.Solid
-import compose.icons.fontawesomeicons.brands.Discord
-import compose.icons.fontawesomeicons.brands.Github
-import compose.icons.fontawesomeicons.solid.Coffee
+import compose.icons.fontawesomeicons.solid.InfoCircle
+import compose.icons.fontawesomeicons.solid.Palette
+import compose.icons.fontawesomeicons.solid.Upload
 import java.time.DayOfWeek
 
 @OptIn(ExperimentalMaterial3Api::class, ExperimentalMaterial3ExpressiveApi::class)
@@ -59,7 +44,6 @@ fun RootPage(
     onNavigateToAboutLibraries: () -> Unit
 ) = PageFill {
     val context = LocalContext.current
-    val uriHandler = LocalUriHandler.current
 
     LaunchedEffect(Unit) {
         onAction(SettingsAction.OnCheckBiometric(context))
@@ -79,84 +63,9 @@ fun RootPage(
         LazyColumn(
             modifier = Modifier.fillMaxSize()
         ) {
-            item {
-                Card(
-                    shape = MaterialTheme.shapes.extraLarge,
-                    colors = CardDefaults.cardColors(
-                        containerColor = MaterialTheme.colorScheme.primaryContainer,
-                        contentColor = MaterialTheme.colorScheme.onPrimaryContainer
-                    ),
-                    modifier = Modifier.padding(16.dp)
-                ) {
-                    ListItem(
-                        modifier = Modifier.clip(MaterialTheme.shapes.medium),
-                        colors = ListItemDefaults.colors(
-                            containerColor = MaterialTheme.colorScheme.primaryContainer,
-                            headlineColor = MaterialTheme.colorScheme.onPrimaryContainer,
-                            trailingIconColor = MaterialTheme.colorScheme.onPrimaryContainer,
-                            supportingColor = MaterialTheme.colorScheme.onPrimaryContainer
-                        ),
-                        headlineContent = {
-                            Text(
-                                text = stringResource(R.string.app_name),
-                                style = MaterialTheme.typography.titleMedium,
-                                fontWeight = FontWeight.Bold
-                            )
-                        },
-                        supportingContent = {
-                            Text(
-                                text = "${BuildConfig.VERSION_NAME} (${BuildConfig.VERSION_CODE})"
-                            )
-                        },
-                        trailingContent = {
-                            Row {
-                                FilledIconButton(
-                                    onClick = {
-                                        uriHandler.openUri("https://discord.gg/https://discord.gg/nxA2hgtEKf")
-                                    }
-                                ) {
-                                    Icon(
-                                        imageVector = FontAwesomeIcons.Brands.Discord,
-                                        contentDescription = "Discord",
-                                        modifier = Modifier.size(20.dp)
-                                    )
-                                }
+            item { AboutApp() }
 
-                                FilledIconButton(
-                                    onClick = {
-                                        uriHandler.openUri("https://github.com/shub39/Grit")
-                                    }
-                                ) {
-                                    Icon(
-                                        imageVector = FontAwesomeIcons.Brands.Github,
-                                        contentDescription = "Github",
-                                        modifier = Modifier.size(20.dp)
-                                    )
-                                }
-                            }
-                        }
-                    )
-
-                    Button(
-                        onClick = {
-                            uriHandler.openUri("https://buymeacoffee.com/shub39")
-                        },
-                        modifier = Modifier
-                            .padding(start = 16.dp, end = 16.dp, bottom = 16.dp)
-                            .fillMaxWidth()
-                    ) {
-                        Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
-                            Icon(
-                                imageVector = FontAwesomeIcons.Solid.Coffee,
-                                contentDescription = "Coffee",
-                                modifier = Modifier.size(20.dp)
-                            )
-
-                            Text(text = stringResource(R.string.sponsor))
-                        }
-                    }
-                }
-            }
+            item { Spacer(modifier = Modifier.height(16.dp)) }
 
             item {
                 ListItem(
@@ -276,8 +185,11 @@ fun RootPage(
                 }
             }
 
+            item { Spacer(modifier = Modifier.height(16.dp)) }
+
             item {
                 ListItem(
+                    modifier = Modifier.clickable { onNavigateToLookAndFeel() },
                     headlineContent = {
                         Text(
                             text = stringResource(R.string.look_and_feel)
@@ -288,21 +200,19 @@ fun RootPage(
                             text = stringResource(R.string.look_and_feel_desc)
                         )
                     },
-                    trailingContent = {
-                        FilledTonalIconButton(
-                            onClick = onNavigateToLookAndFeel
-                        ) {
-                            Icon(
-                                imageVector = Icons.AutoMirrored.Filled.KeyboardArrowRight,
-                                contentDescription = null
-                            )
-                        }
+                    leadingContent = {
+                        Icon(
+                            imageVector = FontAwesomeIcons.Solid.Palette,
+                            contentDescription = "Navigate",
+                            modifier = Modifier.size(24.dp)
+                        )
                     }
                 )
             }
 
             item {
                 ListItem(
+                    modifier = Modifier.clickable { onNavigateToBackup() },
                     headlineContent = {
                         Text(
                             text = stringResource(R.string.backup)
@@ -313,35 +223,30 @@ fun RootPage(
                             text = stringResource(R.string.backup_desc)
                         )
                     },
-                    trailingContent = {
-                        FilledTonalIconButton(
-                            onClick = onNavigateToBackup
-                        ) {
-                            Icon(
-                                imageVector = Icons.AutoMirrored.Filled.KeyboardArrowRight,
-                                contentDescription = null
-                            )
-                        }
+                    leadingContent = {
+                        Icon(
+                            imageVector = FontAwesomeIcons.Solid.Upload,
+                            contentDescription = "Backup",
+                            modifier = Modifier.size(24.dp)
+                        )
                     }
                 )
             }
 
             item {
                 ListItem(
+                    modifier = Modifier.clickable { onNavigateToAboutLibraries() },
                     headlineContent = {
                         Text(
                             text = stringResource(R.string.about_libraries)
                         )
                     },
-                    trailingContent = {
-                        FilledTonalIconButton(
-                            onClick = onNavigateToAboutLibraries
-                        ) {
-                            Icon(
-                                imageVector = Icons.AutoMirrored.Filled.KeyboardArrowRight,
-                                contentDescription = null
-                            )
-                        }
+                    leadingContent = {
+                        Icon(
+                            imageVector = FontAwesomeIcons.Solid.InfoCircle,
+                            contentDescription = "About Libraries",
+                            modifier = Modifier.size(24.dp)
+                        )
                     }
                 )
             }
