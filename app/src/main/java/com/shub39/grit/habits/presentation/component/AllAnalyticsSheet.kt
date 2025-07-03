@@ -115,7 +115,11 @@ fun AllAnalyticsSheet(
                                     shape = MaterialTheme.shapes.small,
                                     color = heatMapData[day.date]?.let {
                                         MaterialTheme.colorScheme.primary.copy(
-                                            alpha = (it.toFloat()/state.habitsWithStatuses.size)
+                                            alpha = if (state.habitsWithStatuses.isNotEmpty()) {
+                                                (it.toFloat() / state.habitsWithStatuses.size).coerceIn(0f, 1f)
+                                            } else {
+                                                0.1f
+                                            }
                                         )
                                     } ?: MaterialTheme.colorScheme.surfaceVariant
                                 )

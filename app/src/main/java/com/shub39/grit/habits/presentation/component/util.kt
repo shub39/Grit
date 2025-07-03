@@ -14,16 +14,14 @@ fun prepareLineChartData(
     val today = LocalDate.now()
     val weekFields = WeekFields.of(firstDay, 1)
 
-    // Calculate the start date of the 10-week period
     val startDateOfPeriod = today.minusWeeks(9).with(weekFields.dayOfWeek(), 1)
 
     val habitCompletionByWeek = habitstatuses
         .filter { !it.date.isBefore(startDateOfPeriod) && !it.date.isAfter(today) }
         .groupBy {
-            // Normalize the week year to handle year boundaries correctly
             val yearOfWeek = it.date.get(weekFields.weekBasedYear())
             val weekOfYear = it.date.get(weekFields.weekOfWeekBasedYear())
-            yearOfWeek * 100 + weekOfYear // Unique key for each week across years
+            yearOfWeek * 100 + weekOfYear
         }
         .mapValues { (_, habitStatuses) -> habitStatuses.size }
     val values = (0..9).map { i ->
@@ -33,7 +31,7 @@ fun prepareLineChartData(
         val weekKey = yearOfWeek * 100 + weekOfYear
         habitCompletionByWeek[weekKey]?.toDouble() ?: 0.0
     }
-    return if (values.filter { it > 0.0 }.size < 2 && values.size <=10) values else if (values.size <2) emptyList() else values
+    return values
 }
 
 fun prepareHeatMapData(
