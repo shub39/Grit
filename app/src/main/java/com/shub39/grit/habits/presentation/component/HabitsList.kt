@@ -120,20 +120,24 @@ fun HabitsList(
                     }
                 },
                 actions = {
-                    FilledTonalIconToggleButton(
-                        checked = editState,
-                        shapes = IconToggleButtonShapes(
-                            shape = CircleShape,
-                            checkedShape = MaterialTheme.shapes.small,
-                            pressedShape = MaterialTheme.shapes.extraSmall,
-                        ),
-                        onCheckedChange = { editState = it },
-                        enabled = state.habitsWithStatuses.isNotEmpty()
+                    AnimatedVisibility(
+                        visible = state.habitsWithStatuses.isNotEmpty()
                     ) {
-                        Icon(
-                            painter = painterResource(R.drawable.baseline_reorder_24),
-                            contentDescription = null
-                        )
+                        FilledTonalIconToggleButton(
+                            checked = editState,
+                            shapes = IconToggleButtonShapes(
+                                shape = CircleShape,
+                                checkedShape = MaterialTheme.shapes.small,
+                                pressedShape = MaterialTheme.shapes.extraSmall,
+                            ),
+                            onCheckedChange = { editState = it },
+                            enabled = state.habitsWithStatuses.isNotEmpty()
+                        ) {
+                            Icon(
+                                painter = painterResource(R.drawable.baseline_reorder_24),
+                                contentDescription = null
+                            )
+                        }
                     }
                 }
             )

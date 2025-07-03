@@ -111,10 +111,10 @@ fun TaskList(
                     )
                 },
                 actions = {
-                    Row {
-                        AnimatedVisibility(
-                            visible = state.completedTasks.isNotEmpty()
-                        ) {
+                    AnimatedVisibility(
+                        visible = state.completedTasks.isNotEmpty()
+                    ) {
+                        Row {
                             OutlinedIconButton(
                                 onClick = { showDeleteDialog = true },
                                 shapes = IconButtonShapes(
@@ -127,22 +127,22 @@ fun TaskList(
                                     contentDescription = null
                                 )
                             }
-                        }
 
-                        FilledTonalIconToggleButton(
-                            checked = editState,
-                            shapes = IconToggleButtonShapes(
-                                shape = CircleShape,
-                                checkedShape = MaterialTheme.shapes.small,
-                                pressedShape = MaterialTheme.shapes.extraSmall,
-                            ),
-                            onCheckedChange = { editState = it },
-                            enabled = !state.tasks[state.currentCategory].isNullOrEmpty()
-                        ) {
-                            Icon(
-                                painter = painterResource(R.drawable.baseline_reorder_24),
-                                contentDescription = null
-                            )
+                            FilledTonalIconToggleButton(
+                                checked = editState,
+                                shapes = IconToggleButtonShapes(
+                                    shape = CircleShape,
+                                    checkedShape = MaterialTheme.shapes.small,
+                                    pressedShape = MaterialTheme.shapes.extraSmall,
+                                ),
+                                onCheckedChange = { editState = it },
+                                enabled = !state.tasks[state.currentCategory].isNullOrEmpty()
+                            ) {
+                                Icon(
+                                    painter = painterResource(R.drawable.baseline_reorder_24),
+                                    contentDescription = null
+                                )
+                            }
                         }
                     }
                 }

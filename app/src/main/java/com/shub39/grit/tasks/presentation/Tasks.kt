@@ -27,6 +27,7 @@ import com.shub39.grit.tasks.presentation.component.EditCategories
 import com.shub39.grit.tasks.presentation.component.TaskList
 import kotlinx.serialization.Serializable
 
+@Serializable
 private sealed interface TasksRoutes {
     @Serializable
     data object TasksList: TasksRoutes

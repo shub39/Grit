@@ -28,6 +28,12 @@ android {
         }
     }
 
+    kotlin {
+        compilerOptions {
+            jvmToolchain(17)
+        }
+    }
+
     buildTypes {
         release {
             resValue("string", "app_name", appName)
@@ -57,11 +63,8 @@ android {
         }
     }
     compileOptions {
-        sourceCompatibility = JavaVersion.VERSION_1_8
-        targetCompatibility = JavaVersion.VERSION_1_8
-    }
-    kotlinOptions {
-        jvmTarget = "1.8"
+        sourceCompatibility = JavaVersion.VERSION_17
+        targetCompatibility = JavaVersion.VERSION_17
     }
     buildFeatures {
         compose = true
@@ -82,7 +85,6 @@ android {
 }
 
 aboutLibraries {
-    // Remove the "generated" timestamp to allow for reproducible builds; from kaajjo/LibreSudoku
     export.excludeFields.add("generated")
 }
 

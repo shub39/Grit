@@ -30,6 +30,7 @@ import kotlinx.serialization.Serializable
 import java.time.LocalDate
 import java.time.LocalDateTime
 
+@Serializable
 private sealed interface HabitRoutes {
     @Serializable
     data object HabitList : HabitRoutes

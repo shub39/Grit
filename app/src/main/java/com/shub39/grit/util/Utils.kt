@@ -14,7 +14,7 @@ object Utils {
         BIOMETRIC_WEAK
     }
 
-    fun authenticaticationAvailable(context: Context): Boolean {
+    fun authenticationAvailable(context: Context): Boolean {
         return if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
             BiometricManager.from(context).canAuthenticate(BIOMETRIC_STRONG or DEVICE_CREDENTIAL) == BiometricManager.BIOMETRIC_SUCCESS
         } else {

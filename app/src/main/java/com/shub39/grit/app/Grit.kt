@@ -39,6 +39,7 @@ import com.shub39.grit.viewmodels.TasksViewModel
 import kotlinx.serialization.Serializable
 import org.koin.androidx.compose.koinViewModel
 
+@Serializable
 private sealed interface Routes {
     @Serializable
     data object HabitsPages: Routes

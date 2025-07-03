@@ -247,7 +247,7 @@ fun RootPage(
                 )
             }
 
-            if (Utils.authenticaticationAvailable(context)) {
+            if (Utils.authenticationAvailable(context)) {
                 item {
                     ListItem(
                         headlineContent = {
