@@ -105,7 +105,7 @@ fun Preview() {
     GritTheme(
         theme = Theme(
             appTheme = AppTheme.DARK,
-            font = Fonts.MANROPE,
+            font = Fonts.FIGTREE,
             paletteStyle = PaletteStyle.Expressive
         )
     ) {

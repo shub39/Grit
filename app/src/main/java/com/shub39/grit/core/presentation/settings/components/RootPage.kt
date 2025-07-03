@@ -27,6 +27,7 @@ import androidx.compose.material3.Switch
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.platform.LocalContext
@@ -40,7 +41,6 @@ import com.shub39.grit.core.domain.Pages
 import com.shub39.grit.core.presentation.components.PageFill
 import com.shub39.grit.core.presentation.settings.SettingsAction
 import com.shub39.grit.core.presentation.settings.SettingsState
-import com.shub39.grit.util.Utils
 import compose.icons.FontAwesomeIcons
 import compose.icons.fontawesomeicons.Brands
 import compose.icons.fontawesomeicons.Solid
@@ -60,6 +60,10 @@ fun RootPage(
 ) = PageFill {
     val context = LocalContext.current
     val uriHandler = LocalUriHandler.current
+
+    LaunchedEffect(Unit) {
+        onAction(SettingsAction.OnCheckBiometric(context))
+    }
 
     Column(
         modifier = Modifier
@@ -247,7 +251,7 @@ fun RootPage(
                 )
             }
 
-            if (Utils.authenticationAvailable(context)) {
+            if (state.biometricAvailable) {
                 item {
                     ListItem(
                         headlineContent = {

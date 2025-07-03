@@ -12,6 +12,7 @@ import com.shub39.grit.core.domain.backup.RestoreResult
 import com.shub39.grit.core.domain.backup.RestoreState
 import com.shub39.grit.core.presentation.settings.BackupState
 import com.shub39.grit.core.presentation.settings.SettingsAction
+import com.shub39.grit.util.Utils
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.asStateFlow
@@ -111,6 +112,14 @@ class SettingsViewModel(
             is SettingsAction.ChangeFontPref -> datastore.setFontPref(action.font)
 
             is SettingsAction.ChangeBiometricLock -> datastore.setBiometricPref(action.pref)
+
+            is SettingsAction.OnCheckBiometric -> {
+                _state.update {
+                    it.copy(
+                        biometricAvailable = Utils.authenticationAvailable(action.context)
+                    )
+                }
+            }
         }
     }
 
