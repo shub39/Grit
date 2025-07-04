@@ -46,10 +46,10 @@ fun Tasks(
     NavHost(
         navController = navController,
         startDestination = TasksRoutes.TasksList,
-        enterTransition = { slideInVertically(tween(500), initialOffsetY = { it / 2 }) },
-        exitTransition = { fadeOut(tween(500)) },
-        popEnterTransition = { slideInVertically(tween(500), initialOffsetY = { it / 2 }) },
-        popExitTransition = { fadeOut(tween(500)) }
+        enterTransition = { slideInVertically(tween(300), initialOffsetY = { it / 2 }) },
+        exitTransition = { fadeOut(tween(300)) },
+        popEnterTransition = { slideInVertically(tween(300), initialOffsetY = { it / 2 }) },
+        popExitTransition = { fadeOut(tween(300)) }
     ) {
         composable<TasksRoutes.TasksList> {
             TaskList(
