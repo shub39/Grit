@@ -25,6 +25,16 @@ import com.shub39.grit.tasks.domain.Category
 import com.shub39.grit.tasks.domain.Task
 import com.shub39.grit.tasks.presentation.component.EditCategories
 import com.shub39.grit.tasks.presentation.component.TaskList
+import kotlinx.serialization.Serializable
+
+@Serializable
+private sealed interface TasksRoutes {
+    @Serializable
+    data object TasksList: TasksRoutes
+
+    @Serializable
+    data object EditCategories: TasksRoutes
+}
 
 @Composable
 fun Tasks(
@@ -36,10 +46,10 @@ fun Tasks(
     NavHost(
         navController = navController,
         startDestination = TasksRoutes.TasksList,
-        enterTransition = { slideInVertically(tween(500), initialOffsetY = { it / 2 }) },
-        exitTransition = { fadeOut(tween(500)) },
-        popEnterTransition = { slideInVertically(tween(500), initialOffsetY = { it / 2 }) },
-        popExitTransition = { fadeOut(tween(500)) }
+        enterTransition = { slideInVertically(tween(300), initialOffsetY = { it / 2 }) },
+        exitTransition = { fadeOut(tween(300)) },
+        popEnterTransition = { slideInVertically(tween(300), initialOffsetY = { it / 2 }) },
+        popExitTransition = { fadeOut(tween(300)) }
     ) {
         composable<TasksRoutes.TasksList> {
             TaskList(

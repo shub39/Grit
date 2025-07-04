@@ -5,6 +5,7 @@ import androidx.compose.animation.core.animateDpAsState
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.FlowRow
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
@@ -32,10 +33,11 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
 import androidx.compose.material3.TimeInput
+import androidx.compose.material3.ToggleButton
+import androidx.compose.material3.ToggleButtonDefaults
 import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.rememberTimePickerState
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -60,8 +62,11 @@ import com.shub39.grit.habits.presentation.HabitPageState
 import com.shub39.grit.habits.presentation.HabitsPageAction
 import sh.calvin.reorderable.ReorderableItem
 import sh.calvin.reorderable.rememberReorderableLazyListState
+import java.time.DayOfWeek
 import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
+import java.time.format.TextStyle
+import java.util.Locale
 
 @OptIn(ExperimentalMaterial3Api::class, ExperimentalMaterial3ExpressiveApi::class)
 @Composable
@@ -77,25 +82,15 @@ fun HabitsList(
 
     var editState by remember { mutableStateOf(false) }
 
-    var habits by remember(state.habitsWithStatuses) {
-        mutableStateOf(state.habitsWithStatuses.entries.toList())
-    }
-    var reorder by remember { mutableStateOf(false) }
+    val habits = state.habitsWithStatuses.entries.toList()
+    var reorderableHabits by remember(state) { mutableStateOf(habits) }
     val lazyListState = rememberLazyListState()
     val reorderableListState =
         rememberReorderableLazyListState(lazyListState) { from, to ->
-            habits = habits.toMutableList().apply {
+            reorderableHabits = reorderableHabits.toMutableList().apply {
                 add(to.index, removeAt(from.index))
             }
         }
-
-    DisposableEffect(Unit) {
-        onDispose {
-            if (reorder) {
-                onAction(HabitsPageAction.ReorderHabits(habits.mapIndexed { index, entry -> index to entry.key }))
-            }
-        }
-    }
 
     Box(
         modifier = Modifier.fillMaxSize(),
@@ -120,20 +115,24 @@ fun HabitsList(
                     }
                 },
                 actions = {
-                    FilledTonalIconToggleButton(
-                        checked = editState,
-                        shapes = IconToggleButtonShapes(
-                            shape = CircleShape,
-                            checkedShape = MaterialTheme.shapes.small,
-                            pressedShape = MaterialTheme.shapes.extraSmall,
-                        ),
-                        onCheckedChange = { editState = it },
-                        enabled = state.habitsWithStatuses.isNotEmpty()
+                    AnimatedVisibility(
+                        visible = state.habitsWithStatuses.isNotEmpty()
                     ) {
-                        Icon(
-                            painter = painterResource(R.drawable.baseline_reorder_24),
-                            contentDescription = null
-                        )
+                        FilledTonalIconToggleButton(
+                            checked = editState,
+                            shapes = IconToggleButtonShapes(
+                                shape = CircleShape,
+                                checkedShape = MaterialTheme.shapes.small,
+                                pressedShape = MaterialTheme.shapes.extraSmall,
+                            ),
+                            onCheckedChange = { editState = it },
+                            enabled = state.habitsWithStatuses.isNotEmpty()
+                        ) {
+                            Icon(
+                                painter = painterResource(R.drawable.baseline_reorder_24),
+                                contentDescription = null
+                            )
+                        }
                     }
                 }
             )
@@ -143,7 +142,7 @@ fun HabitsList(
                 modifier = Modifier.fillMaxSize()
             ) {
                 // habits
-                itemsIndexed(habits, key = { _, it -> it.key.id }) { index, habit ->
+                itemsIndexed(reorderableHabits, key = { _, it -> it.key.id }) { index, habit ->
                     ReorderableItem(reorderableListState, key = habit.key.id) {
                         val cardCorners by animateDpAsState(
                             targetValue = if (it) 30.dp else 20.dp
@@ -163,7 +162,11 @@ fun HabitsList(
                                     painter = painterResource(R.drawable.baseline_drag_indicator_24),
                                     contentDescription = "Drag Indicator",
                                     modifier = Modifier.draggableHandle(
-                                        onDragStopped = { reorder = true }
+                                        onDragStopped = {
+                                            onAction(
+                                                HabitsPageAction.ReorderHabits(reorderableHabits.mapIndexed { index, entry -> index to entry.key })
+                                            )
+                                        }
                                     )
                                 )
                             },
@@ -193,7 +196,9 @@ fun HabitsList(
                 visible = state.habitsWithStatuses.isNotEmpty()
             ) {
                 FloatingActionButton(
-                    onClick = { showAllAnalytics = true }
+                    onClick = { showAllAnalytics = true },
+                    containerColor = MaterialTheme.colorScheme.secondaryContainer,
+                    contentColor = MaterialTheme.colorScheme.onSecondaryContainer
                 ) {
                     Icon(
                         painter = painterResource(R.drawable.round_analytics_24),
@@ -238,6 +243,7 @@ fun HabitsList(
         var newHabitName by remember { mutableStateOf("") }
         var newHabitDescription by remember { mutableStateOf("") }
         var newHabitTime by remember { mutableStateOf(LocalDateTime.now()) }
+        var newHabitDays by remember { mutableStateOf(DayOfWeek.entries.toSet()) }
         val isHabitPresent = { state.habitsWithStatuses.any { it.key.title == newHabitName } }
 
         var timePickerDialog by remember { mutableStateOf(false) }
@@ -326,13 +332,34 @@ fun HabitsList(
                 }
             }
 
+            FlowRow(
+                horizontalArrangement = Arrangement.Center
+            ) {
+                DayOfWeek.entries.forEach { dayOfWeek ->
+                    ToggleButton(
+                        checked = newHabitDays.contains(dayOfWeek),
+                        onCheckedChange = {
+                            newHabitDays = if (it) {
+                                newHabitDays + dayOfWeek
+                            } else {
+                                newHabitDays - dayOfWeek
+                            }
+                        },
+                        colors = ToggleButtonDefaults.tonalToggleButtonColors(),
+                        modifier = Modifier.padding(horizontal = 4.dp),
+                        content = { Text(text = dayOfWeek.getDisplayName(TextStyle.SHORT, Locale.getDefault())) }
+                    )
+                }
+            }
+
             Button(
                 onClick = {
                     val habitEntity = Habit(
                         title = newHabitName,
                         description = newHabitDescription,
                         time = newHabitTime,
-                        index = habits.size
+                        index = reorderableHabits.size,
+                        days = newHabitDays
                     )
                     showAddHabitDialog = false
                     onAction(HabitsPageAction.AddHabit(habitEntity))

@@ -1,5 +1,6 @@
 package com.shub39.grit.core.presentation.settings
 
+import android.content.Context
 import android.net.Uri
 import androidx.compose.ui.graphics.Color
 import com.materialkolor.PaletteStyle
@@ -12,6 +13,7 @@ sealed interface SettingsAction {
     data object OnResetBackupState : SettingsAction
     data object OnExport : SettingsAction
     data class OnRestore(val uri: Uri) : SettingsAction
+    data class OnCheckBiometric(val context: Context): SettingsAction
 
     data class ChangeStartOfTheWeek(val pref: DayOfWeek) : SettingsAction
     data class ChangeIs24Hr(val pref: Boolean) : SettingsAction

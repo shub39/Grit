@@ -13,7 +13,6 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.async
 import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.withContext
-import kotlinx.serialization.encodeToString
 import kotlinx.serialization.json.Json
 import java.io.File
 import java.time.LocalDateTime
@@ -60,7 +59,7 @@ class ExportImpl(
         file.writeText(
             Json.encodeToString(
                 ExportSchema(
-                    schemaVersion = 1,
+                    schemaVersion = 4,
                     habits = habitsDef,
                     habitStatus = statusesDef,
                     tasks = tasksDef,

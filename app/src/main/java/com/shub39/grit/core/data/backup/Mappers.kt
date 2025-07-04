@@ -1,5 +1,6 @@
 package com.shub39.grit.core.data.backup
 
+import com.shub39.grit.core.data.Converters
 import com.shub39.grit.habits.domain.Habit
 import com.shub39.grit.habits.domain.HabitStatus
 import com.shub39.grit.tasks.domain.Category
@@ -13,7 +14,8 @@ fun Habit.toHabitSchema(): HabitSchema {
         title = title,
         description = description,
         index = index,
-        time = time.atZone(ZoneId.systemDefault()).toInstant().toEpochMilli()
+        time = time.atZone(ZoneId.systemDefault()).toInstant().toEpochMilli(),
+        days = Converters.dayOfWeekToString(days)
     )
 }
 
@@ -23,7 +25,8 @@ fun HabitSchema.toHabit(): Habit {
         title = title,
         description = description,
         index = index,
-        time = Instant.ofEpochMilli(time).atZone(ZoneId.systemDefault()).toLocalDateTime()
+        time = Instant.ofEpochMilli(time).atZone(ZoneId.systemDefault()).toLocalDateTime(),
+        days = Converters.dayOfWeekFromString(days)
     )
 }
 

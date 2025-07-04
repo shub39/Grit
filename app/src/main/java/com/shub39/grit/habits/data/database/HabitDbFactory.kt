@@ -9,8 +9,8 @@ class HabitDbFactory(
 ) {
     fun create(): RoomDatabase.Builder<HabitDatabase> {
         val appContext = context.applicationContext
-        val dbFile = appContext.getDatabasePath(HabitDatabase.DB_NAME)
 
-        return Room.databaseBuilder(appContext, dbFile.absolutePath)
+        return Room.databaseBuilder(appContext, HabitDatabase::class.java, HabitDatabase.DB_NAME)
+            .addMigrations(HabitDatabase.migrate_3_4)
     }
 }

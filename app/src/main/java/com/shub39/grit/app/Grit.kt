@@ -36,7 +36,28 @@ import com.shub39.grit.tasks.presentation.Tasks
 import com.shub39.grit.viewmodels.HabitViewModel
 import com.shub39.grit.viewmodels.SettingsViewModel
 import com.shub39.grit.viewmodels.TasksViewModel
+import kotlinx.serialization.Serializable
 import org.koin.androidx.compose.koinViewModel
+
+@Serializable
+private sealed interface Routes {
+    @Serializable
+    data object HabitsPages: Routes
+
+    @Serializable
+    data object  TaskPages: Routes
+
+    @Serializable
+    data object SettingsPages: Routes
+
+    companion object {
+        val allRoutes = listOf(
+            TaskPages,
+            HabitsPages,
+            SettingsPages
+        )
+    }
+}
 
 @OptIn(ExperimentalMaterial3Api::class, ExperimentalMaterial3ExpressiveApi::class)
 @Composable
@@ -46,20 +67,20 @@ fun Grit(
     svm: SettingsViewModel
 ) {
     val navController = rememberNavController()
-    var currentRoute: MainRoutes by remember { mutableStateOf(MainRoutes.TaskPages) }
+    var currentRoute: Routes by remember { mutableStateOf(Routes.TaskPages) }
 
     val taskPageState by tvm.state.collectAsStateWithLifecycle()
     val habitsPageState by hvm.state.collectAsStateWithLifecycle()
     val settingsState by svm.state.collectAsStateWithLifecycle()
 
-    val navigator = { route: MainRoutes ->
+    val navigator = { route: Routes ->
         if (currentRoute != route) {
             navController.navigate(route) {
                 launchSingleTop = true
                 popUpTo(
                     when (settingsState.startingPage) {
-                        Pages.Habits -> MainRoutes.HabitsPages
-                        Pages.Tasks -> MainRoutes.TaskPages
+                        Pages.Habits -> Routes.HabitsPages
+                        Pages.Tasks -> Routes.TaskPages
                     }
                 ) { saveState = true }
                 restoreState = true
@@ -72,7 +93,7 @@ fun Grit(
             NavigationBar(
                 modifier = Modifier.clip(RoundedCornerShape(topStart = 20.dp, topEnd = 20.dp))
             ) {
-                MainRoutes.allRoutes.forEach { route ->
+                Routes.allRoutes.forEach { route ->
                     NavigationBarItem(
                         selected = currentRoute == route,
                         onClick = { navigator(route) },
@@ -80,8 +101,8 @@ fun Grit(
                             Icon(
                                 painter = painterResource(
                                     when (route) {
-                                        MainRoutes.HabitsPages -> R.drawable.round_alarm_24
-                                        MainRoutes.TaskPages -> R.drawable.round_checklist_24
+                                        Routes.HabitsPages -> R.drawable.round_alarm_24
+                                        Routes.TaskPages -> R.drawable.round_checklist_24
                                         else -> R.drawable.round_settings_24
                                     }
                                 ),
@@ -92,8 +113,8 @@ fun Grit(
                             Text(
                                 text = stringResource(
                                     when (route) {
-                                        MainRoutes.HabitsPages -> R.string.habits
-                                        MainRoutes.TaskPages -> R.string.tasks
+                                        Routes.HabitsPages -> R.string.habits
+                                        Routes.TaskPages -> R.string.tasks
                                         else -> R.string.settings
                                     }
                                 )
@@ -108,8 +129,8 @@ fun Grit(
         NavHost(
             navController = navController,
             startDestination = when (settingsState.startingPage) {
-                Pages.Tasks -> MainRoutes.TaskPages
-                Pages.Habits -> MainRoutes.HabitsPages
+                Pages.Tasks -> Routes.TaskPages
+                Pages.Habits -> Routes.HabitsPages
             },
             modifier = Modifier
                 .padding(padding)
@@ -119,8 +140,8 @@ fun Grit(
             popEnterTransition = { fadeIn(animationSpec = tween(300)) },
             popExitTransition = { fadeOut(animationSpec = tween(300)) }
         ) {
-            composable<MainRoutes.TaskPages> {
-                currentRoute = MainRoutes.TaskPages
+            composable<Routes.TaskPages> {
+                currentRoute = Routes.TaskPages
 
                 Tasks(
                     state = taskPageState,
@@ -128,8 +149,8 @@ fun Grit(
                 )
             }
 
-            composable<MainRoutes.SettingsPages> {
-                currentRoute = MainRoutes.SettingsPages
+            composable<Routes.SettingsPages> {
+                currentRoute = Routes.SettingsPages
 
                 Settings(
                     state = settingsState,
@@ -137,8 +158,8 @@ fun Grit(
                 )
             }
 
-            composable<MainRoutes.HabitsPages> {
-                currentRoute = MainRoutes.HabitsPages
+            composable<Routes.HabitsPages> {
+                currentRoute = Routes.HabitsPages
 
                 Habits(
                     state = habitsPageState,

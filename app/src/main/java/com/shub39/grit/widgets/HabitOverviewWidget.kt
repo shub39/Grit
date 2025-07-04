@@ -109,13 +109,15 @@ class HabitOverviewWidget : GlanceAppWidget(), KoinComponent {
                     context = context,
                     habits = habits,
                     completedHabitIds = completedHabitIds,
-                    onHabitClick = { coroutineScope.launch {
-                        if (it in completedHabitIds) {
-                            repo.deleteStatus(it)
-                        } else {
-                            repo.setStatus(it)
+                    onHabitClick = {
+                        coroutineScope.launch {
+                            if (it in completedHabitIds) {
+                                repo.deleteStatus(it)
+                            } else {
+                                repo.setStatus(it)
+                            }
                         }
-                    }}
+                    }
                 )
             }
         }

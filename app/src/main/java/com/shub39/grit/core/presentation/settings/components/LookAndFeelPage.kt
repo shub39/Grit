@@ -14,8 +14,8 @@ import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.FlowRow
 import androidx.compose.foundation.layout.PaddingValues
-import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.offset
@@ -32,6 +32,7 @@ import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.filled.Create
 import androidx.compose.material.icons.outlined.Check
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.ExperimentalMaterial3ExpressiveApi
 import androidx.compose.material3.FilledTonalIconButton
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -39,10 +40,10 @@ import androidx.compose.material3.IconButtonDefaults
 import androidx.compose.material3.ListItem
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.PlainTooltip
-import androidx.compose.material3.RadioButton
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Switch
 import androidx.compose.material3.Text
+import androidx.compose.material3.ToggleButton
 import androidx.compose.material3.TooltipBox
 import androidx.compose.material3.TooltipDefaults
 import androidx.compose.material3.TopAppBar
@@ -74,8 +75,13 @@ import com.shub39.grit.core.presentation.components.GritDialog
 import com.shub39.grit.core.presentation.components.PageFill
 import com.shub39.grit.core.presentation.settings.SettingsAction
 import com.shub39.grit.core.presentation.settings.SettingsState
+import compose.icons.FontAwesomeIcons
+import compose.icons.fontawesomeicons.Solid
+import compose.icons.fontawesomeicons.solid.CloudSun
+import compose.icons.fontawesomeicons.solid.Font
+import java.util.Locale
 
-@OptIn(ExperimentalMaterial3Api::class)
+@OptIn(ExperimentalMaterial3Api::class, ExperimentalMaterial3ExpressiveApi::class)
 @Composable
 fun LookAndFeelPage(
     state: SettingsState,
@@ -298,28 +304,39 @@ fun LookAndFeelPage(
         GritDialog(
             onDismissRequest = { fontPickerDialog = false }
         ) {
-            Fonts.entries.forEach { font ->
-                Row(
-                    verticalAlignment = Alignment.CenterVertically,
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .clickable {
-                            onAction(SettingsAction.ChangeFontPref(font))
-                            fontPickerDialog = false
-                        }
-                ) {
-                    RadioButton(
-                        selected = state.theme.font == font,
-                        onClick = {
-                            onAction(SettingsAction.ChangeFontPref(font))
-                            fontPickerDialog = false
-                        }
-                    )
+            Column(
+                modifier = Modifier.fillMaxWidth(),
+                verticalArrangement = Arrangement.spacedBy(8.dp)
+            ) {
+                Icon(
+                    imageVector = FontAwesomeIcons.Solid.Font,
+                    contentDescription = "Select App Font",
+                    modifier = Modifier.size(32.dp)
+                )
 
-                    Text(
-                        text = font.name,
-                        fontFamily = FontFamily(Font(font.resource))
-                    )
+                Text(
+                    text = stringResource(R.string.font),
+                    style = MaterialTheme.typography.titleLarge
+                )
+
+                FlowRow(
+                    horizontalArrangement = Arrangement.spacedBy(4.dp),
+                    verticalArrangement = Arrangement.spacedBy(2.dp)
+                ) {
+                    Fonts.entries.forEach { font ->
+                        ToggleButton(
+                            checked = state.theme.font == font,
+                            onCheckedChange = {
+                                onAction(SettingsAction.ChangeFontPref(font))
+                                fontPickerDialog = false
+                            }
+                        ) {
+                            Text(
+                                text = font.name.lowercase().replaceFirstChar { if (it.isLowerCase()) it.titlecase(Locale.getDefault()) else it.toString() },
+                                fontFamily = FontFamily(Font(font.resource))
+                            )
+                        }
+                    }
                 }
             }
         }
@@ -329,27 +346,36 @@ fun LookAndFeelPage(
         GritDialog(
             onDismissRequest = { appThemeDialog = false }
         ) {
-            AppTheme.entries.forEach { appTheme ->
-                Row(
-                    verticalAlignment = Alignment.CenterVertically,
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .clickable {
-                            onAction(SettingsAction.ChangeAppTheme(appTheme))
-                            appThemeDialog = false
-                        }
-                ) {
-                    RadioButton(
-                        selected = state.theme.appTheme == appTheme,
-                        onClick = {
-                            onAction(SettingsAction.ChangeAppTheme(appTheme))
-                            appThemeDialog = false
-                        }
-                    )
+            Column(
+                modifier = Modifier.fillMaxWidth(),
+                verticalArrangement = Arrangement.spacedBy(8.dp)
+            ) {
+                Icon(
+                    imageVector = FontAwesomeIcons.Solid.CloudSun,
+                    contentDescription = "Select App Theme",
+                    modifier = Modifier.size(32.dp)
+                )
 
-                    Text(
-                        text = stringResource(appTheme.fullName)
-                    )
+                Text(
+                    text = stringResource(R.string.app_theme),
+                    style = MaterialTheme.typography.titleLarge
+                )
+
+                FlowRow(
+                    horizontalArrangement = Arrangement.spacedBy(4.dp),
+                    verticalArrangement = Arrangement.spacedBy(2.dp)
+                ) {
+                    AppTheme.entries.forEach { appTheme ->
+                        ToggleButton(
+                            checked = state.theme.appTheme == appTheme,
+                            onCheckedChange = {
+                                onAction(SettingsAction.ChangeAppTheme(appTheme))
+                                appThemeDialog = false
+                            }
+                        ) {
+                            Text(text = stringResource(appTheme.fullName))
+                        }
+                    }
                 }
             }
         }
