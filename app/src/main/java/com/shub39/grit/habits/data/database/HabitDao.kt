@@ -8,7 +8,7 @@ import kotlinx.coroutines.flow.Flow
 @Dao
 interface HabitDao {
     @Query("SELECT * FROM habit_index WHERE id = :habitId")
-    suspend fun getHabitById(habitId: Long): HabitEntity
+    suspend fun getHabitById(habitId: Long): HabitEntity?
 
     @Query("SELECT * FROM habit_index")
     suspend fun getAllHabits(): List<HabitEntity>

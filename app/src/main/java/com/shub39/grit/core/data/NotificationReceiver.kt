@@ -41,7 +41,7 @@ class NotificationReceiver : BroadcastReceiver(), KoinComponent {
                         Log.d(tag, "Habit notification received")
                         val habitId = intent.getLongExtra("habit_id", -1)
                         if (habitId < 0L) return@launch
-                        val habitEntity = habitDao.getHabitById(habitId)
+                        val habitEntity = habitDao.getHabitById(habitId) ?: return@launch
 
                         // check if habit is completed today, if not then show notification
                         val habitStatus = habitStatusDao.getStatusForHabit(habitId)
