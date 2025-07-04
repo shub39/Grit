@@ -1,4 +1,4 @@
-package com.shub39.grit.habits.data.database
+package com.shub39.grit.core.data
 
 import androidx.room.TypeConverter
 import java.time.DayOfWeek

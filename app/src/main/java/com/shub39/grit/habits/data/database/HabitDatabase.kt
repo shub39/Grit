@@ -5,6 +5,7 @@ import androidx.room.RoomDatabase
 import androidx.room.TypeConverters
 import androidx.room.migration.Migration
 import androidx.sqlite.db.SupportSQLiteDatabase
+import com.shub39.grit.core.data.Converters
 
 @Database(
     entities = [HabitEntity::class, HabitStatusEntity::class],

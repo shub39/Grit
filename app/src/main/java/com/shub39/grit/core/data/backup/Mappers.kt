@@ -1,6 +1,6 @@
 package com.shub39.grit.core.data.backup
 
-import com.shub39.grit.habits.data.database.Converters
+import com.shub39.grit.core.data.Converters
 import com.shub39.grit.habits.domain.Habit
 import com.shub39.grit.habits.domain.HabitStatus
 import com.shub39.grit.tasks.domain.Category
