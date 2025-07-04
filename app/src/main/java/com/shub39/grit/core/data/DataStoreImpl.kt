@@ -130,7 +130,7 @@ class DataStoreImpl(
     }
 
     override fun getFontPrefFlow(): Flow<Fonts> = datastore.data.map { prefs ->
-        val font = prefs[fontPrefKey] ?: Fonts.POPPINS.name
+        val font = prefs[fontPrefKey] ?: Fonts.FIGTREE.name
         Fonts.valueOf(font)
     }
 

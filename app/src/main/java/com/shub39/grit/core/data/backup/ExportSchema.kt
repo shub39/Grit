@@ -1,7 +1,6 @@
 package com.shub39.grit.core.data.backup
 
 import kotlinx.serialization.Serializable
-import java.time.DayOfWeek
 
 @Serializable
 data class ExportSchema(
@@ -19,7 +18,7 @@ data class HabitSchema(
     val description: String,
     val index: Int,
     val time: Long,
-    val days: Set<DayOfWeek>
+    val days: String
 )
 
 @Serializable

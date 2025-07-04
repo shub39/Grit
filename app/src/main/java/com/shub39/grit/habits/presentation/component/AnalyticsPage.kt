@@ -6,6 +6,7 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.FlowRow
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -37,6 +38,8 @@ import androidx.compose.material3.OutlinedIconButton
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
 import androidx.compose.material3.TimeInput
+import androidx.compose.material3.ToggleButton
+import androidx.compose.material3.ToggleButtonDefaults
 import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.rememberTimePickerState
 import androidx.compose.runtime.Composable
@@ -75,6 +78,7 @@ import ir.ehsannarmani.compose_charts.models.HorizontalIndicatorProperties
 import ir.ehsannarmani.compose_charts.models.LabelHelperProperties
 import ir.ehsannarmani.compose_charts.models.Line
 import ir.ehsannarmani.compose_charts.models.StrokeStyle
+import java.time.DayOfWeek
 import java.time.LocalDate
 import java.time.YearMonth
 import java.time.format.DateTimeFormatter
@@ -434,6 +438,7 @@ fun AnalyticsPage(
         var newHabitTitle by remember { mutableStateOf(currentHabit.title) }
         var newHabitDescription by remember { mutableStateOf(currentHabit.description) }
         var newHabitTime by remember { mutableStateOf(currentHabit.time) }
+        var newHabitDays by remember { mutableStateOf(currentHabit.days) }
 
         var timePickerDialog by remember { mutableStateOf(false) }
 
@@ -519,6 +524,33 @@ fun AnalyticsPage(
                 }
             }
 
+            FlowRow(
+                horizontalArrangement = Arrangement.Center
+            ) {
+                DayOfWeek.entries.forEach { dayOfWeek ->
+                    ToggleButton(
+                        checked = newHabitDays.contains(dayOfWeek),
+                        onCheckedChange = {
+                            newHabitDays = if (it) {
+                                newHabitDays + dayOfWeek
+                            } else {
+                                newHabitDays - dayOfWeek
+                            }
+                        },
+                        colors = ToggleButtonDefaults.tonalToggleButtonColors(),
+                        modifier = Modifier.padding(horizontal = 4.dp),
+                        content = {
+                            Text(
+                                text = dayOfWeek.getDisplayName(
+                                    TextStyle.SHORT,
+                                    Locale.getDefault()
+                                )
+                            )
+                        }
+                    )
+                }
+            }
+
             Button(
                 onClick = {
                     editDialog = false
@@ -530,7 +562,7 @@ fun AnalyticsPage(
                                 description = newHabitDescription,
                                 time = newHabitTime,
                                 index = currentHabit.index,
-                                days = currentHabit.days
+                                days = newHabitDays
                             )
                         )
                     )
