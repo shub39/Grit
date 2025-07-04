@@ -12,7 +12,6 @@ ksp = "2.2.0-2.0.2"
 material3 = "1.4.0-alpha17"
 reorderable = "2.5.1"
 room = "2.7.2"
-sqlite = "2.5.2"
 navigation = "2.9.1"
 serialization = "1.8.1"
 materialKolor = "2.1.1"
@@ -33,7 +32,6 @@ androidx-room-compiler = { module = "androidx.room:room-compiler", version.ref =
 androidx-room-runtime = { module = "androidx.room:room-runtime", version.ref = "room" }
 calendar = { module = "com.kizitonwose.calendar:compose", version.ref = "calendar" }
 compose-charts = { module = "io.github.ehsannarmani:compose-charts", version.ref = "composeCharts" }
-sqlite-bundled = { module = "androidx.sqlite:sqlite-bundled", version.ref = "sqlite" }
 androidx-ui = { group = "androidx.compose.ui", name = "ui", version.ref = "compose" }
 androidx-ui-graphics = { group = "androidx.compose.ui", name = "ui-graphics", version.ref = "compose" }
 androidx-ui-tooling = { group = "androidx.compose.ui", name = "ui-tooling", version.ref = "compose" }

@@ -104,7 +104,6 @@ dependencies {
     implementation(libs.reorderable)
     implementation(libs.androidx.glance.appwidget)
     implementation(libs.androidx.glance.material3)
-    implementation(libs.sqlite.bundled)
     implementation(libs.materialKolor)
     implementation(libs.colorpicker.compose)
     implementation(libs.androidx.datastore.preferences.core)

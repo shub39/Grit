@@ -338,7 +338,8 @@ fun HabitsList(
                         title = newHabitName,
                         description = newHabitDescription,
                         time = newHabitTime,
-                        index = habits.size
+                        index = habits.size,
+                        days = emptySet()
                     )
                     showAddHabitDialog = false
                     onAction(HabitsPageAction.AddHabit(habitEntity))

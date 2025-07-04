@@ -1,13 +1,26 @@
 package com.shub39.grit.habits.data.database
 
 import androidx.room.TypeConverter
+import java.time.DayOfWeek
 import java.time.LocalDate
 import java.time.LocalDateTime
 import java.time.ZoneOffset
 
 object Converters {
+    val allDays = dayOfWeekToString(DayOfWeek.entries.toSet())
+
     @TypeConverter
-    fun fromTimestamp(value: Long?): LocalDateTime? {
+    fun dayOfWeekToString(value: Set<DayOfWeek>): String {
+        return value.joinToString(",") { it.name }
+    }
+
+    @TypeConverter
+    fun dayOfWeekFromString(value: String): Set<DayOfWeek> {
+        return if (value.isBlank()) emptySet() else value.split(",").map { DayOfWeek.valueOf(it) }.toSet()
+    }
+
+    @TypeConverter
+    fun datefromTimestamp(value: Long?): LocalDateTime? {
         return value?.let { LocalDateTime.ofEpochSecond(it, 0, ZoneOffset.UTC) }
     }
 
@@ -17,7 +30,7 @@ object Converters {
     }
 
     @TypeConverter
-    fun fromDay(value: Long?): LocalDate? {
+    fun dayFromTimestamp(value: Long?): LocalDate? {
         return value?.let { LocalDate.ofEpochDay(it) }
     }
 

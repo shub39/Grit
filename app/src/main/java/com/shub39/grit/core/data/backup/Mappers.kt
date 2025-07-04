@@ -13,7 +13,8 @@ fun Habit.toHabitSchema(): HabitSchema {
         title = title,
         description = description,
         index = index,
-        time = time.atZone(ZoneId.systemDefault()).toInstant().toEpochMilli()
+        time = time.atZone(ZoneId.systemDefault()).toInstant().toEpochMilli(),
+        days = days
     )
 }
 
@@ -23,7 +24,8 @@ fun HabitSchema.toHabit(): Habit {
         title = title,
         description = description,
         index = index,
-        time = Instant.ofEpochMilli(time).atZone(ZoneId.systemDefault()).toLocalDateTime()
+        time = Instant.ofEpochMilli(time).atZone(ZoneId.systemDefault()).toLocalDateTime(),
+        days = emptySet()
     )
 }
 

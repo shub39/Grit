@@ -47,7 +47,8 @@ class NotificationReceiver : BroadcastReceiver(), KoinComponent {
                             title = habitTitle,
                             description = habitDescription,
                             time = LocalDateTime.now(),
-                            index = 0
+                            index = 0,
+                            days = emptySet()
                         )
 
                         // check if habit is completed today, if not then show notification

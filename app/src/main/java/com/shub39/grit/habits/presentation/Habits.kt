@@ -81,7 +81,8 @@ private fun Preview() {
             title = "Habit $habitId",
             description = "This is Habit no: $habitId",
             time = LocalDateTime.now().minusDays(habitId),
-            index = habitId.toInt()
+            index = habitId.toInt(),
+            days = emptySet()
         ) to (0L .. 10L).map {
             HabitStatus(
                 id = it,
