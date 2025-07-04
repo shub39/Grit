@@ -7,5 +7,6 @@ enum class Fonts(val resource: Int) {
     INTER(R.font.inter),
     MANROPE(R.font.manrope),
     MONTSERRAT(R.font.montserrat),
-    FIGTREE(R.font.figtree)
+    FIGTREE(R.font.figtree),
+    OUTFIT(R.font.outfit)
 }

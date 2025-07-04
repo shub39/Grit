@@ -3,9 +3,11 @@ package com.shub39.grit.tasks.presentation.component
 import androidx.compose.animation.AnimatedContent
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.core.animateDpAsState
+import androidx.compose.foundation.combinedClickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.FlowRow
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -25,6 +27,7 @@ import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
+import androidx.compose.material.icons.filled.Edit
 import androidx.compose.material3.AssistChip
 import androidx.compose.material3.AssistChipDefaults
 import androidx.compose.material3.Button
@@ -41,11 +44,13 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedIconButton
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
+import androidx.compose.material3.ToggleButton
+import androidx.compose.material3.ToggleButtonDefaults
 import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableLongStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
@@ -84,15 +89,9 @@ fun TaskList(
     var showCategoryAddSheet by remember { mutableStateOf(false) }
     var showDeleteDialog by remember { mutableStateOf(false) }
     var editState by remember { mutableStateOf(false) }
+    var editTask: Task? by remember { mutableStateOf(null) }
 
-    var tasks: List<Task> by remember { mutableStateOf(emptyList()) }
-    val lazyListState = rememberLazyListState()
-    val reorderableListState =
-        rememberReorderableLazyListState(lazyListState) { from, to ->
-            tasks = tasks.toMutableList().apply {
-                add(to.index, removeAt(from.index))
-            }
-        }
+    val tasks = state.tasks[state.currentCategory] ?: emptyList()
 
     Box(
         modifier = Modifier.fillMaxSize(),
@@ -217,17 +216,20 @@ fun TaskList(
                 targetState = state.currentCategory
             ) { category ->
                 if (category != null) {
-                    tasks = state.tasks[category] ?: emptyList()
-
-                    DisposableEffect(Unit) {
-                        onDispose { onAction(TaskPageAction.ReorderTasks(tasks.mapIndexed { index, task -> index to task })) }
-                    }
+                    var reorderableTasks by remember(state) { mutableStateOf(tasks) }
+                    val lazyListState = rememberLazyListState()
+                    val reorderableListState =
+                        rememberReorderableLazyListState(lazyListState) { from, to ->
+                            reorderableTasks = tasks.toMutableList().apply {
+                                add(to.index, removeAt(from.index))
+                            }
+                        }
 
                     LazyColumn(
                         modifier = Modifier.fillMaxSize(),
                         state = lazyListState
                     ) {
-                        itemsIndexed(tasks, key = { _, it -> it.id }) { index, task ->
+                        itemsIndexed(reorderableTasks, key = { _, it -> it.id }) { index, task ->
                             ReorderableItem(reorderableListState, key = task.id) {
                                 val cardCorners by animateDpAsState(
                                     targetValue = if (it) 100.dp else 16.dp
@@ -235,27 +237,46 @@ fun TaskList(
 
                                 TaskCard(
                                     task = task,
-                                    onStatusChange = { updatedTask ->
-                                        onAction(TaskPageAction.UpdateTaskStatus(updatedTask))
-
-                                        if (updatedTask.status) {
-                                            tasks = tasks.toMutableList().apply {
-                                                add(tasks.size - 1, removeAt(index))
-                                            }
-
-                                            onAction(TaskPageAction.ReorderTasks(tasks.mapIndexed { index, task -> index to task }))
-                                        }
-                                    },
                                     dragState = editState,
                                     reorderIcon = {
                                         Icon(
                                             painter = painterResource(R.drawable.baseline_drag_indicator_24),
                                             contentDescription = "Drag",
-                                            modifier = Modifier.draggableHandle()
+                                            modifier = Modifier.draggableHandle(
+                                                onDragStopped = {
+                                                    onAction(TaskPageAction.ReorderTasks(reorderableTasks.mapIndexed { index, task -> index to task }))
+                                                }
+                                            )
                                         )
                                     },
                                     shape = RoundedCornerShape(cardCorners),
                                     modifier = Modifier
+                                        .fillMaxWidth()
+                                        .padding(start = 16.dp, end = 16.dp, bottom = 8.dp)
+                                        .combinedClickable(
+                                            // change status on click
+                                            onClick = {
+                                                if (!editState) {
+                                                    task.status = !task.status
+
+                                                    onAction(TaskPageAction.UpsertTask(task))
+
+                                                    if (task.status) {
+                                                        reorderableTasks = tasks.toMutableList().apply {
+                                                            add(tasks.size - 1, removeAt(index))
+                                                        }
+
+                                                        onAction(TaskPageAction.ReorderTasks(reorderableTasks.mapIndexed { index, task -> index to task }))
+                                                    }
+                                                }
+                                            },
+                                            // edit on click and hold
+                                            onLongClick = {
+                                                if (!editState) {
+                                                    editTask = task
+                                                }
+                                            }
+                                        )
                                 )
                             }
                         }
@@ -272,30 +293,34 @@ fun TaskList(
             }
         }
 
-        FloatingActionButton(
+        AnimatedVisibility(
+            visible = state.currentCategory != null,
             modifier = Modifier
                 .align(Alignment.BottomEnd)
-                .padding(16.dp),
-            onClick = { showTaskAddSheet = true },
-            containerColor = MaterialTheme.colorScheme.primaryContainer,
-            contentColor = MaterialTheme.colorScheme.onPrimaryContainer
+                .padding(16.dp)
         ) {
-            Row(
-                modifier = Modifier.padding(16.dp),
-                verticalAlignment = Alignment.CenterVertically
+            FloatingActionButton(
+                onClick = { showTaskAddSheet = true },
+                containerColor = MaterialTheme.colorScheme.primaryContainer,
+                contentColor = MaterialTheme.colorScheme.onPrimaryContainer
             ) {
-                Icon(
-                    painter = painterResource(R.drawable.round_add_24),
-                    contentDescription = null
-                )
-
-                AnimatedVisibility(
-                    visible = state.tasks[state.currentCategory].isNullOrEmpty()
+                Row(
+                    modifier = Modifier.padding(16.dp),
+                    verticalAlignment = Alignment.CenterVertically
                 ) {
-                    Text(
-                        text = stringResource(R.string.add_task),
-                        modifier = Modifier.padding(start = 8.dp)
+                    Icon(
+                        painter = painterResource(R.drawable.round_add_24),
+                        contentDescription = null
                     )
+
+                    AnimatedVisibility(
+                        visible = state.tasks[state.currentCategory].isNullOrEmpty()
+                    ) {
+                        Text(
+                            text = stringResource(R.string.add_task),
+                            modifier = Modifier.padding(start = 8.dp)
+                        )
+                    }
                 }
             }
         }
@@ -395,9 +420,93 @@ fun TaskList(
         }
     }
 
-    // add dialog
-    if (showTaskAddSheet) {
+    //edit sheet
+    if (editTask != null) {
+        var newTitle by remember { mutableStateOf(editTask!!.title) }
+        var newTaskCategoryId by remember { mutableLongStateOf(editTask!!.categoryId) }
+        val keyboardController = LocalSoftwareKeyboardController.current
+        val focusRequester = remember { FocusRequester() }
+
+        LaunchedEffect(Unit) {
+            focusRequester.requestFocus()
+            keyboardController?.show()
+        }
+
+        GritBottomSheet(
+            onDismissRequest = { editTask = null }
+        ) {
+            Icon(
+                imageVector = Icons.Default.Edit,
+                contentDescription = "Edit"
+            )
+
+            Text(
+                text = stringResource(id = R.string.edit_task),
+                style = MaterialTheme.typography.headlineSmall,
+                textAlign = TextAlign.Center
+            )
+
+            FlowRow(
+                horizontalArrangement = Arrangement.Center
+            ) {
+                state.tasks.keys.forEach { category ->
+                    ToggleButton(
+                        checked = category.id == newTaskCategoryId,
+                        onCheckedChange = { newTaskCategoryId = category.id },
+                        colors = ToggleButtonDefaults.tonalToggleButtonColors(),
+                        modifier = Modifier.padding(horizontal = 4.dp),
+                        content = { Text(category.name) }
+                    )
+                }
+            }
+
+            OutlinedTextField(
+                value = newTitle,
+                onValueChange = { newTitle = it },
+                shape = MaterialTheme.shapes.medium,
+                keyboardOptions = KeyboardOptions.Default.copy(
+                    capitalization = KeyboardCapitalization.Sentences,
+                    imeAction = ImeAction.None
+                ),
+                keyboardActions = KeyboardActions(
+                    onAny = {
+                        newTitle.plus("\n")
+                    }
+                ),
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .focusRequester(focusRequester),
+                label = { Text(text = stringResource(id = R.string.edit_task)) }
+            )
+
+            Button(
+                onClick = {
+                    onAction(
+                        TaskPageAction.UpsertTask(
+                            editTask!!.copy(
+                                title = newTitle,
+                                categoryId = newTaskCategoryId
+                            )
+                        )
+                    )
+                    editTask = null
+                },
+                shapes = ButtonShapes(
+                    shape = MaterialTheme.shapes.extraLarge,
+                    pressedShape = MaterialTheme.shapes.small
+                ),
+                modifier = Modifier.fillMaxWidth(),
+                enabled = newTitle.isNotBlank() && newTitle.length <= 100
+            ) {
+                Text(stringResource(R.string.edit_task))
+            }
+        }
+    }
+
+    // add sheet
+    if (showTaskAddSheet && state.currentCategory != null) {
         var newTask by remember { mutableStateOf("") }
+        var newTaskCategoryId by remember { mutableLongStateOf(state.currentCategory.id) }
         val keyboardController = LocalSoftwareKeyboardController.current
         val focusRequester = remember { FocusRequester() }
 
@@ -419,6 +528,20 @@ fun TaskList(
                 style = MaterialTheme.typography.headlineSmall,
                 textAlign = TextAlign.Center
             )
+
+            FlowRow(
+                horizontalArrangement = Arrangement.Center
+            ) {
+                state.tasks.keys.forEach { category ->
+                    ToggleButton(
+                        checked = category.id == newTaskCategoryId,
+                        onCheckedChange = { newTaskCategoryId = category.id },
+                        colors = ToggleButtonDefaults.tonalToggleButtonColors(),
+                        modifier = Modifier.padding(horizontal = 4.dp),
+                        content = { Text(category.name) }
+                    )
+                }
+            }
 
             OutlinedTextField(
                 value = newTask,
@@ -442,18 +565,16 @@ fun TaskList(
                 onClick = {
                     showTaskAddSheet = false
 
-                    if (state.currentCategory != null) {
-                        onAction(
-                            TaskPageAction.AddTask(
-                                Task(
-                                    categoryId = state.currentCategory.id,
-                                    title = newTask,
-                                    status = false,
-                                    index = state.tasks[state.currentCategory]?.size ?: 0
-                                )
+                    onAction(
+                        TaskPageAction.UpsertTask(
+                            Task(
+                                categoryId = newTaskCategoryId,
+                                title = newTask,
+                                status = false,
+                                index = state.tasks[state.currentCategory]?.size ?: 0
                             )
                         )
-                    }
+                    )
                 },
                 shapes = ButtonShapes(
                     shape = MaterialTheme.shapes.extraLarge,
