@@ -25,6 +25,11 @@
     <string name="days_completed">Дней завершено</string>
     <string name="streak">Текущая серия</string>
     <string name="best_streak">Лучшая серия в днях: %1$d</string>
+    <!-- <plurals name="best_streak">
+        <item quantity="one">Лучшая серия: %1$d день</item>
+        <item quantity="few">Лучшая серия: %1$d дня</item>
+        <item quantity="many">Лучшая серия: %1$d дней</item>
+    </plurals> -->
     <string name="since">С</string>
     <string name="goals">Цели</string>
     <string name="settings">Настройки</string>
@@ -33,6 +38,11 @@
     <string name="at">Напоминать в </string>
     <string name="habit_exists">Привычка уже существует</string>
     <string name="days_ago_format">%1$d дней</string>
+    <!-- <plurals name="days_ago_format">
+        <item quantity="one">%1$d день назад</item>
+        <item quantity="few">%1$d дня назад</item>
+        <item quantity="many">%1$d дней назад</item>
+    </plurals> -->
     <string name="too_long">Слишком долго</string>
     <string name="edit_task">Изменить задачу</string>
     <string name="tasks_guide_1">Нажмите, чтобы отметить как завершенное</string>
