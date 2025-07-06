@@ -370,7 +370,7 @@ fun HabitsList(
                     pressedShape = MaterialTheme.shapes.small
                 ),
                 modifier = Modifier.fillMaxWidth(),
-                enabled = newHabitName.isNotBlank() && newHabitDescription.isNotBlank() && newHabitName.length < 20 && newHabitDescription.length < 50,
+                enabled = newHabitName.isNotBlank() && newHabitName.length < 20 && newHabitDescription.length < 50,
             ) {
                 Text(text = stringResource(id = R.string.add_habit))
             }

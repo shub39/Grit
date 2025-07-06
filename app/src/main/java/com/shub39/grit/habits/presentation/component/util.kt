@@ -29,7 +29,7 @@ fun prepareLineChartData(
         val yearOfWeek = currentWeekStart.get(weekFields.weekBasedYear())
         val weekOfYear = currentWeekStart.get(weekFields.weekOfWeekBasedYear())
         val weekKey = yearOfWeek * 100 + weekOfYear
-        habitCompletionByWeek[weekKey]?.toDouble() ?: 0.0
+        (habitCompletionByWeek[weekKey]?.toDouble() ?: 0.0).coerceAtMost(7.0)
     }
     return values
 }

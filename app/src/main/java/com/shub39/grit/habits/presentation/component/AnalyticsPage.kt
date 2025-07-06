@@ -130,7 +130,9 @@ fun AnalyticsPage(
                 Text(text = currentHabit.title)
             },
             subtitle = {
-                Text(text = currentHabit.description)
+                if (currentHabit.description.isNotEmpty()) {
+                    Text(text = currentHabit.description)
+                }
             },
             navigationIcon = {
                 IconButton(
