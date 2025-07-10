@@ -41,7 +41,7 @@ class MainActivity : FragmentActivity() {
 
             LaunchedEffect(settingsState.biometric, isAppUnlocked) {
                 when {
-                    !settingsState.biometric -> {
+                    settingsState.biometric.not() -> {
                         showContent = true
                     }
 
