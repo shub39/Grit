@@ -23,6 +23,21 @@ import com.shub39.grit.core.presentation.settings.components.LookAndFeelPage
 import com.shub39.grit.core.presentation.settings.components.RootPage
 import com.shub39.grit.core.presentation.theme.GritTheme
 import com.shub39.grit.core.presentation.theme.Theme
+import kotlinx.serialization.Serializable
+
+private sealed interface SettingsRoutes {
+    @Serializable
+    data object Root: SettingsRoutes
+
+    @Serializable
+    data object LookAndFeel: SettingsRoutes
+
+    @Serializable
+    data object Backup: SettingsRoutes
+
+    @Serializable
+    data object AboutLibraries: SettingsRoutes
+}
 
 @Composable
 fun Settings(
@@ -54,7 +69,9 @@ fun Settings(
             RootPage(
                 state = state,
                 onAction = onAction,
-                onNavigate = { navController.navigate(it) }
+                onNavigateToLookAndFeel = { navController.navigate(SettingsRoutes.LookAndFeel) },
+                onNavigateToBackup = { navController.navigate(SettingsRoutes.Backup) },
+                onNavigateToAboutLibraries = { navController.navigate(SettingsRoutes.AboutLibraries) },
             )
         }
 
@@ -88,7 +105,7 @@ fun Preview() {
     GritTheme(
         theme = Theme(
             appTheme = AppTheme.DARK,
-            font = Fonts.MANROPE,
+            font = Fonts.FIGTREE,
             paletteStyle = PaletteStyle.Expressive
         )
     ) {

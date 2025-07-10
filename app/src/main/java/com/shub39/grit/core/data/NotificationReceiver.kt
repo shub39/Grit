@@ -8,7 +8,7 @@ import androidx.core.app.NotificationManagerCompat
 import com.shub39.grit.core.domain.GritDatastore
 import com.shub39.grit.core.domain.IntentActions
 import com.shub39.grit.core.presentation.habitNotification
-import com.shub39.grit.habits.data.database.HabitEntity
+import com.shub39.grit.habits.data.database.HabitDao
 import com.shub39.grit.habits.data.database.HabitStatusDao
 import com.shub39.grit.habits.data.database.HabitStatusEntity
 import kotlinx.coroutines.CoroutineScope
@@ -28,6 +28,7 @@ class NotificationReceiver : BroadcastReceiver(), KoinComponent {
     override fun onReceive(context: Context, intent: Intent?) {
         Log.d(tag, "Received intent")
         val scheduler = get<NotificationAlarmScheduler>()
+        val habitDao = get<HabitDao>()
         val habitStatusDao = get<HabitStatusDao>()
         val datastore = get<GritDatastore>()
 
@@ -40,22 +41,17 @@ class NotificationReceiver : BroadcastReceiver(), KoinComponent {
                         Log.d(tag, "Habit notification received")
                         val habitId = intent.getLongExtra("habit_id", -1)
                         if (habitId < 0L) return@launch
-                        val habitTitle = intent.getStringExtra("habit_title") ?: return@launch
-                        val habitDescription = intent.getStringExtra("habit_description") ?: return@launch
-                        val habitEntity = HabitEntity(
-                            id = habitId,
-                            title = habitTitle,
-                            description = habitDescription,
-                            time = LocalDateTime.now(),
-                            index = 0
-                        )
+                        val habitEntity = habitDao.getHabitById(habitId) ?: return@launch
 
                         // check if habit is completed today, if not then show notification
                         val habitStatus = habitStatusDao.getStatusForHabit(habitId)
                         val time = LocalDateTime.now().toLocalDate()
+                        val todayDayOfWeek = LocalDateTime.now().dayOfWeek
 
                         if (habitStatus.any { it.date == time }) {
                             Log.d(tag, "Habit already completed today")
+                        } else if (!habitEntity.days.contains(todayDayOfWeek)) {
+                            Log.d(tag, "Habit is notification not scheduled for today")
                         } else {
                             habitNotification(context, habitEntity)
                         }

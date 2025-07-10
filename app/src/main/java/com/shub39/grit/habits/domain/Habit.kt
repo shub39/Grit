@@ -1,5 +1,6 @@
 package com.shub39.grit.habits.domain
 
+import java.time.DayOfWeek
 import java.time.LocalDateTime
 
 data class Habit(
@@ -7,5 +8,6 @@ data class Habit(
     val title: String,
     val description: String,
     val time: LocalDateTime,
+    val days: Set<DayOfWeek>,
     val index: Int
 )

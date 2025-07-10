@@ -109,13 +109,15 @@ class HabitOverviewWidget : GlanceAppWidget(), KoinComponent {
                     context = context,
                     habits = habits,
                     completedHabitIds = completedHabitIds,
-                    onHabitClick = { coroutineScope.launch {
-                        if (it in completedHabitIds) {
-                            repo.deleteStatus(it)
-                        } else {
-                            repo.setStatus(it)
+                    onHabitClick = {
+                        coroutineScope.launch {
+                            if (it in completedHabitIds) {
+                                repo.deleteStatus(it)
+                            } else {
+                                repo.setStatus(it)
+                            }
                         }
-                    }}
+                    }
                 )
             }
         }
@@ -191,15 +193,17 @@ class HabitOverviewWidget : GlanceAppWidget(), KoinComponent {
                                 maxLines = 1
                             )
 
-                            Text(
-                                text = habit.description,
-                                modifier = GlanceModifier.fillMaxWidth(),
-                                style = TextStyle(
-                                    color = if (done) GlanceTheme.colors.onPrimary else GlanceTheme.colors.onSecondaryContainer,
-                                    fontSize = 12.sp
-                                ),
-                                maxLines = 1
-                            )
+                            if (habit.description.isNotEmpty()) {
+                                Text(
+                                    text = habit.description,
+                                    modifier = GlanceModifier.fillMaxWidth(),
+                                    style = TextStyle(
+                                        color = if (done) GlanceTheme.colors.onPrimary else GlanceTheme.colors.onSecondaryContainer,
+                                        fontSize = 12.sp
+                                    ),
+                                    maxLines = 1
+                                )
+                            }
                         }
                         Spacer(GlanceModifier.height(4.dp))
                     }

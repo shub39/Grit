@@ -1,6 +1,5 @@
 package com.shub39.grit.di
 
-import androidx.sqlite.driver.bundled.BundledSQLiteDriver
 import com.shub39.grit.core.data.DataStoreImpl
 import com.shub39.grit.core.data.DatastoreFactory
 import com.shub39.grit.core.data.NotificationAlarmScheduler
@@ -37,15 +36,11 @@ val appModule = module {
     single {
         get<HabitDbFactory>()
             .create()
-            .fallbackToDestructiveMigration(true)
-            .setDriver(BundledSQLiteDriver())
             .build()
     }
     single {
         get<TaskDbFactory>()
             .create()
-            .fallbackToDestructiveMigration(true)
-            .setDriver(BundledSQLiteDriver())
             .build()
     }
 

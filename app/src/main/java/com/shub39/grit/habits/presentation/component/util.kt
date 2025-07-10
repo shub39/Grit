@@ -11,24 +11,27 @@ fun prepareLineChartData(
     firstDay: DayOfWeek,
     habitstatuses: List<HabitStatus>
 ): List<Double> {
-    if (habitstatuses.isEmpty()) return emptyList()
-
+    val today = LocalDate.now()
     val weekFields = WeekFields.of(firstDay, 1)
-    val startDate = habitstatuses.minByOrNull { it.date }?.date ?: LocalDate.now()
-    val endDate = habitstatuses.maxByOrNull { it.date }?.date ?: LocalDate.now()
 
-    val startWeek = startDate.get(weekFields.weekOfYear())
-    val endWeek = endDate.get(weekFields.weekOfYear())
+    val startDateOfPeriod = today.minusWeeks(9).with(weekFields.dayOfWeek(), 1)
 
     val habitCompletionByWeek = habitstatuses
-        .groupBy { it.date.get(weekFields.weekOfYear()) }
+        .filter { !it.date.isBefore(startDateOfPeriod) && !it.date.isAfter(today) }
+        .groupBy {
+            val yearOfWeek = it.date.get(weekFields.weekBasedYear())
+            val weekOfYear = it.date.get(weekFields.weekOfWeekBasedYear())
+            yearOfWeek * 100 + weekOfYear
+        }
         .mapValues { (_, habitStatuses) -> habitStatuses.size }
-
-    val values = (startWeek..endWeek).map { week ->
-        habitCompletionByWeek[week]?.toDouble() ?: 0.0
-    }.takeLast(10)
-
-    return if (values.size < 2) emptyList() else values
+    val values = (0..9).map { i ->
+        val currentWeekStart = today.minusWeeks(9 - i.toLong()).with(weekFields.dayOfWeek(), 1)
+        val yearOfWeek = currentWeekStart.get(weekFields.weekBasedYear())
+        val weekOfYear = currentWeekStart.get(weekFields.weekOfWeekBasedYear())
+        val weekKey = yearOfWeek * 100 + weekOfYear
+        (habitCompletionByWeek[weekKey]?.toDouble() ?: 0.0).coerceAtMost(7.0)
+    }
+    return values
 }
 
 fun prepareHeatMapData(

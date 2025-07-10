@@ -129,7 +129,7 @@ class MainActivity : FragmentActivity() {
                 settingsViewModel.onAction(SettingsAction.ChangeBiometricLock(false))
                 Toast.makeText(
                     this,
-                    "Biometric authentication not available. Disabling biometric lock.",
+                    getString(R.string.biometric_not_available),
                     Toast.LENGTH_LONG
                 ).show()
                 onComplete()

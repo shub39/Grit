@@ -15,6 +15,7 @@ fun HabitEntity.toHabit(): Habit {
         title = title,
         description = description,
         time = time,
+        days = days,
         index = index
     )
 }
@@ -33,7 +34,8 @@ fun Habit.toHabitEntity(): HabitEntity {
         title = title,
         description = description,
         time = time,
-        index = index
+        index = index,
+        days = days
     )
 }
 

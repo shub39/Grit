@@ -8,8 +8,8 @@ plugins {
 }
 
 val appName = "Grit"
-val appVersionCode = 3100
-val appVersionName = "3.1.0"
+val appVersionCode = 3210
+val appVersionName = "3.2.1"
 
 android {
     namespace = "com.shub39.grit"
@@ -25,6 +25,12 @@ android {
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
         vectorDrawables {
             useSupportLibrary = true
+        }
+    }
+
+    kotlin {
+        compilerOptions {
+            jvmToolchain(17)
         }
     }
 
@@ -57,11 +63,8 @@ android {
         }
     }
     compileOptions {
-        sourceCompatibility = JavaVersion.VERSION_1_8
-        targetCompatibility = JavaVersion.VERSION_1_8
-    }
-    kotlinOptions {
-        jvmTarget = "1.8"
+        sourceCompatibility = JavaVersion.VERSION_17
+        targetCompatibility = JavaVersion.VERSION_17
     }
     buildFeatures {
         compose = true
@@ -82,7 +85,6 @@ android {
 }
 
 aboutLibraries {
-    // Remove the "generated" timestamp to allow for reproducible builds; from kaajjo/LibreSudoku
     export.excludeFields.add("generated")
 }
 
@@ -102,7 +104,6 @@ dependencies {
     implementation(libs.reorderable)
     implementation(libs.androidx.glance.appwidget)
     implementation(libs.androidx.glance.material3)
-    implementation(libs.sqlite.bundled)
     implementation(libs.materialKolor)
     implementation(libs.colorpicker.compose)
     implementation(libs.androidx.datastore.preferences.core)

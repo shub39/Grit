@@ -41,16 +41,12 @@ class TasksViewModel(
     fun taskPageAction(action: TaskPageAction) {
         viewModelScope.launch {
             when (action) {
-                is TaskPageAction.AddTask -> {
+                is TaskPageAction.UpsertTask -> {
                     upsertTask(action.task)
                 }
 
                 TaskPageAction.DeleteTasks -> {
                     deleteTasks()
-                }
-
-                is TaskPageAction.UpdateTaskStatus -> {
-                    upsertTask(action.task)
                 }
 
                 is TaskPageAction.ChangeCategory -> {

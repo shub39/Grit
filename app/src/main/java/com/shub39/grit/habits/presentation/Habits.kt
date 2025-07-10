@@ -26,8 +26,18 @@ import com.shub39.grit.habits.domain.Habit
 import com.shub39.grit.habits.domain.HabitStatus
 import com.shub39.grit.habits.presentation.component.AnalyticsPage
 import com.shub39.grit.habits.presentation.component.HabitsList
+import kotlinx.serialization.Serializable
 import java.time.LocalDate
 import java.time.LocalDateTime
+
+@Serializable
+private sealed interface HabitRoutes {
+    @Serializable
+    data object HabitList : HabitRoutes
+
+    @Serializable
+    data object HabitAnalytics : HabitRoutes
+}
 
 @Composable
 fun Habits(
@@ -71,7 +81,8 @@ private fun Preview() {
             title = "Habit $habitId",
             description = "This is Habit no: $habitId",
             time = LocalDateTime.now().minusDays(habitId),
-            index = habitId.toInt()
+            index = habitId.toInt(),
+            days = emptySet()
         ) to (0L .. 10L).map {
             HabitStatus(
                 id = it,
