@@ -13,7 +13,7 @@ data class SettingsState(
     val pauseNotifications: Boolean = false,
     val startingPage: Pages = Pages.Tasks,
     val backupState: BackupState = BackupState(),
-    val biometric: Boolean = true,
+    val biometric: Boolean = false,
     val biometricAvailable: Boolean = false
 )
 
