@@ -83,7 +83,7 @@
     <string name="choose_file">Выбрать файл</string>
     <string name="material_theme_desc">Использовать цвета обоев</string>
     <string name="show_habits">Показывать сначала привычки</string>
-    <string name="show_habits_desc">Показывать страницу привычки при старте приложения</string>
+    <string name="show_habits_desc">Показывать страницу привычек при старте приложения</string>
     <string name="use_24Hr">24-часовой формат времени</string>
     <string name="use_24Hr_desc">Использовать 24-часовой формат времени</string>
     <string name="staring_day">Начинать неделю с воскресенья</string>
