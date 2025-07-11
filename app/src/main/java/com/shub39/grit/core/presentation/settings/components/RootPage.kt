@@ -175,7 +175,7 @@ fun RootPage(
                         },
                         trailingContent = {
                             Switch(
-                                checked = state.biometric,
+                                checked = state.biometric == true,
                                 onCheckedChange = {
                                     onAction(SettingsAction.ChangeBiometricLock(it))
                                 }
