@@ -40,28 +40,29 @@ class MainActivity : FragmentActivity() {
             var showContent by remember { mutableStateOf(false) }
 
             LaunchedEffect(settingsState.biometric, isAppUnlocked) {
-                when {
-                    !settingsState.biometric -> {
-                        showContent = true
-                    }
+                settingsState.biometric?.let {
+                    when {
+                        !it -> {
+                            showContent = true
+                        }
 
-                    isAppUnlocked -> {
-                        showContent = true
-                    }
+                        isAppUnlocked -> {
+                            showContent = true
+                        }
 
-                    else -> {
-                        showContent = false
-                        showBiometricPrompt(
-                            onSuccess = {
-                                mainViewModel.setAppUnlocked(true)
-                                showContent = true
-                            },
-                            onError = { errorCode, errString ->
-                                handleBiometricError(errorCode, errString) {
+                        else -> {
+                            showBiometricPrompt(
+                                onSuccess = {
+                                    mainViewModel.setAppUnlocked(true)
                                     showContent = true
+                                },
+                                onError = { errorCode, errString ->
+                                    handleBiometricError(errorCode, errString) {
+                                        showContent = true
+                                    }
                                 }
-                            }
-                        )
+                            )
+                        }
                     }
                 }
             }
