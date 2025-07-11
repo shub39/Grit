@@ -35,13 +35,13 @@ class MainActivity : FragmentActivity() {
         enableEdgeToEdge()
 
         setContent {
-            val settingsState by remember { settingsViewModel.state }.collectAsStateWithLifecycle()
-            val isAppUnlocked by remember { mainViewModel.isAppUnlocked }.collectAsStateWithLifecycle()
+            val settingsState by settingsViewModel.state.collectAsStateWithLifecycle()
+            val isAppUnlocked by mainViewModel.isAppUnlocked.collectAsStateWithLifecycle()
             var showContent by remember { mutableStateOf(false) }
 
             LaunchedEffect(settingsState.biometric, isAppUnlocked) {
                 when {
-                    settingsState.biometric.not() -> {
+                    !settingsState.biometric -> {
                         showContent = true
                     }
 
