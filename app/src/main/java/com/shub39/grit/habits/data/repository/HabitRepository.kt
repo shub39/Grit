@@ -38,6 +38,10 @@ class HabitRepository(
         return habitDao.getAllHabits().map { it.toHabit() }
     }
 
+    override suspend fun getHabitById(id: Long): Habit? {
+        return habitDao.getHabitById(id)?.toHabit()
+    }
+
     override suspend fun getHabitStatuses(): List<HabitStatus> {
         return habitStatusDao.getHabitStatuses().map { it.toHabitStatus() }
     }
@@ -57,6 +61,10 @@ class HabitRepository(
                 habitStatusesFlow.filter { it.habitId == habit.id }
             }
         }
+    }
+
+    override suspend fun getStatusForHabit(id: Long): List<HabitStatus> {
+        return habitStatusDao.getStatusForHabit(id).map { it.toHabitStatus() }
     }
 
     override suspend fun insertHabitStatus(habitStatus: HabitStatus) {
