@@ -75,7 +75,7 @@ fun Habits(
 @Preview
 @Composable
 private fun Preview() {
-    val habitsWithStatueses = (0L..1L).associate { habitId ->
+    val habitsWithStatuses = (0L..1L).associate { habitId ->
         Habit(
             id = habitId,
             title = "Habit $habitId",
@@ -93,8 +93,8 @@ private fun Preview() {
     }
 
     var state by remember { mutableStateOf(HabitPageState(
-        habitsWithStatuses = habitsWithStatueses,
-        completedHabits = habitsWithStatueses.keys.toList()
+        habitsWithStatuses = habitsWithStatuses,
+        completedHabits = habitsWithStatuses.keys.toList()
     )) }
 
     GritTheme(
@@ -102,7 +102,7 @@ private fun Preview() {
             appTheme = AppTheme.DARK,
             isMaterialYou = true,
             font = Fonts.MANROPE,
-            paletteStyle = PaletteStyle.TonalSpot
+            paletteStyle = PaletteStyle.Expressive
         )
     ) {
         Scaffold { padding ->

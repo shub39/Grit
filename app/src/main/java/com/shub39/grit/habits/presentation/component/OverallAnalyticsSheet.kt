@@ -5,7 +5,7 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -31,7 +31,7 @@ import java.util.Locale
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun AllAnalyticsSheet(
+fun OverallAnalyticsSheet(
     state: HabitPageState,
     onDismiss: () -> Unit,
     modifier: Modifier = Modifier
@@ -64,14 +64,15 @@ fun AllAnalyticsSheet(
             )
 
             Text(
-                text = stringResource(R.string.habit_map),
+                text = stringResource(R.string.overall_analytics),
                 style = MaterialTheme.typography.titleLarge,
                 modifier = Modifier.fillMaxWidth(),
                 textAlign = TextAlign.Center
             )
 
             AnalyticsCard(
-                modifier = Modifier.height(300.dp)
+                title = stringResource(R.string.habit_map),
+                modifier = Modifier.heightIn(max = 400.dp)
             ) {
                 HeatMapCalendar(
                     state = heatMapState,

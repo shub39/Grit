@@ -275,7 +275,9 @@ fun AnalyticsPage(
             }
 
             item {
-                AnalyticsCard {
+                AnalyticsCard(
+                    title = stringResource(R.string.weekly_progress)
+                ) {
                     HeatMapCalendar(
                         state = heatMapState,
                         monthHeader = {
@@ -350,6 +352,7 @@ fun AnalyticsPage(
 
             item {
                 AnalyticsCard(
+                    title = stringResource(R.string.weekly_graph),
                     modifier = Modifier.height(300.dp)
                 ) {
                     LineChart(
