@@ -402,8 +402,7 @@ private fun SelectableMiniPalette(
 ) {
     Surface(
         modifier = modifier,
-        shape = RoundedCornerShape(16.dp),
-        color = MaterialTheme.colorScheme.inverseOnSurface,
+        shape = RoundedCornerShape(16.dp)
     ) {
         TooltipBox(
             modifier = modifier,

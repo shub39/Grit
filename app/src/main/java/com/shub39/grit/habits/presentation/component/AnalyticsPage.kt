@@ -289,7 +289,7 @@ fun AnalyticsPage(
                                         TextStyle.SHORT_STANDALONE,
                                         Locale.getDefault()
                                     ),
-                                    color = MaterialTheme.colorScheme.tertiary,
+                                    color = MaterialTheme.colorScheme.secondary,
                                     style = MaterialTheme.typography.bodyMedium,
                                     modifier = Modifier.align(Alignment.Center)
                                 )
@@ -301,13 +301,14 @@ fun AnalyticsPage(
                                     .padding(2.dp)
                                     .size(30.dp)
                                     .background(
-                                        color = MaterialTheme.colorScheme.tertiaryContainer,
+                                        color = MaterialTheme.colorScheme.secondaryContainer,
                                         shape = MaterialTheme.shapes.large
                                     )
                             ) {
                                 Text(
                                     text = it.name.take(1),
                                     style = MaterialTheme.typography.bodyMedium,
+                                    color = MaterialTheme.colorScheme.onSecondaryContainer,
                                     modifier = Modifier.align(Alignment.Center)
                                 )
                             }
@@ -369,7 +370,7 @@ fun AnalyticsPage(
                         ),
                         data = listOf(
                             Line(
-                                label = stringResource(R.string.weekly_graph),
+                                label = stringResource(R.string.progress),
                                 values = lineChartData,
                                 color = SolidColor(primary),
                                 dotProperties = DotProperties(
@@ -477,7 +478,7 @@ fun AnalyticsPage(
                         Text(text = stringResource(id = R.string.too_long))
                     }
                 },
-                isError = newHabitDescription.length > 20
+                isError = newHabitTitle.length > 20
             )
 
             OutlinedTextField(

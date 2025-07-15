@@ -32,7 +32,7 @@
     <string name="new_habit">New Habit </string>
     <string name="at">Reminder at </string>
     <string name="habit_exists">Habit Already Exists</string>
-    <string name="days_ago_format">%1$d Day(s) ago…</string>
+    <string name="days_ago_format">%1$d Days ago…</string>
     <string name="too_long">Too Long</string>
     <string name="edit_task">Edit Task</string>
     <string name="tasks_guide_1">Tap to mark as done</string>
@@ -106,4 +106,5 @@
     <string name="rate_on_play">Rate on Google Play</string>
     <string name="weekly_progress">Weekly Progress</string>
     <string name="overall_analytics">Overall Analytics</string>
+    <string name="progress">Progress</string>
 </resources>

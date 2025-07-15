@@ -59,14 +59,14 @@ fun HabitCard(
     val cardContent by animateColorAsState(
         targetValue = when (completed) {
             true -> MaterialTheme.colorScheme.onPrimaryContainer
-            else -> MaterialTheme.colorScheme.onSecondaryContainer
+            else -> MaterialTheme.colorScheme.onSurface
         },
-        label = "cardContent"
+        label = "cardBackground"
     )
     val cardBackground by animateColorAsState(
         targetValue = when (completed) {
             true -> MaterialTheme.colorScheme.primaryContainer
-            else -> MaterialTheme.colorScheme.secondaryContainer
+            else -> MaterialTheme.colorScheme.surfaceContainer
         },
         label = "cardBackground"
     )
@@ -180,7 +180,7 @@ fun HabitCard(
                         .padding(2.dp)
                         .then(
                             if (done) Modifier.background(
-                                color = MaterialTheme.colorScheme.tertiaryContainer,
+                                color = MaterialTheme.colorScheme.secondaryContainer,
                                 shape = MaterialTheme.shapes.medium
                             ) else Modifier
                         ),
@@ -193,13 +193,13 @@ fun HabitCard(
                         Text(
                             text = weekDay.date.dayOfMonth.toString(),
                             style = MaterialTheme.typography.bodyMedium,
-                            color = if (done) MaterialTheme.colorScheme.onTertiaryContainer else cardContent
+                            color = if (done) MaterialTheme.colorScheme.onSecondaryContainer else cardContent
                         )
 
                         Text(
                             text = weekDay.date.dayOfWeek.toString().take(3),
                             style = MaterialTheme.typography.bodySmall,
-                            color = if (done) MaterialTheme.colorScheme.onTertiaryContainer else cardContent
+                            color = if (done) MaterialTheme.colorScheme.onSecondaryContainer else cardContent
                         )
                     }
                 }
