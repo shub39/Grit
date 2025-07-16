@@ -12,6 +12,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
@@ -75,7 +76,7 @@ fun Habits(
 @Preview
 @Composable
 private fun Preview() {
-    val habitsWithStatueses = (0L..1L).associate { habitId ->
+    val habitsWithStatuses = (0L..1L).associate { habitId ->
         Habit(
             id = habitId,
             title = "Habit $habitId",
@@ -93,16 +94,17 @@ private fun Preview() {
     }
 
     var state by remember { mutableStateOf(HabitPageState(
-        habitsWithStatuses = habitsWithStatueses,
-        completedHabits = habitsWithStatueses.keys.toList()
+        habitsWithStatuses = habitsWithStatuses,
+        completedHabits = habitsWithStatuses.keys.toList()
     )) }
 
     GritTheme(
         theme = Theme(
             appTheme = AppTheme.DARK,
-            isMaterialYou = true,
-            font = Fonts.MANROPE,
-            paletteStyle = PaletteStyle.TonalSpot
+            isMaterialYou = false,
+            seedColor = Color.Red,
+            font = Fonts.FIGTREE,
+            paletteStyle = PaletteStyle.Fidelity
         )
     ) {
         Scaffold { padding ->

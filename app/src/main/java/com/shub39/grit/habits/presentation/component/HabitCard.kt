@@ -55,19 +55,18 @@ fun HabitCard(
     shape: Shape,
     modifier: Modifier = Modifier
 ) {
-    val primary = MaterialTheme.colorScheme.primary
     // animated colors
     val cardContent by animateColorAsState(
         targetValue = when (completed) {
-            true -> MaterialTheme.colorScheme.primary
-            else -> MaterialTheme.colorScheme.secondary
+            true -> MaterialTheme.colorScheme.onPrimaryContainer
+            else -> MaterialTheme.colorScheme.onSurface
         },
-        label = "cardContent"
+        label = "cardBackground"
     )
     val cardBackground by animateColorAsState(
         targetValue = when (completed) {
             true -> MaterialTheme.colorScheme.primaryContainer
-            else -> MaterialTheme.colorScheme.surfaceContainerHighest
+            else -> MaterialTheme.colorScheme.surfaceContainer
         },
         label = "cardBackground"
     )
@@ -81,7 +80,7 @@ fun HabitCard(
 
     Card(
         colors = CardDefaults.outlinedCardColors(
-            containerColor = cardBackground.copy(alpha = 0.8f),
+            containerColor = cardBackground,
             contentColor = cardContent
         ),
         onClick = { action(HabitsPageAction.InsertStatus(habit)) },
@@ -95,6 +94,9 @@ fun HabitCard(
             colors = ListItemDefaults.colors(
                 containerColor = cardBackground,
                 headlineColor = cardContent,
+                supportingColor = cardContent,
+                trailingIconColor = cardContent,
+                leadingIconColor = cardContent
             ),
             leadingContent = {
                 AnimatedContent(
@@ -178,7 +180,7 @@ fun HabitCard(
                         .padding(2.dp)
                         .then(
                             if (done) Modifier.background(
-                                color = primary.copy(alpha = 0.2f),
+                                color = MaterialTheme.colorScheme.secondaryContainer,
                                 shape = MaterialTheme.shapes.medium
                             ) else Modifier
                         ),
@@ -191,13 +193,13 @@ fun HabitCard(
                         Text(
                             text = weekDay.date.dayOfMonth.toString(),
                             style = MaterialTheme.typography.bodyMedium,
-                            color = if (done) primary else MaterialTheme.colorScheme.onSurface
+                            color = if (done) MaterialTheme.colorScheme.onSecondaryContainer else cardContent
                         )
 
                         Text(
                             text = weekDay.date.dayOfWeek.toString().take(3),
                             style = MaterialTheme.typography.bodySmall,
-                            color = if (done) primary else MaterialTheme.colorScheme.onSurface
+                            color = if (done) MaterialTheme.colorScheme.onSecondaryContainer else cardContent
                         )
                     }
                 }

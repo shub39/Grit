@@ -18,7 +18,6 @@ import com.shub39.grit.R
 import com.shub39.grit.app.MainActivity
 import com.shub39.grit.core.data.NotificationReceiver
 import com.shub39.grit.core.domain.IntentActions
-import com.shub39.grit.habits.data.database.HabitEntity
 import com.shub39.grit.habits.domain.Habit
 import java.time.LocalDate
 import java.time.LocalDateTime
@@ -133,14 +132,14 @@ fun showAddNotification(context: Context, habit: Habit) {
 }
 
 // shows habit notification if permission granted
-fun habitNotification(context: Context, habitEntity: HabitEntity) {
+fun habitNotification(context: Context, habit: Habit) {
     val intent = Intent(context, NotificationReceiver::class.java).apply {
-        putExtra("1", habitEntity.id)
+        putExtra("1", habit.id)
         action = IntentActions.ADD_HABIT_STATUS.action
     }
     val pendingBroadcast = PendingIntent.getBroadcast(
         context,
-        habitEntity.id.toInt(),
+        habit.id.toInt(),
         intent,
         PendingIntent.FLAG_IMMUTABLE
     )
@@ -148,8 +147,8 @@ fun habitNotification(context: Context, habitEntity: HabitEntity) {
     val builder = NotificationCompat
         .Builder(context, "1")
         .setSmallIcon(R.drawable.round_checklist_24)
-        .setContentTitle(habitEntity.title)
-        .setContentText(habitEntity.description)
+        .setContentTitle(habit.title)
+        .setContentText(habit.description)
         .setPriority(NotificationCompat.PRIORITY_DEFAULT)
         .setAutoCancel(true)
         .addAction(R.drawable.round_check_circle_24, "Mark Done", pendingBroadcast)
@@ -164,7 +163,7 @@ fun habitNotification(context: Context, habitEntity: HabitEntity) {
             return
         }
 
-        notify(habitEntity.id.hashCode(), builder.build())
+        notify(habit.id.hashCode(), builder.build())
     }
 }
 

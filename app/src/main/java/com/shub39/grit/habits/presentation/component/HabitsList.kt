@@ -232,7 +232,7 @@ fun HabitsList(
 
     // all analytics
     if (showAllAnalytics) {
-        AllAnalyticsSheet(
+        OverallAnalyticsSheet(
             state = state,
             onDismiss = { showAllAnalytics = false }
         )
