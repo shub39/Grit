@@ -1,5 +1,6 @@
 package com.shub39.grit.di
 
+import com.shub39.grit.billing.BillingHandler
 import com.shub39.grit.core.data.DataStoreImpl
 import com.shub39.grit.core.data.DatastoreFactory
 import com.shub39.grit.core.data.NotificationAlarmScheduler
@@ -66,6 +67,9 @@ val appModule = module {
     // widget repositories
     singleOf(::HabitOverviewWidgetRepository)
     singleOf(::HabitStreakWidgetRepository)
+
+    // Revenuecat
+    singleOf(::BillingHandler)
 
     // view models
     singleOf(::StateLayer)

@@ -6,6 +6,7 @@ import androidx.compose.animation.fadeOut
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material3.Button
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.ExperimentalMaterial3ExpressiveApi
 import androidx.compose.material3.Icon
@@ -30,6 +31,7 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import com.shub39.grit.R
 import com.shub39.grit.core.domain.Pages
+import com.shub39.grit.core.presentation.components.PaywallSheet
 import com.shub39.grit.core.presentation.settings.Settings
 import com.shub39.grit.habits.presentation.Habits
 import com.shub39.grit.tasks.presentation.Tasks
@@ -67,6 +69,7 @@ fun Grit(
     svm: SettingsViewModel
 ) {
     val navController = rememberNavController()
+    var showPaywallSheet by remember { mutableStateOf(false) }
     var currentRoute: Routes by remember { mutableStateOf(Routes.TaskPages) }
 
     val taskPageState by tvm.state.collectAsStateWithLifecycle()
@@ -93,6 +96,7 @@ fun Grit(
             NavigationBar(
                 modifier = Modifier.clip(RoundedCornerShape(topStart = 20.dp, topEnd = 20.dp))
             ) {
+                Button(onClick = {showPaywallSheet = true}) { }
                 Routes.allRoutes.forEach { route ->
                     NavigationBarItem(
                         selected = currentRoute == route,
@@ -166,6 +170,13 @@ fun Grit(
                     onAction = hvm::habitsPageAction
                 )
             }
+        }
+
+        if (showPaywallSheet) {
+            PaywallSheet(
+                isPlusUser = false,
+                onDismissRequest = { showPaywallSheet = false }
+            )
         }
     }
 }
