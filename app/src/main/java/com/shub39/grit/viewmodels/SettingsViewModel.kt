@@ -26,7 +26,7 @@ import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 
 class SettingsViewModel(
-    stateLayer: StateLayer,
+    private val stateLayer: StateLayer,
     private val billingHandler: BillingHandler,
     private val exportRepo: ExportRepo,
     private val restoreRepo: RestoreRepo,
@@ -127,10 +127,14 @@ class SettingsViewModel(
                 }
             }
 
-            SettingsAction.OnPaywallDismiss -> _state.update {
-                it.copy(
-                    showPaywall = false
-                )
+            SettingsAction.OnPaywallDismiss -> {
+                _state.update {
+                    it.copy(
+                        showPaywall = false
+                    )
+                }
+
+                checkSubscription()
             }
 
             SettingsAction.OnCheckSubscription -> checkSubscription()
@@ -153,7 +157,13 @@ class SettingsViewModel(
                 viewModelScope.launch {
                     _state.update {
                         it.copy(
-                            isUserSubscribed = isSubscribed
+                            isUserSubscribed = true
+                        )
+                    }
+
+                    stateLayer.habitsState.update {
+                        it.copy(
+                            isUserSubscribed = true
                         )
                     }
                 }
