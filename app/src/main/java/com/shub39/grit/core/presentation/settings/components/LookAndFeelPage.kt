@@ -16,8 +16,10 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.FlowRow
 import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
@@ -31,6 +33,7 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.filled.Create
 import androidx.compose.material.icons.outlined.Check
+import androidx.compose.material3.Button
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.ExperimentalMaterial3ExpressiveApi
 import androidx.compose.material3.FilledTonalIconButton
@@ -50,6 +53,7 @@ import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.contentColorFor
 import androidx.compose.material3.rememberTooltipState
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -68,6 +72,7 @@ import com.materialkolor.ktx.from
 import com.materialkolor.palettes.TonalPalette
 import com.materialkolor.rememberDynamicColorScheme
 import com.shub39.grit.R
+import com.shub39.grit.billing.SubscriptionResult
 import com.shub39.grit.core.domain.AppTheme
 import com.shub39.grit.core.domain.Fonts
 import com.shub39.grit.core.presentation.components.ColorPickerDialog
@@ -88,6 +93,10 @@ fun LookAndFeelPage(
     onAction: (SettingsAction) -> Unit,
     onNavigateBack: () -> Unit
 ) = PageFill {
+
+    LaunchedEffect(Unit) {
+        onAction(SettingsAction.OnCheckSubscription)
+    }
 
     var colorPickerDialog by remember { mutableStateOf(false) }
     var appThemeDialog by remember { mutableStateOf(false) }
@@ -117,7 +126,8 @@ fun LookAndFeelPage(
         )
 
         LazyColumn(
-            modifier = Modifier.fillMaxWidth()
+            modifier = Modifier.fillMaxWidth(),
+            horizontalAlignment = Alignment.CenterHorizontally
         ) {
             item {
                 ListItem(
@@ -144,155 +154,168 @@ fun LookAndFeelPage(
                 )
             }
 
-            item {
-                ListItem(
-                    headlineContent = {
-                        Text(
-                            text = stringResource(R.string.font)
-                        )
-                    },
-                    supportingContent = {
-                        Text(
-                            text = stringResource(R.string.font_desc)
-                        )
-                    },
-                    trailingContent = {
-                        FilledTonalIconButton(
-                            onClick = { fontPickerDialog = true }
-                        ) {
-                            Icon(
-                                imageVector = Icons.Default.Create,
-                                contentDescription = "Select font"
-                            )
-                        }
-                    }
-                )
-            }
-
-            item {
-                ListItem(
-                    headlineContent = {
-                        Text(
-                            text = stringResource(R.string.use_amoled)
-                        )
-                    },
-                    supportingContent = {
-                        Text(
-                            text = stringResource(R.string.use_amoled_desc)
-                        )
-                    },
-                    trailingContent = {
-                        Switch(
-                            checked = state.theme.isAmoled,
-                            onCheckedChange = {
-                                onAction(
-                                    SettingsAction.ChangeAmoled(it)
-                                )
-                            }
-                        )
-                    }
-                )
-            }
-
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
+            if (state.isUserSubscribed is SubscriptionResult.Subscribed) {
                 item {
                     ListItem(
                         headlineContent = {
                             Text(
-                                text = stringResource(R.string.material_theme)
+                                text = stringResource(R.string.font)
                             )
                         },
                         supportingContent = {
                             Text(
-                                text = stringResource(R.string.material_theme_desc)
+                                text = stringResource(R.string.font_desc)
+                            )
+                        },
+                        trailingContent = {
+                            FilledTonalIconButton(
+                                onClick = { fontPickerDialog = true }
+                            ) {
+                                Icon(
+                                    imageVector = Icons.Default.Create,
+                                    contentDescription = "Select font"
+                                )
+                            }
+                        }
+                    )
+                }
+
+                item {
+                    ListItem(
+                        headlineContent = {
+                            Text(
+                                text = stringResource(R.string.use_amoled)
+                            )
+                        },
+                        supportingContent = {
+                            Text(
+                                text = stringResource(R.string.use_amoled_desc)
                             )
                         },
                         trailingContent = {
                             Switch(
-                                checked = state.theme.isMaterialYou,
+                                checked = state.theme.isAmoled,
                                 onCheckedChange = {
                                     onAction(
-                                        SettingsAction.ChangeMaterialYou(it)
+                                        SettingsAction.ChangeAmoled(it)
                                     )
                                 }
                             )
                         }
                     )
                 }
-            }
 
-            item {
-                ListItem(
-                    headlineContent = {
-                        Text(
-                            text = stringResource(R.string.select_seed)
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
+                    item {
+                        ListItem(
+                            headlineContent = {
+                                Text(
+                                    text = stringResource(R.string.material_theme)
+                                )
+                            },
+                            supportingContent = {
+                                Text(
+                                    text = stringResource(R.string.material_theme_desc)
+                                )
+                            },
+                            trailingContent = {
+                                Switch(
+                                    checked = state.theme.isMaterialYou,
+                                    onCheckedChange = {
+                                        onAction(
+                                            SettingsAction.ChangeMaterialYou(it)
+                                        )
+                                    }
+                                )
+                            }
                         )
-                    },
-                    supportingContent = {
-                        Text(
-                            text = stringResource(R.string.select_seed_desc)
-                        )
-                    },
-                    trailingContent = {
-                        IconButton(
-                            onClick = { colorPickerDialog = true },
-                            colors = IconButtonDefaults.iconButtonColors(
-                                containerColor = state.theme.seedColor,
-                                contentColor = contentColorFor(state.theme.seedColor)
-                            ),
-                            enabled = !state.theme.isMaterialYou
-                        ) {
-                            Icon(
-                                imageVector = Icons.Default.Create,
-                                contentDescription = "Select Color"
+                    }
+                }
+
+                item {
+                    ListItem(
+                        headlineContent = {
+                            Text(
+                                text = stringResource(R.string.select_seed)
+                            )
+                        },
+                        supportingContent = {
+                            Text(
+                                text = stringResource(R.string.select_seed_desc)
+                            )
+                        },
+                        trailingContent = {
+                            IconButton(
+                                onClick = { colorPickerDialog = true },
+                                colors = IconButtonDefaults.iconButtonColors(
+                                    containerColor = state.theme.seedColor,
+                                    contentColor = contentColorFor(state.theme.seedColor)
+                                ),
+                                enabled = !state.theme.isMaterialYou
+                            ) {
+                                Icon(
+                                    imageVector = Icons.Default.Create,
+                                    contentDescription = "Select Color"
+                                )
+                            }
+                        }
+                    )
+                }
+
+                item {
+                    ListItem(
+                        headlineContent = {
+                            Text(
+                                text = stringResource(R.string.palette_style)
+                            )
+                        }
+                    )
+                }
+
+                item {
+                    LazyRow(
+                        horizontalArrangement = Arrangement.spacedBy(8.dp),
+                        contentPadding = PaddingValues(horizontal = 16.dp)
+                    ) {
+                        items(PaletteStyle.entries.toList(), key = { it.name }) { style ->
+                            val scheme = rememberDynamicColorScheme(
+                                primary = if (state.theme.isMaterialYou && Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
+                                    colorResource(android.R.color.system_accent1_200)
+                                } else state.theme.seedColor,
+                                isDark = when (state.theme.appTheme) {
+                                    AppTheme.SYSTEM -> isSystemInDarkTheme()
+                                    AppTheme.DARK -> true
+                                    AppTheme.LIGHT -> false
+                                },
+                                isAmoled = state.theme.isAmoled,
+                                style = style
+                            )
+
+                            SelectableMiniPalette(
+                                selected = state.theme.paletteStyle == style,
+                                onClick = {
+                                    onAction(
+                                        SettingsAction.ChangePaletteStyle(style)
+                                    )
+                                },
+                                contentDescription = { style.name },
+                                accents = listOf(
+                                    TonalPalette.from(scheme.primary),
+                                    TonalPalette.from(scheme.tertiary),
+                                    TonalPalette.from(scheme.secondary)
+                                )
                             )
                         }
                     }
-                )
-            }
-
-            item {
-                ListItem(
-                    headlineContent = {
+                }
+            } else {
+                item {
+                    Spacer(modifier = Modifier.height(16.dp))
+                    Button(
+                        onClick = { onAction(SettingsAction.OnPaywallShow) }
+                    ) {
                         Text(
-                            text = stringResource(R.string.palette_style)
-                        )
-                    }
-                )
-            }
-
-            item {
-                LazyRow(
-                    horizontalArrangement = Arrangement.spacedBy(8.dp),
-                    contentPadding = PaddingValues(horizontal = 16.dp)
-                ) {
-                    items(PaletteStyle.entries.toList(), key = { it.name }) { style ->
-                        val scheme = rememberDynamicColorScheme(
-                            primary = if (state.theme.isMaterialYou && Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
-                                colorResource(android.R.color.system_accent1_200)
-                            } else state.theme.seedColor,
-                            isDark = when (state.theme.appTheme) {
-                                AppTheme.SYSTEM -> isSystemInDarkTheme()
-                                AppTheme.DARK -> true
-                                AppTheme.LIGHT -> false
-                            },
-                            isAmoled = state.theme.isAmoled,
-                            style = style
-                        )
-
-                        SelectableMiniPalette(
-                            selected = state.theme.paletteStyle == style,
-                            onClick = {
-                                onAction(
-                                    SettingsAction.ChangePaletteStyle(style)
-                                )
-                            },
-                            contentDescription = { style.name },
-                            accents = listOf(
-                                TonalPalette.from(scheme.primary),
-                                TonalPalette.from(scheme.tertiary),
-                                TonalPalette.from(scheme.secondary)
-                            )
+                            text = stringResource(R.string.unlock_plus)
                         )
                     }
                 }

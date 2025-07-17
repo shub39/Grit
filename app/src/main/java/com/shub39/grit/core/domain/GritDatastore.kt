@@ -5,6 +5,8 @@ import kotlinx.coroutines.flow.Flow
 import java.time.DayOfWeek
 
 interface GritDatastore {
+    suspend fun resetAppTheme()
+
     fun getAppThemeFlow(): Flow<AppTheme>
     suspend fun setAppTheme(theme: AppTheme)
 

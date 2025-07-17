@@ -10,7 +10,9 @@ import com.shub39.grit.core.domain.Pages
 import java.time.DayOfWeek
 
 sealed interface SettingsAction {
+    data object OnPaywallShow: SettingsAction
     data object OnPaywallDismiss: SettingsAction
+    data object OnCheckSubscription: SettingsAction
 
     data object OnResetBackupState : SettingsAction
     data object OnExport : SettingsAction
@@ -22,6 +24,7 @@ sealed interface SettingsAction {
     data class ChangeStartingPage(val page: Pages) : SettingsAction
     data class ChangePauseNotifications(val pref: Boolean) : SettingsAction
 
+    data object OnResetTheme : SettingsAction
     data class ChangeAppTheme(val appTheme: AppTheme) : SettingsAction
     data class ChangeFontPref(val font: Fonts) : SettingsAction
     data class ChangeSeedColor(val color: Color) : SettingsAction

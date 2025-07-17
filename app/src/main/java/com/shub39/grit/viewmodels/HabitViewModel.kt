@@ -3,6 +3,7 @@ package com.shub39.grit.viewmodels
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.shub39.grit.billing.BillingHandler
+import com.shub39.grit.billing.SubscriptionResult
 import com.shub39.grit.core.domain.AlarmScheduler
 import com.shub39.grit.core.domain.GritDatastore
 import com.shub39.grit.habits.domain.Habit
@@ -93,6 +94,12 @@ class HabitViewModel(
                         _state.update {
                             it.copy(
                                 showHabitAddDialog = true
+                            )
+                        }
+
+                        stateLayer.settingsState.update {
+                            it.copy(
+                                isUserSubscribed = SubscriptionResult.Subscribed
                             )
                         }
                     }

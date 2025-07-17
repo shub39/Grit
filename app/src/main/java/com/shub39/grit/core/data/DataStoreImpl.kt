@@ -35,6 +35,16 @@ class DataStoreImpl(
         private val biometricLockKey = booleanPreferencesKey("biometric")
     }
 
+    override suspend fun resetAppTheme() {
+        datastore.edit { settings ->
+            settings[seedColorKey] = Color.White.toArgb()
+            settings[amoledKey] = false
+            settings[paletteKey] = PaletteStyle.TonalSpot.name
+            settings[materialYouKey] = false
+            settings[fontPrefKey] = Fonts.FIGTREE.name
+        }
+    }
+
     override fun getAppThemeFlow(): Flow<AppTheme> = datastore.data.map { prefs ->
         val appTheme = prefs[appThemeKey] ?: AppTheme.SYSTEM.name
         AppTheme.valueOf(appTheme)

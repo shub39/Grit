@@ -166,7 +166,6 @@ fun Grit(
                         Settings(
                             state = settingsState,
                             onAction = svm::onAction,
-                            onShowPaywall = { svm.onAction(SettingsAction.OnPaywallDismiss) }
                         )
                     }
 
@@ -179,7 +178,6 @@ fun Grit(
                         Habits(
                             state = habitsPageState,
                             onAction = hvm::habitsPageAction,
-                            onShowPaywall = { svm.onAction(SettingsAction.OnPaywallDismiss) }
                         )
                     }
                 }

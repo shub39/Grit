@@ -5,6 +5,7 @@ import androidx.compose.ui.graphics.toArgb
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.shub39.grit.billing.BillingHandler
+import com.shub39.grit.billing.SubscriptionResult
 import com.shub39.grit.core.domain.GritDatastore
 import com.shub39.grit.core.domain.backup.ExportRepo
 import com.shub39.grit.core.domain.backup.ExportState
@@ -131,16 +132,36 @@ class SettingsViewModel(
                     showPaywall = false
                 )
             }
+
+            SettingsAction.OnCheckSubscription -> checkSubscription()
+
+            SettingsAction.OnPaywallShow -> _state.update {
+                it.copy(
+                    showPaywall = true
+                )
+            }
+
+            SettingsAction.OnResetTheme -> datastore.resetAppTheme()
         }
     }
 
-    private fun checkSubscription() {
-        viewModelScope.launch {
-            _state.update {
-                it.copy(
-                    isUserSubscribed = billingHandler.userResult()
-                )
+    private suspend fun checkSubscription() {
+        val isSubscribed = billingHandler.userResult()
+
+        when (isSubscribed) {
+            SubscriptionResult.Subscribed -> {
+                viewModelScope.launch {
+                    _state.update {
+                        it.copy(
+                            isUserSubscribed = isSubscribed
+                        )
+                    }
+                }
             }
+
+            SubscriptionResult.NotSubscribed -> datastore.resetAppTheme()
+
+            else -> {}
         }
     }
 

@@ -43,7 +43,6 @@ private sealed interface SettingsRoutes {
 fun Settings(
     state: SettingsState,
     onAction: (SettingsAction) -> Unit,
-    onShowPaywall: () -> Unit
 ) = PageFill {
     val navController = rememberNavController()
 
@@ -113,7 +112,6 @@ fun Preview() {
         Settings(
             state = SettingsState(),
             onAction = {},
-            onShowPaywall = {}
         )
     }
 }
