@@ -43,7 +43,8 @@ private sealed interface HabitRoutes {
 @Composable
 fun Habits(
     state: HabitPageState,
-    onAction: (HabitsPageAction) -> Unit
+    onAction: (HabitsPageAction) -> Unit,
+    onShowPaywall: () -> Unit
 ) = PageFill {
     val navController = rememberNavController()
 
@@ -142,7 +143,8 @@ private fun Preview() {
 
                             else -> {}
                         }
-                    }
+                    },
+                    onShowPaywall = {}
                 )
             }
         }

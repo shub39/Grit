@@ -10,6 +10,8 @@ import com.shub39.grit.core.domain.Pages
 import java.time.DayOfWeek
 
 sealed interface SettingsAction {
+    data object OnPaywallDismiss: SettingsAction
+
     data object OnResetBackupState : SettingsAction
     data object OnExport : SettingsAction
     data class OnRestore(val uri: Uri) : SettingsAction

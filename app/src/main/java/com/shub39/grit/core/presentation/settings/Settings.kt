@@ -42,7 +42,8 @@ private sealed interface SettingsRoutes {
 @Composable
 fun Settings(
     state: SettingsState,
-    onAction: (SettingsAction) -> Unit
+    onAction: (SettingsAction) -> Unit,
+    onShowPaywall: () -> Unit
 ) = PageFill {
     val navController = rememberNavController()
 
@@ -111,7 +112,8 @@ fun Preview() {
     ) {
         Settings(
             state = SettingsState(),
-            onAction = {}
+            onAction = {},
+            onShowPaywall = {}
         )
     }
 }

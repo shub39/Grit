@@ -4,6 +4,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.toArgb
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.shub39.grit.billing.BillingHandler
 import com.shub39.grit.core.domain.GritDatastore
 import com.shub39.grit.core.domain.backup.ExportRepo
 import com.shub39.grit.core.domain.backup.ExportState
@@ -25,6 +26,7 @@ import kotlinx.coroutines.launch
 
 class SettingsViewModel(
     stateLayer: StateLayer,
+    private val billingHandler: BillingHandler,
     private val exportRepo: ExportRepo,
     private val restoreRepo: RestoreRepo,
     private val datastore: GritDatastore
@@ -35,7 +37,10 @@ class SettingsViewModel(
     private val _state = stateLayer.settingsState
 
     val state = _state.asStateFlow()
-        .onStart { observeJob() }
+        .onStart {
+            checkSubscription()
+            observeJob()
+        }
         .stateIn(
             viewModelScope,
             SharingStarted.WhileSubscribed(5000),
@@ -119,6 +124,22 @@ class SettingsViewModel(
                         biometricAvailable = Utils.authenticationAvailable(action.context)
                     )
                 }
+            }
+
+            SettingsAction.OnPaywallDismiss -> _state.update {
+                it.copy(
+                    showPaywall = false
+                )
+            }
+        }
+    }
+
+    private fun checkSubscription() {
+        viewModelScope.launch {
+            _state.update {
+                it.copy(
+                    isUserSubscribed = billingHandler.userResult()
+                )
             }
         }
     }

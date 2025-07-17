@@ -1,7 +1,7 @@
 package com.shub39.grit.core.presentation.components
 
+import androidx.compose.foundation.layout.Box
 import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.ModalBottomSheet
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
@@ -22,10 +22,7 @@ fun PaywallSheet(
             .build()
     }
 
-    ModalBottomSheet(
-        onDismissRequest = onDismissRequest,
-        modifier = modifier
-    ) {
+    Box(modifier = modifier) {
         if (!isPlusUser) {
             Paywall(paywallOptions)
         } else {

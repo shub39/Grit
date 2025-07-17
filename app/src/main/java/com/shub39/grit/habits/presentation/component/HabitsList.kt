@@ -77,7 +77,6 @@ fun HabitsList(
 ) {
     val context = LocalContext.current
 
-    var showAddHabitDialog by remember { mutableStateOf(false) }
     var showAllAnalytics by remember { mutableStateOf(false) }
 
     var editState by remember { mutableStateOf(false) }
@@ -177,7 +176,7 @@ fun HabitsList(
                 }
 
                 // when no habits
-                if (state.habitsWithStatuses.isEmpty() && !showAddHabitDialog) {
+                if (state.habitsWithStatuses.isEmpty()) {
                     item { Empty() }
                 }
 
@@ -208,7 +207,9 @@ fun HabitsList(
             }
 
             FloatingActionButton(
-                onClick = { showAddHabitDialog = true }
+                onClick = {
+                    onAction(HabitsPageAction.OnAddHabitClicked)
+                }
             ) {
                 Row(
                     modifier = Modifier.padding(16.dp),
@@ -239,7 +240,7 @@ fun HabitsList(
     }
 
     // add dialog
-    if (showAddHabitDialog) {
+    if (state.showHabitAddDialog) {
         var newHabitName by remember { mutableStateOf("") }
         var newHabitDescription by remember { mutableStateOf("") }
         var newHabitTime by remember { mutableStateOf(LocalDateTime.now()) }
@@ -249,7 +250,9 @@ fun HabitsList(
         var timePickerDialog by remember { mutableStateOf(false) }
 
         GritBottomSheet(
-            onDismissRequest = { showAddHabitDialog = false }
+            onDismissRequest = {
+                onAction(HabitsPageAction.DismissAddHabitDialog)
+            }
         ) {
             Icon(
                 painter = painterResource(R.drawable.round_add_24),
@@ -361,8 +364,8 @@ fun HabitsList(
                         index = reorderableHabits.size,
                         days = newHabitDays
                     )
-                    showAddHabitDialog = false
                     onAction(HabitsPageAction.AddHabit(habitEntity))
+                    onAction(HabitsPageAction.DismissAddHabitDialog)
                     showAddNotification(context, habitEntity)
                 },
                 shapes = ButtonShapes(
