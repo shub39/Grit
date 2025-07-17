@@ -72,7 +72,6 @@ import com.materialkolor.ktx.from
 import com.materialkolor.palettes.TonalPalette
 import com.materialkolor.rememberDynamicColorScheme
 import com.shub39.grit.R
-import com.shub39.grit.billing.SubscriptionResult
 import com.shub39.grit.core.domain.AppTheme
 import com.shub39.grit.core.domain.Fonts
 import com.shub39.grit.core.presentation.components.ColorPickerDialog
@@ -154,7 +153,7 @@ fun LookAndFeelPage(
                 )
             }
 
-            if (state.isUserSubscribed is SubscriptionResult.Subscribed) {
+            if (state.isUserSubscribed) {
                 item {
                     ListItem(
                         headlineContent = {

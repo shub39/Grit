@@ -154,18 +154,16 @@ class SettingsViewModel(
 
         when (isSubscribed) {
             SubscriptionResult.Subscribed -> {
-                viewModelScope.launch {
-                    _state.update {
-                        it.copy(
-                            isUserSubscribed = true
-                        )
-                    }
+                _state.update {
+                    it.copy(
+                        isUserSubscribed = true
+                    )
+                }
 
-                    stateLayer.habitsState.update {
-                        it.copy(
-                            isUserSubscribed = true
-                        )
-                    }
+                stateLayer.habitsState.update {
+                    it.copy(
+                        isUserSubscribed = true
+                    )
                 }
             }
 
