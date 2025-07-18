@@ -8,8 +8,8 @@ plugins {
 }
 
 val appName = "Grit"
-val appVersionCode = 3210
-val appVersionName = "3.2.1"
+val appVersionCode = 4000
+val appVersionName = "4.0.0"
 
 android {
     namespace = "com.shub39.grit"
@@ -45,21 +45,8 @@ android {
             )
         }
 
-        create("beta") {
-            resValue("string", "app_name", "$appName Beta")
-            applicationIdSuffix = ".beta"
-            isMinifyEnabled = true
-            isShrinkResources = true
-            versionNameSuffix = "-beta"
-            proguardFiles(
-                getDefaultProguardFile("proguard-android-optimize.txt"),
-                "proguard-rules.pro"
-            )
-        }
-
         debug {
             resValue("string", "app_name", "$appName Debug")
-            applicationIdSuffix = ".debug"
         }
     }
     compileOptions {
@@ -69,9 +56,6 @@ android {
     buildFeatures {
         compose = true
         buildConfig = true
-    }
-    composeOptions {
-        kotlinCompilerExtensionVersion = "1.5.14"
     }
     packaging {
         resources {
@@ -89,6 +73,8 @@ aboutLibraries {
 }
 
 dependencies {
+    implementation(libs.purchases)
+    implementation(libs.purchases.ui)
     implementation(libs.androidx.navigation.compose)
     implementation(libs.androidx.material3)
     implementation(libs.androidx.ui.tooling.preview)

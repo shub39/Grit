@@ -8,7 +8,7 @@ import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.flow.update
 
-class MainViewModel() : ViewModel() {
+class MainViewModel : ViewModel() {
     private var _state = MutableStateFlow(false)
 
     val isAppUnlocked = _state.asStateFlow()

@@ -4,6 +4,8 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.toArgb
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.shub39.grit.billing.BillingHandler
+import com.shub39.grit.billing.SubscriptionResult
 import com.shub39.grit.core.domain.GritDatastore
 import com.shub39.grit.core.domain.backup.ExportRepo
 import com.shub39.grit.core.domain.backup.ExportState
@@ -24,7 +26,8 @@ import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 
 class SettingsViewModel(
-    stateLayer: StateLayer,
+    private val stateLayer: StateLayer,
+    private val billingHandler: BillingHandler,
     private val exportRepo: ExportRepo,
     private val restoreRepo: RestoreRepo,
     private val datastore: GritDatastore
@@ -35,7 +38,10 @@ class SettingsViewModel(
     private val _state = stateLayer.settingsState
 
     val state = _state.asStateFlow()
-        .onStart { observeJob() }
+        .onStart {
+            checkSubscription()
+            observeJob()
+        }
         .stateIn(
             viewModelScope,
             SharingStarted.WhileSubscribed(5000),
@@ -120,6 +126,50 @@ class SettingsViewModel(
                     )
                 }
             }
+
+            SettingsAction.OnPaywallDismiss -> {
+                _state.update {
+                    it.copy(
+                        showPaywall = false
+                    )
+                }
+
+                checkSubscription()
+            }
+
+            SettingsAction.OnCheckSubscription -> checkSubscription()
+
+            SettingsAction.OnPaywallShow -> _state.update {
+                it.copy(
+                    showPaywall = true
+                )
+            }
+
+            SettingsAction.OnResetTheme -> datastore.resetAppTheme()
+        }
+    }
+
+    private suspend fun checkSubscription() {
+        val isSubscribed = billingHandler.userResult()
+
+        when (isSubscribed) {
+            SubscriptionResult.Subscribed -> {
+                _state.update {
+                    it.copy(
+                        isUserSubscribed = true
+                    )
+                }
+
+                stateLayer.habitsState.update {
+                    it.copy(
+                        isUserSubscribed = true
+                    )
+                }
+            }
+
+            SubscriptionResult.NotSubscribed -> datastore.resetAppTheme()
+
+            else -> {}
         }
     }
 

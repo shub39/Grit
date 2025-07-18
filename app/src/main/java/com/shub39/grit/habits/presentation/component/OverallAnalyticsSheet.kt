@@ -4,7 +4,9 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
@@ -70,6 +72,8 @@ fun OverallAnalyticsSheet(
                 textAlign = TextAlign.Center
             )
 
+            Spacer(modifier = Modifier.height(16.dp))
+
             AnalyticsCard(
                 title = stringResource(R.string.habit_map),
                 modifier = Modifier.heightIn(max = 400.dp)
@@ -122,7 +126,7 @@ fun OverallAnalyticsSheet(
                                                 0.1f
                                             }
                                         )
-                                    } ?: MaterialTheme.colorScheme.surfaceVariant
+                                    } ?: MaterialTheme.colorScheme.background
                                 )
                         )
                     }

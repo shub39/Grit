@@ -574,7 +574,7 @@ fun AnalyticsPage(
                     )
                 },
                 modifier = Modifier.fillMaxWidth(),
-                enabled = newHabitDescription.isNotBlank() && newHabitDescription.length <= 50 && newHabitTitle.length <= 20 && newHabitTitle.isNotBlank(),
+                enabled = newHabitDescription.length <= 50 && newHabitTitle.length <= 20 && newHabitTitle.isNotBlank(),
             ) {
                 Text(text = stringResource(id = R.string.update))
             }

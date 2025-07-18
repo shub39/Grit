@@ -2,6 +2,7 @@ package com.shub39.grit.viewmodels
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.shub39.grit.billing.BillingHandler
 import com.shub39.grit.core.domain.AlarmScheduler
 import com.shub39.grit.core.domain.GritDatastore
 import com.shub39.grit.habits.domain.Habit
@@ -21,7 +22,8 @@ import kotlinx.coroutines.launch
 import java.time.LocalDate
 
 class HabitViewModel(
-    stateLayer: StateLayer,
+    private val stateLayer: StateLayer,
+    private val billingHandler: BillingHandler,
     private val scheduler: AlarmScheduler,
     private val repo: HabitRepo,
     private val datastore: GritDatastore,
@@ -77,6 +79,38 @@ class HabitViewModel(
                         )
                     }
                 }
+
+                HabitsPageAction.OnAddHabitClicked -> {
+                    val isSubscribed = billingHandler.isPlusUser()
+
+                    if (!isSubscribed && _state.value.habitsWithStatuses.size >= 5) {
+                        stateLayer.settingsState.update {
+                            it.copy(
+                                showPaywall = true
+                            )
+                        }
+                    } else {
+                        _state.update {
+                            it.copy(
+                                showHabitAddDialog = true
+                            )
+                        }
+
+                        if (isSubscribed) {
+                            stateLayer.settingsState.update {
+                                it.copy(
+                                    isUserSubscribed = true
+                                )
+                            }
+
+                            _state.update {
+                                it.copy(isUserSubscribed = true)
+                            }
+                        }
+                    }
+                }
+
+                HabitsPageAction.DismissAddHabitDialog -> _state.update { it.copy(showHabitAddDialog = false) }
             }
         }
     }

@@ -107,4 +107,6 @@
     <string name="weekly_progress">Weekly Progress</string>
     <string name="overall_analytics">Overall Analytics</string>
     <string name="progress">Progress</string>
+    <string name="unlock_plus">Unlock more with plus</string>
+    <string name="grit_plus">Grit Plus</string>
 </resources>

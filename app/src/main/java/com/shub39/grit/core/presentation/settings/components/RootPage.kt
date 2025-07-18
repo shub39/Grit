@@ -31,6 +31,7 @@ import compose.icons.FontAwesomeIcons
 import compose.icons.fontawesomeicons.Solid
 import compose.icons.fontawesomeicons.solid.InfoCircle
 import compose.icons.fontawesomeicons.solid.Palette
+import compose.icons.fontawesomeicons.solid.PlusCircle
 import compose.icons.fontawesomeicons.solid.Upload
 import java.time.DayOfWeek
 
@@ -245,6 +246,24 @@ fun RootPage(
                         Icon(
                             imageVector = FontAwesomeIcons.Solid.InfoCircle,
                             contentDescription = "About Libraries",
+                            modifier = Modifier.size(24.dp)
+                        )
+                    }
+                )
+            }
+
+            item {
+                ListItem(
+                    modifier = Modifier.clickable {
+                        onAction(SettingsAction.OnPaywallShow)
+                    },
+                    headlineContent = {
+                        Text(text = stringResource(R.string.grit_plus))
+                    },
+                    leadingContent = {
+                        Icon(
+                            imageVector = FontAwesomeIcons.Solid.PlusCircle,
+                            contentDescription = "Grit Plus",
                             modifier = Modifier.size(24.dp)
                         )
                     }

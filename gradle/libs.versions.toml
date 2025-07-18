@@ -2,6 +2,7 @@
 agp = "8.11.1"
 calendar = "2.7.0"
 composeCharts = "0.1.7"
+purchases = "9.0.1"
 splashscreen = "1.0.1"
 datastore = "1.2.0-alpha02"
 colorpicker = "1.1.2"
@@ -43,6 +44,8 @@ androidx-biometric = { group = "androidx.biometric", name = "biometric-ktx", ver
 # Others
 koin-androidx-compose = { module = "io.insert-koin:koin-androidx-compose", version.ref = "koin" }
 kotlinx-serialization-json = { module = "org.jetbrains.kotlinx:kotlinx-serialization-json", version.ref = "serialization" }
+purchases = { module = "com.revenuecat.purchases:purchases", version.ref = "purchases" }
+purchases-ui = { module = "com.revenuecat.purchases:purchases-ui", version.ref = "purchases" }
 reorderable = { module = "sh.calvin.reorderable:reorderable", version.ref = "reorderable" }
 materialKolor = { module = "com.materialkolor:material-kolor", version.ref = "materialKolor" }
 colorpicker-compose = { module = "com.github.skydoves:colorpicker-compose", version.ref = "colorpicker" }

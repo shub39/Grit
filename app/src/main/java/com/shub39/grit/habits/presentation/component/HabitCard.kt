@@ -180,7 +180,7 @@ fun HabitCard(
                         .padding(2.dp)
                         .then(
                             if (done) Modifier.background(
-                                color = MaterialTheme.colorScheme.secondaryContainer,
+                                color = MaterialTheme.colorScheme.primary,
                                 shape = MaterialTheme.shapes.medium
                             ) else Modifier
                         ),
@@ -193,13 +193,13 @@ fun HabitCard(
                         Text(
                             text = weekDay.date.dayOfMonth.toString(),
                             style = MaterialTheme.typography.bodyMedium,
-                            color = if (done) MaterialTheme.colorScheme.onSecondaryContainer else cardContent
+                            color = if (done) MaterialTheme.colorScheme.onPrimary else cardContent
                         )
 
                         Text(
                             text = weekDay.date.dayOfWeek.toString().take(3),
                             style = MaterialTheme.typography.bodySmall,
-                            color = if (done) MaterialTheme.colorScheme.onSecondaryContainer else cardContent
+                            color = if (done) MaterialTheme.colorScheme.onPrimary else cardContent
                         )
                     }
                 }

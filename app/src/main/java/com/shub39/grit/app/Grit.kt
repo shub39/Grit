@@ -1,5 +1,6 @@
 package com.shub39.grit.app
 
+import androidx.compose.animation.AnimatedContent
 import androidx.compose.animation.core.tween
 import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
@@ -30,7 +31,9 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import com.shub39.grit.R
 import com.shub39.grit.core.domain.Pages
+import com.shub39.grit.core.presentation.components.PaywallSheet
 import com.shub39.grit.core.presentation.settings.Settings
+import com.shub39.grit.core.presentation.settings.SettingsAction
 import com.shub39.grit.habits.presentation.Habits
 import com.shub39.grit.tasks.presentation.Tasks
 import com.shub39.grit.viewmodels.HabitViewModel
@@ -42,16 +45,16 @@ import org.koin.androidx.compose.koinViewModel
 @Serializable
 private sealed interface Routes {
     @Serializable
-    data object HabitsPages: Routes
+    data object HabitsPages : Routes
 
     @Serializable
-    data object  TaskPages: Routes
+    data object TaskPages : Routes
 
     @Serializable
-    data object SettingsPages: Routes
+    data object SettingsPages : Routes
 
     companion object {
-        val allRoutes = listOf(
+        val mainRoutes = listOf(
             TaskPages,
             HabitsPages,
             SettingsPages
@@ -62,15 +65,11 @@ private sealed interface Routes {
 @OptIn(ExperimentalMaterial3Api::class, ExperimentalMaterial3ExpressiveApi::class)
 @Composable
 fun Grit(
-    tvm: TasksViewModel = koinViewModel(),
-    hvm: HabitViewModel = koinViewModel(),
     svm: SettingsViewModel
 ) {
     val navController = rememberNavController()
     var currentRoute: Routes by remember { mutableStateOf(Routes.TaskPages) }
 
-    val taskPageState by tvm.state.collectAsStateWithLifecycle()
-    val habitsPageState by hvm.state.collectAsStateWithLifecycle()
     val settingsState by svm.state.collectAsStateWithLifecycle()
 
     val navigator = { route: Routes ->
@@ -88,84 +87,107 @@ fun Grit(
         }
     }
 
-    Scaffold(
-        bottomBar = {
-            NavigationBar(
-                modifier = Modifier.clip(RoundedCornerShape(topStart = 20.dp, topEnd = 20.dp))
-            ) {
-                Routes.allRoutes.forEach { route ->
-                    NavigationBarItem(
-                        selected = currentRoute == route,
-                        onClick = { navigator(route) },
-                        icon = {
-                            Icon(
-                                painter = painterResource(
-                                    when (route) {
-                                        Routes.HabitsPages -> R.drawable.round_alarm_24
-                                        Routes.TaskPages -> R.drawable.round_checklist_24
-                                        else -> R.drawable.round_settings_24
-                                    }
-                                ),
-                                contentDescription = null,
+    AnimatedContent(
+        targetState = settingsState.showPaywall,
+        modifier = Modifier.background(MaterialTheme.colorScheme.background)
+    ) {
+        if (!it) {
+            Scaffold(
+                bottomBar = {
+                    NavigationBar(
+                        modifier = Modifier.clip(
+                            RoundedCornerShape(
+                                topStart = 20.dp,
+                                topEnd = 20.dp
                             )
-                        },
-                        label = {
-                            Text(
-                                text = stringResource(
-                                    when (route) {
-                                        Routes.HabitsPages -> R.string.habits
-                                        Routes.TaskPages -> R.string.tasks
-                                        else -> R.string.settings
-                                    }
-                                )
+                        )
+                    ) {
+                        Routes.mainRoutes.forEach { route ->
+                            NavigationBarItem(
+                                selected = currentRoute == route,
+                                onClick = { navigator(route) },
+                                icon = {
+                                    Icon(
+                                        painter = painterResource(
+                                            when (route) {
+                                                Routes.HabitsPages -> R.drawable.round_alarm_24
+                                                Routes.TaskPages -> R.drawable.round_checklist_24
+                                                else -> R.drawable.round_settings_24
+                                            }
+                                        ),
+                                        contentDescription = null,
+                                    )
+                                },
+                                label = {
+                                    Text(
+                                        text = stringResource(
+                                            when (route) {
+                                                Routes.HabitsPages -> R.string.habits
+                                                Routes.TaskPages -> R.string.tasks
+                                                else -> R.string.settings
+                                            }
+                                        )
+                                    )
+                                },
+                                alwaysShowLabel = false
                             )
-                        },
-                        alwaysShowLabel = false
-                    )
+                        }
+                    }
                 }
+            ) { padding ->
+                NavHost(
+                    navController = navController,
+                    startDestination = when (settingsState.startingPage) {
+                        Pages.Tasks -> Routes.TaskPages
+                        Pages.Habits -> Routes.HabitsPages
+                    },
+                    modifier = Modifier
+                        .padding(padding)
+                        .background(MaterialTheme.colorScheme.background),
+                    enterTransition = { fadeIn(animationSpec = tween(300)) },
+                    exitTransition = { fadeOut(animationSpec = tween(300)) },
+                    popEnterTransition = { fadeIn(animationSpec = tween(300)) },
+                    popExitTransition = { fadeOut(animationSpec = tween(300)) }
+                ) {
+                    composable<Routes.TaskPages> {
+                        currentRoute = Routes.TaskPages
+                        val tvm: TasksViewModel = koinViewModel()
+                        val taskPageState by tvm.state.collectAsStateWithLifecycle()
+
+                        Tasks(
+                            state = taskPageState,
+                            onAction = tvm::taskPageAction
+                        )
+                    }
+
+                    composable<Routes.SettingsPages> {
+                        currentRoute = Routes.SettingsPages
+
+                        Settings(
+                            state = settingsState,
+                            onAction = svm::onAction,
+                        )
+                    }
+
+                    composable<Routes.HabitsPages> {
+                        currentRoute = Routes.HabitsPages
+
+                        val hvm: HabitViewModel = koinViewModel()
+                        val habitsPageState by hvm.state.collectAsStateWithLifecycle()
+
+                        Habits(
+                            state = habitsPageState,
+                            onAction = hvm::habitsPageAction,
+                        )
+                    }
+                }
+
             }
-        }
-    ) { padding ->
-        NavHost(
-            navController = navController,
-            startDestination = when (settingsState.startingPage) {
-                Pages.Tasks -> Routes.TaskPages
-                Pages.Habits -> Routes.HabitsPages
-            },
-            modifier = Modifier
-                .padding(padding)
-                .background(MaterialTheme.colorScheme.background),
-            enterTransition = { fadeIn(animationSpec = tween(300)) },
-            exitTransition = { fadeOut(animationSpec = tween(300)) },
-            popEnterTransition = { fadeIn(animationSpec = tween(300)) },
-            popExitTransition = { fadeOut(animationSpec = tween(300)) }
-        ) {
-            composable<Routes.TaskPages> {
-                currentRoute = Routes.TaskPages
-
-                Tasks(
-                    state = taskPageState,
-                    onAction = tvm::taskPageAction
-                )
-            }
-
-            composable<Routes.SettingsPages> {
-                currentRoute = Routes.SettingsPages
-
-                Settings(
-                    state = settingsState,
-                    onAction = svm::onAction
-                )
-            }
-
-            composable<Routes.HabitsPages> {
-                currentRoute = Routes.HabitsPages
-
-                Habits(
-                    state = habitsPageState,
-                    onAction = hvm::habitsPageAction
-                )
-            }
+        } else {
+            PaywallSheet(
+                isPlusUser = settingsState.isUserSubscribed,
+                onDismissRequest = { svm.onAction(SettingsAction.OnPaywallDismiss) }
+            )
         }
     }
 }
