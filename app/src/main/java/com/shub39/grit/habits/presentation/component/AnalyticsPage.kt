@@ -469,6 +469,16 @@ fun AnalyticsPage(
             }
 
             item {
+                AnalyticsCard(
+                    title = stringResource(R.string.week_breakdown),
+                    isUserSubscribed = state.isUserSubscribed,
+                    onPlusClick = { onAction(HabitsPageAction.OnShowPaywall) }
+                ) {
+
+                }
+            }
+
+            item {
                 Spacer(modifier = Modifier.height(60.dp))
             }
         }
