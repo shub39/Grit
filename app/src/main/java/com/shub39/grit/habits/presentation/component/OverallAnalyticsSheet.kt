@@ -51,12 +51,11 @@ fun OverallAnalyticsSheet(
 
     GritBottomSheet(
         onDismissRequest = onDismiss,
-        modifier = modifier
+        modifier = modifier,
+        padding = 16.dp
     ) {
         Column (
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(16.dp),
+            modifier = Modifier.fillMaxWidth(),
             verticalArrangement = Arrangement.spacedBy(8.dp),
             horizontalAlignment = Alignment.CenterHorizontally
         ){
