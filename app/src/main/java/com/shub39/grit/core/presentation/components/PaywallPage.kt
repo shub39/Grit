@@ -11,7 +11,7 @@ import com.revenuecat.purchases.ui.revenuecatui.customercenter.CustomerCenter
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun PaywallSheet(
+fun PaywallPage(
     isPlusUser: Boolean,
     onDismissRequest: () -> Unit,
     modifier: Modifier = Modifier

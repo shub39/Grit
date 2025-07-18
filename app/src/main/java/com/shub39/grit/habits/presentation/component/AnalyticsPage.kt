@@ -72,14 +72,21 @@ import com.shub39.grit.habits.domain.Habit
 import com.shub39.grit.habits.presentation.HabitPageState
 import com.shub39.grit.habits.presentation.HabitsPageAction
 import ir.ehsannarmani.compose_charts.LineChart
+import ir.ehsannarmani.compose_charts.RowChart
 import ir.ehsannarmani.compose_charts.models.AnimationMode
+import ir.ehsannarmani.compose_charts.models.BarProperties
+import ir.ehsannarmani.compose_charts.models.Bars
+import ir.ehsannarmani.compose_charts.models.DividerProperties
 import ir.ehsannarmani.compose_charts.models.DotProperties
 import ir.ehsannarmani.compose_charts.models.DrawStyle
 import ir.ehsannarmani.compose_charts.models.GridProperties
 import ir.ehsannarmani.compose_charts.models.HorizontalIndicatorProperties
 import ir.ehsannarmani.compose_charts.models.LabelHelperProperties
+import ir.ehsannarmani.compose_charts.models.LabelProperties
 import ir.ehsannarmani.compose_charts.models.Line
+import ir.ehsannarmani.compose_charts.models.LineProperties
 import ir.ehsannarmani.compose_charts.models.StrokeStyle
+import ir.ehsannarmani.compose_charts.models.VerticalIndicatorProperties
 import java.time.DayOfWeek
 import java.time.LocalDate
 import java.time.YearMonth
@@ -103,6 +110,7 @@ fun AnalyticsPage(
     val statuses = state.habitsWithStatuses[currentHabit]!!
 
     var lineChartData = prepareLineChartData(state.startingDay, statuses)
+    var weekDayData = prepareWeekDayData(statuses.map { it.date }, primary)
     var currentStreak = countCurrentStreak(statuses.map { it.date })
     var bestStreak = countBestStreak(statuses.map { it.date })
 
@@ -126,6 +134,7 @@ fun AnalyticsPage(
         lineChartData = prepareLineChartData(state.startingDay, statuses)
         currentStreak = countCurrentStreak(statuses.map { it.date })
         bestStreak = countBestStreak(statuses.map { it.date })
+        weekDayData = prepareWeekDayData(statuses.map { it.date }, primary)
     }
 
     Column(
@@ -370,10 +379,19 @@ fun AnalyticsPage(
                         indicatorProperties = HorizontalIndicatorProperties(
                             textStyle = MaterialTheme.typography.bodyMedium.copy(color = primary)
                         ),
+                        dividerProperties = DividerProperties(
+                            xAxisProperties = LineProperties(color = SolidColor(primary)),
+                            yAxisProperties = LineProperties(color = SolidColor(primary))
+                        ),
                         gridProperties = GridProperties(
-                            enabled = true,
-                            xAxisProperties = GridProperties.AxisProperties(lineCount = 10),
-                            yAxisProperties = GridProperties.AxisProperties(lineCount = 7)
+                            xAxisProperties = GridProperties.AxisProperties(
+                                lineCount = 10,
+                                color = SolidColor(primary)
+                            ),
+                            yAxisProperties = GridProperties.AxisProperties(
+                                lineCount = 7,
+                                color = SolidColor(primary)
+                            )
                         ),
                         data = listOf(
                             Line(
@@ -472,9 +490,33 @@ fun AnalyticsPage(
                 AnalyticsCard(
                     title = stringResource(R.string.week_breakdown),
                     isUserSubscribed = state.isUserSubscribed,
-                    onPlusClick = { onAction(HabitsPageAction.OnShowPaywall) }
+                    onPlusClick = { onAction(HabitsPageAction.OnShowPaywall) },
+                    modifier = Modifier.height(300.dp)
                 ) {
-
+                    RowChart(
+                        data = weekDayData,
+                        dividerProperties = DividerProperties(
+                            enabled = false
+                        ),
+                        gridProperties = GridProperties(
+                            enabled = false
+                        ),
+                        indicatorProperties = VerticalIndicatorProperties(
+                            enabled = true,
+                            textStyle = MaterialTheme.typography.bodyMedium.copy(color = primary)
+                        ),
+                        labelProperties = LabelProperties(
+                            enabled = true,
+                            textStyle = MaterialTheme.typography.bodyMedium.copy(color = primary)
+                        ),
+                        labelHelperProperties = LabelHelperProperties(
+                            enabled = false
+                        ),
+                        barProperties = BarProperties(
+                            cornerRadius = Bars.Data.Radius.Circular(10.dp)
+                        ),
+                        animationMode = AnimationMode.Together(delayBuilder = { it * 500L })
+                    )
                 }
             }
 

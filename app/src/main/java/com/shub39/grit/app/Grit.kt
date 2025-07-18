@@ -31,7 +31,7 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import com.shub39.grit.R
 import com.shub39.grit.core.domain.Pages
-import com.shub39.grit.core.presentation.components.PaywallSheet
+import com.shub39.grit.core.presentation.components.PaywallPage
 import com.shub39.grit.core.presentation.settings.Settings
 import com.shub39.grit.core.presentation.settings.SettingsAction
 import com.shub39.grit.habits.presentation.Habits
@@ -184,7 +184,7 @@ fun Grit(
 
             }
         } else {
-            PaywallSheet(
+            PaywallPage(
                 isPlusUser = settingsState.isUserSubscribed,
                 onDismissRequest = { svm.onAction(SettingsAction.OnPaywallDismiss) }
             )
