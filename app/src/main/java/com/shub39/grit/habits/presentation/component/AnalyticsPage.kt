@@ -59,7 +59,9 @@ import androidx.compose.ui.text.input.KeyboardCapitalization
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import com.kizitonwose.calendar.compose.HeatMapCalendar
+import com.kizitonwose.calendar.compose.HorizontalCalendar
 import com.kizitonwose.calendar.compose.heatmapcalendar.rememberHeatMapCalendarState
+import com.kizitonwose.calendar.compose.rememberCalendarState
 import com.shub39.grit.R
 import com.shub39.grit.core.presentation.components.GritBottomSheet
 import com.shub39.grit.core.presentation.components.GritDialog
@@ -105,6 +107,12 @@ fun AnalyticsPage(
     var bestStreak = countBestStreak(statuses.map { it.date })
 
     val heatMapState = rememberHeatMapCalendarState(
+        startMonth = currentMonth.minusMonths(12),
+        endMonth = currentMonth,
+        firstVisibleMonth = currentMonth,
+        firstDayOfWeek = state.startingDay
+    )
+    val calendarState = rememberCalendarState(
         startMonth = currentMonth.minusMonths(12),
         endMonth = currentMonth,
         firstVisibleMonth = currentMonth,
@@ -314,14 +322,13 @@ fun AnalyticsPage(
                             }
                         },
                         dayContent = { day, week ->
-                            var done = statuses.any { it.date == day.date }
+                            val done = statuses.any { it.date == day.date }
 
                             Box(
                                 modifier = Modifier
                                     .padding(2.dp)
                                     .size(30.dp)
                                     .clickable(enabled = day.date <= today) {
-                                        done = !done
                                         onAction(
                                             HabitsPageAction.InsertStatus(
                                                 currentHabit,
@@ -397,6 +404,72 @@ fun AnalyticsPage(
                         animationMode = AnimationMode.Together(delayBuilder = { it * 500L })
                     )
                 }
+            }
+
+            item {
+                AnalyticsCard(
+                    title = stringResource(R.string.monthly_progress),
+                    isUserSubscribed = state.isUserSubscribed,
+                    onPlusClick = { onAction(HabitsPageAction.OnShowPaywall) }
+                ) {
+                    HorizontalCalendar(
+                        modifier = Modifier.height(300.dp),
+                        state = calendarState,
+                        userScrollEnabled = state.isUserSubscribed,
+                        monthHeader = {
+                            Box(
+                                modifier = Modifier.padding(4.dp)
+                            ) {
+                                Text(
+                                    text = it.yearMonth.month.getDisplayName(
+                                        TextStyle.FULL,
+                                        Locale.getDefault()
+                                    ) + " ${it.yearMonth.year}",
+                                    color = MaterialTheme.colorScheme.secondary,
+                                    style = MaterialTheme.typography.titleSmall,
+                                    modifier = Modifier.align(Alignment.Center)
+                                )
+                            }
+                        },
+                        dayContent = { day ->
+                            val done = statuses.any { it.date == day.date }
+
+                            Box(
+                                modifier = Modifier
+                                    .padding(2.dp)
+                                    .size(40.dp)
+                                    .clickable(enabled = day.date <= today && state.isUserSubscribed) {
+                                        onAction(
+                                            HabitsPageAction.InsertStatus(
+                                                currentHabit,
+                                                day.date
+                                            )
+                                        )
+                                    }
+                                    .then(
+                                        if (done) Modifier.background(
+                                            color = primary.copy(alpha = 0.2f),
+                                            shape = MaterialTheme.shapes.small
+                                        ) else Modifier
+                                    ),
+                                contentAlignment = Alignment.Center
+                            ) {
+                                Text(
+                                    text = day.date.dayOfMonth.toString(),
+                                    style = MaterialTheme.typography.bodyMedium,
+                                    fontWeight = if (done) FontWeight.Bold else FontWeight.Normal,
+                                    color = if (done) primary else if (day.date > today) MaterialTheme.colorScheme.onSurface.copy(
+                                        alpha = 0.5f
+                                    ) else MaterialTheme.colorScheme.onSurface
+                                )
+                            }
+                        }
+                    )
+                }
+            }
+
+            item {
+                Spacer(modifier = Modifier.height(60.dp))
             }
         }
     }

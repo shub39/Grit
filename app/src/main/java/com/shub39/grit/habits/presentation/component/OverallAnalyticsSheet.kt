@@ -13,7 +13,6 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.ModalBottomSheet
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
@@ -26,6 +25,7 @@ import androidx.compose.ui.unit.dp
 import com.kizitonwose.calendar.compose.HeatMapCalendar
 import com.kizitonwose.calendar.compose.heatmapcalendar.rememberHeatMapCalendarState
 import com.shub39.grit.R
+import com.shub39.grit.core.presentation.components.GritBottomSheet
 import com.shub39.grit.habits.presentation.HabitPageState
 import java.time.YearMonth
 import java.time.format.TextStyle
@@ -49,7 +49,7 @@ fun OverallAnalyticsSheet(
         firstDayOfWeek = state.startingDay
     )
 
-    ModalBottomSheet(
+    GritBottomSheet(
         onDismissRequest = onDismiss,
         modifier = modifier
     ) {

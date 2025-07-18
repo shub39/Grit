@@ -4,6 +4,7 @@ import com.shub39.grit.habits.domain.Habit
 import java.time.LocalDate
 
 sealed interface HabitsPageAction {
+    data object OnShowPaywall : HabitsPageAction
     data object DismissAddHabitDialog : HabitsPageAction
     data object OnAddHabitClicked : HabitsPageAction
     data class PrepareAnalytics(val habit: Habit) : HabitsPageAction

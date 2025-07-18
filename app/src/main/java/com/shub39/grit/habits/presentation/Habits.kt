@@ -95,7 +95,8 @@ private fun Preview() {
 
     var state by remember { mutableStateOf(HabitPageState(
         habitsWithStatuses = habitsWithStatuses,
-        completedHabits = habitsWithStatuses.keys.toList()
+        completedHabits = habitsWithStatuses.keys.toList(),
+        isUserSubscribed = false
     )) }
 
     GritTheme(

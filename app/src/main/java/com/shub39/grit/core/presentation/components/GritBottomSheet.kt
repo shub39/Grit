@@ -17,11 +17,13 @@ import androidx.compose.ui.unit.dp
 @Composable
 fun GritBottomSheet(
     onDismissRequest: () -> Unit,
+    modifier: Modifier = Modifier,
     content: @Composable (ColumnScope.() -> Unit)
 ) {
     ModalBottomSheet(
         onDismissRequest = onDismissRequest,
         sheetMaxWidth = 500.dp,
+        modifier = modifier,
         sheetState = rememberModalBottomSheetState(skipPartiallyExpanded = true)
     ) {
         Column(
