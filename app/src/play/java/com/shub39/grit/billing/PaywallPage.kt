@@ -1,4 +1,4 @@
-package com.shub39.grit.core.presentation.components
+package com.shub39.grit.billing
 
 import androidx.compose.foundation.layout.Box
 import androidx.compose.material3.ExperimentalMaterial3Api
