@@ -111,6 +111,8 @@ class HabitViewModel(
                 }
 
                 HabitsPageAction.DismissAddHabitDialog -> _state.update { it.copy(showHabitAddDialog = false) }
+
+                HabitsPageAction.OnShowPaywall -> stateLayer.settingsState.update { it.copy(showPaywall = true) }
             }
         }
     }

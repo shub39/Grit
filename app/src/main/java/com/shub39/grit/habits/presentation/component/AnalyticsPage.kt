@@ -59,7 +59,9 @@ import androidx.compose.ui.text.input.KeyboardCapitalization
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import com.kizitonwose.calendar.compose.HeatMapCalendar
+import com.kizitonwose.calendar.compose.HorizontalCalendar
 import com.kizitonwose.calendar.compose.heatmapcalendar.rememberHeatMapCalendarState
+import com.kizitonwose.calendar.compose.rememberCalendarState
 import com.shub39.grit.R
 import com.shub39.grit.core.presentation.components.GritBottomSheet
 import com.shub39.grit.core.presentation.components.GritDialog
@@ -70,14 +72,21 @@ import com.shub39.grit.habits.domain.Habit
 import com.shub39.grit.habits.presentation.HabitPageState
 import com.shub39.grit.habits.presentation.HabitsPageAction
 import ir.ehsannarmani.compose_charts.LineChart
+import ir.ehsannarmani.compose_charts.RowChart
 import ir.ehsannarmani.compose_charts.models.AnimationMode
+import ir.ehsannarmani.compose_charts.models.BarProperties
+import ir.ehsannarmani.compose_charts.models.Bars
+import ir.ehsannarmani.compose_charts.models.DividerProperties
 import ir.ehsannarmani.compose_charts.models.DotProperties
 import ir.ehsannarmani.compose_charts.models.DrawStyle
 import ir.ehsannarmani.compose_charts.models.GridProperties
 import ir.ehsannarmani.compose_charts.models.HorizontalIndicatorProperties
 import ir.ehsannarmani.compose_charts.models.LabelHelperProperties
+import ir.ehsannarmani.compose_charts.models.LabelProperties
 import ir.ehsannarmani.compose_charts.models.Line
+import ir.ehsannarmani.compose_charts.models.LineProperties
 import ir.ehsannarmani.compose_charts.models.StrokeStyle
+import ir.ehsannarmani.compose_charts.models.VerticalIndicatorProperties
 import java.time.DayOfWeek
 import java.time.LocalDate
 import java.time.YearMonth
@@ -101,10 +110,17 @@ fun AnalyticsPage(
     val statuses = state.habitsWithStatuses[currentHabit]!!
 
     var lineChartData = prepareLineChartData(state.startingDay, statuses)
+    var weekDayData = prepareWeekDayData(statuses.map { it.date }, primary)
     var currentStreak = countCurrentStreak(statuses.map { it.date })
     var bestStreak = countBestStreak(statuses.map { it.date })
 
     val heatMapState = rememberHeatMapCalendarState(
+        startMonth = currentMonth.minusMonths(12),
+        endMonth = currentMonth,
+        firstVisibleMonth = currentMonth,
+        firstDayOfWeek = state.startingDay
+    )
+    val calendarState = rememberCalendarState(
         startMonth = currentMonth.minusMonths(12),
         endMonth = currentMonth,
         firstVisibleMonth = currentMonth,
@@ -118,6 +134,7 @@ fun AnalyticsPage(
         lineChartData = prepareLineChartData(state.startingDay, statuses)
         currentStreak = countCurrentStreak(statuses.map { it.date })
         bestStreak = countBestStreak(statuses.map { it.date })
+        weekDayData = prepareWeekDayData(statuses.map { it.date }, primary)
     }
 
     Column(
@@ -314,14 +331,13 @@ fun AnalyticsPage(
                             }
                         },
                         dayContent = { day, week ->
-                            var done = statuses.any { it.date == day.date }
+                            val done = statuses.any { it.date == day.date }
 
                             Box(
                                 modifier = Modifier
                                     .padding(2.dp)
                                     .size(30.dp)
                                     .clickable(enabled = day.date <= today) {
-                                        done = !done
                                         onAction(
                                             HabitsPageAction.InsertStatus(
                                                 currentHabit,
@@ -363,10 +379,19 @@ fun AnalyticsPage(
                         indicatorProperties = HorizontalIndicatorProperties(
                             textStyle = MaterialTheme.typography.bodyMedium.copy(color = primary)
                         ),
+                        dividerProperties = DividerProperties(
+                            xAxisProperties = LineProperties(color = SolidColor(primary)),
+                            yAxisProperties = LineProperties(color = SolidColor(primary))
+                        ),
                         gridProperties = GridProperties(
-                            enabled = true,
-                            xAxisProperties = GridProperties.AxisProperties(lineCount = 10),
-                            yAxisProperties = GridProperties.AxisProperties(lineCount = 7)
+                            xAxisProperties = GridProperties.AxisProperties(
+                                lineCount = 10,
+                                color = SolidColor(primary)
+                            ),
+                            yAxisProperties = GridProperties.AxisProperties(
+                                lineCount = 7,
+                                color = SolidColor(primary)
+                            )
                         ),
                         data = listOf(
                             Line(
@@ -397,6 +422,106 @@ fun AnalyticsPage(
                         animationMode = AnimationMode.Together(delayBuilder = { it * 500L })
                     )
                 }
+            }
+
+            item {
+                AnalyticsCard(
+                    title = stringResource(R.string.monthly_progress),
+                    isUserSubscribed = state.isUserSubscribed,
+                    onPlusClick = { onAction(HabitsPageAction.OnShowPaywall) }
+                ) {
+                    HorizontalCalendar(
+                        modifier = Modifier.height(300.dp),
+                        state = calendarState,
+                        userScrollEnabled = state.isUserSubscribed,
+                        monthHeader = {
+                            Box(
+                                modifier = Modifier.padding(4.dp)
+                            ) {
+                                Text(
+                                    text = it.yearMonth.month.getDisplayName(
+                                        TextStyle.FULL,
+                                        Locale.getDefault()
+                                    ) + " ${it.yearMonth.year}",
+                                    color = MaterialTheme.colorScheme.secondary,
+                                    style = MaterialTheme.typography.titleSmall,
+                                    modifier = Modifier.align(Alignment.Center)
+                                )
+                            }
+                        },
+                        dayContent = { day ->
+                            val done = statuses.any { it.date == day.date }
+
+                            Box(
+                                modifier = Modifier
+                                    .padding(2.dp)
+                                    .size(40.dp)
+                                    .clickable(enabled = day.date <= today && state.isUserSubscribed) {
+                                        onAction(
+                                            HabitsPageAction.InsertStatus(
+                                                currentHabit,
+                                                day.date
+                                            )
+                                        )
+                                    }
+                                    .then(
+                                        if (done) Modifier.background(
+                                            color = primary.copy(alpha = 0.2f),
+                                            shape = MaterialTheme.shapes.small
+                                        ) else Modifier
+                                    ),
+                                contentAlignment = Alignment.Center
+                            ) {
+                                Text(
+                                    text = day.date.dayOfMonth.toString(),
+                                    style = MaterialTheme.typography.bodyMedium,
+                                    fontWeight = if (done) FontWeight.Bold else FontWeight.Normal,
+                                    color = if (done) primary else if (day.date > today) MaterialTheme.colorScheme.onSurface.copy(
+                                        alpha = 0.5f
+                                    ) else MaterialTheme.colorScheme.onSurface
+                                )
+                            }
+                        }
+                    )
+                }
+            }
+
+            item {
+                AnalyticsCard(
+                    title = stringResource(R.string.week_breakdown),
+                    isUserSubscribed = state.isUserSubscribed,
+                    onPlusClick = { onAction(HabitsPageAction.OnShowPaywall) },
+                    modifier = Modifier.height(300.dp)
+                ) {
+                    RowChart(
+                        data = weekDayData,
+                        dividerProperties = DividerProperties(
+                            enabled = false
+                        ),
+                        gridProperties = GridProperties(
+                            enabled = false
+                        ),
+                        indicatorProperties = VerticalIndicatorProperties(
+                            enabled = true,
+                            textStyle = MaterialTheme.typography.bodyMedium.copy(color = primary)
+                        ),
+                        labelProperties = LabelProperties(
+                            enabled = true,
+                            textStyle = MaterialTheme.typography.bodyMedium.copy(color = primary)
+                        ),
+                        labelHelperProperties = LabelHelperProperties(
+                            enabled = false
+                        ),
+                        barProperties = BarProperties(
+                            cornerRadius = Bars.Data.Radius.Circular(10.dp)
+                        ),
+                        animationMode = AnimationMode.Together(delayBuilder = { it * 500L })
+                    )
+                }
+            }
+
+            item {
+                Spacer(modifier = Modifier.height(60.dp))
             }
         }
     }

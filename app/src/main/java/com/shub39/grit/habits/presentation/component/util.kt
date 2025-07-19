@@ -1,11 +1,16 @@
 package com.shub39.grit.habits.presentation.component
 
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.SolidColor
 import com.shub39.grit.habits.domain.Habit
 import com.shub39.grit.habits.domain.HabitStatus
+import ir.ehsannarmani.compose_charts.models.Bars
 import java.time.DayOfWeek
 import java.time.LocalDate
 import java.time.format.DateTimeFormatter
+import java.time.format.TextStyle
 import java.time.temporal.WeekFields
+import java.util.Locale
 
 fun prepareLineChartData(
     firstDay: DayOfWeek,
@@ -34,9 +39,37 @@ fun prepareLineChartData(
     return values
 }
 
+fun prepareWeekDayData(
+    dates: List<LocalDate>,
+    lineColor: Color
+): List<Bars> {
+    val dayFrequency = dates.groupingBy { it.dayOfWeek }
+        .eachCount()
+
+    val weekdayBars = DayOfWeek.entries.map { dayOfWeek ->
+        val weekName = dayOfWeek.getDisplayName(
+            TextStyle.SHORT,
+            Locale.getDefault()
+        )
+
+        Bars(
+            label = weekName,
+            values = listOf(
+                Bars.Data(
+                    label = weekName,
+                    value = dayFrequency[dayOfWeek]?.toDouble() ?: 0.0,
+                    color = SolidColor(lineColor)
+                )
+            )
+        )
+    }
+
+    return weekdayBars
+}
+
 fun prepareHeatMapData(
     habitData: Map<Habit, List<HabitStatus>>
-):  Map<LocalDate, Int> {
+): Map<LocalDate, Int> {
     val allDates = habitData.values.flatten().map { it.date }
     val dateFrequency = allDates.groupingBy { it }
         .eachCount()

@@ -8,8 +8,8 @@ plugins {
 }
 
 val appName = "Grit"
-val appVersionCode = 4000
-val appVersionName = "4.0.0"
+val appVersionCode = 4100
+val appVersionName = "4.1.0"
 
 android {
     namespace = "com.shub39.grit"
@@ -49,6 +49,20 @@ android {
             resValue("string", "app_name", "$appName Debug")
         }
     }
+
+    flavorDimensions += "version"
+
+    productFlavors {
+        create("play") {
+            dimension = "version"
+            versionNameSuffix = "-play"
+        }
+        create("foss") {
+            dimension = "version"
+            versionNameSuffix = "-foss"
+        }
+    }
+
     compileOptions {
         sourceCompatibility = JavaVersion.VERSION_17
         targetCompatibility = JavaVersion.VERSION_17
@@ -73,8 +87,8 @@ aboutLibraries {
 }
 
 dependencies {
-    implementation(libs.purchases)
-    implementation(libs.purchases.ui)
+    "playImplementation"(libs.purchases)
+    "playImplementation"(libs.purchases.ui)
     implementation(libs.androidx.navigation.compose)
     implementation(libs.androidx.material3)
     implementation(libs.androidx.ui.tooling.preview)

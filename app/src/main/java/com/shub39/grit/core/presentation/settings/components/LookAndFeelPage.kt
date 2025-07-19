@@ -314,7 +314,7 @@ fun LookAndFeelPage(
                         onClick = { onAction(SettingsAction.OnPaywallShow) }
                     ) {
                         Text(
-                            text = stringResource(R.string.unlock_plus)
+                            text = stringResource(R.string.unlock_more_plus)
                         )
                     }
                 }

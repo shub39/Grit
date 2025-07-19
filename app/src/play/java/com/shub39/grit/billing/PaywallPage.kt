@@ -1,4 +1,4 @@
-package com.shub39.grit.core.presentation.components
+package com.shub39.grit.billing
 
 import androidx.compose.foundation.layout.Box
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -11,7 +11,7 @@ import com.revenuecat.purchases.ui.revenuecatui.customercenter.CustomerCenter
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun PaywallSheet(
+fun PaywallPage(
     isPlusUser: Boolean,
     onDismissRequest: () -> Unit,
     modifier: Modifier = Modifier
