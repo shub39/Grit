@@ -37,6 +37,7 @@ fun AnalyticsCard(
             Text(
                 text = title,
                 fontWeight = FontWeight.Bold,
+                color = MaterialTheme.colorScheme.primary,
                 style = MaterialTheme.typography.titleLarge
             )
 

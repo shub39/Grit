@@ -1,3 +1,5 @@
+import com.android.build.gradle.internal.api.ApkVariantOutputImpl
+
 plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.jetbrains.kotlin.android)
@@ -8,8 +10,8 @@ plugins {
 }
 
 val appName = "Grit"
-val appVersionCode = 4100
-val appVersionName = "4.1.0"
+val appVersionCode = 4200
+val appVersionName = "4.2.0"
 
 android {
     namespace = "com.shub39.grit"
@@ -59,7 +61,13 @@ android {
         }
         create("foss") {
             dimension = "version"
-            versionNameSuffix = "-foss"
+        }
+    }
+
+    applicationVariants.all {
+        outputs.all {
+            val apkOutput = this as ApkVariantOutputImpl
+            apkOutput.outputFileName = "app-release.apk"
         }
     }
 

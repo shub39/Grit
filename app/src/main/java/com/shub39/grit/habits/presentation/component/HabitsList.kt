@@ -235,6 +235,7 @@ fun HabitsList(
     if (showAllAnalytics) {
         OverallAnalyticsSheet(
             state = state,
+            onAction = onAction,
             onDismiss = { showAllAnalytics = false }
         )
     }

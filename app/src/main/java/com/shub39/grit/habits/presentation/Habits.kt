@@ -12,7 +12,6 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
@@ -102,8 +101,7 @@ private fun Preview() {
     GritTheme(
         theme = Theme(
             appTheme = AppTheme.DARK,
-            isMaterialYou = false,
-            seedColor = Color.Red,
+            isMaterialYou = true,
             font = Fonts.FIGTREE,
             paletteStyle = PaletteStyle.Fidelity
         )

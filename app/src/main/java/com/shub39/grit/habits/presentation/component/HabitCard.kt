@@ -12,6 +12,7 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -179,10 +180,35 @@ fun HabitCard(
                         .aspectRatio(1f)
                         .padding(2.dp)
                         .then(
-                            if (done) Modifier.background(
-                                color = MaterialTheme.colorScheme.primary,
-                                shape = MaterialTheme.shapes.medium
-                            ) else Modifier
+                            if (done) {
+                                val donePrevious =
+                                    statusList.any { it.date == weekDay.date.minusDays(1) }
+                                val doneAfter =
+                                    statusList.any { it.date == weekDay.date.plusDays(1) }
+
+                                Modifier.background(
+                                    color = MaterialTheme.colorScheme.primary,
+                                    shape =  if (donePrevious && doneAfter) {
+                                        RoundedCornerShape(5.dp)
+                                    } else if (donePrevious) {
+                                        RoundedCornerShape(
+                                            topStart = 5.dp,
+                                            bottomStart = 5.dp,
+                                            topEnd = 15.dp,
+                                            bottomEnd = 15.dp
+                                        )
+                                    } else if (doneAfter) {
+                                        RoundedCornerShape(
+                                            topStart = 15.dp,
+                                            bottomStart = 15.dp,
+                                            topEnd = 5.dp,
+                                            bottomEnd = 5.dp
+                                        )
+                                    } else {
+                                        RoundedCornerShape(15.dp)
+                                    }
+                                )
+                            } else Modifier
                         ),
                     contentAlignment = Alignment.Center
                 ) {

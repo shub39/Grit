@@ -18,6 +18,7 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.widthIn
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
@@ -50,6 +51,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.SolidColor
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
@@ -58,8 +60,10 @@ import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardCapitalization
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
+import com.kizitonwose.calendar.compose.CalendarState
 import com.kizitonwose.calendar.compose.HeatMapCalendar
 import com.kizitonwose.calendar.compose.HorizontalCalendar
+import com.kizitonwose.calendar.compose.heatmapcalendar.HeatMapCalendarState
 import com.kizitonwose.calendar.compose.heatmapcalendar.rememberHeatMapCalendarState
 import com.kizitonwose.calendar.compose.rememberCalendarState
 import com.shub39.grit.R
@@ -69,6 +73,7 @@ import com.shub39.grit.core.presentation.components.PageFill
 import com.shub39.grit.core.presentation.countBestStreak
 import com.shub39.grit.core.presentation.countCurrentStreak
 import com.shub39.grit.habits.domain.Habit
+import com.shub39.grit.habits.domain.HabitStatus
 import com.shub39.grit.habits.presentation.HabitPageState
 import com.shub39.grit.habits.presentation.HabitsPageAction
 import ir.ehsannarmani.compose_charts.LineChart
@@ -85,6 +90,7 @@ import ir.ehsannarmani.compose_charts.models.LabelHelperProperties
 import ir.ehsannarmani.compose_charts.models.LabelProperties
 import ir.ehsannarmani.compose_charts.models.Line
 import ir.ehsannarmani.compose_charts.models.LineProperties
+import ir.ehsannarmani.compose_charts.models.PopupProperties
 import ir.ehsannarmani.compose_charts.models.StrokeStyle
 import ir.ehsannarmani.compose_charts.models.VerticalIndicatorProperties
 import java.time.DayOfWeek
@@ -198,326 +204,23 @@ fun AnalyticsPage(
             contentPadding = PaddingValues(16.dp)
         ) {
             item {
-                Row(
-                    modifier = Modifier
-                        .height(200.dp)
-                        .fillMaxWidth(),
-                    verticalAlignment = Alignment.CenterVertically,
-                    horizontalArrangement = Arrangement.spacedBy(8.dp)
-                ) {
-                    Card(
-                        shape = MaterialTheme.shapes.extraLarge,
-                        modifier = Modifier.weight(1f),
-                        colors = CardDefaults.cardColors(
-                            contentColor = MaterialTheme.colorScheme.onPrimaryContainer,
-                            containerColor = MaterialTheme.colorScheme.primaryContainer
-                        )
-                    ) {
-                        Column(
-                            modifier = Modifier
-                                .fillMaxSize()
-                                .padding(16.dp),
-                            horizontalAlignment = Alignment.CenterHorizontally,
-                            verticalArrangement = Arrangement.Center
-                        ) {
-                            Icon(
-                                painter = painterResource(R.drawable.baseline_flag_circle_24),
-                                contentDescription = "Flag",
-                                modifier = Modifier.size(64.dp)
-                            )
-
-                            Spacer(modifier = Modifier.height(8.dp))
-
-                            Text(
-                                text = stringResource(R.string.started_on),
-                                style = MaterialTheme.typography.titleSmall
-                            )
-
-                            Text(
-                                text = formatDateWithOrdinal(currentHabit.time.toLocalDate()),
-                                fontWeight = FontWeight.Bold,
-                                style = MaterialTheme.typography.bodyLarge
-                            )
-
-                            Text(
-                                text = stringResource(
-                                    R.string.days_ago_format,
-                                    ChronoUnit.DAYS.between(currentHabit.time.toLocalDate(), today)
-                                ),
-                                style = MaterialTheme.typography.bodyMedium
-                            )
-                        }
-                    }
-
-                    Card(
-                        shape = MaterialTheme.shapes.extraLarge,
-                        modifier = Modifier.weight(1f),
-                        colors = CardDefaults.cardColors(
-                            contentColor = MaterialTheme.colorScheme.onSecondaryContainer,
-                            containerColor = MaterialTheme.colorScheme.secondaryContainer
-                        )
-                    ) {
-                        Column(
-                            modifier = Modifier
-                                .fillMaxSize()
-                                .padding(16.dp),
-                            horizontalAlignment = Alignment.CenterHorizontally,
-                            verticalArrangement = Arrangement.Center
-                        ) {
-                            Icon(
-                                painter = painterResource(R.drawable.round_local_fire_department_24),
-                                contentDescription = "Streak",
-                                modifier = Modifier
-                                    .size(64.dp)
-                            )
-
-                            Text(
-                                text = stringResource(R.string.streak),
-                                style = MaterialTheme.typography.titleSmall
-                            )
-
-                            Text(
-                                text = currentStreak.toString(),
-                                fontWeight = FontWeight.Bold,
-                                style = MaterialTheme.typography.titleLarge
-                            )
-
-                            Text(
-                                text = stringResource(R.string.best_streak, bestStreak),
-                                style = MaterialTheme.typography.bodyMedium
-                            )
-                        }
-                    }
-                }
+                HabitStats(currentHabit, today, currentStreak, bestStreak)
             }
 
             item {
-                AnalyticsCard(
-                    title = stringResource(R.string.weekly_progress)
-                ) {
-                    HeatMapCalendar(
-                        state = heatMapState,
-                        monthHeader = {
-                            Box(
-                                modifier = Modifier.padding(2.dp)
-                            ) {
-                                Text(
-                                    text = it.yearMonth.month.getDisplayName(
-                                        TextStyle.SHORT_STANDALONE,
-                                        Locale.getDefault()
-                                    ),
-                                    color = MaterialTheme.colorScheme.secondary,
-                                    style = MaterialTheme.typography.bodyMedium,
-                                    modifier = Modifier.align(Alignment.Center)
-                                )
-                            }
-                        },
-                        weekHeader = {
-                            Box(
-                                modifier = Modifier
-                                    .padding(2.dp)
-                                    .size(30.dp)
-                                    .background(
-                                        color = MaterialTheme.colorScheme.secondaryContainer,
-                                        shape = MaterialTheme.shapes.large
-                                    )
-                            ) {
-                                Text(
-                                    text = it.name.take(1),
-                                    style = MaterialTheme.typography.bodyMedium,
-                                    color = MaterialTheme.colorScheme.onSecondaryContainer,
-                                    modifier = Modifier.align(Alignment.Center)
-                                )
-                            }
-                        },
-                        dayContent = { day, week ->
-                            val done = statuses.any { it.date == day.date }
-
-                            Box(
-                                modifier = Modifier
-                                    .padding(2.dp)
-                                    .size(30.dp)
-                                    .clickable(enabled = day.date <= today) {
-                                        onAction(
-                                            HabitsPageAction.InsertStatus(
-                                                currentHabit,
-                                                day.date
-                                            )
-                                        )
-                                    }
-                                    .then(
-                                        if (done) Modifier.background(
-                                            color = primary.copy(alpha = 0.2f),
-                                            shape = MaterialTheme.shapes.small
-                                        ) else Modifier
-                                    ),
-                                contentAlignment = Alignment.Center
-                            ) {
-                                Text(
-                                    text = day.date.dayOfMonth.toString(),
-                                    style = MaterialTheme.typography.bodyMedium,
-                                    fontWeight = if (done) FontWeight.Bold else FontWeight.Normal,
-                                    color = if (done) primary else if (day.date > today) MaterialTheme.colorScheme.onSurface.copy(
-                                        alpha = 0.5f
-                                    ) else MaterialTheme.colorScheme.onSurface
-                                )
-                            }
-                        }
-                    )
-                }
+                WeeklyBooleanHeatMap(heatMapState, statuses, today, onAction, currentHabit, primary)
             }
 
             item {
-                AnalyticsCard(
-                    title = stringResource(R.string.weekly_graph),
-                    modifier = Modifier.height(300.dp)
-                ) {
-                    LineChart(
-                        labelHelperProperties = LabelHelperProperties(
-                            textStyle = MaterialTheme.typography.bodyMedium.copy(color = primary)
-                        ),
-                        indicatorProperties = HorizontalIndicatorProperties(
-                            textStyle = MaterialTheme.typography.bodyMedium.copy(color = primary)
-                        ),
-                        dividerProperties = DividerProperties(
-                            xAxisProperties = LineProperties(color = SolidColor(primary)),
-                            yAxisProperties = LineProperties(color = SolidColor(primary))
-                        ),
-                        gridProperties = GridProperties(
-                            xAxisProperties = GridProperties.AxisProperties(
-                                lineCount = 10,
-                                color = SolidColor(primary)
-                            ),
-                            yAxisProperties = GridProperties.AxisProperties(
-                                lineCount = 7,
-                                color = SolidColor(primary)
-                            )
-                        ),
-                        data = listOf(
-                            Line(
-                                label = stringResource(R.string.progress),
-                                values = lineChartData,
-                                color = SolidColor(primary),
-                                dotProperties = DotProperties(
-                                    enabled = true,
-                                    color = SolidColor(primary),
-                                    strokeWidth = 4.dp,
-                                    radius = 7.dp,
-                                    strokeColor = SolidColor(primary.copy(alpha = 0.5f))
-                                ),
-                                drawStyle = DrawStyle.Stroke(
-                                    width = 3.dp,
-                                    strokeStyle = StrokeStyle.Dashed(
-                                        intervals = floatArrayOf(
-                                            10f,
-                                            10f
-                                        ), phase = 15f
-                                    )
-                                )
-                            )
-                        ),
-                        maxValue = 7.0,
-                        minValue = 0.0,
-                        curvedEdges = false,
-                        animationMode = AnimationMode.Together(delayBuilder = { it * 500L })
-                    )
-                }
+                WeeklyActivity(primary, lineChartData)
             }
 
             item {
-                AnalyticsCard(
-                    title = stringResource(R.string.monthly_progress),
-                    isUserSubscribed = state.isUserSubscribed,
-                    onPlusClick = { onAction(HabitsPageAction.OnShowPaywall) }
-                ) {
-                    HorizontalCalendar(
-                        modifier = Modifier.height(300.dp),
-                        state = calendarState,
-                        userScrollEnabled = state.isUserSubscribed,
-                        monthHeader = {
-                            Box(
-                                modifier = Modifier.padding(4.dp)
-                            ) {
-                                Text(
-                                    text = it.yearMonth.month.getDisplayName(
-                                        TextStyle.FULL,
-                                        Locale.getDefault()
-                                    ) + " ${it.yearMonth.year}",
-                                    color = MaterialTheme.colorScheme.secondary,
-                                    style = MaterialTheme.typography.titleSmall,
-                                    modifier = Modifier.align(Alignment.Center)
-                                )
-                            }
-                        },
-                        dayContent = { day ->
-                            val done = statuses.any { it.date == day.date }
-
-                            Box(
-                                modifier = Modifier
-                                    .padding(2.dp)
-                                    .size(40.dp)
-                                    .clickable(enabled = day.date <= today && state.isUserSubscribed) {
-                                        onAction(
-                                            HabitsPageAction.InsertStatus(
-                                                currentHabit,
-                                                day.date
-                                            )
-                                        )
-                                    }
-                                    .then(
-                                        if (done) Modifier.background(
-                                            color = primary.copy(alpha = 0.2f),
-                                            shape = MaterialTheme.shapes.small
-                                        ) else Modifier
-                                    ),
-                                contentAlignment = Alignment.Center
-                            ) {
-                                Text(
-                                    text = day.date.dayOfMonth.toString(),
-                                    style = MaterialTheme.typography.bodyMedium,
-                                    fontWeight = if (done) FontWeight.Bold else FontWeight.Normal,
-                                    color = if (done) primary else if (day.date > today) MaterialTheme.colorScheme.onSurface.copy(
-                                        alpha = 0.5f
-                                    ) else MaterialTheme.colorScheme.onSurface
-                                )
-                            }
-                        }
-                    )
-                }
+                CalendarMap(state, onAction, calendarState, statuses, today, currentHabit, primary)
             }
 
             item {
-                AnalyticsCard(
-                    title = stringResource(R.string.week_breakdown),
-                    isUserSubscribed = state.isUserSubscribed,
-                    onPlusClick = { onAction(HabitsPageAction.OnShowPaywall) },
-                    modifier = Modifier.height(300.dp)
-                ) {
-                    RowChart(
-                        data = weekDayData,
-                        dividerProperties = DividerProperties(
-                            enabled = false
-                        ),
-                        gridProperties = GridProperties(
-                            enabled = false
-                        ),
-                        indicatorProperties = VerticalIndicatorProperties(
-                            enabled = true,
-                            textStyle = MaterialTheme.typography.bodyMedium.copy(color = primary)
-                        ),
-                        labelProperties = LabelProperties(
-                            enabled = true,
-                            textStyle = MaterialTheme.typography.bodyMedium.copy(color = primary)
-                        ),
-                        labelHelperProperties = LabelHelperProperties(
-                            enabled = false
-                        ),
-                        barProperties = BarProperties(
-                            cornerRadius = Bars.Data.Radius.Circular(10.dp)
-                        ),
-                        animationMode = AnimationMode.Together(delayBuilder = { it * 500L })
-                    )
-                }
+                WeekDayBreakdown(state, onAction, weekDayData, primary)
             }
 
             item {
@@ -746,6 +449,416 @@ fun AnalyticsPage(
                         Text(text = stringResource(R.string.done))
                     }
                 }
+            }
+        }
+    }
+}
+
+@Composable
+private fun WeekDayBreakdown(
+    state: HabitPageState,
+    onAction: (HabitsPageAction) -> Unit,
+    weekDayData: List<Bars>,
+    primary: Color
+) {
+    AnalyticsCard(
+        title = stringResource(R.string.week_breakdown),
+        isUserSubscribed = state.isUserSubscribed,
+        onPlusClick = { onAction(HabitsPageAction.OnShowPaywall) },
+        modifier = Modifier.height(300.dp)
+    ) {
+        RowChart(
+            data = weekDayData,
+            dividerProperties = DividerProperties(
+                enabled = false
+            ),
+            popupProperties = PopupProperties(
+                enabled = false
+            ),
+            gridProperties = GridProperties(
+                enabled = false
+            ),
+            indicatorProperties = VerticalIndicatorProperties(
+                enabled = true,
+                textStyle = MaterialTheme.typography.bodyMedium.copy(color = primary)
+            ),
+            labelProperties = LabelProperties(
+                enabled = true,
+                textStyle = MaterialTheme.typography.bodyMedium.copy(color = primary)
+            ),
+            labelHelperProperties = LabelHelperProperties(
+                enabled = false
+            ),
+            barProperties = BarProperties(
+                cornerRadius = Bars.Data.Radius.Circular(10.dp)
+            ),
+            animationMode = AnimationMode.Together(delayBuilder = { it * 100L })
+        )
+    }
+}
+
+@Composable
+private fun CalendarMap(
+    state: HabitPageState,
+    onAction: (HabitsPageAction) -> Unit,
+    calendarState: CalendarState,
+    statuses: List<HabitStatus>,
+    today: LocalDate?,
+    currentHabit: Habit,
+    primary: Color
+) {
+    AnalyticsCard(
+        title = stringResource(R.string.monthly_progress),
+        isUserSubscribed = state.isUserSubscribed,
+        onPlusClick = { onAction(HabitsPageAction.OnShowPaywall) }
+    ) {
+        HorizontalCalendar(
+            modifier = Modifier.height(350.dp),
+            state = calendarState,
+            userScrollEnabled = state.isUserSubscribed,
+            monthHeader = {
+                Box(
+                    modifier = Modifier.padding(4.dp)
+                ) {
+                    Text(
+                        text = it.yearMonth.month.getDisplayName(
+                            TextStyle.FULL,
+                            Locale.getDefault()
+                        ) + " ${it.yearMonth.year}",
+                        color = MaterialTheme.colorScheme.secondary,
+                        style = MaterialTheme.typography.titleMedium,
+                        modifier = Modifier.align(Alignment.Center)
+                    )
+                }
+            },
+            dayContent = { day ->
+                val done = statuses.any { it.date == day.date }
+
+                Box(
+                    modifier = Modifier
+                        .padding(2.dp)
+                        .size(45.dp)
+                        .clickable(enabled = day.date <= today && state.isUserSubscribed) {
+                            onAction(
+                                HabitsPageAction.InsertStatus(
+                                    currentHabit,
+                                    day.date
+                                )
+                            )
+                        }
+                        .then(
+                            if (done) {
+                                val donePrevious =
+                                    statuses.any { it.date == day.date.minusDays(1) }
+                                val doneAfter =
+                                    statuses.any { it.date == day.date.plusDays(1) }
+
+                                Modifier.background(
+                                    color = primary.copy(alpha = 0.2f),
+                                    shape = if (donePrevious && doneAfter) {
+                                        RoundedCornerShape(5.dp)
+                                    } else if (donePrevious) {
+                                        RoundedCornerShape(
+                                            topStart = 5.dp,
+                                            bottomStart = 5.dp,
+                                            topEnd = 20.dp,
+                                            bottomEnd = 20.dp
+                                        )
+                                    } else if (doneAfter) {
+                                        RoundedCornerShape(
+                                            topStart = 20.dp,
+                                            bottomStart = 20.dp,
+                                            topEnd = 5.dp,
+                                            bottomEnd = 5.dp
+                                        )
+                                    } else {
+                                        RoundedCornerShape(20.dp)
+                                    }
+                                )
+                            } else Modifier
+                        ),
+                    contentAlignment = Alignment.Center
+                ) {
+                    Text(
+                        text = day.date.dayOfMonth.toString(),
+                        style = MaterialTheme.typography.bodyLarge,
+                        fontWeight = if (done) FontWeight.Bold else FontWeight.Normal,
+                        color = if (done) primary else if (day.date > today) MaterialTheme.colorScheme.onSurface.copy(
+                            alpha = 0.5f
+                        ) else MaterialTheme.colorScheme.onSurface
+                    )
+                }
+            }
+        )
+    }
+}
+
+@Composable
+private fun WeeklyActivity(
+    primary: Color,
+    lineChartData: List<Double>
+) {
+    AnalyticsCard(
+        title = stringResource(R.string.weekly_graph),
+        modifier = Modifier.height(300.dp)
+    ) {
+        LineChart(
+            labelHelperProperties = LabelHelperProperties(
+                textStyle = MaterialTheme.typography.bodyMedium.copy(color = primary)
+            ),
+            indicatorProperties = HorizontalIndicatorProperties(
+                textStyle = MaterialTheme.typography.bodyMedium.copy(color = primary)
+            ),
+            dividerProperties = DividerProperties(
+                xAxisProperties = LineProperties(color = SolidColor(primary)),
+                yAxisProperties = LineProperties(color = SolidColor(primary))
+            ),
+            gridProperties = GridProperties(
+                xAxisProperties = GridProperties.AxisProperties(
+                    lineCount = 10,
+                    color = SolidColor(primary)
+                ),
+                yAxisProperties = GridProperties.AxisProperties(
+                    lineCount = 7,
+                    color = SolidColor(primary)
+                )
+            ),
+            data = listOf(
+                Line(
+                    label = stringResource(R.string.progress),
+                    values = lineChartData,
+                    color = SolidColor(primary),
+                    dotProperties = DotProperties(
+                        enabled = true,
+                        color = SolidColor(primary),
+                        strokeWidth = 4.dp,
+                        radius = 7.dp,
+                        strokeColor = SolidColor(primary.copy(alpha = 0.5f))
+                    ),
+                    popupProperties = PopupProperties(
+                        enabled = false
+                    ),
+                    drawStyle = DrawStyle.Stroke(
+                        width = 3.dp,
+                        strokeStyle = StrokeStyle.Dashed(
+                            intervals = floatArrayOf(
+                                10f,
+                                10f
+                            ), phase = 15f
+                        )
+                    )
+                )
+            ),
+            maxValue = 7.0,
+            minValue = 0.0,
+            curvedEdges = false,
+            animationMode = AnimationMode.Together(delayBuilder = { it * 500L })
+        )
+    }
+}
+
+@Composable
+private fun WeeklyBooleanHeatMap(
+    heatMapState: HeatMapCalendarState,
+    statuses: List<HabitStatus>,
+    today: LocalDate?,
+    onAction: (HabitsPageAction) -> Unit,
+    currentHabit: Habit,
+    primary: Color
+) {
+    AnalyticsCard(
+        title = stringResource(R.string.weekly_progress)
+    ) {
+        HeatMapCalendar(
+            state = heatMapState,
+            monthHeader = {
+                Box(
+                    modifier = Modifier.padding(2.dp)
+                ) {
+                    Text(
+                        text = it.yearMonth.month.getDisplayName(
+                            TextStyle.SHORT_STANDALONE,
+                            Locale.getDefault()
+                        ),
+                        color = MaterialTheme.colorScheme.secondary,
+                        style = MaterialTheme.typography.bodyMedium,
+                        modifier = Modifier.align(Alignment.Center)
+                    )
+                }
+            },
+            weekHeader = {
+                Box(
+                    modifier = Modifier
+                        .padding(2.dp)
+                        .size(30.dp)
+                        .background(
+                            color = MaterialTheme.colorScheme.secondaryContainer,
+                            shape = MaterialTheme.shapes.large
+                        )
+                ) {
+                    Text(
+                        text = it.name.take(1),
+                        style = MaterialTheme.typography.bodyMedium,
+                        color = MaterialTheme.colorScheme.onSecondaryContainer,
+                        modifier = Modifier.align(Alignment.Center)
+                    )
+                }
+            },
+            dayContent = { day, week ->
+                val done = statuses.any { it.date == day.date }
+
+                Box(
+                    modifier = Modifier
+                        .padding(2.dp)
+                        .size(30.dp)
+                        .clickable(enabled = day.date <= today) {
+                            onAction(
+                                HabitsPageAction.InsertStatus(
+                                    currentHabit,
+                                    day.date
+                                )
+                            )
+                        }
+                        .then(
+                            if (done) {
+                                val donePrevious = statuses.any { it.date == day.date.minusDays(1) }
+                                val doneAfter = statuses.any { it.date == day.date.plusDays(1) }
+
+                                Modifier.background(
+                                    color = primary.copy(alpha = 0.2f),
+                                    shape = if (donePrevious && doneAfter) {
+                                        RoundedCornerShape(5.dp)
+                                    } else if (donePrevious) {
+                                        RoundedCornerShape(
+                                            topStart = 5.dp,
+                                            bottomStart = 20.dp,
+                                            topEnd = 5.dp,
+                                            bottomEnd = 20.dp
+                                        )
+                                    } else if (doneAfter) {
+                                        RoundedCornerShape(
+                                            topStart = 20.dp,
+                                            bottomStart = 5.dp,
+                                            topEnd = 20.dp,
+                                            bottomEnd = 5.dp
+                                        )
+                                    } else {
+                                        RoundedCornerShape(20.dp)
+                                    }
+                                )
+                            } else Modifier
+                        ),
+                    contentAlignment = Alignment.Center
+                ) {
+                    Text(
+                        text = day.date.dayOfMonth.toString(),
+                        style = MaterialTheme.typography.bodyMedium,
+                        fontWeight = if (done) FontWeight.Bold else FontWeight.Normal,
+                        color = if (done) primary else if (day.date > today) MaterialTheme.colorScheme.onSurface.copy(
+                            alpha = 0.5f
+                        ) else MaterialTheme.colorScheme.onSurface
+                    )
+                }
+            }
+        )
+    }
+}
+
+@Composable
+private fun HabitStats(
+    currentHabit: Habit,
+    today: LocalDate?,
+    currentStreak: Int,
+    bestStreak: Int
+) {
+    Row(
+        modifier = Modifier
+            .height(200.dp)
+            .fillMaxWidth(),
+        verticalAlignment = Alignment.CenterVertically,
+        horizontalArrangement = Arrangement.spacedBy(8.dp)
+    ) {
+        Card(
+            shape = MaterialTheme.shapes.extraLarge,
+            modifier = Modifier.weight(1f),
+            colors = CardDefaults.cardColors(
+                contentColor = MaterialTheme.colorScheme.onPrimaryContainer,
+                containerColor = MaterialTheme.colorScheme.primaryContainer
+            )
+        ) {
+            Column(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .padding(16.dp),
+                horizontalAlignment = Alignment.CenterHorizontally,
+                verticalArrangement = Arrangement.Center
+            ) {
+                Icon(
+                    painter = painterResource(R.drawable.baseline_flag_circle_24),
+                    contentDescription = "Flag",
+                    modifier = Modifier.size(64.dp)
+                )
+
+                Spacer(modifier = Modifier.height(8.dp))
+
+                Text(
+                    text = stringResource(R.string.started_on),
+                    style = MaterialTheme.typography.titleSmall
+                )
+
+                Text(
+                    text = formatDateWithOrdinal(currentHabit.time.toLocalDate()),
+                    fontWeight = FontWeight.Bold,
+                    style = MaterialTheme.typography.bodyLarge
+                )
+
+                Text(
+                    text = stringResource(
+                        R.string.days_ago_format,
+                        ChronoUnit.DAYS.between(currentHabit.time.toLocalDate(), today)
+                    ),
+                    style = MaterialTheme.typography.bodyMedium
+                )
+            }
+        }
+
+        Card(
+            shape = MaterialTheme.shapes.extraLarge,
+            modifier = Modifier.weight(1f),
+            colors = CardDefaults.cardColors(
+                contentColor = MaterialTheme.colorScheme.onSecondaryContainer,
+                containerColor = MaterialTheme.colorScheme.secondaryContainer
+            )
+        ) {
+            Column(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .padding(16.dp),
+                horizontalAlignment = Alignment.CenterHorizontally,
+                verticalArrangement = Arrangement.Center
+            ) {
+                Icon(
+                    painter = painterResource(R.drawable.round_local_fire_department_24),
+                    contentDescription = "Streak",
+                    modifier = Modifier
+                        .size(64.dp)
+                )
+
+                Text(
+                    text = stringResource(R.string.streak),
+                    style = MaterialTheme.typography.titleSmall
+                )
+
+                Text(
+                    text = currentStreak.toString(),
+                    fontWeight = FontWeight.Bold,
+                    style = MaterialTheme.typography.titleLarge
+                )
+
+                Text(
+                    text = stringResource(R.string.best_streak, bestStreak),
+                    style = MaterialTheme.typography.bodyMedium
+                )
             }
         }
     }
