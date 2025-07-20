@@ -4,6 +4,7 @@ import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
@@ -31,6 +32,9 @@ import com.shub39.grit.core.domain.AppTheme
 import com.shub39.grit.core.domain.Fonts
 import com.shub39.grit.core.presentation.theme.GritTheme
 import com.shub39.grit.core.presentation.theme.Theme
+import compose.icons.FontAwesomeIcons
+import compose.icons.fontawesomeicons.Solid
+import compose.icons.fontawesomeicons.solid.Coffee
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -51,7 +55,9 @@ fun PaywallPage(
             contentAlignment = Alignment.Center
         ) {
             Column(
-                modifier = Modifier.fillMaxWidth(),
+                modifier = Modifier
+                    .padding(horizontal = 32.dp)
+                    .fillMaxWidth(),
                 horizontalAlignment = Alignment.CenterHorizontally,
                 verticalArrangement = Arrangement.spacedBy(8.dp)
             ) {
@@ -74,11 +80,20 @@ fun PaywallPage(
                 )
 
                 Button(
-                    onClick = { uriHandler.openUri("https://play.google.com/store/apps/details?id=com.shub39.grit") }
+                    onClick = { uriHandler.openUri("https://buymeacoffee.com/shub39") }
                 ) {
-                    Text(
-                        text = stringResource(R.string.download_from_playstore)
-                    )
+                    Row(
+                        horizontalArrangement = Arrangement.spacedBy(8.dp),
+                        verticalAlignment = Alignment.CenterVertically
+                    ) {
+                        Icon(
+                            imageVector = FontAwesomeIcons.Solid.Coffee,
+                            contentDescription = "Buy me a coffee",
+                            modifier = Modifier.size(24.dp)
+                        )
+
+                        Text(text = stringResource(R.string.bmc))
+                    }
                 }
             }
         }
