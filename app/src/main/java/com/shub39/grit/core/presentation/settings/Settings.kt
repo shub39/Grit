@@ -107,7 +107,7 @@ fun Preview() {
         theme = Theme(
             appTheme = AppTheme.DARK,
             font = Fonts.FIGTREE,
-            seedColor = Color.Red,
+            seedColor = Color.Cyan,
             paletteStyle = PaletteStyle.FruitSalad
         )
     ) {

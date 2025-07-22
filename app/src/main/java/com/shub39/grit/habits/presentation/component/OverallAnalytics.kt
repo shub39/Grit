@@ -90,9 +90,10 @@ fun OverallAnalytics(
                 enabled = false,
                 color = SolidColor(color),
                 strokeWidth = 4.dp,
-                radius = 7.dp,
-                strokeColor = SolidColor(color.copy(alpha = 0.5f))
+                radius = 7.dp
             ),
+            firstGradientFillColor = color.copy(alpha = 0.8f),
+            secondGradientFillColor = Color.Transparent,
             popupProperties = PopupProperties(
                 enabled = false
             ),

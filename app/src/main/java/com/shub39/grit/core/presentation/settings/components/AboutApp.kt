@@ -9,6 +9,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.Icon
@@ -46,6 +47,11 @@ fun AboutApp() {
         ),
         shape = MaterialTheme.shapes.extraLarge
     ) {
+        val buttonColors = ButtonDefaults.buttonColors(
+            containerColor = MaterialTheme.colorScheme.onPrimaryContainer,
+            contentColor = MaterialTheme.colorScheme.primaryContainer
+        )
+
         Row(
             modifier = Modifier
                 .padding(16.dp)
@@ -92,6 +98,7 @@ fun AboutApp() {
             horizontalArrangement = Arrangement.spacedBy(8.dp)
         ) {
             Button(
+                colors = buttonColors,
                 onClick = { uriHandler.openUri("https://buymeacoffee.com/shub39") }
             ) {
                 Row(
@@ -109,6 +116,7 @@ fun AboutApp() {
             }
 
             Button(
+                colors = buttonColors,
                 onClick = { uriHandler.openUri("https://play.google.com/store/apps/details?id=com.shub39.grit") }
             ) {
                 Row(
