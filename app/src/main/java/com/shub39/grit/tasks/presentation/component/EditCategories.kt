@@ -54,6 +54,7 @@ import com.shub39.grit.core.presentation.components.GritDialog
 import com.shub39.grit.core.presentation.components.PageFill
 import com.shub39.grit.tasks.presentation.TaskPageAction
 import com.shub39.grit.tasks.presentation.TaskPageState
+import kotlinx.coroutines.delay
 import sh.calvin.reorderable.ReorderableItem
 import sh.calvin.reorderable.rememberReorderableLazyListState
 
@@ -204,6 +205,7 @@ fun EditCategories(
                         val focusRequester = remember { FocusRequester() }
 
                         LaunchedEffect(Unit) {
+                            delay(200)
                             focusRequester.requestFocus()
                             keyboardController?.show()
                         }
