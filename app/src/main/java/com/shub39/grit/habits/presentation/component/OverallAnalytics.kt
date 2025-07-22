@@ -174,8 +174,6 @@ private fun WeekDayBreakdown(
         modifier = Modifier.height(300.dp)
     ) {
         RowChart(
-            minValue = 0.0,
-            maxValue = 7.0,
             data = weeklyBreakdownData,
             dividerProperties = DividerProperties(
                 enabled = false

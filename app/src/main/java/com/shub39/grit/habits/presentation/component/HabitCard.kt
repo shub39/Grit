@@ -189,23 +189,23 @@ fun HabitCard(
                                 Modifier.background(
                                     color = MaterialTheme.colorScheme.primary,
                                     shape =  if (donePrevious && doneAfter) {
-                                        RoundedCornerShape(5.dp)
+                                        RoundedCornerShape(10.dp)
                                     } else if (donePrevious) {
                                         RoundedCornerShape(
-                                            topStart = 5.dp,
-                                            bottomStart = 5.dp,
-                                            topEnd = 15.dp,
-                                            bottomEnd = 15.dp
+                                            topStart = 10.dp,
+                                            bottomStart = 10.dp,
+                                            topEnd = 20.dp,
+                                            bottomEnd = 20.dp
                                         )
                                     } else if (doneAfter) {
                                         RoundedCornerShape(
-                                            topStart = 15.dp,
-                                            bottomStart = 15.dp,
-                                            topEnd = 5.dp,
-                                            bottomEnd = 5.dp
+                                            topStart = 20.dp,
+                                            bottomStart = 20.dp,
+                                            topEnd = 10.dp,
+                                            bottomEnd = 10.dp
                                         )
                                     } else {
-                                        RoundedCornerShape(15.dp)
+                                        RoundedCornerShape(20.dp)
                                     }
                                 )
                             } else Modifier
