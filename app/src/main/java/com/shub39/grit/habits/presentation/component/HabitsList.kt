@@ -73,11 +73,10 @@ import java.util.Locale
 fun HabitsList(
     state: HabitPageState,
     onAction: (HabitsPageAction) -> Unit,
-    onNavigateToAnalytics: () -> Unit
+    onNavigateToAnalytics: () -> Unit,
+    onNavigateToOverallAnalytics: () -> Unit
 ) {
     val context = LocalContext.current
-
-    var showAllAnalytics by remember { mutableStateOf(false) }
 
     var editState by remember { mutableStateOf(false) }
 
@@ -195,7 +194,7 @@ fun HabitsList(
                 visible = state.habitsWithStatuses.isNotEmpty()
             ) {
                 FloatingActionButton(
-                    onClick = { showAllAnalytics = true },
+                    onClick = onNavigateToOverallAnalytics,
                     containerColor = MaterialTheme.colorScheme.secondaryContainer,
                     contentColor = MaterialTheme.colorScheme.onSecondaryContainer
                 ) {
@@ -229,15 +228,6 @@ fun HabitsList(
                 }
             }
         }
-    }
-
-    // all analytics
-    if (showAllAnalytics) {
-        OverallAnalyticsSheet(
-            state = state,
-            onAction = onAction,
-            onDismiss = { showAllAnalytics = false }
-        )
     }
 
     // add dialog

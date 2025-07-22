@@ -3,26 +3,31 @@ package com.shub39.grit.habits.presentation.component
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.widthIn
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
+import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.SolidColor
-import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import com.kizitonwose.calendar.compose.HeatMapCalendar
 import com.kizitonwose.calendar.compose.heatmapcalendar.HeatMapCalendarState
@@ -30,7 +35,6 @@ import com.kizitonwose.calendar.compose.heatmapcalendar.rememberHeatMapCalendarS
 import com.materialkolor.ktx.fixIfDisliked
 import com.materialkolor.ktx.harmonize
 import com.shub39.grit.R
-import com.shub39.grit.core.presentation.components.GritBottomSheet
 import com.shub39.grit.habits.presentation.HabitPageState
 import com.shub39.grit.habits.presentation.HabitsPageAction
 import ir.ehsannarmani.compose_charts.LineChart
@@ -58,11 +62,10 @@ import kotlin.random.Random
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun OverallAnalyticsSheet(
+fun OverallAnalytics(
     state: HabitPageState,
     onAction: (HabitsPageAction) -> Unit,
-    onDismiss: () -> Unit,
-    modifier: Modifier = Modifier
+    onNavigateBack : () -> Unit
 ) {
     val primary = MaterialTheme.colorScheme.primary
     val currentMonth = remember { YearMonth.now() }
@@ -84,7 +87,7 @@ fun OverallAnalyticsSheet(
             values = prepareLineChartData(state.startingDay, statuses),
             color = SolidColor(color),
             dotProperties = DotProperties(
-                enabled = true,
+                enabled = false,
                 color = SolidColor(color),
                 strokeWidth = 4.dp,
                 radius = 7.dp,
@@ -95,12 +98,7 @@ fun OverallAnalyticsSheet(
             ),
             drawStyle = DrawStyle.Stroke(
                 width = 3.dp,
-                strokeStyle = StrokeStyle.Dashed(
-                    intervals = floatArrayOf(
-                        10f,
-                        10f
-                    ), phase = 15f
-                )
+                strokeStyle = StrokeStyle.Normal
             )
         )
     }
@@ -112,77 +110,97 @@ fun OverallAnalyticsSheet(
         firstDayOfWeek = state.startingDay
     )
 
-    GritBottomSheet(
-        onDismissRequest = onDismiss,
-        modifier = modifier,
-        padding = 16.dp
+
+    Column(
+        modifier = Modifier
+            .widthIn(max = 500.dp)
+            .fillMaxSize()
     ) {
+        TopAppBar(
+            title = {
+                Text(
+                    text = stringResource(R.string.overall_analytics),
+                )
+            },
+            navigationIcon = {
+                IconButton(
+                    onClick = onNavigateBack
+                ) {
+                    Icon(
+                        imageVector = Icons.AutoMirrored.Filled.ArrowBack,
+                        contentDescription = "Navigate Back"
+                    )
+                }
+            }
+        )
+
         LazyColumn(
-            modifier = Modifier.fillMaxWidth(),
+            modifier = Modifier.fillMaxSize(),
+            contentPadding = PaddingValues(16.dp),
             verticalArrangement = Arrangement.spacedBy(8.dp),
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
-            item {
-                Icon(
-                    painter = painterResource(R.drawable.round_analytics_24),
-                    contentDescription = "All Analytics"
-                )
-
-                Text(
-                    text = stringResource(R.string.overall_analytics),
-                    style = MaterialTheme.typography.titleLarge,
-                    modifier = Modifier.fillMaxWidth(),
-                    textAlign = TextAlign.Center
-                )
-
-                Spacer(modifier = Modifier.height(16.dp))
-            }
-
             item {
                 HabitHeatMap(heatMapState, heatMapData, state)
             }
 
             item {
-                AnalyticsCard(
-                    title = stringResource(R.string.week_breakdown),
-                    isUserSubscribed = state.isUserSubscribed,
-                    onPlusClick = { onAction(HabitsPageAction.OnShowPaywall) },
-                    modifier = Modifier.height(300.dp)
-                ) {
-                    RowChart(
-                        data = weeklyBreakdownData,
-                        dividerProperties = DividerProperties(
-                            enabled = false
-                        ),
-                        popupProperties = PopupProperties(
-                            enabled = false
-                        ),
-                        gridProperties = GridProperties(
-                            enabled = false
-                        ),
-                        indicatorProperties = VerticalIndicatorProperties(
-                            enabled = true,
-                            textStyle = MaterialTheme.typography.bodyMedium.copy(color = primary)
-                        ),
-                        labelProperties = LabelProperties(
-                            enabled = true,
-                            textStyle = MaterialTheme.typography.bodyMedium.copy(color = primary)
-                        ),
-                        labelHelperProperties = LabelHelperProperties(
-                            enabled = false
-                        ),
-                        barProperties = BarProperties(
-                            cornerRadius = Bars.Data.Radius.Circular(10.dp)
-                        ),
-                        animationMode = AnimationMode.Together(delayBuilder = { it * 100L })
-                    )
-                }
+                WeekDayBreakdown(state, onAction, weeklyBreakdownData, primary)
             }
 
             item {
                 WeeklyGraph(state, primary, onAction, weeklyGraphData)
             }
+
+            item {
+                Spacer(modifier = Modifier.height(60.dp))
+            }
         }
+    }
+}
+
+@Composable
+private fun WeekDayBreakdown(
+    state: HabitPageState,
+    onAction: (HabitsPageAction) -> Unit,
+    weeklyBreakdownData: List<Bars>,
+    primary: Color
+) {
+    AnalyticsCard(
+        title = stringResource(R.string.week_breakdown),
+        isUserSubscribed = state.isUserSubscribed,
+        onPlusClick = { onAction(HabitsPageAction.OnShowPaywall) },
+        modifier = Modifier.height(300.dp)
+    ) {
+        RowChart(
+            minValue = 0.0,
+            maxValue = 7.0,
+            data = weeklyBreakdownData,
+            dividerProperties = DividerProperties(
+                enabled = false
+            ),
+            popupProperties = PopupProperties(
+                enabled = false
+            ),
+            gridProperties = GridProperties(
+                enabled = false
+            ),
+            indicatorProperties = VerticalIndicatorProperties(
+                enabled = true,
+                textStyle = MaterialTheme.typography.bodyMedium.copy(color = primary)
+            ),
+            labelProperties = LabelProperties(
+                enabled = true,
+                textStyle = MaterialTheme.typography.bodyMedium.copy(color = primary)
+            ),
+            labelHelperProperties = LabelHelperProperties(
+                enabled = false
+            ),
+            barProperties = BarProperties(
+                cornerRadius = Bars.Data.Radius.Circular(10.dp)
+            ),
+            animationMode = AnimationMode.Together(delayBuilder = { it * 100L })
+        )
     }
 }
 
