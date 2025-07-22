@@ -75,6 +75,7 @@ import com.shub39.grit.tasks.domain.CategoryColors
 import com.shub39.grit.tasks.domain.Task
 import com.shub39.grit.tasks.presentation.TaskPageAction
 import com.shub39.grit.tasks.presentation.TaskPageState
+import kotlinx.coroutines.delay
 import sh.calvin.reorderable.ReorderableItem
 import sh.calvin.reorderable.rememberReorderableLazyListState
 
@@ -364,12 +365,17 @@ fun TaskList(
         val focusRequester = remember { FocusRequester() }
 
         LaunchedEffect(Unit) {
+            delay(200)
             focusRequester.requestFocus()
             keyboardController?.show()
         }
 
         GritBottomSheet(
-            onDismissRequest = { showCategoryAddSheet = false }
+            onDismissRequest = {
+                focusRequester.freeFocus()
+                keyboardController?.hide()
+                showCategoryAddSheet = false
+            }
         ) {
             Icon(
                 imageVector = Icons.Default.Add,
@@ -428,12 +434,17 @@ fun TaskList(
         val focusRequester = remember { FocusRequester() }
 
         LaunchedEffect(Unit) {
+            delay(200)
             focusRequester.requestFocus()
             keyboardController?.show()
         }
 
         GritBottomSheet(
-            onDismissRequest = { editTask = null }
+            onDismissRequest = {
+                focusRequester.freeFocus()
+                keyboardController?.hide()
+                editTask = null
+            }
         ) {
             Icon(
                 imageVector = Icons.Default.Edit,
@@ -511,12 +522,17 @@ fun TaskList(
         val focusRequester = remember { FocusRequester() }
 
         LaunchedEffect(Unit) {
+            delay(200)
             focusRequester.requestFocus()
             keyboardController?.show()
         }
 
         GritBottomSheet(
-            onDismissRequest = { showTaskAddSheet = false }
+            onDismissRequest = {
+                focusRequester.freeFocus()
+                keyboardController?.hide()
+                showTaskAddSheet = false
+            }
         ) {
             Icon(
                 imageVector = Icons.Default.Add,
