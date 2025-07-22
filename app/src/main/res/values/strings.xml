@@ -114,5 +114,5 @@
     <string name="week_breakdown">Week Day Breakdown</string>
     <string name="foss">You are using the FOSS variant</string>
     <string name="download_from_playstore">Download from Playstore</string>
-    <string name="foss_desc">All features are unlocked. This variant of the app does not support In-App Purchases. Support me by donating on</string>
+    <string name="foss_desc">All features are unlocked. This variant of the app does not support In-App Purchases. If this app added value to your life, Support me by donating on</string>
 </resources>
