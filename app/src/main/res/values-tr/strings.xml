@@ -30,7 +30,7 @@
     <string name="settings">Ayarlar</string>
     <string name="mark_undone">İşareti Kaldır</string>
     <string name="new_habit">Yeni Alışkanlık</string>
-    <string name="at">Hatırlatma saati: </string>
+    <string name="at">Hatırlatma saati: %1$s</string>
     <string name="habit_exists">Alışkanlık Zaten Mevcut</string>
     <string name="days_ago_format">%1$d gün önce…</string>
     <string name="too_long">Çok Uzun</string>
