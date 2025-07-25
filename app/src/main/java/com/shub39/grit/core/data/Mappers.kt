@@ -53,7 +53,9 @@ fun Task.toTaskEntity(): TaskEntity {
         categoryId = categoryId,
         title = title,
         index = index,
-        status = status
+        status = status,
+        deadline = deadline?.atZone(java.time.ZoneOffset.systemDefault())?.toInstant()?.toEpochMilli(),
+        priority = priority.name
     )
 }
 
@@ -63,7 +65,14 @@ fun TaskEntity.toTask(): Task {
         categoryId = categoryId,
         title = title,
         index = index,
-        status = status
+        status = status,
+        deadline = deadline?.let { 
+            java.time.LocalDateTime.ofInstant(
+                java.time.Instant.ofEpochMilli(it), 
+                java.time.ZoneOffset.systemDefault()
+            )
+        },
+        priority = com.shub39.grit.tasks.domain.TaskPriority.valueOf(priority)
     )
 }
 

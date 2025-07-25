@@ -32,7 +32,6 @@ import androidx.compose.material3.AssistChip
 import androidx.compose.material3.AssistChipDefaults
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonShapes
-import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.ExperimentalMaterial3ExpressiveApi
 import androidx.compose.material3.FilledTonalIconToggleButton
 import androidx.compose.material3.FilterChip
@@ -41,6 +40,7 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButtonShapes
 import androidx.compose.material3.IconToggleButtonShapes
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.OutlinedIconButton
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
@@ -73,11 +73,24 @@ import com.shub39.grit.core.presentation.components.GritDialog
 import com.shub39.grit.tasks.domain.Category
 import com.shub39.grit.tasks.domain.CategoryColors
 import com.shub39.grit.tasks.domain.Task
+import com.shub39.grit.tasks.domain.TaskPriority
 import com.shub39.grit.tasks.presentation.TaskPageAction
 import com.shub39.grit.tasks.presentation.TaskPageState
 import kotlinx.coroutines.delay
 import sh.calvin.reorderable.ReorderableItem
 import sh.calvin.reorderable.rememberReorderableLazyListState
+import java.time.LocalDateTime
+import java.time.format.DateTimeFormatter
+import androidx.compose.material3.DatePicker
+import androidx.compose.material3.DatePickerDialog
+import androidx.compose.material3.TimePicker
+import androidx.compose.material3.rememberDatePickerState
+import androidx.compose.material3.rememberTimePickerState
+import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.TextButton
+import androidx.compose.material3.SegmentedButton
+import androidx.compose.material3.SegmentedButtonDefaults
+import androidx.compose.material3.SingleChoiceSegmentedButtonRow
 
 @OptIn(ExperimentalMaterial3ExpressiveApi::class, ExperimentalMaterial3Api::class)
 @Composable
@@ -430,6 +443,10 @@ fun TaskList(
     if (editTask != null) {
         var newTitle by remember { mutableStateOf(editTask!!.title) }
         var newTaskCategoryId by remember { mutableLongStateOf(editTask!!.categoryId) }
+        var editPriority by remember { mutableStateOf(editTask!!.priority) }
+        var editDeadline by remember { mutableStateOf(editTask!!.deadline) }
+        var showEditDatePicker by remember { mutableStateOf(false) }
+        
         val keyboardController = LocalSoftwareKeyboardController.current
         val focusRequester = remember { FocusRequester() }
 
@@ -489,6 +506,64 @@ fun TaskList(
                     .focusRequester(focusRequester),
                 label = { Text(text = stringResource(id = R.string.edit_task)) }
             )
+            
+            // Priority selection
+            Text(
+                text = "Priority",
+                style = MaterialTheme.typography.labelLarge,
+                modifier = Modifier.padding(top = 16.dp, bottom = 8.dp)
+            )
+            
+            SingleChoiceSegmentedButtonRow(
+                modifier = Modifier.fillMaxWidth()
+            ) {
+                TaskPriority.values().forEachIndexed { index, priority ->
+                    SegmentedButton(
+                        shape = SegmentedButtonDefaults.itemShape(
+                            index = index,
+                            count = TaskPriority.values().size
+                        ),
+                        onClick = { editPriority = priority },
+                        selected = editPriority == priority,
+                        colors = SegmentedButtonDefaults.colors(
+                            activeContainerColor = when (priority) {
+                                TaskPriority.HIGH -> MaterialTheme.colorScheme.error.copy(alpha = 0.3f)
+                                TaskPriority.LOW -> MaterialTheme.colorScheme.primary.copy(alpha = 0.3f)
+                                else -> MaterialTheme.colorScheme.secondaryContainer
+                            }
+                        )
+                    ) {
+                        Text(priority.name)
+                    }
+                }
+            }
+            
+            // Deadline selection
+            Text(
+                text = "Deadline (Optional)",
+                style = MaterialTheme.typography.labelLarge,
+                modifier = Modifier.padding(top = 16.dp, bottom = 8.dp)
+            )
+            
+            OutlinedButton(
+                onClick = { showEditDatePicker = true },
+                modifier = Modifier.fillMaxWidth()
+            ) {
+                Text(
+                    text = editDeadline?.format(
+                        DateTimeFormatter.ofPattern("MMM d, yyyy h:mm a")
+                    ) ?: "Set deadline"
+                )
+            }
+            
+            if (editDeadline != null) {
+                TextButton(
+                    onClick = { editDeadline = null },
+                    modifier = Modifier.fillMaxWidth()
+                ) {
+                    Text("Clear deadline")
+                }
+            }
 
             Button(
                 onClick = {
@@ -496,7 +571,9 @@ fun TaskList(
                         TaskPageAction.UpsertTask(
                             editTask!!.copy(
                                 title = newTitle,
-                                categoryId = newTaskCategoryId
+                                categoryId = newTaskCategoryId,
+                                priority = editPriority,
+                                deadline = editDeadline
                             )
                         )
                     )
@@ -512,12 +589,104 @@ fun TaskList(
                 Text(stringResource(R.string.edit_task))
             }
         }
+        
+        // Edit task date picker dialog
+        if (showEditDatePicker) {
+            val datePickerState = rememberDatePickerState(
+                initialSelectedDateMillis = editDeadline?.atZone(java.time.ZoneOffset.systemDefault())?.toInstant()?.toEpochMilli()
+            )
+            val timePickerState = rememberTimePickerState(
+                initialHour = editDeadline?.hour ?: 12,
+                initialMinute = editDeadline?.minute ?: 0
+            )
+            var showTimePicker by remember { mutableStateOf(false) }
+            
+            if (!showTimePicker) {
+                DatePickerDialog(
+                    onDismissRequest = { showEditDatePicker = false },
+                    confirmButton = {
+                        TextButton(
+                            onClick = {
+                                datePickerState.selectedDateMillis?.let {
+                                    showTimePicker = true
+                                }
+                            }
+                        ) {
+                            Text("Next")
+                        }
+                    },
+                    dismissButton = {
+                        TextButton(onClick = { showEditDatePicker = false }) {
+                            Text("Cancel")
+                        }
+                    }
+                ) {
+                    DatePicker(state = datePickerState)
+                }
+            } else {
+                GritDialog(
+                    onDismissRequest = { 
+                        showEditDatePicker = false
+                        showTimePicker = false
+                    }
+                ) {
+                    Text(
+                        text = "Select Time",
+                        style = MaterialTheme.typography.headlineSmall,
+                        modifier = Modifier.padding(bottom = 16.dp)
+                    )
+                    
+                    TimePicker(state = timePickerState)
+                    
+                    Row(
+                        modifier = Modifier.fillMaxWidth(),
+                        horizontalArrangement = Arrangement.spacedBy(8.dp)
+                    ) {
+                        TextButton(
+                            onClick = { 
+                                showEditDatePicker = false
+                                showTimePicker = false
+                            },
+                            modifier = Modifier.weight(1f)
+                        ) {
+                            Text("Cancel")
+                        }
+                        
+                        Button(
+                            onClick = {
+                                datePickerState.selectedDateMillis?.let { dateMillis ->
+                                    val date = java.time.Instant.ofEpochMilli(dateMillis)
+                                        .atZone(java.time.ZoneOffset.systemDefault())
+                                        .toLocalDate()
+                                    editDeadline = LocalDateTime.of(
+                                        date,
+                                        java.time.LocalTime.of(
+                                            timePickerState.hour,
+                                            timePickerState.minute
+                                        )
+                                    )
+                                }
+                                showEditDatePicker = false
+                                showTimePicker = false
+                            },
+                            modifier = Modifier.weight(1f)
+                        ) {
+                            Text("Set")
+                        }
+                    }
+                }
+            }
+        }
     }
 
     // add sheet
     if (showTaskAddSheet && state.currentCategory != null) {
         var newTask by remember { mutableStateOf("") }
         var newTaskCategoryId by remember { mutableLongStateOf(state.currentCategory.id) }
+        var selectedPriority by remember { mutableStateOf(TaskPriority.MEDIUM) }
+        var selectedDeadline by remember { mutableStateOf<LocalDateTime?>(null) }
+        var showDatePicker by remember { mutableStateOf(false) }
+        
         val keyboardController = LocalSoftwareKeyboardController.current
         val focusRequester = remember { FocusRequester() }
 
@@ -562,6 +731,7 @@ fun TaskList(
             OutlinedTextField(
                 value = newTask,
                 onValueChange = { newTask = it },
+                label = { Text("Task") },
                 shape = MaterialTheme.shapes.medium,
                 keyboardOptions = KeyboardOptions.Default.copy(
                     capitalization = KeyboardCapitalization.Sentences,
@@ -576,6 +746,64 @@ fun TaskList(
                     .fillMaxWidth()
                     .focusRequester(focusRequester)
             )
+            
+            // Priority selection
+            Text(
+                text = "Priority",
+                style = MaterialTheme.typography.labelLarge,
+                modifier = Modifier.padding(top = 16.dp, bottom = 8.dp)
+            )
+            
+            SingleChoiceSegmentedButtonRow(
+                modifier = Modifier.fillMaxWidth()
+            ) {
+                TaskPriority.values().forEachIndexed { index, priority ->
+                    SegmentedButton(
+                        shape = SegmentedButtonDefaults.itemShape(
+                            index = index,
+                            count = TaskPriority.values().size
+                        ),
+                        onClick = { selectedPriority = priority },
+                        selected = selectedPriority == priority,
+                        colors = SegmentedButtonDefaults.colors(
+                            activeContainerColor = when (priority) {
+                                TaskPriority.HIGH -> MaterialTheme.colorScheme.error.copy(alpha = 0.3f)
+                                TaskPriority.LOW -> MaterialTheme.colorScheme.primary.copy(alpha = 0.3f)
+                                else -> MaterialTheme.colorScheme.secondaryContainer
+                            }
+                        )
+                    ) {
+                        Text(priority.name)
+                    }
+                }
+            }
+            
+            // Deadline selection
+            Text(
+                text = "Deadline (Optional)",
+                style = MaterialTheme.typography.labelLarge,
+                modifier = Modifier.padding(top = 16.dp, bottom = 8.dp)
+            )
+            
+            OutlinedButton(
+                onClick = { showDatePicker = true },
+                modifier = Modifier.fillMaxWidth()
+            ) {
+                Text(
+                    text = selectedDeadline?.format(
+                        DateTimeFormatter.ofPattern("MMM d, yyyy h:mm a")
+                    ) ?: "Set deadline"
+                )
+            }
+            
+            if (selectedDeadline != null) {
+                TextButton(
+                    onClick = { selectedDeadline = null },
+                    modifier = Modifier.fillMaxWidth()
+                ) {
+                    Text("Clear deadline")
+                }
+            }
 
             Button(
                 onClick = {
@@ -587,7 +815,9 @@ fun TaskList(
                                 categoryId = newTaskCategoryId,
                                 title = newTask,
                                 status = false,
-                                index = state.tasks[state.currentCategory]?.size ?: 0
+                                index = state.tasks[state.currentCategory]?.size ?: 0,
+                                priority = selectedPriority,
+                                deadline = selectedDeadline
                             )
                         )
                     )
@@ -604,6 +834,89 @@ fun TaskList(
                     style = MaterialTheme.typography.labelMedium,
                     fontWeight = FontWeight.Bold,
                 )
+            }
+        }
+        
+        // Date picker dialog
+        if (showDatePicker) {
+            val datePickerState = rememberDatePickerState()
+            val timePickerState = rememberTimePickerState()
+            var showTimePicker by remember { mutableStateOf(false) }
+            
+            if (!showTimePicker) {
+                DatePickerDialog(
+                    onDismissRequest = { showDatePicker = false },
+                    confirmButton = {
+                        TextButton(
+                            onClick = {
+                                datePickerState.selectedDateMillis?.let {
+                                    showTimePicker = true
+                                }
+                            }
+                        ) {
+                            Text("Next")
+                        }
+                    },
+                    dismissButton = {
+                        TextButton(onClick = { showDatePicker = false }) {
+                            Text("Cancel")
+                        }
+                    }
+                ) {
+                    DatePicker(state = datePickerState)
+                }
+            } else {
+                GritDialog(
+                    onDismissRequest = { 
+                        showDatePicker = false
+                        showTimePicker = false
+                    }
+                ) {
+                    Text(
+                        text = "Select Time",
+                        style = MaterialTheme.typography.headlineSmall,
+                        modifier = Modifier.padding(bottom = 16.dp)
+                    )
+                    
+                    TimePicker(state = timePickerState)
+                    
+                    Row(
+                        modifier = Modifier.fillMaxWidth(),
+                        horizontalArrangement = Arrangement.spacedBy(8.dp)
+                    ) {
+                        TextButton(
+                            onClick = { 
+                                showDatePicker = false
+                                showTimePicker = false
+                            },
+                            modifier = Modifier.weight(1f)
+                        ) {
+                            Text("Cancel")
+                        }
+                        
+                        Button(
+                            onClick = {
+                                datePickerState.selectedDateMillis?.let { dateMillis ->
+                                    val date = java.time.Instant.ofEpochMilli(dateMillis)
+                                        .atZone(java.time.ZoneOffset.systemDefault())
+                                        .toLocalDate()
+                                    selectedDeadline = LocalDateTime.of(
+                                        date,
+                                        java.time.LocalTime.of(
+                                            timePickerState.hour,
+                                            timePickerState.minute
+                                        )
+                                    )
+                                }
+                                showDatePicker = false
+                                showTimePicker = false
+                            },
+                            modifier = Modifier.weight(1f)
+                        ) {
+                            Text("Set")
+                        }
+                    }
+                }
             }
         }
     }

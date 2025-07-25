@@ -11,6 +11,7 @@ class TaskDbFactory(
         val appContext = context.applicationContext
         val dbfile = appContext.getDatabasePath(TaskDatabase.DB_NAME)
 
-        return Room.databaseBuilder(appContext, dbfile.absolutePath)
+        return Room.databaseBuilder<TaskDatabase>(appContext, dbfile.absolutePath)
+            .addMigrations(TaskDatabase.MIGRATION_4_5)
     }
 }

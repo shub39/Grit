@@ -19,6 +19,8 @@ import com.shub39.grit.app.MainActivity
 import com.shub39.grit.core.data.NotificationReceiver
 import com.shub39.grit.core.domain.IntentActions
 import com.shub39.grit.habits.domain.Habit
+import com.shub39.grit.tasks.domain.Task
+import com.shub39.grit.tasks.domain.TaskPriority
 import java.time.LocalDate
 import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
@@ -84,9 +86,11 @@ fun countBestStreak(dates: List<LocalDate>): Int {
 fun createNotificationChannel(context: Context) {
     val name = getString(context, R.string.channel_name)
     val descriptionText = getString(context, R.string.channel_description)
-    val importance = NotificationManager.IMPORTANCE_DEFAULT
+    val importance = NotificationManager.IMPORTANCE_HIGH
     val channel = NotificationChannel("1", name, importance).apply {
         description = descriptionText
+        setShowBadge(true)
+        lockscreenVisibility = NotificationCompat.VISIBILITY_PUBLIC
     }
     val notificationManager: NotificationManager =
         context.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
@@ -109,7 +113,9 @@ fun showAddNotification(context: Context, habit: Habit) {
                 DateTimeFormatter.ofPattern("hh:mm a")
             )
         )
-        .setPriority(NotificationCompat.PRIORITY_DEFAULT)
+        .setPriority(NotificationCompat.PRIORITY_HIGH)
+        .setCategory(NotificationCompat.CATEGORY_REMINDER)
+        .setVisibility(NotificationCompat.VISIBILITY_PUBLIC)
         .setContentIntent(pendingIntent)
         .setAutoCancel(true)
 
@@ -141,7 +147,7 @@ fun habitNotification(context: Context, habit: Habit) {
         context,
         habit.id.toInt(),
         intent,
-        PendingIntent.FLAG_IMMUTABLE
+        PendingIntent.FLAG_IMMUTABLE or PendingIntent.FLAG_UPDATE_CURRENT
     )
 
     val builder = NotificationCompat
@@ -149,7 +155,9 @@ fun habitNotification(context: Context, habit: Habit) {
         .setSmallIcon(R.drawable.round_checklist_24)
         .setContentTitle(habit.title)
         .setContentText(habit.description)
-        .setPriority(NotificationCompat.PRIORITY_DEFAULT)
+        .setPriority(NotificationCompat.PRIORITY_HIGH)
+        .setCategory(NotificationCompat.CATEGORY_REMINDER)
+        .setVisibility(NotificationCompat.VISIBILITY_PUBLIC)
         .setAutoCancel(true)
         .addAction(R.drawable.round_check_circle_24, "Mark Done", pendingBroadcast)
 
@@ -179,5 +187,68 @@ fun getRandomLine(): String {
         8 -> "\uD83E\uDD8D Chimpanzini Bananini"
         9 -> "\uD83E\uDD92 Giraffa Celeste"
         else -> "\uD83E\uDD88 Tralalero Tralala"
+    }
+}
+
+// shows task deadline notification if permission granted
+fun taskNotification(context: Context, task: Task, notificationType: String) {
+    val intent = Intent(context, NotificationReceiver::class.java).apply {
+        putExtra("task_id", task.id)
+        action = IntentActions.COMPLETE_TASK.action
+    }
+    val pendingBroadcast = PendingIntent.getBroadcast(
+        context,
+        task.id.toInt(),
+        intent,
+        PendingIntent.FLAG_IMMUTABLE or PendingIntent.FLAG_UPDATE_CURRENT
+    )
+
+    // Create notification title based on type
+    val title = when (notificationType) {
+        "ONE_DAY_BEFORE" -> "Task Due Tomorrow"
+        "MORNING_OF" -> "Task Due Today"
+        "TWO_HOURS_BEFORE" -> "Task Due Soon!"
+        else -> "Task Reminder"
+    }
+    
+    // Add priority indicator
+    val priorityEmoji = when (task.priority) {
+        TaskPriority.HIGH -> "🔴 "
+        TaskPriority.LOW -> "🔵 "
+        else -> ""
+    }
+    
+    val deadlineText = task.deadline?.format(DateTimeFormatter.ofPattern("MMM d, h:mm a")) ?: ""
+    val contentText = "${priorityEmoji}${task.title}\nDue: $deadlineText"
+
+    val builder = NotificationCompat
+        .Builder(context, "1")
+        .setSmallIcon(R.drawable.round_checklist_24)
+        .setContentTitle(title)
+        .setContentText(contentText)
+        .setStyle(NotificationCompat.BigTextStyle().bigText(contentText))
+        .setPriority(
+            when (task.priority) {
+                TaskPriority.HIGH -> NotificationCompat.PRIORITY_HIGH
+                TaskPriority.LOW -> NotificationCompat.PRIORITY_DEFAULT
+                else -> NotificationCompat.PRIORITY_DEFAULT
+            }
+        )
+        .setCategory(NotificationCompat.CATEGORY_REMINDER)
+        .setVisibility(NotificationCompat.VISIBILITY_PUBLIC)
+        .setAutoCancel(true)
+        .addAction(R.drawable.round_check_circle_24, "Mark Complete", pendingBroadcast)
+
+    with(NotificationManagerCompat.from(context)) {
+        if (
+            ActivityCompat.checkSelfPermission(
+                context,
+                Manifest.permission.POST_NOTIFICATIONS
+            ) != PackageManager.PERMISSION_GRANTED
+        ) {
+            return
+        }
+
+        notify(task.id.hashCode(), builder.build())
     }
 }

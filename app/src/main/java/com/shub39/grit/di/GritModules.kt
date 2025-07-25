@@ -17,6 +17,7 @@ import com.shub39.grit.habits.domain.HabitRepo
 import com.shub39.grit.tasks.data.database.TaskDatabase
 import com.shub39.grit.tasks.data.database.TaskDbFactory
 import com.shub39.grit.tasks.data.repository.TasksRepository
+import com.shub39.grit.tasks.data.TaskNotificationScheduler
 import com.shub39.grit.tasks.domain.TaskRepo
 import com.shub39.grit.viewmodels.HabitViewModel
 import com.shub39.grit.viewmodels.MainViewModel
@@ -64,6 +65,7 @@ val appModule = module {
 
     // scheduler
     singleOf(::NotificationAlarmScheduler).bind<AlarmScheduler>()
+    singleOf(::TaskNotificationScheduler)
 
     // widget repositories
     singleOf(::HabitOverviewWidgetRepository)

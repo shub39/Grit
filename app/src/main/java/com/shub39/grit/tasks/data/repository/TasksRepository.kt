@@ -4,6 +4,7 @@ import com.shub39.grit.core.data.toCategory
 import com.shub39.grit.core.data.toCategoryEntity
 import com.shub39.grit.core.data.toTask
 import com.shub39.grit.core.data.toTaskEntity
+import com.shub39.grit.tasks.data.TaskNotificationScheduler
 import com.shub39.grit.tasks.data.database.CategoryDao
 import com.shub39.grit.tasks.data.database.TasksDao
 import com.shub39.grit.tasks.domain.Category
@@ -22,6 +23,7 @@ class TasksRepository(
 ): TaskRepo, KoinComponent {
     
     private val widgetRepo: TodoListWidgetRepository by lazy { get() }
+    private val notificationScheduler: TaskNotificationScheduler by lazy { get() }
     override fun getTasksFlow(): Flow<Map<Category, List<Task>>> {
         val tasksFlow = tasksDao.getTasksFlow().map { entities ->
             entities.map { it.toTask() }.sortedBy { it.index }
@@ -47,12 +49,16 @@ class TasksRepository(
 
     override suspend fun upsertTask(task: Task) {
         tasksDao.upsertTask(task.toTaskEntity())
+        // Schedule notifications for tasks with deadlines
+        notificationScheduler.scheduleTaskDeadlineNotifications(task)
         // Update widget immediately
         widgetRepo.update()
     }
 
     override suspend fun deleteTask(task: Task) {
         tasksDao.deleteTask(task.toTaskEntity())
+        // Cancel notifications for deleted task
+        notificationScheduler.cancelTaskNotifications(task)
         // Update widget immediately
         widgetRepo.update()
     }

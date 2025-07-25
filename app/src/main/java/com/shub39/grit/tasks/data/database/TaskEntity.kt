@@ -4,6 +4,10 @@ import androidx.room.Entity
 import androidx.room.ForeignKey
 import androidx.room.Index
 import androidx.room.PrimaryKey
+import androidx.room.TypeConverter
+import java.time.Instant
+import java.time.LocalDateTime
+import java.time.ZoneOffset
 
 @Entity(
     tableName = "task",
@@ -22,5 +26,7 @@ data class TaskEntity(
     val categoryId: Long,
     var title: String,
     var status: Boolean = false,
-    var index: Int = 0
+    var index: Int = 0,
+    var deadline: Long? = null, // Store as timestamp
+    var priority: String = "MEDIUM"
 )
