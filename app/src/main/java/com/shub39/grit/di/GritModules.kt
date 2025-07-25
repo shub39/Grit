@@ -25,6 +25,7 @@ import com.shub39.grit.viewmodels.StateLayer
 import com.shub39.grit.viewmodels.TasksViewModel
 import com.shub39.grit.widgets.HabitOverviewWidgetRepository
 import com.shub39.grit.widgets.HabitStreakWidgetRepository
+import com.shub39.grit.widgets.TodoListWidgetRepository
 import org.koin.core.module.dsl.singleOf
 import org.koin.core.module.dsl.viewModelOf
 import org.koin.dsl.bind
@@ -67,6 +68,7 @@ val appModule = module {
     // widget repositories
     singleOf(::HabitOverviewWidgetRepository)
     singleOf(::HabitStreakWidgetRepository)
+    singleOf(::TodoListWidgetRepository)
 
     // Revenuecat
     singleOf(::BillingHandler)

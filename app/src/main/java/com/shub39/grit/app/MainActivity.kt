@@ -22,17 +22,28 @@ import com.shub39.grit.core.presentation.theme.GritTheme
 import com.shub39.grit.util.Utils
 import com.shub39.grit.viewmodels.MainViewModel
 import com.shub39.grit.viewmodels.SettingsViewModel
+import com.shub39.grit.widgets.TodoListWidgetRepository
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import org.koin.android.ext.android.get
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class MainActivity : FragmentActivity() {
     private val settingsViewModel: SettingsViewModel by viewModel()
     private val mainViewModel: MainViewModel by viewModel()
+    private val todoWidgetRepo: TodoListWidgetRepository by lazy { get() }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         installSplashScreen()
         createNotificationChannel(this)
         enableEdgeToEdge()
+        
+        // Update widgets when app opens
+        CoroutineScope(Dispatchers.IO).launch {
+            todoWidgetRepo.update()
+        }
 
         setContent {
             val settingsState by settingsViewModel.state.collectAsStateWithLifecycle()
@@ -141,6 +152,14 @@ class MainActivity : FragmentActivity() {
                 Toast.makeText(this, "Authentication error: $errString", Toast.LENGTH_SHORT).show()
                 finish()
             }
+        }
+    }
+    
+    override fun onResume() {
+        super.onResume()
+        // Update widgets when app resumes
+        CoroutineScope(Dispatchers.IO).launch {
+            todoWidgetRepo.update()
         }
     }
 }

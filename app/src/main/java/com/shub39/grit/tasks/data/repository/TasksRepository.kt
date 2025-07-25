@@ -9,14 +9,19 @@ import com.shub39.grit.tasks.data.database.TasksDao
 import com.shub39.grit.tasks.domain.Category
 import com.shub39.grit.tasks.domain.Task
 import com.shub39.grit.tasks.domain.TaskRepo
+import com.shub39.grit.widgets.TodoListWidgetRepository
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.map
+import org.koin.core.component.KoinComponent
+import org.koin.core.component.get
 
 class TasksRepository(
     private val tasksDao: TasksDao,
     private val categoryDao: CategoryDao
-): TaskRepo {
+): TaskRepo, KoinComponent {
+    
+    private val widgetRepo: TodoListWidgetRepository by lazy { get() }
     override fun getTasksFlow(): Flow<Map<Category, List<Task>>> {
         val tasksFlow = tasksDao.getTasksFlow().map { entities ->
             entities.map { it.toTask() }.sortedBy { it.index }
@@ -42,14 +47,20 @@ class TasksRepository(
 
     override suspend fun upsertTask(task: Task) {
         tasksDao.upsertTask(task.toTaskEntity())
+        // Update widget immediately
+        widgetRepo.update()
     }
 
     override suspend fun deleteTask(task: Task) {
         tasksDao.deleteTask(task.toTaskEntity())
+        // Update widget immediately
+        widgetRepo.update()
     }
 
     override suspend fun deleteAllTasks() {
         tasksDao.deleteAllTasks()
+        // Update widget immediately
+        widgetRepo.update()
     }
 
     override suspend fun upsertCategory(category: Category) {
