@@ -104,7 +104,6 @@ class MainActivity : FragmentActivity() {
 
         val promptInfo = BiometricPrompt.PromptInfo.Builder()
             .setTitle(getString(R.string.biometric_lock))
-            .setNegativeButtonText(getString(R.string.cancel))
             .setAllowedAuthenticators(Utils.getAuthenticators())
             .build()
 
