@@ -10,8 +10,8 @@ plugins {
 }
 
 val appName = "Grit"
-val appVersionCode = 4220
-val appVersionName = "4.2.2"
+val appVersionCode = 4230
+val appVersionName = "4.2.3"
 
 android {
     namespace = "com.shub39.grit"
