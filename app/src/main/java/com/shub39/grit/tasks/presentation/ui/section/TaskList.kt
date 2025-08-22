@@ -12,6 +12,7 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
@@ -97,17 +98,17 @@ fun TaskList(
 
     val tasks = state.tasks[state.currentCategory] ?: emptyList()
 
-    val scrollBehaviour = TopAppBarDefaults.enterAlwaysScrollBehavior()
+    val scrollBehavior = TopAppBarDefaults.enterAlwaysScrollBehavior()
     Column(
         modifier = Modifier
-            .nestedScroll(scrollBehaviour.nestedScrollConnection)
+            .nestedScroll(scrollBehavior.nestedScrollConnection)
             .fillMaxSize()
     ) {
         MediumFlexibleTopAppBar(
             colors = TopAppBarDefaults.topAppBarColors(
                 scrolledContainerColor = MaterialTheme.colorScheme.surface
             ),
-            scrollBehavior = scrollBehaviour,
+            scrollBehavior = scrollBehavior,
             title = { Text(text = stringResource(R.string.tasks)) },
             subtitle = {
                 Text(
@@ -115,42 +116,40 @@ fun TaskList(
                 )
             },
             actions = {
-                Row {
-                    AnimatedVisibility(
-                        visible = state.completedTasks.isNotEmpty()
+                AnimatedVisibility(
+                    visible = state.completedTasks.isNotEmpty()
+                ) {
+                    OutlinedIconButton(
+                        onClick = { showDeleteDialog = true },
+                        shapes = IconButtonShapes(
+                            shape = CircleShape,
+                            pressedShape = MaterialTheme.shapes.small
+                        )
                     ) {
-                        OutlinedIconButton(
-                            onClick = { showDeleteDialog = true },
-                            shapes = IconButtonShapes(
-                                shape = CircleShape,
-                                pressedShape = MaterialTheme.shapes.small
-                            )
-                        ) {
-                            Icon(
-                                imageVector = Icons.Rounded.Delete,
-                                contentDescription = null
-                            )
-                        }
+                        Icon(
+                            imageVector = Icons.Rounded.Delete,
+                            contentDescription = null
+                        )
                     }
+                }
 
-                    AnimatedVisibility(
-                        visible = tasks.isNotEmpty()
+                AnimatedVisibility(
+                    visible = tasks.isNotEmpty()
+                ) {
+                    FilledTonalIconToggleButton(
+                        checked = editState,
+                        shapes = IconToggleButtonShapes(
+                            shape = CircleShape,
+                            checkedShape = MaterialTheme.shapes.small,
+                            pressedShape = MaterialTheme.shapes.extraSmall,
+                        ),
+                        onCheckedChange = { editState = it },
+                        enabled = !state.tasks[state.currentCategory].isNullOrEmpty()
                     ) {
-                        FilledTonalIconToggleButton(
-                            checked = editState,
-                            shapes = IconToggleButtonShapes(
-                                shape = CircleShape,
-                                checkedShape = MaterialTheme.shapes.small,
-                                pressedShape = MaterialTheme.shapes.extraSmall,
-                            ),
-                            onCheckedChange = { editState = it },
-                            enabled = !state.tasks[state.currentCategory].isNullOrEmpty()
-                        ) {
-                            Icon(
-                                imageVector = Icons.Rounded.Reorder,
-                                contentDescription = null
-                            )
-                        }
+                        Icon(
+                            imageVector = Icons.Rounded.Reorder,
+                            contentDescription = null
+                        )
                     }
                 }
             }
@@ -280,7 +279,7 @@ fun TaskList(
                         if (tasks.isEmpty()) {
                             Empty()
                         } else {
-                            Spacer(modifier = Modifier.padding(60.dp))
+                            Spacer(modifier = Modifier.height(60.dp))
                         }
                     }
                 }

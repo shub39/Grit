@@ -1,31 +1,33 @@
 package com.shub39.grit.tasks.presentation.ui.section
 
-import androidx.compose.animation.core.animateDpAsState
-import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.layout.widthIn
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.lazy.rememberLazyListState
-import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
-import androidx.compose.material.icons.filled.Edit
+import androidx.compose.material.icons.rounded.Delete
+import androidx.compose.material.icons.rounded.DragIndicator
+import androidx.compose.material.icons.rounded.Edit
+import androidx.compose.material.icons.rounded.Reorder
+import androidx.compose.material.icons.rounded.Warning
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonShapes
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.ExperimentalMaterial3ExpressiveApi
 import androidx.compose.material3.FilledTonalIconButton
+import androidx.compose.material3.FilledTonalIconToggleButton
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
+import androidx.compose.material3.IconToggleButtonShapes
 import androidx.compose.material3.ListItem
-import androidx.compose.material3.ListItemDefaults
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
@@ -38,11 +40,9 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
 import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
-import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardCapitalization
@@ -66,6 +66,7 @@ fun EditCategories(
     onNavigateBack: () -> Unit
 ) = PageFill {
     var categories by remember(state.tasks) { mutableStateOf(state.tasks.keys.toList()) }
+    var editState by remember { mutableStateOf(false) }
 
     val listState = rememberLazyListState()
     val reorderableListState = rememberReorderableLazyListState(listState) { from, to ->
@@ -78,7 +79,6 @@ fun EditCategories(
 
     Column(
         modifier = Modifier
-            .widthIn(max = 500.dp)
             .fillMaxSize()
     ) {
         TopAppBar(
@@ -96,25 +96,40 @@ fun EditCategories(
                         contentDescription = "Navigate Back"
                     )
                 }
+            },
+            actions = {
+                AnimatedVisibility(
+                    visible = categories.size >= 2
+                ) {
+                    FilledTonalIconToggleButton(
+                        checked = editState,
+                        shapes = IconToggleButtonShapes(
+                            shape = CircleShape,
+                            checkedShape = MaterialTheme.shapes.small,
+                            pressedShape = MaterialTheme.shapes.extraSmall,
+                        ),
+                        onCheckedChange = { editState = it },
+                        enabled = !state.tasks[state.currentCategory].isNullOrEmpty()
+                    ) {
+                        Icon(
+                            imageVector = Icons.Rounded.Reorder,
+                            contentDescription = null
+                        )
+                    }
+                }
             }
         )
 
         LazyColumn(
             modifier = Modifier.fillMaxSize(),
             state = listState,
-            horizontalAlignment = Alignment.CenterHorizontally,
-            verticalArrangement = Arrangement.spacedBy(8.dp),
-            contentPadding = PaddingValues(16.dp)
+            horizontalAlignment = Alignment.CenterHorizontally
         ) {
             itemsIndexed(categories, key = { _, it -> it.id }) { index, category ->
                 var showEditSheet by remember { mutableStateOf(false) }
                 var showDeleteDialog by remember { mutableStateOf(false) }
 
                 ReorderableItem(reorderableListState, key = category.id) {
-                    val cardCorners by animateDpAsState(
-                        targetValue = if (it) 30.dp else 16.dp
-                    )
-
                     ListItem(
                         headlineContent = {
                             Text(text = category.name)
@@ -122,41 +137,33 @@ fun EditCategories(
                         supportingContent = {
                             Text(text = "${state.tasks[category]?.size ?: "0"} ${stringResource(R.string.tasks)}")
                         },
-                        colors = ListItemDefaults.colors(
-                            containerColor = MaterialTheme.colorScheme.secondaryContainer,
-                            leadingIconColor = MaterialTheme.colorScheme.onSecondaryContainer,
-                            headlineColor = MaterialTheme.colorScheme.onSecondaryContainer,
-                            supportingColor = MaterialTheme.colorScheme.onSecondaryContainer,
-                            trailingIconColor = MaterialTheme.colorScheme.onSecondaryContainer
-                        ),
-                        modifier = Modifier.clip(RoundedCornerShape(cardCorners)),
                         trailingContent = {
-                            Row {
-                                FilledTonalIconButton(
+                            Row(verticalAlignment = Alignment.CenterVertically) {
+                                IconButton(
                                     onClick = { showDeleteDialog = true },
                                     enabled = categories.size > 1
                                 ) {
                                     Icon(
-                                        painter = painterResource(R.drawable.round_delete_forever_24),
+                                        imageVector = Icons.Rounded.Delete,
                                         contentDescription = "Delete"
                                     )
                                 }
 
-                                FilledTonalIconButton(
+                                IconButton(
                                     onClick = { showEditSheet = true }
                                 ) {
                                     Icon(
-                                        painter = painterResource(R.drawable.baseline_edit_square_24),
+                                        imageVector = Icons.Rounded.Edit,
                                         contentDescription = "Edit"
                                     )
                                 }
 
-                                IconButton(
-                                    modifier = Modifier.draggableHandle(),
-                                    onClick = {}
+                                FilledTonalIconButton(
+                                    onClick = {},
+                                    modifier = Modifier.draggableHandle()
                                 ) {
                                     Icon(
-                                        painter = painterResource(R.drawable.baseline_drag_indicator_24),
+                                        imageVector = Icons.Rounded.DragIndicator,
                                         contentDescription = null
                                     )
                                 }
@@ -170,7 +177,7 @@ fun EditCategories(
                         onDismissRequest = { showDeleteDialog = false }
                     ) {
                         Icon(
-                            painter = painterResource(R.drawable.round_warning_24),
+                            imageVector = Icons.Rounded.Warning,
                             contentDescription = null,
                             modifier = Modifier.size(64.dp)
                         )
@@ -211,7 +218,7 @@ fun EditCategories(
                         }
 
                         Icon(
-                            imageVector = Icons.Default.Edit,
+                            imageVector = Icons.Rounded.Edit,
                             contentDescription = "Edit Category"
                         )
 
