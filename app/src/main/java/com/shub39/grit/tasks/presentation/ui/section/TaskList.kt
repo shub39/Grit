@@ -269,7 +269,7 @@ fun TaskList(
                                                     if (task.status) {
                                                         reorderableTasks =
                                                             tasks.toMutableList().apply {
-                                                                add(tasks.size - 1, removeAt(index))
+                                                                add(reorderableTasks.size - 1, removeAt(index))
                                                             }
 
                                                         onAction(
