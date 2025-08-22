@@ -19,7 +19,6 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import com.materialkolor.PaletteStyle
 import com.shub39.grit.core.domain.AppTheme
-import com.shub39.grit.core.presentation.component.PageFill
 import com.shub39.grit.core.presentation.theme.GritTheme
 import com.shub39.grit.core.presentation.theme.Theme
 import com.shub39.grit.tasks.domain.Category
@@ -41,7 +40,7 @@ private sealed interface TasksRoutes {
 fun TasksGraph(
     state: TaskPageState,
     onAction: (TaskPageAction) -> Unit
-) = PageFill {
+) {
     val navController = rememberNavController()
 
     NavHost(

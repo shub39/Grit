@@ -5,7 +5,6 @@ import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.core.animateDpAsState
 import androidx.compose.foundation.combinedClickable
 import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.FlowRow
 import androidx.compose.foundation.layout.PaddingValues
@@ -15,7 +14,6 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.layout.widthIn
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
@@ -41,12 +39,13 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButtonShapes
 import androidx.compose.material3.IconToggleButtonShapes
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.MediumFlexibleTopAppBar
 import androidx.compose.material3.OutlinedIconButton
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
 import androidx.compose.material3.ToggleButton
 import androidx.compose.material3.ToggleButtonDefaults
-import androidx.compose.material3.TopAppBar
+import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
@@ -58,6 +57,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.focus.focusRequester
+import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
@@ -70,6 +70,7 @@ import com.shub39.grit.R
 import com.shub39.grit.core.presentation.component.Empty
 import com.shub39.grit.core.presentation.component.GritBottomSheet
 import com.shub39.grit.core.presentation.component.GritDialog
+import com.shub39.grit.core.presentation.component.PageFill
 import com.shub39.grit.tasks.domain.Category
 import com.shub39.grit.tasks.domain.CategoryColors
 import com.shub39.grit.tasks.domain.Task
@@ -86,7 +87,7 @@ fun TaskList(
     state: TaskPageState,
     onAction: (TaskPageAction) -> Unit,
     onNavigateToEditCategories: () -> Unit
-) {
+) = PageFill {
     var showTaskAddSheet by remember { mutableStateOf(false) }
     var showCategoryAddSheet by remember { mutableStateOf(false) }
     var showDeleteDialog by remember { mutableStateOf(false) }
@@ -95,241 +96,241 @@ fun TaskList(
 
     val tasks = state.tasks[state.currentCategory] ?: emptyList()
 
-    Box(
-        modifier = Modifier.fillMaxSize(),
-        contentAlignment = Alignment.Center
+    val scrollBehaviour = TopAppBarDefaults.enterAlwaysScrollBehavior()
+    Column(
+        modifier = Modifier
+            .nestedScroll(scrollBehaviour.nestedScrollConnection)
+            .fillMaxSize()
     ) {
-        Column(
-            modifier = Modifier
-                .widthIn(max = 500.dp)
-                .fillMaxSize()
-        ) {
-            TopAppBar(
-                title = { Text(text = stringResource(R.string.tasks)) },
-                subtitle = {
-                    Text(
-                        text = "${state.completedTasks.size} " + stringResource(R.string.items_completed)
-                    )
-                },
-                actions = {
-                    Row {
-                        AnimatedVisibility(
-                            visible = state.completedTasks.isNotEmpty()
+        MediumFlexibleTopAppBar(
+            scrollBehavior = scrollBehaviour,
+            title = { Text(text = stringResource(R.string.tasks)) },
+            subtitle = {
+                Text(
+                    text = "${state.completedTasks.size} " + stringResource(R.string.items_completed)
+                )
+            },
+            actions = {
+                Row {
+                    AnimatedVisibility(
+                        visible = state.completedTasks.isNotEmpty()
+                    ) {
+                        OutlinedIconButton(
+                            onClick = { showDeleteDialog = true },
+                            shapes = IconButtonShapes(
+                                shape = CircleShape,
+                                pressedShape = MaterialTheme.shapes.small
+                            )
                         ) {
-                            OutlinedIconButton(
-                                onClick = { showDeleteDialog = true },
-                                shapes = IconButtonShapes(
-                                    shape = CircleShape,
-                                    pressedShape = MaterialTheme.shapes.small
-                                )
-                            ) {
-                                Icon(
-                                    painter = painterResource(R.drawable.round_delete_forever_24),
-                                    contentDescription = null
-                                )
-                            }
-                        }
-
-                        AnimatedVisibility(
-                            visible = tasks.isNotEmpty()
-                        ) {
-                            FilledTonalIconToggleButton(
-                                checked = editState,
-                                shapes = IconToggleButtonShapes(
-                                    shape = CircleShape,
-                                    checkedShape = MaterialTheme.shapes.small,
-                                    pressedShape = MaterialTheme.shapes.extraSmall,
-                                ),
-                                onCheckedChange = { editState = it },
-                                enabled = !state.tasks[state.currentCategory].isNullOrEmpty()
-                            ) {
-                                Icon(
-                                    painter = painterResource(R.drawable.baseline_reorder_24),
-                                    contentDescription = null
-                                )
-                            }
+                            Icon(
+                                painter = painterResource(R.drawable.round_delete_forever_24),
+                                contentDescription = null
+                            )
                         }
                     }
-                }
-            )
 
-            LazyRow(
-                modifier = Modifier.fillMaxWidth(),
-                horizontalArrangement = Arrangement.spacedBy(8.dp),
-                contentPadding = PaddingValues(start = 16.dp, end = 16.dp)
-            ) {
-                items(state.tasks.keys.toList(), key = { it.id }) { category ->
-                    val chipCorner by animateDpAsState(
-                        targetValue = if (category == state.currentCategory) 20.dp else 5.dp
-                    )
-
-                    FilterChip(
-                        selected = category == state.currentCategory,
-                        onClick = {
-                            onAction(TaskPageAction.ReorderTasks(tasks.mapIndexed { index, task -> index to task }))
-                            onAction(TaskPageAction.ChangeCategory(category))
-                            editState = false
-                        },
-                        shape = RoundedCornerShape(chipCorner),
-                        label = { Text(category.name) }
-                    )
-                }
-
-                item {
-                    Row(
-                        horizontalArrangement = Arrangement.spacedBy(8.dp)
+                    AnimatedVisibility(
+                        visible = tasks.isNotEmpty()
                     ) {
-                        AssistChip(
-                            onClick = { showCategoryAddSheet = true },
-                            enabled = !editState,
-                            colors = AssistChipDefaults.assistChipColors(
-                                containerColor = MaterialTheme.colorScheme.primaryContainer,
-                                labelColor = MaterialTheme.colorScheme.onPrimaryContainer
+                        FilledTonalIconToggleButton(
+                            checked = editState,
+                            shapes = IconToggleButtonShapes(
+                                shape = CircleShape,
+                                checkedShape = MaterialTheme.shapes.small,
+                                pressedShape = MaterialTheme.shapes.extraSmall,
                             ),
-                            border = AssistChipDefaults.assistChipBorder(false),
-                            label = {
-                                Icon(
-                                    painter = painterResource(R.drawable.round_add_24),
-                                    contentDescription = "Add Category"
-                                )
-                            }
-                        )
-
-                        AssistChip(
-                            onClick = onNavigateToEditCategories,
-                            enabled = !editState,
-                            colors = AssistChipDefaults.assistChipColors(
-                                containerColor = MaterialTheme.colorScheme.primaryContainer,
-                                labelColor = MaterialTheme.colorScheme.onPrimaryContainer
-                            ),
-                            border = AssistChipDefaults.assistChipBorder(false),
-                            label = {
-                                Icon(
-                                    painter = painterResource(R.drawable.baseline_edit_square_24),
-                                    contentDescription = "Edit Categories"
-                                )
-                            }
-                        )
+                            onCheckedChange = { editState = it },
+                            enabled = !state.tasks[state.currentCategory].isNullOrEmpty()
+                        ) {
+                            Icon(
+                                painter = painterResource(R.drawable.baseline_reorder_24),
+                                contentDescription = null
+                            )
+                        }
                     }
                 }
             }
+        )
 
-            AnimatedContent(
-                targetState = state.currentCategory
-            ) { category ->
-                if (category != null) {
-                    var reorderableTasks by remember(state) { mutableStateOf(tasks) }
-                    val lazyListState = rememberLazyListState()
-                    val reorderableListState =
-                        rememberReorderableLazyListState(lazyListState) { from, to ->
-                            reorderableTasks = tasks.toMutableList().apply {
-                                add(to.index, removeAt(from.index))
-                            }
+        LazyRow(
+            modifier = Modifier.fillMaxWidth(),
+            horizontalArrangement = Arrangement.spacedBy(8.dp),
+            contentPadding = PaddingValues(start = 16.dp, end = 16.dp)
+        ) {
+            items(state.tasks.keys.toList(), key = { it.id }) { category ->
+                val chipCorner by animateDpAsState(
+                    targetValue = if (category == state.currentCategory) 20.dp else 5.dp
+                )
+
+                FilterChip(
+                    selected = category == state.currentCategory,
+                    onClick = {
+                        onAction(TaskPageAction.ReorderTasks(tasks.mapIndexed { index, task -> index to task }))
+                        onAction(TaskPageAction.ChangeCategory(category))
+                        editState = false
+                    },
+                    shape = RoundedCornerShape(chipCorner),
+                    label = { Text(category.name) }
+                )
+            }
+
+            item {
+                Row(
+                    horizontalArrangement = Arrangement.spacedBy(8.dp)
+                ) {
+                    AssistChip(
+                        onClick = { showCategoryAddSheet = true },
+                        enabled = !editState,
+                        colors = AssistChipDefaults.assistChipColors(
+                            containerColor = MaterialTheme.colorScheme.primaryContainer,
+                            labelColor = MaterialTheme.colorScheme.onPrimaryContainer
+                        ),
+                        border = AssistChipDefaults.assistChipBorder(false),
+                        label = {
+                            Icon(
+                                painter = painterResource(R.drawable.round_add_24),
+                                contentDescription = "Add Category"
+                            )
                         }
+                    )
 
-                    LazyColumn(
-                        modifier = Modifier.fillMaxSize(),
-                        state = lazyListState
-                    ) {
-                        itemsIndexed(reorderableTasks, key = { _, it -> it.id }) { index, task ->
-                            ReorderableItem(reorderableListState, key = task.id) {
-                                val cardCorners by animateDpAsState(
-                                    targetValue = if (it) 100.dp else 16.dp
-                                )
+                    AssistChip(
+                        onClick = onNavigateToEditCategories,
+                        enabled = !editState,
+                        colors = AssistChipDefaults.assistChipColors(
+                            containerColor = MaterialTheme.colorScheme.primaryContainer,
+                            labelColor = MaterialTheme.colorScheme.onPrimaryContainer
+                        ),
+                        border = AssistChipDefaults.assistChipBorder(false),
+                        label = {
+                            Icon(
+                                painter = painterResource(R.drawable.baseline_edit_square_24),
+                                contentDescription = "Edit Categories"
+                            )
+                        }
+                    )
+                }
+            }
+        }
 
-                                TaskCard(
-                                    task = task,
-                                    dragState = editState,
-                                    reorderIcon = {
-                                        Icon(
-                                            painter = painterResource(R.drawable.baseline_drag_indicator_24),
-                                            contentDescription = "Drag",
-                                            modifier = Modifier.draggableHandle(
-                                                onDragStopped = {
+        AnimatedContent(
+            targetState = state.currentCategory
+        ) { category ->
+            if (category != null) {
+                var reorderableTasks by remember(state) { mutableStateOf(tasks) }
+                val lazyListState = rememberLazyListState()
+                val reorderableListState =
+                    rememberReorderableLazyListState(lazyListState) { from, to ->
+                        reorderableTasks = tasks.toMutableList().apply {
+                            add(to.index, removeAt(from.index))
+                        }
+                    }
+
+                LazyColumn(
+                    modifier = Modifier.fillMaxSize(),
+                    state = lazyListState
+                ) {
+                    itemsIndexed(reorderableTasks, key = { _, it -> it.id }) { index, task ->
+                        ReorderableItem(reorderableListState, key = task.id) {
+                            val cardCorners by animateDpAsState(
+                                targetValue = if (it) 100.dp else 16.dp
+                            )
+
+                            TaskCard(
+                                task = task,
+                                dragState = editState,
+                                reorderIcon = {
+                                    Icon(
+                                        painter = painterResource(R.drawable.baseline_drag_indicator_24),
+                                        contentDescription = "Drag",
+                                        modifier = Modifier.draggableHandle(
+                                            onDragStopped = {
+                                                onAction(
+                                                    TaskPageAction.ReorderTasks(
+                                                        reorderableTasks.mapIndexed { index, task -> index to task })
+                                                )
+                                            }
+                                        )
+                                    )
+                                },
+                                shape = RoundedCornerShape(cardCorners),
+                                modifier = Modifier
+                                    .fillMaxWidth()
+                                    .padding(start = 16.dp, end = 16.dp, bottom = 8.dp)
+                                    .combinedClickable(
+                                        // change status on click
+                                        onClick = {
+                                            if (!editState) {
+                                                task.status = !task.status
+
+                                                onAction(TaskPageAction.UpsertTask(task))
+
+                                                if (task.status) {
+                                                    reorderableTasks =
+                                                        tasks.toMutableList().apply {
+                                                            add(
+                                                                reorderableTasks.size - 1,
+                                                                removeAt(index)
+                                                            )
+                                                        }
+
                                                     onAction(
                                                         TaskPageAction.ReorderTasks(
                                                             reorderableTasks.mapIndexed { index, task -> index to task })
                                                     )
                                                 }
-                                            )
-                                        )
-                                    },
-                                    shape = RoundedCornerShape(cardCorners),
-                                    modifier = Modifier
-                                        .fillMaxWidth()
-                                        .padding(start = 16.dp, end = 16.dp, bottom = 8.dp)
-                                        .combinedClickable(
-                                            // change status on click
-                                            onClick = {
-                                                if (!editState) {
-                                                    task.status = !task.status
-
-                                                    onAction(TaskPageAction.UpsertTask(task))
-
-                                                    if (task.status) {
-                                                        reorderableTasks =
-                                                            tasks.toMutableList().apply {
-                                                                add(reorderableTasks.size - 1, removeAt(index))
-                                                            }
-
-                                                        onAction(
-                                                            TaskPageAction.ReorderTasks(
-                                                                reorderableTasks.mapIndexed { index, task -> index to task })
-                                                        )
-                                                    }
-                                                }
-                                            },
-                                            // edit on click and hold
-                                            onLongClick = {
-                                                if (!editState) {
-                                                    editTask = task
-                                                }
                                             }
-                                        )
-                                )
-                            }
+                                        },
+                                        // edit on click and hold
+                                        onLongClick = {
+                                            if (!editState) {
+                                                editTask = task
+                                            }
+                                        }
+                                    )
+                            )
                         }
+                    }
 
-                        item {
-                            if (tasks.isEmpty()) {
-                                Empty()
-                            } else {
-                                Spacer(modifier = Modifier.padding(60.dp))
-                            }
+                    item {
+                        if (tasks.isEmpty()) {
+                            Empty()
+                        } else {
+                            Spacer(modifier = Modifier.padding(60.dp))
                         }
                     }
                 }
             }
         }
+    }
 
-        AnimatedVisibility(
-            visible = state.currentCategory != null,
-            modifier = Modifier
-                .align(Alignment.BottomEnd)
-                .padding(16.dp)
+    AnimatedVisibility(
+        visible = state.currentCategory != null,
+        modifier = Modifier
+            .align(Alignment.BottomEnd)
+            .padding(16.dp)
+    ) {
+        FloatingActionButton(
+            onClick = { showTaskAddSheet = true },
+            containerColor = MaterialTheme.colorScheme.primaryContainer,
+            contentColor = MaterialTheme.colorScheme.onPrimaryContainer
         ) {
-            FloatingActionButton(
-                onClick = { showTaskAddSheet = true },
-                containerColor = MaterialTheme.colorScheme.primaryContainer,
-                contentColor = MaterialTheme.colorScheme.onPrimaryContainer
+            Row(
+                modifier = Modifier.padding(16.dp),
+                verticalAlignment = Alignment.CenterVertically
             ) {
-                Row(
-                    modifier = Modifier.padding(16.dp),
-                    verticalAlignment = Alignment.CenterVertically
-                ) {
-                    Icon(
-                        painter = painterResource(R.drawable.round_add_24),
-                        contentDescription = null
-                    )
+                Icon(
+                    painter = painterResource(R.drawable.round_add_24),
+                    contentDescription = null
+                )
 
-                    AnimatedVisibility(
-                        visible = state.tasks[state.currentCategory].isNullOrEmpty()
-                    ) {
-                        Text(
-                            text = stringResource(R.string.add_task),
-                            modifier = Modifier.padding(start = 8.dp)
-                        )
-                    }
+                AnimatedVisibility(
+                    visible = state.tasks[state.currentCategory].isNullOrEmpty()
+                ) {
+                    Text(
+                        text = stringResource(R.string.add_task),
+                        modifier = Modifier.padding(start = 8.dp)
+                    )
                 }
             }
         }
