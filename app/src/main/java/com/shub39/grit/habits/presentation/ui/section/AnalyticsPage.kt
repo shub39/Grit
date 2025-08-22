@@ -1,4 +1,4 @@
-package com.shub39.grit.habits.presentation.component
+package com.shub39.grit.habits.presentation.ui.section
 
 import androidx.compose.animation.animateContentSize
 import androidx.compose.foundation.background
@@ -67,15 +67,19 @@ import com.kizitonwose.calendar.compose.heatmapcalendar.HeatMapCalendarState
 import com.kizitonwose.calendar.compose.heatmapcalendar.rememberHeatMapCalendarState
 import com.kizitonwose.calendar.compose.rememberCalendarState
 import com.shub39.grit.R
-import com.shub39.grit.core.presentation.components.GritBottomSheet
-import com.shub39.grit.core.presentation.components.GritDialog
-import com.shub39.grit.core.presentation.components.PageFill
+import com.shub39.grit.core.presentation.component.GritBottomSheet
+import com.shub39.grit.core.presentation.component.GritDialog
+import com.shub39.grit.core.presentation.component.PageFill
 import com.shub39.grit.core.presentation.countBestStreak
 import com.shub39.grit.core.presentation.countCurrentStreak
 import com.shub39.grit.habits.domain.Habit
 import com.shub39.grit.habits.domain.HabitStatus
 import com.shub39.grit.habits.presentation.HabitPageState
 import com.shub39.grit.habits.presentation.HabitsPageAction
+import com.shub39.grit.habits.presentation.formatDateWithOrdinal
+import com.shub39.grit.habits.presentation.prepareLineChartData
+import com.shub39.grit.habits.presentation.prepareWeekDayData
+import com.shub39.grit.habits.presentation.ui.component.AnalyticsCard
 import ir.ehsannarmani.compose_charts.LineChart
 import ir.ehsannarmani.compose_charts.RowChart
 import ir.ehsannarmani.compose_charts.models.AnimationMode

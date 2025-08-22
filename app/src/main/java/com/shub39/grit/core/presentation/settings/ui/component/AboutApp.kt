@@ -1,4 +1,4 @@
-package com.shub39.grit.core.presentation.settings.components
+package com.shub39.grit.core.presentation.settings.ui.component
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column

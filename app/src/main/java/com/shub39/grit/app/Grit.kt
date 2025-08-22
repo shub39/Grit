@@ -32,10 +32,10 @@ import androidx.navigation.compose.rememberNavController
 import com.shub39.grit.R
 import com.shub39.grit.billing.PaywallPage
 import com.shub39.grit.core.domain.Pages
-import com.shub39.grit.core.presentation.settings.Settings
 import com.shub39.grit.core.presentation.settings.SettingsAction
-import com.shub39.grit.habits.presentation.Habits
-import com.shub39.grit.tasks.presentation.Tasks
+import com.shub39.grit.core.presentation.settings.SettingsGraph
+import com.shub39.grit.habits.presentation.HabitsGraph
+import com.shub39.grit.tasks.presentation.TasksGraph
 import com.shub39.grit.viewmodels.HabitViewModel
 import com.shub39.grit.viewmodels.SettingsViewModel
 import com.shub39.grit.viewmodels.TasksViewModel
@@ -154,7 +154,7 @@ fun Grit(
                         val tvm: TasksViewModel = koinViewModel()
                         val taskPageState by tvm.state.collectAsStateWithLifecycle()
 
-                        Tasks(
+                        TasksGraph(
                             state = taskPageState,
                             onAction = tvm::taskPageAction
                         )
@@ -163,7 +163,7 @@ fun Grit(
                     composable<Routes.SettingsPages> {
                         currentRoute = Routes.SettingsPages
 
-                        Settings(
+                        SettingsGraph(
                             state = settingsState,
                             onAction = svm::onAction,
                         )
@@ -175,7 +175,7 @@ fun Grit(
                         val hvm: HabitViewModel = koinViewModel()
                         val habitsPageState by hvm.state.collectAsStateWithLifecycle()
 
-                        Habits(
+                        HabitsGraph(
                             state = habitsPageState,
                             onAction = hvm::habitsPageAction,
                         )

@@ -1,4 +1,4 @@
-package com.shub39.grit.habits.presentation.component
+package com.shub39.grit.habits.presentation.ui.component
 
 import android.os.Build
 import androidx.compose.foundation.layout.Box

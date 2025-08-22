@@ -19,14 +19,14 @@ import androidx.navigation.compose.rememberNavController
 import com.materialkolor.PaletteStyle
 import com.shub39.grit.core.domain.AppTheme
 import com.shub39.grit.core.domain.Fonts
-import com.shub39.grit.core.presentation.components.PageFill
+import com.shub39.grit.core.presentation.component.PageFill
 import com.shub39.grit.core.presentation.theme.GritTheme
 import com.shub39.grit.core.presentation.theme.Theme
 import com.shub39.grit.habits.domain.Habit
 import com.shub39.grit.habits.domain.HabitStatus
-import com.shub39.grit.habits.presentation.component.AnalyticsPage
-import com.shub39.grit.habits.presentation.component.HabitsList
-import com.shub39.grit.habits.presentation.component.OverallAnalytics
+import com.shub39.grit.habits.presentation.ui.section.AnalyticsPage
+import com.shub39.grit.habits.presentation.ui.section.HabitsList
+import com.shub39.grit.habits.presentation.ui.section.OverallAnalytics
 import kotlinx.serialization.Serializable
 import java.time.LocalDate
 import java.time.LocalDateTime
@@ -44,7 +44,7 @@ private sealed interface HabitRoutes {
 }
 
 @Composable
-fun Habits(
+fun HabitsGraph(
     state: HabitPageState,
     onAction: (HabitsPageAction) -> Unit
 ) = PageFill {
@@ -123,7 +123,7 @@ private fun Preview() {
             Box(
                 modifier = Modifier.padding(padding)
             ) {
-                Habits(
+                HabitsGraph(
                     state = state,
                     onAction = {
                         when (it) {

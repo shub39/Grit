@@ -1,4 +1,4 @@
-package com.shub39.grit.tasks.presentation.component
+package com.shub39.grit.tasks.presentation.ui.section
 
 import androidx.compose.animation.core.animateDpAsState
 import androidx.compose.foundation.layout.Arrangement
@@ -49,9 +49,9 @@ import androidx.compose.ui.text.input.KeyboardCapitalization
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import com.shub39.grit.R
-import com.shub39.grit.core.presentation.components.GritBottomSheet
-import com.shub39.grit.core.presentation.components.GritDialog
-import com.shub39.grit.core.presentation.components.PageFill
+import com.shub39.grit.core.presentation.component.GritBottomSheet
+import com.shub39.grit.core.presentation.component.GritDialog
+import com.shub39.grit.core.presentation.component.PageFill
 import com.shub39.grit.tasks.presentation.TaskPageAction
 import com.shub39.grit.tasks.presentation.TaskPageState
 import kotlinx.coroutines.delay

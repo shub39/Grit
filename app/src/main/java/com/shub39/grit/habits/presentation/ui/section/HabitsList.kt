@@ -1,4 +1,4 @@
-package com.shub39.grit.habits.presentation.component
+package com.shub39.grit.habits.presentation.ui.section
 
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.core.animateDpAsState
@@ -52,14 +52,15 @@ import androidx.compose.ui.text.input.KeyboardCapitalization
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import com.shub39.grit.R
-import com.shub39.grit.core.presentation.components.Empty
-import com.shub39.grit.core.presentation.components.GritBottomSheet
-import com.shub39.grit.core.presentation.components.GritDialog
+import com.shub39.grit.core.presentation.component.Empty
+import com.shub39.grit.core.presentation.component.GritBottomSheet
+import com.shub39.grit.core.presentation.component.GritDialog
 import com.shub39.grit.core.presentation.showAddNotification
 import com.shub39.grit.core.presentation.timePickerStateToLocalDateTime
 import com.shub39.grit.habits.domain.Habit
 import com.shub39.grit.habits.presentation.HabitPageState
 import com.shub39.grit.habits.presentation.HabitsPageAction
+import com.shub39.grit.habits.presentation.ui.component.HabitCard
 import sh.calvin.reorderable.ReorderableItem
 import sh.calvin.reorderable.rememberReorderableLazyListState
 import java.time.DayOfWeek

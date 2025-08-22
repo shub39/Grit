@@ -12,19 +12,20 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import com.materialkolor.PaletteStyle
 import com.shub39.grit.core.domain.AppTheme
-import com.shub39.grit.core.presentation.components.PageFill
+import com.shub39.grit.core.presentation.component.PageFill
 import com.shub39.grit.core.presentation.theme.GritTheme
 import com.shub39.grit.core.presentation.theme.Theme
 import com.shub39.grit.tasks.domain.Category
 import com.shub39.grit.tasks.domain.Task
-import com.shub39.grit.tasks.presentation.component.EditCategories
-import com.shub39.grit.tasks.presentation.component.TaskList
+import com.shub39.grit.tasks.presentation.ui.section.EditCategories
+import com.shub39.grit.tasks.presentation.ui.section.TaskList
 import kotlinx.serialization.Serializable
 
 @Serializable
@@ -37,7 +38,7 @@ private sealed interface TasksRoutes {
 }
 
 @Composable
-fun Tasks(
+fun TasksGraph(
     state: TaskPageState,
     onAction: (TaskPageAction) -> Unit
 ) = PageFill {
@@ -104,15 +105,16 @@ private fun Preview() {
     GritTheme(
         theme = Theme(
             appTheme = AppTheme.DARK,
-            isMaterialYou = true,
-            paletteStyle = PaletteStyle.Expressive
+            isMaterialYou = false,
+            seedColor = Color.Red,
+            paletteStyle = PaletteStyle.TonalSpot
         )
     ) {
         Scaffold { padding ->
             Box(
                 modifier = Modifier.padding(padding)
             ) {
-                Tasks(
+                TasksGraph(
                     state = state,
                     onAction = {
                         when (it) {

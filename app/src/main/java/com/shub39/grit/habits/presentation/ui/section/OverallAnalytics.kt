@@ -1,4 +1,4 @@
-package com.shub39.grit.habits.presentation.component
+package com.shub39.grit.habits.presentation.ui.section
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
@@ -37,6 +37,10 @@ import com.materialkolor.ktx.harmonize
 import com.shub39.grit.R
 import com.shub39.grit.habits.presentation.HabitPageState
 import com.shub39.grit.habits.presentation.HabitsPageAction
+import com.shub39.grit.habits.presentation.prepareHeatMapData
+import com.shub39.grit.habits.presentation.prepareLineChartData
+import com.shub39.grit.habits.presentation.prepareWeekDayData
+import com.shub39.grit.habits.presentation.ui.component.AnalyticsCard
 import ir.ehsannarmani.compose_charts.LineChart
 import ir.ehsannarmani.compose_charts.RowChart
 import ir.ehsannarmani.compose_charts.models.AnimationMode

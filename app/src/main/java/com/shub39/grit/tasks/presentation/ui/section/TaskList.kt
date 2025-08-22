@@ -1,4 +1,4 @@
-package com.shub39.grit.tasks.presentation.component
+package com.shub39.grit.tasks.presentation.ui.section
 
 import androidx.compose.animation.AnimatedContent
 import androidx.compose.animation.AnimatedVisibility
@@ -67,14 +67,15 @@ import androidx.compose.ui.text.input.KeyboardCapitalization
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import com.shub39.grit.R
-import com.shub39.grit.core.presentation.components.Empty
-import com.shub39.grit.core.presentation.components.GritBottomSheet
-import com.shub39.grit.core.presentation.components.GritDialog
+import com.shub39.grit.core.presentation.component.Empty
+import com.shub39.grit.core.presentation.component.GritBottomSheet
+import com.shub39.grit.core.presentation.component.GritDialog
 import com.shub39.grit.tasks.domain.Category
 import com.shub39.grit.tasks.domain.CategoryColors
 import com.shub39.grit.tasks.domain.Task
 import com.shub39.grit.tasks.presentation.TaskPageAction
 import com.shub39.grit.tasks.presentation.TaskPageState
+import com.shub39.grit.tasks.presentation.ui.component.TaskCard
 import kotlinx.coroutines.delay
 import sh.calvin.reorderable.ReorderableItem
 import sh.calvin.reorderable.rememberReorderableLazyListState
@@ -245,7 +246,10 @@ fun TaskList(
                                             contentDescription = "Drag",
                                             modifier = Modifier.draggableHandle(
                                                 onDragStopped = {
-                                                    onAction(TaskPageAction.ReorderTasks(reorderableTasks.mapIndexed { index, task -> index to task }))
+                                                    onAction(
+                                                        TaskPageAction.ReorderTasks(
+                                                            reorderableTasks.mapIndexed { index, task -> index to task })
+                                                    )
                                                 }
                                             )
                                         )
@@ -263,11 +267,15 @@ fun TaskList(
                                                     onAction(TaskPageAction.UpsertTask(task))
 
                                                     if (task.status) {
-                                                        reorderableTasks = tasks.toMutableList().apply {
-                                                            add(tasks.size - 1, removeAt(index))
-                                                        }
+                                                        reorderableTasks =
+                                                            tasks.toMutableList().apply {
+                                                                add(tasks.size - 1, removeAt(index))
+                                                            }
 
-                                                        onAction(TaskPageAction.ReorderTasks(reorderableTasks.mapIndexed { index, task -> index to task }))
+                                                        onAction(
+                                                            TaskPageAction.ReorderTasks(
+                                                                reorderableTasks.mapIndexed { index, task -> index to task })
+                                                        )
                                                     }
                                                 }
                                             },
