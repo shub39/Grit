@@ -24,16 +24,18 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Add
-import androidx.compose.material.icons.filled.Edit
-import androidx.compose.material3.AssistChip
-import androidx.compose.material3.AssistChipDefaults
+import androidx.compose.material.icons.rounded.Add
+import androidx.compose.material.icons.rounded.Delete
+import androidx.compose.material.icons.rounded.DragIndicator
+import androidx.compose.material.icons.rounded.Edit
+import androidx.compose.material.icons.rounded.Reorder
+import androidx.compose.material.icons.rounded.Warning
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonShapes
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.ExperimentalMaterial3ExpressiveApi
+import androidx.compose.material3.FilledTonalIconButton
 import androidx.compose.material3.FilledTonalIconToggleButton
-import androidx.compose.material3.FilterChip
 import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButtonShapes
@@ -59,7 +61,6 @@ import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
-import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.ImeAction
@@ -103,6 +104,9 @@ fun TaskList(
             .fillMaxSize()
     ) {
         MediumFlexibleTopAppBar(
+            colors = TopAppBarDefaults.topAppBarColors(
+                scrolledContainerColor = MaterialTheme.colorScheme.surface
+            ),
             scrollBehavior = scrollBehaviour,
             title = { Text(text = stringResource(R.string.tasks)) },
             subtitle = {
@@ -123,7 +127,7 @@ fun TaskList(
                             )
                         ) {
                             Icon(
-                                painter = painterResource(R.drawable.round_delete_forever_24),
+                                imageVector = Icons.Rounded.Delete,
                                 contentDescription = null
                             )
                         }
@@ -143,7 +147,7 @@ fun TaskList(
                             enabled = !state.tasks[state.currentCategory].isNullOrEmpty()
                         ) {
                             Icon(
-                                painter = painterResource(R.drawable.baseline_reorder_24),
+                                imageVector = Icons.Rounded.Reorder,
                                 contentDescription = null
                             )
                         }
@@ -155,59 +159,39 @@ fun TaskList(
         LazyRow(
             modifier = Modifier.fillMaxWidth(),
             horizontalArrangement = Arrangement.spacedBy(8.dp),
-            contentPadding = PaddingValues(start = 16.dp, end = 16.dp)
+            contentPadding = PaddingValues(vertical = 8.dp, horizontal = 16.dp)
         ) {
             items(state.tasks.keys.toList(), key = { it.id }) { category ->
-                val chipCorner by animateDpAsState(
-                    targetValue = if (category == state.currentCategory) 20.dp else 5.dp
-                )
-
-                FilterChip(
-                    selected = category == state.currentCategory,
-                    onClick = {
+                ToggleButton(
+                    checked = category == state.currentCategory,
+                    onCheckedChange = {
                         onAction(TaskPageAction.ReorderTasks(tasks.mapIndexed { index, task -> index to task }))
                         onAction(TaskPageAction.ChangeCategory(category))
                         editState = false
-                    },
-                    shape = RoundedCornerShape(chipCorner),
-                    label = { Text(category.name) }
-                )
+                    }
+                ) {
+                    Text(text = category.name)
+                }
             }
 
             item {
-                Row(
-                    horizontalArrangement = Arrangement.spacedBy(8.dp)
+                FilledTonalIconButton(
+                    onClick = { showCategoryAddSheet = true },
+                    enabled = !editState
                 ) {
-                    AssistChip(
-                        onClick = { showCategoryAddSheet = true },
-                        enabled = !editState,
-                        colors = AssistChipDefaults.assistChipColors(
-                            containerColor = MaterialTheme.colorScheme.primaryContainer,
-                            labelColor = MaterialTheme.colorScheme.onPrimaryContainer
-                        ),
-                        border = AssistChipDefaults.assistChipBorder(false),
-                        label = {
-                            Icon(
-                                painter = painterResource(R.drawable.round_add_24),
-                                contentDescription = "Add Category"
-                            )
-                        }
+                    Icon(
+                        imageVector = Icons.Rounded.Add,
+                        contentDescription = "Add Category"
                     )
+                }
 
-                    AssistChip(
-                        onClick = onNavigateToEditCategories,
-                        enabled = !editState,
-                        colors = AssistChipDefaults.assistChipColors(
-                            containerColor = MaterialTheme.colorScheme.primaryContainer,
-                            labelColor = MaterialTheme.colorScheme.onPrimaryContainer
-                        ),
-                        border = AssistChipDefaults.assistChipBorder(false),
-                        label = {
-                            Icon(
-                                painter = painterResource(R.drawable.baseline_edit_square_24),
-                                contentDescription = "Edit Categories"
-                            )
-                        }
+                FilledTonalIconButton(
+                    onClick = onNavigateToEditCategories,
+                    enabled = !editState
+                ) {
+                    Icon(
+                        imageVector = Icons.Rounded.Edit,
+                        contentDescription = "Edit Categories"
                     )
                 }
             }
@@ -241,7 +225,7 @@ fun TaskList(
                                 dragState = editState,
                                 reorderIcon = {
                                     Icon(
-                                        painter = painterResource(R.drawable.baseline_drag_indicator_24),
+                                        imageVector = Icons.Rounded.DragIndicator,
                                         contentDescription = "Drag",
                                         modifier = Modifier.draggableHandle(
                                             onDragStopped = {
@@ -320,7 +304,7 @@ fun TaskList(
                 verticalAlignment = Alignment.CenterVertically
             ) {
                 Icon(
-                    painter = painterResource(R.drawable.round_add_24),
+                    imageVector = Icons.Rounded.Add,
                     contentDescription = null
                 )
 
@@ -342,7 +326,7 @@ fun TaskList(
             onDismissRequest = { showDeleteDialog = false }
         ) {
             Icon(
-                painter = painterResource(R.drawable.round_warning_24),
+                imageVector = Icons.Rounded.Warning,
                 contentDescription = "Warning",
                 modifier = Modifier.size(64.dp)
             )
@@ -387,7 +371,7 @@ fun TaskList(
             }
         ) {
             Icon(
-                imageVector = Icons.Default.Add,
+                imageVector = Icons.Rounded.Add,
                 contentDescription = "Add"
             )
 
@@ -456,7 +440,7 @@ fun TaskList(
             }
         ) {
             Icon(
-                imageVector = Icons.Default.Edit,
+                imageVector = Icons.Rounded.Edit,
                 contentDescription = "Edit"
             )
 
@@ -544,7 +528,7 @@ fun TaskList(
             }
         ) {
             Icon(
-                imageVector = Icons.Default.Add,
+                imageVector = Icons.Rounded.Add,
                 contentDescription = "Add"
             )
 
