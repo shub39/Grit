@@ -158,14 +158,16 @@ fun EditCategories(
                                     )
                                 }
 
-                                FilledTonalIconButton(
-                                    onClick = {},
-                                    modifier = Modifier.draggableHandle()
-                                ) {
-                                    Icon(
-                                        imageVector = Icons.Rounded.DragIndicator,
-                                        contentDescription = null
-                                    )
+                                AnimatedVisibility(editState) {
+                                    FilledTonalIconButton(
+                                        onClick = {},
+                                        modifier = Modifier.draggableHandle()
+                                    ) {
+                                        Icon(
+                                            imageVector = Icons.Rounded.DragIndicator,
+                                            contentDescription = null
+                                        )
+                                    }
                                 }
                             }
                         }
