@@ -17,7 +17,6 @@ import androidx.navigation.compose.rememberNavController
 import com.materialkolor.PaletteStyle
 import com.shub39.grit.core.domain.AppTheme
 import com.shub39.grit.core.domain.Fonts
-import com.shub39.grit.core.presentation.component.PageFill
 import com.shub39.grit.core.presentation.settings.ui.section.AboutLibraries
 import com.shub39.grit.core.presentation.settings.ui.section.Backup
 import com.shub39.grit.core.presentation.settings.ui.section.LookAndFeelPage
@@ -44,7 +43,7 @@ private sealed interface SettingsRoutes {
 fun SettingsGraph(
     state: SettingsState,
     onAction: (SettingsAction) -> Unit,
-) = PageFill {
+) {
     val navController = rememberNavController()
 
     NavHost(
