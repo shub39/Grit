@@ -15,18 +15,21 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.layout.widthIn
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
-import androidx.compose.material.icons.filled.Create
+import androidx.compose.material.icons.rounded.Alarm
+import androidx.compose.material.icons.rounded.Create
+import androidx.compose.material.icons.rounded.Delete
+import androidx.compose.material.icons.rounded.Edit
+import androidx.compose.material.icons.rounded.FlagCircle
+import androidx.compose.material.icons.rounded.LocalFireDepartment
+import androidx.compose.material.icons.rounded.Warning
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonShapes
-import androidx.compose.material3.Card
-import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.ExperimentalMaterial3ExpressiveApi
 import androidx.compose.material3.FilledIconButton
@@ -34,14 +37,17 @@ import androidx.compose.material3.FilledTonalIconButton
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.IconButtonShapes
+import androidx.compose.material3.ListItem
+import androidx.compose.material3.ListItemDefaults
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.MediumFlexibleTopAppBar
 import androidx.compose.material3.OutlinedIconButton
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
 import androidx.compose.material3.TimeInput
 import androidx.compose.material3.ToggleButton
 import androidx.compose.material3.ToggleButtonDefaults
-import androidx.compose.material3.TopAppBar
+import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.material3.rememberTimePickerState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -51,9 +57,10 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.SolidColor
-import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.ImeAction
@@ -147,12 +154,17 @@ fun AnalyticsPage(
         weekDayData = prepareWeekDayData(statuses.map { it.date }, primary)
     }
 
+    val scrollBehavior = TopAppBarDefaults.enterAlwaysScrollBehavior()
     Column(
         modifier = Modifier
-            .widthIn(max = 500.dp)
+            .nestedScroll(scrollBehavior.nestedScrollConnection)
             .fillMaxSize()
     ) {
-        TopAppBar(
+        MediumFlexibleTopAppBar(
+            scrollBehavior = scrollBehavior,
+            colors = TopAppBarDefaults.topAppBarColors(
+                scrolledContainerColor = MaterialTheme.colorScheme.surface
+            ),
             title = {
                 Text(text = currentHabit.title)
             },
@@ -180,7 +192,7 @@ fun AnalyticsPage(
                     )
                 ) {
                     Icon(
-                        painter = painterResource(id = R.drawable.round_delete_forever_24),
+                        imageVector = Icons.Rounded.Delete,
                         contentDescription = "Delete Habit"
                     )
                 }
@@ -193,7 +205,7 @@ fun AnalyticsPage(
                     )
                 ) {
                     Icon(
-                        painter = painterResource(id = R.drawable.baseline_edit_square_24),
+                        imageVector = Icons.Rounded.Edit,
                         contentDescription = "Edit Habit"
                     )
                 }
@@ -239,7 +251,7 @@ fun AnalyticsPage(
             onDismissRequest = { deleteDialog = false }
         ) {
             Icon(
-                painter = painterResource(id = R.drawable.round_warning_24),
+                imageVector = Icons.Rounded.Warning,
                 contentDescription = "Warning"
             )
 
@@ -284,7 +296,7 @@ fun AnalyticsPage(
             onDismissRequest = { editDialog = false }
         ) {
             Icon(
-                imageVector = Icons.Default.Create,
+                imageVector = Icons.Rounded.Edit,
                 contentDescription = "Edit Habit"
             )
 
@@ -342,7 +354,7 @@ fun AnalyticsPage(
                     verticalAlignment = Alignment.CenterVertically
                 ) {
                     Icon(
-                        painter = painterResource(R.drawable.round_alarm_24),
+                        imageVector = Icons.Rounded.Alarm,
                         contentDescription = "Alarm Icon"
                     )
 
@@ -356,7 +368,7 @@ fun AnalyticsPage(
                     onClick = { timePickerDialog = true }
                 ) {
                     Icon(
-                        imageVector = Icons.Default.Create,
+                        imageVector = Icons.Rounded.Create,
                         contentDescription = "Pick Time"
                     )
                 }
@@ -422,7 +434,7 @@ fun AnalyticsPage(
                     onDismissRequest = { timePickerDialog = false }
                 ) {
                     Icon(
-                        painter = painterResource(R.drawable.round_alarm_24),
+                        imageVector = Icons.Rounded.Alarm,
                         contentDescription = "Add Time"
                     )
 
@@ -472,6 +484,11 @@ private fun WeekDayBreakdown(
         modifier = Modifier.height(300.dp)
     ) {
         RowChart(
+            modifier = Modifier.padding(
+                start = 16.dp,
+                end = 16.dp,
+                bottom = 16.dp
+            ),
             data = weekDayData,
             dividerProperties = DividerProperties(
                 enabled = false
@@ -517,8 +534,11 @@ private fun CalendarMap(
         onPlusClick = { onAction(HabitsPageAction.OnShowPaywall) }
     ) {
         HorizontalCalendar(
-            modifier = Modifier.height(350.dp),
             state = calendarState,
+            modifier = Modifier
+                .height(350.dp)
+                .padding(bottom = 16.dp),
+            contentPadding = PaddingValues(horizontal = 16.dp),
             userScrollEnabled = state.isUserSubscribed,
             monthHeader = {
                 Box(
@@ -536,61 +556,63 @@ private fun CalendarMap(
                 }
             },
             dayContent = { day ->
-                val done = statuses.any { it.date == day.date }
+                if (day.position.name == "MonthDate") {
+                    val done = statuses.any { it.date == day.date }
 
-                Box(
-                    modifier = Modifier
-                        .padding(2.dp)
-                        .size(45.dp)
-                        .clickable(enabled = day.date <= today && state.isUserSubscribed) {
-                            onAction(
-                                HabitsPageAction.InsertStatus(
-                                    currentHabit,
-                                    day.date
+                    Box(
+                        modifier = Modifier
+                            .padding(2.dp)
+                            .size(45.dp)
+                            .clickable(enabled = day.date <= today && state.isUserSubscribed) {
+                                onAction(
+                                    HabitsPageAction.InsertStatus(
+                                        currentHabit,
+                                        day.date
+                                    )
                                 )
-                            )
-                        }
-                        .then(
-                            if (done) {
-                                val donePrevious =
-                                    statuses.any { it.date == day.date.minusDays(1) }
-                                val doneAfter =
-                                    statuses.any { it.date == day.date.plusDays(1) }
+                            }
+                            .then(
+                                if (done) {
+                                    val donePrevious =
+                                        statuses.any { it.date == day.date.minusDays(1) }
+                                    val doneAfter =
+                                        statuses.any { it.date == day.date.plusDays(1) }
 
-                                Modifier.background(
-                                    color = primary.copy(alpha = 0.2f),
-                                    shape = if (donePrevious && doneAfter) {
-                                        RoundedCornerShape(5.dp)
-                                    } else if (donePrevious) {
-                                        RoundedCornerShape(
-                                            topStart = 5.dp,
-                                            bottomStart = 5.dp,
-                                            topEnd = 20.dp,
-                                            bottomEnd = 20.dp
-                                        )
-                                    } else if (doneAfter) {
-                                        RoundedCornerShape(
-                                            topStart = 20.dp,
-                                            bottomStart = 20.dp,
-                                            topEnd = 5.dp,
-                                            bottomEnd = 5.dp
-                                        )
-                                    } else {
-                                        RoundedCornerShape(20.dp)
-                                    }
-                                )
-                            } else Modifier
-                        ),
-                    contentAlignment = Alignment.Center
-                ) {
-                    Text(
-                        text = day.date.dayOfMonth.toString(),
-                        style = MaterialTheme.typography.bodyLarge,
-                        fontWeight = if (done) FontWeight.Bold else FontWeight.Normal,
-                        color = if (done) primary else if (day.date > today) MaterialTheme.colorScheme.onSurface.copy(
-                            alpha = 0.5f
-                        ) else MaterialTheme.colorScheme.onSurface
-                    )
+                                    Modifier.background(
+                                        color = primary.copy(alpha = 0.2f),
+                                        shape = if (donePrevious && doneAfter) {
+                                            RoundedCornerShape(5.dp)
+                                        } else if (donePrevious) {
+                                            RoundedCornerShape(
+                                                topStart = 5.dp,
+                                                bottomStart = 5.dp,
+                                                topEnd = 20.dp,
+                                                bottomEnd = 20.dp
+                                            )
+                                        } else if (doneAfter) {
+                                            RoundedCornerShape(
+                                                topStart = 20.dp,
+                                                bottomStart = 20.dp,
+                                                topEnd = 5.dp,
+                                                bottomEnd = 5.dp
+                                            )
+                                        } else {
+                                            RoundedCornerShape(20.dp)
+                                        }
+                                    )
+                                } else Modifier
+                            ),
+                        contentAlignment = Alignment.Center
+                    ) {
+                        Text(
+                            text = day.date.dayOfMonth.toString(),
+                            style = MaterialTheme.typography.bodyLarge,
+                            fontWeight = if (done) FontWeight.Bold else FontWeight.Normal,
+                            color = if (done) primary else if (day.date > today) MaterialTheme.colorScheme.onSurface.copy(
+                                alpha = 0.5f
+                            ) else MaterialTheme.colorScheme.onSurface
+                        )
+                    }
                 }
             }
         )
@@ -607,6 +629,11 @@ private fun WeeklyActivity(
         modifier = Modifier.height(300.dp)
     ) {
         LineChart(
+            modifier = Modifier.padding(
+                start = 16.dp,
+                end = 16.dp,
+                bottom = 16.dp
+            ),
             labelHelperProperties = LabelHelperProperties(
                 textStyle = MaterialTheme.typography.bodyMedium.copy(color = primary)
             ),
@@ -675,6 +702,8 @@ private fun WeeklyBooleanHeatMap(
     ) {
         HeatMapCalendar(
             state = heatMapState,
+            modifier = Modifier.padding(bottom = 16.dp),
+            contentPadding = PaddingValues(horizontal = 16.dp),
             monthHeader = {
                 Box(
                     modifier = Modifier.padding(2.dp)
@@ -685,7 +714,6 @@ private fun WeeklyBooleanHeatMap(
                             Locale.getDefault()
                         ),
                         color = MaterialTheme.colorScheme.secondary,
-                        style = MaterialTheme.typography.bodyMedium,
                         modifier = Modifier.align(Alignment.Center)
                     )
                 }
@@ -695,14 +723,9 @@ private fun WeeklyBooleanHeatMap(
                     modifier = Modifier
                         .padding(2.dp)
                         .size(30.dp)
-                        .background(
-                            color = MaterialTheme.colorScheme.secondaryContainer,
-                            shape = MaterialTheme.shapes.large
-                        )
                 ) {
                     Text(
                         text = it.name.take(1),
-                        style = MaterialTheme.typography.bodyMedium,
                         color = MaterialTheme.colorScheme.onSecondaryContainer,
                         modifier = Modifier.align(Alignment.Center)
                     )
@@ -775,95 +798,93 @@ private fun HabitStats(
     currentStreak: Int,
     bestStreak: Int
 ) {
-    Row(
+    ListItem(
+        colors = ListItemDefaults.colors(
+            containerColor = MaterialTheme.colorScheme.primaryContainer,
+            leadingIconColor = MaterialTheme.colorScheme.onPrimaryContainer,
+            headlineColor = MaterialTheme.colorScheme.onPrimaryContainer,
+            overlineColor = MaterialTheme.colorScheme.onPrimaryContainer,
+            supportingColor = MaterialTheme.colorScheme.onPrimaryContainer
+        ),
         modifier = Modifier
-            .height(200.dp)
-            .fillMaxWidth(),
-        verticalAlignment = Alignment.CenterVertically,
-        horizontalArrangement = Arrangement.spacedBy(8.dp)
-    ) {
-        Card(
-            shape = MaterialTheme.shapes.extraLarge,
-            modifier = Modifier.weight(1f),
-            colors = CardDefaults.cardColors(
-                contentColor = MaterialTheme.colorScheme.onPrimaryContainer,
-                containerColor = MaterialTheme.colorScheme.primaryContainer
+            .clip(
+                RoundedCornerShape(
+                    topStart = 30.dp,
+                    topEnd = 30.dp,
+                    bottomStart = 10.dp,
+                    bottomEnd = 10.dp
+                )
+            ),
+        leadingContent = {
+            Icon(
+                imageVector = Icons.Rounded.FlagCircle,
+                contentDescription = "Flag",
+                modifier = Modifier.size(64.dp)
             )
-        ) {
-            Column(
-                modifier = Modifier
-                    .fillMaxSize()
-                    .padding(16.dp),
-                horizontalAlignment = Alignment.CenterHorizontally,
-                verticalArrangement = Arrangement.Center
-            ) {
-                Icon(
-                    painter = painterResource(R.drawable.baseline_flag_circle_24),
-                    contentDescription = "Flag",
-                    modifier = Modifier.size(64.dp)
-                )
-
-                Spacer(modifier = Modifier.height(8.dp))
-
-                Text(
-                    text = stringResource(R.string.started_on),
-                    style = MaterialTheme.typography.titleSmall
-                )
-
-                Text(
-                    text = formatDateWithOrdinal(currentHabit.time.toLocalDate()),
-                    fontWeight = FontWeight.Bold,
-                    style = MaterialTheme.typography.bodyLarge
-                )
-
-                Text(
-                    text = stringResource(
-                        R.string.days_ago_format,
-                        ChronoUnit.DAYS.between(currentHabit.time.toLocalDate(), today)
-                    ),
-                    style = MaterialTheme.typography.bodyMedium
-                )
-            }
-        }
-
-        Card(
-            shape = MaterialTheme.shapes.extraLarge,
-            modifier = Modifier.weight(1f),
-            colors = CardDefaults.cardColors(
-                contentColor = MaterialTheme.colorScheme.onSecondaryContainer,
-                containerColor = MaterialTheme.colorScheme.secondaryContainer
+        },
+        overlineContent = {
+            Text(
+                text = stringResource(R.string.started_on),
             )
-        ) {
-            Column(
-                modifier = Modifier
-                    .fillMaxSize()
-                    .padding(16.dp),
-                horizontalAlignment = Alignment.CenterHorizontally,
-                verticalArrangement = Arrangement.Center
-            ) {
-                Icon(
-                    painter = painterResource(R.drawable.round_local_fire_department_24),
-                    contentDescription = "Streak",
-                    modifier = Modifier
-                        .size(64.dp)
-                )
-
-                Text(
-                    text = stringResource(R.string.streak),
-                    style = MaterialTheme.typography.titleSmall
-                )
-
-                Text(
-                    text = currentStreak.toString(),
-                    fontWeight = FontWeight.Bold,
-                    style = MaterialTheme.typography.titleLarge
-                )
-
-                Text(
-                    text = stringResource(R.string.best_streak, bestStreak),
-                    style = MaterialTheme.typography.bodyMedium
-                )
-            }
+        },
+        headlineContent = {
+            Text(
+                text = formatDateWithOrdinal(currentHabit.time.toLocalDate()),
+                fontWeight = FontWeight.Bold,
+            )
+        },
+        supportingContent = {
+            Text(
+                text = stringResource(
+                    R.string.days_ago_format,
+                    ChronoUnit.DAYS.between(currentHabit.time.toLocalDate(), today)
+                ),
+            )
         }
-    }
+    )
+
+    Spacer(modifier = Modifier.height(4.dp))
+
+    ListItem(
+        colors = ListItemDefaults.colors(
+            containerColor = MaterialTheme.colorScheme.secondary,
+            leadingIconColor = MaterialTheme.colorScheme.onSecondary,
+            headlineColor = MaterialTheme.colorScheme.onSecondary,
+            overlineColor = MaterialTheme.colorScheme.onSecondary,
+            supportingColor = MaterialTheme.colorScheme.onSecondary
+        ),
+        modifier = Modifier
+            .clip(
+                RoundedCornerShape(
+                    topStart = 10.dp,
+                    topEnd = 10.dp,
+                    bottomStart = 30.dp,
+                    bottomEnd = 30.dp
+                )
+            ),
+        leadingContent = {
+            Icon(
+                imageVector = Icons.Rounded.LocalFireDepartment,
+                contentDescription = "Streak",
+                modifier = Modifier.size(64.dp)
+            )
+        },
+        overlineContent = {
+            Text(
+                text = stringResource(R.string.streak),
+            )
+        },
+        headlineContent = {
+            Text(
+                text = currentStreak.toString(),
+                fontWeight = FontWeight.Bold,
+            )
+        },
+        supportingContent = {
+            Text(
+                text = stringResource(R.string.best_streak, bestStreak),
+                style = MaterialTheme.typography.bodyMedium
+            )
+        }
+    )
 }

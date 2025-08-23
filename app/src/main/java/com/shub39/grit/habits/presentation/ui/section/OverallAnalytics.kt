@@ -285,7 +285,7 @@ private fun HabitHeatMap(
                             TextStyle.SHORT_STANDALONE,
                             Locale.getDefault()
                         ),
-                        color = MaterialTheme.colorScheme.primary,
+                        color = MaterialTheme.colorScheme.secondary,
                         modifier = Modifier.align(Alignment.Center)
                     )
                 }
@@ -295,14 +295,10 @@ private fun HabitHeatMap(
                     modifier = Modifier
                         .padding(2.dp)
                         .size(30.dp)
-                        .background(
-                            color = MaterialTheme.colorScheme.surfaceVariant,
-                            shape = MaterialTheme.shapes.large
-                        )
                 ) {
                     Text(
                         text = it.name.take(1),
-                        color = MaterialTheme.colorScheme.primary,
+                        color = MaterialTheme.colorScheme.onSecondaryContainer,
                         modifier = Modifier.align(Alignment.Center)
                     )
                 }
