@@ -61,18 +61,25 @@ fun HabitCard(
     shape: Shape,
     modifier: Modifier = Modifier
 ) {
+    val today = LocalDate.now()
+    val canCompleteToday = today.dayOfWeek in habit.days
+
     // animated colors
     val cardContent by animateColorAsState(
         targetValue = when (completed) {
             true -> MaterialTheme.colorScheme.onPrimaryContainer
-            else -> MaterialTheme.colorScheme.onSurface
+            else -> MaterialTheme.colorScheme.onSurface.copy(
+                alpha = if (canCompleteToday) 1f else 0.7f
+            )
         },
         label = "cardBackground"
     )
     val cardBackground by animateColorAsState(
         targetValue = when (completed) {
             true -> MaterialTheme.colorScheme.primaryContainer
-            else -> MaterialTheme.colorScheme.surfaceContainer
+            else -> MaterialTheme.colorScheme.surfaceContainer.copy(
+                alpha = if (canCompleteToday) 1f else 0.7f
+            )
         },
         label = "cardBackground"
     )
@@ -89,7 +96,11 @@ fun HabitCard(
             containerColor = cardBackground,
             contentColor = cardContent
         ),
-        onClick = { action(HabitsPageAction.InsertStatus(habit)) },
+        onClick = {
+            if (canCompleteToday) {
+                action(HabitsPageAction.InsertStatus(habit))
+            }
+        },
         shape = shape,
         modifier = modifier
     ) {
@@ -178,6 +189,8 @@ fun HabitCard(
             state = weekState,
             dayContent = { weekDay ->
                 val done = statusList.any { it.date == weekDay.date }
+                val validDay =
+                    weekDay.date <= today && weekDay.date.dayOfWeek in habit.days
 
                 Box(
                     modifier = Modifier
@@ -192,7 +205,7 @@ fun HabitCard(
 
                                 Modifier.background(
                                     color = MaterialTheme.colorScheme.primary,
-                                    shape =  if (donePrevious && doneAfter) {
+                                    shape = if (donePrevious && doneAfter) {
                                         RoundedCornerShape(10.dp)
                                     } else if (donePrevious) {
                                         RoundedCornerShape(
@@ -223,13 +236,17 @@ fun HabitCard(
                         Text(
                             text = weekDay.date.dayOfMonth.toString(),
                             style = MaterialTheme.typography.bodyMedium,
-                            color = if (done) MaterialTheme.colorScheme.onPrimary else cardContent
+                            color = if (done) MaterialTheme.colorScheme.onPrimary
+                            else if (!validDay) cardContent.copy(alpha = 0.5f)
+                            else cardContent
                         )
 
                         Text(
                             text = weekDay.date.dayOfWeek.toString().take(3),
                             style = MaterialTheme.typography.bodySmall,
-                            color = if (done) MaterialTheme.colorScheme.onPrimary else cardContent
+                            color = if (done) MaterialTheme.colorScheme.onPrimary
+                            else if (!validDay) cardContent.copy(alpha = 0.5f)
+                            else cardContent
                         )
                     }
                 }

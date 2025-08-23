@@ -19,6 +19,7 @@ import com.shub39.grit.app.MainActivity
 import com.shub39.grit.core.data.NotificationReceiver
 import com.shub39.grit.core.domain.IntentActions
 import com.shub39.grit.habits.domain.Habit
+import java.time.DayOfWeek
 import java.time.LocalDate
 import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
@@ -30,55 +31,86 @@ fun timePickerStateToLocalDateTime(timePickerState: TimePickerState, date: Local
     return LocalDateTime.of(date, java.time.LocalTime.of(timePickerState.hour, timePickerState.minute))
 }
 
-fun countCurrentStreak(dates: List<LocalDate>): Int {
+
+fun countCurrentStreak(dates: List<LocalDate>, eligibleWeekdays: Set<DayOfWeek> = DayOfWeek.values().toSet()): Int {
     if (dates.isEmpty()) return 0
 
     val today = LocalDate.now()
-    val sortedDates = dates.sorted()
-    val lastDate = sortedDates.last()
+    val filteredDates = dates.filter { eligibleWeekdays.contains(it.dayOfWeek) }.sorted()
 
-    if (ChronoUnit.DAYS.between(lastDate, today) > 1L) {
-        return 0
+    if (filteredDates.isEmpty()) return 0
+
+    val lastDate = filteredDates.last()
+
+    // Check if we need to account for eligible days between lastDate and today
+    val daysBetween = ChronoUnit.DAYS.between(lastDate, today)
+    if (daysBetween > 0) {
+        // Check if there are any eligible days we missed between lastDate and today
+        var hasEligibleDayMissed = false
+        for (i in 1L..daysBetween) {
+            val checkDate = lastDate.plusDays(i)
+            if (eligibleWeekdays.contains(checkDate.dayOfWeek) && checkDate.isBefore(today)) {
+                hasEligibleDayMissed = true
+                break
+            }
+        }
+        if (hasEligibleDayMissed) return 0
+
+        // If today is not eligible, check if we missed any eligible days
+        if (!eligibleWeekdays.contains(today.dayOfWeek) && daysBetween > 1) {
+            return 0
+        }
     }
 
     var streak = 1
+    for (i in filteredDates.size - 2 downTo 0) {
+        val currentDate = filteredDates[i]
+        val nextDate = filteredDates[i + 1]
 
-    for (i in sortedDates.size - 2 downTo 0) {
-        val currentDate = sortedDates[i]
-        val nextDate = sortedDates[i + 1]
-
-        if (ChronoUnit.DAYS.between(currentDate, nextDate) == 1L) {
+        // Check if these are consecutive eligible days
+        if (areConsecutiveEligibleDays(currentDate, nextDate, eligibleWeekdays)) {
             streak++
         } else {
             break
         }
     }
-
     return streak
 }
 
-
-fun countBestStreak(dates: List<LocalDate>): Int {
+fun countBestStreak(dates: List<LocalDate>, eligibleWeekdays: Set<DayOfWeek> = DayOfWeek.values().toSet()): Int {
     if (dates.isEmpty()) return 0
-    val sortedDates = dates.sorted()
-    var maxConsecutive = 0
-    var currentConsecutive = 0
-    for (i in 1 until sortedDates.size) {
-        val previousDate = sortedDates[i - 1]
-        val currentDate = sortedDates[i]
-        if (ChronoUnit.DAYS.between(previousDate, currentDate) == 1L) {
+
+    val filteredDates = dates.filter { eligibleWeekdays.contains(it.dayOfWeek) }.sorted()
+    if (filteredDates.isEmpty()) return 0
+
+    var maxConsecutive = 1
+    var currentConsecutive = 1
+
+    for (i in 1 until filteredDates.size) {
+        val previousDate = filteredDates[i - 1]
+        val currentDate = filteredDates[i]
+
+        if (areConsecutiveEligibleDays(previousDate, currentDate, eligibleWeekdays)) {
             currentConsecutive++
         } else {
-            if (currentConsecutive > maxConsecutive) {
-                maxConsecutive = currentConsecutive
-            }
+            maxConsecutive = maxOf(maxConsecutive, currentConsecutive)
             currentConsecutive = 1
         }
     }
-    if (currentConsecutive > maxConsecutive) {
-        maxConsecutive = currentConsecutive
+
+    return maxOf(maxConsecutive, currentConsecutive)
+}
+
+private fun areConsecutiveEligibleDays(date1: LocalDate, date2: LocalDate, eligibleWeekdays: Set<DayOfWeek>): Boolean {
+    var checkDate = date1.plusDays(1)
+    while (checkDate.isBefore(date2)) {
+        if (eligibleWeekdays.contains(checkDate.dayOfWeek)) {
+            // Found an eligible day between date1 and date2, so they're not consecutive
+            return false
+        }
+        checkDate = checkDate.plusDays(1)
     }
-    return maxConsecutive
+    return checkDate == date2
 }
 
 fun createNotificationChannel(context: Context) {

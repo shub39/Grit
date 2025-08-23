@@ -54,6 +54,7 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -104,6 +105,8 @@ import ir.ehsannarmani.compose_charts.models.LineProperties
 import ir.ehsannarmani.compose_charts.models.PopupProperties
 import ir.ehsannarmani.compose_charts.models.StrokeStyle
 import ir.ehsannarmani.compose_charts.models.VerticalIndicatorProperties
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 import java.time.DayOfWeek
 import java.time.LocalDate
 import java.time.YearMonth
@@ -119,6 +122,7 @@ fun AnalyticsPage(
     onAction: (HabitsPageAction) -> Unit,
     onNavigateBack: () -> Unit
 ) = PageFill {
+    val scope = rememberCoroutineScope()
     val primary = MaterialTheme.colorScheme.primary
     val today = LocalDate.now()
     val currentMonth = remember { YearMonth.now() }
@@ -128,8 +132,8 @@ fun AnalyticsPage(
 
     var lineChartData = prepareLineChartData(state.startingDay, statuses)
     var weekDayData = prepareWeekDayData(statuses.map { it.date }, primary)
-    var currentStreak = countCurrentStreak(statuses.map { it.date })
-    var bestStreak = countBestStreak(statuses.map { it.date })
+    var currentStreak = countCurrentStreak(statuses.map { it.date }, currentHabit.days)
+    var bestStreak = countBestStreak(statuses.map { it.date }, currentHabit.days)
 
     val heatMapState = rememberHeatMapCalendarState(
         startMonth = currentMonth.minusMonths(12),
@@ -148,10 +152,12 @@ fun AnalyticsPage(
     var deleteDialog by remember { mutableStateOf(false) }
 
     LaunchedEffect(statuses) {
-        lineChartData = prepareLineChartData(state.startingDay, statuses)
-        currentStreak = countCurrentStreak(statuses.map { it.date })
-        bestStreak = countBestStreak(statuses.map { it.date })
-        weekDayData = prepareWeekDayData(statuses.map { it.date }, primary)
+        scope.launch(Dispatchers.Default) {
+            lineChartData = prepareLineChartData(state.startingDay, statuses)
+            currentStreak = countCurrentStreak(statuses.map { it.date }, currentHabit.days)
+            bestStreak = countBestStreak(statuses.map { it.date }, currentHabit.days)
+            weekDayData = prepareWeekDayData(statuses.map { it.date }, primary)
+        }
     }
 
     val scrollBehavior = TopAppBarDefaults.enterAlwaysScrollBehavior()
@@ -524,7 +530,7 @@ private fun CalendarMap(
     onAction: (HabitsPageAction) -> Unit,
     calendarState: CalendarState,
     statuses: List<HabitStatus>,
-    today: LocalDate?,
+    today: LocalDate,
     currentHabit: Habit,
     primary: Color
 ) {
@@ -558,12 +564,13 @@ private fun CalendarMap(
             dayContent = { day ->
                 if (day.position.name == "MonthDate") {
                     val done = statuses.any { it.date == day.date }
+                    val validDate = day.date <= today && state.isUserSubscribed && day.date.dayOfWeek in currentHabit.days
 
                     Box(
                         modifier = Modifier
                             .padding(2.dp)
                             .size(45.dp)
-                            .clickable(enabled = day.date <= today && state.isUserSubscribed) {
+                            .clickable(enabled = validDate) {
                                 onAction(
                                     HabitsPageAction.InsertStatus(
                                         currentHabit,
@@ -608,9 +615,9 @@ private fun CalendarMap(
                             text = day.date.dayOfMonth.toString(),
                             style = MaterialTheme.typography.bodyLarge,
                             fontWeight = if (done) FontWeight.Bold else FontWeight.Normal,
-                            color = if (done) primary else if (day.date > today) MaterialTheme.colorScheme.onSurface.copy(
-                                alpha = 0.5f
-                            ) else MaterialTheme.colorScheme.onSurface
+                            color = if (done) primary
+                            else if (!validDate) MaterialTheme.colorScheme.onSurface.copy(alpha = 0.5f)
+                            else MaterialTheme.colorScheme.onSurface
                         )
                     }
                 }
@@ -692,7 +699,7 @@ private fun WeeklyActivity(
 private fun WeeklyBooleanHeatMap(
     heatMapState: HeatMapCalendarState,
     statuses: List<HabitStatus>,
-    today: LocalDate?,
+    today: LocalDate,
     onAction: (HabitsPageAction) -> Unit,
     currentHabit: Habit,
     primary: Color
@@ -713,7 +720,7 @@ private fun WeeklyBooleanHeatMap(
                             TextStyle.SHORT_STANDALONE,
                             Locale.getDefault()
                         ),
-                        color = MaterialTheme.colorScheme.secondary,
+                        color = MaterialTheme.colorScheme.primary,
                         modifier = Modifier.align(Alignment.Center)
                     )
                 }
@@ -726,19 +733,20 @@ private fun WeeklyBooleanHeatMap(
                 ) {
                     Text(
                         text = it.name.take(1),
-                        color = MaterialTheme.colorScheme.onSecondaryContainer,
+                        color = MaterialTheme.colorScheme.primary,
                         modifier = Modifier.align(Alignment.Center)
                     )
                 }
             },
             dayContent = { day, week ->
                 val done = statuses.any { it.date == day.date }
+                val validDay = day.date <= today && day.date.dayOfWeek in currentHabit.days
 
                 Box(
                     modifier = Modifier
                         .padding(2.dp)
                         .size(30.dp)
-                        .clickable(enabled = day.date <= today) {
+                        .clickable(enabled = validDay) {
                             onAction(
                                 HabitsPageAction.InsertStatus(
                                     currentHabit,
@@ -781,9 +789,9 @@ private fun WeeklyBooleanHeatMap(
                         text = day.date.dayOfMonth.toString(),
                         style = MaterialTheme.typography.bodyMedium,
                         fontWeight = if (done) FontWeight.Bold else FontWeight.Normal,
-                        color = if (done) primary else if (day.date > today) MaterialTheme.colorScheme.onSurface.copy(
-                            alpha = 0.5f
-                        ) else MaterialTheme.colorScheme.onSurface
+                        color = if (done) primary
+                        else if (!validDay) MaterialTheme.colorScheme.onSurface.copy(alpha = 0.5f)
+                        else MaterialTheme.colorScheme.onSurface
                     )
                 }
             }
