@@ -13,6 +13,11 @@ import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.outlined.Circle
+import androidx.compose.material.icons.rounded.Analytics
+import androidx.compose.material.icons.rounded.CheckCircleOutline
+import androidx.compose.material.icons.rounded.LocalFireDepartment
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -28,11 +33,10 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Shape
-import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import com.kizitonwose.calendar.compose.WeekCalendar
 import com.kizitonwose.calendar.compose.weekcalendar.rememberWeekCalendarState
-import com.shub39.grit.R
 import com.shub39.grit.core.presentation.countCurrentStreak
 import com.shub39.grit.habits.domain.Habit
 import com.shub39.grit.habits.domain.HabitStatus
@@ -104,9 +108,7 @@ fun HabitCard(
                     targetState = completed
                 ) {
                     Icon(
-                        painter = painterResource(
-                            if (it) R.drawable.round_check_circle_24 else R.drawable.outline_circle_24
-                        ),
+                        imageVector = if (!it) Icons.Outlined.Circle else Icons.Rounded.CheckCircleOutline,
                         contentDescription = null,
                     )
                 }
@@ -119,6 +121,7 @@ fun HabitCard(
                     Text(
                         text = habit.title,
                         maxLines = 1,
+                        fontWeight = FontWeight.Bold,
                         modifier = Modifier.basicMarquee()
                     )
                 }
@@ -138,7 +141,7 @@ fun HabitCard(
                         horizontalArrangement = Arrangement.spacedBy(4.dp)
                     ) {
                         Icon(
-                            painter = painterResource(R.drawable.round_local_fire_department_24),
+                            imageVector = Icons.Rounded.LocalFireDepartment,
                             contentDescription = null
                         )
 
@@ -155,7 +158,7 @@ fun HabitCard(
                         enabled = !editState
                     ) {
                         Icon(
-                            painter = painterResource(R.drawable.round_analytics_24),
+                            imageVector = Icons.Rounded.Analytics,
                             contentDescription = "Analytics"
                         )
                     }

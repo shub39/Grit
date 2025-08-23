@@ -12,6 +12,7 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.lazy.rememberLazyListState
@@ -20,6 +21,9 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Create
+import androidx.compose.material.icons.rounded.Add
+import androidx.compose.material.icons.rounded.Analytics
+import androidx.compose.material.icons.rounded.Reorder
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonShapes
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -27,6 +31,7 @@ import androidx.compose.material3.ExperimentalMaterial3ExpressiveApi
 import androidx.compose.material3.FilledTonalIconButton
 import androidx.compose.material3.FilledTonalIconToggleButton
 import androidx.compose.material3.FloatingActionButton
+import androidx.compose.material3.FloatingActionButtonDefaults
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconToggleButtonShapes
 import androidx.compose.material3.MaterialTheme
@@ -38,8 +43,10 @@ import androidx.compose.material3.TimeInput
 import androidx.compose.material3.ToggleButton
 import androidx.compose.material3.ToggleButtonDefaults
 import androidx.compose.material3.TopAppBarDefaults
+import androidx.compose.material3.animateFloatingActionButton
 import androidx.compose.material3.rememberTimePickerState
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -84,10 +91,18 @@ fun HabitsList(
     val context = LocalContext.current
 
     var editState by remember { mutableStateOf(false) }
-
-    val habits = state.habitsWithStatuses.entries.toList()
-    var reorderableHabits by remember(state) { mutableStateOf(habits) }
     val lazyListState = rememberLazyListState()
+    val fabVisible by remember {
+        derivedStateOf {
+            lazyListState.firstVisibleItemIndex == 0
+        }
+    }
+
+    var reorderableHabits by remember(state.habitsWithStatuses) {
+        mutableStateOf(
+            state.habitsWithStatuses.entries.toList()
+        )
+    }
     val reorderableListState =
         rememberReorderableLazyListState(lazyListState) { from, to ->
             reorderableHabits = reorderableHabits.toMutableList().apply {
@@ -103,6 +118,9 @@ fun HabitsList(
     ) {
         MediumFlexibleTopAppBar(
             scrollBehavior = scrollBehavior,
+            colors = TopAppBarDefaults.topAppBarColors(
+                scrolledContainerColor = MaterialTheme.colorScheme.surface
+            ),
             title = {
                 Text(text = stringResource(id = R.string.habits))
             },
@@ -130,7 +148,7 @@ fun HabitsList(
                         enabled = state.habitsWithStatuses.isNotEmpty()
                     ) {
                         Icon(
-                            painter = painterResource(R.drawable.baseline_reorder_24),
+                            imageVector = Icons.Rounded.Reorder,
                             contentDescription = null
                         )
                     }
@@ -148,7 +166,7 @@ fun HabitsList(
             itemsIndexed(reorderableHabits, key = { _, it -> it.key.id }) { index, habit ->
                 ReorderableItem(reorderableListState, key = habit.key.id) {
                     val cardCorners by animateDpAsState(
-                        targetValue = if (it) 30.dp else 20.dp
+                        targetValue = if (!it) 20.dp else 16.dp
                     )
 
                     HabitCard(
@@ -195,34 +213,39 @@ fun HabitsList(
         horizontalArrangement = Arrangement.spacedBy(8.dp),
         verticalAlignment = Alignment.Bottom
     ) {
-        AnimatedVisibility(
-            visible = state.habitsWithStatuses.isNotEmpty()
+        FloatingActionButton(
+            onClick = onNavigateToOverallAnalytics,
+            containerColor = MaterialTheme.colorScheme.secondaryContainer,
+            contentColor = MaterialTheme.colorScheme.onSecondaryContainer,
+            modifier = Modifier.animateFloatingActionButton(
+                visible = state.habitsWithStatuses.isNotEmpty(),
+                alignment = Alignment.BottomEnd
+            )
         ) {
-            FloatingActionButton(
-                onClick = onNavigateToOverallAnalytics,
-                containerColor = MaterialTheme.colorScheme.secondaryContainer,
-                contentColor = MaterialTheme.colorScheme.onSecondaryContainer
-            ) {
-                Icon(
-                    painter = painterResource(R.drawable.round_analytics_24),
-                    contentDescription = "All Analytics"
-                )
-            }
+            Icon(
+                imageVector = Icons.Rounded.Analytics,
+                contentDescription = "All Analytics"
+            )
         }
 
         MediumFloatingActionButton(
             onClick = {
                 onAction(HabitsPageAction.OnAddHabitClicked)
-            }
+            },
+            modifier = Modifier.animateFloatingActionButton(
+                visible = fabVisible,
+                alignment = Alignment.BottomEnd
+            )
         ) {
             Row(
                 modifier = Modifier.padding(16.dp),
                 horizontalArrangement = Arrangement.spacedBy(8.dp),
-                verticalAlignment = Alignment.CenterVertically
+                verticalAlignment = Alignment.CenterVertically,
             ) {
                 Icon(
-                    painter = painterResource(R.drawable.round_add_24),
-                    contentDescription = "Add Habit"
+                    imageVector = Icons.Rounded.Add,
+                    contentDescription = "Add Habit",
+                    modifier = Modifier.size(FloatingActionButtonDefaults.MediumIconSize)
                 )
 
                 AnimatedVisibility(
