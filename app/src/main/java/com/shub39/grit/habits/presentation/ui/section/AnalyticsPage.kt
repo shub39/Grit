@@ -467,7 +467,7 @@ private fun WeekDayBreakdown(
 ) {
     AnalyticsCard(
         title = stringResource(R.string.week_breakdown),
-        isUserSubscribed = state.isUserSubscribed,
+        canSeeContent = state.isUserSubscribed,
         onPlusClick = { onAction(HabitsPageAction.OnShowPaywall) },
         modifier = Modifier.height(300.dp)
     ) {
@@ -513,7 +513,7 @@ private fun CalendarMap(
 ) {
     AnalyticsCard(
         title = stringResource(R.string.monthly_progress),
-        isUserSubscribed = state.isUserSubscribed,
+        canSeeContent = state.isUserSubscribed,
         onPlusClick = { onAction(HabitsPageAction.OnShowPaywall) }
     ) {
         HorizontalCalendar(

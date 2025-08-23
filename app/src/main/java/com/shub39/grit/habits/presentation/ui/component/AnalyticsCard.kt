@@ -2,10 +2,8 @@ package com.shub39.grit.habits.presentation.ui.component
 
 import android.os.Build
 import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Button
 import androidx.compose.material3.Card
@@ -25,7 +23,7 @@ import com.shub39.grit.R
 fun AnalyticsCard(
     title: String,
     modifier: Modifier = Modifier,
-    isUserSubscribed: Boolean = true,
+    canSeeContent: Boolean = true,
     onPlusClick: () -> Unit = {},
     content: @Composable () -> Unit
 ) {
@@ -33,41 +31,38 @@ fun AnalyticsCard(
         modifier = modifier,
         shape = MaterialTheme.shapes.large
     ) {
-        Column(modifier = Modifier.padding(16.dp)) {
-            Text(
-                text = title,
-                fontWeight = FontWeight.Bold,
-                color = MaterialTheme.colorScheme.primary,
-                style = MaterialTheme.typography.titleLarge
-            )
+        Text(
+            text = title,
+            fontWeight = FontWeight.Bold,
+            color = MaterialTheme.colorScheme.primary,
+            style = MaterialTheme.typography.titleLarge,
+            modifier = Modifier.padding(16.dp)
+        )
 
-            Spacer(modifier = Modifier.height(8.dp))
-
-            if (!isUserSubscribed) {
-                Box(
-                    contentAlignment = Alignment.Center,
-                    modifier = Modifier
-                        .height(200.dp)
-                        .fillMaxWidth()
-                ) {
-                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
-                        Box(
-                            modifier = Modifier
-                                .matchParentSize()
-                                .blur(
-                                    radius = 10.dp,
-                                    edgeTreatment = BlurredEdgeTreatment.Unbounded
-                                )
-                        ) { content() }
-                    }
-
-                    Button(
-                        onClick = onPlusClick
-                    ) { Text(text = stringResource(R.string.unlock_plus)) }
+        if (!canSeeContent) {
+            Box(
+                contentAlignment = Alignment.Center,
+                modifier = Modifier
+                    .heightIn(max = 300.dp)
+                    .fillMaxWidth()
+            ) {
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
+                    Box(
+                        modifier = Modifier
+                            .matchParentSize()
+                            .blur(
+                                radius = 10.dp,
+                                edgeTreatment = BlurredEdgeTreatment.Unbounded
+                            )
+                    ) { content() }
                 }
-            } else {
-                content()
+
+                Button(
+                    onClick = onPlusClick
+                ) { Text(text = stringResource(R.string.unlock_plus)) }
             }
+        } else {
+            content()
         }
     }
 }

@@ -11,22 +11,24 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.layout.widthIn
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.ExperimentalMaterial3ExpressiveApi
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.MediumFlexibleTopAppBar
 import androidx.compose.material3.Text
-import androidx.compose.material3.TopAppBar
+import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.SolidColor
+import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import com.kizitonwose.calendar.compose.HeatMapCalendar
@@ -64,12 +66,12 @@ import java.time.format.TextStyle
 import java.util.Locale
 import kotlin.random.Random
 
-@OptIn(ExperimentalMaterial3Api::class)
+@OptIn(ExperimentalMaterial3Api::class, ExperimentalMaterial3ExpressiveApi::class)
 @Composable
 fun OverallAnalytics(
     state: HabitPageState,
     onAction: (HabitsPageAction) -> Unit,
-    onNavigateBack : () -> Unit
+    onNavigateBack: () -> Unit
 ) {
     val primary = MaterialTheme.colorScheme.primary
     val currentMonth = remember { YearMonth.now() }
@@ -115,13 +117,17 @@ fun OverallAnalytics(
         firstDayOfWeek = state.startingDay
     )
 
-
+    val scrollBehavior = TopAppBarDefaults.enterAlwaysScrollBehavior()
     Column(
         modifier = Modifier
-            .widthIn(max = 500.dp)
+            .nestedScroll(scrollBehavior.nestedScrollConnection)
             .fillMaxSize()
     ) {
-        TopAppBar(
+        MediumFlexibleTopAppBar(
+            scrollBehavior = scrollBehavior,
+            colors = TopAppBarDefaults.topAppBarColors(
+                scrolledContainerColor = MaterialTheme.colorScheme.surface
+            ),
             title = {
                 Text(
                     text = stringResource(R.string.overall_analytics),
@@ -173,12 +179,17 @@ private fun WeekDayBreakdown(
 ) {
     AnalyticsCard(
         title = stringResource(R.string.week_breakdown),
-        isUserSubscribed = state.isUserSubscribed,
+        canSeeContent = state.isUserSubscribed,
         onPlusClick = { onAction(HabitsPageAction.OnShowPaywall) },
         modifier = Modifier.height(300.dp)
     ) {
         RowChart(
             data = weeklyBreakdownData,
+            modifier = Modifier.padding(
+                start = 16.dp,
+                end = 16.dp,
+                bottom = 16.dp
+            ),
             dividerProperties = DividerProperties(
                 enabled = false
             ),
@@ -216,7 +227,7 @@ private fun WeeklyGraph(
 ) {
     AnalyticsCard(
         title = stringResource(R.string.weekly_graph),
-        isUserSubscribed = state.isUserSubscribed,
+        canSeeContent = state.isUserSubscribed,
         modifier = Modifier.height(300.dp),
         onPlusClick = { onAction(HabitsPageAction.OnShowPaywall) }
     ) {
@@ -241,7 +252,12 @@ private fun WeeklyGraph(
                     color = SolidColor(primary)
                 )
             ),
-            data = weeklyGraphData
+            data = weeklyGraphData,
+            modifier = Modifier.padding(
+                start = 16.dp,
+                end = 16.dp,
+                bottom = 16.dp
+            )
         )
     }
 }
@@ -258,6 +274,8 @@ private fun HabitHeatMap(
     ) {
         HeatMapCalendar(
             state = heatMapState,
+            modifier = Modifier.padding(bottom = 16.dp),
+            contentPadding = PaddingValues(horizontal = 16.dp),
             monthHeader = {
                 Box(
                     modifier = Modifier.padding(2.dp)
@@ -267,7 +285,7 @@ private fun HabitHeatMap(
                             TextStyle.SHORT_STANDALONE,
                             Locale.getDefault()
                         ),
-                        style = MaterialTheme.typography.bodyMedium,
+                        color = MaterialTheme.colorScheme.primary,
                         modifier = Modifier.align(Alignment.Center)
                     )
                 }
@@ -284,7 +302,7 @@ private fun HabitHeatMap(
                 ) {
                     Text(
                         text = it.name.take(1),
-                        style = MaterialTheme.typography.bodyMedium,
+                        color = MaterialTheme.colorScheme.primary,
                         modifier = Modifier.align(Alignment.Center)
                     )
                 }

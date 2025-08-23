@@ -34,8 +34,8 @@ import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.FloatingActionButtonDefaults
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconToggleButtonShapes
+import androidx.compose.material3.LargeFlexibleTopAppBar
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.MediumFlexibleTopAppBar
 import androidx.compose.material3.MediumFloatingActionButton
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
@@ -116,7 +116,7 @@ fun HabitsList(
             .nestedScroll(scrollBehavior.nestedScrollConnection)
             .fillMaxSize()
     ) {
-        MediumFlexibleTopAppBar(
+        LargeFlexibleTopAppBar(
             scrollBehavior = scrollBehavior,
             colors = TopAppBarDefaults.topAppBarColors(
                 scrolledContainerColor = MaterialTheme.colorScheme.surface
@@ -218,7 +218,7 @@ fun HabitsList(
             containerColor = MaterialTheme.colorScheme.secondaryContainer,
             contentColor = MaterialTheme.colorScheme.onSecondaryContainer,
             modifier = Modifier.animateFloatingActionButton(
-                visible = state.habitsWithStatuses.isNotEmpty(),
+                visible = state.habitsWithStatuses.isNotEmpty() && fabVisible,
                 alignment = Alignment.BottomEnd
             )
         ) {

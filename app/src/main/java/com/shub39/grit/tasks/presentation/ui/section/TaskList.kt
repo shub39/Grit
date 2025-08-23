@@ -41,8 +41,8 @@ import androidx.compose.material3.FloatingActionButtonDefaults
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButtonShapes
 import androidx.compose.material3.IconToggleButtonShapes
+import androidx.compose.material3.LargeFlexibleTopAppBar
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.MediumFlexibleTopAppBar
 import androidx.compose.material3.MediumFloatingActionButton
 import androidx.compose.material3.OutlinedIconButton
 import androidx.compose.material3.OutlinedTextField
@@ -112,7 +112,7 @@ fun TaskList(
             .nestedScroll(scrollBehavior.nestedScrollConnection)
             .fillMaxSize()
     ) {
-        MediumFlexibleTopAppBar(
+        LargeFlexibleTopAppBar(
             colors = TopAppBarDefaults.topAppBarColors(
                 scrolledContainerColor = MaterialTheme.colorScheme.surface
             ),
@@ -226,7 +226,7 @@ fun TaskList(
                     itemsIndexed(reorderableTasks, key = { _, it -> it.id }) { index, task ->
                         ReorderableItem(reorderableListState, key = task.id) {
                             val cardCorners by animateDpAsState(
-                                targetValue = if (it) 16.dp else 100.dp
+                                targetValue = if (it) 16.dp else 30.dp
                             )
 
                             TaskCard(
@@ -316,7 +316,7 @@ fun TaskList(
             Icon(
                 imageVector = Icons.Rounded.Add,
                 contentDescription = null,
-                modifier = Modifier.size(FloatingActionButtonDefaults.LargeIconSize)
+                modifier = Modifier.size(FloatingActionButtonDefaults.MediumIconSize)
             )
 
             AnimatedVisibility(
