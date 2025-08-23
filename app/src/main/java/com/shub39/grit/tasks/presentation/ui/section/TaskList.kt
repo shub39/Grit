@@ -37,20 +37,23 @@ import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.ExperimentalMaterial3ExpressiveApi
 import androidx.compose.material3.FilledTonalIconButton
 import androidx.compose.material3.FilledTonalIconToggleButton
-import androidx.compose.material3.FloatingActionButton
+import androidx.compose.material3.FloatingActionButtonDefaults
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButtonShapes
 import androidx.compose.material3.IconToggleButtonShapes
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.MediumFlexibleTopAppBar
+import androidx.compose.material3.MediumFloatingActionButton
 import androidx.compose.material3.OutlinedIconButton
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
 import androidx.compose.material3.ToggleButton
 import androidx.compose.material3.ToggleButtonDefaults
 import androidx.compose.material3.TopAppBarDefaults
+import androidx.compose.material3.animateFloatingActionButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableLongStateOf
 import androidx.compose.runtime.mutableStateOf
@@ -96,7 +99,12 @@ fun TaskList(
     var editState by remember { mutableStateOf(false) }
     var editTask: Task? by remember { mutableStateOf(null) }
 
-    val tasks = state.tasks[state.currentCategory] ?: emptyList()
+    val lazyListState = rememberLazyListState()
+    val fabVisible by remember {
+        derivedStateOf {
+            lazyListState.firstVisibleItemIndex <= 0
+        }
+    }
 
     val scrollBehavior = TopAppBarDefaults.enterAlwaysScrollBehavior()
     Column(
@@ -134,7 +142,7 @@ fun TaskList(
                 }
 
                 AnimatedVisibility(
-                    visible = tasks.isNotEmpty()
+                    visible = state.tasks.values.isNotEmpty()
                 ) {
                     FilledTonalIconToggleButton(
                         checked = editState,
@@ -164,7 +172,6 @@ fun TaskList(
                 ToggleButton(
                     checked = category == state.currentCategory,
                     onCheckedChange = {
-                        onAction(TaskPageAction.ReorderTasks(tasks.mapIndexed { index, task -> index to task }))
                         onAction(TaskPageAction.ChangeCategory(category))
                         editState = false
                     }
@@ -197,14 +204,17 @@ fun TaskList(
         }
 
         AnimatedContent(
-            targetState = state.currentCategory
-        ) { category ->
+            targetState = state.currentCategory?.id
+        ) { categoryId ->
+            val category = state.tasks.keys.firstOrNull { it.id == categoryId }
+
             if (category != null) {
-                var reorderableTasks by remember(state) { mutableStateOf(tasks) }
-                val lazyListState = rememberLazyListState()
+                var reorderableTasks by remember(category.id, state.tasks.values) { mutableStateOf(
+                    state.tasks[category] ?: emptyList()
+                ) }
                 val reorderableListState =
                     rememberReorderableLazyListState(lazyListState) { from, to ->
-                        reorderableTasks = tasks.toMutableList().apply {
+                        reorderableTasks = reorderableTasks.toMutableList().apply {
                             add(to.index, removeAt(from.index))
                         }
                     }
@@ -216,7 +226,7 @@ fun TaskList(
                     itemsIndexed(reorderableTasks, key = { _, it -> it.id }) { index, task ->
                         ReorderableItem(reorderableListState, key = task.id) {
                             val cardCorners by animateDpAsState(
-                                targetValue = if (it) 100.dp else 16.dp
+                                targetValue = if (it) 16.dp else 100.dp
                             )
 
                             TaskCard(
@@ -250,7 +260,7 @@ fun TaskList(
 
                                                 if (task.status) {
                                                     reorderableTasks =
-                                                        tasks.toMutableList().apply {
+                                                        reorderableTasks.toMutableList().apply {
                                                             add(
                                                                 reorderableTasks.size - 1,
                                                                 removeAt(index)
@@ -276,7 +286,7 @@ fun TaskList(
                     }
 
                     item {
-                        if (tasks.isEmpty()) {
+                        if (reorderableTasks.isEmpty()) {
                             Empty()
                         } else {
                             Spacer(modifier = Modifier.height(60.dp))
@@ -287,34 +297,35 @@ fun TaskList(
         }
     }
 
-    AnimatedVisibility(
-        visible = state.currentCategory != null,
+    MediumFloatingActionButton(
+        onClick = { showTaskAddSheet = true },
+        containerColor = MaterialTheme.colorScheme.primaryContainer,
+        contentColor = MaterialTheme.colorScheme.onPrimaryContainer,
         modifier = Modifier
             .align(Alignment.BottomEnd)
             .padding(16.dp)
+            .animateFloatingActionButton(
+                visible = state.currentCategory != null && fabVisible,
+                alignment = Alignment.BottomEnd,
+            )
     ) {
-        FloatingActionButton(
-            onClick = { showTaskAddSheet = true },
-            containerColor = MaterialTheme.colorScheme.primaryContainer,
-            contentColor = MaterialTheme.colorScheme.onPrimaryContainer
+        Row(
+            modifier = Modifier.padding(16.dp),
+            verticalAlignment = Alignment.CenterVertically,
         ) {
-            Row(
-                modifier = Modifier.padding(16.dp),
-                verticalAlignment = Alignment.CenterVertically
-            ) {
-                Icon(
-                    imageVector = Icons.Rounded.Add,
-                    contentDescription = null
-                )
+            Icon(
+                imageVector = Icons.Rounded.Add,
+                contentDescription = null,
+                modifier = Modifier.size(FloatingActionButtonDefaults.LargeIconSize)
+            )
 
-                AnimatedVisibility(
-                    visible = state.tasks[state.currentCategory].isNullOrEmpty()
-                ) {
-                    Text(
-                        text = stringResource(R.string.add_task),
-                        modifier = Modifier.padding(start = 8.dp)
-                    )
-                }
+            AnimatedVisibility(
+                visible = state.tasks[state.currentCategory].isNullOrEmpty()
+            ) {
+                Text(
+                    text = stringResource(R.string.add_task),
+                    modifier = Modifier.padding(start = 8.dp)
+                )
             }
         }
     }

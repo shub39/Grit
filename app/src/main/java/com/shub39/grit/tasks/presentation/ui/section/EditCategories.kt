@@ -109,7 +109,7 @@ fun EditCategories(
                             pressedShape = MaterialTheme.shapes.extraSmall,
                         ),
                         onCheckedChange = { editState = it },
-                        enabled = !state.tasks[state.currentCategory].isNullOrEmpty()
+                        enabled = state.tasks.keys.isNotEmpty()
                     ) {
                         Icon(
                             imageVector = Icons.Rounded.Reorder,

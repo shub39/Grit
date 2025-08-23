@@ -19,7 +19,6 @@ import androidx.navigation.compose.rememberNavController
 import com.materialkolor.PaletteStyle
 import com.shub39.grit.core.domain.AppTheme
 import com.shub39.grit.core.domain.Fonts
-import com.shub39.grit.core.presentation.component.PageFill
 import com.shub39.grit.core.presentation.theme.GritTheme
 import com.shub39.grit.core.presentation.theme.Theme
 import com.shub39.grit.habits.domain.Habit
@@ -47,7 +46,7 @@ private sealed interface HabitRoutes {
 fun HabitsGraph(
     state: HabitPageState,
     onAction: (HabitsPageAction) -> Unit
-) = PageFill {
+) {
     val navController = rememberNavController()
 
     NavHost(
