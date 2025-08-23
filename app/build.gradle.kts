@@ -120,7 +120,7 @@ dependencies {
     implementation(libs.composeIcons.fontAwesome)
     implementation(libs.compose.charts)
     implementation(libs.calendar)
-    implementation(libs.material.icons.core)
+    implementation(libs.androidx.material.icons.extended)
     implementation(libs.aboutlibraries.compose.m3)
     implementation(libs.androidx.biometric)
 }

@@ -1,4 +1,4 @@
-package com.shub39.grit.tasks.presentation.component
+package com.shub39.grit.tasks.presentation.ui.component
 
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.animateColorAsState

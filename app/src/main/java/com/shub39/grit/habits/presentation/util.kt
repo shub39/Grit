@@ -1,4 +1,4 @@
-package com.shub39.grit.habits.presentation.component
+package com.shub39.grit.habits.presentation
 
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.SolidColor

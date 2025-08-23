@@ -1,4 +1,4 @@
-package com.shub39.grit.core.presentation.settings.components
+package com.shub39.grit.core.presentation.settings.ui.section
 
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
@@ -8,41 +8,41 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
-import androidx.compose.foundation.layout.widthIn
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.KeyboardArrowRight
+import androidx.compose.material.icons.automirrored.rounded.ArrowForwardIos
+import androidx.compose.material.icons.rounded.Add
+import androidx.compose.material.icons.rounded.Download
+import androidx.compose.material.icons.rounded.Info
+import androidx.compose.material.icons.rounded.Palette
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.ExperimentalMaterial3ExpressiveApi
 import androidx.compose.material3.Icon
+import androidx.compose.material3.LargeFlexibleTopAppBar
 import androidx.compose.material3.ListItem
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Switch
 import androidx.compose.material3.Text
-import androidx.compose.material3.TopAppBar
+import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import com.shub39.grit.R
 import com.shub39.grit.core.domain.Pages
-import com.shub39.grit.core.presentation.components.PageFill
+import com.shub39.grit.core.presentation.component.PageFill
 import com.shub39.grit.core.presentation.settings.SettingsAction
 import com.shub39.grit.core.presentation.settings.SettingsState
-import compose.icons.FontAwesomeIcons
-import compose.icons.fontawesomeicons.Solid
-import compose.icons.fontawesomeicons.solid.InfoCircle
-import compose.icons.fontawesomeicons.solid.Palette
-import compose.icons.fontawesomeicons.solid.PlusCircle
-import compose.icons.fontawesomeicons.solid.Upload
+import com.shub39.grit.core.presentation.settings.ui.component.AboutApp
 import java.time.DayOfWeek
 
 @OptIn(ExperimentalMaterial3Api::class, ExperimentalMaterial3ExpressiveApi::class)
@@ -60,12 +60,14 @@ fun RootPage(
         onAction(SettingsAction.OnCheckBiometric(context))
     }
 
+    val scrollBehavior = TopAppBarDefaults.enterAlwaysScrollBehavior()
     Column(
         modifier = Modifier
-            .widthIn(max = 500.dp)
+            .nestedScroll(scrollBehavior.nestedScrollConnection)
             .fillMaxSize()
     ) {
-        TopAppBar(
+        LargeFlexibleTopAppBar(
+            scrollBehavior = scrollBehavior,
             title = {
                 Text(text = stringResource(R.string.settings))
             }
@@ -91,9 +93,8 @@ fun RootPage(
                         verticalAlignment = Alignment.CenterVertically
                     ) {
                         Icon(
-                            imageVector = FontAwesomeIcons.Solid.PlusCircle,
+                            imageVector = Icons.Rounded.Add,
                             contentDescription = "Grit Plus",
-                            modifier = Modifier.size(24.dp)
                         )
 
                         Spacer(modifier = Modifier.width(8.dp))
@@ -251,11 +252,16 @@ fun RootPage(
                             text = stringResource(R.string.look_and_feel_desc)
                         )
                     },
+                    trailingContent = {
+                        Icon(
+                            imageVector = Icons.AutoMirrored.Rounded.ArrowForwardIos,
+                            contentDescription = "Navigate"
+                        )
+                    },
                     leadingContent = {
                         Icon(
-                            imageVector = FontAwesomeIcons.Solid.Palette,
+                            imageVector = Icons.Rounded.Palette,
                             contentDescription = "Navigate",
-                            modifier = Modifier.size(24.dp)
                         )
                     }
                 )
@@ -274,11 +280,16 @@ fun RootPage(
                             text = stringResource(R.string.backup_desc)
                         )
                     },
+                    trailingContent = {
+                        Icon(
+                            imageVector = Icons.AutoMirrored.Rounded.ArrowForwardIos,
+                            contentDescription = "Navigate"
+                        )
+                    },
                     leadingContent = {
                         Icon(
-                            imageVector = FontAwesomeIcons.Solid.Upload,
+                            imageVector = Icons.Rounded.Download,
                             contentDescription = "Backup",
-                            modifier = Modifier.size(24.dp)
                         )
                     }
                 )
@@ -292,11 +303,21 @@ fun RootPage(
                             text = stringResource(R.string.about_libraries)
                         )
                     },
+                    supportingContent = {
+                        Text(
+                            text = stringResource(R.string.about_libraries)
+                        )
+                    },
+                    trailingContent = {
+                        Icon(
+                            imageVector = Icons.AutoMirrored.Rounded.ArrowForwardIos,
+                            contentDescription = "Navigate"
+                        )
+                    },
                     leadingContent = {
                         Icon(
-                            imageVector = FontAwesomeIcons.Solid.InfoCircle,
-                            contentDescription = "About Libraries",
-                            modifier = Modifier.size(24.dp)
+                            imageVector = Icons.Rounded.Info,
+                            contentDescription = "About Libraries"
                         )
                     }
                 )

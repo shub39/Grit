@@ -1,4 +1,4 @@
-package com.shub39.grit.core.presentation.settings.components
+package com.shub39.grit.core.presentation.settings.ui.section
 
 import android.os.Build
 import androidx.compose.animation.AnimatedVisibility
@@ -74,9 +74,9 @@ import com.materialkolor.rememberDynamicColorScheme
 import com.shub39.grit.R
 import com.shub39.grit.core.domain.AppTheme
 import com.shub39.grit.core.domain.Fonts
-import com.shub39.grit.core.presentation.components.ColorPickerDialog
-import com.shub39.grit.core.presentation.components.GritDialog
-import com.shub39.grit.core.presentation.components.PageFill
+import com.shub39.grit.core.presentation.component.ColorPickerDialog
+import com.shub39.grit.core.presentation.component.GritDialog
+import com.shub39.grit.core.presentation.component.PageFill
 import com.shub39.grit.core.presentation.settings.SettingsAction
 import com.shub39.grit.core.presentation.settings.SettingsState
 import compose.icons.FontAwesomeIcons

@@ -17,11 +17,10 @@ import androidx.navigation.compose.rememberNavController
 import com.materialkolor.PaletteStyle
 import com.shub39.grit.core.domain.AppTheme
 import com.shub39.grit.core.domain.Fonts
-import com.shub39.grit.core.presentation.components.PageFill
-import com.shub39.grit.core.presentation.settings.components.AboutLibraries
-import com.shub39.grit.core.presentation.settings.components.Backup
-import com.shub39.grit.core.presentation.settings.components.LookAndFeelPage
-import com.shub39.grit.core.presentation.settings.components.RootPage
+import com.shub39.grit.core.presentation.settings.ui.section.AboutLibraries
+import com.shub39.grit.core.presentation.settings.ui.section.Backup
+import com.shub39.grit.core.presentation.settings.ui.section.LookAndFeelPage
+import com.shub39.grit.core.presentation.settings.ui.section.RootPage
 import com.shub39.grit.core.presentation.theme.GritTheme
 import com.shub39.grit.core.presentation.theme.Theme
 import kotlinx.serialization.Serializable
@@ -41,10 +40,10 @@ private sealed interface SettingsRoutes {
 }
 
 @Composable
-fun Settings(
+fun SettingsGraph(
     state: SettingsState,
     onAction: (SettingsAction) -> Unit,
-) = PageFill {
+) {
     val navController = rememberNavController()
 
     NavHost(
@@ -111,7 +110,7 @@ fun Preview() {
             paletteStyle = PaletteStyle.FruitSalad
         )
     ) {
-        Settings(
+        SettingsGraph(
             state = SettingsState(),
             onAction = {},
         )

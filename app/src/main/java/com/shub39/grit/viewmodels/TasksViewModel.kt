@@ -9,6 +9,7 @@ import com.shub39.grit.tasks.domain.TaskRepo
 import com.shub39.grit.tasks.presentation.TaskPageAction
 import com.shub39.grit.tasks.presentation.TaskPageState
 import kotlinx.coroutines.Job
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.launchIn
@@ -78,6 +79,8 @@ class TasksViewModel(
                         upsertCategory(category.second.copy(index = category.first))
                     }
 
+                    delay(200)
+
                     _state.update {
                         it.copy(
                             currentCategory = it.tasks.keys.firstOrNull()
@@ -87,6 +90,8 @@ class TasksViewModel(
 
                 is TaskPageAction.DeleteCategory -> {
                     deleteCategory(action.category)
+
+                    delay(200)
 
                     _state.update {
                         it.copy(

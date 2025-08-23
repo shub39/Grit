@@ -1,4 +1,4 @@
-package com.shub39.grit.core.presentation.components
+package com.shub39.grit.core.presentation.component
 
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
