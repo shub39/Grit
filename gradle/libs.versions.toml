@@ -1,5 +1,5 @@
 [versions]
-agp = "8.12.1"
+agp = "8.11.1"
 calendar = "2.8.0"
 composeCharts = "0.1.10"
 purchases = "9.3.0"
