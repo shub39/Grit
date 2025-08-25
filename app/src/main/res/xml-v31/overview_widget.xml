@@ -5,8 +5,8 @@
     android:description="@string/habit_overview_widget"
     android:targetCellHeight="2"
     android:minWidth="120dp"
-    android:minHeight="100dp"
+    android:minHeight="60dp"
     android:updatePeriodMillis="3600000"
     android:widgetCategory="home_screen"
     android:previewImage="@drawable/habit_overview_widget"
-    android:resizeMode="vertical" />
+    android:resizeMode="horizontal|vertical" />
