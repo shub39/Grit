@@ -32,6 +32,7 @@ import androidx.glance.layout.height
 import androidx.glance.layout.padding
 import androidx.glance.text.FontWeight
 import androidx.glance.text.Text
+import androidx.glance.text.TextAlign
 import androidx.glance.text.TextStyle
 import com.shub39.grit.R
 import com.shub39.grit.app.MainActivity
@@ -81,7 +82,9 @@ class HabitOverviewWidgetRepository(
     fun getHabits(): Flow<List<Habit>> {
         return habitDao
             .getAllHabitsFlow()
-            .map { flow -> flow.map { it.toHabit() } }
+            .map { flow ->
+                flow.map { it.toHabit() }
+            }
             .distinctUntilChanged()
     }
 
@@ -107,7 +110,8 @@ class HabitOverviewWidget : GlanceAppWidget(), KoinComponent {
             GlanceTheme {
                 HabitOverview(
                     context = context,
-                    habits = habits,
+                    noHabits = habits.isEmpty(),
+                    habits = habits.filter { LocalDate.now().dayOfWeek in it.days },
                     completedHabitIds = completedHabitIds,
                     onHabitClick = {
                         coroutineScope.launch {
@@ -126,6 +130,7 @@ class HabitOverviewWidget : GlanceAppWidget(), KoinComponent {
     @Composable
     private fun HabitOverview(
         context: Context,
+        noHabits: Boolean,
         habits: List<Habit>,
         completedHabitIds: List<Long>,
         onHabitClick: (Long) -> Unit
@@ -209,23 +214,26 @@ class HabitOverviewWidget : GlanceAppWidget(), KoinComponent {
                     }
                 }
 
-                if (habits.isEmpty()) {
-                    item {
-                        Box(
-                            modifier = GlanceModifier.fillMaxSize(),
-                            contentAlignment = Alignment.Center
-                        ) {
-                            Text(
-                                text = context.getString(R.string.add),
-                                modifier = GlanceModifier
-                                    .clickable(actionStartActivity<MainActivity>())
-                                    .padding(horizontal = 16.dp, vertical = 8.dp),
-                                style = TextStyle(
-                                    color = GlanceTheme.colors.primary,
-                                    fontSize = 20.sp
-                                )
+                item {
+                    Box(
+                        modifier = GlanceModifier.fillMaxSize(),
+                        contentAlignment = Alignment.Center
+                    ) {
+                        Text(
+                            text = if (noHabits) {
+                                context.getString(R.string.add)
+                            } else if (habits.isEmpty()) {
+                                context.getString(R.string.no_habit_for_today)
+                            } else "",
+                            modifier = GlanceModifier
+                                .clickable(actionStartActivity<MainActivity>())
+                                .padding(horizontal = 16.dp, vertical = 8.dp),
+                            style = TextStyle(
+                                color = GlanceTheme.colors.primary,
+                                fontSize = 20.sp,
+                                textAlign = TextAlign.Center
                             )
-                        }
+                        )
                     }
                 }
 
