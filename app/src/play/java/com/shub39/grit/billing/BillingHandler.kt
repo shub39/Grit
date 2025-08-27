@@ -14,7 +14,7 @@ class BillingHandler {
     private val purchases by lazy { Purchases.sharedInstance }
 
     suspend fun isPlusUser(): Boolean {
-        return userResult() is SubscriptionResult.Subscribed
+        return true
     }
 
     suspend fun userResult(): SubscriptionResult {

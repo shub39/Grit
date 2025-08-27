@@ -77,49 +77,6 @@ fun RootPage(
             modifier = Modifier.fillMaxSize()
         ) {
             item {
-                Card(
-                    onClick = { onAction(SettingsAction.OnPaywallShow) },
-                    modifier = Modifier.padding(16.dp),
-                    shape = MaterialTheme.shapes.extraLarge,
-                    colors = CardDefaults.cardColors(
-                        containerColor = MaterialTheme.colorScheme.tertiary,
-                        contentColor = MaterialTheme.colorScheme.onTertiary
-                    )
-                ) {
-                    Row(
-                        modifier = Modifier
-                            .padding(16.dp)
-                            .fillMaxWidth(),
-                        verticalAlignment = Alignment.CenterVertically
-                    ) {
-                        Icon(
-                            imageVector = Icons.Rounded.Add,
-                            contentDescription = "Grit Plus",
-                        )
-
-                        Spacer(modifier = Modifier.width(8.dp))
-
-                        Text(
-                            text = stringResource(R.string.grit_plus),
-                            style = MaterialTheme.typography.titleLarge,
-                            fontWeight = FontWeight.Bold
-                        )
-
-                        Spacer(modifier = Modifier.weight(1f))
-
-                        Icon(
-                            imageVector = Icons.AutoMirrored.Filled.KeyboardArrowRight,
-                            contentDescription = "Grit Plus"
-                        )
-                    }
-                }
-            }
-
-            item { AboutApp() }
-
-            item { Spacer(modifier = Modifier.height(16.dp)) }
-
-            item {
                 ListItem(
                     headlineContent = {
                         Text(

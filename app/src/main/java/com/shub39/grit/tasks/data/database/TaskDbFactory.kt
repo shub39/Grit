@@ -9,8 +9,6 @@ class TaskDbFactory(
 ) {
     fun create() : RoomDatabase.Builder<TaskDatabase> {
         val appContext = context.applicationContext
-        val dbfile = appContext.getDatabasePath(TaskDatabase.DB_NAME)
-
-        return Room.databaseBuilder(appContext, dbfile.absolutePath)
+        return Room.databaseBuilder(appContext, TaskDatabase::class.java, TaskDatabase.DB_NAME)
     }
 }
