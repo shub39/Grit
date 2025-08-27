@@ -36,6 +36,15 @@ android {
         }
     }
 
+    signingConfigs {
+        create("release") {
+            storeFile = file("../grit.keystore")
+            storePassword = "gritpassword"
+            keyAlias = "grit_alias"
+            keyPassword = "gritpassword"
+        }
+    }
+
     buildTypes {
         release {
             resValue("string", "app_name", appName)
@@ -45,6 +54,7 @@ android {
                 getDefaultProguardFile("proguard-android-optimize.txt"),
                 "proguard-rules.pro"
             )
+            signingConfig = signingConfigs.getByName("release")
         }
 
         debug {
