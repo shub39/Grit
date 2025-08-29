@@ -92,7 +92,7 @@ class HabitViewModel(
                     } else {
                         _state.update {
                             it.copy(
-                                showHabitAddDialog = true
+                                showHabitAddSheet = true
                             )
                         }
 
@@ -110,7 +110,7 @@ class HabitViewModel(
                     }
                 }
 
-                HabitsPageAction.DismissAddHabitDialog -> _state.update { it.copy(showHabitAddDialog = false) }
+                HabitsPageAction.DismissAddHabitDialog -> _state.update { it.copy(showHabitAddSheet = false) }
 
                 HabitsPageAction.OnShowPaywall -> stateLayer.settingsState.update { it.copy(showPaywall = true) }
             }

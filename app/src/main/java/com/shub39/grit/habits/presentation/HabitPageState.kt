@@ -11,6 +11,6 @@ data class HabitPageState(
     val timeFormat: String = "hh:mm a",
     val startingDay: DayOfWeek = DayOfWeek.MONDAY,
     val analyticsHabitId: Long? = null,
-    val showHabitAddDialog: Boolean = false,
+    val showHabitAddSheet: Boolean = false,
     val isUserSubscribed: Boolean = false
 )

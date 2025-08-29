@@ -258,12 +258,11 @@ fun HabitsList(
     }
 
     // add dialog
-    if (state.showHabitAddDialog) {
+    if (state.showHabitAddSheet) {
         var newHabitName by remember { mutableStateOf("") }
         var newHabitDescription by remember { mutableStateOf("") }
         var newHabitTime by remember { mutableStateOf(LocalDateTime.now()) }
         var newHabitDays by remember { mutableStateOf(DayOfWeek.entries.toSet()) }
-        val isHabitPresent = { state.habitsWithStatuses.any { it.key.title == newHabitName } }
 
         var timePickerDialog by remember { mutableStateOf(false) }
 
@@ -273,7 +272,7 @@ fun HabitsList(
             }
         ) {
             Icon(
-                painter = painterResource(R.drawable.round_add_24),
+                imageVector = Icons.Rounded.Add,
                 contentDescription = "Add Habit"
             )
 
@@ -293,15 +292,13 @@ fun HabitsList(
                 shape = MaterialTheme.shapes.medium,
                 modifier = Modifier.fillMaxWidth(),
                 label = {
-                    if (isHabitPresent()) {
-                        Text(text = stringResource(id = R.string.habit_exists))
-                    } else if (newHabitName.length <= 20) {
+                    if (newHabitName.length <= 20) {
                         Text(text = stringResource(id = R.string.title))
                     } else {
                         Text(text = stringResource(id = R.string.too_long))
                     }
                 },
-                isError = newHabitName.length > 20 || isHabitPresent()
+                isError = newHabitName.length > 20
             )
 
             OutlinedTextField(
@@ -314,13 +311,13 @@ fun HabitsList(
                 ),
                 onValueChange = { newHabitDescription = it },
                 label = {
-                    if (newHabitName.length <= 50) {
+                    if (newHabitDescription.length <= 50) {
                         Text(text = stringResource(id = R.string.description))
                     } else {
                         Text(text = stringResource(id = R.string.too_long))
                     }
                 },
-                isError = newHabitName.length > 50
+                isError = newHabitDescription.length > 50
             )
 
             Row(
@@ -398,7 +395,7 @@ fun HabitsList(
                     pressedShape = MaterialTheme.shapes.small
                 ),
                 modifier = Modifier.fillMaxWidth(),
-                enabled = newHabitName.isNotBlank() && newHabitName.length < 20 && newHabitDescription.length < 50,
+                enabled = newHabitName.isNotBlank() && newHabitName.length <= 20 && newHabitDescription.length <= 50,
             ) {
                 Text(text = stringResource(id = R.string.add_habit))
             }
