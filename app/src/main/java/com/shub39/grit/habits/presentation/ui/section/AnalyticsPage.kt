@@ -314,6 +314,7 @@ fun AnalyticsPage(
 
             OutlinedTextField(
                 value = newHabitTitle,
+                singleLine = true,
                 shape = MaterialTheme.shapes.medium,
                 keyboardOptions = KeyboardOptions.Default.copy(
                     capitalization = KeyboardCapitalization.Sentences,
@@ -333,6 +334,7 @@ fun AnalyticsPage(
 
             OutlinedTextField(
                 value = newHabitDescription,
+                singleLine = true,
                 shape = MaterialTheme.shapes.medium,
                 keyboardOptions = KeyboardOptions.Default.copy(
                     capitalization = KeyboardCapitalization.Sentences,

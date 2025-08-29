@@ -284,6 +284,7 @@ fun HabitsList(
 
             OutlinedTextField(
                 value = newHabitName,
+                singleLine = true,
                 onValueChange = { newHabitName = it },
                 keyboardOptions = KeyboardOptions.Default.copy(
                     capitalization = KeyboardCapitalization.Words,
@@ -303,6 +304,7 @@ fun HabitsList(
 
             OutlinedTextField(
                 value = newHabitDescription,
+                singleLine = true,
                 shape = MaterialTheme.shapes.medium,
                 modifier = Modifier.fillMaxWidth(),
                 keyboardOptions = KeyboardOptions.Default.copy(
