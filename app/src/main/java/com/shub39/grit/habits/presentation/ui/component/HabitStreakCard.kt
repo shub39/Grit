@@ -1,17 +1,23 @@
 package com.shub39.grit.habits.presentation.ui.component
 
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.rounded.LocalFireDepartment
+import androidx.compose.material3.Card
+import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.Icon
-import androidx.compose.material3.ListItem
-import androidx.compose.material3.ListItemDefaults
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
@@ -25,48 +31,46 @@ fun HabitStreakCard(
     bestStreak: Int,
     modifier: Modifier = Modifier
 ) {
-    ListItem(
-        colors = ListItemDefaults.colors(
-            containerColor = MaterialTheme.colorScheme.secondary,
-            leadingIconColor = MaterialTheme.colorScheme.onSecondary,
-            headlineColor = MaterialTheme.colorScheme.onSecondary,
-            overlineColor = MaterialTheme.colorScheme.onSecondary,
-            supportingColor = MaterialTheme.colorScheme.onSecondary
+    Card(
+        modifier = modifier,
+        colors = CardDefaults.cardColors(
+            containerColor = MaterialTheme.colorScheme.secondaryContainer,
+            contentColor = MaterialTheme.colorScheme.onSecondaryContainer
         ),
-        modifier = modifier
-            .clip(
-                RoundedCornerShape(
-                    topStart = 10.dp,
-                    topEnd = 10.dp,
-                    bottomStart = 30.dp,
-                    bottomEnd = 30.dp
-                )
-            ),
-        leadingContent = {
+        shape = CircleShape
+    ) {
+        Row(
+            modifier = Modifier
+                .padding(16.dp)
+                .fillMaxWidth(),
+            verticalAlignment = Alignment.CenterVertically
+        ) {
             Icon(
                 imageVector = Icons.Rounded.LocalFireDepartment,
                 contentDescription = "Streak",
                 modifier = Modifier.size(64.dp)
             )
-        },
-        overlineContent = {
-            Text(
-                text = stringResource(R.string.streak),
-            )
-        },
-        headlineContent = {
-            Text(
-                text = currentStreak.toString(),
-                fontWeight = FontWeight.Bold,
-            )
-        },
-        supportingContent = {
-            Text(
-                text = stringResource(R.string.best_streak, bestStreak),
-                style = MaterialTheme.typography.bodyMedium
-            )
+
+            Spacer(modifier = Modifier.width(12.dp))
+
+            Column(
+                modifier = Modifier.weight(1f),
+            ) {
+                Text(
+                    text = stringResource(R.string.streak),
+                    style = MaterialTheme.typography.labelMedium
+                )
+                Text(
+                    text = currentStreak.toString(),
+                    style = MaterialTheme.typography.titleLarge.copy(fontWeight = FontWeight.Bold)
+                )
+                Text(
+                    text = stringResource(R.string.best_streak, bestStreak),
+                    style = MaterialTheme.typography.bodyMedium
+                )
+            }
         }
-    )
+    }
 }
 
 @Preview
