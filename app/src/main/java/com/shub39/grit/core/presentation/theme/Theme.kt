@@ -9,7 +9,7 @@ data class Theme(
     val appTheme: AppTheme = AppTheme.SYSTEM,
     val isAmoled: Boolean = false,
     val isMaterialYou: Boolean = false,
-    val font: Fonts = Fonts.POPPINS,
+    val font: Fonts = Fonts.FIGTREE,
     val paletteStyle: PaletteStyle = PaletteStyle.TonalSpot,
     val seedColor: Color = Color.White
 )

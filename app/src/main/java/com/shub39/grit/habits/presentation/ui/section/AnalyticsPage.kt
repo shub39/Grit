@@ -1,10 +1,7 @@
 package com.shub39.grit.habits.presentation.ui.section
 
 import androidx.compose.animation.animateContentSize
-import androidx.compose.foundation.background
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.FlowRow
 import androidx.compose.foundation.layout.PaddingValues
@@ -14,10 +11,8 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.shape.CircleShape
-import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
@@ -25,8 +20,6 @@ import androidx.compose.material.icons.rounded.Alarm
 import androidx.compose.material.icons.rounded.Create
 import androidx.compose.material.icons.rounded.Delete
 import androidx.compose.material.icons.rounded.Edit
-import androidx.compose.material.icons.rounded.FlagCircle
-import androidx.compose.material.icons.rounded.LocalFireDepartment
 import androidx.compose.material.icons.rounded.Warning
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonShapes
@@ -37,8 +30,6 @@ import androidx.compose.material3.FilledTonalIconButton
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.IconButtonShapes
-import androidx.compose.material3.ListItem
-import androidx.compose.material3.ListItemDefaults
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.MediumFlexibleTopAppBar
 import androidx.compose.material3.OutlinedIconButton
@@ -58,9 +49,6 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
-import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.SolidColor
 import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
@@ -68,10 +56,6 @@ import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardCapitalization
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
-import com.kizitonwose.calendar.compose.CalendarState
-import com.kizitonwose.calendar.compose.HeatMapCalendar
-import com.kizitonwose.calendar.compose.HorizontalCalendar
-import com.kizitonwose.calendar.compose.heatmapcalendar.HeatMapCalendarState
 import com.kizitonwose.calendar.compose.heatmapcalendar.rememberHeatMapCalendarState
 import com.kizitonwose.calendar.compose.rememberCalendarState
 import com.shub39.grit.R
@@ -81,30 +65,16 @@ import com.shub39.grit.core.presentation.component.PageFill
 import com.shub39.grit.core.presentation.countBestStreak
 import com.shub39.grit.core.presentation.countCurrentStreak
 import com.shub39.grit.habits.domain.Habit
-import com.shub39.grit.habits.domain.HabitStatus
 import com.shub39.grit.habits.presentation.HabitPageState
 import com.shub39.grit.habits.presentation.HabitsPageAction
-import com.shub39.grit.habits.presentation.formatDateWithOrdinal
 import com.shub39.grit.habits.presentation.prepareLineChartData
 import com.shub39.grit.habits.presentation.prepareWeekDayData
-import com.shub39.grit.habits.presentation.ui.component.AnalyticsCard
-import ir.ehsannarmani.compose_charts.LineChart
-import ir.ehsannarmani.compose_charts.RowChart
-import ir.ehsannarmani.compose_charts.models.AnimationMode
-import ir.ehsannarmani.compose_charts.models.BarProperties
-import ir.ehsannarmani.compose_charts.models.Bars
-import ir.ehsannarmani.compose_charts.models.DividerProperties
-import ir.ehsannarmani.compose_charts.models.DotProperties
-import ir.ehsannarmani.compose_charts.models.DrawStyle
-import ir.ehsannarmani.compose_charts.models.GridProperties
-import ir.ehsannarmani.compose_charts.models.HorizontalIndicatorProperties
-import ir.ehsannarmani.compose_charts.models.LabelHelperProperties
-import ir.ehsannarmani.compose_charts.models.LabelProperties
-import ir.ehsannarmani.compose_charts.models.Line
-import ir.ehsannarmani.compose_charts.models.LineProperties
-import ir.ehsannarmani.compose_charts.models.PopupProperties
-import ir.ehsannarmani.compose_charts.models.StrokeStyle
-import ir.ehsannarmani.compose_charts.models.VerticalIndicatorProperties
+import com.shub39.grit.habits.presentation.ui.component.CalendarMap
+import com.shub39.grit.habits.presentation.ui.component.HabitStartCard
+import com.shub39.grit.habits.presentation.ui.component.HabitStreakCard
+import com.shub39.grit.habits.presentation.ui.component.WeekDayBreakdown
+import com.shub39.grit.habits.presentation.ui.component.WeeklyActivity
+import com.shub39.grit.habits.presentation.ui.component.WeeklyBooleanHeatMap
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import java.time.DayOfWeek
@@ -112,7 +82,6 @@ import java.time.LocalDate
 import java.time.YearMonth
 import java.time.format.DateTimeFormatter
 import java.time.format.TextStyle
-import java.time.temporal.ChronoUnit
 import java.util.Locale
 
 @OptIn(ExperimentalMaterial3Api::class, ExperimentalMaterial3ExpressiveApi::class)
@@ -226,23 +195,56 @@ fun AnalyticsPage(
             contentPadding = PaddingValues(16.dp)
         ) {
             item {
-                HabitStats(currentHabit, today, currentStreak, bestStreak)
+                HabitStartCard(
+                    today = today,
+                    habitDate = currentHabit.time
+                )
             }
 
             item {
-                WeeklyBooleanHeatMap(heatMapState, statuses, today, onAction, currentHabit, primary)
+                HabitStreakCard(
+                    currentStreak = currentStreak,
+                    bestStreak = bestStreak
+                )
             }
 
             item {
-                WeeklyActivity(primary, lineChartData)
+                WeeklyBooleanHeatMap(
+                    heatMapState = heatMapState,
+                    statuses = statuses,
+                    today = today,
+                    onAction = onAction,
+                    currentHabit = currentHabit,
+                    primary = primary
+                )
             }
 
             item {
-                CalendarMap(state, onAction, calendarState, statuses, today, currentHabit, primary)
+                WeeklyActivity(
+                    primary = primary,
+                    lineChartData = lineChartData
+                )
             }
 
             item {
-                WeekDayBreakdown(state, onAction, weekDayData, primary)
+                CalendarMap(
+                    canSeeContent = state.isUserSubscribed,
+                    onAction = onAction,
+                    calendarState = calendarState,
+                    statuses = statuses,
+                    today = today,
+                    currentHabit = currentHabit,
+                    primary = primary
+                )
+            }
+
+            item {
+                WeekDayBreakdown(
+                    canSeeContent = state.isUserSubscribed,
+                    onAction = onAction,
+                    weekDayData = weekDayData,
+                    primary = primary,
+                )
             }
 
             item {
@@ -476,425 +478,4 @@ fun AnalyticsPage(
             }
         }
     }
-}
-
-@Composable
-private fun WeekDayBreakdown(
-    state: HabitPageState,
-    onAction: (HabitsPageAction) -> Unit,
-    weekDayData: List<Bars>,
-    primary: Color
-) {
-    AnalyticsCard(
-        title = stringResource(R.string.week_breakdown),
-        canSeeContent = state.isUserSubscribed,
-        onPlusClick = { onAction(HabitsPageAction.OnShowPaywall) },
-        modifier = Modifier.height(300.dp)
-    ) {
-        RowChart(
-            modifier = Modifier.padding(
-                start = 16.dp,
-                end = 16.dp,
-                bottom = 16.dp
-            ),
-            data = weekDayData,
-            dividerProperties = DividerProperties(
-                enabled = false
-            ),
-            popupProperties = PopupProperties(
-                enabled = false
-            ),
-            gridProperties = GridProperties(
-                enabled = false
-            ),
-            indicatorProperties = VerticalIndicatorProperties(
-                enabled = true,
-                textStyle = MaterialTheme.typography.bodyMedium.copy(color = primary)
-            ),
-            labelProperties = LabelProperties(
-                enabled = true,
-                textStyle = MaterialTheme.typography.bodyMedium.copy(color = primary)
-            ),
-            labelHelperProperties = LabelHelperProperties(
-                enabled = false
-            ),
-            barProperties = BarProperties(
-                cornerRadius = Bars.Data.Radius.Circular(10.dp)
-            ),
-            animationMode = AnimationMode.Together(delayBuilder = { it * 100L })
-        )
-    }
-}
-
-@Composable
-private fun CalendarMap(
-    state: HabitPageState,
-    onAction: (HabitsPageAction) -> Unit,
-    calendarState: CalendarState,
-    statuses: List<HabitStatus>,
-    today: LocalDate,
-    currentHabit: Habit,
-    primary: Color
-) {
-    AnalyticsCard(
-        title = stringResource(R.string.monthly_progress),
-        canSeeContent = state.isUserSubscribed,
-        onPlusClick = { onAction(HabitsPageAction.OnShowPaywall) }
-    ) {
-        HorizontalCalendar(
-            state = calendarState,
-            modifier = Modifier
-                .height(350.dp)
-                .padding(bottom = 16.dp),
-            contentPadding = PaddingValues(horizontal = 16.dp),
-            userScrollEnabled = state.isUserSubscribed,
-            monthHeader = {
-                Box(
-                    modifier = Modifier.padding(4.dp)
-                ) {
-                    Text(
-                        text = it.yearMonth.month.getDisplayName(
-                            TextStyle.FULL,
-                            Locale.getDefault()
-                        ) + " ${it.yearMonth.year}",
-                        color = MaterialTheme.colorScheme.secondary,
-                        style = MaterialTheme.typography.titleMedium,
-                        modifier = Modifier.align(Alignment.Center)
-                    )
-                }
-            },
-            dayContent = { day ->
-                if (day.position.name == "MonthDate") {
-                    val done = statuses.any { it.date == day.date }
-                    val validDate = day.date <= today && state.isUserSubscribed && day.date.dayOfWeek in currentHabit.days
-
-                    Box(
-                        modifier = Modifier
-                            .padding(2.dp)
-                            .size(45.dp)
-                            .clickable(enabled = validDate) {
-                                onAction(
-                                    HabitsPageAction.InsertStatus(
-                                        currentHabit,
-                                        day.date
-                                    )
-                                )
-                            }
-                            .then(
-                                if (done) {
-                                    val donePrevious =
-                                        statuses.any { it.date == day.date.minusDays(1) }
-                                    val doneAfter =
-                                        statuses.any { it.date == day.date.plusDays(1) }
-
-                                    Modifier.background(
-                                        color = primary.copy(alpha = 0.2f),
-                                        shape = if (donePrevious && doneAfter) {
-                                            RoundedCornerShape(5.dp)
-                                        } else if (donePrevious) {
-                                            RoundedCornerShape(
-                                                topStart = 5.dp,
-                                                bottomStart = 5.dp,
-                                                topEnd = 20.dp,
-                                                bottomEnd = 20.dp
-                                            )
-                                        } else if (doneAfter) {
-                                            RoundedCornerShape(
-                                                topStart = 20.dp,
-                                                bottomStart = 20.dp,
-                                                topEnd = 5.dp,
-                                                bottomEnd = 5.dp
-                                            )
-                                        } else {
-                                            RoundedCornerShape(20.dp)
-                                        }
-                                    )
-                                } else Modifier
-                            ),
-                        contentAlignment = Alignment.Center
-                    ) {
-                        Text(
-                            text = day.date.dayOfMonth.toString(),
-                            style = MaterialTheme.typography.bodyLarge,
-                            fontWeight = if (done) FontWeight.Bold else FontWeight.Normal,
-                            color = if (done) primary
-                            else if (!validDate) MaterialTheme.colorScheme.onSurface.copy(alpha = 0.5f)
-                            else MaterialTheme.colorScheme.onSurface
-                        )
-                    }
-                }
-            }
-        )
-    }
-}
-
-@Composable
-private fun WeeklyActivity(
-    primary: Color,
-    lineChartData: List<Double>
-) {
-    AnalyticsCard(
-        title = stringResource(R.string.weekly_graph),
-        modifier = Modifier.height(300.dp)
-    ) {
-        LineChart(
-            modifier = Modifier.padding(
-                start = 16.dp,
-                end = 16.dp,
-                bottom = 16.dp
-            ),
-            labelHelperProperties = LabelHelperProperties(
-                textStyle = MaterialTheme.typography.bodyMedium.copy(color = primary)
-            ),
-            indicatorProperties = HorizontalIndicatorProperties(
-                textStyle = MaterialTheme.typography.bodyMedium.copy(color = primary)
-            ),
-            dividerProperties = DividerProperties(
-                xAxisProperties = LineProperties(color = SolidColor(primary)),
-                yAxisProperties = LineProperties(color = SolidColor(primary))
-            ),
-            gridProperties = GridProperties(
-                xAxisProperties = GridProperties.AxisProperties(
-                    lineCount = 10,
-                    color = SolidColor(primary)
-                ),
-                yAxisProperties = GridProperties.AxisProperties(
-                    lineCount = 7,
-                    color = SolidColor(primary)
-                )
-            ),
-            data = listOf(
-                Line(
-                    label = stringResource(R.string.progress),
-                    values = lineChartData,
-                    color = SolidColor(primary),
-                    dotProperties = DotProperties(
-                        enabled = true,
-                        color = SolidColor(primary),
-                        strokeWidth = 4.dp,
-                        radius = 7.dp,
-                        strokeColor = SolidColor(primary.copy(alpha = 0.5f))
-                    ),
-                    popupProperties = PopupProperties(
-                        enabled = false
-                    ),
-                    drawStyle = DrawStyle.Stroke(
-                        width = 3.dp,
-                        strokeStyle = StrokeStyle.Dashed(
-                            intervals = floatArrayOf(
-                                10f,
-                                10f
-                            ), phase = 15f
-                        )
-                    )
-                )
-            ),
-            maxValue = 7.0,
-            minValue = 0.0,
-            curvedEdges = false,
-            animationMode = AnimationMode.Together(delayBuilder = { it * 500L })
-        )
-    }
-}
-
-@Composable
-private fun WeeklyBooleanHeatMap(
-    heatMapState: HeatMapCalendarState,
-    statuses: List<HabitStatus>,
-    today: LocalDate,
-    onAction: (HabitsPageAction) -> Unit,
-    currentHabit: Habit,
-    primary: Color
-) {
-    AnalyticsCard(
-        title = stringResource(R.string.weekly_progress)
-    ) {
-        HeatMapCalendar(
-            state = heatMapState,
-            modifier = Modifier.padding(bottom = 16.dp),
-            contentPadding = PaddingValues(horizontal = 16.dp),
-            monthHeader = {
-                Box(
-                    modifier = Modifier.padding(2.dp)
-                ) {
-                    Text(
-                        text = it.yearMonth.month.getDisplayName(
-                            TextStyle.SHORT_STANDALONE,
-                            Locale.getDefault()
-                        ),
-                        color = MaterialTheme.colorScheme.primary,
-                        modifier = Modifier.align(Alignment.Center)
-                    )
-                }
-            },
-            weekHeader = {
-                Box(
-                    modifier = Modifier
-                        .padding(2.dp)
-                        .size(30.dp)
-                ) {
-                    Text(
-                        text = it.name.take(1),
-                        color = MaterialTheme.colorScheme.primary,
-                        modifier = Modifier.align(Alignment.Center)
-                    )
-                }
-            },
-            dayContent = { day, week ->
-                val done = statuses.any { it.date == day.date }
-                val validDay = day.date <= today && day.date.dayOfWeek in currentHabit.days
-
-                Box(
-                    modifier = Modifier
-                        .padding(2.dp)
-                        .size(30.dp)
-                        .clickable(enabled = validDay) {
-                            onAction(
-                                HabitsPageAction.InsertStatus(
-                                    currentHabit,
-                                    day.date
-                                )
-                            )
-                        }
-                        .then(
-                            if (done) {
-                                val donePrevious = statuses.any { it.date == day.date.minusDays(1) }
-                                val doneAfter = statuses.any { it.date == day.date.plusDays(1) }
-
-                                Modifier.background(
-                                    color = primary.copy(alpha = 0.2f),
-                                    shape = if (donePrevious && doneAfter) {
-                                        RoundedCornerShape(5.dp)
-                                    } else if (donePrevious) {
-                                        RoundedCornerShape(
-                                            topStart = 5.dp,
-                                            bottomStart = 20.dp,
-                                            topEnd = 5.dp,
-                                            bottomEnd = 20.dp
-                                        )
-                                    } else if (doneAfter) {
-                                        RoundedCornerShape(
-                                            topStart = 20.dp,
-                                            bottomStart = 5.dp,
-                                            topEnd = 20.dp,
-                                            bottomEnd = 5.dp
-                                        )
-                                    } else {
-                                        RoundedCornerShape(20.dp)
-                                    }
-                                )
-                            } else Modifier
-                        ),
-                    contentAlignment = Alignment.Center
-                ) {
-                    Text(
-                        text = day.date.dayOfMonth.toString(),
-                        style = MaterialTheme.typography.bodyMedium,
-                        fontWeight = if (done) FontWeight.Bold else FontWeight.Normal,
-                        color = if (done) primary
-                        else if (!validDay) MaterialTheme.colorScheme.onSurface.copy(alpha = 0.5f)
-                        else MaterialTheme.colorScheme.onSurface
-                    )
-                }
-            }
-        )
-    }
-}
-
-@Composable
-private fun HabitStats(
-    currentHabit: Habit,
-    today: LocalDate?,
-    currentStreak: Int,
-    bestStreak: Int
-) {
-    ListItem(
-        colors = ListItemDefaults.colors(
-            containerColor = MaterialTheme.colorScheme.primaryContainer,
-            leadingIconColor = MaterialTheme.colorScheme.onPrimaryContainer,
-            headlineColor = MaterialTheme.colorScheme.onPrimaryContainer,
-            overlineColor = MaterialTheme.colorScheme.onPrimaryContainer,
-            supportingColor = MaterialTheme.colorScheme.onPrimaryContainer
-        ),
-        modifier = Modifier
-            .clip(
-                RoundedCornerShape(
-                    topStart = 30.dp,
-                    topEnd = 30.dp,
-                    bottomStart = 10.dp,
-                    bottomEnd = 10.dp
-                )
-            ),
-        leadingContent = {
-            Icon(
-                imageVector = Icons.Rounded.FlagCircle,
-                contentDescription = "Flag",
-                modifier = Modifier.size(64.dp)
-            )
-        },
-        overlineContent = {
-            Text(
-                text = stringResource(R.string.started_on),
-            )
-        },
-        headlineContent = {
-            Text(
-                text = formatDateWithOrdinal(currentHabit.time.toLocalDate()),
-                fontWeight = FontWeight.Bold,
-            )
-        },
-        supportingContent = {
-            Text(
-                text = stringResource(
-                    R.string.days_ago_format,
-                    ChronoUnit.DAYS.between(currentHabit.time.toLocalDate(), today)
-                ),
-            )
-        }
-    )
-
-    Spacer(modifier = Modifier.height(4.dp))
-
-    ListItem(
-        colors = ListItemDefaults.colors(
-            containerColor = MaterialTheme.colorScheme.secondary,
-            leadingIconColor = MaterialTheme.colorScheme.onSecondary,
-            headlineColor = MaterialTheme.colorScheme.onSecondary,
-            overlineColor = MaterialTheme.colorScheme.onSecondary,
-            supportingColor = MaterialTheme.colorScheme.onSecondary
-        ),
-        modifier = Modifier
-            .clip(
-                RoundedCornerShape(
-                    topStart = 10.dp,
-                    topEnd = 10.dp,
-                    bottomStart = 30.dp,
-                    bottomEnd = 30.dp
-                )
-            ),
-        leadingContent = {
-            Icon(
-                imageVector = Icons.Rounded.LocalFireDepartment,
-                contentDescription = "Streak",
-                modifier = Modifier.size(64.dp)
-            )
-        },
-        overlineContent = {
-            Text(
-                text = stringResource(R.string.streak),
-            )
-        },
-        headlineContent = {
-            Text(
-                text = currentStreak.toString(),
-                fontWeight = FontWeight.Bold,
-            )
-        },
-        supportingContent = {
-            Text(
-                text = stringResource(R.string.best_streak, bestStreak),
-                style = MaterialTheme.typography.bodyMedium
-            )
-        }
-    )
 }

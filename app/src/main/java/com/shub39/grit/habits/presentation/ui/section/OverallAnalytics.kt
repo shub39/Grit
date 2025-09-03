@@ -1,16 +1,11 @@
 package com.shub39.grit.habits.presentation.ui.section
 
-import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.heightIn
-import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
@@ -31,8 +26,6 @@ import androidx.compose.ui.graphics.SolidColor
 import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
-import com.kizitonwose.calendar.compose.HeatMapCalendar
-import com.kizitonwose.calendar.compose.heatmapcalendar.HeatMapCalendarState
 import com.kizitonwose.calendar.compose.heatmapcalendar.rememberHeatMapCalendarState
 import com.materialkolor.ktx.fixIfDisliked
 import com.materialkolor.ktx.harmonize
@@ -42,28 +35,15 @@ import com.shub39.grit.habits.presentation.HabitsPageAction
 import com.shub39.grit.habits.presentation.prepareHeatMapData
 import com.shub39.grit.habits.presentation.prepareLineChartData
 import com.shub39.grit.habits.presentation.prepareWeekDayData
-import com.shub39.grit.habits.presentation.ui.component.AnalyticsCard
-import ir.ehsannarmani.compose_charts.LineChart
-import ir.ehsannarmani.compose_charts.RowChart
-import ir.ehsannarmani.compose_charts.models.AnimationMode
-import ir.ehsannarmani.compose_charts.models.BarProperties
-import ir.ehsannarmani.compose_charts.models.Bars
-import ir.ehsannarmani.compose_charts.models.DividerProperties
+import com.shub39.grit.habits.presentation.ui.component.HabitHeatMap
+import com.shub39.grit.habits.presentation.ui.component.WeekDayBreakdown
+import com.shub39.grit.habits.presentation.ui.component.WeeklyGraph
 import ir.ehsannarmani.compose_charts.models.DotProperties
 import ir.ehsannarmani.compose_charts.models.DrawStyle
-import ir.ehsannarmani.compose_charts.models.GridProperties
-import ir.ehsannarmani.compose_charts.models.HorizontalIndicatorProperties
-import ir.ehsannarmani.compose_charts.models.LabelHelperProperties
-import ir.ehsannarmani.compose_charts.models.LabelProperties
 import ir.ehsannarmani.compose_charts.models.Line
-import ir.ehsannarmani.compose_charts.models.LineProperties
 import ir.ehsannarmani.compose_charts.models.PopupProperties
 import ir.ehsannarmani.compose_charts.models.StrokeStyle
-import ir.ehsannarmani.compose_charts.models.VerticalIndicatorProperties
-import java.time.LocalDate
 import java.time.YearMonth
-import java.time.format.TextStyle
-import java.util.Locale
 import kotlin.random.Random
 
 @OptIn(ExperimentalMaterial3Api::class, ExperimentalMaterial3ExpressiveApi::class)
@@ -152,179 +132,34 @@ fun OverallAnalytics(
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
             item {
-                HabitHeatMap(heatMapState, heatMapData, state)
+                HabitHeatMap(
+                    heatMapState = heatMapState,
+                    heatMapData = heatMapData,
+                    state = state
+                )
             }
 
             item {
-                WeekDayBreakdown(state, onAction, weeklyBreakdownData, primary)
+                WeekDayBreakdown(
+                    canSeeContent = state.isUserSubscribed,
+                    onAction = onAction,
+                    weekDayData = weeklyBreakdownData,
+                    primary = primary
+                )
             }
 
             item {
-                WeeklyGraph(state, primary, onAction, weeklyGraphData)
+                WeeklyGraph(
+                    canSeeContent = state.isUserSubscribed,
+                    primary = primary,
+                    onAction = onAction,
+                    weeklyGraphData = weeklyGraphData,
+                )
             }
 
             item {
                 Spacer(modifier = Modifier.height(60.dp))
             }
         }
-    }
-}
-
-@Composable
-private fun WeekDayBreakdown(
-    state: HabitPageState,
-    onAction: (HabitsPageAction) -> Unit,
-    weeklyBreakdownData: List<Bars>,
-    primary: Color
-) {
-    AnalyticsCard(
-        title = stringResource(R.string.week_breakdown),
-        canSeeContent = state.isUserSubscribed,
-        onPlusClick = { onAction(HabitsPageAction.OnShowPaywall) },
-        modifier = Modifier.height(300.dp)
-    ) {
-        RowChart(
-            data = weeklyBreakdownData,
-            modifier = Modifier.padding(
-                start = 16.dp,
-                end = 16.dp,
-                bottom = 16.dp
-            ),
-            dividerProperties = DividerProperties(
-                enabled = false
-            ),
-            popupProperties = PopupProperties(
-                enabled = false
-            ),
-            gridProperties = GridProperties(
-                enabled = false
-            ),
-            indicatorProperties = VerticalIndicatorProperties(
-                enabled = true,
-                textStyle = MaterialTheme.typography.bodyMedium.copy(color = primary)
-            ),
-            labelProperties = LabelProperties(
-                enabled = true,
-                textStyle = MaterialTheme.typography.bodyMedium.copy(color = primary)
-            ),
-            labelHelperProperties = LabelHelperProperties(
-                enabled = false
-            ),
-            barProperties = BarProperties(
-                cornerRadius = Bars.Data.Radius.Circular(10.dp)
-            ),
-            animationMode = AnimationMode.Together(delayBuilder = { it * 100L })
-        )
-    }
-}
-
-@Composable
-private fun WeeklyGraph(
-    state: HabitPageState,
-    primary: Color,
-    onAction: (HabitsPageAction) -> Unit,
-    weeklyGraphData: List<Line>
-) {
-    AnalyticsCard(
-        title = stringResource(R.string.weekly_graph),
-        canSeeContent = state.isUserSubscribed,
-        modifier = Modifier.height(300.dp),
-        onPlusClick = { onAction(HabitsPageAction.OnShowPaywall) }
-    ) {
-        LineChart(
-            labelHelperProperties = LabelHelperProperties(
-                textStyle = MaterialTheme.typography.bodyMedium.copy(color = primary)
-            ),
-            indicatorProperties = HorizontalIndicatorProperties(
-                textStyle = MaterialTheme.typography.bodyMedium.copy(color = primary)
-            ),
-            dividerProperties = DividerProperties(
-                xAxisProperties = LineProperties(color = SolidColor(primary)),
-                yAxisProperties = LineProperties(color = SolidColor(primary))
-            ),
-            gridProperties = GridProperties(
-                xAxisProperties = GridProperties.AxisProperties(
-                    lineCount = 10,
-                    color = SolidColor(primary)
-                ),
-                yAxisProperties = GridProperties.AxisProperties(
-                    lineCount = 7,
-                    color = SolidColor(primary)
-                )
-            ),
-            data = weeklyGraphData,
-            modifier = Modifier.padding(
-                start = 16.dp,
-                end = 16.dp,
-                bottom = 16.dp
-            )
-        )
-    }
-}
-
-@Composable
-private fun HabitHeatMap(
-    heatMapState: HeatMapCalendarState,
-    heatMapData: Map<LocalDate, Int>,
-    state: HabitPageState
-) {
-    AnalyticsCard(
-        title = stringResource(R.string.habit_map),
-        modifier = Modifier.heightIn(max = 400.dp)
-    ) {
-        HeatMapCalendar(
-            state = heatMapState,
-            modifier = Modifier.padding(bottom = 16.dp),
-            contentPadding = PaddingValues(horizontal = 16.dp),
-            monthHeader = {
-                Box(
-                    modifier = Modifier.padding(2.dp)
-                ) {
-                    Text(
-                        text = it.yearMonth.month.getDisplayName(
-                            TextStyle.SHORT_STANDALONE,
-                            Locale.getDefault()
-                        ),
-                        color = MaterialTheme.colorScheme.primary,
-                        modifier = Modifier.align(Alignment.Center)
-                    )
-                }
-            },
-            weekHeader = {
-                Box(
-                    modifier = Modifier
-                        .padding(2.dp)
-                        .size(30.dp)
-                ) {
-                    Text(
-                        text = it.name.take(1),
-                        color = MaterialTheme.colorScheme.primary,
-                        modifier = Modifier.align(Alignment.Center)
-                    )
-                }
-            },
-            dayContent = { day, week ->
-                Box(
-                    modifier = Modifier
-                        .padding(2.dp)
-                        .size(30.dp)
-                        .background(
-                            shape = MaterialTheme.shapes.small,
-                            color = heatMapData[day.date]?.let {
-                                MaterialTheme.colorScheme.primary.copy(
-                                    alpha = if (state.habitsWithStatuses.isNotEmpty()) {
-                                        (it.toFloat() / state.habitsWithStatuses.size).coerceIn(
-                                            0f,
-                                            1f
-                                        )
-                                    } else {
-                                        0.1f
-                                    }
-                                )
-                            } ?: MaterialTheme.colorScheme.background
-                        )
-                )
-            }
-        )
     }
 }
