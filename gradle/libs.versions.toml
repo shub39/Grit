@@ -1,7 +1,7 @@
 [versions]
 agp = "8.11.1"
 calendar = "2.8.0"
-composeCharts = "0.1.10"
+composeCharts = "0.1.11"
 purchases = "9.4.0"
 splashscreen = "1.0.1"
 datastore = "1.2.0-alpha02"
@@ -32,6 +32,7 @@ androidx-material3 = { module = "androidx.compose.material3:material3", version.
 androidx-core-splashscreen = { module = "androidx.core:core-splashscreen", version.ref = "splashscreen" }
 androidx-room-compiler = { module = "androidx.room:room-compiler", version.ref = "room" }
 androidx-room-runtime = { module = "androidx.room:room-runtime", version.ref = "room" }
+androidx-room-testing = { module = "androidx.room:room-testing", version.ref = "room" }
 calendar = { module = "com.kizitonwose.calendar:compose", version.ref = "calendar" }
 compose-charts = { module = "io.github.ehsannarmani:compose-charts", version.ref = "composeCharts" }
 androidx-ui = { group = "androidx.compose.ui", name = "ui", version.ref = "compose" }
@@ -54,6 +55,7 @@ aboutlibraries-compose-m3 = { module = "com.mikepenz:aboutlibraries-compose-m3",
 composeIcons-fontAwesome = { module = "br.com.devsrsouza.compose.icons:font-awesome", version.ref = "composeIcons" }
 
 [plugins]
+room = { id = "androidx.room", version.ref = "room" }
 ksp = { id = "com.google.devtools.ksp", version.ref = "ksp" }
 android-application = { id = "com.android.application", version.ref = "agp" }
 jetbrains-kotlin-android = { id = "org.jetbrains.kotlin.android", version.ref = "kotlin" }

@@ -10,7 +10,7 @@ import com.shub39.grit.core.data.Converters
 @Database(
     entities = [HabitEntity::class, HabitStatusEntity::class],
     version = 4,
-    exportSchema = false
+    exportSchema = true
 )
 @TypeConverters(Converters::class)
 abstract class HabitDatabase : RoomDatabase() {

@@ -7,6 +7,7 @@ plugins {
     alias(libs.plugins.ksp)
     alias(libs.plugins.kotlin.serialization)
     alias(libs.plugins.aboutLibraries)
+    alias(libs.plugins.room)
 }
 
 val appName = "Grit"
@@ -107,7 +108,6 @@ dependencies {
     implementation(libs.androidx.core.splashscreen)
     implementation(libs.kotlinx.serialization.json)
     implementation(libs.androidx.room.runtime)
-    annotationProcessor(libs.androidx.room.compiler)
     ksp(libs.androidx.room.compiler)
     implementation(libs.koin.androidx.compose)
     implementation(libs.reorderable)
@@ -123,6 +123,12 @@ dependencies {
     implementation(libs.androidx.material.icons.extended)
     implementation(libs.aboutlibraries.compose.m3)
     implementation(libs.androidx.biometric)
+
+    testImplementation(libs.androidx.room.testing)
+}
+
+room {
+    schemaDirectory("$projectDir/schemas")
 }
 
 java {
