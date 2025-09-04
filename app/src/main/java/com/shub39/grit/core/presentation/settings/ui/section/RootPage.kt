@@ -40,6 +40,7 @@ import androidx.compose.ui.unit.dp
 import com.shub39.grit.R
 import com.shub39.grit.core.domain.Pages
 import com.shub39.grit.core.presentation.component.PageFill
+import com.shub39.grit.core.presentation.getRandomLine
 import com.shub39.grit.core.presentation.settings.SettingsAction
 import com.shub39.grit.core.presentation.settings.SettingsState
 import com.shub39.grit.core.presentation.settings.ui.component.AboutApp
@@ -70,6 +71,9 @@ fun RootPage(
             scrollBehavior = scrollBehavior,
             title = {
                 Text(text = stringResource(R.string.settings))
+            },
+            subtitle = {
+                Text(text = getRandomLine())
             }
         )
 
@@ -136,6 +140,29 @@ fun RootPage(
                             checked = state.pauseNotifications,
                             onCheckedChange = {
                                 onAction(SettingsAction.ChangePauseNotifications(it))
+                            }
+                        )
+                    }
+                )
+            }
+
+            item {
+                ListItem(
+                    headlineContent = {
+                        Text(
+                            text = stringResource(R.string.reorder_tasks)
+                        )
+                    },
+                    supportingContent = {
+                        Text(
+                            text = stringResource(R.string.reorder_tasks_desc)
+                        )
+                    },
+                    trailingContent = {
+                        Switch(
+                            checked = state.reorderTasks,
+                            onCheckedChange = {
+                                onAction(SettingsAction.ChangeReorderTasks(it))
                             }
                         )
                     }

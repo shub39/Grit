@@ -3,7 +3,6 @@ package com.shub39.grit.viewmodels
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.shub39.grit.core.domain.AlarmScheduler
-import com.shub39.grit.core.domain.GritDatastore
 import com.shub39.grit.tasks.domain.Category
 import com.shub39.grit.tasks.domain.CategoryColors
 import com.shub39.grit.tasks.domain.TaskRepo
@@ -23,19 +22,16 @@ import kotlinx.coroutines.launch
 class TasksViewModel(
     stateLayer: StateLayer,
     private val repo: TaskRepo,
-    private val dataStore: GritDatastore,
     private val scheduler: AlarmScheduler
 ) : ViewModel() {
 
     private var savedJob: Job? = null
-    private var prefJob: Job? = null
     private val _state = stateLayer.tasksState
 
     val state = _state.asStateFlow()
         .onStart {
             // runs when flow starts
             observeTasks()
-            observePreferences()
         }
         .stateIn(
             viewModelScope,
@@ -135,19 +131,6 @@ class TasksViewModel(
                 }
             }
             .launchIn(viewModelScope)
-    }
-
-    private fun observePreferences() {
-        prefJob?.cancel()
-        prefJob = viewModelScope.launch {
-            dataStore.getIs24Hr()
-                .onEach { pref ->
-                    _state.update {
-                        it.copy(is24Hour = pref)
-                    }
-                }
-                .launchIn(this)
-        }
     }
 
     private suspend fun addDefault() {

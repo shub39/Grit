@@ -10,5 +10,6 @@ data class TaskPageState(
     val tasks: Map<Category, List<Task>> = emptyMap(),
     val currentCategory: Category? = null,
     val completedTasks: List<Task> = emptyList(),
-    val is24Hour: Boolean = false
+    val is24Hour: Boolean = false,
+    val reorderTasks: Boolean = true
 )

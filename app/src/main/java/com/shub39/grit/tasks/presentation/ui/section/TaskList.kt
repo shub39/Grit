@@ -256,7 +256,7 @@ fun TaskList(
                                                     )
                                                 )
 
-                                                if (!task.status) {
+                                                if (!task.status && state.reorderTasks) {
                                                     reorderableTasks =
                                                         reorderableTasks.toMutableList().apply {
                                                             add(

@@ -33,6 +33,7 @@ class DataStoreImpl(
         private val notificationsKey = booleanPreferencesKey("notifications")
         private val fontPrefKey = stringPreferencesKey("font")
         private val biometricLockKey = booleanPreferencesKey("biometric")
+        private val taskReorderKey = booleanPreferencesKey("task_reorder")
     }
 
     override suspend fun resetAppTheme() {
@@ -157,6 +158,16 @@ class DataStoreImpl(
     override suspend fun setBiometricPref(pref: Boolean) {
         datastore.edit { prefs ->
             prefs[biometricLockKey] = pref
+        }
+    }
+
+    override fun getTaskReorderPref(): Flow<Boolean> = datastore.data.map { prefs ->
+        prefs[taskReorderKey] == true
+    }
+
+    override suspend fun setTaskReorderPref(pref: Boolean) {
+        datastore.edit { prefs ->
+            prefs[taskReorderKey] = pref
         }
     }
 }

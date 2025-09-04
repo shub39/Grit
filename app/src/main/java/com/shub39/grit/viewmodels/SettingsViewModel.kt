@@ -146,6 +146,8 @@ class SettingsViewModel(
             }
 
             SettingsAction.OnResetTheme -> datastore.resetAppTheme()
+
+            is SettingsAction.ChangeReorderTasks -> datastore.setTaskReorderPref(action.pref)
         }
     }
 
@@ -155,15 +157,11 @@ class SettingsViewModel(
         when (isSubscribed) {
             SubscriptionResult.Subscribed -> {
                 _state.update {
-                    it.copy(
-                        isUserSubscribed = true
-                    )
+                    it.copy(isUserSubscribed = true)
                 }
 
                 stateLayer.habitsState.update {
-                    it.copy(
-                        isUserSubscribed = true
-                    )
+                    it.copy(isUserSubscribed = true)
                 }
             }
 
@@ -176,6 +174,22 @@ class SettingsViewModel(
     private fun observeJob() = viewModelScope.launch {
         observeJob?.cancel()
         observeJob = launch {
+            datastore.getTaskReorderPref()
+                .onEach { pref ->
+                    _state.update {
+                        it.copy(
+                            reorderTasks = pref
+                        )
+                    }
+
+                    stateLayer.tasksState.update {
+                        it.copy(
+                            reorderTasks = pref
+                        )
+                    }
+                }
+                .launchIn(this)
+
             datastore.getNotificationsFlow()
                 .onEach { pref ->
                     _state.update {
@@ -263,6 +277,12 @@ class SettingsViewModel(
                     _state.update {
                         it.copy(
                             is24Hr = flow
+                        )
+                    }
+
+                    stateLayer.tasksState.update {
+                        it.copy(
+                            is24Hour = flow
                         )
                     }
                 }

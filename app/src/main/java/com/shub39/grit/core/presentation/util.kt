@@ -153,7 +153,7 @@ fun showAddNotification(context: Context, habit: Habit) {
         ) {
             ActivityCompat.requestPermissions(
                 context as Activity,
-                arrayOf(Manifest.permission.POST_NOTIFICATIONS), // works fine in API 29 :/
+                arrayOf(Manifest.permission.POST_NOTIFICATIONS),
                 1
             )
             return

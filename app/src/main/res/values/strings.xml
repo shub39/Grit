@@ -118,4 +118,6 @@
     <string name="no_habit_for_today">No Habits for today</string>
     <string name="add_reminder">Add Reminder</string>
     <string name="invalid_date_time">Time selected is in the past :\')</string>
+    <string name="reorder_tasks">Reorder tasks</string>
+    <string name="reorder_tasks_desc">Reorder tasks when marked as completed</string>
 </resources>
