@@ -2,6 +2,9 @@
 agp = "8.11.1"
 calendar = "2.8.0"
 composeCharts = "0.1.11"
+espressoCore = "3.7.0"
+junit = "4.13.2"
+junitVersion = "1.3.0"
 purchases = "9.4.0"
 splashscreen = "1.0.1"
 datastore = "1.2.0-alpha02"
@@ -21,9 +24,12 @@ composeIcons = "1.1.1"
 compose = "1.9.0"
 materialIconsExtended = "1.7.8"
 biometric = "1.4.0-alpha02"
+truth = "1.4.4"
 
 [libraries]
 # Android
+androidx-espresso-core = { module = "androidx.test.espresso:espresso-core", version.ref = "espressoCore" }
+androidx-junit = { module = "androidx.test.ext:junit", version.ref = "junitVersion" }
 androidx-material-icons-extended = { module = "androidx.compose.material:material-icons-extended", version.ref = "materialIconsExtended" }
 androidx-datastore-preferences-core = { module = "androidx.datastore:datastore-preferences-core", version.ref = "datastore" }
 androidx-glance-appwidget = { module = "androidx.glance:glance-appwidget", version.ref = "glance" }
@@ -33,16 +39,16 @@ androidx-core-splashscreen = { module = "androidx.core:core-splashscreen", versi
 androidx-room-compiler = { module = "androidx.room:room-compiler", version.ref = "room" }
 androidx-room-runtime = { module = "androidx.room:room-runtime", version.ref = "room" }
 androidx-room-testing = { module = "androidx.room:room-testing", version.ref = "room" }
-calendar = { module = "com.kizitonwose.calendar:compose", version.ref = "calendar" }
-compose-charts = { module = "io.github.ehsannarmani:compose-charts", version.ref = "composeCharts" }
 androidx-ui = { group = "androidx.compose.ui", name = "ui", version.ref = "compose" }
 androidx-ui-graphics = { group = "androidx.compose.ui", name = "ui-graphics", version.ref = "compose" }
+androidx-ui-test-junit4 = { module = "androidx.compose.ui:ui-test-junit4", version.ref = "compose" }
 androidx-ui-tooling = { group = "androidx.compose.ui", name = "ui-tooling", version.ref = "compose" }
 androidx-ui-tooling-preview = { group = "androidx.compose.ui", name = "ui-tooling-preview", version.ref = "compose" }
 androidx-navigation-compose = { group = "androidx.navigation", name = "navigation-compose", version.ref = "navigation" }
 androidx-biometric = { group = "androidx.biometric", name = "biometric-ktx", version.ref = "biometric" }
 
 # Others
+junit = { module = "junit:junit", version.ref = "junit" }
 koin-androidx-compose = { module = "io.insert-koin:koin-androidx-compose", version.ref = "koin" }
 kotlinx-serialization-json = { module = "org.jetbrains.kotlinx:kotlinx-serialization-json", version.ref = "serialization" }
 purchases = { module = "com.revenuecat.purchases:purchases", version.ref = "purchases" }
@@ -53,6 +59,9 @@ colorpicker-compose = { module = "com.github.skydoves:colorpicker-compose", vers
 aboutLibraries = { group = "com.mikepenz", name = "aboutlibraries-compose", version.ref = "aboutLibraries" }
 aboutlibraries-compose-m3 = { module = "com.mikepenz:aboutlibraries-compose-m3", version.ref = "aboutLibraries" }
 composeIcons-fontAwesome = { module = "br.com.devsrsouza.compose.icons:font-awesome", version.ref = "composeIcons" }
+calendar = { module = "com.kizitonwose.calendar:compose", version.ref = "calendar" }
+compose-charts = { module = "io.github.ehsannarmani:compose-charts", version.ref = "composeCharts" }
+truth = { module = "com.google.truth:truth", version.ref = "truth" }
 
 [plugins]
 room = { id = "androidx.room", version.ref = "room" }

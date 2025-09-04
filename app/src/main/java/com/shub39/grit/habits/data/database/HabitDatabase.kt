@@ -18,6 +18,7 @@ abstract class HabitDatabase : RoomDatabase() {
     abstract fun habitStatusDao(): HabitStatusDao
 
     companion object {
+        const val SCHEMA_VERSION = 4
         const val DB_NAME = "habit_database"
 
         val migrate_3_4 = object : Migration(3, 4) {

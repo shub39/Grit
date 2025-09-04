@@ -34,7 +34,7 @@ fun HabitStatus.toHabitStatusSchema(): HabitStatusSchema {
     return HabitStatusSchema(
         id = id,
         habitId = habitId,
-        date = date.atStartOfDay(ZoneId.systemDefault()).toInstant().toEpochMilli()
+        date = Converters.dayToTimestamp(date)
     )
 }
 
@@ -42,7 +42,7 @@ fun HabitStatusSchema.toHabitStatus(): HabitStatus {
     return HabitStatus(
         id = id,
         habitId = habitId,
-        date = Instant.ofEpochMilli(date).atZone(ZoneId.systemDefault()).toLocalDate()
+        date = Converters.dayFromTimestamp(date)
     )
 }
 
@@ -52,7 +52,8 @@ fun TaskSchema.toTask(): Task {
         categoryId = categoryId,
         title = title,
         status = status,
-        index = index
+        index = index,
+        reminder = reminder?.let { Converters.datefromTimestamp(it) }
     )
 }
 
@@ -62,7 +63,8 @@ fun Task.toTaskSchema(): TaskSchema {
         categoryId = categoryId,
         title = title,
         status = status,
-        index = index
+        index = index,
+        reminder = reminder?.let { Converters.dateToTimestamp(it) }
     )
 }
 

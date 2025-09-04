@@ -254,9 +254,7 @@ fun TaskList(
                                         // change status on click
                                         onClick = {
                                             if (!editState) {
-                                                task.status = !task.status
-
-                                                onAction(TaskPageAction.UpsertTask(task))
+                                                onAction(TaskPageAction.UpsertTask(task.copy(status = !task.status)))
 
                                                 if (task.status) {
                                                     reorderableTasks =

@@ -53,7 +53,8 @@ fun Task.toTaskEntity(): TaskEntity {
         categoryId = categoryId,
         title = title,
         index = index,
-        status = status
+        status = status,
+        reminder = reminder
     )
 }
 
@@ -63,7 +64,8 @@ fun TaskEntity.toTask(): Task {
         categoryId = categoryId,
         title = title,
         index = index,
-        status = status
+        status = status,
+        reminder = reminder
     )
 }
 

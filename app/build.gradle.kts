@@ -31,6 +31,10 @@ android {
         }
     }
 
+    sourceSets {
+        getByName("androidTest").assets.srcDir("$projectDir/schemas")
+    }
+
     kotlin {
         compilerOptions {
             jvmToolchain(17)
@@ -124,7 +128,13 @@ dependencies {
     implementation(libs.aboutlibraries.compose.m3)
     implementation(libs.androidx.biometric)
 
+    testImplementation(libs.junit)
+    androidTestImplementation(libs.androidx.junit)
+    androidTestImplementation(libs.androidx.espresso.core)
+    androidTestImplementation(libs.androidx.ui.test.junit4)
+    androidTestImplementation(libs.androidx.room.testing)
     testImplementation(libs.androidx.room.testing)
+    androidTestImplementation(libs.truth)
 }
 
 room {

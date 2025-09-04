@@ -6,6 +6,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.shub39.grit.billing.BillingHandler
 import com.shub39.grit.billing.SubscriptionResult
+import com.shub39.grit.core.data.Utils
 import com.shub39.grit.core.domain.GritDatastore
 import com.shub39.grit.core.domain.backup.ExportRepo
 import com.shub39.grit.core.domain.backup.ExportState
@@ -14,7 +15,6 @@ import com.shub39.grit.core.domain.backup.RestoreResult
 import com.shub39.grit.core.domain.backup.RestoreState
 import com.shub39.grit.core.presentation.settings.BackupState
 import com.shub39.grit.core.presentation.settings.SettingsAction
-import com.shub39.grit.util.Utils
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.asStateFlow

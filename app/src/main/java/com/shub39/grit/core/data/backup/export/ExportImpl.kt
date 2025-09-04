@@ -59,7 +59,6 @@ class ExportImpl(
         file.writeText(
             Json.encodeToString(
                 ExportSchema(
-                    schemaVersion = 4,
                     habits = habitsDef,
                     habitStatus = statusesDef,
                     tasks = tasksDef,

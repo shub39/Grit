@@ -1,9 +1,11 @@
 package com.shub39.grit.tasks.data.database
 
+import androidx.room.ColumnInfo
 import androidx.room.Entity
 import androidx.room.ForeignKey
 import androidx.room.Index
 import androidx.room.PrimaryKey
+import java.time.LocalDateTime
 
 @Entity(
     tableName = "task",
@@ -20,7 +22,9 @@ import androidx.room.PrimaryKey
 data class TaskEntity(
     @PrimaryKey(autoGenerate = true) val id: Long = 0,
     val categoryId: Long,
-    var title: String,
-    var status: Boolean = false,
-    var index: Int = 0
+    val title: String,
+    val status: Boolean = false,
+    val index: Int = 0,
+    @ColumnInfo(name = "reminder", defaultValue = "NULL")
+    val reminder: LocalDateTime? = null
 )

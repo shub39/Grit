@@ -15,11 +15,11 @@ import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import androidx.fragment.app.FragmentActivity
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.shub39.grit.R
+import com.shub39.grit.core.data.Utils
 import com.shub39.grit.core.presentation.component.InitialLoading
 import com.shub39.grit.core.presentation.createNotificationChannel
 import com.shub39.grit.core.presentation.settings.SettingsAction
 import com.shub39.grit.core.presentation.theme.GritTheme
-import com.shub39.grit.util.Utils
 import com.shub39.grit.viewmodels.MainViewModel
 import com.shub39.grit.viewmodels.SettingsViewModel
 import org.koin.androidx.viewmodel.ext.android.viewModel
