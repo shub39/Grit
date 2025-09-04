@@ -141,9 +141,11 @@ fun HabitCard(
                 }
             },
             supportingContent = {
-                Text(
-                    text = habit.time.format(DateTimeFormatter.ofPattern(timeFormat))
-                )
+                if (habit.reminder) {
+                    Text(
+                        text = habit.time.format(DateTimeFormatter.ofPattern(timeFormat))
+                    )
+                }
             },
             trailingContent = {
                 Row(
