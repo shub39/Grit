@@ -44,8 +44,8 @@ fun HabitStartCard(
     Card(
         modifier = modifier,
         colors = CardDefaults.cardColors(
-            containerColor = MaterialTheme.colorScheme.primaryContainer,
-            contentColor = MaterialTheme.colorScheme.onPrimaryContainer
+            containerColor = MaterialTheme.colorScheme.secondaryContainer,
+            contentColor = MaterialTheme.colorScheme.onSecondaryContainer
         ),
         shape = CircleShape
     ) {
@@ -59,7 +59,7 @@ fun HabitStartCard(
                 modifier = Modifier
                     .size(64.dp)
                     .background(
-                        color = MaterialTheme.colorScheme.primary,
+                        color = MaterialTheme.colorScheme.secondary,
                         shape = Sunny.toShape()
                     ),
                 contentAlignment = Alignment.Center
@@ -67,7 +67,7 @@ fun HabitStartCard(
                 Icon(
                     imageVector = Icons.Rounded.FlagCircle,
                     contentDescription = "Flag",
-                    tint = MaterialTheme.colorScheme.onPrimary,
+                    tint = MaterialTheme.colorScheme.onSecondary,
                     modifier = Modifier.size(36.dp)
                 )
             }
