@@ -116,4 +116,6 @@
     <string name="download_from_playstore">Download from Playstore</string>
     <string name="foss_desc">All features are unlocked. This variant of the app does not support In-App Purchases. If this app added value to your life, Support me by donating on</string>
     <string name="no_habit_for_today">No Habits for today</string>
+    <string name="add_reminder">Add Reminder</string>
+    <string name="invalid_date_time">Time selected is in the past :\')</string>
 </resources>

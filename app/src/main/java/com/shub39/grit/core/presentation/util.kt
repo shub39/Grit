@@ -32,7 +32,6 @@ fun timePickerStateToLocalDateTime(timePickerState: TimePickerState, date: Local
     return LocalDateTime.of(date, java.time.LocalTime.of(timePickerState.hour, timePickerState.minute))
 }
 
-
 fun countCurrentStreak(dates: List<LocalDate>, eligibleWeekdays: Set<DayOfWeek> = DayOfWeek.entries.toSet()): Int {
     if (dates.isEmpty()) return 0
 

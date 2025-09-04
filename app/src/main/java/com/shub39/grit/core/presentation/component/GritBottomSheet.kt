@@ -1,5 +1,6 @@
 package com.shub39.grit.core.presentation.component
 
+import androidx.compose.animation.animateContentSize
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.ColumnScope
@@ -31,6 +32,7 @@ fun GritBottomSheet(
         Column(
             modifier = Modifier
                 .padding(padding)
+                .animateContentSize()
                 .fillMaxWidth(),
             horizontalAlignment = Alignment.CenterHorizontally,
             verticalArrangement = Arrangement.spacedBy(8.dp),

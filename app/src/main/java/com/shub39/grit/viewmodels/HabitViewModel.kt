@@ -36,7 +36,6 @@ class HabitViewModel(
 
     val state = _state.asStateFlow()
         .onStart {
-            refreshAlarms()
             observeHabitStatuses()
             observeDataStore()
         }
@@ -115,15 +114,6 @@ class HabitViewModel(
                 HabitsPageAction.OnShowPaywall -> stateLayer.settingsState.update { it.copy(showPaywall = true) }
             }
         }
-    }
-
-    // reschedule all alarms
-    private fun refreshAlarms() = viewModelScope.launch {
-        val habits = repo.getHabits()
-
-        scheduler.cancelAll()
-        habits.forEach { scheduler.cancel(it) }
-        habits.forEach { scheduler.schedule(it) }
     }
 
     private fun observeHabitStatuses() {

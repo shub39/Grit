@@ -4,7 +4,8 @@ import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
 import android.util.Log
-import com.shub39.grit.habits.data.database.HabitDao
+import com.shub39.grit.habits.domain.HabitRepo
+import com.shub39.grit.tasks.domain.TaskRepo
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.SupervisorJob
@@ -19,12 +20,18 @@ class BootReceiver : BroadcastReceiver(), KoinComponent {
     override fun onReceive(context: Context, intent: Intent?) {
         if (intent?.action == Intent.ACTION_BOOT_COMPLETED) {
             val scheduler = get<NotificationAlarmScheduler>()
-            val habitDao = get<HabitDao>()
+            val habitRepo = get<HabitRepo>()
+            val taskRepo = get<TaskRepo>()
 
             receiverScope.launch {
-                habitDao.getAllHabits().filter { it.reminder }.forEach {
-                    scheduler.schedule(it.toHabit())
+                habitRepo.getHabits().forEach {
+                    scheduler.schedule(it)
                     Log.d("BootReceiver", "Scheduled habit: ${it.id}")
+                }
+
+                taskRepo.getTasks().forEach {
+                    scheduler.schedule(it)
+                    Log.d("BootReceiver", "Scheduled task: ${it.id}")
                 }
             }
         }

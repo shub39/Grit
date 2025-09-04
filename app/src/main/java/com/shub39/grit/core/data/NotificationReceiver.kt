@@ -104,6 +104,7 @@ class NotificationReceiver : BroadcastReceiver(), KoinComponent {
 
                         val task = taskRepo.getTaskById(taskId) ?: return@launch
                         if (!task.status && task.reminder != null) {
+                            Log.d(tag, "Task notification")
                             taskNotification(context, task)
                         }
                     }

@@ -24,6 +24,7 @@ class NotificationAlarmScheduler(
     private val alarmManager = context.getSystemService(Context.ALARM_SERVICE) as AlarmManager
 
     override fun schedule(habit: Habit) {
+        cancel(habit)
         if (!habit.reminder) return
         var scheduleTime = habit.time
 
@@ -65,6 +66,7 @@ class NotificationAlarmScheduler(
     }
 
     override fun schedule(task: Task) {
+        cancel(task)
         if (task.reminder == null) return
         val scheduleTime = task.reminder
 

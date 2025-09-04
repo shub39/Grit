@@ -2,9 +2,10 @@ package com.shub39.grit.viewmodels
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.shub39.grit.core.domain.AlarmScheduler
+import com.shub39.grit.core.domain.GritDatastore
 import com.shub39.grit.tasks.domain.Category
 import com.shub39.grit.tasks.domain.CategoryColors
-import com.shub39.grit.tasks.domain.Task
 import com.shub39.grit.tasks.domain.TaskRepo
 import com.shub39.grit.tasks.presentation.TaskPageAction
 import com.shub39.grit.tasks.presentation.TaskPageState
@@ -21,16 +22,20 @@ import kotlinx.coroutines.launch
 
 class TasksViewModel(
     stateLayer: StateLayer,
-    private val repo: TaskRepo
+    private val repo: TaskRepo,
+    private val dataStore: GritDatastore,
+    private val scheduler: AlarmScheduler
 ) : ViewModel() {
 
     private var savedJob: Job? = null
+    private var prefJob: Job? = null
     private val _state = stateLayer.tasksState
 
     val state = _state.asStateFlow()
         .onStart {
             // runs when flow starts
             observeTasks()
+            observePreferences()
         }
         .stateIn(
             viewModelScope,
@@ -43,7 +48,9 @@ class TasksViewModel(
         viewModelScope.launch {
             when (action) {
                 is TaskPageAction.UpsertTask -> {
-                    upsertTask(action.task)
+                    repo.upsertTask(action.task)
+
+                    scheduler.schedule(action.task)
                 }
 
                 TaskPageAction.DeleteTasks -> {
@@ -130,12 +137,21 @@ class TasksViewModel(
             .launchIn(viewModelScope)
     }
 
-    private suspend fun addDefault() {
-        upsertCategory(Category(name = "Misc", color = CategoryColors.GRAY.color))
+    private fun observePreferences() {
+        prefJob?.cancel()
+        prefJob = viewModelScope.launch {
+            dataStore.getIs24Hr()
+                .onEach { pref ->
+                    _state.update {
+                        it.copy(is24Hour = pref)
+                    }
+                }
+                .launchIn(this)
+        }
     }
 
-    private suspend fun upsertTask(task: Task) {
-        repo.upsertTask(task)
+    private suspend fun addDefault() {
+        upsertCategory(Category(name = "Misc", color = CategoryColors.GRAY.color))
     }
 
     private suspend fun deleteTasks() {
