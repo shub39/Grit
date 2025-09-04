@@ -1,5 +1,6 @@
 package com.shub39.grit.habits.data.database
 
+import androidx.room.AutoMigration
 import androidx.room.Database
 import androidx.room.RoomDatabase
 import androidx.room.TypeConverters
@@ -9,8 +10,11 @@ import com.shub39.grit.core.data.Converters
 
 @Database(
     entities = [HabitEntity::class, HabitStatusEntity::class],
-    version = 4,
-    exportSchema = true
+    version = HabitDatabase.SCHEMA_VERSION,
+    exportSchema = true,
+    autoMigrations = [
+        AutoMigration(from = 4, to = 5)
+    ]
 )
 @TypeConverters(Converters::class)
 abstract class HabitDatabase : RoomDatabase() {
@@ -18,7 +22,7 @@ abstract class HabitDatabase : RoomDatabase() {
     abstract fun habitStatusDao(): HabitStatusDao
 
     companion object {
-        const val SCHEMA_VERSION = 4
+        const val SCHEMA_VERSION = 5
         const val DB_NAME = "habit_database"
 
         val migrate_3_4 = object : Migration(3, 4) {

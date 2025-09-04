@@ -422,7 +422,8 @@ fun AnalyticsPage(
                                 description = newHabitDescription,
                                 time = newHabitTime,
                                 index = currentHabit.index,
-                                days = newHabitDays
+                                days = newHabitDays,
+                                reminder = false
                             )
                         )
                     )

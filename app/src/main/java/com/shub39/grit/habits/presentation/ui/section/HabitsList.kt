@@ -386,7 +386,8 @@ fun HabitsList(
                         description = newHabitDescription,
                         time = newHabitTime,
                         index = reorderableHabits.size,
-                        days = newHabitDays
+                        days = newHabitDays,
+                        reminder = false
                     )
                     onAction(HabitsPageAction.AddHabit(habitEntity))
                     onAction(HabitsPageAction.DismissAddHabitDialog)

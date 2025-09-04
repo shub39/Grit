@@ -8,7 +8,7 @@ import com.shub39.grit.core.data.Converters
 
 @Database(
     entities = [TaskEntity::class, CategoryEntity::class],
-    version = 5,
+    version = TaskDatabase.SCHEMA_VERSION,
     exportSchema = true,
     autoMigrations = [
         AutoMigration(from = 4, to = 5)

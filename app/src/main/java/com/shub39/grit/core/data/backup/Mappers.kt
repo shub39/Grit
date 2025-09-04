@@ -15,7 +15,8 @@ fun Habit.toHabitSchema(): HabitSchema {
         description = description,
         index = index,
         time = time.atZone(ZoneId.systemDefault()).toInstant().toEpochMilli(),
-        days = Converters.dayOfWeekToString(days)
+        days = Converters.dayOfWeekToString(days),
+        reminder = reminder
     )
 }
 
@@ -26,7 +27,8 @@ fun HabitSchema.toHabit(): Habit {
         description = description,
         index = index,
         time = Instant.ofEpochMilli(time).atZone(ZoneId.systemDefault()).toLocalDateTime(),
-        days = Converters.dayOfWeekFromString(days)
+        days = Converters.dayOfWeekFromString(days),
+        reminder = reminder
     )
 }
 

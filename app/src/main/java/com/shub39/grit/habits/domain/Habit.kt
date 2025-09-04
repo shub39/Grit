@@ -9,5 +9,6 @@ data class Habit(
     val description: String,
     val time: LocalDateTime,
     val days: Set<DayOfWeek>,
-    val index: Int
+    val index: Int,
+    val reminder: Boolean
 )

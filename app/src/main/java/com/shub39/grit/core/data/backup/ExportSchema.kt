@@ -20,7 +20,8 @@ data class HabitSchema(
     val description: String,
     val index: Int,
     val time: Long,
-    val days: String
+    val days: String,
+    val reminder: Boolean
 )
 
 @Serializable
