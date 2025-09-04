@@ -23,6 +23,7 @@ sealed interface SettingsAction {
     data class ChangeIs24Hr(val pref: Boolean) : SettingsAction
     data class ChangeStartingPage(val page: Pages) : SettingsAction
     data class ChangePauseNotifications(val pref: Boolean) : SettingsAction
+    data class ChangeReorderTasks(val pref: Boolean) : SettingsAction
 
     data object OnResetTheme : SettingsAction
     data class ChangeAppTheme(val appTheme: AppTheme) : SettingsAction

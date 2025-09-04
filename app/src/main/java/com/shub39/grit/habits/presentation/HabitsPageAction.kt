@@ -4,6 +4,8 @@ import com.shub39.grit.habits.domain.Habit
 import java.time.LocalDate
 
 sealed interface HabitsPageAction {
+    data class OnToggleCompactView(val pref: Boolean) : HabitsPageAction
+
     data object OnShowPaywall : HabitsPageAction
     data object DismissAddHabitDialog : HabitsPageAction
     data object OnAddHabitClicked : HabitsPageAction

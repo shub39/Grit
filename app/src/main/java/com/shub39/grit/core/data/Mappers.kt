@@ -16,7 +16,8 @@ fun HabitEntity.toHabit(): Habit {
         description = description,
         time = time,
         days = days,
-        index = index
+        index = index,
+        reminder = reminder
     )
 }
 
@@ -35,7 +36,8 @@ fun Habit.toHabitEntity(): HabitEntity {
         description = description,
         time = time,
         index = index,
-        days = days
+        days = days,
+        reminder = reminder
     )
 }
 
@@ -53,7 +55,8 @@ fun Task.toTaskEntity(): TaskEntity {
         categoryId = categoryId,
         title = title,
         index = index,
-        status = status
+        status = status,
+        reminder = reminder
     )
 }
 
@@ -63,7 +66,8 @@ fun TaskEntity.toTask(): Task {
         categoryId = categoryId,
         title = title,
         index = index,
-        status = status
+        status = status,
+        reminder = reminder
     )
 }
 

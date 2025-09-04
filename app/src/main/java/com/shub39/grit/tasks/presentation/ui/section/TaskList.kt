@@ -6,7 +6,6 @@ import androidx.compose.animation.core.animateDpAsState
 import androidx.compose.foundation.combinedClickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.FlowRow
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -22,7 +21,6 @@ import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.rounded.Add
@@ -48,25 +46,18 @@ import androidx.compose.material3.OutlinedIconButton
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
 import androidx.compose.material3.ToggleButton
-import androidx.compose.material3.ToggleButtonDefaults
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.material3.animateFloatingActionButton
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableLongStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.focus.FocusRequester
-import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.input.nestedscroll.nestedScroll
-import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardCapitalization
 import androidx.compose.ui.text.style.TextAlign
@@ -82,7 +73,7 @@ import com.shub39.grit.tasks.domain.Task
 import com.shub39.grit.tasks.presentation.TaskPageAction
 import com.shub39.grit.tasks.presentation.TaskPageState
 import com.shub39.grit.tasks.presentation.ui.component.TaskCard
-import kotlinx.coroutines.delay
+import com.shub39.grit.tasks.presentation.ui.component.TaskUpsertSheet
 import sh.calvin.reorderable.ReorderableItem
 import sh.calvin.reorderable.rememberReorderableLazyListState
 
@@ -209,9 +200,11 @@ fun TaskList(
             val category = state.tasks.keys.firstOrNull { it.id == categoryId }
 
             if (category != null) {
-                var reorderableTasks by remember(category.id, state.tasks.values) { mutableStateOf(
-                    state.tasks[category] ?: emptyList()
-                ) }
+                var reorderableTasks by remember(category.id, state.tasks.values) {
+                    mutableStateOf(
+                        state.tasks[category] ?: emptyList()
+                    )
+                }
                 val reorderableListState =
                     rememberReorderableLazyListState(lazyListState) { from, to ->
                         reorderableTasks = reorderableTasks.toMutableList().apply {
@@ -254,11 +247,16 @@ fun TaskList(
                                         // change status on click
                                         onClick = {
                                             if (!editState) {
-                                                task.status = !task.status
+                                                onAction(
+                                                    TaskPageAction.UpsertTask(
+                                                        task.copy(
+                                                            status = !task.status,
+                                                            reminder = if (!task.status) null else task.reminder
+                                                        )
+                                                    )
+                                                )
 
-                                                onAction(TaskPageAction.UpsertTask(task))
-
-                                                if (task.status) {
+                                                if (!task.status && state.reorderTasks) {
                                                     reorderableTasks =
                                                         reorderableTasks.toMutableList().apply {
                                                             add(
@@ -364,19 +362,9 @@ fun TaskList(
 
     if (showCategoryAddSheet) {
         var name by remember { mutableStateOf("") }
-        val keyboardController = LocalSoftwareKeyboardController.current
-        val focusRequester = remember { FocusRequester() }
-
-        LaunchedEffect(Unit) {
-            delay(200)
-            focusRequester.requestFocus()
-            keyboardController?.show()
-        }
 
         GritBottomSheet(
             onDismissRequest = {
-                focusRequester.freeFocus()
-                keyboardController?.hide()
                 showCategoryAddSheet = false
             }
         ) {
@@ -402,7 +390,6 @@ fun TaskList(
                 singleLine = true,
                 modifier = Modifier
                     .fillMaxWidth()
-                    .focusRequester(focusRequester)
             )
 
             Button(
@@ -431,183 +418,32 @@ fun TaskList(
 
     //edit sheet
     if (editTask != null) {
-        var newTitle by remember { mutableStateOf(editTask!!.title) }
-        var newTaskCategoryId by remember { mutableLongStateOf(editTask!!.categoryId) }
-        val keyboardController = LocalSoftwareKeyboardController.current
-        val focusRequester = remember { FocusRequester() }
-
-        LaunchedEffect(Unit) {
-            delay(200)
-            focusRequester.requestFocus()
-            keyboardController?.show()
-        }
-
-        GritBottomSheet(
-            onDismissRequest = {
-                focusRequester.freeFocus()
-                keyboardController?.hide()
-                editTask = null
+        TaskUpsertSheet(
+            task = editTask!!,
+            categories = state.tasks.keys.toList(),
+            onDismissRequest = { editTask = null },
+            edit = true,
+            is24Hr = state.is24Hour,
+            onUpsert = {
+                onAction(TaskPageAction.UpsertTask(it))
             }
-        ) {
-            Icon(
-                imageVector = Icons.Rounded.Edit,
-                contentDescription = "Edit"
-            )
-
-            Text(
-                text = stringResource(id = R.string.edit_task),
-                style = MaterialTheme.typography.headlineSmall,
-                textAlign = TextAlign.Center
-            )
-
-            FlowRow(
-                horizontalArrangement = Arrangement.Center
-            ) {
-                state.tasks.keys.forEach { category ->
-                    ToggleButton(
-                        checked = category.id == newTaskCategoryId,
-                        onCheckedChange = { newTaskCategoryId = category.id },
-                        colors = ToggleButtonDefaults.tonalToggleButtonColors(),
-                        modifier = Modifier.padding(horizontal = 4.dp),
-                        content = { Text(category.name) }
-                    )
-                }
-            }
-
-            OutlinedTextField(
-                value = newTitle,
-                onValueChange = { newTitle = it },
-                shape = MaterialTheme.shapes.medium,
-                keyboardOptions = KeyboardOptions.Default.copy(
-                    capitalization = KeyboardCapitalization.Sentences,
-                    imeAction = ImeAction.None
-                ),
-                keyboardActions = KeyboardActions(
-                    onAny = {
-                        newTitle.plus("\n")
-                    }
-                ),
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .focusRequester(focusRequester),
-                label = { Text(text = stringResource(id = R.string.edit_task)) }
-            )
-
-            Button(
-                onClick = {
-                    onAction(
-                        TaskPageAction.UpsertTask(
-                            editTask!!.copy(
-                                title = newTitle,
-                                categoryId = newTaskCategoryId
-                            )
-                        )
-                    )
-                    editTask = null
-                },
-                shapes = ButtonShapes(
-                    shape = MaterialTheme.shapes.extraLarge,
-                    pressedShape = MaterialTheme.shapes.small
-                ),
-                modifier = Modifier.fillMaxWidth(),
-                enabled = newTitle.isNotBlank() && newTitle.length <= 100
-            ) {
-                Text(stringResource(R.string.edit_task))
-            }
-        }
+        )
     }
 
     // add sheet
     if (showTaskAddSheet && state.currentCategory != null) {
-        var newTask by remember { mutableStateOf("") }
-        var newTaskCategoryId by remember { mutableLongStateOf(state.currentCategory.id) }
-        val keyboardController = LocalSoftwareKeyboardController.current
-        val focusRequester = remember { FocusRequester() }
-
-        LaunchedEffect(Unit) {
-            delay(200)
-            focusRequester.requestFocus()
-            keyboardController?.show()
-        }
-
-        GritBottomSheet(
-            onDismissRequest = {
-                focusRequester.freeFocus()
-                keyboardController?.hide()
-                showTaskAddSheet = false
-            }
-        ) {
-            Icon(
-                imageVector = Icons.Rounded.Add,
-                contentDescription = "Add"
-            )
-
-            Text(
-                text = stringResource(id = R.string.add_task),
-                style = MaterialTheme.typography.headlineSmall,
-                textAlign = TextAlign.Center
-            )
-
-            FlowRow(
-                horizontalArrangement = Arrangement.Center
-            ) {
-                state.tasks.keys.forEach { category ->
-                    ToggleButton(
-                        checked = category.id == newTaskCategoryId,
-                        onCheckedChange = { newTaskCategoryId = category.id },
-                        colors = ToggleButtonDefaults.tonalToggleButtonColors(),
-                        modifier = Modifier.padding(horizontal = 4.dp),
-                        content = { Text(category.name) }
-                    )
-                }
-            }
-
-            OutlinedTextField(
-                value = newTask,
-                onValueChange = { newTask = it },
-                shape = MaterialTheme.shapes.medium,
-                keyboardOptions = KeyboardOptions.Default.copy(
-                    capitalization = KeyboardCapitalization.Sentences,
-                    imeAction = ImeAction.None
-                ),
-                keyboardActions = KeyboardActions(
-                    onAny = {
-                        newTask.plus("\n")
-                    }
-                ),
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .focusRequester(focusRequester)
-            )
-
-            Button(
-                onClick = {
-                    showTaskAddSheet = false
-
-                    onAction(
-                        TaskPageAction.UpsertTask(
-                            Task(
-                                categoryId = newTaskCategoryId,
-                                title = newTask,
-                                status = false,
-                                index = state.tasks[state.currentCategory]?.size ?: 0
-                            )
-                        )
-                    )
-                },
-                shapes = ButtonShapes(
-                    shape = MaterialTheme.shapes.extraLarge,
-                    pressedShape = MaterialTheme.shapes.small
-                ),
-                modifier = Modifier.fillMaxWidth(),
-                enabled = newTask.isNotEmpty() && newTask.length <= 100
-            ) {
-                Text(
-                    text = stringResource(id = R.string.add_task),
-                    style = MaterialTheme.typography.labelMedium,
-                    fontWeight = FontWeight.Bold,
-                )
-            }
-        }
+        TaskUpsertSheet(
+            task = Task(
+                categoryId = state.currentCategory.id,
+                title = "",
+                index = state.tasks[state.currentCategory]?.size ?: 0,
+                status = false,
+                reminder = null
+            ),
+            is24Hr = state.is24Hour,
+            categories = state.tasks.keys.toList(),
+            onDismissRequest = { showTaskAddSheet = false },
+            onUpsert = { onAction(TaskPageAction.UpsertTask(it)) },
+        )
     }
 }

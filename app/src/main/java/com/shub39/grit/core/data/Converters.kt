@@ -20,7 +20,7 @@ object Converters {
     }
 
     @TypeConverter
-    fun datefromTimestamp(value: Long?): LocalDateTime? {
+    fun dateFromTimestamp(value: Long?): LocalDateTime? {
         return value?.let { LocalDateTime.ofEpochSecond(it, 0, ZoneOffset.UTC) }
     }
 
@@ -30,12 +30,12 @@ object Converters {
     }
 
     @TypeConverter
-    fun dayFromTimestamp(value: Long?): LocalDate? {
-        return value?.let { LocalDate.ofEpochDay(it) }
+    fun dayFromTimestamp(value: Long): LocalDate {
+        return value.let { LocalDate.ofEpochDay(it) }
     }
 
     @TypeConverter
-    fun dayToTimestamp(date: LocalDate?): Long? {
-        return date?.toEpochDay()
+    fun dayToTimestamp(date: LocalDate): Long {
+        return date.toEpochDay()
     }
 }

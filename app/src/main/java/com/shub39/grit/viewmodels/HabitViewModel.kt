@@ -36,7 +36,6 @@ class HabitViewModel(
 
     val state = _state.asStateFlow()
         .onStart {
-            refreshAlarms()
             observeHabitStatuses()
             observeDataStore()
         }
@@ -113,17 +112,10 @@ class HabitViewModel(
                 HabitsPageAction.DismissAddHabitDialog -> _state.update { it.copy(showHabitAddSheet = false) }
 
                 HabitsPageAction.OnShowPaywall -> stateLayer.settingsState.update { it.copy(showPaywall = true) }
+
+                is HabitsPageAction.OnToggleCompactView -> datastore.setCompactView(action.pref)
             }
         }
-    }
-
-    // reschedule all alarms
-    private fun refreshAlarms() = viewModelScope.launch {
-        val habits = repo.getHabits()
-
-        scheduler.cancelAll()
-        habits.forEach { scheduler.cancel(it) }
-        habits.forEach { scheduler.schedule(it) }
     }
 
     private fun observeHabitStatuses() {
@@ -143,9 +135,20 @@ class HabitViewModel(
             .launchIn(viewModelScope)
     }
 
-    private fun observeDataStore() = viewModelScope.launch {
+    private fun observeDataStore() {
         observeJob?.cancel()
-        observeJob = launch {
+        observeJob = viewModelScope.launch {
+            datastore
+                .getCompactViewPref()
+                .onEach { pref ->
+                    _state.update {
+                        it.copy(
+                            compactHabitView = pref
+                        )
+                    }
+                }
+                .launchIn(this)
+
             datastore
                 .getStartOfTheWeekPref()
                 .onEach { pref ->
@@ -155,7 +158,7 @@ class HabitViewModel(
                         )
                     }
                 }
-                .launchIn(viewModelScope)
+                .launchIn(this)
 
             datastore
                 .getIs24Hr()
@@ -167,7 +170,7 @@ class HabitViewModel(
                         )
                     }
                 }
-                .launchIn(viewModelScope)
+                .launchIn(this)
         }
     }
 

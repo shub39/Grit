@@ -6,8 +6,10 @@ interface TaskRepo {
     fun getTasksFlow(): Flow<Map<Category, List<Task>>>
 
     suspend fun getTasks(): List<Task>
+    suspend fun getTaskById(id: Long): Task?
     suspend fun getCategories(): List<Category>
 
+    suspend fun updateTaskIndexById(id: Long, index: Int)
     suspend fun upsertTask(task: Task)
     suspend fun deleteTask(task: Task)
     suspend fun deleteAllTasks()

@@ -2,6 +2,7 @@ package com.shub39.grit.core.presentation.settings.ui.section
 
 import android.os.Build
 import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.animateContentSize
 import androidx.compose.animation.core.Spring
 import androidx.compose.animation.core.spring
 import androidx.compose.animation.fadeIn
@@ -78,6 +79,7 @@ import com.shub39.grit.core.domain.Fonts
 import com.shub39.grit.core.presentation.component.ColorPickerDialog
 import com.shub39.grit.core.presentation.component.GritDialog
 import com.shub39.grit.core.presentation.component.PageFill
+import com.shub39.grit.core.presentation.component.zigZagBackground
 import com.shub39.grit.core.presentation.settings.SettingsAction
 import com.shub39.grit.core.presentation.settings.SettingsState
 import compose.icons.FontAwesomeIcons
@@ -126,7 +128,9 @@ fun LookAndFeelPage(
         )
 
         LazyColumn(
-            modifier = Modifier.fillMaxWidth(),
+            modifier = Modifier
+                .fillMaxSize()
+                .animateContentSize(),
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
             item {
@@ -154,85 +158,111 @@ fun LookAndFeelPage(
                 )
             }
 
-            if (state.isUserSubscribed) {
+            if (!state.isUserSubscribed) {
                 item {
-                    ListItem(
-                        headlineContent = {
+                    Box(
+                        contentAlignment = Alignment.Center,
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .height(100.dp)
+                            .zigZagBackground()
+                    ) {
+                        Spacer(modifier = Modifier.height(16.dp))
+                        Button(
+                            onClick = { onAction(SettingsAction.OnPaywallShow) }
+                        ) {
                             Text(
-                                text = stringResource(R.string.font)
+                                text = stringResource(R.string.unlock_more_plus)
                             )
-                        },
-                        supportingContent = {
-                            Text(
-                                text = stringResource(R.string.font_desc)
+                        }
+                    }
+                }
+            }
+
+            item {
+                ListItem(
+                    headlineContent = {
+                        Text(
+                            text = stringResource(R.string.font)
+                        )
+                    },
+                    supportingContent = {
+                        Text(
+                            text = stringResource(R.string.font_desc)
+                        )
+                    },
+                    trailingContent = {
+                        FilledTonalIconButton(
+                            onClick = { fontPickerDialog = true },
+                            enabled = state.isUserSubscribed
+                        ) {
+                            Icon(
+                                imageVector = Icons.Default.Create,
+                                contentDescription = "Select font"
                             )
-                        },
-                        trailingContent = {
-                            FilledTonalIconButton(
-                                onClick = { fontPickerDialog = true }
-                            ) {
-                                Icon(
-                                    imageVector = Icons.Default.Create,
-                                    contentDescription = "Select font"
+                        }
+                    }
+                )
+            }
+
+            item {
+                ListItem(
+                    headlineContent = {
+                        Text(
+                            text = stringResource(R.string.use_amoled)
+                        )
+                    },
+                    supportingContent = {
+                        Text(
+                            text = stringResource(R.string.use_amoled_desc)
+                        )
+                    },
+                    trailingContent = {
+                        Switch(
+                            checked = state.theme.isAmoled,
+                            enabled = state.isUserSubscribed,
+                            onCheckedChange = {
+                                onAction(
+                                    SettingsAction.ChangeAmoled(it)
                                 )
                             }
-                        }
-                    )
-                }
+                        )
+                    }
+                )
+            }
 
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
                 item {
                     ListItem(
                         headlineContent = {
                             Text(
-                                text = stringResource(R.string.use_amoled)
+                                text = stringResource(R.string.material_theme)
                             )
                         },
                         supportingContent = {
                             Text(
-                                text = stringResource(R.string.use_amoled_desc)
+                                text = stringResource(R.string.material_theme_desc)
                             )
                         },
                         trailingContent = {
                             Switch(
-                                checked = state.theme.isAmoled,
+                                checked = state.theme.isMaterialYou,
+                                enabled = state.isUserSubscribed,
                                 onCheckedChange = {
                                     onAction(
-                                        SettingsAction.ChangeAmoled(it)
+                                        SettingsAction.ChangeMaterialYou(it)
                                     )
                                 }
                             )
                         }
                     )
                 }
+            }
 
-                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
-                    item {
-                        ListItem(
-                            headlineContent = {
-                                Text(
-                                    text = stringResource(R.string.material_theme)
-                                )
-                            },
-                            supportingContent = {
-                                Text(
-                                    text = stringResource(R.string.material_theme_desc)
-                                )
-                            },
-                            trailingContent = {
-                                Switch(
-                                    checked = state.theme.isMaterialYou,
-                                    onCheckedChange = {
-                                        onAction(
-                                            SettingsAction.ChangeMaterialYou(it)
-                                        )
-                                    }
-                                )
-                            }
-                        )
-                    }
-                }
-
-                item {
+            item {
+                AnimatedVisibility(
+                    visible = !state.theme.isMaterialYou
+                ) {
                     ListItem(
                         headlineContent = {
                             Text(
@@ -251,7 +281,7 @@ fun LookAndFeelPage(
                                     containerColor = state.theme.seedColor,
                                     contentColor = contentColorFor(state.theme.seedColor)
                                 ),
-                                enabled = !state.theme.isMaterialYou
+                                enabled = state.isUserSubscribed
                             ) {
                                 Icon(
                                     imageVector = Icons.Default.Create,
@@ -261,65 +291,56 @@ fun LookAndFeelPage(
                         }
                     )
                 }
+            }
 
-                item {
-                    ListItem(
-                        headlineContent = {
-                            Text(
-                                text = stringResource(R.string.palette_style)
-                            )
-                        }
-                    )
-                }
-
-                item {
-                    LazyRow(
-                        horizontalArrangement = Arrangement.spacedBy(8.dp),
-                        contentPadding = PaddingValues(horizontal = 16.dp)
-                    ) {
-                        items(PaletteStyle.entries.toList(), key = { it.name }) { style ->
-                            val scheme = rememberDynamicColorScheme(
-                                primary = if (state.theme.isMaterialYou && Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
-                                    colorResource(android.R.color.system_accent1_200)
-                                } else state.theme.seedColor,
-                                isDark = when (state.theme.appTheme) {
-                                    AppTheme.SYSTEM -> isSystemInDarkTheme()
-                                    AppTheme.DARK -> true
-                                    AppTheme.LIGHT -> false
-                                },
-                                isAmoled = state.theme.isAmoled,
-                                style = style
-                            )
-
-                            SelectableMiniPalette(
-                                selected = state.theme.paletteStyle == style,
-                                onClick = {
-                                    onAction(
-                                        SettingsAction.ChangePaletteStyle(style)
-                                    )
-                                },
-                                contentDescription = { style.name },
-                                accents = listOf(
-                                    TonalPalette.from(scheme.primary),
-                                    TonalPalette.from(scheme.tertiary),
-                                    TonalPalette.from(scheme.secondary)
-                                )
-                            )
-                        }
-                    }
-                }
-            } else {
-                item {
-                    Spacer(modifier = Modifier.height(16.dp))
-                    Button(
-                        onClick = { onAction(SettingsAction.OnPaywallShow) }
-                    ) {
+            item {
+                ListItem(
+                    headlineContent = {
                         Text(
-                            text = stringResource(R.string.unlock_more_plus)
+                            text = stringResource(R.string.palette_style)
+                        )
+                    }
+                )
+            }
+
+            item {
+                LazyRow(
+                    horizontalArrangement = Arrangement.spacedBy(8.dp),
+                    contentPadding = PaddingValues(horizontal = 16.dp)
+                ) {
+                    items(PaletteStyle.entries.toList(), key = { it.name }) { style ->
+                        val scheme = rememberDynamicColorScheme(
+                            primary = if (state.theme.isMaterialYou && Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
+                                colorResource(android.R.color.system_accent1_200)
+                            } else state.theme.seedColor,
+                            isDark = when (state.theme.appTheme) {
+                                AppTheme.SYSTEM -> isSystemInDarkTheme()
+                                AppTheme.DARK -> true
+                                AppTheme.LIGHT -> false
+                            },
+                            isAmoled = state.theme.isAmoled,
+                            style = style
+                        )
+
+                        SelectableMiniPalette(
+                            selected = state.theme.paletteStyle == style,
+                            onClick = {
+                                onAction(
+                                    SettingsAction.ChangePaletteStyle(style)
+                                )
+                            },
+                            contentDescription = { style.name },
+                            enabled = state.isUserSubscribed,
+                            accents = listOf(
+                                TonalPalette.from(scheme.primary),
+                                TonalPalette.from(scheme.tertiary),
+                                TonalPalette.from(scheme.secondary)
+                            )
                         )
                     }
                 }
             }
+
         }
     }
 
@@ -355,7 +376,8 @@ fun LookAndFeelPage(
                             }
                         ) {
                             Text(
-                                text = font.name.lowercase().replaceFirstChar { if (it.isLowerCase()) it.titlecase(Locale.getDefault()) else it.toString() },
+                                text = font.name.lowercase()
+                                    .replaceFirstChar { if (it.isLowerCase()) it.titlecase(Locale.getDefault()) else it.toString() },
                                 fontFamily = FontFamily(Font(font.resource))
                             )
                         }
@@ -422,6 +444,7 @@ private fun SelectableMiniPalette(
     onClick: () -> Unit,
     contentDescription: () -> String,
     accents: List<TonalPalette>,
+    enabled: Boolean = true
 ) {
     Surface(
         modifier = modifier,
@@ -439,7 +462,7 @@ private fun SelectableMiniPalette(
         ) {
             Surface(
                 modifier = Modifier
-                    .clickable(onClick = onClick)
+                    .clickable(onClick = onClick, enabled = enabled)
                     .padding(12.dp)
                     .size(50.dp),
                 shape = CircleShape,

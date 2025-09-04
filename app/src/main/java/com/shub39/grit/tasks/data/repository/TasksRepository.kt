@@ -36,8 +36,16 @@ class TasksRepository(
        return tasksDao.getTasks().map { it.toTask() }
     }
 
+    override suspend fun getTaskById(id: Long): Task? {
+        return tasksDao.getTaskById(id)?.toTask()
+    }
+
     override suspend fun getCategories(): List<Category> {
         return categoryDao.getCategories().map { it.toCategory() }
+    }
+
+    override suspend fun updateTaskIndexById(id: Long, index: Int) {
+        tasksDao.updateTaskIndexById(id, index)
     }
 
     override suspend fun upsertTask(task: Task) {

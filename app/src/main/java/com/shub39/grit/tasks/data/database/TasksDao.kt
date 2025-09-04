@@ -12,7 +12,13 @@ interface TasksDao {
     fun getTasksFlow(): Flow<List<TaskEntity>>
 
     @Query("SELECT * FROM task")
-    fun getTasks(): List<TaskEntity>
+    suspend fun getTasks(): List<TaskEntity>
+
+    @Query("UPDATE task SET `index` = :newIndex WHERE id = :id")
+    suspend fun updateTaskIndexById(id: Long, newIndex: Int)
+
+    @Query("SELECT * FROM task WHERE id = :id")
+    suspend fun getTaskById(id: Long): TaskEntity?
 
     @Upsert
     suspend fun upsertTask(taskEntity: TaskEntity)

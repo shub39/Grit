@@ -152,7 +152,8 @@ private fun Preview() {
                 description = "A desc",
                 time = LocalDateTime.now(),
                 days = DayOfWeek.entries.toSet(),
-                index = 1
+                index = 1,
+                reminder = true
             ),
             primary = MaterialTheme.colorScheme.primary,
         )

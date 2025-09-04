@@ -6,6 +6,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.shub39.grit.billing.BillingHandler
 import com.shub39.grit.billing.SubscriptionResult
+import com.shub39.grit.core.data.Utils
 import com.shub39.grit.core.domain.GritDatastore
 import com.shub39.grit.core.domain.backup.ExportRepo
 import com.shub39.grit.core.domain.backup.ExportState
@@ -14,7 +15,6 @@ import com.shub39.grit.core.domain.backup.RestoreResult
 import com.shub39.grit.core.domain.backup.RestoreState
 import com.shub39.grit.core.presentation.settings.BackupState
 import com.shub39.grit.core.presentation.settings.SettingsAction
-import com.shub39.grit.util.Utils
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.asStateFlow
@@ -146,6 +146,8 @@ class SettingsViewModel(
             }
 
             SettingsAction.OnResetTheme -> datastore.resetAppTheme()
+
+            is SettingsAction.ChangeReorderTasks -> datastore.setTaskReorderPref(action.pref)
         }
     }
 
@@ -155,15 +157,11 @@ class SettingsViewModel(
         when (isSubscribed) {
             SubscriptionResult.Subscribed -> {
                 _state.update {
-                    it.copy(
-                        isUserSubscribed = true
-                    )
+                    it.copy(isUserSubscribed = true)
                 }
 
                 stateLayer.habitsState.update {
-                    it.copy(
-                        isUserSubscribed = true
-                    )
+                    it.copy(isUserSubscribed = true)
                 }
             }
 
@@ -176,6 +174,22 @@ class SettingsViewModel(
     private fun observeJob() = viewModelScope.launch {
         observeJob?.cancel()
         observeJob = launch {
+            datastore.getTaskReorderPref()
+                .onEach { pref ->
+                    _state.update {
+                        it.copy(
+                            reorderTasks = pref
+                        )
+                    }
+
+                    stateLayer.tasksState.update {
+                        it.copy(
+                            reorderTasks = pref
+                        )
+                    }
+                }
+                .launchIn(this)
+
             datastore.getNotificationsFlow()
                 .onEach { pref ->
                     _state.update {
@@ -263,6 +277,12 @@ class SettingsViewModel(
                     _state.update {
                         it.copy(
                             is24Hr = flow
+                        )
+                    }
+
+                    stateLayer.tasksState.update {
+                        it.copy(
+                            is24Hour = flow
                         )
                     }
                 }

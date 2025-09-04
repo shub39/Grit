@@ -2,9 +2,9 @@ package com.shub39.grit.viewmodels
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.shub39.grit.core.domain.AlarmScheduler
 import com.shub39.grit.tasks.domain.Category
 import com.shub39.grit.tasks.domain.CategoryColors
-import com.shub39.grit.tasks.domain.Task
 import com.shub39.grit.tasks.domain.TaskRepo
 import com.shub39.grit.tasks.presentation.TaskPageAction
 import com.shub39.grit.tasks.presentation.TaskPageState
@@ -21,7 +21,8 @@ import kotlinx.coroutines.launch
 
 class TasksViewModel(
     stateLayer: StateLayer,
-    private val repo: TaskRepo
+    private val repo: TaskRepo,
+    private val scheduler: AlarmScheduler
 ) : ViewModel() {
 
     private var savedJob: Job? = null
@@ -43,7 +44,9 @@ class TasksViewModel(
         viewModelScope.launch {
             when (action) {
                 is TaskPageAction.UpsertTask -> {
-                    upsertTask(action.task)
+                    repo.upsertTask(action.task)
+
+                    scheduler.schedule(action.task)
                 }
 
                 TaskPageAction.DeleteTasks -> {
@@ -69,8 +72,8 @@ class TasksViewModel(
                 }
 
                 is TaskPageAction.ReorderTasks -> {
-                    for (task in action.mapping) {
-                        upsertTask(task.second.copy(index = task.first))
+                    for (pair in action.mapping) {
+                        repo.updateTaskIndexById(pair.second.id, pair.first)
                     }
                 }
 
@@ -132,10 +135,6 @@ class TasksViewModel(
 
     private suspend fun addDefault() {
         upsertCategory(Category(name = "Misc", color = CategoryColors.GRAY.color))
-    }
-
-    private suspend fun upsertTask(task: Task) {
-        repo.upsertTask(task)
     }
 
     private suspend fun deleteTasks() {
