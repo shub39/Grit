@@ -22,17 +22,24 @@ class BootReceiver : BroadcastReceiver(), KoinComponent {
             val scheduler = get<NotificationAlarmScheduler>()
             val habitRepo = get<HabitRepo>()
             val taskRepo = get<TaskRepo>()
+            val pendingResult = goAsync()
 
             receiverScope.launch {
-                habitRepo.getHabits().forEach {
-                    scheduler.schedule(it)
-                    Log.d("BootReceiver", "Scheduled habit: ${it.id}")
-                }
+               try {
+                   habitRepo.getHabits().forEach {
+                       scheduler.schedule(it)
+                       Log.d("BootReceiver", "Scheduled habit: ${it.id}")
+                   }
 
-                taskRepo.getTasks().forEach {
-                    scheduler.schedule(it)
-                    Log.d("BootReceiver", "Scheduled task: ${it.id}")
-                }
+                   taskRepo.getTasks().forEach {
+                       scheduler.schedule(it)
+                       Log.d("BootReceiver", "Scheduled task: ${it.id}")
+                   }
+               } catch (t: Throwable) {
+                   Log.e("BootReceiver", "Failed to initiate alarms", t)
+               } finally {
+                   pendingResult.finish()
+               }
             }
         }
     }

@@ -135,9 +135,9 @@ class HabitViewModel(
             .launchIn(viewModelScope)
     }
 
-    private fun observeDataStore() = viewModelScope.launch {
+    private fun observeDataStore() {
         observeJob?.cancel()
-        observeJob = launch {
+        observeJob = viewModelScope.launch {
             datastore
                 .getCompactViewPref()
                 .onEach { pref ->
@@ -147,7 +147,7 @@ class HabitViewModel(
                         )
                     }
                 }
-                .launchIn(viewModelScope)
+                .launchIn(this)
 
             datastore
                 .getStartOfTheWeekPref()
@@ -158,7 +158,7 @@ class HabitViewModel(
                         )
                     }
                 }
-                .launchIn(viewModelScope)
+                .launchIn(this)
 
             datastore
                 .getIs24Hr()
@@ -170,7 +170,7 @@ class HabitViewModel(
                         )
                     }
                 }
-                .launchIn(viewModelScope)
+                .launchIn(this)
         }
     }
 

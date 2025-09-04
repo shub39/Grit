@@ -20,7 +20,7 @@ object Converters {
     }
 
     @TypeConverter
-    fun datefromTimestamp(value: Long?): LocalDateTime? {
+    fun dateFromTimestamp(value: Long?): LocalDateTime? {
         return value?.let { LocalDateTime.ofEpochSecond(it, 0, ZoneOffset.UTC) }
     }
 

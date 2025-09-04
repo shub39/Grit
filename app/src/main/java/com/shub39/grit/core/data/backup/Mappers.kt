@@ -55,7 +55,7 @@ fun TaskSchema.toTask(): Task {
         title = title,
         status = status,
         index = index,
-        reminder = reminder?.let { Converters.datefromTimestamp(it) }
+        reminder = reminder?.let { Converters.dateFromTimestamp(it) }
     )
 }
 

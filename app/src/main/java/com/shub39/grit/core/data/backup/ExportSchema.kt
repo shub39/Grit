@@ -1,12 +1,13 @@
 package com.shub39.grit.core.data.backup
 
+import com.shub39.grit.habits.data.database.HabitDatabase
 import com.shub39.grit.tasks.data.database.TaskDatabase
 import kotlinx.serialization.Serializable
 
 @Serializable
 data class ExportSchema(
     val tasksSchemaVersion: Int = TaskDatabase.SCHEMA_VERSION,
-    val habitsSchemaVersion: Int = TaskDatabase.SCHEMA_VERSION,
+    val habitsSchemaVersion: Int = HabitDatabase.SCHEMA_VERSION,
     val habits: List<HabitSchema>,
     val habitStatus: List<HabitStatusSchema>,
     val tasks: List<TaskSchema>,
