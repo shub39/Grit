@@ -19,6 +19,7 @@ import com.shub39.grit.app.MainActivity
 import com.shub39.grit.core.data.NotificationReceiver
 import com.shub39.grit.core.domain.IntentActions
 import com.shub39.grit.habits.domain.Habit
+import com.shub39.grit.tasks.domain.Task
 import java.time.DayOfWeek
 import java.time.LocalDate
 import java.time.LocalDateTime
@@ -32,7 +33,7 @@ fun timePickerStateToLocalDateTime(timePickerState: TimePickerState, date: Local
 }
 
 
-fun countCurrentStreak(dates: List<LocalDate>, eligibleWeekdays: Set<DayOfWeek> = DayOfWeek.values().toSet()): Int {
+fun countCurrentStreak(dates: List<LocalDate>, eligibleWeekdays: Set<DayOfWeek> = DayOfWeek.entries.toSet()): Int {
     if (dates.isEmpty()) return 0
 
     val today = LocalDate.now()
@@ -77,7 +78,7 @@ fun countCurrentStreak(dates: List<LocalDate>, eligibleWeekdays: Set<DayOfWeek> 
     return streak
 }
 
-fun countBestStreak(dates: List<LocalDate>, eligibleWeekdays: Set<DayOfWeek> = DayOfWeek.values().toSet()): Int {
+fun countBestStreak(dates: List<LocalDate>, eligibleWeekdays: Set<DayOfWeek> = DayOfWeek.entries.toSet()): Int {
     if (dates.isEmpty()) return 0
 
     val filteredDates = dates.filter { eligibleWeekdays.contains(it.dayOfWeek) }.sorted()
@@ -166,7 +167,7 @@ fun showAddNotification(context: Context, habit: Habit) {
 // shows habit notification if permission granted
 fun habitNotification(context: Context, habit: Habit) {
     val intent = Intent(context, NotificationReceiver::class.java).apply {
-        putExtra("1", habit.id)
+        putExtra("habit_id", habit.id)
         action = IntentActions.ADD_HABIT_STATUS.action
     }
     val pendingBroadcast = PendingIntent.getBroadcast(
@@ -178,12 +179,12 @@ fun habitNotification(context: Context, habit: Habit) {
 
     val builder = NotificationCompat
         .Builder(context, "1")
-        .setSmallIcon(R.drawable.round_checklist_24)
+        .setSmallIcon(R.drawable.round_alarm_24)
         .setContentTitle(habit.title)
         .setContentText(habit.description)
         .setPriority(NotificationCompat.PRIORITY_DEFAULT)
         .setAutoCancel(true)
-        .addAction(R.drawable.round_check_circle_24, "Mark Done", pendingBroadcast)
+        .addAction(R.drawable.round_check_circle_24, context.getString(R.string.mark_done), pendingBroadcast)
 
     with(NotificationManagerCompat.from(context)) {
         if (
@@ -195,21 +196,56 @@ fun habitNotification(context: Context, habit: Habit) {
             return
         }
 
-        notify(habit.id.hashCode(), builder.build())
+        notify(habit.id.toInt(), builder.build())
     }
 }
 
+// show task notification if permission granted
+fun taskNotification(context: Context, task: Task) {
+    val intent = Intent(context, NotificationReceiver::class.java).apply {
+        putExtra("task_id", task.id)
+        action = IntentActions.MARK_TASK_DONE.action
+    }
+    val pendingBroadcast = PendingIntent.getBroadcast(
+        context,
+        task.id.toInt(),
+        intent,
+        PendingIntent.FLAG_IMMUTABLE
+    )
+    val builder = NotificationCompat
+        .Builder(context, "1")
+        .setSmallIcon(R.drawable.round_checklist_24)
+        .setContentTitle(task.title)
+        .setPriority(NotificationCompat.PRIORITY_DEFAULT)
+        .setAutoCancel(true)
+        .addAction(R.drawable.round_check_circle_24, context.getString(R.string.mark_done), pendingBroadcast)
+
+    with(NotificationManagerCompat.from(context)){
+        if (
+            ActivityCompat.checkSelfPermission(
+                context,
+                Manifest.permission.POST_NOTIFICATIONS
+            ) != PackageManager.PERMISSION_GRANTED
+        ) {
+            return
+        }
+
+        notify(task.id.toInt(), builder.build())
+    }
+}
+
+// gotta add this somewhere fr 💯
 fun getRandomLine(): String {
     return when(Random.nextInt(0, 10)) {
-        1 -> "\uD83D\uDCA3\uFE0F Bombardino Crocodilo"
-        2 -> "\uD83C\uDF33 Brr Brr Patapim"
-        3 -> "\uD83C\uDF35 Lirili Larila"
-        4 -> "\uD83D\uDE3A Trippi Troppi"
-        5 -> "☕\uFE0F Capucino Assassaino"
-        6 -> "\uD83D\uDC1F\uFE0F Trulimero Trulichina"
-        7 -> "\uD83D\uDC80 Tung Tung Tung Sahur"
-        8 -> "\uD83E\uDD8D Chimpanzini Bananini"
-        9 -> "\uD83E\uDD92 Giraffa Celeste"
-        else -> "\uD83E\uDD88 Tralalero Tralala"
+        1 -> "💣🐊✈ Bombardino Crocodilo"
+        2 -> "🌳🦶👃 Brr Brr Patapim"
+        3 -> "🐘🌵 Lirili Larila"
+        4 -> "😺🦐 Trippi Troppi"
+        5 -> "☕🔪 Capucino Assassaino"
+        6 -> "😺🐟 Trulimero Trulichina"
+        7 -> "💀 Tung Tung Tung Sahur"
+        8 -> "🐵🍌 Chimpanzini Bananini"
+        9 -> "🦒🍉🌌 Giraffa Celeste"
+        else -> "🦈👟 Tralalero Tralala"
     }
 }

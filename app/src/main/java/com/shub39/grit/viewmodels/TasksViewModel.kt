@@ -69,8 +69,8 @@ class TasksViewModel(
                 }
 
                 is TaskPageAction.ReorderTasks -> {
-                    for (task in action.mapping) {
-                        upsertTask(task.second.copy(index = task.first))
+                    for (pair in action.mapping) {
+                        repo.updateTaskIndexById(pair.second.id, pair.first)
                     }
                 }
 

@@ -37,7 +37,7 @@ class TaskDBMigrationTest {
             """.trimIndent())
                 }
             }
-        }
+        }.close()
 
         val db = helper.runMigrationsAndValidate(DB_NAME, 5, true)
 

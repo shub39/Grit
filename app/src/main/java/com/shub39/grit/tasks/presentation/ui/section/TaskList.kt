@@ -58,6 +58,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableLongStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -83,6 +84,7 @@ import com.shub39.grit.tasks.presentation.TaskPageAction
 import com.shub39.grit.tasks.presentation.TaskPageState
 import com.shub39.grit.tasks.presentation.ui.component.TaskCard
 import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
 import sh.calvin.reorderable.ReorderableItem
 import sh.calvin.reorderable.rememberReorderableLazyListState
 
@@ -93,6 +95,8 @@ fun TaskList(
     onAction: (TaskPageAction) -> Unit,
     onNavigateToEditCategories: () -> Unit
 ) = PageFill {
+    val scope = rememberCoroutineScope()
+
     var showTaskAddSheet by remember { mutableStateOf(false) }
     var showCategoryAddSheet by remember { mutableStateOf(false) }
     var showDeleteDialog by remember { mutableStateOf(false) }
@@ -256,19 +260,23 @@ fun TaskList(
                                             if (!editState) {
                                                 onAction(TaskPageAction.UpsertTask(task.copy(status = !task.status)))
 
-                                                if (task.status) {
-                                                    reorderableTasks =
-                                                        reorderableTasks.toMutableList().apply {
-                                                            add(
-                                                                reorderableTasks.size - 1,
-                                                                removeAt(index)
-                                                            )
-                                                        }
+                                                if (!task.status) {
+                                                    scope.launch {
+                                                        delay(200)
 
-                                                    onAction(
-                                                        TaskPageAction.ReorderTasks(
-                                                            reorderableTasks.mapIndexed { index, task -> index to task })
-                                                    )
+                                                        reorderableTasks =
+                                                            reorderableTasks.toMutableList().apply {
+                                                                add(
+                                                                    reorderableTasks.size - 1,
+                                                                    removeAt(index)
+                                                                )
+                                                            }
+
+                                                        onAction(
+                                                            TaskPageAction.ReorderTasks(
+                                                                reorderableTasks.mapIndexed { index, task -> index to task })
+                                                        )
+                                                    }
                                                 }
                                             }
                                         },
@@ -431,19 +439,13 @@ fun TaskList(
     if (editTask != null) {
         var newTitle by remember { mutableStateOf(editTask!!.title) }
         var newTaskCategoryId by remember { mutableLongStateOf(editTask!!.categoryId) }
-        val keyboardController = LocalSoftwareKeyboardController.current
-        val focusRequester = remember { FocusRequester() }
 
         LaunchedEffect(Unit) {
             delay(200)
-            focusRequester.requestFocus()
-            keyboardController?.show()
         }
 
         GritBottomSheet(
             onDismissRequest = {
-                focusRequester.freeFocus()
-                keyboardController?.hide()
                 editTask = null
             }
         ) {
@@ -485,9 +487,7 @@ fun TaskList(
                         newTitle.plus("\n")
                     }
                 ),
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .focusRequester(focusRequester),
+                modifier = Modifier.fillMaxWidth(),
                 label = { Text(text = stringResource(id = R.string.edit_task)) }
             )
 
@@ -519,19 +519,13 @@ fun TaskList(
     if (showTaskAddSheet && state.currentCategory != null) {
         var newTask by remember { mutableStateOf("") }
         var newTaskCategoryId by remember { mutableLongStateOf(state.currentCategory.id) }
-        val keyboardController = LocalSoftwareKeyboardController.current
-        val focusRequester = remember { FocusRequester() }
 
         LaunchedEffect(Unit) {
             delay(200)
-            focusRequester.requestFocus()
-            keyboardController?.show()
         }
 
         GritBottomSheet(
             onDismissRequest = {
-                focusRequester.freeFocus()
-                keyboardController?.hide()
                 showTaskAddSheet = false
             }
         ) {
@@ -573,9 +567,7 @@ fun TaskList(
                         newTask.plus("\n")
                     }
                 ),
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .focusRequester(focusRequester)
+                modifier = Modifier.fillMaxWidth()
             )
 
             Button(

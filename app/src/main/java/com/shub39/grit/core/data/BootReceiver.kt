@@ -22,7 +22,7 @@ class BootReceiver : BroadcastReceiver(), KoinComponent {
             val habitDao = get<HabitDao>()
 
             receiverScope.launch {
-                habitDao.getAllHabits().forEach {
+                habitDao.getAllHabits().filter { it.reminder }.forEach {
                     scheduler.schedule(it.toHabit())
                     Log.d("BootReceiver", "Scheduled habit: ${it.id}")
                 }

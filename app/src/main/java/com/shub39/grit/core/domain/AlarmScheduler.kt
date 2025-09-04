@@ -1,13 +1,14 @@
 package com.shub39.grit.core.domain
 
 import com.shub39.grit.habits.domain.Habit
+import com.shub39.grit.tasks.domain.Task
 
 interface AlarmScheduler {
-    // Notification scheduler for Habits
     fun schedule(habit: Habit)
+    fun schedule(task: Task)
 
-    // cancel habit notifications
     fun cancel(habit: Habit)
+    fun cancel(task: Task)
 
     fun cancelAll()
 }

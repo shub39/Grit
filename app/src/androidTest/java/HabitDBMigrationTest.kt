@@ -32,7 +32,8 @@ class HabitDBMigrationTest {
                 val timeEpoch = LocalDateTime.now().minusDays(habit.toLong())
                     .toEpochSecond(ZoneOffset.UTC)
 
-                execSQL("""
+                execSQL(
+                    """
                 INSERT INTO habit_index (title, description, [index], days, time)
                 VALUES (
                     'Habit $habit',
@@ -41,22 +42,25 @@ class HabitDBMigrationTest {
                     'MONDAY,TUESDAY',              
                     $timeEpoch  
                 )
-            """.trimIndent())
+            """.trimIndent()
+                )
 
                 (1..3).forEach { offset ->
 
                     val dateEpoch = LocalDate.now().minusDays(offset.toLong()).toEpochDay()
 
-                    execSQL("""
+                    execSQL(
+                        """
                     INSERT INTO habit_status (habitId, date)
                     VALUES (
                         $habit,
                         $dateEpoch        
                     )
-                """.trimIndent())
+                """.trimIndent()
+                    )
                 }
             }
-        }
+        }.close()
 
         val db = helper.runMigrationsAndValidate(DB_NAME, 5, true)
 
