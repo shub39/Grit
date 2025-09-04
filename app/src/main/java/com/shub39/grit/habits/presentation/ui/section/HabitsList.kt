@@ -23,6 +23,8 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Create
 import androidx.compose.material.icons.rounded.Add
 import androidx.compose.material.icons.rounded.Analytics
+import androidx.compose.material.icons.rounded.DensityLarge
+import androidx.compose.material.icons.rounded.Expand
 import androidx.compose.material.icons.rounded.Reorder
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonShapes
@@ -137,21 +139,46 @@ fun HabitsList(
                 AnimatedVisibility(
                     visible = state.habitsWithStatuses.isNotEmpty()
                 ) {
-                    FilledTonalIconToggleButton(
-                        checked = editState,
-                        shapes = IconToggleButtonShapes(
-                            shape = CircleShape,
-                            checkedShape = MaterialTheme.shapes.small,
-                            pressedShape = MaterialTheme.shapes.extraSmall,
-                        ),
-                        onCheckedChange = { editState = it },
-                        enabled = state.habitsWithStatuses.isNotEmpty()
-                    ) {
-                        Icon(
-                            imageVector = Icons.Rounded.Reorder,
-                            contentDescription = null
-                        )
-                    }
+                   Row {
+                       FilledTonalIconToggleButton(
+                           checked = state.compactHabitView,
+                           shapes = IconToggleButtonShapes(
+                               shape = CircleShape,
+                               checkedShape = MaterialTheme.shapes.small,
+                               pressedShape = MaterialTheme.shapes.extraSmall,
+                           ),
+                           onCheckedChange = {
+                               onAction(
+                                   HabitsPageAction.OnToggleCompactView(it)
+                               )
+                           }
+                       ) {
+                           Icon(
+                               imageVector = if (state.compactHabitView) {
+                                   Icons.Rounded.Expand
+                               } else {
+                                   Icons.Rounded.DensityLarge
+                               },
+                               contentDescription = "Compact View"
+                           )
+                       }
+
+                       FilledTonalIconToggleButton(
+                           checked = editState,
+                           shapes = IconToggleButtonShapes(
+                               shape = CircleShape,
+                               checkedShape = MaterialTheme.shapes.small,
+                               pressedShape = MaterialTheme.shapes.extraSmall,
+                           ),
+                           onCheckedChange = { editState = it },
+                           enabled = state.habitsWithStatuses.isNotEmpty()
+                       ) {
+                           Icon(
+                               imageVector = Icons.Rounded.Reorder,
+                               contentDescription = null
+                           )
+                       }
+                   }
                 }
             }
         )
@@ -191,7 +218,8 @@ fun HabitsList(
                                 )
                             )
                         },
-                        shape = RoundedCornerShape(cardCorners)
+                        shape = RoundedCornerShape(cardCorners),
+                        compactView = state.compactHabitView
                     )
                 }
             }

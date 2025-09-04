@@ -112,6 +112,8 @@ class HabitViewModel(
                 HabitsPageAction.DismissAddHabitDialog -> _state.update { it.copy(showHabitAddSheet = false) }
 
                 HabitsPageAction.OnShowPaywall -> stateLayer.settingsState.update { it.copy(showPaywall = true) }
+
+                is HabitsPageAction.OnToggleCompactView -> datastore.setCompactView(action.pref)
             }
         }
     }
@@ -136,6 +138,17 @@ class HabitViewModel(
     private fun observeDataStore() = viewModelScope.launch {
         observeJob?.cancel()
         observeJob = launch {
+            datastore
+                .getCompactViewPref()
+                .onEach { pref ->
+                    _state.update {
+                        it.copy(
+                            compactHabitView = pref
+                        )
+                    }
+                }
+                .launchIn(viewModelScope)
+
             datastore
                 .getStartOfTheWeekPref()
                 .onEach { pref ->

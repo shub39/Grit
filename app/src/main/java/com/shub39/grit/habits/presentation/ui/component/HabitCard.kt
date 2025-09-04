@@ -3,6 +3,7 @@ package com.shub39.grit.habits.presentation.ui.component
 import androidx.compose.animation.AnimatedContent
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.animateColorAsState
+import androidx.compose.animation.animateContentSize
 import androidx.compose.foundation.background
 import androidx.compose.foundation.basicMarquee
 import androidx.compose.foundation.layout.Arrangement
@@ -55,6 +56,7 @@ fun HabitCard(
     action: (HabitsPageAction) -> Unit,
     onNavigateToAnalytics: () -> Unit,
     editState: Boolean,
+    compactView: Boolean,
     startingDay: DayOfWeek,
     reorderHandle: @Composable () -> Unit,
     timeFormat: String,
@@ -102,7 +104,7 @@ fun HabitCard(
             }
         },
         shape = shape,
-        modifier = modifier
+        modifier = modifier.animateContentSize()
     ) {
         ListItem(
             modifier = Modifier
@@ -184,73 +186,75 @@ fun HabitCard(
             }
         )
 
-        WeekCalendar(
-            contentPadding = PaddingValues(8.dp),
-            state = weekState,
-            dayContent = { weekDay ->
-                val done = statusList.any { it.date == weekDay.date }
-                val validDay =
-                    weekDay.date <= today && weekDay.date.dayOfWeek in habit.days
+        if (!compactView) {
+            WeekCalendar(
+                contentPadding = PaddingValues(8.dp),
+                state = weekState,
+                dayContent = { weekDay ->
+                    val done = statusList.any { it.date == weekDay.date }
+                    val validDay =
+                        weekDay.date <= today && weekDay.date.dayOfWeek in habit.days
 
-                Box(
-                    modifier = Modifier
-                        .aspectRatio(1f)
-                        .padding(2.dp)
-                        .then(
-                            if (done) {
-                                val donePrevious =
-                                    statusList.any { it.date == weekDay.date.minusDays(1) }
-                                val doneAfter =
-                                    statusList.any { it.date == weekDay.date.plusDays(1) }
+                    Box(
+                        modifier = Modifier
+                            .aspectRatio(1f)
+                            .padding(2.dp)
+                            .then(
+                                if (done) {
+                                    val donePrevious =
+                                        statusList.any { it.date == weekDay.date.minusDays(1) }
+                                    val doneAfter =
+                                        statusList.any { it.date == weekDay.date.plusDays(1) }
 
-                                Modifier.background(
-                                    color = MaterialTheme.colorScheme.primary,
-                                    shape = if (donePrevious && doneAfter) {
-                                        RoundedCornerShape(10.dp)
-                                    } else if (donePrevious) {
-                                        RoundedCornerShape(
-                                            topStart = 10.dp,
-                                            bottomStart = 10.dp,
-                                            topEnd = 20.dp,
-                                            bottomEnd = 20.dp
-                                        )
-                                    } else if (doneAfter) {
-                                        RoundedCornerShape(
-                                            topStart = 20.dp,
-                                            bottomStart = 20.dp,
-                                            topEnd = 10.dp,
-                                            bottomEnd = 10.dp
-                                        )
-                                    } else {
-                                        RoundedCornerShape(20.dp)
-                                    }
-                                )
-                            } else Modifier
-                        ),
-                    contentAlignment = Alignment.Center
-                ) {
-                    Column(
-                        modifier = Modifier.padding(4.dp),
-                        horizontalAlignment = Alignment.CenterHorizontally
+                                    Modifier.background(
+                                        color = MaterialTheme.colorScheme.primary,
+                                        shape = if (donePrevious && doneAfter) {
+                                            RoundedCornerShape(10.dp)
+                                        } else if (donePrevious) {
+                                            RoundedCornerShape(
+                                                topStart = 10.dp,
+                                                bottomStart = 10.dp,
+                                                topEnd = 20.dp,
+                                                bottomEnd = 20.dp
+                                            )
+                                        } else if (doneAfter) {
+                                            RoundedCornerShape(
+                                                topStart = 20.dp,
+                                                bottomStart = 20.dp,
+                                                topEnd = 10.dp,
+                                                bottomEnd = 10.dp
+                                            )
+                                        } else {
+                                            RoundedCornerShape(20.dp)
+                                        }
+                                    )
+                                } else Modifier
+                            ),
+                        contentAlignment = Alignment.Center
                     ) {
-                        Text(
-                            text = weekDay.date.dayOfMonth.toString(),
-                            style = MaterialTheme.typography.bodyMedium,
-                            color = if (done) MaterialTheme.colorScheme.onPrimary
-                            else if (!validDay) cardContent.copy(alpha = 0.5f)
-                            else cardContent
-                        )
+                        Column(
+                            modifier = Modifier.padding(4.dp),
+                            horizontalAlignment = Alignment.CenterHorizontally
+                        ) {
+                            Text(
+                                text = weekDay.date.dayOfMonth.toString(),
+                                style = MaterialTheme.typography.bodyMedium,
+                                color = if (done) MaterialTheme.colorScheme.onPrimary
+                                else if (!validDay) cardContent.copy(alpha = 0.5f)
+                                else cardContent
+                            )
 
-                        Text(
-                            text = weekDay.date.dayOfWeek.toString().take(3),
-                            style = MaterialTheme.typography.bodySmall,
-                            color = if (done) MaterialTheme.colorScheme.onPrimary
-                            else if (!validDay) cardContent.copy(alpha = 0.5f)
-                            else cardContent
-                        )
+                            Text(
+                                text = weekDay.date.dayOfWeek.toString().take(3),
+                                style = MaterialTheme.typography.bodySmall,
+                                color = if (done) MaterialTheme.colorScheme.onPrimary
+                                else if (!validDay) cardContent.copy(alpha = 0.5f)
+                                else cardContent
+                            )
+                        }
                     }
                 }
-            }
-        )
+            )
+        }
     }
 }

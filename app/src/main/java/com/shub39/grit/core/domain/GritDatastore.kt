@@ -42,4 +42,7 @@ interface GritDatastore {
 
     fun getTaskReorderPref(): Flow<Boolean>
     suspend fun setTaskReorderPref(pref: Boolean)
+
+    fun getCompactViewPref(): Flow<Boolean>
+    suspend fun setCompactView(pref: Boolean)
 }
