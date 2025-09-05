@@ -274,7 +274,7 @@ fun TaskList(
                                         },
                                         // edit on click and hold
                                         onLongClick = {
-                                            if (!editState) {
+                                            if (!editState && !task.status) {
                                                 editTask = task
                                             }
                                         }

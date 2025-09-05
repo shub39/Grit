@@ -8,6 +8,8 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.rounded.CalendarMonth
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -44,6 +46,7 @@ fun CalendarMap(
 ) {
     AnalyticsCard(
         title = stringResource(R.string.monthly_progress),
+        icon = Icons.Rounded.CalendarMonth,
         canSeeContent = canSeeContent,
         onPlusClick = { onAction(HabitsPageAction.OnShowPaywall) }
     ) {

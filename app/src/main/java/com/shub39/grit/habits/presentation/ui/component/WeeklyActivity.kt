@@ -1,10 +1,23 @@
 package com.shub39.grit.habits.presentation.ui.component
 
 
-import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.lazy.LazyRow
+import androidx.compose.foundation.lazy.items
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.rounded.AutoGraph
+import androidx.compose.material3.ButtonGroupDefaults
+import androidx.compose.material3.ExperimentalMaterial3ExpressiveApi
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Text
+import androidx.compose.material3.ToggleButton
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.saveable.rememberSaveable
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.SolidColor
@@ -13,6 +26,8 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.shub39.grit.R
 import com.shub39.grit.core.presentation.theme.GritTheme
+import com.shub39.grit.habits.domain.WeeklyTimePeriod
+import com.shub39.grit.habits.domain.WeeklyTimePeriod.Companion.toWeeks
 import ir.ehsannarmani.compose_charts.LineChart
 import ir.ehsannarmani.compose_charts.models.AnimationMode
 import ir.ehsannarmani.compose_charts.models.DividerProperties
@@ -26,16 +41,37 @@ import ir.ehsannarmani.compose_charts.models.LineProperties
 import ir.ehsannarmani.compose_charts.models.PopupProperties
 import ir.ehsannarmani.compose_charts.models.StrokeStyle
 
+@OptIn(ExperimentalMaterial3ExpressiveApi::class)
 @Composable
 fun WeeklyActivity(
     primary: Color,
     lineChartData: List<Double>,
     modifier: Modifier = Modifier
 ) {
+    var selectedTimePeriod by rememberSaveable { mutableStateOf(WeeklyTimePeriod.WEEKS_8) }
+
     AnalyticsCard(
         title = stringResource(R.string.weekly_graph),
-        modifier = modifier.height(300.dp)
+        icon = Icons.Rounded.AutoGraph,
+        modifier = modifier.heightIn(max = 400.dp)
     ) {
+        LazyRow(
+            contentPadding = PaddingValues(
+                horizontal = 16.dp,
+                vertical = 8.dp
+            ),
+            horizontalArrangement = ButtonGroupDefaults.HorizontalArrangement
+        ) {
+            items(WeeklyTimePeriod.entries) { period ->
+                ToggleButton(
+                    checked = period == selectedTimePeriod,
+                    onCheckedChange = { selectedTimePeriod = period }
+                ) {
+                    Text(text = "${period.toWeeks()} ${stringResource(R.string.weeks)}")
+                }
+            }
+        }
+
         LineChart(
             modifier = Modifier.padding(
                 start = 16.dp,
@@ -65,7 +101,7 @@ fun WeeklyActivity(
             data = listOf(
                 Line(
                     label = stringResource(R.string.progress),
-                    values = lineChartData,
+                    values = lineChartData.takeLast(selectedTimePeriod.toWeeks()),
                     color = SolidColor(primary),
                     dotProperties = DotProperties(
                         enabled = true,

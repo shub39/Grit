@@ -7,6 +7,9 @@ import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.rounded.Map
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -34,6 +37,7 @@ fun HabitHeatMap(
 ) {
     AnalyticsCard(
         title = stringResource(R.string.habit_map),
+        icon = Icons.Rounded.Map,
         modifier = modifier.heightIn(max = 400.dp)
     ) {
         HeatMapCalendar(
@@ -57,12 +61,16 @@ fun HabitHeatMap(
             weekHeader = {
                 Box(
                     modifier = Modifier
-                        .padding(2.dp)
+                        .padding(start = 6.dp, top = 2.dp, bottom = 2.dp, end = 4.dp)
                         .size(30.dp)
+                        .background(
+                            color = MaterialTheme.colorScheme.secondaryContainer,
+                            shape = CircleShape
+                        )
                 ) {
                     Text(
                         text = it.name.take(1),
-                        color = MaterialTheme.colorScheme.primary,
+                        color = MaterialTheme.colorScheme.secondary,
                         modifier = Modifier.align(Alignment.Center)
                     )
                 }
