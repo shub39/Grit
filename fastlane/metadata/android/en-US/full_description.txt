@@ -2,7 +2,7 @@ Grit is a ToDo List and Daily habit tracker app that lets you visualise your pro
 
 Features
 
-- ToDo List with categories
+- ToDo List with categories and reminders
 - Daily Habit tracker with scheduled notifications
 - Habit map to visualise progress
 - Homescreen widgets
