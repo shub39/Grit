@@ -18,8 +18,9 @@ fun prepareLineChartData(
 ): List<Double> {
     val today = LocalDate.now()
     val weekFields = WeekFields.of(firstDay, 1)
+    val totalWeeks = 15
 
-    val startDateOfPeriod = today.minusWeeks(9).with(weekFields.dayOfWeek(), 1)
+    val startDateOfPeriod = today.minusWeeks(totalWeeks.toLong()).with(weekFields.dayOfWeek(), 1)
 
     val habitCompletionByWeek = habitstatuses
         .filter { !it.date.isBefore(startDateOfPeriod) && !it.date.isAfter(today) }
@@ -29,8 +30,8 @@ fun prepareLineChartData(
             yearOfWeek * 100 + weekOfYear
         }
         .mapValues { (_, habitStatuses) -> habitStatuses.size }
-    val values = (0..9).map { i ->
-        val currentWeekStart = today.minusWeeks(9 - i.toLong()).with(weekFields.dayOfWeek(), 1)
+    val values = (0..totalWeeks).map { i ->
+        val currentWeekStart = today.minusWeeks(totalWeeks - i.toLong()).with(weekFields.dayOfWeek(), 1)
         val yearOfWeek = currentWeekStart.get(weekFields.weekBasedYear())
         val weekOfYear = currentWeekStart.get(weekFields.weekOfWeekBasedYear())
         val weekKey = yearOfWeek * 100 + weekOfYear

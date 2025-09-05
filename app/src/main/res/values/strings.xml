@@ -120,4 +120,7 @@
     <string name="invalid_date_time">Time selected is in the past :\')</string>
     <string name="reorder_tasks">Reorder tasks</string>
     <string name="reorder_tasks_desc">Reorder tasks when marked as completed</string>
+    <string name="streak_histogram">Streak Analysis</string>
+    <string name="rolling_completions">Rolling Completions</string>
+    <string name="weeks">Weeks</string>
 </resources>

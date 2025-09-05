@@ -6,7 +6,10 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.rounded.ViewWeek
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -43,6 +46,7 @@ fun WeeklyBooleanHeatMap(
 ) {
     AnalyticsCard(
         title = stringResource(R.string.weekly_progress),
+        icon = Icons.Rounded.ViewWeek,
         modifier = modifier
     ) {
         HeatMapCalendar(
@@ -66,12 +70,16 @@ fun WeeklyBooleanHeatMap(
             weekHeader = {
                 Box(
                     modifier = Modifier
-                        .padding(2.dp)
+                        .padding(start = 6.dp, top = 2.dp, bottom = 2.dp)
                         .size(30.dp)
+                        .background(
+                            color = MaterialTheme.colorScheme.secondaryContainer,
+                            shape = CircleShape
+                        )
                 ) {
                     Text(
                         text = it.name.take(1),
-                        color = MaterialTheme.colorScheme.primary,
+                        color = MaterialTheme.colorScheme.secondary,
                         modifier = Modifier.align(Alignment.Center)
                     )
                 }

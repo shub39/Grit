@@ -2,6 +2,7 @@ package com.shub39.grit.tasks.presentation.ui.component
 
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.animateColorAsState
+import androidx.compose.animation.animateContentSize
 import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
 import androidx.compose.foundation.ExperimentalFoundationApi
@@ -27,6 +28,7 @@ import androidx.compose.ui.graphics.Shape
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import com.shub39.grit.tasks.domain.Task
 import java.time.format.DateTimeFormatter
 import java.time.format.FormatStyle
@@ -60,7 +62,7 @@ fun TaskCard(
     )
 
     Card(
-        modifier = modifier,
+        modifier = modifier.animateContentSize(),
         colors = cardColors,
         shape = shape,
     ) {
@@ -102,7 +104,9 @@ fun TaskCard(
                                     FormatStyle.SHORT
                                 )
                             ),
-                            style = MaterialTheme.typography.labelSmall
+                            style = MaterialTheme.typography.labelSmall.copy(
+                                fontSize = 11.sp
+                            )
                         )
                     }
                 }
