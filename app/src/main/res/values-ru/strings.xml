@@ -108,10 +108,28 @@
     <string name="font">Шрифт</string>
     <string name="font_desc">Выбрать шрифт приложения</string>
     <string name="habit_overview_widget">Привычки</string>
-    <string name="biometric_lock">Биометрическая блокировка</string>
-    <string name="biometric_lock_desc">Использовать биометрическую аутентификацию для разблокировки приложения</string>
+    <string name="biometric_lock">Блокировка с биометрией</string>
+    <string name="biometric_lock_desc">Использовать вход с биометрией для разблокировки приложения</string>
     <string name="biometric_failed">Для использования приложения требуется аутентификация</string>
-    <string name="biometric_not_available">Биометрическая аутентификация не доступна. Биометрическая блокировка будет отключена.</string>
+    <string name="biometric_not_available">Блокировка с биометрией не доступна. Блокировка будет отключена.</string>
     <string name="bmc">Угостите меня кофе</string>
     <string name="rate_on_play">Оценить в Google Play</string>
+    <string name="weekly_progress">Прогресс за неделю</string>
+    <string name="overall_analytics">Подробная аналитика</string>
+    <string name="progress">Прогресс</string>
+    <string name="unlock_more_plus">Разблокируйте больше с подпиской Plus</string>
+    <string name="unlock_plus">Разблокируйте с подпиской Plus</string>
+    <string name="grit_plus">Grit Plus</string>
+    <string name="monthly_progress">Месячный прогресс</string>
+    <string name="week_breakdown">Разбивка по дням недели</string>
+    <string name="foss">Вы используйте вариант приложения с открытым исходным кодом</string>
+    <string name="download_from_playstore">Скачать с Google Play</string>
+    <string name="foss_desc">Все улучшения разблокированы. Эта версия приложения не поддерживает встроенные покупки. Если это приложение сделало вашу жизнь лучше, поддержите меня, сделав пожертвование.</string>
+    <string name="no_habit_for_today">Нет привычек на сегодня</string>
+    <string name="add_reminder">Добавить напоминание</string>
+    <string name="invalid_date_time">Выбранное время уже прошло :\')</string>
+    <string name="reorder_tasks">Изменить порядок задач</string>
+    <string name="reorder_tasks_desc">Изменить порядок задач отмеченных выполненными</string>
+    <string name="weeks">Неделя</string>
+</resources>
 </resources>
