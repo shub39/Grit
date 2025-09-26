@@ -8,10 +8,12 @@ import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.FlowRow
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.lazy.LazyRow
+import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
@@ -50,10 +52,12 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardCapitalization
 import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.core.content.ContextCompat
 import com.shub39.grit.R
 import com.shub39.grit.core.presentation.component.GritBottomSheet
+import com.shub39.grit.core.presentation.theme.GritTheme
 import com.shub39.grit.tasks.domain.Category
 import com.shub39.grit.tasks.domain.Task
 import java.time.LocalDate
@@ -95,23 +99,34 @@ fun TaskUpsertSheet(
 
     GritBottomSheet(
         modifier = modifier,
+        padding = 0.dp,
         onDismissRequest = onDismissRequest
     ) {
         Icon(
             imageVector = if (edit) Icons.Rounded.Edit else Icons.Rounded.Add,
-            contentDescription = "Upsert"
+            contentDescription = "Upsert",
         )
 
         Text(
             text = stringResource(id = if (edit) R.string.edit_task else R.string.add_task),
             style = MaterialTheme.typography.headlineSmall,
-            textAlign = TextAlign.Center
+            textAlign = TextAlign.Center,
+            modifier = Modifier.padding(horizontal = 16.dp)
         )
 
-        FlowRow(
-            horizontalArrangement = Arrangement.Center
+//        FlowRow(
+//            horizontalArrangement = Arrangement.Center
+//        ) {
+//            categories.forEach { category ->
+
+//            }
+//        }
+
+        LazyRow(
+            horizontalArrangement = Arrangement.Center,
+            contentPadding = PaddingValues(horizontal = 16.dp)
         ) {
-            categories.forEach { category ->
+            items(categories) { category ->
                 ToggleButton(
                     checked = category.id == newTask.categoryId,
                     onCheckedChange = { newTask = newTask.copy(categoryId = category.id) },
@@ -135,12 +150,14 @@ fun TaskUpsertSheet(
                     newTask = newTask.copy(title = newTask.title.plus("\n"))
                 }
             ),
-            modifier = Modifier.fillMaxWidth()
+            modifier = Modifier
+                .padding(horizontal = 16.dp)
+                .fillMaxWidth()
         )
 
         Row(
             modifier = Modifier
-                .padding(vertical = 8.dp)
+                .padding(vertical = 8.dp, horizontal = 16.dp)
                 .fillMaxWidth(),
             verticalAlignment = Alignment.CenterVertically
         ) {
@@ -200,7 +217,9 @@ fun TaskUpsertSheet(
                 shape = MaterialTheme.shapes.extraLarge,
                 pressedShape = MaterialTheme.shapes.small
             ),
-            modifier = Modifier.fillMaxWidth(),
+            modifier = Modifier
+                .padding(start = 16.dp, end = 16.dp, bottom = 32.dp)
+                .fillMaxWidth(),
             enabled = newTask.title.isNotBlank()
                     && newTask.title.length <= 100
                     && newTask != task
@@ -265,5 +284,33 @@ fun TaskUpsertSheet(
                 }
             }
         }
+    }
+}
+
+@Preview
+@Composable
+private fun Preview() {
+    GritTheme {
+        TaskUpsertSheet(
+            task = Task(
+                id = 1,
+                categoryId = 1,
+                title = "Dummy Task",
+                index = 1,
+                status = true,
+                reminder = null
+            ),
+            categories = (0..10).map {
+                Category(
+                    id = it.toLong(),
+                    name = "Dummy category $it",
+                    index = it,
+                    color = "Yellow :)"
+                )
+            },
+            onDismissRequest = {  },
+            onUpsert = {  },
+            is24Hr = false
+        )
     }
 }
