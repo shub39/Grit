@@ -11,8 +11,10 @@ plugins {
 }
 
 val appName = "Grit"
-val appVersionCode = 5010
-val appVersionName = "5.0.1"
+val appVersionCode = 5100
+val appVersionName = "5.1.0"
+
+val gitHash = execute("git", "rev-parse", "HEAD").take(7)
 
 android {
     namespace = "com.shub39.grit"
@@ -44,6 +46,18 @@ android {
     buildTypes {
         release {
             resValue("string", "app_name", appName)
+            isMinifyEnabled = true
+            isShrinkResources = true
+            proguardFiles(
+                getDefaultProguardFile("proguard-android-optimize.txt"),
+                "proguard-rules.pro"
+            )
+        }
+
+        create("beta") {
+            resValue("string", "app_name", "$appName Beta")
+            applicationIdSuffix = ".beta"
+            versionNameSuffix = "-beta$gitHash"
             isMinifyEnabled = true
             isShrinkResources = true
             proguardFiles(
@@ -146,3 +160,7 @@ java {
         languageVersion = JavaLanguageVersion.of(17)
     }
 }
+
+fun execute(vararg command: String): String = providers.exec {
+    commandLine(*command)
+}.standardOutput.asText.get().trim()
