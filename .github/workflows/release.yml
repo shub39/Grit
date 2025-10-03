@@ -1,0 +1,106 @@
+name: release
+
+on:
+  push:
+    branches:
+      - master
+  workflow_dispatch: { }
+
+permissions:
+  contents: write
+
+jobs:
+  build:
+    if: startsWith(github.event.head_commit.message, '[release]')
+    runs-on: ubuntu-latest
+    env:
+      VERSION: $( echo ${{ github.event.head_commit.id }} | cut -c1-7 )
+      COMMIT: $( sed -E "s/(.*) <.*@.*>/\\1/g;t" <<< "${{ github.event.head_commit.message }}" | jq -Rsa . | tail -c +2 | head -c -2 )
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Setup JDK 17
+        uses: actions/setup-java@v4
+        with:
+          distribution: 'zulu'
+          java-version: 17
+          cache: 'gradle'
+
+      - name: Extract Version Name from Gradle
+        run: |
+          GRADLE_FILE="app/build.gradle.kts" 
+          VERSION_NAME=$(grep -E 'val appVersionName' $GRADLE_FILE | head -n 1 | awk -F'"' '{print $2}')
+
+          if [ -z "$VERSION_NAME" ]; then
+            echo "::error::Could not extract version name from $GRADLE_FILE."
+            exit 1
+          fi
+
+          echo "Extracted Version: $VERSION_NAME"
+          echo "VERSION_NAME=$VERSION_NAME" >> $GITHUB_ENV
+
+      - name: Extract Changelog Notes
+        run: |
+          VERSION="${{ env.VERSION_NAME }}"
+          CHANGELOG_FILE="CHANGELOG.md"
+          OUTPUT_FILE="commit.txt"
+          
+          sed -n "/## ${VERSION}/, /## [0-9]/p" ${CHANGELOG_FILE} | \
+          sed '1d;$d' | \
+          grep -v '^# Changelog' > ${OUTPUT_FILE}
+          
+          if [ ! -s "${OUTPUT_FILE}" ]; then
+            echo "::warning file=${CHANGELOG_FILE}::Could not find changelog for version ${VERSION}. commit.txt will be empty."
+          fi
+          
+          echo "Changelog extracted to commit.txt"
+
+      - name: Cook KeyStore
+        run: echo "${{ secrets.KEYSTORE_FILE }}" | base64 -d > $GITHUB_WORKSPACE/signing-key.jks
+
+      - name: Make gradlew executable
+        run: chmod +x ./gradlew
+
+      - name: Build with Gradle
+        run: |
+          ./gradlew assembleFossRelease \
+          -Pandroid.injected.signing.store.file=$GITHUB_WORKSPACE/signing-key.jks \
+          -Pandroid.injected.signing.store.password=${{ secrets.KEYSTORE_PASSWORD }} \
+          -Pandroid.injected.signing.key.alias=key0 \
+          -Pandroid.injected.signing.key.password=${{ secrets.KEY_PASSWORD }}
+          
+          APK_PATH=$(find app/build/outputs/ -name "*.apk" -print -quit)
+          
+          if [ -z "$APK_PATH" ]; then
+            echo "::error::Could not find APK file."
+            exit 1
+          fi
+          
+          echo "APK_PATH=$APK_PATH" >> $GITHUB_ENV
+
+      - name: Upload APK
+        uses: actions/upload-artifact@v4
+        with:
+          name: app-release.apk
+          path: app/build/outputs/**/*.apk
+
+      - name: Create Release
+        uses: softprops/action-gh-release@v2
+        with:
+          make_latest: true
+          tag_name: ${{ env.VERSION_NAME }}
+          name: ${{ env.VERSION_NAME }}
+          body_path: commit.txt
+          files: ${{ env.APK_PATH }}
+
+      - name: Notify on Discord
+        shell: bash
+        env:
+          WEBHOOK: ${{ secrets.DISCORD_WEBHOOK }}
+        run: |
+          message=$(echo "**New Grit Release** **${{ env.VERSION_NAME }}** \n https://github.com/shub39/Grit/releases")
+          curl -F "payload_json={\"content\":\"${message}\"}" \
+          ${{ env.WEBHOOK }}
