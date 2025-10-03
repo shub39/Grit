@@ -8,7 +8,7 @@ on:
 
 jobs:
   build:
-    if: endsWith(github.event.head_commit.message, '[ci]')
+    if: startsWith(github.event.head_commit.message, '[beta]')
     runs-on: ubuntu-latest
     env:
       VERSION: $( echo ${{ github.event.head_commit.id }} | cut -c1-7 )
