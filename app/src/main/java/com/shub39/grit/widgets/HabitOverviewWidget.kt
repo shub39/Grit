@@ -182,7 +182,7 @@ class HabitOverviewWidget : GlanceAppWidget(), KoinComponent {
                                     if (done) GlanceTheme.colors.primary
                                     else GlanceTheme.colors.secondaryContainer
                                 )
-                                .cornerRadius(100.dp)
+                                .cornerRadius(if (done) 20.dp else 100.dp)
                                 .padding(horizontal = 10.dp, vertical = 4.dp)
                                 .clickable { onHabitClick(habit.id) }
                         ) {

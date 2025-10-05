@@ -162,7 +162,9 @@ class AllTasksWidget : GlanceAppWidget(), KoinComponent {
                                             if (!status) GlanceTheme.colors.secondaryContainer
                                             else GlanceTheme.colors.tertiaryContainer
                                         )
-                                        .cornerRadius(100.dp)
+                                        .cornerRadius(
+                                            if (!status) 100.dp else 20.dp
+                                        )
                                         .padding(horizontal = 10.dp, vertical = 4.dp)
                                         .clickable { onTaskStatusUpdate(task) }
                                 ) {
