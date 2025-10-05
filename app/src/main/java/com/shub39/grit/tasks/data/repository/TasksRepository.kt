@@ -9,13 +9,15 @@ import com.shub39.grit.tasks.data.database.TasksDao
 import com.shub39.grit.tasks.domain.Category
 import com.shub39.grit.tasks.domain.Task
 import com.shub39.grit.tasks.domain.TaskRepo
+import com.shub39.grit.widgets.AllTasksWidgetRepository
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.map
 
 class TasksRepository(
     private val tasksDao: TasksDao,
-    private val categoryDao: CategoryDao
+    private val categoryDao: CategoryDao,
+    private val allTasksWidgetRepository: AllTasksWidgetRepository
 ): TaskRepo {
     override fun getTasksFlow(): Flow<Map<Category, List<Task>>> {
         val tasksFlow = tasksDao.getTasksFlow().map { entities ->
@@ -46,29 +48,36 @@ class TasksRepository(
 
     override suspend fun updateTaskIndexById(id: Long, index: Int) {
         tasksDao.updateTaskIndexById(id, index)
+        allTasksWidgetRepository.update()
     }
 
     override suspend fun upsertTask(task: Task) {
         tasksDao.upsertTask(task.toTaskEntity())
+        allTasksWidgetRepository.update()
     }
 
     override suspend fun deleteTask(task: Task) {
         tasksDao.deleteTask(task.toTaskEntity())
+        allTasksWidgetRepository.update()
     }
 
     override suspend fun deleteAllTasks() {
         tasksDao.deleteAllTasks()
+        allTasksWidgetRepository.update()
     }
 
     override suspend fun upsertCategory(category: Category) {
         categoryDao.upsertCategory(category.toCategoryEntity())
+        allTasksWidgetRepository.update()
     }
 
     override suspend fun deleteCategory(category: Category) {
         categoryDao.deleteCategory(category.toCategoryEntity())
+        allTasksWidgetRepository.update()
     }
 
     override suspend fun deleteAllCategories() {
         categoryDao.deleteAllCategories()
+        allTasksWidgetRepository.update()
     }
 }
