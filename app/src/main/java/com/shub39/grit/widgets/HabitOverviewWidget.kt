@@ -178,36 +178,39 @@ class HabitOverviewWidget : GlanceAppWidget(), KoinComponent {
                         Column(
                             modifier = GlanceModifier
                                 .fillMaxWidth()
-                                .padding(horizontal = 10.dp, vertical = 2.dp)
                                 .background(
                                     if (done) GlanceTheme.colors.primary
                                     else GlanceTheme.colors.secondaryContainer
                                 )
-                                .cornerRadius(10.dp)
-                                .padding(4.dp)
+                                .cornerRadius(if (done) 20.dp else 100.dp)
+                                .padding(horizontal = 10.dp, vertical = 4.dp)
                                 .clickable { onHabitClick(habit.id) }
                         ) {
-                            Text(
-                                text = habit.title,
-                                modifier = GlanceModifier.fillMaxWidth(),
-                                style = TextStyle(
-                                    color = if (done) GlanceTheme.colors.onPrimary else GlanceTheme.colors.onSecondaryContainer,
-                                    fontSize = 16.sp,
-                                    fontWeight = FontWeight.Bold
-                                ),
-                                maxLines = 1
-                            )
-
-                            if (habit.description.isNotEmpty()) {
+                            Column(modifier = GlanceModifier.padding(8.dp)) {
                                 Text(
-                                    text = habit.description,
-                                    modifier = GlanceModifier.fillMaxWidth(),
+                                    text = habit.title,
+                                    modifier = GlanceModifier
+                                        .fillMaxWidth(),
                                     style = TextStyle(
                                         color = if (done) GlanceTheme.colors.onPrimary else GlanceTheme.colors.onSecondaryContainer,
-                                        fontSize = 12.sp
+                                        fontSize = 20.sp,
+                                        fontWeight = FontWeight.Bold
                                     ),
                                     maxLines = 1
                                 )
+
+                                if (habit.description.isNotEmpty()) {
+                                    Text(
+                                        text = habit.description,
+                                        modifier = GlanceModifier
+                                            .fillMaxWidth(),
+                                        style = TextStyle(
+                                            color = if (done) GlanceTheme.colors.onPrimary else GlanceTheme.colors.onSecondaryContainer,
+                                            fontSize = 12.sp
+                                        ),
+                                        maxLines = 1
+                                    )
+                                }
                             }
                         }
                         Spacer(GlanceModifier.height(4.dp))
@@ -227,10 +230,10 @@ class HabitOverviewWidget : GlanceAppWidget(), KoinComponent {
                             } else "",
                             modifier = GlanceModifier
                                 .clickable(actionStartActivity<MainActivity>())
-                                .padding(horizontal = 16.dp, vertical = 8.dp),
+                                .padding(horizontal = 16.dp, vertical = 16.dp),
                             style = TextStyle(
                                 color = GlanceTheme.colors.primary,
-                                fontSize = 20.sp,
+                                fontSize = 16.sp,
                                 textAlign = TextAlign.Center
                             )
                         )

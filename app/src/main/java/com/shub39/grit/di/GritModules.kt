@@ -23,6 +23,7 @@ import com.shub39.grit.viewmodels.MainViewModel
 import com.shub39.grit.viewmodels.SettingsViewModel
 import com.shub39.grit.viewmodels.StateLayer
 import com.shub39.grit.viewmodels.TasksViewModel
+import com.shub39.grit.widgets.AllTasksWidgetRepository
 import com.shub39.grit.widgets.HabitOverviewWidgetRepository
 import com.shub39.grit.widgets.HabitStreakWidgetRepository
 import org.koin.core.module.dsl.singleOf
@@ -67,6 +68,7 @@ val appModule = module {
     // widget repositories
     singleOf(::HabitOverviewWidgetRepository)
     singleOf(::HabitStreakWidgetRepository)
+    singleOf(::AllTasksWidgetRepository)
 
     // Revenuecat
     singleOf(::BillingHandler)

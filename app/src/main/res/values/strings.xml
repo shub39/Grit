@@ -121,4 +121,6 @@
     <string name="reorder_tasks">Reorder tasks</string>
     <string name="reorder_tasks_desc">Reorder tasks when marked as completed</string>
     <string name="weeks">Weeks</string>
+    <string name="open_app">Open App</string>
+    <string name="all_tasks">All Tasks</string>
 </resources>
