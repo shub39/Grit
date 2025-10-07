@@ -30,7 +30,7 @@ class NotificationAlarmScheduler(
 
         var attempt = 0
         while (scheduleTime.isBefore(LocalDateTime.now()) && attempt < 365) {
-            scheduleTime = scheduleTime.plusDays(1)
+            scheduleTime = scheduleTime.plusDays(1).withSecond(0)
             attempt++
         }
 

@@ -7,6 +7,7 @@ import android.app.PendingIntent
 import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageManager
+import android.util.Log
 import androidx.core.app.ActivityCompat
 import androidx.core.app.NotificationCompat
 import androidx.core.app.NotificationManagerCompat
@@ -117,6 +118,8 @@ fun createNotificationChannel(context: Context) {
 
 // shows habit notification if permission granted
 fun habitNotification(context: Context, habit: Habit) {
+    Log.d("Habit Notification", "Sending Notification")
+
     val intent = Intent(context, NotificationReceiver::class.java).apply {
         putExtra("habit_id", habit.id)
         action = IntentActions.ADD_HABIT_STATUS.action
@@ -148,6 +151,8 @@ fun habitNotification(context: Context, habit: Habit) {
         }
 
         notify(habit.id.toInt(), builder.build())
+
+        Log.d("Habit Notification", "Notification sent!")
     }
 }
 
