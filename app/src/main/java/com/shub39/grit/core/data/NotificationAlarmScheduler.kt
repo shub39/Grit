@@ -30,7 +30,7 @@ class NotificationAlarmScheduler(
 
         var attempt = 0
         while (scheduleTime.isBefore(LocalDateTime.now()) && attempt < 365) {
-            scheduleTime = scheduleTime.plusDays(1).withSecond(0)
+            scheduleTime = scheduleTime.plusDays(1)
             attempt++
         }
 
@@ -48,7 +48,7 @@ class NotificationAlarmScheduler(
 
         alarmManager.setExactAndAllowWhileIdle(
             AlarmManager.RTC_WAKEUP,
-            scheduleTime.atZone(ZoneId.systemDefault()).toEpochSecond() * 1000,
+            scheduleTime.withSecond(0).atZone(ZoneId.systemDefault()).toEpochSecond() * 1000,
             pendingIntent
         )
 
