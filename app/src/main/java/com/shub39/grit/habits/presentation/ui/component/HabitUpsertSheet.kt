@@ -16,12 +16,16 @@ import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.rounded.Alarm
 import androidx.compose.material.icons.rounded.Create
+import androidx.compose.material.icons.rounded.Delete
 import androidx.compose.material.icons.rounded.Edit
+import androidx.compose.material.icons.rounded.Warning
 import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.ButtonShapes
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.ExperimentalMaterial3ExpressiveApi
 import androidx.compose.material3.FilledTonalIconButton
+import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
@@ -40,6 +44,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardCapitalization
 import androidx.compose.ui.text.style.TextAlign
@@ -63,13 +68,15 @@ fun HabitUpsertSheet(
     onUpsertHabit: (Habit) -> Unit,
     is24Hr: Boolean,
     modifier: Modifier = Modifier,
-    edit: Boolean = false
+    edit: Boolean = false,
+    onDelete: ((Habit) -> Unit)? = null
 ) {
     val context = LocalContext.current
 
     var newHabit by remember { mutableStateOf(habit) }
 
     var timePickerDialog by remember { mutableStateOf(false) }
+    var deleteDialog by remember { mutableStateOf(false) }
 
     val launcher = rememberLauncherForActivityResult(
         contract = ActivityResultContracts.RequestPermission()
@@ -241,6 +248,23 @@ fun HabitUpsertSheet(
             Text(text = stringResource(id = if (edit) R.string.update else R.string.add_habit))
         }
 
+        if (edit && onDelete != null) {
+            OutlinedButton(
+                onClick = { deleteDialog = true },
+                modifier = Modifier.fillMaxWidth(),
+                colors = ButtonDefaults.outlinedButtonColors(
+                    contentColor = MaterialTheme.colorScheme.error
+                )
+            ) {
+                Icon(
+                    imageVector = Icons.Rounded.Delete,
+                    contentDescription = "Delete Habit"
+                )
+                Spacer(modifier = Modifier.padding(4.dp))
+                Text(text = stringResource(R.string.delete))
+            }
+        }
+
         if (timePickerDialog) {
             val timePickerState = rememberTimePickerState(
                 initialHour = newHabit.time.hour,
@@ -284,6 +308,43 @@ fun HabitUpsertSheet(
                     modifier = Modifier.fillMaxWidth()
                 ) {
                     Text(text = stringResource(R.string.done))
+                }
+            }
+        }
+
+        if (deleteDialog) {
+            GritDialog(
+                onDismissRequest = { deleteDialog = false }
+            ) {
+                Icon(
+                    imageVector = Icons.Rounded.Warning,
+                    contentDescription = "Warning"
+                )
+
+                Text(
+                    text = stringResource(R.string.delete),
+                    textAlign = TextAlign.Center,
+                    style = MaterialTheme.typography.titleMedium,
+                    fontWeight = FontWeight.Bold
+                )
+
+                Text(
+                    text = stringResource(id = R.string.delete_warning),
+                    textAlign = TextAlign.Center
+                )
+
+                Button(
+                    onClick = {
+                        deleteDialog = false
+                        onDismissRequest()
+                        onDelete?.invoke(habit)
+                    },
+                    modifier = Modifier.fillMaxWidth(),
+                    colors = ButtonDefaults.buttonColors(
+                        containerColor = MaterialTheme.colorScheme.error
+                    )
+                ) {
+                    Text(text = stringResource(id = R.string.delete))
                 }
             }
         }

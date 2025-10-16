@@ -2,6 +2,7 @@ package com.shub39.grit.habits.presentation.ui.section
 
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.core.animateDpAsState
+import androidx.compose.foundation.combinedClickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
@@ -69,6 +70,7 @@ fun HabitsList(
     onNavigateToOverallAnalytics: () -> Unit
 ) = PageFill {
     var editState by remember { mutableStateOf(false) }
+    var editHabit: Habit? by remember { mutableStateOf(null) }
     val lazyListState = rememberLazyListState()
     val fabVisible by remember {
         derivedStateOf {
@@ -180,6 +182,7 @@ fun HabitsList(
                         startingDay = state.startingDay,
                         editState = editState,
                         onNavigateToAnalytics = onNavigateToAnalytics,
+                        onEditHabit = { habit -> editHabit = habit },
                         timeFormat = state.timeFormat,
                         reorderHandle = {
                             Icon(
@@ -276,6 +279,21 @@ fun HabitsList(
             timeFormat = state.timeFormat,
             onUpsertHabit = { onAction(HabitsPageAction.AddHabit(it)) },
             is24Hr = state.is24Hr,
+        )
+    }
+
+    // edit sheet
+    if (editHabit != null) {
+        HabitUpsertSheet(
+            habit = editHabit!!,
+            onDismissRequest = { editHabit = null },
+            timeFormat = state.timeFormat,
+            onUpsertHabit = { onAction(HabitsPageAction.UpdateHabit(it)) },
+            is24Hr = state.is24Hr,
+            edit = true,
+            onDelete = { habit ->
+                onAction(HabitsPageAction.DeleteHabit(habit))
+            }
         )
     }
 }

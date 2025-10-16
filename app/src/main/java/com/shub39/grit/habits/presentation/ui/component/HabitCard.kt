@@ -6,6 +6,7 @@ import androidx.compose.animation.animateColorAsState
 import androidx.compose.animation.animateContentSize
 import androidx.compose.foundation.background
 import androidx.compose.foundation.basicMarquee
+import androidx.compose.foundation.combinedClickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -55,6 +56,7 @@ fun HabitCard(
     completed: Boolean,
     action: (HabitsPageAction) -> Unit,
     onNavigateToAnalytics: () -> Unit,
+    onEditHabit: (Habit) -> Unit,
     editState: Boolean,
     compactView: Boolean,
     startingDay: DayOfWeek,
@@ -98,13 +100,21 @@ fun HabitCard(
             containerColor = cardBackground,
             contentColor = cardContent
         ),
-        onClick = {
-            if (canCompleteToday) {
-                action(HabitsPageAction.InsertStatus(habit))
-            }
-        },
         shape = shape,
-        modifier = modifier.animateContentSize()
+        modifier = modifier
+            .animateContentSize()
+            .combinedClickable(
+                onClick = {
+                    if (canCompleteToday) {
+                        action(HabitsPageAction.InsertStatus(habit))
+                    }
+                },
+                onLongClick = {
+                    if (!editState) {
+                        onEditHabit(habit)
+                    }
+                }
+            )
     ) {
         ListItem(
             modifier = Modifier
