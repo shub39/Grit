@@ -16,7 +16,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
-import com.mikepenz.aboutlibraries.ui.compose.android.rememberLibraries
+import com.mikepenz.aboutlibraries.ui.compose.android.produceLibraries
 import com.mikepenz.aboutlibraries.ui.compose.m3.LibrariesContainer
 import com.shub39.grit.R
 import com.shub39.grit.core.presentation.component.PageFill
@@ -31,7 +31,7 @@ fun AboutLibraries(
             .widthIn(max = 500.dp)
             .fillMaxSize()
     ) {
-        val libraries by rememberLibraries (R.raw.aboutlibraries)
+        val libraries by produceLibraries(R.raw.aboutlibraries)
 
         TopAppBar(
             title = { Text(stringResource(R.string.about_libraries)) },

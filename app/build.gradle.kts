@@ -1,4 +1,6 @@
 import com.android.build.gradle.internal.api.ApkVariantOutputImpl
+import com.mikepenz.aboutlibraries.plugin.DuplicateMode
+import com.mikepenz.aboutlibraries.plugin.DuplicateRule
 
 plugins {
     alias(libs.plugins.android.application)
@@ -112,6 +114,10 @@ android {
 
 aboutLibraries {
     export.excludeFields.add("generated")
+    library {
+        duplicationMode = DuplicateMode.MERGE
+        duplicationRule = DuplicateRule.SIMPLE
+    }
 }
 
 dependencies {
