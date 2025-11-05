@@ -77,7 +77,7 @@ fun AnalyticsPage(
     val currentMonth = remember { YearMonth.now() }
 
     val currentHabit = state.habitsWithStatuses.keys.find { it.id == state.analyticsHabitId }!!
-    val statuses = state.habitsWithStatuses[currentHabit]!!
+    val statuses = state.habitsWithStatuses[currentHabit] ?: emptyList()
 
     var lineChartData = prepareLineChartData(state.startingDay, statuses)
     var weekDayData = prepareWeekDayData(statuses.map { it.date }, primary)
