@@ -108,8 +108,7 @@ class HabitRepository(
                     )
                 }
             )
-        }
-            .flowOn(Dispatchers.Default)
+        }.flowOn(Dispatchers.Default)
     }
 
     override suspend fun getStatusForHabit(id: Long): List<HabitStatus> {
