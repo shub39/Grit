@@ -54,6 +54,7 @@ import com.shub39.grit.habits.presentation.ui.component.HabitUpsertSheet
 import com.shub39.grit.habits.presentation.ui.component.WeekDayBreakdown
 import com.shub39.grit.habits.presentation.ui.component.WeeklyActivity
 import com.shub39.grit.habits.presentation.ui.component.WeeklyBooleanHeatMap
+import kotlinx.collections.immutable.toImmutableList
 import java.time.YearMonth
 
 @OptIn(ExperimentalMaterial3Api::class, ExperimentalMaterial3ExpressiveApi::class)
@@ -175,7 +176,7 @@ fun AnalyticsPage(
             item {
                 WeeklyActivity(
                     primary = primary,
-                    lineChartData = currentHabit.weeklyComparisonData
+                    lineChartData = currentHabit.weeklyComparisonData.toImmutableList()
                 )
             }
 
