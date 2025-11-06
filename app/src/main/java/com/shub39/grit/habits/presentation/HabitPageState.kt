@@ -2,15 +2,16 @@ package com.shub39.grit.habits.presentation
 
 import androidx.compose.runtime.Immutable
 import androidx.compose.runtime.Stable
-import com.shub39.grit.habits.domain.Habit
-import com.shub39.grit.habits.domain.HabitStatus
+import com.shub39.grit.habits.domain.HabitWithAnalytics
+import com.shub39.grit.habits.domain.OverallAnalytics
 import java.time.DayOfWeek
 
 @Stable
 @Immutable
 data class HabitPageState(
-    val habitsWithStatuses: Map<Habit, List<HabitStatus>> = emptyMap(),
-    val completedHabits: List<Habit> = emptyList(),
+    val habitsWithAnalytics: List<HabitWithAnalytics> = emptyList(),
+    val completedHabitIds: List<Long> = emptyList(),
+    val overallAnalytics: OverallAnalytics = OverallAnalytics(),
     val analyticsHabitId: Long? = null,
     val showHabitAddSheet: Boolean = false,
     val isUserSubscribed: Boolean = false,

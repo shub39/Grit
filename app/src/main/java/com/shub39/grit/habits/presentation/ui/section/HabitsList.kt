@@ -12,7 +12,7 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.itemsIndexed
+import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -76,10 +76,8 @@ fun HabitsList(
         }
     }
 
-    var reorderableHabits by remember(state.habitsWithStatuses) {
-        mutableStateOf(
-            state.habitsWithStatuses.entries.toList()
-        )
+    var reorderableHabits by remember(state.habitsWithAnalytics) {
+        mutableStateOf(state.habitsWithAnalytics)
     }
     val reorderableListState =
         rememberReorderableLazyListState(lazyListState) { from, to ->
@@ -105,7 +103,7 @@ fun HabitsList(
             subtitle = {
                 Column {
                     Text(
-                        text = "${state.completedHabits.size}/${state.habitsWithStatuses.size} " + stringResource(
+                        text = "${state.completedHabitIds.size}/${state.habitsWithAnalytics.size} " + stringResource(
                             R.string.completed
                         )
                     )
@@ -113,7 +111,7 @@ fun HabitsList(
             },
             actions = {
                 AnimatedVisibility(
-                    visible = state.habitsWithStatuses.isNotEmpty()
+                    visible = state.habitsWithAnalytics.isNotEmpty()
                 ) {
                    Row {
                        FilledTonalIconToggleButton(
@@ -147,7 +145,7 @@ fun HabitsList(
                                pressedShape = MaterialTheme.shapes.extraSmall,
                            ),
                            onCheckedChange = { editState = it },
-                           enabled = state.habitsWithStatuses.isNotEmpty()
+                           enabled = state.habitsWithAnalytics.isNotEmpty()
                        ) {
                            Icon(
                                imageVector = Icons.Rounded.Reorder,
@@ -166,16 +164,15 @@ fun HabitsList(
             verticalArrangement = Arrangement.spacedBy(8.dp)
         ) {
             // habits
-            itemsIndexed(reorderableHabits, key = { _, it -> it.key.id }) { index, habit ->
-                ReorderableItem(reorderableListState, key = habit.key.id) {
+            items(reorderableHabits, key = { it.habit.id }) { habitWithAnalytics ->
+                ReorderableItem(reorderableListState, key = habitWithAnalytics.habit.id) {
                     val cardCorners by animateDpAsState(
                         targetValue = if (!it) 20.dp else 16.dp
                     )
 
                     HabitCard(
-                        habit = habit.key,
-                        statusList = habit.value,
-                        completed = state.completedHabits.contains(habit.key),
+                        habitWithAnalytics = habitWithAnalytics,
+                        completed = state.completedHabitIds.contains(habitWithAnalytics.habit.id),
                         action = onAction,
                         startingDay = state.startingDay,
                         editState = editState,
@@ -188,7 +185,7 @@ fun HabitsList(
                                 modifier = Modifier.draggableHandle(
                                     onDragStopped = {
                                         onAction(
-                                            HabitsPageAction.ReorderHabits(reorderableHabits.mapIndexed { index, entry -> index to entry.key })
+                                            HabitsPageAction.ReorderHabits(reorderableHabits.mapIndexed { index, entry -> index to entry })
                                         )
                                     }
                                 )
@@ -201,11 +198,10 @@ fun HabitsList(
             }
 
             // when no habits
-            if (state.habitsWithStatuses.isEmpty()) {
+            if (state.habitsWithAnalytics.isEmpty()) {
                 item { Empty() }
             }
 
-            // ui sweetener
             item { Spacer(modifier = Modifier.height(60.dp)) }
         }
     }
@@ -222,7 +218,7 @@ fun HabitsList(
             containerColor = MaterialTheme.colorScheme.secondaryContainer,
             contentColor = MaterialTheme.colorScheme.onSecondaryContainer,
             modifier = Modifier.animateFloatingActionButton(
-                visible = state.habitsWithStatuses.isNotEmpty() && fabVisible,
+                visible = state.habitsWithAnalytics.isNotEmpty() && fabVisible,
                 alignment = Alignment.BottomEnd
             )
         ) {
@@ -253,7 +249,7 @@ fun HabitsList(
                 )
 
                 AnimatedVisibility(
-                    visible = state.habitsWithStatuses.isEmpty()
+                    visible = state.habitsWithAnalytics.isEmpty()
                 ) {
                     Text(text = stringResource(id = R.string.add_habit))
                 }

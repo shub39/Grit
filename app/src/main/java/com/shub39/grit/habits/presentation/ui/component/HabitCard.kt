@@ -39,9 +39,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import com.kizitonwose.calendar.compose.WeekCalendar
 import com.kizitonwose.calendar.compose.weekcalendar.rememberWeekCalendarState
-import com.shub39.grit.core.presentation.countCurrentStreak
-import com.shub39.grit.habits.domain.Habit
-import com.shub39.grit.habits.domain.HabitStatus
+import com.shub39.grit.habits.domain.HabitWithAnalytics
 import com.shub39.grit.habits.presentation.HabitsPageAction
 import java.time.DayOfWeek
 import java.time.LocalDate
@@ -50,8 +48,7 @@ import java.time.format.DateTimeFormatter
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun HabitCard(
-    habit: Habit,
-    statusList: List<HabitStatus>,
+    habitWithAnalytics: HabitWithAnalytics,
     completed: Boolean,
     action: (HabitsPageAction) -> Unit,
     onNavigateToAnalytics: () -> Unit,
@@ -64,7 +61,7 @@ fun HabitCard(
     modifier: Modifier = Modifier
 ) {
     val today = LocalDate.now()
-    val canCompleteToday = today.dayOfWeek in habit.days
+    val canCompleteToday = today.dayOfWeek in habitWithAnalytics.habit.days
 
     // animated colors
     val cardContent by animateColorAsState(
@@ -87,7 +84,7 @@ fun HabitCard(
     )
 
     val weekState = rememberWeekCalendarState(
-        startDate = habit.time.toLocalDate().minusMonths(12),
+        startDate = habitWithAnalytics.habit.time.toLocalDate().minusMonths(12),
         endDate = LocalDate.now(),
         firstVisibleWeekDate = LocalDate.now(),
         firstDayOfWeek = startingDay
@@ -100,7 +97,7 @@ fun HabitCard(
         ),
         onClick = {
             if (canCompleteToday) {
-                action(HabitsPageAction.InsertStatus(habit))
+                action(HabitsPageAction.InsertStatus(habitWithAnalytics.habit))
             }
         },
         shape = shape,
@@ -133,7 +130,7 @@ fun HabitCard(
                     horizontalArrangement = Arrangement.SpaceBetween
                 ) {
                     Text(
-                        text = habit.title,
+                        text = habitWithAnalytics.habit.title,
                         maxLines = 1,
                         fontWeight = FontWeight.Bold,
                         modifier = Modifier.basicMarquee()
@@ -141,9 +138,9 @@ fun HabitCard(
                 }
             },
             supportingContent = {
-                if (habit.reminder) {
+                if (habitWithAnalytics.habit.reminder) {
                     Text(
-                        text = habit.time.format(DateTimeFormatter.ofPattern(timeFormat))
+                        text = habitWithAnalytics.habit.time.format(DateTimeFormatter.ofPattern(timeFormat))
                     )
                 }
             },
@@ -162,13 +159,13 @@ fun HabitCard(
                         )
 
                         Text(
-                            text = countCurrentStreak(statusList.map { it.date }).toString()
+                            text = habitWithAnalytics.currentStreak.toString()
                         )
                     }
 
                     IconButton(
                         onClick = {
-                            action(HabitsPageAction.PrepareAnalytics(habit))
+                            action(HabitsPageAction.PrepareAnalytics(habitWithAnalytics.habit))
                             onNavigateToAnalytics()
                         },
                         enabled = !editState
@@ -193,9 +190,9 @@ fun HabitCard(
                 contentPadding = PaddingValues(8.dp),
                 state = weekState,
                 dayContent = { weekDay ->
-                    val done = statusList.any { it.date == weekDay.date }
+                    val done = habitWithAnalytics.statuses.any { it.date == weekDay.date }
                     val validDay =
-                        weekDay.date <= today && weekDay.date.dayOfWeek in habit.days
+                        weekDay.date <= today && weekDay.date.dayOfWeek in habitWithAnalytics.habit.days
 
                     Box(
                         modifier = Modifier
@@ -204,9 +201,9 @@ fun HabitCard(
                             .then(
                                 if (done) {
                                     val donePrevious =
-                                        statusList.any { it.date == weekDay.date.minusDays(1) }
+                                        habitWithAnalytics.statuses.any { it.date == weekDay.date.minusDays(1) }
                                     val doneAfter =
-                                        statusList.any { it.date == weekDay.date.plusDays(1) }
+                                        habitWithAnalytics.statuses.any { it.date == weekDay.date.plusDays(1) }
 
                                     Modifier.background(
                                         color = MaterialTheme.colorScheme.primary,

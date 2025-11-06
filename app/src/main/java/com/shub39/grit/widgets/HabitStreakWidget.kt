@@ -45,9 +45,9 @@ import com.shub39.grit.R
 import com.shub39.grit.app.MainActivity
 import com.shub39.grit.core.data.toHabit
 import com.shub39.grit.core.data.toHabitStatus
-import com.shub39.grit.core.presentation.countCurrentStreak
 import com.shub39.grit.habits.data.database.HabitDao
 import com.shub39.grit.habits.data.database.HabitStatusDao
+import com.shub39.grit.habits.data.repository.countCurrentStreak
 import com.shub39.grit.habits.domain.Habit
 import com.shub39.grit.habits.domain.HabitStatus
 import kotlinx.coroutines.flow.Flow

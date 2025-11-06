@@ -75,7 +75,7 @@ fun HabitHeatMap(
                     )
                 }
             },
-            dayContent = { day, week ->
+            dayContent = { day, _ ->
                 Box(
                     modifier = Modifier
                         .padding(2.dp)
@@ -84,8 +84,8 @@ fun HabitHeatMap(
                             shape = MaterialTheme.shapes.small,
                             color = heatMapData[day.date]?.let {
                                 MaterialTheme.colorScheme.primary.copy(
-                                    alpha = if (state.habitsWithStatuses.isNotEmpty()) {
-                                        (it.toFloat() / state.habitsWithStatuses.size).coerceIn(
+                                    alpha = if (state.habitsWithAnalytics.isNotEmpty()) {
+                                        (it.toFloat() / state.habitsWithAnalytics.size).coerceIn(
                                             0f,
                                             1f
                                         )

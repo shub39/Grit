@@ -22,12 +22,11 @@ import com.shub39.grit.core.domain.Fonts
 import com.shub39.grit.core.presentation.theme.GritTheme
 import com.shub39.grit.core.presentation.theme.Theme
 import com.shub39.grit.habits.domain.Habit
-import com.shub39.grit.habits.domain.HabitStatus
+import com.shub39.grit.habits.domain.HabitWithAnalytics
 import com.shub39.grit.habits.presentation.ui.section.AnalyticsPage
 import com.shub39.grit.habits.presentation.ui.section.HabitsList
 import com.shub39.grit.habits.presentation.ui.section.OverallAnalytics
 import kotlinx.serialization.Serializable
-import java.time.LocalDate
 import java.time.LocalDateTime
 
 @Serializable
@@ -87,27 +86,28 @@ fun HabitsGraph(
 @Preview
 @Composable
 private fun Preview() {
-    val habitsWithStatuses = (0L..1L).associate { habitId ->
-        Habit(
-            id = habitId,
-            title = "Habit $habitId",
-            description = "This is Habit no: $habitId",
-            time = LocalDateTime.now().minusDays(habitId),
-            index = habitId.toInt(),
-            days = emptySet(),
-            reminder = false
-        ) to (0L .. 10L).map {
-            HabitStatus(
-                id = it,
-                habitId = habitId,
-                date = LocalDate.now().minusDays(it)
-            )
-        }
+    val habitsWithStatuses = (0L..1L).map { habitId ->
+        HabitWithAnalytics(
+            habit = Habit(
+                id = habitId,
+                title = "Habit $habitId",
+                description = "Description $habitId",
+                time = LocalDateTime.now(),
+                days = emptySet(),
+                index = habitId.toInt(),
+                reminder = false
+            ),
+            statuses = emptyList(),
+            weeklyComparisonData = emptyList(),
+            weekDayFrequencyData = emptyMap(),
+            currentStreak = 100,
+            bestStreak = 100,
+            startedDaysAgo = 12,
+        )
     }
 
     var state by remember { mutableStateOf(HabitPageState(
-        habitsWithStatuses = habitsWithStatuses,
-        completedHabits = habitsWithStatuses.keys.toList(),
+        habitsWithAnalytics = habitsWithStatuses,
         isUserSubscribed = true
     )) }
 
@@ -125,36 +125,7 @@ private fun Preview() {
             ) {
                 HabitsGraph(
                     state = state,
-                    onAction = {
-                        when (it) {
-                            is HabitsPageAction.PrepareAnalytics -> {
-                                state = state.copy(
-                                    analyticsHabitId = it.habit.id
-                                )
-                            }
-
-                            is HabitsPageAction.InsertStatus -> {
-                                state = state.copy(
-                                    habitsWithStatuses = state.habitsWithStatuses.mapValues { (habit, statuses) ->
-                                        if (habit.id == it.habit.id) {
-                                            if (statuses.any { status -> status.date == it.date }) {
-                                                statuses.filter { status -> status.date != it.date }
-                                            } else {
-                                                statuses + HabitStatus(habitId = habit.id, date = it.date)
-                                            }
-                                        } else statuses
-                                    },
-                                    completedHabits = if (state.completedHabits.contains(it.habit)) {
-                                        state.completedHabits - it.habit
-                                    } else if (it.date == LocalDate.now()) {
-                                        state.completedHabits + it.habit
-                                    } else state.completedHabits
-                                )
-                            }
-
-                            else -> {}
-                        }
-                    }
+                    onAction = {}
                 )
             }
         }
