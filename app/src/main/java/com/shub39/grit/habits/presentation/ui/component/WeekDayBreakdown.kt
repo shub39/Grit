@@ -27,12 +27,14 @@ import ir.ehsannarmani.compose_charts.models.LabelHelperProperties
 import ir.ehsannarmani.compose_charts.models.LabelProperties
 import ir.ehsannarmani.compose_charts.models.PopupProperties
 import ir.ehsannarmani.compose_charts.models.VerticalIndicatorProperties
+import kotlinx.collections.immutable.ImmutableList
+import kotlinx.collections.immutable.toImmutableList
 
 @Composable
 fun WeekDayBreakdown(
     canSeeContent: Boolean,
     onAction: (HabitsPageAction) -> Unit,
-    weekDayData: List<Bars>,
+    weekDayData: ImmutableList<Bars>,
     primary: Color,
     modifier: Modifier = Modifier
 ) {
@@ -97,7 +99,7 @@ private fun Preview() {
             weekDayData = prepareWeekDayDataToBars(
                 data = (0..10).associateBy { it.toString() },
                 lineColor = MaterialTheme.colorScheme.primary
-            ),
+            ).toImmutableList(),
             primary = MaterialTheme.colorScheme.primary,
         )
     }

@@ -4,13 +4,15 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.SolidColor
 import com.shub39.grit.habits.domain.WeekDayFrequencyData
 import ir.ehsannarmani.compose_charts.models.Bars
+import kotlinx.collections.immutable.ImmutableList
+import kotlinx.collections.immutable.toImmutableList
 import java.time.LocalDate
 import java.time.format.DateTimeFormatter
 
 fun prepareWeekDayDataToBars(
     data: WeekDayFrequencyData,
     lineColor: Color
-): List<Bars> {
+): ImmutableList<Bars> {
     return data.map { (day, count) ->
         Bars(
             label = day,
@@ -22,7 +24,7 @@ fun prepareWeekDayDataToBars(
                 )
             )
         )
-    }
+    }.toImmutableList()
 }
 
 fun getOrdinalSuffix(day: Int): String {

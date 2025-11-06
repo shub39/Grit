@@ -82,7 +82,7 @@ class HabitRepository(
                     bestStreak = countBestStreak(dates = dates, eligibleWeekdays = habit.days),
                     weeklyComparisonData = prepareLineChartData(
                         firstDay = firstDayOfWeek,
-                        habitstatuses = habitStatusesForHabit
+                        habitStatuses = habitStatusesForHabit
                     ),
                     weekDayFrequencyData = prepareWeekDayFrequencyData(dates = dates),
                     startedDaysAgo = ChronoUnit.DAYS.between(
@@ -104,7 +104,7 @@ class HabitRepository(
 
                     prepareLineChartData(
                         firstDay = firstDayOfWeek,
-                        habitstatuses = habitStatusesForHabit
+                        habitStatuses = habitStatusesForHabit
                     )
                 }
             )

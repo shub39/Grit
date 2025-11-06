@@ -81,7 +81,7 @@ fun countBestStreak(dates: List<LocalDate>, eligibleWeekdays: Set<DayOfWeek> = D
 
 fun prepareLineChartData(
     firstDay: DayOfWeek,
-    habitstatuses: List<HabitStatus>
+    habitStatuses: List<HabitStatus>
 ): WeeklyComparisonData {
     val today = LocalDate.now()
     val weekFields = WeekFields.of(firstDay, 1)
@@ -89,7 +89,7 @@ fun prepareLineChartData(
 
     val startDateOfPeriod = today.minusWeeks(totalWeeks.toLong()).with(weekFields.dayOfWeek(), 1)
 
-    val habitCompletionByWeek = habitstatuses
+    val habitCompletionByWeek = habitStatuses
         .filter { !it.date.isBefore(startDateOfPeriod) && !it.date.isAfter(today) }
         .groupBy {
             val yearOfWeek = it.date.get(weekFields.weekBasedYear())

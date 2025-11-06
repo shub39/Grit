@@ -54,7 +54,6 @@ import com.shub39.grit.habits.presentation.ui.component.HabitUpsertSheet
 import com.shub39.grit.habits.presentation.ui.component.WeekDayBreakdown
 import com.shub39.grit.habits.presentation.ui.component.WeeklyActivity
 import com.shub39.grit.habits.presentation.ui.component.WeeklyBooleanHeatMap
-import java.time.LocalDate
 import java.time.YearMonth
 
 @OptIn(ExperimentalMaterial3Api::class, ExperimentalMaterial3ExpressiveApi::class)
@@ -65,7 +64,6 @@ fun AnalyticsPage(
     onNavigateBack: () -> Unit
 ) = PageFill {
     val primary = MaterialTheme.colorScheme.primary
-    val today = LocalDate.now()
     val currentMonth = remember { YearMonth.now() }
 
     val currentHabit = state.habitsWithAnalytics.find { it.habit.id == state.analyticsHabitId } ?: return@PageFill
@@ -153,8 +151,8 @@ fun AnalyticsPage(
         ) {
             item {
                 HabitStartCard(
-                    today = today,
-                    habitDate = currentHabit.habit.time
+                    habit = currentHabit.habit,
+                    startedDaysAgo = currentHabit.startedDaysAgo,
                 )
             }
 
@@ -168,10 +166,8 @@ fun AnalyticsPage(
             item {
                 WeeklyBooleanHeatMap(
                     heatMapState = heatMapState,
-                    statuses = currentHabit.statuses,
-                    today = today,
                     onAction = onAction,
-                    currentHabit = currentHabit.habit,
+                    currentHabit = currentHabit,
                     primary = primary
                 )
             }
@@ -188,9 +184,7 @@ fun AnalyticsPage(
                     canSeeContent = state.isUserSubscribed,
                     onAction = onAction,
                     calendarState = calendarState,
-                    statuses = currentHabit.statuses,
-                    today = today,
-                    currentHabit = currentHabit.habit,
+                    currentHabit = currentHabit,
                     primary = primary
                 )
             }

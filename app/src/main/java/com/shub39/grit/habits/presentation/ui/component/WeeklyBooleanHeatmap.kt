@@ -26,7 +26,7 @@ import com.kizitonwose.calendar.compose.heatmapcalendar.rememberHeatMapCalendarS
 import com.shub39.grit.R
 import com.shub39.grit.core.presentation.theme.GritTheme
 import com.shub39.grit.habits.domain.Habit
-import com.shub39.grit.habits.domain.HabitStatus
+import com.shub39.grit.habits.domain.HabitWithAnalytics
 import com.shub39.grit.habits.presentation.HabitsPageAction
 import java.time.DayOfWeek
 import java.time.LocalDate
@@ -37,13 +37,13 @@ import java.util.Locale
 @Composable
 fun WeeklyBooleanHeatMap(
     heatMapState: HeatMapCalendarState,
-    statuses: List<HabitStatus>,
-    today: LocalDate,
     onAction: (HabitsPageAction) -> Unit,
-    currentHabit: Habit,
+    currentHabit: HabitWithAnalytics,
     primary: Color,
     modifier: Modifier = Modifier
 ) {
+    val today = LocalDate.now()
+
     AnalyticsCard(
         title = stringResource(R.string.weekly_progress),
         icon = Icons.Rounded.ViewWeek,
@@ -84,9 +84,9 @@ fun WeeklyBooleanHeatMap(
                     )
                 }
             },
-            dayContent = { day, week ->
-                val done = statuses.any { it.date == day.date }
-                val validDay = day.date <= today && day.date.dayOfWeek in currentHabit.days
+            dayContent = { day, _ ->
+                val done = currentHabit.statuses.any { it.date == day.date }
+                val validDay = day.date <= today && day.date.dayOfWeek in currentHabit.habit.days
 
                 Box(
                     modifier = Modifier
@@ -95,15 +95,15 @@ fun WeeklyBooleanHeatMap(
                         .clickable(enabled = validDay) {
                             onAction(
                                 HabitsPageAction.InsertStatus(
-                                    currentHabit,
+                                    currentHabit.habit,
                                     day.date
                                 )
                             )
                         }
                         .then(
                             if (done) {
-                                val donePrevious = statuses.any { it.date == day.date.minusDays(1) }
-                                val doneAfter = statuses.any { it.date == day.date.plusDays(1) }
+                                val donePrevious = currentHabit.statuses.any { it.date == day.date.minusDays(1) }
+                                val doneAfter = currentHabit.statuses.any { it.date == day.date.plusDays(1) }
 
                                 Modifier.background(
                                     color = primary.copy(alpha = 0.2f),
@@ -151,17 +151,23 @@ private fun Preview() {
     GritTheme {
         WeeklyBooleanHeatMap(
             heatMapState = rememberHeatMapCalendarState(),
-            statuses = emptyList(),
-            today = LocalDate.now(),
-            onAction = {  },
-            currentHabit = Habit(
-                id = 0,
-                title = "Test Habit",
-                description = "A desc",
-                time = LocalDateTime.now(),
-                days = DayOfWeek.entries.toSet(),
-                index = 1,
-                reminder = true
+            onAction = {},
+            currentHabit = HabitWithAnalytics(
+                habit = Habit(
+                    id = 0,
+                    title = "Test Habit",
+                    description = "A desc",
+                    time = LocalDateTime.now(),
+                    days = DayOfWeek.entries.toSet(),
+                    index = 1,
+                    reminder = true
+                ),
+                statuses = listOf(),
+                weeklyComparisonData = listOf(),
+                weekDayFrequencyData = mapOf(),
+                currentStreak = 1,
+                bestStreak = 1,
+                startedDaysAgo = 1,
             ),
             primary = MaterialTheme.colorScheme.primary,
         )
