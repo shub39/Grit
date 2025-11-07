@@ -29,16 +29,15 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.shub39.grit.R
 import com.shub39.grit.core.presentation.theme.GritTheme
+import com.shub39.grit.habits.domain.Habit
 import com.shub39.grit.habits.presentation.formatDateWithOrdinal
-import java.time.LocalDate
 import java.time.LocalDateTime
-import java.time.temporal.ChronoUnit
 
 @OptIn(ExperimentalMaterial3ExpressiveApi::class)
 @Composable
 fun HabitStartCard(
-    today: LocalDate,
-    habitDate: LocalDateTime,
+    habit: Habit,
+    startedDaysAgo: Long,
     modifier: Modifier = Modifier
 ) {
     Card(
@@ -82,13 +81,13 @@ fun HabitStartCard(
                     style = MaterialTheme.typography.labelMedium
                 )
                 Text(
-                    text = formatDateWithOrdinal(habitDate.toLocalDate()),
+                    text = formatDateWithOrdinal(habit.time.toLocalDate()),
                     style = MaterialTheme.typography.titleLarge.copy(fontWeight = FontWeight.Bold)
                 )
                 Text(
                     text = stringResource(
                         R.string.days_ago_format,
-                        ChronoUnit.DAYS.between(habitDate.toLocalDate(), today)
+                        startedDaysAgo
                     ),
                     style = MaterialTheme.typography.bodyMedium
                 )
@@ -102,8 +101,16 @@ fun HabitStartCard(
 private fun Preview() {
     GritTheme {
         HabitStartCard(
-            today = LocalDate.now(),
-            habitDate = LocalDateTime.now()
+            habit = Habit(
+                id = 0,
+                title = "Asas",
+                description = "asasa",
+                time = LocalDateTime.now(),
+                days = emptySet(),
+                index = 1,
+                reminder = false
+            ),
+            startedDaysAgo = 5,
         )
     }
 }

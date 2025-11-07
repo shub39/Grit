@@ -1,11 +1,15 @@
 package com.shub39.grit.core.presentation.settings
 
+import androidx.compose.runtime.Immutable
+import androidx.compose.runtime.Stable
 import com.shub39.grit.core.domain.Pages
 import com.shub39.grit.core.domain.backup.ExportState
 import com.shub39.grit.core.domain.backup.RestoreState
 import com.shub39.grit.core.presentation.theme.Theme
 import java.time.DayOfWeek
 
+@Stable
+@Immutable
 data class SettingsState(
     val theme: Theme = Theme(),
     val is24Hr: Boolean = false,
@@ -20,6 +24,8 @@ data class SettingsState(
     val isUserSubscribed: Boolean = false
 )
 
+@Stable
+@Immutable
 data class BackupState(
     val exportState: ExportState = ExportState.IDLE,
     val restoreState: RestoreState = RestoreState.IDLE

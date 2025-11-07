@@ -32,9 +32,7 @@ import com.materialkolor.ktx.harmonize
 import com.shub39.grit.R
 import com.shub39.grit.habits.presentation.HabitPageState
 import com.shub39.grit.habits.presentation.HabitsPageAction
-import com.shub39.grit.habits.presentation.prepareHeatMapData
-import com.shub39.grit.habits.presentation.prepareLineChartData
-import com.shub39.grit.habits.presentation.prepareWeekDayData
+import com.shub39.grit.habits.presentation.prepareWeekDayDataToBars
 import com.shub39.grit.habits.presentation.ui.component.HabitHeatMap
 import com.shub39.grit.habits.presentation.ui.component.WeekDayBreakdown
 import com.shub39.grit.habits.presentation.ui.component.WeeklyGraph
@@ -43,6 +41,7 @@ import ir.ehsannarmani.compose_charts.models.DrawStyle
 import ir.ehsannarmani.compose_charts.models.Line
 import ir.ehsannarmani.compose_charts.models.PopupProperties
 import ir.ehsannarmani.compose_charts.models.StrokeStyle
+import kotlinx.collections.immutable.toImmutableList
 import java.time.YearMonth
 import kotlin.random.Random
 
@@ -56,12 +55,11 @@ fun OverallAnalytics(
     val primary = MaterialTheme.colorScheme.primary
     val currentMonth = remember { YearMonth.now() }
 
-    val heatMapData = prepareHeatMapData(state.habitsWithStatuses)
+    val heatMapData = state.overallAnalytics.heatMapData
     val weeklyBreakdownData =
-        prepareWeekDayData(state.habitsWithStatuses.values.flatten().map { it.date }, primary)
-    val weeklyGraphData = state.habitsWithStatuses.entries.map { entry ->
+        prepareWeekDayDataToBars(data = state.overallAnalytics.weekDayFrequencyData, lineColor = primary)
+    val weeklyGraphData = state.overallAnalytics.weeklyGraphData.map { entry ->
         val habit = entry.key
-        val statuses = entry.value
         val color = Color(
             red = Random.nextFloat(),
             green = Random.nextFloat(),
@@ -70,7 +68,7 @@ fun OverallAnalytics(
 
         Line(
             label = habit.title,
-            values = prepareLineChartData(state.startingDay, statuses),
+            values = entry.value,
             color = SolidColor(color),
             dotProperties = DotProperties(
                 enabled = false,
@@ -88,7 +86,7 @@ fun OverallAnalytics(
                 strokeStyle = StrokeStyle.Normal
             )
         )
-    }
+    }.toImmutableList()
 
     val heatMapState = rememberHeatMapCalendarState(
         startMonth = currentMonth.minusMonths(12),

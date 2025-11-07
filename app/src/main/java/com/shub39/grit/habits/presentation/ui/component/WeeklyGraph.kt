@@ -36,6 +36,8 @@ import ir.ehsannarmani.compose_charts.models.HorizontalIndicatorProperties
 import ir.ehsannarmani.compose_charts.models.LabelHelperProperties
 import ir.ehsannarmani.compose_charts.models.Line
 import ir.ehsannarmani.compose_charts.models.LineProperties
+import kotlinx.collections.immutable.ImmutableList
+import kotlinx.collections.immutable.toImmutableList
 
 @OptIn(ExperimentalMaterial3ExpressiveApi::class)
 @Composable
@@ -43,7 +45,7 @@ fun WeeklyGraph(
     canSeeContent: Boolean,
     primary: Color,
     onAction: (HabitsPageAction) -> Unit,
-    weeklyGraphData: List<Line>,
+    weeklyGraphData: ImmutableList<Line>,
     modifier: Modifier = Modifier
 ) {
     var selectedTimePeriod by rememberSaveable { mutableStateOf(WeeklyTimePeriod.WEEKS_8) }
@@ -122,7 +124,7 @@ private fun Preview() {
                     values = (0..10).map { it.toDouble() },
                     color = SolidColor(MaterialTheme.colorScheme.primary)
                 )
-            ),
+            ).toImmutableList(),
         )
     }
 }

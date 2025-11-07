@@ -29,11 +29,9 @@ import androidx.compose.material3.OutlinedIconButton
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.input.nestedscroll.nestedScroll
@@ -46,12 +44,9 @@ import com.kizitonwose.calendar.compose.rememberCalendarState
 import com.shub39.grit.R
 import com.shub39.grit.core.presentation.component.GritDialog
 import com.shub39.grit.core.presentation.component.PageFill
-import com.shub39.grit.core.presentation.countBestStreak
-import com.shub39.grit.core.presentation.countCurrentStreak
 import com.shub39.grit.habits.presentation.HabitPageState
 import com.shub39.grit.habits.presentation.HabitsPageAction
-import com.shub39.grit.habits.presentation.prepareLineChartData
-import com.shub39.grit.habits.presentation.prepareWeekDayData
+import com.shub39.grit.habits.presentation.prepareWeekDayDataToBars
 import com.shub39.grit.habits.presentation.ui.component.CalendarMap
 import com.shub39.grit.habits.presentation.ui.component.HabitStartCard
 import com.shub39.grit.habits.presentation.ui.component.HabitStreakCard
@@ -59,9 +54,7 @@ import com.shub39.grit.habits.presentation.ui.component.HabitUpsertSheet
 import com.shub39.grit.habits.presentation.ui.component.WeekDayBreakdown
 import com.shub39.grit.habits.presentation.ui.component.WeeklyActivity
 import com.shub39.grit.habits.presentation.ui.component.WeeklyBooleanHeatMap
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.launch
-import java.time.LocalDate
+import kotlinx.collections.immutable.toImmutableList
 import java.time.YearMonth
 
 @OptIn(ExperimentalMaterial3Api::class, ExperimentalMaterial3ExpressiveApi::class)
@@ -71,18 +64,10 @@ fun AnalyticsPage(
     onAction: (HabitsPageAction) -> Unit,
     onNavigateBack: () -> Unit
 ) = PageFill {
-    val scope = rememberCoroutineScope()
     val primary = MaterialTheme.colorScheme.primary
-    val today = LocalDate.now()
     val currentMonth = remember { YearMonth.now() }
 
-    val currentHabit = state.habitsWithStatuses.keys.find { it.id == state.analyticsHabitId }!!
-    val statuses = state.habitsWithStatuses[currentHabit]!!
-
-    var lineChartData = prepareLineChartData(state.startingDay, statuses)
-    var weekDayData = prepareWeekDayData(statuses.map { it.date }, primary)
-    var currentStreak = countCurrentStreak(statuses.map { it.date }, currentHabit.days)
-    var bestStreak = countBestStreak(statuses.map { it.date }, currentHabit.days)
+    val currentHabit = state.habitsWithAnalytics.find { it.habit.id == state.analyticsHabitId } ?: return@PageFill
 
     val heatMapState = rememberHeatMapCalendarState(
         startMonth = currentMonth.minusMonths(12),
@@ -100,15 +85,6 @@ fun AnalyticsPage(
     var editDialog by remember { mutableStateOf(false) }
     var deleteDialog by remember { mutableStateOf(false) }
 
-    LaunchedEffect(statuses) {
-        scope.launch(Dispatchers.Default) {
-            lineChartData = prepareLineChartData(state.startingDay, statuses)
-            currentStreak = countCurrentStreak(statuses.map { it.date }, currentHabit.days)
-            bestStreak = countBestStreak(statuses.map { it.date }, currentHabit.days)
-            weekDayData = prepareWeekDayData(statuses.map { it.date }, primary)
-        }
-    }
-
     val scrollBehavior = TopAppBarDefaults.enterAlwaysScrollBehavior()
     Column(
         modifier = Modifier
@@ -121,11 +97,11 @@ fun AnalyticsPage(
                 scrolledContainerColor = MaterialTheme.colorScheme.surface
             ),
             title = {
-                Text(text = currentHabit.title)
+                Text(text = currentHabit.habit.title)
             },
             subtitle = {
-                if (currentHabit.description.isNotEmpty()) {
-                    Text(text = currentHabit.description)
+                if (currentHabit.habit.description.isNotEmpty()) {
+                    Text(text = currentHabit.habit.description)
                 }
             },
             navigationIcon = {
@@ -176,23 +152,21 @@ fun AnalyticsPage(
         ) {
             item {
                 HabitStartCard(
-                    today = today,
-                    habitDate = currentHabit.time
+                    habit = currentHabit.habit,
+                    startedDaysAgo = currentHabit.startedDaysAgo,
                 )
             }
 
             item {
                 HabitStreakCard(
-                    currentStreak = currentStreak,
-                    bestStreak = bestStreak
+                    currentStreak = currentHabit.currentStreak,
+                    bestStreak = currentHabit.bestStreak
                 )
             }
 
             item {
                 WeeklyBooleanHeatMap(
                     heatMapState = heatMapState,
-                    statuses = statuses,
-                    today = today,
                     onAction = onAction,
                     currentHabit = currentHabit,
                     primary = primary
@@ -202,7 +176,7 @@ fun AnalyticsPage(
             item {
                 WeeklyActivity(
                     primary = primary,
-                    lineChartData = lineChartData
+                    lineChartData = currentHabit.weeklyComparisonData.toImmutableList()
                 )
             }
 
@@ -211,8 +185,6 @@ fun AnalyticsPage(
                     canSeeContent = state.isUserSubscribed,
                     onAction = onAction,
                     calendarState = calendarState,
-                    statuses = statuses,
-                    today = today,
                     currentHabit = currentHabit,
                     primary = primary
                 )
@@ -222,7 +194,7 @@ fun AnalyticsPage(
                 WeekDayBreakdown(
                     canSeeContent = state.isUserSubscribed,
                     onAction = onAction,
-                    weekDayData = weekDayData,
+                    weekDayData = prepareWeekDayDataToBars(currentHabit.weekDayFrequencyData, primary),
                     primary = primary,
                 )
             }
@@ -259,7 +231,7 @@ fun AnalyticsPage(
                 onClick = {
                     deleteDialog = false
                     onNavigateBack()
-                    onAction(HabitsPageAction.DeleteHabit(currentHabit))
+                    onAction(HabitsPageAction.DeleteHabit(currentHabit.habit))
                 },
                 modifier = Modifier.fillMaxWidth(),
                 shapes = ButtonShapes(
@@ -274,7 +246,7 @@ fun AnalyticsPage(
 
     if (editDialog) {
         HabitUpsertSheet(
-            habit = currentHabit,
+            habit = currentHabit.habit,
             onDismissRequest = { editDialog = false },
             timeFormat = state.timeFormat,
             onUpsertHabit = { onAction(HabitsPageAction.UpdateHabit(it)) },

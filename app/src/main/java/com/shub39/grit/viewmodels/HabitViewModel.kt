@@ -30,18 +30,20 @@ class HabitViewModel(
 ) : ViewModel() {
 
     private var habitStatusJob: Job? = null
+    private var overallAnalyticsJob: Job? = null
     private var observeJob: Job? = null
 
     private val _state = stateLayer.habitsState
 
     val state = _state.asStateFlow()
         .onStart {
-            observeHabitStatuses()
             observeDataStore()
+            observeHabitStatuses()
+            observeOverallAnalytics()
         }
         .stateIn(
             viewModelScope,
-            SharingStarted.Companion.WhileSubscribed(5000),
+            SharingStarted.WhileSubscribed(5000),
             HabitPageState()
         )
 
@@ -66,8 +68,8 @@ class HabitViewModel(
                 }
 
                 is HabitsPageAction.ReorderHabits -> {
-                    for (habit in action.pairs) {
-                        upsertHabit(habit.second.copy(index = habit.first))
+                    for (habitWithIndex in action.pairs) {
+                        upsertHabit(habitWithIndex.second.habit.copy(index = habitWithIndex.first))
                     }
                 }
 
@@ -82,7 +84,7 @@ class HabitViewModel(
                 HabitsPageAction.OnAddHabitClicked -> {
                     val isSubscribed = billingHandler.isPlusUser()
 
-                    if (!isSubscribed && _state.value.habitsWithStatuses.size >= 5) {
+                    if (!isSubscribed && _state.value.habitsWithAnalytics.size >= 5) {
                         stateLayer.settingsState.update {
                             it.copy(
                                 showPaywall = true
@@ -111,7 +113,11 @@ class HabitViewModel(
 
                 HabitsPageAction.DismissAddHabitDialog -> _state.update { it.copy(showHabitAddSheet = false) }
 
-                HabitsPageAction.OnShowPaywall -> stateLayer.settingsState.update { it.copy(showPaywall = true) }
+                HabitsPageAction.OnShowPaywall -> stateLayer.settingsState.update {
+                    it.copy(
+                        showPaywall = true
+                    )
+                }
 
                 is HabitsPageAction.OnToggleCompactView -> datastore.setCompactView(action.pref)
             }
@@ -121,14 +127,30 @@ class HabitViewModel(
     private fun observeHabitStatuses() {
         habitStatusJob?.cancel()
         habitStatusJob = repo
-            .getHabitStatus()
-            .onEach { habitWithStatuses ->
+            .getHabitStatus(_state.value.startingDay)
+            .onEach { habitsWithAnalytics ->
                 _state.update { habitPageState ->
                     habitPageState.copy(
-                        habitsWithStatuses = habitWithStatuses,
-                        completedHabits = habitWithStatuses.keys.filter { habit ->
-                            habitWithStatuses[habit]?.any { it.date == LocalDate.now() } == true
-                        }
+                        habitsWithAnalytics = habitsWithAnalytics,
+                        completedHabitIds = habitsWithAnalytics
+                            .filter { habitWithAnalytics ->
+                                habitWithAnalytics.statuses.any { it.date == LocalDate.now() }
+                            }
+                            .map { it.habit.id }
+                    )
+                }
+            }
+            .launchIn(viewModelScope)
+    }
+
+    private fun observeOverallAnalytics() {
+        overallAnalyticsJob?.cancel()
+        overallAnalyticsJob = repo
+            .getOverallAnalytics(_state.value.startingDay)
+            .onEach { overallAnalytics ->
+                _state.update {
+                    it.copy(
+                        overallAnalytics = overallAnalytics
                     )
                 }
             }
@@ -185,7 +207,9 @@ class HabitViewModel(
     }
 
     private suspend fun insertHabitStatus(habit: Habit, date: LocalDate) {
-        if (isHabitCompleted(habit, date)) {
+        val isHabitCompleted = _state.value.habitsWithAnalytics.find { it.habit == habit }?.statuses?.any { it.date == date } ?: false
+
+        if (isHabitCompleted) {
 
             repo.deleteHabitStatus(habit.id, date)
 
@@ -197,10 +221,6 @@ class HabitViewModel(
                 )
             )
         }
-    }
-
-    private fun isHabitCompleted(habit: Habit, date: LocalDate): Boolean {
-        return _state.value.habitsWithStatuses[habit]?.any { it.date == date } == true
     }
 
 }

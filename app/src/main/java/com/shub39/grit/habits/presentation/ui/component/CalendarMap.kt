@@ -26,7 +26,7 @@ import com.kizitonwose.calendar.compose.rememberCalendarState
 import com.shub39.grit.R
 import com.shub39.grit.core.presentation.theme.GritTheme
 import com.shub39.grit.habits.domain.Habit
-import com.shub39.grit.habits.domain.HabitStatus
+import com.shub39.grit.habits.domain.HabitWithAnalytics
 import com.shub39.grit.habits.presentation.HabitsPageAction
 import java.time.DayOfWeek
 import java.time.LocalDate
@@ -39,11 +39,11 @@ fun CalendarMap(
     canSeeContent: Boolean,
     onAction: (HabitsPageAction) -> Unit,
     calendarState: CalendarState,
-    statuses: List<HabitStatus>,
-    today: LocalDate,
-    currentHabit: Habit,
+    currentHabit: HabitWithAnalytics,
     primary: Color
 ) {
+    val today = LocalDate.now()
+
     AnalyticsCard(
         title = stringResource(R.string.monthly_progress),
         icon = Icons.Rounded.CalendarMonth,
@@ -74,8 +74,8 @@ fun CalendarMap(
             },
             dayContent = { day ->
                 if (day.position.name == "MonthDate") {
-                    val done = statuses.any { it.date == day.date }
-                    val validDate = day.date <= today && canSeeContent && day.date.dayOfWeek in currentHabit.days
+                    val done = currentHabit.statuses.any { it.date == day.date }
+                    val validDate = day.date <= today && canSeeContent && day.date.dayOfWeek in currentHabit.habit.days
 
                     Box(
                         modifier = Modifier
@@ -84,7 +84,7 @@ fun CalendarMap(
                             .clickable(enabled = validDate) {
                                 onAction(
                                     HabitsPageAction.InsertStatus(
-                                        currentHabit,
+                                        currentHabit.habit,
                                         day.date
                                     )
                                 )
@@ -92,9 +92,9 @@ fun CalendarMap(
                             .then(
                                 if (done) {
                                     val donePrevious =
-                                        statuses.any { it.date == day.date.minusDays(1) }
+                                        currentHabit.statuses.any { it.date == day.date.minusDays(1) }
                                     val doneAfter =
-                                        statuses.any { it.date == day.date.plusDays(1) }
+                                        currentHabit.statuses.any { it.date == day.date.plusDays(1) }
 
                                     Modifier.background(
                                         color = primary.copy(alpha = 0.2f),
@@ -145,16 +145,22 @@ private fun Preview() {
             canSeeContent = true,
             onAction = {},
             calendarState = rememberCalendarState(),
-            statuses = emptyList(),
-            today = LocalDate.now(),
-            currentHabit = Habit(
-                id = 0,
-                title = "Test Habit",
-                description = "A desc",
-                time = LocalDateTime.now(),
-                days = DayOfWeek.entries.toSet(),
-                index = 1,
-                reminder = false
+            currentHabit = HabitWithAnalytics(
+                habit = Habit(
+                    id = 0,
+                    title = "Test Habit",
+                    description = "A desc",
+                    time = LocalDateTime.now(),
+                    days = DayOfWeek.entries.toSet(),
+                    index = 1,
+                    reminder = false
+                ),
+                statuses = emptyList(),
+                weeklyComparisonData = emptyList(),
+                weekDayFrequencyData = emptyMap(),
+                currentStreak = 1,
+                bestStreak = 1,
+                startedDaysAgo = 1,
             ),
             primary = MaterialTheme.colorScheme.primary,
         )

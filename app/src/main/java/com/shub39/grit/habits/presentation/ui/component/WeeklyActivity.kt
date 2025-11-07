@@ -40,12 +40,14 @@ import ir.ehsannarmani.compose_charts.models.Line
 import ir.ehsannarmani.compose_charts.models.LineProperties
 import ir.ehsannarmani.compose_charts.models.PopupProperties
 import ir.ehsannarmani.compose_charts.models.StrokeStyle
+import kotlinx.collections.immutable.ImmutableList
+import kotlinx.collections.immutable.toImmutableList
 
 @OptIn(ExperimentalMaterial3ExpressiveApi::class)
 @Composable
 fun WeeklyActivity(
     primary: Color,
-    lineChartData: List<Double>,
+    lineChartData: ImmutableList<Double>,
     modifier: Modifier = Modifier
 ) {
     var selectedTimePeriod by rememberSaveable { mutableStateOf(WeeklyTimePeriod.WEEKS_8) }
@@ -138,7 +140,7 @@ private fun Preview() {
     GritTheme {
         WeeklyActivity(
             primary = MaterialTheme.colorScheme.primary,
-            lineChartData = emptyList()
+            lineChartData = emptyList<Double>().toImmutableList()
         )
     }
 }

@@ -16,7 +16,7 @@ import androidx.compose.ui.unit.dp
 import com.shub39.grit.R
 import com.shub39.grit.core.presentation.theme.GritTheme
 import com.shub39.grit.habits.presentation.HabitsPageAction
-import com.shub39.grit.habits.presentation.prepareWeekDayData
+import com.shub39.grit.habits.presentation.prepareWeekDayDataToBars
 import ir.ehsannarmani.compose_charts.RowChart
 import ir.ehsannarmani.compose_charts.models.AnimationMode
 import ir.ehsannarmani.compose_charts.models.BarProperties
@@ -27,13 +27,14 @@ import ir.ehsannarmani.compose_charts.models.LabelHelperProperties
 import ir.ehsannarmani.compose_charts.models.LabelProperties
 import ir.ehsannarmani.compose_charts.models.PopupProperties
 import ir.ehsannarmani.compose_charts.models.VerticalIndicatorProperties
-import java.time.LocalDate
+import kotlinx.collections.immutable.ImmutableList
+import kotlinx.collections.immutable.toImmutableList
 
 @Composable
 fun WeekDayBreakdown(
     canSeeContent: Boolean,
     onAction: (HabitsPageAction) -> Unit,
-    weekDayData: List<Bars>,
+    weekDayData: ImmutableList<Bars>,
     primary: Color,
     modifier: Modifier = Modifier
 ) {
@@ -95,12 +96,10 @@ private fun Preview() {
         WeekDayBreakdown(
             canSeeContent = true,
             onAction = {  },
-            weekDayData = prepareWeekDayData(
-                dates = (0..10).map {
-                    LocalDate.now().minusDays(it.toLong())
-                },
+            weekDayData = prepareWeekDayDataToBars(
+                data = (0..10).associateBy { it.toString() },
                 lineColor = MaterialTheme.colorScheme.primary
-            ),
+            ).toImmutableList(),
             primary = MaterialTheme.colorScheme.primary,
         )
     }
