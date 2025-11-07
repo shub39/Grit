@@ -144,8 +144,6 @@ dependencies {
     implementation(libs.aboutLibraries)
     implementation(libs.composeIcons.fontAwesome)
     implementation(libs.compose.charts)
-    implementation(libs.vico.compose)
-    implementation(libs.vico.compose.m3)
     implementation(libs.calendar)
     implementation(libs.androidx.material.icons.extended)
     implementation(libs.aboutlibraries.compose.m3)
