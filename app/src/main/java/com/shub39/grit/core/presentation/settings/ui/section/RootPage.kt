@@ -31,6 +31,8 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.input.nestedscroll.nestedScroll
@@ -45,7 +47,9 @@ import com.shub39.grit.core.presentation.getRandomLine
 import com.shub39.grit.core.presentation.settings.SettingsAction
 import com.shub39.grit.core.presentation.settings.SettingsState
 import com.shub39.grit.core.presentation.settings.ui.component.AboutApp
+import com.shub39.grit.server.GritServerRepository
 import com.shub39.grit.server.GritServerService
+import org.koin.compose.koinInject
 import java.time.DayOfWeek
 
 @OptIn(ExperimentalMaterial3Api::class, ExperimentalMaterial3ExpressiveApi::class)
@@ -58,6 +62,7 @@ fun RootPage(
     onNavigateToAboutLibraries: () -> Unit
 ) = PageFill {
     val context = LocalContext.current
+    val serverRepo = koinInject<GritServerRepository>()
 
     LaunchedEffect(Unit) {
         onAction(SettingsAction.OnCheckBiometric(context))
@@ -126,19 +131,24 @@ fun RootPage(
             item { Spacer(modifier = Modifier.height(16.dp)) }
 
             item {
+                val isRunning by serverRepo.isRunning.collectAsState()
+                val serverUrl by serverRepo.serverUrl.collectAsState()
                 ListItem(
                     headlineContent = {
                         Text("Start Server")
                     },
+                    supportingContent = {
+                        serverUrl?.let { Text(text = it) }
+                    },
                     trailingContent = {
-                        Button(
-                            onClick = {
-                                GritServerService.startService(
-                                    context = context,
-                                    port = 8080
-                                )
+                        Switch(
+                            checked = isRunning,
+                            onCheckedChange = {
+                                if (!isRunning) {
+                                    GritServerService.startService(context, 8080)
+                                }
                             }
-                        ) { Text("Start") }
+                        )
                     }
                 )
             }

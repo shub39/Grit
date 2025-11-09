@@ -28,7 +28,6 @@ import com.shub39.grit.viewmodels.TasksViewModel
 import com.shub39.grit.widgets.AllTasksWidgetRepository
 import com.shub39.grit.widgets.HabitOverviewWidgetRepository
 import com.shub39.grit.widgets.HabitStreakWidgetRepository
-import org.koin.core.module.dsl.factoryOf
 import org.koin.core.module.dsl.singleOf
 import org.koin.core.module.dsl.viewModelOf
 import org.koin.dsl.bind
@@ -77,7 +76,7 @@ val appModule = module {
     singleOf(::BillingHandler)
 
     // server
-    factoryOf(::GritServerRepositoryImpl).bind<GritServerRepository>()
+    singleOf(::GritServerRepositoryImpl).bind<GritServerRepository>()
 
     // view models
     singleOf(::StateLayer)

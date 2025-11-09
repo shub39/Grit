@@ -87,7 +87,8 @@ class GritServerRepositoryImpl(
 
                 routing {
                     get("/") {
-                        call.respondText(text = "Hello!!")
+                        val tasks = taskRepo.getTasks().toString()
+                        call.respondText(text = tasks)
                     }
                 }
             }
