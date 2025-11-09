@@ -17,6 +17,7 @@ import androidx.compose.material.icons.rounded.Add
 import androidx.compose.material.icons.rounded.Download
 import androidx.compose.material.icons.rounded.Info
 import androidx.compose.material.icons.rounded.Palette
+import androidx.compose.material3.Button
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -44,6 +45,7 @@ import com.shub39.grit.core.presentation.getRandomLine
 import com.shub39.grit.core.presentation.settings.SettingsAction
 import com.shub39.grit.core.presentation.settings.SettingsState
 import com.shub39.grit.core.presentation.settings.ui.component.AboutApp
+import com.shub39.grit.server.GritServerService
 import java.time.DayOfWeek
 
 @OptIn(ExperimentalMaterial3Api::class, ExperimentalMaterial3ExpressiveApi::class)
@@ -122,6 +124,24 @@ fun RootPage(
             item { AboutApp() }
 
             item { Spacer(modifier = Modifier.height(16.dp)) }
+
+            item {
+                ListItem(
+                    headlineContent = {
+                        Text("Start Server")
+                    },
+                    trailingContent = {
+                        Button(
+                            onClick = {
+                                GritServerService.startService(
+                                    context = context,
+                                    port = 8080
+                                )
+                            }
+                        ) { Text("Start") }
+                    }
+                )
+            }
 
             item {
                 ListItem(

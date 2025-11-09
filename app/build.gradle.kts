@@ -69,7 +69,7 @@ android {
         }
 
         debug {
-//            applicationIdSuffix = ".debug"
+            applicationIdSuffix = ".debug"
             resValue("string", "app_name", "$appName Debug")
         }
     }
@@ -156,6 +156,11 @@ dependencies {
     androidTestImplementation(libs.androidx.room.testing)
     testImplementation(libs.androidx.room.testing)
     androidTestImplementation(libs.truth)
+
+    implementation(libs.ktor.server.core)
+    implementation(libs.ktor.server.cio)
+    implementation(libs.ktor.serialization.kotlinx.json)
+    implementation(libs.ktor.server.content.negotiation)
 }
 
 room {

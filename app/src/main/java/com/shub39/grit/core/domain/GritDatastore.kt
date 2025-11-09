@@ -45,4 +45,7 @@ interface GritDatastore {
 
     fun getCompactViewPref(): Flow<Boolean>
     suspend fun setCompactView(pref: Boolean)
+
+    fun getServerPort(): Flow<Int>
+    suspend fun setServerPort(port: Int)
 }

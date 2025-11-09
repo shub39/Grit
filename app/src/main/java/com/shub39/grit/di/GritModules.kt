@@ -14,6 +14,8 @@ import com.shub39.grit.habits.data.database.HabitDatabase
 import com.shub39.grit.habits.data.database.HabitDbFactory
 import com.shub39.grit.habits.data.repository.HabitRepository
 import com.shub39.grit.habits.domain.HabitRepo
+import com.shub39.grit.server.GritServerRepository
+import com.shub39.grit.server.GritServerRepositoryImpl
 import com.shub39.grit.tasks.data.database.TaskDatabase
 import com.shub39.grit.tasks.data.database.TaskDbFactory
 import com.shub39.grit.tasks.data.repository.TasksRepository
@@ -26,6 +28,7 @@ import com.shub39.grit.viewmodels.TasksViewModel
 import com.shub39.grit.widgets.AllTasksWidgetRepository
 import com.shub39.grit.widgets.HabitOverviewWidgetRepository
 import com.shub39.grit.widgets.HabitStreakWidgetRepository
+import org.koin.core.module.dsl.factoryOf
 import org.koin.core.module.dsl.singleOf
 import org.koin.core.module.dsl.viewModelOf
 import org.koin.dsl.bind
@@ -72,6 +75,9 @@ val appModule = module {
 
     // Revenuecat
     singleOf(::BillingHandler)
+
+    // server
+    factoryOf(::GritServerRepositoryImpl).bind<GritServerRepository>()
 
     // view models
     singleOf(::StateLayer)
