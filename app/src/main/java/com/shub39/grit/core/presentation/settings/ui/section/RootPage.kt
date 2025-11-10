@@ -1,5 +1,11 @@
 package com.shub39.grit.core.presentation.settings.ui.section
 
+import android.Manifest
+import android.content.pm.PackageManager
+import android.os.Build
+import android.widget.Toast
+import androidx.activity.compose.rememberLauncherForActivityResult
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -17,7 +23,6 @@ import androidx.compose.material.icons.rounded.Add
 import androidx.compose.material.icons.rounded.Download
 import androidx.compose.material.icons.rounded.Info
 import androidx.compose.material.icons.rounded.Palette
-import androidx.compose.material3.Button
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -40,6 +45,8 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
+import androidx.core.content.ContextCompat
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.shub39.grit.R
 import com.shub39.grit.core.domain.Pages
 import com.shub39.grit.core.presentation.component.PageFill
@@ -63,6 +70,15 @@ fun RootPage(
 ) = PageFill {
     val context = LocalContext.current
     val serverRepo = koinInject<GritServerRepository>()
+    val serverPort by serverRepo.serverPort.collectAsStateWithLifecycle()
+
+    val launcher = rememberLauncherForActivityResult(
+        contract = ActivityResultContracts.RequestPermission()
+    ) { granted ->
+        if (granted) {
+            GritServerService.startService(context, serverPort)
+        } else Toast.makeText(context, "Notification permission denied", Toast.LENGTH_SHORT).show()
+    }
 
     LaunchedEffect(Unit) {
         onAction(SettingsAction.OnCheckBiometric(context))
@@ -133,6 +149,7 @@ fun RootPage(
             item {
                 val isRunning by serverRepo.isRunning.collectAsState()
                 val serverUrl by serverRepo.serverUrl.collectAsState()
+
                 ListItem(
                     headlineContent = {
                         Text("Start Server")
@@ -145,7 +162,18 @@ fun RootPage(
                             checked = isRunning,
                             onCheckedChange = {
                                 if (!isRunning) {
-                                    GritServerService.startService(context, 8080)
+                                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU &&
+                                        ContextCompat.checkSelfPermission(
+                                            context,
+                                            Manifest.permission.POST_NOTIFICATIONS
+                                        ) != PackageManager.PERMISSION_GRANTED
+                                    ) {
+                                        launcher.launch(Manifest.permission.POST_NOTIFICATIONS)
+                                    } else {
+                                        GritServerService.startService(context , serverPort)
+                                    }
+                                } else {
+                                    GritServerService.stopService(context)
                                 }
                             }
                         )
