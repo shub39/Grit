@@ -1,4 +1,4 @@
-package com.shub39.grit.server
+package com.shub39.grit.server.domain
 
 import kotlinx.coroutines.flow.StateFlow
 

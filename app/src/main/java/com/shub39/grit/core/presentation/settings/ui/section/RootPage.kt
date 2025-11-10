@@ -54,7 +54,7 @@ import com.shub39.grit.core.presentation.getRandomLine
 import com.shub39.grit.core.presentation.settings.SettingsAction
 import com.shub39.grit.core.presentation.settings.SettingsState
 import com.shub39.grit.core.presentation.settings.ui.component.AboutApp
-import com.shub39.grit.server.GritServerRepository
+import com.shub39.grit.server.domain.GritServerRepository
 import com.shub39.grit.server.GritServerService
 import org.koin.compose.koinInject
 import java.time.DayOfWeek

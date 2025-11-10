@@ -1,0 +1,197 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <title>Tasks UI</title>
+    <link href="https://fonts.googleapis.com/css2?family=Figtree:wght@400;600&display=swap" rel="stylesheet">
+    <style>
+        :root {
+          --bg: #282828;
+          --fg: #ebdbb2;
+          --accent: #b8bb26;
+          --error: #fb4934;
+          --muted: #a89984;
+          --surface: #3c3836;
+          --border: #504945;
+          font-family: 'Figtree', system-ui, sans-serif;
+          line-height: 1.4;
+        }
+        body {
+          background: var(--bg);
+          color: var(--fg);
+          max-width: 900px;
+          margin: 32px auto;
+          padding: 16px;
+        }
+        h1 {
+          font-size: 22px;
+          margin-bottom: 8px;
+          color: var(--accent);
+        }
+        .card {
+          background: var(--surface);
+          border: 1px solid var(--border);
+          border-radius: 8px;
+          padding: 16px;
+          margin-bottom: 16px;
+          box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+        }
+        .row { display: flex; gap: 12px; align-items: center; flex-wrap: wrap; }
+        label { font-size: 13px; color: var(--muted); }
+        input[type=text], input[type=number] {
+          background: var(--bg);
+          border: 1px solid var(--border);
+          color: var(--fg);
+          padding: 8px;
+          border-radius: 6px;
+          width: 100%;
+        }
+        input[type=checkbox] {
+          accent-color: var(--accent);
+        }
+        button {
+          padding: 8px 14px;
+          border-radius: 8px;
+          border: none;
+          background: var(--accent);
+          color: var(--bg);
+          cursor: pointer;
+          font-weight: 600;
+          transition: background 0.2s;
+        }
+        button:hover { background: #98971a; }
+        .muted { color: var(--muted); font-size: 13px; }
+        .task-item { display: flex; align-items: center; gap: 10px; padding: 8px; border-top: 1px solid var(--border); }
+        .title { font-weight: 600; color: var(--fg); }
+        .small { font-size: 13px; color: var(--muted); }
+        .error { color: var(--error); }
+        .success { color: var(--accent); }
+    </style>
+</head>
+<body>
+<h1>Tasks — Simple UI</h1>
+<p class="muted">Using <code>/api/tasks</code> endpoints (GET + POST). Ensure this runs where your in-app Ktor server is reachable.</p>
+
+<div class="card">
+    <form id="taskForm">
+        <div class="row">
+            <div style="flex:1">
+                <label>Title</label>
+                <input type="text" id="title" placeholder="Task title" required />
+            </div>
+            <div style="width:120px">
+                <label>Category ID</label>
+                <input type="number" id="categoryId" value="0" min="0" required />
+            </div>
+        </div>
+
+        <div class="row" style="margin-top:8px">
+            <div style="width:130px">
+                <label>Index</label>
+                <input type="number" id="index" value="0" required />
+            </div>
+            <div style="display:flex;align-items:center;gap:8px">
+                <label>Status</label>
+                <input type="checkbox" id="status" />
+            </div>
+            <div style="margin-left:auto;display:flex;gap:8px">
+                <button type="submit">Create Task</button>
+            </div>
+        </div>
+        <div id="formMessage" style="margin-top:8px"></div>
+    </form>
+</div>
+
+<div class="card">
+    <div class="row">
+        <strong>Tasks</strong>
+        <div style="margin-left:auto">
+            <button id="refreshBtn">Refresh</button>
+        </div>
+    </div>
+
+    <div id="tasks" style="margin-top:12px"></div>
+    <div id="listMessage" style="margin-top:8px"></div>
+</div>
+
+<script>
+    const apiBase = ''
+    const getUrl = () => apiBase + '/api/tasks'
+    const el = id => document.getElementById(id)
+
+    async function fetchTasks() {
+      setListMessage('Loading...')
+      try {
+        const res = await fetch(getUrl())
+        if (!res.ok) throw new Error('HTTP ' + res.status)
+        const tasks = await res.json()
+        renderTasks(tasks)
+        setListMessage('')
+      } catch (e) {
+        console.error(e)
+        setListMessage('Error loading tasks: ' + e.message)
+        el('tasks').innerHTML = ''
+      }
+    }
+
+    function renderTasks(tasks) {
+      const c = el('tasks')
+      c.innerHTML = ''
+      if (!tasks.length) return c.innerHTML = '<div class="muted">No tasks found.</div>'
+      for (const t of tasks) {
+        const item = document.createElement('div')
+        item.className = 'task-item'
+        item.innerHTML = `
+          <div style="width:28px;text-align:center">${t.id}</div>
+          <div style="flex:1">
+            <div class="title">${escapeHtml(t.title)}</div>
+            <div class="small">category ${t.categoryId} • index ${t.index}</div>
+          </div>
+          <div style="display:flex;align-items:center;gap:8px">
+            <label class="small">Done</label>
+            <input type="checkbox" ${t.status ? 'checked' : ''} disabled />
+          </div>`
+        c.appendChild(item)
+      }
+    }
+
+    function escapeHtml(str) {
+      return str.replace(/[&<>\"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]))
+    }
+
+    function setFormMessage(msg, isErr=false){
+      const n = el('formMessage'); n.textContent = msg; n.className = isErr ? 'error' : 'success'
+    }
+    function setListMessage(msg){
+      const n = el('listMessage'); n.textContent = msg; n.className = msg ? 'muted' : ''
+    }
+
+    async function createTask(p){
+      setFormMessage('Creating...')
+      try {
+        const res = await fetch(getUrl(), {method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(p)})
+        const data = await res.json().catch(()=>null)
+        if(!res.ok) throw new Error(data?.error || 'HTTP '+res.status)
+        setFormMessage(data?.message || 'Created!')
+        el('title').value=''
+        fetchTasks()
+      } catch(e){
+        setFormMessage('Error: '+e.message, true)
+      }
+    }
+
+    document.addEventListener('DOMContentLoaded',()=>{
+      fetchTasks()
+      el('refreshBtn').onclick=e=>{e.preventDefault();fetchTasks()}
+      el('taskForm').onsubmit=e=>{
+        e.preventDefault()
+        const title=el('title').value.trim()
+        if(!title) return setFormMessage('Title required',true)
+        const payload={id:0,categoryId:+el('categoryId').value,index:+el('index').value,title,status:el('status').checked}
+        createTask(payload)
+      }
+    })
+</script>
+</body>
+</html>

@@ -5,7 +5,18 @@ import android.net.wifi.WifiManager
 import android.util.Log
 import com.shub39.grit.core.domain.GritDatastore
 import com.shub39.grit.habits.domain.HabitRepo
+import com.shub39.grit.server.domain.CategoryResponse
+import com.shub39.grit.server.domain.ErrorResponse
+import com.shub39.grit.server.domain.GritServerRepository
+import com.shub39.grit.server.domain.SuccessResponse
+import com.shub39.grit.server.domain.TaskResponse
+import com.shub39.grit.server.domain.toCategory
+import com.shub39.grit.server.domain.toCategoryResponse
+import com.shub39.grit.server.domain.toTask
+import com.shub39.grit.server.domain.toTaskResponse
 import com.shub39.grit.tasks.domain.TaskRepo
+import io.ktor.http.ContentType
+import io.ktor.http.HttpStatusCode
 import io.ktor.serialization.kotlinx.json.json
 import io.ktor.server.application.install
 import io.ktor.server.cio.CIO
@@ -13,8 +24,12 @@ import io.ktor.server.cio.CIOApplicationEngine
 import io.ktor.server.engine.EmbeddedServer
 import io.ktor.server.engine.embeddedServer
 import io.ktor.server.plugins.contentnegotiation.ContentNegotiation
+import io.ktor.server.request.ContentTransformationException
+import io.ktor.server.request.receive
+import io.ktor.server.response.respond
 import io.ktor.server.response.respondText
 import io.ktor.server.routing.get
+import io.ktor.server.routing.post
 import io.ktor.server.routing.routing
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -32,9 +47,9 @@ typealias GritServer = EmbeddedServer<CIOApplicationEngine, CIOApplicationEngine
 class GritServerRepositoryImpl(
     private val context: Context,
     private val taskRepo: TaskRepo,
-    private val habitRepo: HabitRepo,
+//    private val habitRepo: HabitRepo,
     private val datastore: GritDatastore
-): GritServerRepository {
+) : GritServerRepository {
 
     companion object {
         private const val TAG = "GritServer"
@@ -87,8 +102,104 @@ class GritServerRepositoryImpl(
 
                 routing {
                     get("/") {
-                        val tasks = taskRepo.getTasks().toString()
-                        call.respondText(text = tasks)
+                        try {
+                            val htmlContent = context.assets
+                                .open("index.html")
+                                .bufferedReader()
+                                .use { it.readText() }
+                            call.respondText(htmlContent, ContentType.Text.Html)
+                        } catch (e: Exception) {
+                            Log.e(TAG, "Error reading html asset", e)
+                            call.respondText(
+                                """
+                                    <html>
+                                    <body>
+                                        <h1>Grit Server</h1>
+                                        <p>Error loading interface. Please check server logs.</p>
+                                    </body>
+                                    </html>
+                                """.trimIndent(),
+                                ContentType.Text.Html,
+                            )
+                        }
+                    }
+
+                    get("/api/tasks") {
+                        try {
+                            val tasks = taskRepo.getTasks()
+                            val response = tasks.map { it.toTaskResponse() }
+
+                            call.respond(HttpStatusCode.OK, response)
+                        } catch (e: Exception) {
+                            Log.e(TAG, "Error getting tasks", e)
+                            call.respond(
+                                HttpStatusCode.InternalServerError,
+                                ErrorResponse("Error getting tasks: ${e.message}")
+                            )
+                        }
+                    }
+
+                    post("/api/tasks") {
+                        try {
+                            val request = call.receive<TaskResponse>()
+
+                            taskRepo.upsertTask(request.toTask())
+                            call.respond(
+                                HttpStatusCode.Created,
+                                SuccessResponse("Task added successfully")
+                            )
+                        } catch (e: ContentTransformationException) {
+                            Log.e(TAG, "Error adding task", e)
+                            call.respond(
+                                HttpStatusCode.NotAcceptable,
+                                ErrorResponse("Error adding task: ${e.message}")
+                            )
+                        } catch (e: Exception) {
+                            Log.e(TAG, "Error adding task", e)
+                            call.respond(
+                                HttpStatusCode.InternalServerError,
+                                ErrorResponse("Error adding task: ${e.message}")
+                            )
+                        }
+                    }
+
+                    get("/api/categories") {
+                        try {
+                            val categories = taskRepo.getCategories()
+                            val response = categories.map { it.toCategoryResponse() }
+
+                            call.respond(HttpStatusCode.OK, response)
+                        } catch (e: Exception) {
+                            Log.e(TAG, "Error adding category", e)
+                            call.respond(
+                                HttpStatusCode.InternalServerError,
+                                ErrorResponse("Error adding category: ${e.message}")
+                            )
+                        }
+                    }
+
+                    post("/api/categories") {
+                        try {
+                            val request = call.receive<CategoryResponse>()
+
+                            taskRepo.upsertCategory(request.toCategory())
+                            call.respond(
+                                HttpStatusCode.Created,
+                                SuccessResponse("Category added successfully")
+                            )
+                        } catch (e: ContentTransformationException) {
+                            Log.e(TAG, "Error adding category", e)
+                            call.respond(
+                                HttpStatusCode.NotAcceptable,
+                                ErrorResponse("Error adding category: ${e.message}")
+                            )
+                        } catch (e: Exception) {
+                            Log.e(TAG, "Error adding category", e)
+                            call.respond(
+                                HttpStatusCode.InternalServerError,
+                                ErrorResponse("Error adding category: ${e.message}")
+                            )
+                        }
                     }
                 }
             }
