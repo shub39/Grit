@@ -4,7 +4,6 @@ import android.content.Context
 import android.net.wifi.WifiManager
 import android.util.Log
 import com.shub39.grit.core.domain.GritDatastore
-import com.shub39.grit.habits.domain.HabitRepo
 import com.shub39.grit.server.domain.CategoryResponse
 import com.shub39.grit.server.domain.ErrorResponse
 import com.shub39.grit.server.domain.GritServerRepository
