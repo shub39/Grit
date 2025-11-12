@@ -23,17 +23,26 @@ import androidx.compose.ui.unit.dp
 import com.kizitonwose.calendar.compose.HeatMapCalendar
 import com.kizitonwose.calendar.compose.heatmapcalendar.HeatMapCalendarState
 import com.kizitonwose.calendar.compose.heatmapcalendar.rememberHeatMapCalendarState
+import com.kizitonwose.calendar.core.minusDays
+import com.kizitonwose.calendar.core.plusDays
 import com.shub39.grit.R
 import com.shub39.grit.core.presentation.theme.GritTheme
 import com.shub39.grit.habits.domain.Habit
 import com.shub39.grit.habits.domain.HabitWithAnalytics
 import com.shub39.grit.habits.presentation.HabitsPageAction
-import java.time.DayOfWeek
-import java.time.LocalDate
-import java.time.LocalDateTime
-import java.time.format.TextStyle
-import java.util.Locale
+import kotlinx.datetime.DayOfWeek
+import kotlinx.datetime.TimeZone
+import kotlinx.datetime.YearMonth
+import kotlinx.datetime.format
+import kotlinx.datetime.format.FormatStringsInDatetimeFormats
+import kotlinx.datetime.format.MonthNames
+import kotlinx.datetime.format.char
+import kotlinx.datetime.toLocalDateTime
+import kotlinx.datetime.todayIn
+import kotlin.time.Clock
+import kotlin.time.ExperimentalTime
 
+@OptIn(ExperimentalTime::class, FormatStringsInDatetimeFormats::class)
 @Composable
 fun WeeklyBooleanHeatMap(
     heatMapState: HeatMapCalendarState,
@@ -42,7 +51,7 @@ fun WeeklyBooleanHeatMap(
     primary: Color,
     modifier: Modifier = Modifier
 ) {
-    val today = LocalDate.now()
+    val today = Clock.System.todayIn(TimeZone.currentSystemDefault())
 
     AnalyticsCard(
         title = stringResource(R.string.weekly_progress),
@@ -58,10 +67,11 @@ fun WeeklyBooleanHeatMap(
                     modifier = Modifier.padding(2.dp)
                 ) {
                     Text(
-                        text = it.yearMonth.month.getDisplayName(
-                            TextStyle.SHORT_STANDALONE,
-                            Locale.getDefault()
-                        ),
+                        text = it.yearMonth.format(YearMonth.Format {
+                            monthName(MonthNames.ENGLISH_ABBREVIATED)
+                            char(' ')
+                            year()
+                        }),
                         color = MaterialTheme.colorScheme.primary,
                         modifier = Modifier.align(Alignment.Center)
                     )
@@ -132,7 +142,7 @@ fun WeeklyBooleanHeatMap(
                     contentAlignment = Alignment.Center
                 ) {
                     Text(
-                        text = day.date.dayOfMonth.toString(),
+                        text = day.date.day.toString(),
                         style = MaterialTheme.typography.bodyMedium,
                         fontWeight = if (done) FontWeight.Bold else FontWeight.Normal,
                         color = if (done) primary
@@ -145,6 +155,7 @@ fun WeeklyBooleanHeatMap(
     }
 }
 
+@OptIn(ExperimentalTime::class)
 @Preview
 @Composable
 private fun Preview() {
@@ -157,7 +168,7 @@ private fun Preview() {
                     id = 0,
                     title = "Test Habit",
                     description = "A desc",
-                    time = LocalDateTime.now(),
+                    time = Clock.System.now().toLocalDateTime(TimeZone.currentSystemDefault()),
                     days = DayOfWeek.entries.toSet(),
                     index = 1,
                     reminder = true

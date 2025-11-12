@@ -3,17 +3,28 @@ package com.shub39.grit.habits.data.repository
 import com.shub39.grit.habits.domain.HabitStatus
 import com.shub39.grit.habits.domain.WeekDayFrequencyData
 import com.shub39.grit.habits.domain.WeeklyComparisonData
-import java.time.DayOfWeek
-import java.time.LocalDate
-import java.time.format.TextStyle
-import java.time.temporal.ChronoUnit
-import java.time.temporal.WeekFields
-import java.util.Locale
+import kotlinx.datetime.DatePeriod
+import kotlinx.datetime.DateTimeUnit
+import kotlinx.datetime.DayOfWeek
+import kotlinx.datetime.LocalDate
+import kotlinx.datetime.TimeZone
+import kotlinx.datetime.daysUntil
+import kotlinx.datetime.format.DayOfWeekNames
+import kotlinx.datetime.isoDayNumber
+import kotlinx.datetime.minus
+import kotlinx.datetime.plus
+import kotlinx.datetime.todayIn
+import kotlin.time.Clock
+import kotlin.time.ExperimentalTime
 
-fun countCurrentStreak(dates: List<LocalDate>, eligibleWeekdays: Set<DayOfWeek> = DayOfWeek.entries.toSet()): Int {
+@OptIn(ExperimentalTime::class)
+fun countCurrentStreak(
+    dates: List<LocalDate>,
+    eligibleWeekdays: Set<DayOfWeek> = DayOfWeek.entries.toSet()
+): Int {
     if (dates.isEmpty()) return 0
 
-    val today = LocalDate.now()
+    val today = Clock.System.todayIn(TimeZone.currentSystemDefault())
     val filteredDates = dates.filter { eligibleWeekdays.contains(it.dayOfWeek) }.sorted()
 
     if (filteredDates.isEmpty()) return 0
@@ -21,13 +32,13 @@ fun countCurrentStreak(dates: List<LocalDate>, eligibleWeekdays: Set<DayOfWeek> 
     val lastDate = filteredDates.last()
 
     // Check if we need to account for eligible days between lastDate and today
-    val daysBetween = ChronoUnit.DAYS.between(lastDate, today)
+    val daysBetween = lastDate.daysUntil(today)
     if (daysBetween > 0) {
         // Check if there are any eligible days we missed between lastDate and today
         var hasEligibleDayMissed = false
-        for (i in 1L..daysBetween) {
-            val checkDate = lastDate.plusDays(i)
-            if (eligibleWeekdays.contains(checkDate.dayOfWeek) && checkDate.isBefore(today)) {
+        for (i in 1..daysBetween) {
+            val checkDate = lastDate.plus(DatePeriod(days = i))
+            if (eligibleWeekdays.contains(checkDate.dayOfWeek) && checkDate < today) {
                 hasEligibleDayMissed = true
                 break
             }
@@ -55,7 +66,10 @@ fun countCurrentStreak(dates: List<LocalDate>, eligibleWeekdays: Set<DayOfWeek> 
     return streak
 }
 
-fun countBestStreak(dates: List<LocalDate>, eligibleWeekdays: Set<DayOfWeek> = DayOfWeek.entries.toSet()): Int {
+fun countBestStreak(
+    dates: List<LocalDate>,
+    eligibleWeekdays: Set<DayOfWeek> = DayOfWeek.entries.toSet()
+): Int {
     if (dates.isEmpty()) return 0
 
     val filteredDates = dates.filter { eligibleWeekdays.contains(it.dayOfWeek) }.sorted()
@@ -79,29 +93,37 @@ fun countBestStreak(dates: List<LocalDate>, eligibleWeekdays: Set<DayOfWeek> = D
     return maxOf(maxConsecutive, currentConsecutive)
 }
 
+@OptIn(ExperimentalTime::class)
 fun prepareLineChartData(
     firstDay: DayOfWeek,
     habitStatuses: List<HabitStatus>
 ): WeeklyComparisonData {
-    val today = LocalDate.now()
-    val weekFields = WeekFields.of(firstDay, 1)
+    val today = Clock.System.todayIn(TimeZone.currentSystemDefault())
     val totalWeeks = 15
 
-    val startDateOfPeriod = today.minusWeeks(totalWeeks.toLong()).with(weekFields.dayOfWeek(), 1)
+    // Find the start date of the 15-week period
+    val startDateOfTodayWeek = today.minus(
+        today.dayOfWeek.isoDayNumber - firstDay.isoDayNumber,
+        DateTimeUnit.DAY
+    )
+    val startDateOfPeriod = startDateOfTodayWeek.minus(totalWeeks, DateTimeUnit.WEEK)
 
     val habitCompletionByWeek = habitStatuses
-        .filter { !it.date.isBefore(startDateOfPeriod) && !it.date.isAfter(today) }
+        .filter { it.date in startDateOfPeriod..today }
         .groupBy {
-            val yearOfWeek = it.date.get(weekFields.weekBasedYear())
-            val weekOfYear = it.date.get(weekFields.weekOfWeekBasedYear())
-            yearOfWeek * 100 + weekOfYear
+            // Calculate the start date of the week for the given habit date
+            val daysFromFirstDay = (it.date.dayOfWeek.isoDayNumber - firstDay.isoDayNumber + 7) % 7
+            it.date.minus(daysFromFirstDay, DateTimeUnit.DAY)
         }
         .mapValues { (_, habitStatuses) -> habitStatuses.size }
+
     val values = (0..totalWeeks).map { i ->
-        val currentWeekStart = today.minusWeeks(totalWeeks - i.toLong()).with(weekFields.dayOfWeek(), 1)
-        val yearOfWeek = currentWeekStart.get(weekFields.weekBasedYear())
-        val weekOfYear = currentWeekStart.get(weekFields.weekOfWeekBasedYear())
-        val weekKey = yearOfWeek * 100 + weekOfYear
+        // The start of the current week in the loop, starting from 15 weeks ago
+        val currentWeekStart = startDateOfPeriod.plus(i, DateTimeUnit.WEEK)
+
+        // The key for the map is the LocalDate representing the start of the week
+        val weekKey = currentWeekStart
+
         (habitCompletionByWeek[weekKey]?.toDouble() ?: 0.0).coerceIn(0.0, 7.0)
     }
     return values
@@ -115,10 +137,7 @@ fun prepareWeekDayFrequencyData(
         .eachCount()
 
     return DayOfWeek.entries.associate { dayOfWeek ->
-        val weekName = dayOfWeek.getDisplayName(
-            TextStyle.SHORT,
-            Locale.getDefault()
-        ).toString()
+        val weekName = DayOfWeekNames.ENGLISH_ABBREVIATED.names[dayOfWeek.isoDayNumber - 1]
 
         weekName to dayFrequency.getOrDefault(dayOfWeek, 0)
     }
@@ -135,14 +154,18 @@ fun prepareHeatMapData(
     return dateFrequency
 }
 
-private fun areConsecutiveEligibleDays(date1: LocalDate, date2: LocalDate, eligibleWeekdays: Set<DayOfWeek>): Boolean {
-    var checkDate = date1.plusDays(1)
-    while (checkDate.isBefore(date2)) {
+private fun areConsecutiveEligibleDays(
+    date1: LocalDate,
+    date2: LocalDate,
+    eligibleWeekdays: Set<DayOfWeek>
+): Boolean {
+    var checkDate = date1.plus(1, DateTimeUnit.DAY)
+    while (checkDate < date2) {
         if (eligibleWeekdays.contains(checkDate.dayOfWeek)) {
             // Found an eligible day between date1 and date2, so they're not consecutive
             return false
         }
-        checkDate = checkDate.plusDays(1)
+        checkDate = checkDate.plus(1, DateTimeUnit.DAY)
     }
     return checkDate == date2
 }

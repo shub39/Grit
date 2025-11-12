@@ -48,18 +48,17 @@ import androidx.core.content.ContextCompat
 import com.shub39.grit.R
 import com.shub39.grit.core.presentation.component.GritBottomSheet
 import com.shub39.grit.core.presentation.component.GritDialog
+import com.shub39.grit.core.presentation.toFormattedString
 import com.shub39.grit.habits.domain.Habit
-import java.time.DayOfWeek
-import java.time.format.DateTimeFormatter
-import java.time.format.TextStyle
-import java.util.Locale
+import kotlinx.datetime.DayOfWeek
+import kotlinx.datetime.LocalDateTime
+import kotlinx.datetime.LocalTime
 
 @OptIn(ExperimentalMaterial3ExpressiveApi::class, ExperimentalMaterial3Api::class)
 @Composable
 fun HabitUpsertSheet(
     habit: Habit,
     onDismissRequest: () -> Unit,
-    timeFormat: String,
     onUpsertHabit: (Habit) -> Unit,
     is24Hr: Boolean,
     modifier: Modifier = Modifier,
@@ -183,7 +182,7 @@ fun HabitUpsertSheet(
                     )
 
                     Text(
-                        text = newHabit.time.format(DateTimeFormatter.ofPattern(timeFormat)),
+                        text = newHabit.time.time.toFormattedString(is24Hr = is24Hr),
                         style = MaterialTheme.typography.titleLarge
                     )
                 }
@@ -217,10 +216,7 @@ fun HabitUpsertSheet(
                         modifier = Modifier.padding(horizontal = 4.dp),
                         content = {
                             Text(
-                                text = dayOfWeek.getDisplayName(
-                                    TextStyle.SHORT,
-                                    Locale.getDefault()
-                                )
+                                text = dayOfWeek.name.take(3)
                             )
                         }
                     )
@@ -271,9 +267,13 @@ fun HabitUpsertSheet(
                 Button(
                     onClick = {
                         newHabit = newHabit.copy(
-                            time = newHabit.time
-                                .withHour(timePickerState.hour)
-                                .withMinute(timePickerState.minute)
+                            time = LocalDateTime(
+                                date = newHabit.time.date,
+                                time = LocalTime(
+                                    minute = timePickerState.minute,
+                                    hour = timePickerState.hour
+                                )
+                            )
                         )
                         timePickerDialog = false
                     },

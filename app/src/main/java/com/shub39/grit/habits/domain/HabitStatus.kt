@@ -1,6 +1,6 @@
 package com.shub39.grit.habits.domain
 
-import java.time.LocalDate
+import kotlinx.datetime.LocalDate
 
 data class HabitStatus(
     val id: Long = 0,

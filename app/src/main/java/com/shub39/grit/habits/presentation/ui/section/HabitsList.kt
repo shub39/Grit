@@ -55,12 +55,17 @@ import com.shub39.grit.habits.presentation.HabitPageState
 import com.shub39.grit.habits.presentation.HabitsPageAction
 import com.shub39.grit.habits.presentation.ui.component.HabitCard
 import com.shub39.grit.habits.presentation.ui.component.HabitUpsertSheet
+import kotlinx.datetime.DayOfWeek
+import kotlinx.datetime.TimeZone
+import kotlinx.datetime.toLocalDateTime
 import sh.calvin.reorderable.ReorderableItem
 import sh.calvin.reorderable.rememberReorderableLazyListState
-import java.time.DayOfWeek
-import java.time.LocalDateTime
+import kotlin.time.Clock
+import kotlin.time.ExperimentalTime
 
-@OptIn(ExperimentalMaterial3Api::class, ExperimentalMaterial3ExpressiveApi::class)
+@OptIn(ExperimentalMaterial3Api::class, ExperimentalMaterial3ExpressiveApi::class,
+    ExperimentalTime::class
+)
 @Composable
 fun HabitsList(
     state: HabitPageState,
@@ -177,7 +182,7 @@ fun HabitsList(
                         startingDay = state.startingDay,
                         editState = editState,
                         onNavigateToAnalytics = onNavigateToAnalytics,
-                        timeFormat = state.timeFormat,
+                        is24Hr = state.is24Hr,
                         reorderHandle = {
                             Icon(
                                 painter = painterResource(R.drawable.baseline_drag_indicator_24),
@@ -263,13 +268,12 @@ fun HabitsList(
             habit = Habit(
                 title = "",
                 description = "",
-                time = LocalDateTime.now(),
+                time = Clock.System.now().toLocalDateTime(TimeZone.currentSystemDefault()),
                 days = DayOfWeek.entries.toSet(),
                 index = reorderableHabits.size,
                 reminder = false
             ),
             onDismissRequest = { onAction(HabitsPageAction.DismissAddHabitDialog) },
-            timeFormat = state.timeFormat,
             onUpsertHabit = { onAction(HabitsPageAction.AddHabit(it)) },
             is24Hr = state.is24Hr,
         )

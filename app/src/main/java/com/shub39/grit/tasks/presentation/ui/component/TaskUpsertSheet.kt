@@ -37,7 +37,6 @@ import androidx.compose.material3.TimePicker
 import androidx.compose.material3.TimePickerDialog
 import androidx.compose.material3.ToggleButton
 import androidx.compose.material3.ToggleButtonDefaults
-import androidx.compose.material3.getSelectedDate
 import androidx.compose.material3.rememberDatePickerState
 import androidx.compose.material3.rememberTimePickerState
 import androidx.compose.runtime.Composable
@@ -58,15 +57,21 @@ import androidx.core.content.ContextCompat
 import com.shub39.grit.R
 import com.shub39.grit.core.presentation.component.GritBottomSheet
 import com.shub39.grit.core.presentation.theme.GritTheme
+import com.shub39.grit.core.presentation.toFormattedString
 import com.shub39.grit.tasks.domain.Category
 import com.shub39.grit.tasks.domain.Task
-import java.time.LocalDate
-import java.time.LocalDateTime
-import java.time.LocalTime
-import java.time.format.DateTimeFormatter
-import java.time.format.FormatStyle
+import kotlinx.datetime.LocalDateTime
+import kotlinx.datetime.LocalTime
+import kotlinx.datetime.TimeZone
+import kotlinx.datetime.toLocalDateTime
+import kotlin.time.Clock
+import kotlin.time.ExperimentalTime
+import kotlin.time.Instant
 
-@OptIn(ExperimentalMaterial3ExpressiveApi::class, ExperimentalMaterial3Api::class)
+@OptIn(
+    ExperimentalMaterial3ExpressiveApi::class, ExperimentalMaterial3Api::class,
+    ExperimentalTime::class
+)
 @Composable
 fun TaskUpsertSheet(
     task: Task,
@@ -85,10 +90,10 @@ fun TaskUpsertSheet(
     val timePickerState = rememberTimePickerState(
         is24Hour = is24Hr
     )
-    val datePickerState = rememberDatePickerState(
-        initialSelectedDate = LocalDate.now()
-    )
-    val isValidDateTime = newTask.reminder?.isAfter(LocalDateTime.now()) ?: true
+    val datePickerState = rememberDatePickerState()
+    val isValidDateTime = if (newTask.reminder != null) {
+        newTask.reminder!! > Clock.System.now().toLocalDateTime(TimeZone.currentSystemDefault())
+    } else true
 
     val launcher = rememberLauncherForActivityResult(
         contract = ActivityResultContracts.RequestPermission()
@@ -113,14 +118,6 @@ fun TaskUpsertSheet(
             textAlign = TextAlign.Center,
             modifier = Modifier.padding(horizontal = 16.dp)
         )
-
-//        FlowRow(
-//            horizontalArrangement = Arrangement.Center
-//        ) {
-//            categories.forEach { category ->
-
-//            }
-//        }
 
         LazyRow(
             horizontalArrangement = Arrangement.Center,
@@ -169,11 +166,7 @@ fun TaskUpsertSheet(
 
                 if (newTask.reminder != null) {
                     Text(
-                        text = newTask.reminder!!.format(
-                            DateTimeFormatter.ofLocalizedDateTime(
-                                FormatStyle.SHORT
-                            )
-                        ),
+                        text = newTask.reminder!!.toFormattedString(is24Hr = is24Hr),
                         style = MaterialTheme.typography.bodySmall
                     )
                 }
@@ -237,14 +230,23 @@ fun TaskUpsertSheet(
             confirmButton = {
                 TextButton(
                     onClick = {
-                        newTask = newTask.copy(
-                            reminder = LocalDateTime.of(
-                                datePickerState.getSelectedDate(),
-                                LocalTime.of(timePickerState.hour, timePickerState.minute)
+                        if (datePickerState.selectedDateMillis != null) {
+                            newTask = newTask.copy(
+                                reminder = LocalDateTime(
+                                    date = Instant
+                                        .fromEpochMilliseconds(datePickerState.selectedDateMillis!!)
+                                        .toLocalDateTime(TimeZone.currentSystemDefault())
+                                        .date,
+                                    time = LocalTime(
+                                        hour = timePickerState.hour,
+                                        minute = timePickerState.minute
+                                    )
+                                )
                             )
-                        )
-                        showDateTimePicker = false
-                    }
+                            showDateTimePicker = false
+                        }
+                    },
+                    enabled = datePickerState.selectedDateMillis != null
                 ) {
                     Text(stringResource(R.string.done))
                 }
@@ -287,6 +289,7 @@ fun TaskUpsertSheet(
     }
 }
 
+@OptIn(ExperimentalTime::class)
 @Preview
 @Composable
 private fun Preview() {
@@ -298,7 +301,7 @@ private fun Preview() {
                 title = "Dummy Task",
                 index = 1,
                 status = true,
-                reminder = null
+                reminder = Clock.System.now().toLocalDateTime(TimeZone.currentSystemDefault())
             ),
             categories = (0..10).map {
                 Category(
@@ -308,8 +311,8 @@ private fun Preview() {
                     color = "Yellow :)"
                 )
             },
-            onDismissRequest = {  },
-            onUpsert = {  },
+            onDismissRequest = { },
+            onUpsert = { },
             is24Hr = false
         )
     }

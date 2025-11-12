@@ -4,13 +4,15 @@ import androidx.sqlite.db.framework.FrameworkSQLiteOpenHelperFactory
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import androidx.test.platform.app.InstrumentationRegistry
 import com.google.common.truth.Truth.assertThat
+import com.kizitonwose.calendar.core.minusDays
+import com.kizitonwose.calendar.core.now
 import com.shub39.grit.habits.data.database.HabitDatabase
+import kotlinx.datetime.LocalDate
 import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith
-import java.time.LocalDate
-import java.time.LocalDateTime
-import java.time.ZoneOffset
+import kotlin.time.Clock
+import kotlin.time.ExperimentalTime
 
 private const val DB_NAME = "habits_test.db"
 
@@ -24,13 +26,13 @@ class HabitDBMigrationTest {
         FrameworkSQLiteOpenHelperFactory()
     )
 
+    @OptIn(ExperimentalTime::class)
     @Test
     fun migration4to5_containsCorrectData() {
         helper.createDatabase(DB_NAME, 4).apply {
             (1..5).forEach { habit ->
 
-                val timeEpoch = LocalDateTime.now().minusDays(habit.toLong())
-                    .toEpochSecond(ZoneOffset.UTC)
+                val timeEpoch = Clock.System.now().toEpochMilliseconds().div(1000)
 
                 execSQL(
                     """
@@ -47,7 +49,7 @@ class HabitDBMigrationTest {
 
                 (1..3).forEach { offset ->
 
-                    val dateEpoch = LocalDate.now().minusDays(offset.toLong()).toEpochDay()
+                    val dateEpoch = LocalDate.now().minusDays(offset).toEpochDays()
 
                     execSQL(
                         """
@@ -121,7 +123,7 @@ class HabitDBMigrationTest {
                     assertThat(habitId).isAtMost(5L)
 
                     // Date should be a valid epochDay (not in the future)
-                    assertThat(dateEpoch).isAtMost(LocalDate.now().toEpochDay())
+                    assertThat(dateEpoch).isAtMost(LocalDate.now().toEpochDays())
                 } while (cursor.moveToNext())
             }
     }

@@ -15,7 +15,7 @@ import com.shub39.grit.core.domain.GritDatastore
 import com.shub39.grit.core.domain.Pages
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
-import java.time.DayOfWeek
+import kotlinx.datetime.DayOfWeek
 
 class DataStoreImpl(
     private val datastore: DataStore<Preferences>
@@ -35,6 +35,7 @@ class DataStoreImpl(
         private val biometricLockKey = booleanPreferencesKey("biometric")
         private val taskReorderKey = booleanPreferencesKey("task_reorder")
         private val compactHabitView = booleanPreferencesKey("compact_habit_view")
+        private val serverPortKey = intPreferencesKey("server_port")
     }
 
     override suspend fun resetAppTheme() {
@@ -179,6 +180,16 @@ class DataStoreImpl(
     override suspend fun setCompactView(pref: Boolean) {
         datastore.edit { prefs ->
             prefs[compactHabitView] = pref
+        }
+    }
+
+    override fun getServerPort(): Flow<Int> = datastore.data.map { prefs ->
+        prefs[serverPortKey] ?: 8080
+    }
+
+    override suspend fun setServerPort(port: Int) {
+        datastore.edit { prefs ->
+            prefs[serverPortKey] = port
         }
     }
 }

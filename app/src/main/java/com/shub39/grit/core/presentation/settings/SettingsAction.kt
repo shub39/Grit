@@ -7,7 +7,7 @@ import com.materialkolor.PaletteStyle
 import com.shub39.grit.core.domain.AppTheme
 import com.shub39.grit.core.domain.Fonts
 import com.shub39.grit.core.domain.Pages
-import java.time.DayOfWeek
+import kotlinx.datetime.DayOfWeek
 
 sealed interface SettingsAction {
     data object OnPaywallShow: SettingsAction

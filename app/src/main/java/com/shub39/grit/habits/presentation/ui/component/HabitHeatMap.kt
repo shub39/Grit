@@ -24,10 +24,12 @@ import com.kizitonwose.calendar.compose.heatmapcalendar.rememberHeatMapCalendarS
 import com.shub39.grit.R
 import com.shub39.grit.core.presentation.theme.GritTheme
 import com.shub39.grit.habits.presentation.HabitPageState
-import java.time.LocalDate
-import java.time.format.TextStyle
-import java.util.Locale
+import kotlinx.datetime.LocalDate
+import kotlinx.datetime.YearMonth
+import kotlinx.datetime.format
+import kotlinx.datetime.format.FormatStringsInDatetimeFormats
 
+@OptIn(FormatStringsInDatetimeFormats::class)
 @Composable
 fun HabitHeatMap(
     heatMapState: HeatMapCalendarState,
@@ -49,10 +51,7 @@ fun HabitHeatMap(
                     modifier = Modifier.padding(2.dp)
                 ) {
                     Text(
-                        text = it.yearMonth.month.getDisplayName(
-                            TextStyle.SHORT_STANDALONE,
-                            Locale.getDefault()
-                        ),
+                        text = it.yearMonth.toString(),
                         color = MaterialTheme.colorScheme.primary,
                         modifier = Modifier.align(Alignment.Center)
                     )

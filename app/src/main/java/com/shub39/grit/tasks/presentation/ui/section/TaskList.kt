@@ -240,6 +240,7 @@ fun TaskList(
                                     )
                                 },
                                 shape = RoundedCornerShape(cardCorners),
+                                is24Hr = state.is24Hour,
                                 modifier = Modifier
                                     .fillMaxWidth()
                                     .padding(start = 16.dp, end = 16.dp, bottom = 8.dp)

@@ -5,28 +5,33 @@ import com.shub39.grit.habits.domain.Habit
 import com.shub39.grit.habits.domain.HabitStatus
 import com.shub39.grit.tasks.domain.Category
 import com.shub39.grit.tasks.domain.Task
-import java.time.Instant
-import java.time.ZoneId
+import kotlinx.datetime.TimeZone
+import kotlinx.datetime.toInstant
+import kotlinx.datetime.toLocalDateTime
+import kotlin.time.Clock
+import kotlin.time.ExperimentalTime
 
+@OptIn(ExperimentalTime::class)
 fun Habit.toHabitSchema(): HabitSchema {
     return HabitSchema(
         id = id,
         title = title,
         description = description,
         index = index,
-        time = time.atZone(ZoneId.systemDefault()).toInstant().toEpochMilli(),
+        time = time.toInstant(TimeZone.currentSystemDefault()).toEpochMilliseconds(),
         days = Converters.dayOfWeekToString(days),
         reminder = reminder
     )
 }
 
+@OptIn(ExperimentalTime::class)
 fun HabitSchema.toHabit(): Habit {
     return Habit(
         id = id,
         title = title,
         description = description,
         index = index,
-        time = Instant.ofEpochMilli(time).atZone(ZoneId.systemDefault()).toLocalDateTime(),
+        time = Clock.System.now().toLocalDateTime(TimeZone.currentSystemDefault()),
         days = Converters.dayOfWeekFromString(days),
         reminder = reminder
     )

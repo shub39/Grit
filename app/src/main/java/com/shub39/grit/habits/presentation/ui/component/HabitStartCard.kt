@@ -31,7 +31,10 @@ import com.shub39.grit.R
 import com.shub39.grit.core.presentation.theme.GritTheme
 import com.shub39.grit.habits.domain.Habit
 import com.shub39.grit.habits.presentation.formatDateWithOrdinal
-import java.time.LocalDateTime
+import kotlinx.datetime.TimeZone
+import kotlinx.datetime.toLocalDateTime
+import kotlin.time.Clock
+import kotlin.time.ExperimentalTime
 
 @OptIn(ExperimentalMaterial3ExpressiveApi::class)
 @Composable
@@ -81,7 +84,7 @@ fun HabitStartCard(
                     style = MaterialTheme.typography.labelMedium
                 )
                 Text(
-                    text = formatDateWithOrdinal(habit.time.toLocalDate()),
+                    text = formatDateWithOrdinal(habit.time.date),
                     style = MaterialTheme.typography.titleLarge.copy(fontWeight = FontWeight.Bold)
                 )
                 Text(
@@ -96,6 +99,7 @@ fun HabitStartCard(
     }
 }
 
+@OptIn(ExperimentalTime::class)
 @Preview
 @Composable
 private fun Preview() {
@@ -105,7 +109,7 @@ private fun Preview() {
                 id = 0,
                 title = "Asas",
                 description = "asasa",
-                time = LocalDateTime.now(),
+                time = Clock.System.now().toLocalDateTime(TimeZone.currentSystemDefault()),
                 days = emptySet(),
                 index = 1,
                 reminder = false

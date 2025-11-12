@@ -26,6 +26,7 @@ compose = "1.9.4"
 materialIconsExtended = "1.7.8"
 biometric = "1.4.0-alpha02"
 truth = "1.4.5"
+ktor = "3.3.1"
 
 [libraries]
 # Android
@@ -48,6 +49,12 @@ androidx-ui-tooling-preview = { group = "androidx.compose.ui", name = "ui-toolin
 androidx-navigation-compose = { group = "androidx.navigation", name = "navigation-compose", version.ref = "navigation" }
 androidx-biometric = { group = "androidx.biometric", name = "biometric-ktx", version.ref = "biometric" }
 
+# Server
+ktor-server-core = { module = "io.ktor:ktor-server-core", version.ref = "ktor" }
+ktor-server-cio = { module = "io.ktor:ktor-server-cio", version.ref = "ktor" }
+ktor-server-content-negotiation = { module = "io.ktor:ktor-server-content-negotiation", version.ref = "ktor" }
+ktor-serialization-kotlinx-json = { module = "io.ktor:ktor-serialization-kotlinx-json", version.ref = "ktor" }
+
 # Others
 junit = { module = "junit:junit", version.ref = "junit" }
 koin-androidx-compose = { module = "io.insert-koin:koin-androidx-compose", version.ref = "koin" }
@@ -61,7 +68,7 @@ colorpicker-compose = { module = "com.github.skydoves:colorpicker-compose", vers
 aboutLibraries = { group = "com.mikepenz", name = "aboutlibraries-compose", version.ref = "aboutLibraries" }
 aboutlibraries-compose-m3 = { module = "com.mikepenz:aboutlibraries-compose-m3", version.ref = "aboutLibraries" }
 composeIcons-fontAwesome = { module = "br.com.devsrsouza.compose.icons:font-awesome", version.ref = "composeIcons" }
-calendar = { module = "com.kizitonwose.calendar:compose", version.ref = "calendar" }
+calendar = { module = "com.kizitonwose.calendar:compose-multiplatform", version.ref = "calendar" }
 compose-charts = { module = "io.github.ehsannarmani:compose-charts", version.ref = "composeCharts" }
 truth = { module = "com.google.truth:truth", version.ref = "truth" }
 

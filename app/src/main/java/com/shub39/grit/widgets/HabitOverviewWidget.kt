@@ -34,6 +34,7 @@ import androidx.glance.text.FontWeight
 import androidx.glance.text.Text
 import androidx.glance.text.TextAlign
 import androidx.glance.text.TextStyle
+import com.kizitonwose.calendar.core.now
 import com.shub39.grit.R
 import com.shub39.grit.app.MainActivity
 import com.shub39.grit.core.data.toHabit
@@ -46,14 +47,16 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.launch
+import kotlinx.datetime.LocalDate
 import org.koin.core.component.KoinComponent
 import org.koin.core.component.get
-import java.time.LocalDate
+import kotlin.time.ExperimentalTime
 
 class HabitOverviewWidgetReceiver : GlanceAppWidgetReceiver() {
     override val glanceAppWidget: GlanceAppWidget = HabitOverviewWidget()
 }
 
+@OptIn(ExperimentalTime::class)
 class HabitOverviewWidgetRepository(
     private val context: Context,
     private val statusDao: HabitStatusDao,
@@ -98,6 +101,7 @@ class HabitOverviewWidgetRepository(
     }
 }
 
+@OptIn(ExperimentalTime::class)
 class HabitOverviewWidget : GlanceAppWidget(), KoinComponent {
     override suspend fun provideGlance(context: Context, id: GlanceId) {
         val repo = get<HabitOverviewWidgetRepository>()

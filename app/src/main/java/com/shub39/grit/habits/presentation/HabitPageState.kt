@@ -4,7 +4,7 @@ import androidx.compose.runtime.Immutable
 import androidx.compose.runtime.Stable
 import com.shub39.grit.habits.domain.HabitWithAnalytics
 import com.shub39.grit.habits.domain.OverallAnalytics
-import java.time.DayOfWeek
+import kotlinx.datetime.DayOfWeek
 
 @Stable
 @Immutable
@@ -19,6 +19,5 @@ data class HabitPageState(
     // datastore
     val compactHabitView: Boolean = false,
     val is24Hr: Boolean = false,
-    val timeFormat: String = "hh:mm a",
     val startingDay: DayOfWeek = DayOfWeek.MONDAY,
 )

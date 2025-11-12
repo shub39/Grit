@@ -41,6 +41,8 @@ import androidx.glance.layout.width
 import androidx.glance.text.FontWeight
 import androidx.glance.text.Text
 import androidx.glance.text.TextStyle
+import com.kizitonwose.calendar.core.minusDays
+import com.kizitonwose.calendar.core.now
 import com.shub39.grit.R
 import com.shub39.grit.app.MainActivity
 import com.shub39.grit.core.data.toHabit
@@ -54,10 +56,10 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.launch
+import kotlinx.datetime.LocalDate
 import org.koin.core.component.KoinComponent
 import org.koin.core.component.get
-import java.time.LocalDate
-import java.util.Locale
+import kotlin.time.ExperimentalTime
 
 class HabitStreakWidgetReceiver : GlanceAppWidgetReceiver() {
     override val glanceAppWidget: GlanceAppWidget = HabitStreakWidget()
@@ -138,6 +140,7 @@ class HabitStreakWidget : GlanceAppWidget(), KoinComponent {
         }
     }
 
+    @OptIn(ExperimentalTime::class)
     @Composable
     fun HabitStreak(
         context: Context,
@@ -147,7 +150,7 @@ class HabitStreakWidget : GlanceAppWidget(), KoinComponent {
     ) {
         if (habit != null) {
             val today = LocalDate.now()
-            val last5Days = (0..4).map { today.minusDays(it.toLong()) }.reversed()
+            val last5Days = (0..4).map { today.minusDays(it) }.reversed()
             val currentStreak = countCurrentStreak(statuses)
 
             Scaffold(
@@ -234,10 +237,7 @@ class HabitStreakWidget : GlanceAppWidget(), KoinComponent {
                                     contentAlignment = Alignment.Center
                                 ) {
                                     Text(
-                                        text = it.dayOfWeek.getDisplayName(
-                                            java.time.format.TextStyle.NARROW_STANDALONE,
-                                            Locale.getDefault()
-                                        ),
+                                        text = it.dayOfWeek.name,
                                         style = TextStyle(
                                             fontSize = 12.sp,
                                             fontWeight = FontWeight.Bold,

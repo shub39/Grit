@@ -123,4 +123,10 @@
     <string name="weeks">Weeks</string>
     <string name="open_app">Open App</string>
     <string name="all_tasks">All Tasks</string>
+    <string name="server_channel_name">Server notification channel</string>
+    <string name="server_channel_description">channel for sending server status updates</string>
+    <string name="server_running">Grit Server is running</string>
+    <string name="local_server_notification_text">Server URL: %s</string>
+    <string name="local_server_starting">starting server</string>
+    <string name="stop">Stop</string>
 </resources>

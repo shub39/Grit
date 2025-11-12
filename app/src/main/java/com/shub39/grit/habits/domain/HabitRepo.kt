@@ -1,8 +1,8 @@
 package com.shub39.grit.habits.domain
 
 import kotlinx.coroutines.flow.Flow
-import java.time.DayOfWeek
-import java.time.LocalDate
+import kotlinx.datetime.DayOfWeek
+import kotlinx.datetime.LocalDate
 
 interface HabitRepo {
     suspend fun upsertHabit(habit: Habit)

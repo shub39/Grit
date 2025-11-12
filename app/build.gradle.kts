@@ -69,7 +69,7 @@ android {
         }
 
         debug {
-//            applicationIdSuffix = ".debug"
+            applicationIdSuffix = ".debug"
             resValue("string", "app_name", "$appName Debug")
         }
     }
@@ -148,6 +148,7 @@ dependencies {
     implementation(libs.androidx.material.icons.extended)
     implementation(libs.aboutlibraries.compose.m3)
     implementation(libs.androidx.biometric)
+    implementation("org.jetbrains.kotlinx:kotlinx-datetime:0.7.1")
 
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
@@ -156,6 +157,11 @@ dependencies {
     androidTestImplementation(libs.androidx.room.testing)
     testImplementation(libs.androidx.room.testing)
     androidTestImplementation(libs.truth)
+
+    implementation(libs.ktor.server.core)
+    implementation(libs.ktor.server.cio)
+    implementation(libs.ktor.serialization.kotlinx.json)
+    implementation(libs.ktor.server.content.negotiation)
 }
 
 room {

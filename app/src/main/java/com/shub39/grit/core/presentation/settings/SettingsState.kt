@@ -6,7 +6,7 @@ import com.shub39.grit.core.domain.Pages
 import com.shub39.grit.core.domain.backup.ExportState
 import com.shub39.grit.core.domain.backup.RestoreState
 import com.shub39.grit.core.presentation.theme.Theme
-import java.time.DayOfWeek
+import kotlinx.datetime.DayOfWeek
 
 @Stable
 @Immutable

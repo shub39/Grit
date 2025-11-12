@@ -14,6 +14,8 @@ import com.shub39.grit.habits.data.database.HabitDatabase
 import com.shub39.grit.habits.data.database.HabitDbFactory
 import com.shub39.grit.habits.data.repository.HabitRepository
 import com.shub39.grit.habits.domain.HabitRepo
+import com.shub39.grit.server.domain.GritServerRepository
+import com.shub39.grit.server.GritServerRepositoryImpl
 import com.shub39.grit.tasks.data.database.TaskDatabase
 import com.shub39.grit.tasks.data.database.TaskDbFactory
 import com.shub39.grit.tasks.data.repository.TasksRepository
@@ -72,6 +74,9 @@ val appModule = module {
 
     // Revenuecat
     singleOf(::BillingHandler)
+
+    // server
+    singleOf(::GritServerRepositoryImpl).bind<GritServerRepository>()
 
     // view models
     singleOf(::StateLayer)

@@ -27,6 +27,8 @@ import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import com.kizitonwose.calendar.compose.heatmapcalendar.rememberHeatMapCalendarState
+import com.kizitonwose.calendar.core.minusMonths
+import com.kizitonwose.calendar.core.now
 import com.materialkolor.ktx.fixIfDisliked
 import com.materialkolor.ktx.harmonize
 import com.shub39.grit.R
@@ -42,10 +44,13 @@ import ir.ehsannarmani.compose_charts.models.Line
 import ir.ehsannarmani.compose_charts.models.PopupProperties
 import ir.ehsannarmani.compose_charts.models.StrokeStyle
 import kotlinx.collections.immutable.toImmutableList
-import java.time.YearMonth
+import kotlinx.datetime.YearMonth
 import kotlin.random.Random
+import kotlin.time.ExperimentalTime
 
-@OptIn(ExperimentalMaterial3Api::class, ExperimentalMaterial3ExpressiveApi::class)
+@OptIn(ExperimentalMaterial3Api::class, ExperimentalMaterial3ExpressiveApi::class,
+    ExperimentalTime::class
+)
 @Composable
 fun OverallAnalytics(
     state: HabitPageState,

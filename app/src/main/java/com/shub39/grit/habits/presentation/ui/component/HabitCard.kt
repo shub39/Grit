@@ -39,13 +39,20 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import com.kizitonwose.calendar.compose.WeekCalendar
 import com.kizitonwose.calendar.compose.weekcalendar.rememberWeekCalendarState
+import com.kizitonwose.calendar.core.minusDays
+import com.kizitonwose.calendar.core.plusDays
+import com.shub39.grit.core.presentation.toFormattedString
 import com.shub39.grit.habits.domain.HabitWithAnalytics
 import com.shub39.grit.habits.presentation.HabitsPageAction
-import java.time.DayOfWeek
-import java.time.LocalDate
-import java.time.format.DateTimeFormatter
+import kotlinx.datetime.DateTimeUnit
+import kotlinx.datetime.DayOfWeek
+import kotlinx.datetime.TimeZone
+import kotlinx.datetime.minus
+import kotlinx.datetime.todayIn
+import kotlin.time.Clock
+import kotlin.time.ExperimentalTime
 
-@OptIn(ExperimentalMaterial3Api::class)
+@OptIn(ExperimentalMaterial3Api::class, ExperimentalTime::class)
 @Composable
 fun HabitCard(
     habitWithAnalytics: HabitWithAnalytics,
@@ -56,11 +63,11 @@ fun HabitCard(
     compactView: Boolean,
     startingDay: DayOfWeek,
     reorderHandle: @Composable () -> Unit,
-    timeFormat: String,
+    is24Hr: Boolean,
     shape: Shape,
     modifier: Modifier = Modifier
 ) {
-    val today = LocalDate.now()
+    val today = Clock.System.todayIn(TimeZone.currentSystemDefault())
     val canCompleteToday = today.dayOfWeek in habitWithAnalytics.habit.days
 
     // animated colors
@@ -84,9 +91,9 @@ fun HabitCard(
     )
 
     val weekState = rememberWeekCalendarState(
-        startDate = habitWithAnalytics.habit.time.toLocalDate().minusMonths(12),
-        endDate = LocalDate.now(),
-        firstVisibleWeekDate = LocalDate.now(),
+        startDate = habitWithAnalytics.habit.time.date.minus(1, DateTimeUnit.YEAR),
+        endDate = today,
+        firstVisibleWeekDate = today,
         firstDayOfWeek = startingDay
     )
 
@@ -97,7 +104,7 @@ fun HabitCard(
         ),
         onClick = {
             if (canCompleteToday) {
-                action(HabitsPageAction.InsertStatus(habitWithAnalytics.habit))
+                action(HabitsPageAction.InsertStatus(habitWithAnalytics.habit, today))
             }
         },
         shape = shape,
@@ -140,7 +147,7 @@ fun HabitCard(
             supportingContent = {
                 if (habitWithAnalytics.habit.reminder) {
                     Text(
-                        text = habitWithAnalytics.habit.time.format(DateTimeFormatter.ofPattern(timeFormat))
+                        text = habitWithAnalytics.habit.time.time.toFormattedString(is24Hr)
                     )
                 }
             },
@@ -236,7 +243,7 @@ fun HabitCard(
                             horizontalAlignment = Alignment.CenterHorizontally
                         ) {
                             Text(
-                                text = weekDay.date.dayOfMonth.toString(),
+                                text = weekDay.date.day.toString(),
                                 style = MaterialTheme.typography.bodyMedium,
                                 color = if (done) MaterialTheme.colorScheme.onPrimary
                                 else if (!validDay) cardContent.copy(alpha = 0.5f)
