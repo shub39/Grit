@@ -41,6 +41,8 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import com.kizitonwose.calendar.compose.heatmapcalendar.rememberHeatMapCalendarState
 import com.kizitonwose.calendar.compose.rememberCalendarState
+import com.kizitonwose.calendar.core.minusMonths
+import com.kizitonwose.calendar.core.now
 import com.shub39.grit.R
 import com.shub39.grit.core.presentation.component.GritDialog
 import com.shub39.grit.core.presentation.component.PageFill
@@ -55,9 +57,12 @@ import com.shub39.grit.habits.presentation.ui.component.WeekDayBreakdown
 import com.shub39.grit.habits.presentation.ui.component.WeeklyActivity
 import com.shub39.grit.habits.presentation.ui.component.WeeklyBooleanHeatMap
 import kotlinx.collections.immutable.toImmutableList
-import java.time.YearMonth
+import kotlinx.datetime.YearMonth
+import kotlin.time.ExperimentalTime
 
-@OptIn(ExperimentalMaterial3Api::class, ExperimentalMaterial3ExpressiveApi::class)
+@OptIn(ExperimentalMaterial3Api::class, ExperimentalMaterial3ExpressiveApi::class,
+    ExperimentalTime::class
+)
 @Composable
 fun AnalyticsPage(
     state: HabitPageState,

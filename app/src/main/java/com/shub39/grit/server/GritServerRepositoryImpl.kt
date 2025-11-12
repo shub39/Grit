@@ -14,7 +14,6 @@ import com.shub39.grit.server.domain.toCategoryResponse
 import com.shub39.grit.server.domain.toTask
 import com.shub39.grit.server.domain.toTaskResponse
 import com.shub39.grit.tasks.domain.TaskRepo
-import io.ktor.http.ContentType
 import io.ktor.http.HttpStatusCode
 import io.ktor.serialization.kotlinx.json.json
 import io.ktor.server.application.install
@@ -26,7 +25,6 @@ import io.ktor.server.plugins.contentnegotiation.ContentNegotiation
 import io.ktor.server.request.ContentTransformationException
 import io.ktor.server.request.receive
 import io.ktor.server.response.respond
-import io.ktor.server.response.respondText
 import io.ktor.server.routing.get
 import io.ktor.server.routing.post
 import io.ktor.server.routing.routing
@@ -100,29 +98,6 @@ class GritServerRepositoryImpl(
                 }
 
                 routing {
-                    get("/") {
-                        try {
-                            val htmlContent = context.assets
-                                .open("index.html")
-                                .bufferedReader()
-                                .use { it.readText() }
-                            call.respondText(htmlContent, ContentType.Text.Html)
-                        } catch (e: Exception) {
-                            Log.e(TAG, "Error reading html asset", e)
-                            call.respondText(
-                                """
-                                    <html>
-                                    <body>
-                                        <h1>Grit Server</h1>
-                                        <p>Error loading interface. Please check server logs.</p>
-                                    </body>
-                                    </html>
-                                """.trimIndent(),
-                                ContentType.Text.Html,
-                            )
-                        }
-                    }
-
                     get("/api/tasks") {
                         try {
                             val tasks = taskRepo.getTasks()

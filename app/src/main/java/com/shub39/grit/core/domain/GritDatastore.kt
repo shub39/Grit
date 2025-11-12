@@ -2,7 +2,7 @@ package com.shub39.grit.core.domain
 
 import com.materialkolor.PaletteStyle
 import kotlinx.coroutines.flow.Flow
-import java.time.DayOfWeek
+import kotlinx.datetime.DayOfWeek
 
 interface GritDatastore {
     suspend fun resetAppTheme()

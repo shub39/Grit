@@ -4,7 +4,7 @@ import androidx.room.Entity
 import androidx.room.ForeignKey
 import androidx.room.Index
 import androidx.room.PrimaryKey
-import java.time.LocalDate
+import kotlinx.datetime.LocalDate
 
 @Entity(
     tableName = "habit_status",

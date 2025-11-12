@@ -6,8 +6,7 @@ import com.shub39.grit.habits.domain.WeekDayFrequencyData
 import ir.ehsannarmani.compose_charts.models.Bars
 import kotlinx.collections.immutable.ImmutableList
 import kotlinx.collections.immutable.toImmutableList
-import java.time.LocalDate
-import java.time.format.DateTimeFormatter
+import kotlinx.datetime.LocalDate
 
 fun prepareWeekDayDataToBars(
     data: WeekDayFrequencyData,
@@ -40,8 +39,8 @@ fun getOrdinalSuffix(day: Int): String {
 }
 
 fun formatDateWithOrdinal(date: LocalDate): String {
-    val day = date.dayOfMonth
-    val month = date.format(DateTimeFormatter.ofPattern("MMMM"))
+    val day = date.day
+    val month = date.month
     val year = date.year
 
     return "${getOrdinalSuffix(day)} $month $year"

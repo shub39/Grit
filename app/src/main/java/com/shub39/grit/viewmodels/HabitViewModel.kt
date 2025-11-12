@@ -2,6 +2,7 @@ package com.shub39.grit.viewmodels
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.kizitonwose.calendar.core.now
 import com.shub39.grit.billing.BillingHandler
 import com.shub39.grit.core.domain.AlarmScheduler
 import com.shub39.grit.core.domain.GritDatastore
@@ -19,7 +20,8 @@ import kotlinx.coroutines.flow.onStart
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
-import java.time.LocalDate
+import kotlinx.datetime.LocalDate
+import kotlin.time.ExperimentalTime
 
 class HabitViewModel(
     private val stateLayer: StateLayer,
@@ -124,6 +126,7 @@ class HabitViewModel(
         }
     }
 
+    @OptIn(ExperimentalTime::class)
     private fun observeHabitStatuses() {
         habitStatusJob?.cancel()
         habitStatusJob = repo

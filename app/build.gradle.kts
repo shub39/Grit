@@ -148,6 +148,7 @@ dependencies {
     implementation(libs.androidx.material.icons.extended)
     implementation(libs.aboutlibraries.compose.m3)
     implementation(libs.androidx.biometric)
+    implementation("org.jetbrains.kotlinx:kotlinx-datetime:0.7.1")
 
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)

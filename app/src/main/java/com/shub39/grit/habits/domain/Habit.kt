@@ -2,8 +2,8 @@ package com.shub39.grit.habits.domain
 
 import androidx.compose.runtime.Immutable
 import androidx.compose.runtime.Stable
-import java.time.DayOfWeek
-import java.time.LocalDateTime
+import kotlinx.datetime.DayOfWeek
+import kotlinx.datetime.LocalDateTime
 
 @Stable
 @Immutable

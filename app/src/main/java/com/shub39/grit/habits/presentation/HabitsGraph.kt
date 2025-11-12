@@ -26,8 +26,11 @@ import com.shub39.grit.habits.domain.HabitWithAnalytics
 import com.shub39.grit.habits.presentation.ui.section.AnalyticsPage
 import com.shub39.grit.habits.presentation.ui.section.HabitsList
 import com.shub39.grit.habits.presentation.ui.section.OverallAnalytics
+import kotlinx.datetime.TimeZone
+import kotlinx.datetime.toLocalDateTime
 import kotlinx.serialization.Serializable
-import java.time.LocalDateTime
+import kotlin.time.Clock
+import kotlin.time.ExperimentalTime
 
 @Serializable
 private sealed interface HabitRoutes {
@@ -83,6 +86,7 @@ fun HabitsGraph(
     }
 }
 
+@OptIn(ExperimentalTime::class)
 @Preview
 @Composable
 private fun Preview() {
@@ -92,7 +96,7 @@ private fun Preview() {
                 id = habitId,
                 title = "Habit $habitId",
                 description = "Description $habitId",
-                time = LocalDateTime.now(),
+                time = Clock.System.now().toLocalDateTime(TimeZone.currentSystemDefault()),
                 days = emptySet(),
                 index = habitId.toInt(),
                 reminder = false

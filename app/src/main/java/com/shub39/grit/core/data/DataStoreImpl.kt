@@ -15,7 +15,7 @@ import com.shub39.grit.core.domain.GritDatastore
 import com.shub39.grit.core.domain.Pages
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
-import java.time.DayOfWeek
+import kotlinx.datetime.DayOfWeek
 
 class DataStoreImpl(
     private val datastore: DataStore<Preferences>

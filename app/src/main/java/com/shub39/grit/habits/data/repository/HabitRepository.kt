@@ -18,10 +18,15 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.flowOn
 import kotlinx.coroutines.flow.map
-import java.time.DayOfWeek
-import java.time.LocalDate
-import java.time.temporal.ChronoUnit
+import kotlinx.datetime.DayOfWeek
+import kotlinx.datetime.LocalDate
+import kotlinx.datetime.TimeZone
+import kotlinx.datetime.daysUntil
+import kotlinx.datetime.todayIn
+import kotlin.time.Clock
+import kotlin.time.ExperimentalTime
 
+@OptIn(ExperimentalTime::class)
 class HabitRepository(
     private val habitDao: HabitDao,
     private val habitStatusDao: HabitStatusDao,
@@ -85,10 +90,7 @@ class HabitRepository(
                         habitStatuses = habitStatusesForHabit
                     ),
                     weekDayFrequencyData = prepareWeekDayFrequencyData(dates = dates),
-                    startedDaysAgo = ChronoUnit.DAYS.between(
-                        habit.time.toLocalDate(),
-                        LocalDate.now()
-                    )
+                    startedDaysAgo = habit.time.date.daysUntil(Clock.System.todayIn(TimeZone.currentSystemDefault())).toLong()
                 )
             }
         }.flowOn(Dispatchers.Default)
@@ -119,7 +121,7 @@ class HabitRepository(
         habitStatusDao.insertHabitStatus(habitStatus.toHabitStatusEntity())
         habitHeatMapWidgetRepository.update()
 
-        if (habitStatus.date == LocalDate.now()) {
+        if (habitStatus.date == Clock.System.todayIn(TimeZone.currentSystemDefault())) {
             habitOverviewWidgetRepository.update()
         }
     }
@@ -128,7 +130,7 @@ class HabitRepository(
         habitStatusDao.deleteStatus(id, date)
         habitHeatMapWidgetRepository.update()
 
-        if (date == LocalDate.now()) {
+        if (date == Clock.System.todayIn(TimeZone.currentSystemDefault())) {
             habitOverviewWidgetRepository.update()
         }
     }

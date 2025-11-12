@@ -5,7 +5,7 @@ import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.Query
 import kotlinx.coroutines.flow.Flow
-import java.time.LocalDate
+import kotlinx.datetime.LocalDate
 
 @Dao
 interface HabitStatusDao {
@@ -13,7 +13,7 @@ interface HabitStatusDao {
     suspend fun getHabitStatuses(): List<HabitStatusEntity>
 
     @Query("SELECT * FROM habit_status WHERE date = :date")
-    suspend fun getCompletedStatuses(date: LocalDate = LocalDate.now()): List<HabitStatusEntity>
+    suspend fun getCompletedStatuses(date: LocalDate): List<HabitStatusEntity>
 
     @Query("SELECT * FROM habit_status")
     fun getAllHabitStatuses(): Flow<List<HabitStatusEntity>>

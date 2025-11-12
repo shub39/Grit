@@ -68,7 +68,7 @@ colorpicker-compose = { module = "com.github.skydoves:colorpicker-compose", vers
 aboutLibraries = { group = "com.mikepenz", name = "aboutlibraries-compose", version.ref = "aboutLibraries" }
 aboutlibraries-compose-m3 = { module = "com.mikepenz:aboutlibraries-compose-m3", version.ref = "aboutLibraries" }
 composeIcons-fontAwesome = { module = "br.com.devsrsouza.compose.icons:font-awesome", version.ref = "composeIcons" }
-calendar = { module = "com.kizitonwose.calendar:compose", version.ref = "calendar" }
+calendar = { module = "com.kizitonwose.calendar:compose-multiplatform", version.ref = "calendar" }
 compose-charts = { module = "io.github.ehsannarmani:compose-charts", version.ref = "composeCharts" }
 truth = { module = "com.google.truth:truth", version.ref = "truth" }
 

@@ -4,7 +4,7 @@ import androidx.compose.runtime.Immutable
 import androidx.compose.runtime.Stable
 import com.shub39.grit.habits.domain.HabitWithAnalytics
 import com.shub39.grit.habits.domain.OverallAnalytics
-import java.time.DayOfWeek
+import kotlinx.datetime.DayOfWeek
 
 @Stable
 @Immutable

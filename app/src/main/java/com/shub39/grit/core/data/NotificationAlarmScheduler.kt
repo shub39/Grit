@@ -10,12 +10,17 @@ import com.shub39.grit.core.domain.AlarmScheduler
 import com.shub39.grit.core.domain.IntentActions
 import com.shub39.grit.habits.domain.Habit
 import com.shub39.grit.tasks.domain.Task
-import java.time.LocalDateTime
-import java.time.ZoneId
-import java.time.format.DateTimeFormatter
-import java.util.Locale
+import kotlinx.datetime.DateTimeUnit
+import kotlinx.datetime.LocalDateTime
+import kotlinx.datetime.TimeZone
+import kotlinx.datetime.plus
+import kotlinx.datetime.toInstant
+import kotlinx.datetime.toLocalDateTime
+import kotlin.time.Clock
+import kotlin.time.ExperimentalTime
 
 //implementation of AlarmScheduler using AlarmManager
+@OptIn(ExperimentalTime::class)
 class NotificationAlarmScheduler(
     private val context: Context
 ) : AlarmScheduler {
@@ -29,8 +34,8 @@ class NotificationAlarmScheduler(
         var scheduleTime = habit.time
 
         var attempt = 0
-        while (scheduleTime.isBefore(LocalDateTime.now()) && attempt < 365) {
-            scheduleTime = scheduleTime.plusDays(1)
+        while (scheduleTime < Clock.System.now().toLocalDateTime(TimeZone.currentSystemDefault()) && attempt < 365) {
+            scheduleTime = LocalDateTime(date = scheduleTime.date.plus(1, DateTimeUnit.DAY), time = scheduleTime.time)
             attempt++
         }
 
@@ -48,20 +53,13 @@ class NotificationAlarmScheduler(
 
         alarmManager.setExactAndAllowWhileIdle(
             AlarmManager.RTC_WAKEUP,
-            scheduleTime.withSecond(0).atZone(ZoneId.systemDefault()).toEpochSecond() * 1000,
+            scheduleTime.toInstant(TimeZone.UTC).toEpochMilliseconds(),
             pendingIntent
         )
 
         Log.d(
             tag,
-            "Scheduled: Habit '${habit.title}' at ${
-                scheduleTime.format(
-                    DateTimeFormatter.ofPattern(
-                        "dd/MM/yyyy hh:mm a",
-                        Locale.getDefault()
-                    )
-                )
-            }"
+            "Scheduled: Habit '${habit.title}' at $scheduleTime"
         )
     }
 
@@ -70,7 +68,7 @@ class NotificationAlarmScheduler(
         if (task.reminder == null) return
         val scheduleTime = task.reminder
 
-        if (scheduleTime.isBefore(LocalDateTime.now())) {
+        if (scheduleTime < Clock.System.now().toLocalDateTime(TimeZone.currentSystemDefault())) {
             Log.d(tag, "Task '${task.title}' reminder time is in the past")
             return
         }
@@ -89,20 +87,13 @@ class NotificationAlarmScheduler(
 
         alarmManager.setExactAndAllowWhileIdle(
             AlarmManager.RTC_WAKEUP,
-            scheduleTime.atZone(ZoneId.systemDefault()).toEpochSecond() * 1000,
+            scheduleTime.toInstant(TimeZone.currentSystemDefault()).toEpochMilliseconds(),
             pendingIntent
         )
 
         Log.d(
             tag,
-            "Scheduled: Task '${task.title}' at ${
-                scheduleTime.format(
-                    DateTimeFormatter.ofPattern(
-                        "dd/MM/yyyy hh:mm a",
-                        Locale.getDefault()
-                    )
-                )
-            }"
+            "Scheduled: Task '${task.title}' at $scheduleTime"
         )
     }
 

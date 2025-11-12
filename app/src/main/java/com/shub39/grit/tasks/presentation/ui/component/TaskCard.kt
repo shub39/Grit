@@ -30,10 +30,11 @@ import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.shub39.grit.tasks.domain.Task
-import java.time.format.DateTimeFormatter
-import java.time.format.FormatStyle
+import kotlinx.datetime.format.FormatStringsInDatetimeFormats
 
-@OptIn(ExperimentalFoundationApi::class, ExperimentalMaterial3ExpressiveApi::class)
+@OptIn(ExperimentalFoundationApi::class, ExperimentalMaterial3ExpressiveApi::class,
+    FormatStringsInDatetimeFormats::class
+)
 @Composable
 fun TaskCard(
     task: Task,
@@ -99,11 +100,7 @@ fun TaskCard(
                         )
 
                         Text(
-                            text = task.reminder.format(
-                                DateTimeFormatter.ofLocalizedDateTime(
-                                    FormatStyle.SHORT
-                                )
-                            ),
+                            text = task.reminder.toString(),
                             style = MaterialTheme.typography.labelSmall.copy(
                                 fontSize = 11.sp
                             )

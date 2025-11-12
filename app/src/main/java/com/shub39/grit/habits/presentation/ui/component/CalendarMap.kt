@@ -23,17 +23,21 @@ import androidx.compose.ui.unit.dp
 import com.kizitonwose.calendar.compose.CalendarState
 import com.kizitonwose.calendar.compose.HorizontalCalendar
 import com.kizitonwose.calendar.compose.rememberCalendarState
+import com.kizitonwose.calendar.core.minusDays
+import com.kizitonwose.calendar.core.plusDays
 import com.shub39.grit.R
 import com.shub39.grit.core.presentation.theme.GritTheme
 import com.shub39.grit.habits.domain.Habit
 import com.shub39.grit.habits.domain.HabitWithAnalytics
 import com.shub39.grit.habits.presentation.HabitsPageAction
-import java.time.DayOfWeek
-import java.time.LocalDate
-import java.time.LocalDateTime
-import java.time.format.TextStyle
-import java.util.Locale
+import kotlinx.datetime.DayOfWeek
+import kotlinx.datetime.TimeZone
+import kotlinx.datetime.toLocalDateTime
+import kotlinx.datetime.todayIn
+import kotlin.time.Clock
+import kotlin.time.ExperimentalTime
 
+@OptIn(ExperimentalTime::class)
 @Composable
 fun CalendarMap(
     canSeeContent: Boolean,
@@ -42,7 +46,7 @@ fun CalendarMap(
     currentHabit: HabitWithAnalytics,
     primary: Color
 ) {
-    val today = LocalDate.now()
+    val today = Clock.System.todayIn(TimeZone.currentSystemDefault())
 
     AnalyticsCard(
         title = stringResource(R.string.monthly_progress),
@@ -62,10 +66,7 @@ fun CalendarMap(
                     modifier = Modifier.padding(4.dp)
                 ) {
                     Text(
-                        text = it.yearMonth.month.getDisplayName(
-                            TextStyle.FULL,
-                            Locale.getDefault()
-                        ) + " ${it.yearMonth.year}",
+                        text = it.yearMonth.month.name + " ${it.yearMonth.year}",
                         color = MaterialTheme.colorScheme.secondary,
                         style = MaterialTheme.typography.titleMedium,
                         modifier = Modifier.align(Alignment.Center)
@@ -123,7 +124,7 @@ fun CalendarMap(
                         contentAlignment = Alignment.Center
                     ) {
                         Text(
-                            text = day.date.dayOfMonth.toString(),
+                            text = day.date.day.toString(),
                             style = MaterialTheme.typography.bodyLarge,
                             fontWeight = if (done) FontWeight.Bold else FontWeight.Normal,
                             color = if (done) primary
@@ -137,6 +138,7 @@ fun CalendarMap(
     }
 }
 
+@OptIn(ExperimentalTime::class)
 @Preview
 @Composable
 private fun Preview() {
@@ -150,7 +152,7 @@ private fun Preview() {
                     id = 0,
                     title = "Test Habit",
                     description = "A desc",
-                    time = LocalDateTime.now(),
+                    time = Clock.System.now().toLocalDateTime(TimeZone.currentSystemDefault()),
                     days = DayOfWeek.entries.toSet(),
                     index = 1,
                     reminder = false

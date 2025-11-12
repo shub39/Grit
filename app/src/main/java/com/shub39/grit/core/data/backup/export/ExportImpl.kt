@@ -13,14 +13,18 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.async
 import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.withContext
+import kotlinx.datetime.TimeZone
+import kotlinx.datetime.toLocalDateTime
 import kotlinx.serialization.json.Json
 import java.io.File
-import java.time.LocalDateTime
+import kotlin.time.Clock
+import kotlin.time.ExperimentalTime
 
 class ExportImpl(
     private val taskRepo: TaskRepo,
     private val habitsRepo: HabitRepo
 ): ExportRepo {
+    @OptIn(ExperimentalTime::class)
     override suspend fun exportToJson() = coroutineScope {
         val habitsDef = async {
             withContext(Dispatchers.IO) {
@@ -53,7 +57,7 @@ class ExportImpl(
 
         if (!exportFolder.exists() || !exportFolder.isDirectory) exportFolder.mkdirs()
 
-        val time = LocalDateTime.now().toString().replace(":", "").replace(" ", "")
+        val time = Clock.System.now().toLocalDateTime(TimeZone.currentSystemDefault()).toString().replace(":", "").replace(" ", "")
         val file = File(exportFolder, "Grit-Export-$time.json")
 
         file.writeText(
