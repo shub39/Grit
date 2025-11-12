@@ -253,7 +253,6 @@ fun AnalyticsPage(
         HabitUpsertSheet(
             habit = currentHabit.habit,
             onDismissRequest = { editDialog = false },
-            timeFormat = state.timeFormat,
             onUpsertHabit = { onAction(HabitsPageAction.UpdateHabit(it)) },
             is24Hr = state.is24Hr,
             edit = true

@@ -19,6 +19,5 @@ data class HabitPageState(
     // datastore
     val compactHabitView: Boolean = false,
     val is24Hr: Boolean = false,
-    val timeFormat: String = "hh:mm a",
     val startingDay: DayOfWeek = DayOfWeek.MONDAY,
 )

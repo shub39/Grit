@@ -32,6 +32,10 @@ import com.shub39.grit.habits.domain.HabitWithAnalytics
 import com.shub39.grit.habits.presentation.HabitsPageAction
 import kotlinx.datetime.DayOfWeek
 import kotlinx.datetime.TimeZone
+import kotlinx.datetime.YearMonth
+import kotlinx.datetime.format
+import kotlinx.datetime.format.MonthNames
+import kotlinx.datetime.format.char
 import kotlinx.datetime.toLocalDateTime
 import kotlinx.datetime.todayIn
 import kotlin.time.Clock
@@ -66,7 +70,11 @@ fun CalendarMap(
                     modifier = Modifier.padding(4.dp)
                 ) {
                     Text(
-                        text = it.yearMonth.month.name + " ${it.yearMonth.year}",
+                        text = it.yearMonth.format(YearMonth.Format {
+                            monthName(MonthNames.ENGLISH_FULL)
+                            char(' ')
+                            year()
+                        }),
                         color = MaterialTheme.colorScheme.secondary,
                         style = MaterialTheme.typography.titleMedium,
                         modifier = Modifier.align(Alignment.Center)

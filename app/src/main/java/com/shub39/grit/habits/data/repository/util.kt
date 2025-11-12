@@ -4,12 +4,12 @@ import com.shub39.grit.habits.domain.HabitStatus
 import com.shub39.grit.habits.domain.WeekDayFrequencyData
 import com.shub39.grit.habits.domain.WeeklyComparisonData
 import kotlinx.datetime.DatePeriod
-import kotlinx.datetime.DateTimePeriod
 import kotlinx.datetime.DateTimeUnit
 import kotlinx.datetime.DayOfWeek
 import kotlinx.datetime.LocalDate
 import kotlinx.datetime.TimeZone
 import kotlinx.datetime.daysUntil
+import kotlinx.datetime.format.DayOfWeekNames
 import kotlinx.datetime.isoDayNumber
 import kotlinx.datetime.minus
 import kotlinx.datetime.plus
@@ -137,7 +137,7 @@ fun prepareWeekDayFrequencyData(
         .eachCount()
 
     return DayOfWeek.entries.associate { dayOfWeek ->
-        val weekName = dayOfWeek.name.take(3)
+        val weekName = DayOfWeekNames.ENGLISH_ABBREVIATED.names[dayOfWeek.isoDayNumber - 1]
 
         weekName to dayFrequency.getOrDefault(dayOfWeek, 0)
     }

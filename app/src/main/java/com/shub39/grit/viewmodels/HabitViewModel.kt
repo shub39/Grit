@@ -2,7 +2,6 @@ package com.shub39.grit.viewmodels
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.kizitonwose.calendar.core.now
 import com.shub39.grit.billing.BillingHandler
 import com.shub39.grit.core.domain.AlarmScheduler
 import com.shub39.grit.core.domain.GritDatastore
@@ -21,6 +20,9 @@ import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import kotlinx.datetime.LocalDate
+import kotlinx.datetime.TimeZone
+import kotlinx.datetime.todayIn
+import kotlin.time.Clock
 import kotlin.time.ExperimentalTime
 
 class HabitViewModel(
@@ -137,7 +139,9 @@ class HabitViewModel(
                         habitsWithAnalytics = habitsWithAnalytics,
                         completedHabitIds = habitsWithAnalytics
                             .filter { habitWithAnalytics ->
-                                habitWithAnalytics.statuses.any { it.date == LocalDate.now() }
+                                habitWithAnalytics.statuses.any {
+                                    it.date == Clock.System.todayIn(TimeZone.currentSystemDefault())
+                                }
                             }
                             .map { it.habit.id }
                     )
@@ -190,8 +194,7 @@ class HabitViewModel(
                 .onEach { pref ->
                     _state.update {
                         it.copy(
-                            is24Hr = pref,
-                            timeFormat = if (pref) "HH:mm" else "hh:mm a"
+                            is24Hr = pref
                         )
                     }
                 }
@@ -210,7 +213,9 @@ class HabitViewModel(
     }
 
     private suspend fun insertHabitStatus(habit: Habit, date: LocalDate) {
-        val isHabitCompleted = _state.value.habitsWithAnalytics.find { it.habit == habit }?.statuses?.any { it.date == date } ?: false
+        val isHabitCompleted =
+            _state.value.habitsWithAnalytics.find { it.habit == habit }?.statuses?.any { it.date == date }
+                ?: false
 
         if (isHabitCompleted) {
 

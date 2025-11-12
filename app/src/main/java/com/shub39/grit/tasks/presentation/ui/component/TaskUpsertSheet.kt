@@ -57,12 +57,12 @@ import androidx.core.content.ContextCompat
 import com.shub39.grit.R
 import com.shub39.grit.core.presentation.component.GritBottomSheet
 import com.shub39.grit.core.presentation.theme.GritTheme
+import com.shub39.grit.core.presentation.toFormattedString
 import com.shub39.grit.tasks.domain.Category
 import com.shub39.grit.tasks.domain.Task
 import kotlinx.datetime.LocalDateTime
 import kotlinx.datetime.LocalTime
 import kotlinx.datetime.TimeZone
-import kotlinx.datetime.format.FormatStringsInDatetimeFormats
 import kotlinx.datetime.toLocalDateTime
 import kotlin.time.Clock
 import kotlin.time.ExperimentalTime
@@ -70,7 +70,7 @@ import kotlin.time.Instant
 
 @OptIn(
     ExperimentalMaterial3ExpressiveApi::class, ExperimentalMaterial3Api::class,
-    ExperimentalTime::class, FormatStringsInDatetimeFormats::class
+    ExperimentalTime::class
 )
 @Composable
 fun TaskUpsertSheet(
@@ -166,7 +166,7 @@ fun TaskUpsertSheet(
 
                 if (newTask.reminder != null) {
                     Text(
-                        text = newTask.reminder!!.toString(),
+                        text = newTask.reminder!!.toFormattedString(is24Hr = is24Hr),
                         style = MaterialTheme.typography.bodySmall
                     )
                 }
@@ -289,6 +289,7 @@ fun TaskUpsertSheet(
     }
 }
 
+@OptIn(ExperimentalTime::class)
 @Preview
 @Composable
 private fun Preview() {
@@ -300,7 +301,7 @@ private fun Preview() {
                 title = "Dummy Task",
                 index = 1,
                 status = true,
-                reminder = null
+                reminder = Clock.System.now().toLocalDateTime(TimeZone.currentSystemDefault())
             ),
             categories = (0..10).map {
                 Category(

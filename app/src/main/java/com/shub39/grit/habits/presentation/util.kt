@@ -7,6 +7,11 @@ import ir.ehsannarmani.compose_charts.models.Bars
 import kotlinx.collections.immutable.ImmutableList
 import kotlinx.collections.immutable.toImmutableList
 import kotlinx.datetime.LocalDate
+import kotlinx.datetime.YearMonth
+import kotlinx.datetime.format
+import kotlinx.datetime.format.MonthNames
+import kotlinx.datetime.format.char
+import kotlinx.datetime.yearMonth
 
 fun prepareWeekDayDataToBars(
     data: WeekDayFrequencyData,
@@ -40,8 +45,13 @@ fun getOrdinalSuffix(day: Int): String {
 
 fun formatDateWithOrdinal(date: LocalDate): String {
     val day = date.day
-    val month = date.month
-    val year = date.year
+    val yearMonth = date.yearMonth.format(
+        YearMonth.Format {
+            monthName(MonthNames.ENGLISH_FULL)
+            char(' ')
+            year()
+        }
+    )
 
-    return "${getOrdinalSuffix(day)} $month $year"
+    return "${getOrdinalSuffix(day)} $yearMonth"
 }

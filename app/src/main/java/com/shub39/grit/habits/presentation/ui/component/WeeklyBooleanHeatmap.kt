@@ -35,6 +35,8 @@ import kotlinx.datetime.TimeZone
 import kotlinx.datetime.YearMonth
 import kotlinx.datetime.format
 import kotlinx.datetime.format.FormatStringsInDatetimeFormats
+import kotlinx.datetime.format.MonthNames
+import kotlinx.datetime.format.char
 import kotlinx.datetime.toLocalDateTime
 import kotlinx.datetime.todayIn
 import kotlin.time.Clock
@@ -65,7 +67,11 @@ fun WeeklyBooleanHeatMap(
                     modifier = Modifier.padding(2.dp)
                 ) {
                     Text(
-                        text = it.yearMonth.toString(),
+                        text = it.yearMonth.format(YearMonth.Format {
+                            monthName(MonthNames.ENGLISH_ABBREVIATED)
+                            char(' ')
+                            year()
+                        }),
                         color = MaterialTheme.colorScheme.primary,
                         modifier = Modifier.align(Alignment.Center)
                     )

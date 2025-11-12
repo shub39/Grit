@@ -182,7 +182,7 @@ fun HabitsList(
                         startingDay = state.startingDay,
                         editState = editState,
                         onNavigateToAnalytics = onNavigateToAnalytics,
-                        timeFormat = state.timeFormat,
+                        is24Hr = state.is24Hr,
                         reorderHandle = {
                             Icon(
                                 painter = painterResource(R.drawable.baseline_drag_indicator_24),
@@ -274,7 +274,6 @@ fun HabitsList(
                 reminder = false
             ),
             onDismissRequest = { onAction(HabitsPageAction.DismissAddHabitDialog) },
-            timeFormat = state.timeFormat,
             onUpsertHabit = { onAction(HabitsPageAction.AddHabit(it)) },
             is24Hr = state.is24Hr,
         )

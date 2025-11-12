@@ -29,18 +29,17 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.shub39.grit.core.presentation.toFormattedString
 import com.shub39.grit.tasks.domain.Task
-import kotlinx.datetime.format.FormatStringsInDatetimeFormats
 
-@OptIn(ExperimentalFoundationApi::class, ExperimentalMaterial3ExpressiveApi::class,
-    FormatStringsInDatetimeFormats::class
-)
+@OptIn(ExperimentalFoundationApi::class, ExperimentalMaterial3ExpressiveApi::class,)
 @Composable
 fun TaskCard(
     task: Task,
     dragState: Boolean = false,
     reorderIcon: @Composable () -> Unit,
     shape: Shape,
+    is24Hr: Boolean,
     modifier: Modifier
 ) {
     val cardContent by animateColorAsState(
@@ -100,7 +99,7 @@ fun TaskCard(
                         )
 
                         Text(
-                            text = task.reminder.toString(),
+                            text = task.reminder.toFormattedString(is24Hr),
                             style = MaterialTheme.typography.labelSmall.copy(
                                 fontSize = 11.sp
                             )

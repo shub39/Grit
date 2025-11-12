@@ -41,20 +41,18 @@ import com.kizitonwose.calendar.compose.WeekCalendar
 import com.kizitonwose.calendar.compose.weekcalendar.rememberWeekCalendarState
 import com.kizitonwose.calendar.core.minusDays
 import com.kizitonwose.calendar.core.plusDays
+import com.shub39.grit.core.presentation.toFormattedString
 import com.shub39.grit.habits.domain.HabitWithAnalytics
 import com.shub39.grit.habits.presentation.HabitsPageAction
 import kotlinx.datetime.DateTimeUnit
 import kotlinx.datetime.DayOfWeek
 import kotlinx.datetime.TimeZone
-import kotlinx.datetime.format.FormatStringsInDatetimeFormats
 import kotlinx.datetime.minus
 import kotlinx.datetime.todayIn
 import kotlin.time.Clock
 import kotlin.time.ExperimentalTime
 
-@OptIn(ExperimentalMaterial3Api::class, ExperimentalTime::class,
-    FormatStringsInDatetimeFormats::class
-)
+@OptIn(ExperimentalMaterial3Api::class, ExperimentalTime::class)
 @Composable
 fun HabitCard(
     habitWithAnalytics: HabitWithAnalytics,
@@ -65,7 +63,7 @@ fun HabitCard(
     compactView: Boolean,
     startingDay: DayOfWeek,
     reorderHandle: @Composable () -> Unit,
-    timeFormat: String,
+    is24Hr: Boolean,
     shape: Shape,
     modifier: Modifier = Modifier
 ) {
@@ -149,7 +147,7 @@ fun HabitCard(
             supportingContent = {
                 if (habitWithAnalytics.habit.reminder) {
                     Text(
-                        text = habitWithAnalytics.habit.time.toString()
+                        text = habitWithAnalytics.habit.time.time.toFormattedString(is24Hr)
                     )
                 }
             },
