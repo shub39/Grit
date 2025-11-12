@@ -20,12 +20,12 @@ val gitHash = execute("git", "rev-parse", "HEAD").take(7)
 
 android {
     namespace = "com.shub39.grit"
-    compileSdk = 36
+    compileSdk = libs.versions.compileSdk.get().toInt()
 
     defaultConfig {
         applicationId = "com.shub39.grit"
-        minSdk = 29
-        targetSdk = 36
+        minSdk = libs.versions.minSdk.get().toInt()
+        targetSdk = libs.versions.targetSdk.get().toInt()
         versionCode = appVersionCode
         versionName = appVersionName
 
@@ -121,6 +121,8 @@ aboutLibraries {
 }
 
 dependencies {
+    implementation(project(":shared:core"))
+
     "playImplementation"(libs.purchases)
     "playImplementation"(libs.purchases.ui)
     implementation(libs.androidx.navigation.compose)
@@ -148,7 +150,7 @@ dependencies {
     implementation(libs.androidx.material.icons.extended)
     implementation(libs.aboutlibraries.compose.m3)
     implementation(libs.androidx.biometric)
-    implementation("org.jetbrains.kotlinx:kotlinx-datetime:0.7.1")
+    implementation(libs.kotlinx.datetime)
 
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
