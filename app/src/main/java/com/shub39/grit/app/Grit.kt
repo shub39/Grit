@@ -32,15 +32,16 @@ import androidx.navigation.compose.rememberNavController
 import com.shub39.grit.R
 import com.shub39.grit.billing.PaywallPage
 import com.shub39.grit.core.domain.Pages
+import com.shub39.grit.core.habits.presentation.ui.HabitsGraph
 import com.shub39.grit.core.presentation.settings.SettingsAction
 import com.shub39.grit.core.presentation.settings.SettingsGraph
 import com.shub39.grit.core.tasks.presentation.ui.TasksGraph
-import com.shub39.grit.habits.presentation.HabitsGraph
 import com.shub39.grit.viewmodels.HabitViewModel
 import com.shub39.grit.viewmodels.SettingsViewModel
 import com.shub39.grit.viewmodels.TasksViewModel
 import kotlinx.serialization.Serializable
 import org.koin.androidx.compose.koinViewModel
+import org.koin.compose.koinInject
 
 @Serializable
 private sealed interface Routes {
@@ -64,12 +65,11 @@ private sealed interface Routes {
 
 @OptIn(ExperimentalMaterial3Api::class, ExperimentalMaterial3ExpressiveApi::class)
 @Composable
-fun Grit(
-    svm: SettingsViewModel
-) {
+fun Grit() {
     val navController = rememberNavController()
     var currentRoute: Routes by remember { mutableStateOf(Routes.TaskPages) }
 
+    val svm: SettingsViewModel = koinInject()
     val settingsState by svm.state.collectAsStateWithLifecycle()
 
     val navigator = { route: Routes ->

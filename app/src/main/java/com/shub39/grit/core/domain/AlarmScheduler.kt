@@ -1,7 +1,7 @@
 package com.shub39.grit.core.domain
 
+import com.shub39.grit.core.habits.domain.Habit
 import com.shub39.grit.core.tasks.domain.Task
-import com.shub39.grit.habits.domain.Habit
 
 interface AlarmScheduler {
     fun schedule(habit: Habit)

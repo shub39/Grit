@@ -15,8 +15,8 @@ import androidx.core.content.ContextCompat.getString
 import com.shub39.grit.R
 import com.shub39.grit.core.data.NotificationReceiver
 import com.shub39.grit.core.domain.IntentActions
+import com.shub39.grit.core.habits.domain.Habit
 import com.shub39.grit.core.tasks.domain.Task
-import com.shub39.grit.habits.domain.Habit
 import kotlin.random.Random
 
 fun createNotificationChannel(context: Context) {

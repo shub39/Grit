@@ -1,8 +1,8 @@
 package com.shub39.grit.habits.data.repository
 
-import com.shub39.grit.habits.domain.HabitStatus
-import com.shub39.grit.habits.domain.WeekDayFrequencyData
-import com.shub39.grit.habits.domain.WeeklyComparisonData
+import com.shub39.grit.core.habits.domain.HabitStatus
+import com.shub39.grit.core.habits.domain.WeekDayFrequencyData
+import com.shub39.grit.core.habits.domain.WeeklyComparisonData
 import kotlinx.datetime.DatePeriod
 import kotlinx.datetime.DateTimeUnit
 import kotlinx.datetime.DayOfWeek

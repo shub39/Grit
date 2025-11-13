@@ -7,8 +7,8 @@ import com.shub39.grit.core.data.backup.toHabitSchema
 import com.shub39.grit.core.data.backup.toHabitStatusSchema
 import com.shub39.grit.core.data.backup.toTaskSchema
 import com.shub39.grit.core.domain.backup.ExportRepo
+import com.shub39.grit.core.habits.domain.HabitRepo
 import com.shub39.grit.core.tasks.domain.TaskRepo
-import com.shub39.grit.habits.domain.HabitRepo
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.async
 import kotlinx.coroutines.coroutineScope
