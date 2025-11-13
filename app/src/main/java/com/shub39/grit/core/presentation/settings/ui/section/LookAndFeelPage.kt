@@ -77,11 +77,11 @@ import com.shub39.grit.R
 import com.shub39.grit.core.domain.AppTheme
 import com.shub39.grit.core.domain.Fonts
 import com.shub39.grit.core.presentation.component.ColorPickerDialog
-import com.shub39.grit.core.presentation.component.GritDialog
-import com.shub39.grit.core.presentation.component.PageFill
 import com.shub39.grit.core.presentation.component.zigZagBackground
 import com.shub39.grit.core.presentation.settings.SettingsAction
 import com.shub39.grit.core.presentation.settings.SettingsState
+import com.shub39.grit.core.shared_ui.GritDialog
+import com.shub39.grit.core.shared_ui.PageFill
 import compose.icons.FontAwesomeIcons
 import compose.icons.fontawesomeicons.Solid
 import compose.icons.fontawesomeicons.solid.CloudSun

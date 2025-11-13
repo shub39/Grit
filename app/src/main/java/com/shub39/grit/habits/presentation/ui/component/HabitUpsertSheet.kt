@@ -46,9 +46,9 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.core.content.ContextCompat
 import com.shub39.grit.R
-import com.shub39.grit.core.presentation.component.GritBottomSheet
-import com.shub39.grit.core.presentation.component.GritDialog
-import com.shub39.grit.core.presentation.toFormattedString
+import com.shub39.grit.core.shared_ui.GritBottomSheet
+import com.shub39.grit.core.shared_ui.GritDialog
+import com.shub39.grit.core.utils.toFormattedString
 import com.shub39.grit.habits.domain.Habit
 import kotlinx.datetime.DayOfWeek
 import kotlinx.datetime.LocalDateTime

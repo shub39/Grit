@@ -1,7 +1,7 @@
 package com.shub39.grit.server.domain
 
-import com.shub39.grit.tasks.domain.Category
-import com.shub39.grit.tasks.domain.CategoryColors
+import com.shub39.grit.core.tasks.domain.Category
+import com.shub39.grit.core.tasks.domain.CategoryColors
 import kotlinx.serialization.Serializable
 
 @Serializable

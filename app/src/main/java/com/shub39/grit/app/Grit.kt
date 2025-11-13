@@ -34,8 +34,8 @@ import com.shub39.grit.billing.PaywallPage
 import com.shub39.grit.core.domain.Pages
 import com.shub39.grit.core.presentation.settings.SettingsAction
 import com.shub39.grit.core.presentation.settings.SettingsGraph
+import com.shub39.grit.core.tasks.presentation.ui.TasksGraph
 import com.shub39.grit.habits.presentation.HabitsGraph
-import com.shub39.grit.tasks.presentation.TasksGraph
 import com.shub39.grit.viewmodels.HabitViewModel
 import com.shub39.grit.viewmodels.SettingsViewModel
 import com.shub39.grit.viewmodels.TasksViewModel

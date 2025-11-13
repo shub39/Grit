@@ -125,8 +125,8 @@ dependencies {
 
     "playImplementation"(libs.purchases)
     "playImplementation"(libs.purchases.ui)
-    implementation(libs.androidx.navigation.compose)
-    implementation(libs.androidx.material3)
+    implementation(libs.navigation.compose)
+    implementation(libs.material3)
     implementation(libs.androidx.ui.tooling.preview)
     implementation(libs.androidx.ui.tooling)
     implementation(libs.androidx.ui.graphics)

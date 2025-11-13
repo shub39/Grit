@@ -41,7 +41,7 @@ import com.kizitonwose.calendar.compose.WeekCalendar
 import com.kizitonwose.calendar.compose.weekcalendar.rememberWeekCalendarState
 import com.kizitonwose.calendar.core.minusDays
 import com.kizitonwose.calendar.core.plusDays
-import com.shub39.grit.core.presentation.toFormattedString
+import com.shub39.grit.core.utils.toFormattedString
 import com.shub39.grit.habits.domain.HabitWithAnalytics
 import com.shub39.grit.habits.presentation.HabitsPageAction
 import kotlinx.datetime.DateTimeUnit

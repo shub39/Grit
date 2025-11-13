@@ -11,10 +11,10 @@ import com.shub39.grit.core.domain.AlarmScheduler
 import com.shub39.grit.core.domain.backup.RestoreFailedException
 import com.shub39.grit.core.domain.backup.RestoreRepo
 import com.shub39.grit.core.domain.backup.RestoreResult
+import com.shub39.grit.core.tasks.domain.TaskRepo
 import com.shub39.grit.habits.data.database.HabitDatabase
 import com.shub39.grit.habits.domain.HabitRepo
 import com.shub39.grit.tasks.data.database.TaskDatabase
-import com.shub39.grit.tasks.domain.TaskRepo
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.async
 import kotlinx.coroutines.awaitAll

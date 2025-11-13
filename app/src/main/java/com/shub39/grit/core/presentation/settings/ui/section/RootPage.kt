@@ -44,11 +44,11 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.shub39.grit.R
 import com.shub39.grit.core.domain.Pages
-import com.shub39.grit.core.presentation.component.PageFill
 import com.shub39.grit.core.presentation.getRandomLine
 import com.shub39.grit.core.presentation.settings.SettingsAction
 import com.shub39.grit.core.presentation.settings.SettingsState
 import com.shub39.grit.core.presentation.settings.ui.component.AboutApp
+import com.shub39.grit.core.shared_ui.PageFill
 import com.shub39.grit.server.GritServerService
 import com.shub39.grit.server.domain.GritServerRepository
 import kotlinx.datetime.DayOfWeek

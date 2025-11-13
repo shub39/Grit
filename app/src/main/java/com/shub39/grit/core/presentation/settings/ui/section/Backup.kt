@@ -34,9 +34,9 @@ import androidx.compose.ui.unit.dp
 import com.shub39.grit.R
 import com.shub39.grit.core.domain.backup.ExportState
 import com.shub39.grit.core.domain.backup.RestoreState
-import com.shub39.grit.core.presentation.component.PageFill
 import com.shub39.grit.core.presentation.settings.SettingsAction
 import com.shub39.grit.core.presentation.settings.SettingsState
+import com.shub39.grit.core.shared_ui.PageFill
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable

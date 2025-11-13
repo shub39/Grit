@@ -1,6 +1,6 @@
 package com.shub39.grit.server.domain
 
-import com.shub39.grit.tasks.domain.Task
+import com.shub39.grit.core.tasks.domain.Task
 import kotlinx.serialization.Serializable
 
 @Serializable

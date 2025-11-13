@@ -48,8 +48,8 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import com.shub39.grit.R
-import com.shub39.grit.core.presentation.component.Empty
-import com.shub39.grit.core.presentation.component.PageFill
+import com.shub39.grit.core.shared_ui.Empty
+import com.shub39.grit.core.shared_ui.PageFill
 import com.shub39.grit.habits.domain.Habit
 import com.shub39.grit.habits.presentation.HabitPageState
 import com.shub39.grit.habits.presentation.HabitsPageAction

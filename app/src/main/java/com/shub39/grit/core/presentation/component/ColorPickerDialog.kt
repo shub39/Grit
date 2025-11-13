@@ -24,6 +24,7 @@ import com.github.skydoves.colorpicker.compose.BrightnessSlider
 import com.github.skydoves.colorpicker.compose.HsvColorPicker
 import com.github.skydoves.colorpicker.compose.rememberColorPickerController
 import com.shub39.grit.R
+import com.shub39.grit.core.shared_ui.GritDialog
 
 // Color picker used app wide
 @Composable

@@ -10,9 +10,9 @@ import com.shub39.grit.core.domain.GritDatastore
 import com.shub39.grit.core.domain.IntentActions
 import com.shub39.grit.core.presentation.habitNotification
 import com.shub39.grit.core.presentation.taskNotification
+import com.shub39.grit.core.tasks.domain.TaskRepo
 import com.shub39.grit.habits.domain.HabitRepo
 import com.shub39.grit.habits.domain.HabitStatus
-import com.shub39.grit.tasks.domain.TaskRepo
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.SupervisorJob

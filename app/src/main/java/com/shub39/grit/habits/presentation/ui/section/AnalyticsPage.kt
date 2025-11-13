@@ -44,8 +44,8 @@ import com.kizitonwose.calendar.compose.rememberCalendarState
 import com.kizitonwose.calendar.core.minusMonths
 import com.kizitonwose.calendar.core.now
 import com.shub39.grit.R
-import com.shub39.grit.core.presentation.component.GritDialog
-import com.shub39.grit.core.presentation.component.PageFill
+import com.shub39.grit.core.shared_ui.GritDialog
+import com.shub39.grit.core.shared_ui.PageFill
 import com.shub39.grit.habits.presentation.HabitPageState
 import com.shub39.grit.habits.presentation.HabitsPageAction
 import com.shub39.grit.habits.presentation.prepareWeekDayDataToBars

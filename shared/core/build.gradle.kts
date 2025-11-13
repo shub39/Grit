@@ -6,6 +6,9 @@ import org.jetbrains.kotlin.gradle.dsl.JvmTarget
 plugins {
     alias(libs.plugins.kotlinMultiplatform)
     alias(libs.plugins.android.library)
+    alias(libs.plugins.composeMultiplatform)
+    alias(libs.plugins.compose.compiler)
+    alias(libs.plugins.kotlin.serialization)
 }
 
 kotlin {
@@ -28,6 +31,22 @@ kotlin {
     wasmJs {
         browser()
         binaries.executable()
+    }
+
+    sourceSets {
+        commonMain.dependencies {
+            implementation(libs.material3)
+            implementation(compose.runtime)
+            implementation(compose.foundation)
+            implementation(compose.ui)
+            implementation(compose.materialIconsExtended)
+            implementation(compose.components.resources)
+            implementation(compose.components.uiToolingPreview)
+            implementation(libs.navigation.compose)
+
+            implementation(libs.kotlinx.datetime)
+            implementation(libs.reorderable)
+        }
     }
 }
 

@@ -19,7 +19,7 @@ import androidx.compose.ui.unit.dp
 import com.mikepenz.aboutlibraries.ui.compose.android.produceLibraries
 import com.mikepenz.aboutlibraries.ui.compose.m3.LibrariesContainer
 import com.shub39.grit.R
-import com.shub39.grit.core.presentation.component.PageFill
+import com.shub39.grit.core.shared_ui.PageFill
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
