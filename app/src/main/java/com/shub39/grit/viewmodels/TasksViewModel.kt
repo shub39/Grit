@@ -40,7 +40,7 @@ class TasksViewModel(
         )
 
     // handles actions from task page
-    fun taskPageAction(action: TaskAction) {
+    fun onAction(action: TaskAction) {
         viewModelScope.launch {
             when (action) {
                 is TaskAction.UpsertTask -> {

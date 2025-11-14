@@ -7,6 +7,7 @@ plugins {
     alias(libs.plugins.composeMultiplatform)
     alias(libs.plugins.compose.compiler)
     alias(libs.plugins.kotlin.serialization)
+    alias(libs.plugins.composeHotReload)
 }
 
 kotlin {
@@ -14,6 +15,8 @@ kotlin {
         browser()
         binaries.executable()
     }
+
+    jvm()
 
     sourceSets {
         commonMain.dependencies {
@@ -26,7 +29,26 @@ kotlin {
             implementation(compose.materialIconsExtended)
             implementation(compose.components.resources)
             implementation(compose.components.uiToolingPreview)
+            implementation(compose.material3AdaptiveNavigationSuite)
             implementation(libs.navigation.compose)
+            implementation(libs.kotlinx.datetime)
+
+            implementation(libs.koin.compose)
+            implementation(libs.koin.compose.viewmodel)
+            api(libs.koin.core)
+
+            implementation(libs.materialKolor)
         }
+
+        jvmMain.dependencies {
+            implementation(compose.desktop.currentOs)
+            implementation(libs.kotlinx.coroutinesSwing)
+        }
+    }
+}
+
+compose.desktop {
+    application {
+        mainClass = "MainKt"
     }
 }

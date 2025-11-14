@@ -52,7 +52,7 @@ class HabitViewModel(
         )
 
     // handles actions from habit page
-    fun habitsPageAction(action: HabitsAction) {
+    fun onAction(action: HabitsAction) {
         viewModelScope.launch {
             when (action) {
                 is HabitsAction.AddHabit -> {

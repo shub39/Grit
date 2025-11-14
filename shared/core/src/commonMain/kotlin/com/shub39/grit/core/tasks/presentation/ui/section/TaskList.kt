@@ -255,27 +255,23 @@ fun TaskList(
                                         // change status on click
                                         onClick = {
                                             if (!editState) {
-                                                onAction(
-                                                    TaskAction.UpsertTask(
-                                                        task.copy(
-                                                            status = !task.status,
-                                                            reminder = if (!task.status) null else task.reminder
-                                                        )
-                                                    )
+                                                val updatedTask = task.copy(
+                                                    status = !task.status,
+                                                    reminder = if (!task.status) null else task.reminder
                                                 )
 
-                                                if (!task.status && state.reorderTasks) {
-                                                    reorderableTasks =
-                                                        reorderableTasks.toMutableList().apply {
-                                                            add(
-                                                                reorderableTasks.size - 1,
-                                                                removeAt(index)
-                                                            )
-                                                        }
-
+                                                onAction(TaskAction.UpsertTask(updatedTask))
+                                                
+                                                if (updatedTask.status && state.reorderTasks) {
+                                                    val newList = reorderableTasks.toMutableList().apply {
+                                                        removeAt(index)
+                                                        add(updatedTask)
+                                                    }
+                                                    reorderableTasks = newList
                                                     onAction(
                                                         TaskAction.ReorderTasks(
-                                                            reorderableTasks.mapIndexed { index, task -> index to task })
+                                                            newList.mapIndexed { newIndex, it -> newIndex to it }
+                                                        )
                                                     )
                                                 }
                                             }

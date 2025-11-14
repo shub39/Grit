@@ -153,7 +153,7 @@ fun Grit() {
 
                         TasksGraph(
                             state = taskPageState,
-                            onAction = tvm::taskPageAction
+                            onAction = tvm::onAction
                         )
                     }
 
@@ -174,7 +174,7 @@ fun Grit() {
 
                         HabitsGraph(
                             state = habitsPageState,
-                            onAction = hvm::habitsPageAction,
+                            onAction = hvm::onAction,
                         )
                     }
                 }

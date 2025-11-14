@@ -1,13 +1,11 @@
 package com.shub39.grit.core.habits.domain
 
-import androidx.compose.runtime.Immutable
-import androidx.compose.runtime.Stable
+import kotlinx.serialization.Serializable
 
 typealias WeeklyComparisonData = List<Double>
 typealias WeekDayFrequencyData = Map<String, Int>
 
-@Stable
-@Immutable
+@Serializable
 data class HabitWithAnalytics(
     val habit: Habit,
     val statuses: List<HabitStatus>,
