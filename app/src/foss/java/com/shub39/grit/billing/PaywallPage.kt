@@ -22,12 +22,10 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalUriHandler
-import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import com.shub39.grit.R
 import com.shub39.grit.core.domain.AppTheme
 import com.shub39.grit.core.domain.Fonts
 import com.shub39.grit.core.presentation.theme.GritTheme
@@ -35,6 +33,11 @@ import com.shub39.grit.core.presentation.theme.Theme
 import compose.icons.FontAwesomeIcons
 import compose.icons.fontawesomeicons.Solid
 import compose.icons.fontawesomeicons.solid.Coffee
+import grit.shared.core.generated.resources.Res
+import grit.shared.core.generated.resources.bmc
+import grit.shared.core.generated.resources.foss
+import grit.shared.core.generated.resources.foss_desc
+import org.jetbrains.compose.resources.stringResource
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -68,14 +71,14 @@ fun PaywallPage(
                 )
 
                 Text(
-                    text = stringResource(R.string.foss),
+                    text = stringResource(Res.string.foss),
                     textAlign = TextAlign.Center,
                     fontWeight = FontWeight.Bold,
                     style = MaterialTheme.typography.titleLarge
                 )
 
                 Text(
-                    text = stringResource(R.string.foss_desc),
+                    text = stringResource(Res.string.foss_desc),
                     textAlign = TextAlign.Center
                 )
 
@@ -92,7 +95,7 @@ fun PaywallPage(
                             modifier = Modifier.size(24.dp)
                         )
 
-                        Text(text = stringResource(R.string.bmc))
+                        Text(text = stringResource(Res.string.bmc))
                     }
                 }
             }

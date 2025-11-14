@@ -22,16 +22,18 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalUriHandler
-import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import com.shub39.grit.BuildConfig
-import com.shub39.grit.R
 import compose.icons.FontAwesomeIcons
 import compose.icons.fontawesomeicons.Brands
 import compose.icons.fontawesomeicons.brands.Discord
 import compose.icons.fontawesomeicons.brands.Github
 import compose.icons.fontawesomeicons.brands.GooglePlay
+import grit.shared.core.generated.resources.Res
+import grit.shared.core.generated.resources.bmc
+import grit.shared.core.generated.resources.rate_on_play
+import org.jetbrains.compose.resources.stringResource
 
 @Composable
 fun AboutApp() {
@@ -110,7 +112,7 @@ fun AboutApp() {
                         contentDescription = "Buy me a coffee",
                     )
 
-                    Text(text = stringResource(R.string.bmc))
+                    Text(text = stringResource(Res.string.bmc))
                 }
             }
 
@@ -128,7 +130,7 @@ fun AboutApp() {
                         modifier = Modifier.size(20.dp)
                     )
 
-                    Text(text = stringResource(R.string.rate_on_play))
+                    Text(text = stringResource(Res.string.rate_on_play))
                 }
             }
         }

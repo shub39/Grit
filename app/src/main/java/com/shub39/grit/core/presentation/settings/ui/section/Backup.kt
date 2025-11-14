@@ -29,7 +29,6 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import com.shub39.grit.R
 import com.shub39.grit.core.domain.backup.ExportState
@@ -37,6 +36,14 @@ import com.shub39.grit.core.domain.backup.RestoreState
 import com.shub39.grit.core.presentation.settings.SettingsAction
 import com.shub39.grit.core.presentation.settings.SettingsState
 import com.shub39.grit.core.shared_ui.PageFill
+import grit.shared.core.generated.resources.Res
+import grit.shared.core.generated.resources.backup
+import grit.shared.core.generated.resources.choose_file
+import grit.shared.core.generated.resources.export
+import grit.shared.core.generated.resources.export_desc
+import grit.shared.core.generated.resources.restore
+import grit.shared.core.generated.resources.restore_desc
+import org.jetbrains.compose.resources.stringResource
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -62,7 +69,7 @@ fun Backup(
         TopAppBar(
             title = {
                 Text(
-                    text = stringResource(R.string.backup)
+                    text = stringResource(Res.string.backup)
                 )
             },
             navigationIcon = {
@@ -84,12 +91,12 @@ fun Backup(
                 ListItem(
                     headlineContent = {
                         Text(
-                            text = stringResource(R.string.export)
+                            text = stringResource(Res.string.export)
                         )
                     },
                     supportingContent = {
                         Text(
-                            text = stringResource(R.string.export_desc)
+                            text = stringResource(Res.string.export_desc)
                         )
                     },
                     trailingContent = {
@@ -123,12 +130,12 @@ fun Backup(
                 ListItem(
                     headlineContent = {
                         Text(
-                            text = stringResource(R.string.restore)
+                            text = stringResource(Res.string.restore)
                         )
                     },
                     supportingContent = {
                         Text(
-                            text = stringResource(R.string.restore_desc)
+                            text = stringResource(Res.string.restore_desc)
                         )
                     },
                     trailingContent = {
@@ -137,7 +144,7 @@ fun Backup(
                                 onClick = { launcher.launch(arrayOf("application/json")) }
                             ) {
                                 Text(
-                                    text = stringResource(R.string.choose_file)
+                                    text = stringResource(Res.string.choose_file)
                                 )
                             }
                         } else {

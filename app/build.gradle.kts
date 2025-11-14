@@ -10,6 +10,7 @@ plugins {
     alias(libs.plugins.kotlin.serialization)
     alias(libs.plugins.aboutLibraries)
     alias(libs.plugins.room)
+    alias(libs.plugins.composeMultiplatform)
 }
 
 val appName = "Grit"
@@ -125,12 +126,14 @@ dependencies {
 
     "playImplementation"(libs.purchases)
     "playImplementation"(libs.purchases.ui)
-    implementation(libs.navigation.compose)
     implementation(libs.material3)
-    implementation(libs.androidx.ui.tooling.preview)
-    implementation(libs.androidx.ui.tooling)
-    implementation(libs.androidx.ui.graphics)
-    implementation(libs.androidx.ui)
+    implementation(compose.runtime)
+    implementation(compose.foundation)
+    implementation(compose.ui)
+    implementation(compose.materialIconsExtended)
+    implementation(compose.components.resources)
+    implementation(compose.components.uiToolingPreview)
+    implementation(libs.navigation.compose)
     implementation(libs.androidx.core.splashscreen)
     implementation(libs.androidx.room.runtime)
     ksp(libs.androidx.room.compiler)
@@ -142,7 +145,6 @@ dependencies {
     implementation(libs.androidx.datastore.preferences.core)
     implementation(libs.aboutLibraries)
     implementation(libs.composeIcons.fontAwesome)
-    implementation(libs.androidx.material.icons.extended)
     implementation(libs.aboutlibraries.compose.m3)
     implementation(libs.androidx.biometric)
     implementation(libs.kotlinx.datetime)
