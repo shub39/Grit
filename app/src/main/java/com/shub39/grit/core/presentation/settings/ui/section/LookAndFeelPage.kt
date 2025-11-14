@@ -65,7 +65,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.colorResource
-import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.Font
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.unit.dp
@@ -73,19 +72,33 @@ import com.materialkolor.PaletteStyle
 import com.materialkolor.ktx.from
 import com.materialkolor.palettes.TonalPalette
 import com.materialkolor.rememberDynamicColorScheme
-import com.shub39.grit.R
 import com.shub39.grit.core.domain.AppTheme
 import com.shub39.grit.core.domain.Fonts
 import com.shub39.grit.core.presentation.component.ColorPickerDialog
-import com.shub39.grit.core.presentation.component.GritDialog
-import com.shub39.grit.core.presentation.component.PageFill
 import com.shub39.grit.core.presentation.component.zigZagBackground
 import com.shub39.grit.core.presentation.settings.SettingsAction
 import com.shub39.grit.core.presentation.settings.SettingsState
+import com.shub39.grit.core.shared_ui.GritDialog
+import com.shub39.grit.core.shared_ui.PageFill
 import compose.icons.FontAwesomeIcons
 import compose.icons.fontawesomeicons.Solid
 import compose.icons.fontawesomeicons.solid.CloudSun
 import compose.icons.fontawesomeicons.solid.Font
+import grit.shared.core.generated.resources.Res
+import grit.shared.core.generated.resources.app_theme
+import grit.shared.core.generated.resources.app_theme_desc
+import grit.shared.core.generated.resources.font
+import grit.shared.core.generated.resources.font_desc
+import grit.shared.core.generated.resources.look_and_feel
+import grit.shared.core.generated.resources.material_theme
+import grit.shared.core.generated.resources.material_theme_desc
+import grit.shared.core.generated.resources.palette_style
+import grit.shared.core.generated.resources.select_seed
+import grit.shared.core.generated.resources.select_seed_desc
+import grit.shared.core.generated.resources.unlock_more_plus
+import grit.shared.core.generated.resources.use_amoled
+import grit.shared.core.generated.resources.use_amoled_desc
+import org.jetbrains.compose.resources.stringResource
 import java.util.Locale
 
 @OptIn(ExperimentalMaterial3Api::class, ExperimentalMaterial3ExpressiveApi::class)
@@ -112,7 +125,7 @@ fun LookAndFeelPage(
         TopAppBar(
             title = {
                 Text(
-                    text = stringResource(R.string.look_and_feel)
+                    text = stringResource(Res.string.look_and_feel)
                 )
             },
             navigationIcon = {
@@ -137,12 +150,12 @@ fun LookAndFeelPage(
                 ListItem(
                     headlineContent = {
                         Text(
-                            text = stringResource(R.string.app_theme)
+                            text = stringResource(Res.string.app_theme)
                         )
                     },
                     supportingContent = {
                         Text(
-                            text = stringResource(R.string.app_theme_desc)
+                            text = stringResource(Res.string.app_theme_desc)
                         )
                     },
                     trailingContent = {
@@ -172,7 +185,7 @@ fun LookAndFeelPage(
                             onClick = { onAction(SettingsAction.OnPaywallShow) }
                         ) {
                             Text(
-                                text = stringResource(R.string.unlock_more_plus)
+                                text = stringResource(Res.string.unlock_more_plus)
                             )
                         }
                     }
@@ -183,12 +196,12 @@ fun LookAndFeelPage(
                 ListItem(
                     headlineContent = {
                         Text(
-                            text = stringResource(R.string.font)
+                            text = stringResource(Res.string.font)
                         )
                     },
                     supportingContent = {
                         Text(
-                            text = stringResource(R.string.font_desc)
+                            text = stringResource(Res.string.font_desc)
                         )
                     },
                     trailingContent = {
@@ -209,12 +222,12 @@ fun LookAndFeelPage(
                 ListItem(
                     headlineContent = {
                         Text(
-                            text = stringResource(R.string.use_amoled)
+                            text = stringResource(Res.string.use_amoled)
                         )
                     },
                     supportingContent = {
                         Text(
-                            text = stringResource(R.string.use_amoled_desc)
+                            text = stringResource(Res.string.use_amoled_desc)
                         )
                     },
                     trailingContent = {
@@ -236,12 +249,12 @@ fun LookAndFeelPage(
                     ListItem(
                         headlineContent = {
                             Text(
-                                text = stringResource(R.string.material_theme)
+                                text = stringResource(Res.string.material_theme)
                             )
                         },
                         supportingContent = {
                             Text(
-                                text = stringResource(R.string.material_theme_desc)
+                                text = stringResource(Res.string.material_theme_desc)
                             )
                         },
                         trailingContent = {
@@ -266,12 +279,12 @@ fun LookAndFeelPage(
                     ListItem(
                         headlineContent = {
                             Text(
-                                text = stringResource(R.string.select_seed)
+                                text = stringResource(Res.string.select_seed)
                             )
                         },
                         supportingContent = {
                             Text(
-                                text = stringResource(R.string.select_seed_desc)
+                                text = stringResource(Res.string.select_seed_desc)
                             )
                         },
                         trailingContent = {
@@ -297,7 +310,7 @@ fun LookAndFeelPage(
                 ListItem(
                     headlineContent = {
                         Text(
-                            text = stringResource(R.string.palette_style)
+                            text = stringResource(Res.string.palette_style)
                         )
                     }
                 )
@@ -359,7 +372,7 @@ fun LookAndFeelPage(
                 )
 
                 Text(
-                    text = stringResource(R.string.font),
+                    text = stringResource(Res.string.font),
                     style = MaterialTheme.typography.titleLarge
                 )
 
@@ -402,7 +415,7 @@ fun LookAndFeelPage(
                 )
 
                 Text(
-                    text = stringResource(R.string.app_theme),
+                    text = stringResource(Res.string.app_theme),
                     style = MaterialTheme.typography.titleLarge
                 )
 

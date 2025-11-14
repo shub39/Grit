@@ -41,24 +41,27 @@ import androidx.glance.layout.width
 import androidx.glance.text.FontWeight
 import androidx.glance.text.Text
 import androidx.glance.text.TextStyle
-import com.kizitonwose.calendar.core.minusDays
-import com.kizitonwose.calendar.core.now
 import com.shub39.grit.R
 import com.shub39.grit.app.MainActivity
 import com.shub39.grit.core.data.toHabit
 import com.shub39.grit.core.data.toHabitStatus
+import com.shub39.grit.core.habits.domain.Habit
+import com.shub39.grit.core.habits.domain.HabitStatus
 import com.shub39.grit.habits.data.database.HabitDao
 import com.shub39.grit.habits.data.database.HabitStatusDao
 import com.shub39.grit.habits.data.repository.countCurrentStreak
-import com.shub39.grit.habits.domain.Habit
-import com.shub39.grit.habits.domain.HabitStatus
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.launch
+import kotlinx.datetime.DateTimeUnit
 import kotlinx.datetime.LocalDate
+import kotlinx.datetime.TimeZone
+import kotlinx.datetime.minus
+import kotlinx.datetime.todayIn
 import org.koin.core.component.KoinComponent
 import org.koin.core.component.get
+import kotlin.time.Clock
 import kotlin.time.ExperimentalTime
 
 class HabitStreakWidgetReceiver : GlanceAppWidgetReceiver() {
@@ -149,8 +152,8 @@ class HabitStreakWidget : GlanceAppWidget(), KoinComponent {
         onAction: (ActionParameters) -> Unit
     ) {
         if (habit != null) {
-            val today = LocalDate.now()
-            val last5Days = (0..4).map { today.minusDays(it) }.reversed()
+            val today = Clock.System.todayIn(TimeZone.currentSystemDefault())
+            val last5Days = (0..4).map { today.minus(it, DateTimeUnit.DAY) }.reversed()
             val currentStreak = countCurrentStreak(statuses)
 
             Scaffold(

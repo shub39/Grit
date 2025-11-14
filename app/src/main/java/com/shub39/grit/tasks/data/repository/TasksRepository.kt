@@ -4,11 +4,11 @@ import com.shub39.grit.core.data.toCategory
 import com.shub39.grit.core.data.toCategoryEntity
 import com.shub39.grit.core.data.toTask
 import com.shub39.grit.core.data.toTaskEntity
+import com.shub39.grit.core.tasks.domain.Category
+import com.shub39.grit.core.tasks.domain.Task
+import com.shub39.grit.core.tasks.domain.TaskRepo
 import com.shub39.grit.tasks.data.database.CategoryDao
 import com.shub39.grit.tasks.data.database.TasksDao
-import com.shub39.grit.tasks.domain.Category
-import com.shub39.grit.tasks.domain.Task
-import com.shub39.grit.tasks.domain.TaskRepo
 import com.shub39.grit.widgets.AllTasksWidgetRepository
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.combine

@@ -38,20 +38,38 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import com.shub39.grit.R
 import com.shub39.grit.core.domain.Pages
-import com.shub39.grit.core.presentation.component.PageFill
 import com.shub39.grit.core.presentation.getRandomLine
 import com.shub39.grit.core.presentation.settings.SettingsAction
 import com.shub39.grit.core.presentation.settings.SettingsState
 import com.shub39.grit.core.presentation.settings.ui.component.AboutApp
+import com.shub39.grit.core.shared_ui.PageFill
 import com.shub39.grit.server.GritServerService
 import com.shub39.grit.server.domain.GritServerRepository
+import grit.shared.core.generated.resources.Res
+import grit.shared.core.generated.resources.about_libraries
+import grit.shared.core.generated.resources.backup
+import grit.shared.core.generated.resources.backup_desc
+import grit.shared.core.generated.resources.biometric_lock
+import grit.shared.core.generated.resources.biometric_lock_desc
+import grit.shared.core.generated.resources.grit_plus
+import grit.shared.core.generated.resources.look_and_feel
+import grit.shared.core.generated.resources.look_and_feel_desc
+import grit.shared.core.generated.resources.pause_notifications
+import grit.shared.core.generated.resources.pause_notifications_desc
+import grit.shared.core.generated.resources.reorder_tasks
+import grit.shared.core.generated.resources.reorder_tasks_desc
+import grit.shared.core.generated.resources.settings
+import grit.shared.core.generated.resources.show_habits
+import grit.shared.core.generated.resources.show_habits_desc
+import grit.shared.core.generated.resources.staring_day
+import grit.shared.core.generated.resources.use_24Hr
+import grit.shared.core.generated.resources.use_24Hr_desc
 import kotlinx.datetime.DayOfWeek
+import org.jetbrains.compose.resources.stringResource
 import org.koin.compose.koinInject
 
 @OptIn(ExperimentalMaterial3Api::class, ExperimentalMaterial3ExpressiveApi::class)
@@ -88,7 +106,7 @@ fun RootPage(
         LargeFlexibleTopAppBar(
             scrollBehavior = scrollBehavior,
             title = {
-                Text(text = stringResource(R.string.settings))
+                Text(text = stringResource(Res.string.settings))
             },
             subtitle = {
                 Text(text = getRandomLine())
@@ -122,7 +140,7 @@ fun RootPage(
                         Spacer(modifier = Modifier.width(8.dp))
 
                         Text(
-                            text = stringResource(R.string.grit_plus),
+                            text = stringResource(Res.string.grit_plus),
                             style = MaterialTheme.typography.titleLarge,
                             fontWeight = FontWeight.Bold
                         )
@@ -181,12 +199,12 @@ fun RootPage(
                 ListItem(
                     headlineContent = {
                         Text(
-                            text = stringResource(R.string.pause_notifications)
+                            text = stringResource(Res.string.pause_notifications)
                         )
                     },
                     supportingContent = {
                         Text(
-                            text = stringResource(R.string.pause_notifications_desc)
+                            text = stringResource(Res.string.pause_notifications_desc)
                         )
                     },
                     trailingContent = {
@@ -204,12 +222,12 @@ fun RootPage(
                 ListItem(
                     headlineContent = {
                         Text(
-                            text = stringResource(R.string.reorder_tasks)
+                            text = stringResource(Res.string.reorder_tasks)
                         )
                     },
                     supportingContent = {
                         Text(
-                            text = stringResource(R.string.reorder_tasks_desc)
+                            text = stringResource(Res.string.reorder_tasks_desc)
                         )
                     },
                     trailingContent = {
@@ -227,12 +245,12 @@ fun RootPage(
                 ListItem(
                     headlineContent = {
                         Text(
-                            text = stringResource(R.string.show_habits)
+                            text = stringResource(Res.string.show_habits)
                         )
                     },
                     supportingContent = {
                         Text(
-                            text = stringResource(R.string.show_habits_desc)
+                            text = stringResource(Res.string.show_habits_desc)
                         )
                     },
                     trailingContent = {
@@ -254,7 +272,7 @@ fun RootPage(
                 ListItem(
                     headlineContent = {
                         Text(
-                            text = stringResource(R.string.staring_day)
+                            text = stringResource(Res.string.staring_day)
                         )
                     },
                     trailingContent = {
@@ -274,12 +292,12 @@ fun RootPage(
                 ListItem(
                     headlineContent = {
                         Text(
-                            text = stringResource(R.string.use_24Hr)
+                            text = stringResource(Res.string.use_24Hr)
                         )
                     },
                     supportingContent = {
                         Text(
-                            text = stringResource(R.string.use_24Hr_desc)
+                            text = stringResource(Res.string.use_24Hr_desc)
                         )
                     },
                     trailingContent = {
@@ -298,12 +316,12 @@ fun RootPage(
                     ListItem(
                         headlineContent = {
                             Text(
-                                text = stringResource(R.string.biometric_lock)
+                                text = stringResource(Res.string.biometric_lock)
                             )
                         },
                         supportingContent = {
                             Text(
-                                text = stringResource(R.string.biometric_lock_desc)
+                                text = stringResource(Res.string.biometric_lock_desc)
                             )
                         },
                         trailingContent = {
@@ -325,12 +343,12 @@ fun RootPage(
                     modifier = Modifier.clickable { onNavigateToLookAndFeel() },
                     headlineContent = {
                         Text(
-                            text = stringResource(R.string.look_and_feel)
+                            text = stringResource(Res.string.look_and_feel)
                         )
                     },
                     supportingContent = {
                         Text(
-                            text = stringResource(R.string.look_and_feel_desc)
+                            text = stringResource(Res.string.look_and_feel_desc)
                         )
                     },
                     trailingContent = {
@@ -353,12 +371,12 @@ fun RootPage(
                     modifier = Modifier.clickable { onNavigateToBackup() },
                     headlineContent = {
                         Text(
-                            text = stringResource(R.string.backup)
+                            text = stringResource(Res.string.backup)
                         )
                     },
                     supportingContent = {
                         Text(
-                            text = stringResource(R.string.backup_desc)
+                            text = stringResource(Res.string.backup_desc)
                         )
                     },
                     trailingContent = {
@@ -381,12 +399,12 @@ fun RootPage(
                     modifier = Modifier.clickable { onNavigateToAboutLibraries() },
                     headlineContent = {
                         Text(
-                            text = stringResource(R.string.about_libraries)
+                            text = stringResource(Res.string.about_libraries)
                         )
                     },
                     supportingContent = {
                         Text(
-                            text = stringResource(R.string.about_libraries)
+                            text = stringResource(Res.string.about_libraries)
                         )
                     },
                     trailingContent = {

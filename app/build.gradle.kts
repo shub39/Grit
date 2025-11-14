@@ -10,6 +10,7 @@ plugins {
     alias(libs.plugins.kotlin.serialization)
     alias(libs.plugins.aboutLibraries)
     alias(libs.plugins.room)
+    alias(libs.plugins.composeMultiplatform)
 }
 
 val appName = "Grit"
@@ -20,12 +21,12 @@ val gitHash = execute("git", "rev-parse", "HEAD").take(7)
 
 android {
     namespace = "com.shub39.grit"
-    compileSdk = 36
+    compileSdk = libs.versions.compileSdk.get().toInt()
 
     defaultConfig {
         applicationId = "com.shub39.grit"
-        minSdk = 29
-        targetSdk = 36
+        minSdk = libs.versions.minSdk.get().toInt()
+        targetSdk = libs.versions.targetSdk.get().toInt()
         versionCode = appVersionCode
         versionName = appVersionName
 
@@ -121,21 +122,22 @@ aboutLibraries {
 }
 
 dependencies {
+    implementation(project(":shared:core"))
+
     "playImplementation"(libs.purchases)
     "playImplementation"(libs.purchases.ui)
-    implementation(libs.androidx.navigation.compose)
-    implementation(libs.androidx.material3)
-    implementation(libs.androidx.ui.tooling.preview)
-    implementation(libs.androidx.ui.tooling)
-    implementation(libs.androidx.ui.graphics)
-    implementation(libs.androidx.ui)
-    implementation(libs.kotlinx.collections.immutable)
+    implementation(libs.material3)
+    implementation(compose.runtime)
+    implementation(compose.foundation)
+    implementation(compose.ui)
+    implementation(compose.materialIconsExtended)
+    implementation(compose.components.resources)
+    implementation(compose.components.uiToolingPreview)
+    implementation(libs.navigation.compose)
     implementation(libs.androidx.core.splashscreen)
-    implementation(libs.kotlinx.serialization.json)
     implementation(libs.androidx.room.runtime)
     ksp(libs.androidx.room.compiler)
     implementation(libs.koin.androidx.compose)
-    implementation(libs.reorderable)
     implementation(libs.androidx.glance.appwidget)
     implementation(libs.androidx.glance.material3)
     implementation(libs.materialKolor)
@@ -143,12 +145,9 @@ dependencies {
     implementation(libs.androidx.datastore.preferences.core)
     implementation(libs.aboutLibraries)
     implementation(libs.composeIcons.fontAwesome)
-    implementation(libs.compose.charts)
-    implementation(libs.calendar)
-    implementation(libs.androidx.material.icons.extended)
     implementation(libs.aboutlibraries.compose.m3)
     implementation(libs.androidx.biometric)
-    implementation("org.jetbrains.kotlinx:kotlinx-datetime:0.7.1")
+    implementation(libs.kotlinx.datetime)
 
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)

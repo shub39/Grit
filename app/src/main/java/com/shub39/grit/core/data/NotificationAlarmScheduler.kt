@@ -8,8 +8,8 @@ import android.os.Build
 import android.util.Log
 import com.shub39.grit.core.domain.AlarmScheduler
 import com.shub39.grit.core.domain.IntentActions
-import com.shub39.grit.habits.domain.Habit
-import com.shub39.grit.tasks.domain.Task
+import com.shub39.grit.core.habits.domain.Habit
+import com.shub39.grit.core.tasks.domain.Task
 import kotlinx.datetime.DateTimeUnit
 import kotlinx.datetime.LocalDateTime
 import kotlinx.datetime.TimeZone
@@ -66,7 +66,7 @@ class NotificationAlarmScheduler(
     override fun schedule(task: Task) {
         cancel(task)
         if (task.reminder == null) return
-        val scheduleTime = task.reminder
+        val scheduleTime = task.reminder!!
 
         if (scheduleTime < Clock.System.now().toLocalDateTime(TimeZone.currentSystemDefault())) {
             Log.d(tag, "Task '${task.title}' reminder time is in the past")

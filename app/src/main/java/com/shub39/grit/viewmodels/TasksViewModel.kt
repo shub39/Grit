@@ -3,11 +3,11 @@ package com.shub39.grit.viewmodels
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.shub39.grit.core.domain.AlarmScheduler
-import com.shub39.grit.tasks.domain.Category
-import com.shub39.grit.tasks.domain.CategoryColors
-import com.shub39.grit.tasks.domain.TaskRepo
-import com.shub39.grit.tasks.presentation.TaskPageAction
-import com.shub39.grit.tasks.presentation.TaskPageState
+import com.shub39.grit.core.tasks.domain.Category
+import com.shub39.grit.core.tasks.domain.CategoryColors
+import com.shub39.grit.core.tasks.domain.TaskRepo
+import com.shub39.grit.core.tasks.presentation.TaskAction
+import com.shub39.grit.core.tasks.presentation.TaskState
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.SharingStarted
@@ -35,25 +35,25 @@ class TasksViewModel(
         }
         .stateIn(
             viewModelScope,
-            SharingStarted.Companion.WhileSubscribed(5000),
-            TaskPageState()
+            SharingStarted.WhileSubscribed(5000),
+            TaskState()
         )
 
     // handles actions from task page
-    fun taskPageAction(action: TaskPageAction) {
+    fun onAction(action: TaskAction) {
         viewModelScope.launch {
             when (action) {
-                is TaskPageAction.UpsertTask -> {
+                is TaskAction.UpsertTask -> {
                     repo.upsertTask(action.task)
 
                     scheduler.schedule(action.task)
                 }
 
-                TaskPageAction.DeleteTasks -> {
+                TaskAction.DeleteTasks -> {
                     deleteTasks()
                 }
 
-                is TaskPageAction.ChangeCategory -> {
+                is TaskAction.ChangeCategory -> {
                     _state.update {
                         it.copy(
                             currentCategory = action.category
@@ -61,7 +61,7 @@ class TasksViewModel(
                     }
                 }
 
-                is TaskPageAction.AddCategory -> {
+                is TaskAction.AddCategory -> {
                     upsertCategory(action.category)
 
                     _state.update {
@@ -71,13 +71,13 @@ class TasksViewModel(
                     }
                 }
 
-                is TaskPageAction.ReorderTasks -> {
+                is TaskAction.ReorderTasks -> {
                     for (pair in action.mapping) {
                         repo.updateTaskIndexById(pair.second.id, pair.first)
                     }
                 }
 
-                is TaskPageAction.ReorderCategories -> {
+                is TaskAction.ReorderCategories -> {
                     for (category in action.mapping) {
                         upsertCategory(category.second.copy(index = category.first))
                     }
@@ -91,7 +91,7 @@ class TasksViewModel(
                     }
                 }
 
-                is TaskPageAction.DeleteCategory -> {
+                is TaskAction.DeleteCategory -> {
                     deleteCategory(action.category)
 
                     delay(200)

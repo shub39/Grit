@@ -24,7 +24,6 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalLayoutDirection
 import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.res.stringResource
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
@@ -32,15 +31,21 @@ import androidx.navigation.compose.rememberNavController
 import com.shub39.grit.R
 import com.shub39.grit.billing.PaywallPage
 import com.shub39.grit.core.domain.Pages
+import com.shub39.grit.core.habits.presentation.ui.HabitsGraph
 import com.shub39.grit.core.presentation.settings.SettingsAction
 import com.shub39.grit.core.presentation.settings.SettingsGraph
-import com.shub39.grit.habits.presentation.HabitsGraph
-import com.shub39.grit.tasks.presentation.TasksGraph
+import com.shub39.grit.core.tasks.presentation.ui.TasksGraph
 import com.shub39.grit.viewmodels.HabitViewModel
 import com.shub39.grit.viewmodels.SettingsViewModel
 import com.shub39.grit.viewmodels.TasksViewModel
+import grit.shared.core.generated.resources.Res
+import grit.shared.core.generated.resources.habits
+import grit.shared.core.generated.resources.settings
+import grit.shared.core.generated.resources.tasks
 import kotlinx.serialization.Serializable
+import org.jetbrains.compose.resources.stringResource
 import org.koin.androidx.compose.koinViewModel
+import org.koin.compose.koinInject
 
 @Serializable
 private sealed interface Routes {
@@ -64,12 +69,11 @@ private sealed interface Routes {
 
 @OptIn(ExperimentalMaterial3Api::class, ExperimentalMaterial3ExpressiveApi::class)
 @Composable
-fun Grit(
-    svm: SettingsViewModel
-) {
+fun Grit() {
     val navController = rememberNavController()
     var currentRoute: Routes by remember { mutableStateOf(Routes.TaskPages) }
 
+    val svm: SettingsViewModel = koinInject()
     val settingsState by svm.state.collectAsStateWithLifecycle()
 
     val navigator = { route: Routes ->
@@ -115,9 +119,9 @@ fun Grit(
                                     Text(
                                         text = stringResource(
                                             when (route) {
-                                                Routes.HabitsPages -> R.string.habits
-                                                Routes.TaskPages -> R.string.tasks
-                                                else -> R.string.settings
+                                                Routes.HabitsPages -> Res.string.habits
+                                                Routes.TaskPages -> Res.string.tasks
+                                                else -> Res.string.settings
                                             }
                                         )
                                     )
@@ -153,7 +157,7 @@ fun Grit(
 
                         TasksGraph(
                             state = taskPageState,
-                            onAction = tvm::taskPageAction
+                            onAction = tvm::onAction
                         )
                     }
 
@@ -174,7 +178,7 @@ fun Grit(
 
                         HabitsGraph(
                             state = habitsPageState,
-                            onAction = hvm::habitsPageAction,
+                            onAction = hvm::onAction,
                         )
                     }
                 }

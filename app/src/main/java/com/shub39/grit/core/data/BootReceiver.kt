@@ -4,8 +4,8 @@ import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
 import android.util.Log
-import com.shub39.grit.habits.domain.HabitRepo
-import com.shub39.grit.tasks.domain.TaskRepo
+import com.shub39.grit.core.habits.domain.HabitRepo
+import com.shub39.grit.core.tasks.domain.TaskRepo
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.SupervisorJob

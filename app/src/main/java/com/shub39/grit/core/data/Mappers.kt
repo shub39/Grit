@@ -1,13 +1,13 @@
 package com.shub39.grit.core.data
 
+import com.shub39.grit.core.habits.domain.Habit
+import com.shub39.grit.core.habits.domain.HabitStatus
+import com.shub39.grit.core.tasks.domain.Category
+import com.shub39.grit.core.tasks.domain.Task
 import com.shub39.grit.habits.data.database.HabitEntity
 import com.shub39.grit.habits.data.database.HabitStatusEntity
-import com.shub39.grit.habits.domain.Habit
-import com.shub39.grit.habits.domain.HabitStatus
 import com.shub39.grit.tasks.data.database.CategoryEntity
 import com.shub39.grit.tasks.data.database.TaskEntity
-import com.shub39.grit.tasks.domain.Category
-import com.shub39.grit.tasks.domain.Task
 
 fun HabitEntity.toHabit(): Habit {
     return Habit(

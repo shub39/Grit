@@ -5,11 +5,11 @@ import androidx.lifecycle.viewModelScope
 import com.shub39.grit.billing.BillingHandler
 import com.shub39.grit.core.domain.AlarmScheduler
 import com.shub39.grit.core.domain.GritDatastore
-import com.shub39.grit.habits.domain.Habit
-import com.shub39.grit.habits.domain.HabitRepo
-import com.shub39.grit.habits.domain.HabitStatus
-import com.shub39.grit.habits.presentation.HabitPageState
-import com.shub39.grit.habits.presentation.HabitsPageAction
+import com.shub39.grit.core.habits.domain.Habit
+import com.shub39.grit.core.habits.domain.HabitRepo
+import com.shub39.grit.core.habits.domain.HabitStatus
+import com.shub39.grit.core.habits.presentation.HabitState
+import com.shub39.grit.core.habits.presentation.HabitsAction
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.asStateFlow
@@ -48,36 +48,36 @@ class HabitViewModel(
         .stateIn(
             viewModelScope,
             SharingStarted.WhileSubscribed(5000),
-            HabitPageState()
+            HabitState()
         )
 
     // handles actions from habit page
-    fun habitsPageAction(action: HabitsPageAction) {
+    fun onAction(action: HabitsAction) {
         viewModelScope.launch {
             when (action) {
-                is HabitsPageAction.AddHabit -> {
+                is HabitsAction.AddHabit -> {
                     upsertHabit(action.habit)
                 }
 
-                is HabitsPageAction.DeleteHabit -> {
+                is HabitsAction.DeleteHabit -> {
                     deleteHabit(action.habit)
                 }
 
-                is HabitsPageAction.InsertStatus -> {
+                is HabitsAction.InsertStatus -> {
                     insertHabitStatus(action.habit, action.date)
                 }
 
-                is HabitsPageAction.UpdateHabit -> {
+                is HabitsAction.UpdateHabit -> {
                     upsertHabit(action.habit)
                 }
 
-                is HabitsPageAction.ReorderHabits -> {
+                is HabitsAction.ReorderHabits -> {
                     for (habitWithIndex in action.pairs) {
                         upsertHabit(habitWithIndex.second.habit.copy(index = habitWithIndex.first))
                     }
                 }
 
-                is HabitsPageAction.PrepareAnalytics -> {
+                is HabitsAction.PrepareAnalytics -> {
                     _state.update {
                         it.copy(
                             analyticsHabitId = action.habit.id
@@ -85,7 +85,7 @@ class HabitViewModel(
                     }
                 }
 
-                HabitsPageAction.OnAddHabitClicked -> {
+                HabitsAction.OnAddHabitClicked -> {
                     val isSubscribed = billingHandler.isPlusUser()
 
                     if (!isSubscribed && _state.value.habitsWithAnalytics.size >= 5) {
@@ -115,15 +115,15 @@ class HabitViewModel(
                     }
                 }
 
-                HabitsPageAction.DismissAddHabitDialog -> _state.update { it.copy(showHabitAddSheet = false) }
+                HabitsAction.DismissAddHabitDialog -> _state.update { it.copy(showHabitAddSheet = false) }
 
-                HabitsPageAction.OnShowPaywall -> stateLayer.settingsState.update {
+                HabitsAction.OnShowPaywall -> stateLayer.settingsState.update {
                     it.copy(
                         showPaywall = true
                     )
                 }
 
-                is HabitsPageAction.OnToggleCompactView -> datastore.setCompactView(action.pref)
+                is HabitsAction.OnToggleCompactView -> datastore.setCompactView(action.pref)
             }
         }
     }

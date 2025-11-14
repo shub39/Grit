@@ -4,6 +4,7 @@ import android.content.Context
 import android.net.wifi.WifiManager
 import android.util.Log
 import com.shub39.grit.core.domain.GritDatastore
+import com.shub39.grit.core.tasks.domain.TaskRepo
 import com.shub39.grit.server.domain.CategoryResponse
 import com.shub39.grit.server.domain.ErrorResponse
 import com.shub39.grit.server.domain.GritServerRepository
@@ -13,7 +14,6 @@ import com.shub39.grit.server.domain.toCategory
 import com.shub39.grit.server.domain.toCategoryResponse
 import com.shub39.grit.server.domain.toTask
 import com.shub39.grit.server.domain.toTaskResponse
-import com.shub39.grit.tasks.domain.TaskRepo
 import io.ktor.http.HttpStatusCode
 import io.ktor.serialization.kotlinx.json.json
 import io.ktor.server.application.install

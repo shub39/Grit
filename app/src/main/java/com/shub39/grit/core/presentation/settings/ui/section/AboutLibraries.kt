@@ -14,12 +14,14 @@ import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import com.mikepenz.aboutlibraries.ui.compose.android.produceLibraries
 import com.mikepenz.aboutlibraries.ui.compose.m3.LibrariesContainer
 import com.shub39.grit.R
-import com.shub39.grit.core.presentation.component.PageFill
+import com.shub39.grit.core.shared_ui.PageFill
+import grit.shared.core.generated.resources.Res
+import grit.shared.core.generated.resources.about_libraries
+import org.jetbrains.compose.resources.stringResource
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -34,7 +36,7 @@ fun AboutLibraries(
         val libraries by produceLibraries(R.raw.aboutlibraries)
 
         TopAppBar(
-            title = { Text(stringResource(R.string.about_libraries)) },
+            title = { Text(stringResource(Res.string.about_libraries)) },
             navigationIcon = {
                 IconButton(
                     onClick = onNavigateBack
