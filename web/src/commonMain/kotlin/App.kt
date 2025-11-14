@@ -33,7 +33,7 @@ private sealed interface Routes {
     data object Habits : Routes
 
     companion object {
-        val allRoutes = listOf(
+        val allRoutes = listOf<Routes>(
             Tasks, Habits
         )
 
@@ -67,7 +67,7 @@ fun App() {
     ) {
         NavigationSuiteScaffold(
             navigationSuiteItems = {
-                Routes.allRoutes.forEach { route ->
+                Routes.allRoutes.forEach { route: Routes ->
                     item(
                         selected = currentRoute == route,
                         onClick = {

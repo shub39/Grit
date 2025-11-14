@@ -53,6 +53,10 @@ kotlin {
     }
 }
 
+compose.resources {
+    publicResClass = true
+}
+
 android {
     namespace = "com.shub39.grit.core"
     compileSdk = libs.versions.compileSdk.get().toInt()

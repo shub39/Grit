@@ -332,7 +332,8 @@ class DummyStateProvider : StateProvider {
 
         return DayOfWeek.entries.associate {
             val weekName = DayOfWeekNames.ENGLISH_ABBREVIATED.names[it.isoDayNumber - 1]
-            weekName to dayFrequency.getOrDefault(it, 0)
+
+            weekName to (dayFrequency[it] ?: 0)
         }
     }
 

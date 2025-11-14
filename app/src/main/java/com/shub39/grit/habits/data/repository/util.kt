@@ -139,7 +139,7 @@ fun prepareWeekDayFrequencyData(
     return DayOfWeek.entries.associate { dayOfWeek ->
         val weekName = DayOfWeekNames.ENGLISH_ABBREVIATED.names[dayOfWeek.isoDayNumber - 1]
 
-        weekName to dayFrequency.getOrDefault(dayOfWeek, 0)
+        weekName to (dayFrequency[dayOfWeek] ?: 0)
     }
 }
 
