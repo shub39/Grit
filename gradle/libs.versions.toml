@@ -8,7 +8,6 @@ composeCharts = "0.2.0"
 espressoCore = "3.7.0"
 junit = "4.13.2"
 junitVersion = "1.3.0"
-kotlinxCollectionsImmutable = "0.4.0"
 kotlinxDatetime = "0.7.1"
 purchases = "9.13.0"
 splashscreen = "1.2.0"
@@ -22,7 +21,6 @@ material3 = "1.10.0-alpha04"
 reorderable = "3.0.0"
 room = "2.8.3"
 navigation = "2.9.1"
-serialization = "1.9.0"
 materialKolor = "4.0.4"
 aboutLibraries = "13.1.0"
 composeIcons = "1.1.1"
@@ -64,8 +62,6 @@ ktor-serialization-kotlinx-json = { module = "io.ktor:ktor-serialization-kotlinx
 kotlinx-datetime = { module = "org.jetbrains.kotlinx:kotlinx-datetime", version.ref = "kotlinxDatetime" }
 junit = { module = "junit:junit", version.ref = "junit" }
 koin-androidx-compose = { module = "io.insert-koin:koin-androidx-compose", version.ref = "koin" }
-kotlinx-collections-immutable = { module = "org.jetbrains.kotlinx:kotlinx-collections-immutable", version.ref = "kotlinxCollectionsImmutable" }
-kotlinx-serialization-json = { module = "org.jetbrains.kotlinx:kotlinx-serialization-json", version.ref = "serialization" }
 purchases = { module = "com.revenuecat.purchases:purchases", version.ref = "purchases" }
 purchases-ui = { module = "com.revenuecat.purchases:purchases-ui", version.ref = "purchases" }
 reorderable = { module = "sh.calvin.reorderable:reorderable", version.ref = "reorderable" }
