@@ -43,6 +43,7 @@ kotlin {
             implementation(compose.components.resources)
             implementation(compose.components.uiToolingPreview)
             implementation(libs.navigation.compose)
+            implementation(libs.compose.windowSizeClass)
 
             implementation(libs.kotlinx.datetime)
             implementation(libs.reorderable)

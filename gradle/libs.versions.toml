@@ -25,7 +25,6 @@ materialKolor = "4.0.4"
 aboutLibraries = "13.1.0"
 composeIcons = "1.1.1"
 compose = "1.9.4"
-materialIconsExtended = "1.7.8"
 biometric = "1.4.0-alpha02"
 truth = "1.4.5"
 ktor = "3.3.2"
@@ -35,9 +34,9 @@ kotlinx-coroutines = "1.10.2"
 
 [libraries]
 # Android and compose stuff
+compose-windowSizeClass = { module = "org.jetbrains.compose.material3:material3-window-size-class", version.ref = "material3" }
 androidx-espresso-core = { module = "androidx.test.espresso:espresso-core", version.ref = "espressoCore" }
 androidx-junit = { module = "androidx.test.ext:junit", version.ref = "junitVersion" }
-androidx-material-icons-extended = { module = "androidx.compose.material:material-icons-extended", version.ref = "materialIconsExtended" }
 androidx-datastore-preferences-core = { module = "androidx.datastore:datastore-preferences-core", version.ref = "datastore" }
 androidx-glance-appwidget = { module = "androidx.glance:glance-appwidget", version.ref = "glance" }
 androidx-glance-material3 = { module = "androidx.glance:glance-material3", version.ref = "glance" }
@@ -46,11 +45,7 @@ androidx-core-splashscreen = { module = "androidx.core:core-splashscreen", versi
 androidx-room-compiler = { module = "androidx.room:room-compiler", version.ref = "room" }
 androidx-room-runtime = { module = "androidx.room:room-runtime", version.ref = "room" }
 androidx-room-testing = { module = "androidx.room:room-testing", version.ref = "room" }
-androidx-ui = { group = "androidx.compose.ui", name = "ui", version.ref = "compose" }
-androidx-ui-graphics = { group = "androidx.compose.ui", name = "ui-graphics", version.ref = "compose" }
 androidx-ui-test-junit4 = { module = "androidx.compose.ui:ui-test-junit4", version.ref = "compose" }
-androidx-ui-tooling = { group = "androidx.compose.ui", name = "ui-tooling", version.ref = "compose" }
-androidx-ui-tooling-preview = { group = "androidx.compose.ui", name = "ui-tooling-preview", version.ref = "compose" }
 navigation-compose = { group = "org.jetbrains.androidx.navigation", name = "navigation-compose", version.ref = "navigation" }
 androidx-biometric = { group = "androidx.biometric", name = "biometric-ktx", version.ref = "biometric" }
 

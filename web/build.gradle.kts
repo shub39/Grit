@@ -29,9 +29,9 @@ kotlin {
             implementation(compose.materialIconsExtended)
             implementation(compose.components.resources)
             implementation(compose.components.uiToolingPreview)
-            implementation(compose.material3AdaptiveNavigationSuite)
             implementation(libs.navigation.compose)
             implementation(libs.kotlinx.datetime)
+            implementation(libs.compose.windowSizeClass)
 
             implementation(libs.koin.compose)
             implementation(libs.koin.compose.viewmodel)
