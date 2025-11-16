@@ -134,6 +134,7 @@ dependencies {
     implementation(compose.components.resources)
     implementation(compose.components.uiToolingPreview)
     implementation(libs.navigation.compose)
+    implementation(libs.compose.windowSizeClass)
     implementation(libs.androidx.core.splashscreen)
     implementation(libs.androidx.room.runtime)
     ksp(libs.androidx.room.compiler)

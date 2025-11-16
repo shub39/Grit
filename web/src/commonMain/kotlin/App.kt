@@ -21,7 +21,6 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.windowsizeclass.ExperimentalMaterial3WindowSizeClassApi
 import androidx.compose.material3.windowsizeclass.WindowWidthSizeClass
-import androidx.compose.material3.windowsizeclass.calculateWindowSizeClass
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
@@ -40,6 +39,7 @@ import androidx.navigation.compose.rememberNavController
 import com.materialkolor.DynamicMaterialTheme
 import com.shub39.grit.core.habits.presentation.ui.HabitsGraph
 import com.shub39.grit.core.tasks.presentation.ui.TasksGraph
+import com.shub39.grit.core.utils.LocalWindowSizeClass
 import domain.StateProvider
 import kotlinx.serialization.Serializable
 import org.koin.compose.koinInject
@@ -82,13 +82,13 @@ fun App() {
     var currentRoute: Routes by remember { mutableStateOf(Routes.Tasks) }
     var isDark by remember { mutableStateOf(true) }
 
-    val widthSizeClass = calculateWindowSizeClass()
+    val widthSizeClass = LocalWindowSizeClass.current.widthSizeClass
 
     DynamicMaterialTheme(
         primary = Color(0xFABD2F),
         isDark = isDark
     ) {
-        when (widthSizeClass.widthSizeClass) {
+        when (widthSizeClass) {
             WindowWidthSizeClass.Compact -> {
                 Scaffold(
                     bottomBar = {

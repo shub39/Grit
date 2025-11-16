@@ -44,15 +44,15 @@ fun TaskCard(
 ) {
     val cardContent by animateColorAsState(
         targetValue = when (task.status) {
-            true -> MaterialTheme.colorScheme.secondary.copy(alpha = 0.5f)
-            else -> MaterialTheme.colorScheme.secondary
+            true -> MaterialTheme.colorScheme.onSurface
+            else -> MaterialTheme.colorScheme.onSecondaryContainer
         },
         label = "cardContent"
     )
     val cardContainer by animateColorAsState(
         targetValue = when (task.status) {
-            true -> MaterialTheme.colorScheme.surfaceContainerHighest.copy(alpha = 0.5f)
-            else -> MaterialTheme.colorScheme.surfaceContainerHighest
+            true -> MaterialTheme.colorScheme.surfaceContainerHighest
+            else -> MaterialTheme.colorScheme.secondaryContainer
         },
         label = "cardContainer"
     )

@@ -5,6 +5,9 @@ import android.widget.Toast
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import androidx.biometric.BiometricPrompt
+import androidx.compose.material3.windowsizeclass.ExperimentalMaterial3WindowSizeClassApi
+import androidx.compose.material3.windowsizeclass.calculateWindowSizeClass
+import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -20,6 +23,7 @@ import com.shub39.grit.core.presentation.component.InitialLoading
 import com.shub39.grit.core.presentation.createNotificationChannel
 import com.shub39.grit.core.presentation.settings.SettingsAction
 import com.shub39.grit.core.presentation.theme.GritTheme
+import com.shub39.grit.core.utils.LocalWindowSizeClass
 import com.shub39.grit.viewmodels.MainViewModel
 import com.shub39.grit.viewmodels.SettingsViewModel
 import org.koin.androidx.viewmodel.ext.android.viewModel
@@ -28,6 +32,7 @@ class MainActivity : FragmentActivity() {
     private val settingsViewModel: SettingsViewModel by viewModel()
     private val mainViewModel: MainViewModel by viewModel()
 
+    @OptIn(ExperimentalMaterial3WindowSizeClassApi::class)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         installSplashScreen()
@@ -35,45 +40,51 @@ class MainActivity : FragmentActivity() {
         enableEdgeToEdge()
 
         setContent {
-            val settingsState by settingsViewModel.state.collectAsStateWithLifecycle()
-            val isAppUnlocked by mainViewModel.isAppUnlocked.collectAsStateWithLifecycle()
-            var showContent by remember { mutableStateOf(false) }
+            val windowSizeClass = calculateWindowSizeClass(this)
 
-            LaunchedEffect(settingsState.biometric, isAppUnlocked) {
-                settingsState.biometric?.let {
-                    when {
-                        !it -> {
-                            showContent = true
-                        }
+            CompositionLocalProvider(
+                LocalWindowSizeClass provides windowSizeClass
+            ) {
+                val settingsState by settingsViewModel.state.collectAsStateWithLifecycle()
+                val isAppUnlocked by mainViewModel.isAppUnlocked.collectAsStateWithLifecycle()
+                var showContent by remember { mutableStateOf(false) }
 
-                        isAppUnlocked -> {
-                            showContent = true
-                        }
+                LaunchedEffect(settingsState.biometric, isAppUnlocked) {
+                    settingsState.biometric?.let {
+                        when {
+                            !it -> {
+                                showContent = true
+                            }
 
-                        else -> {
-                            showBiometricPrompt(
-                                onSuccess = {
-                                    mainViewModel.setAppUnlocked(true)
-                                    showContent = true
-                                },
-                                onError = { errorCode, errString ->
-                                    handleBiometricError(errorCode, errString) {
+                            isAppUnlocked -> {
+                                showContent = true
+                            }
+
+                            else -> {
+                                showBiometricPrompt(
+                                    onSuccess = {
+                                        mainViewModel.setAppUnlocked(true)
                                         showContent = true
+                                    },
+                                    onError = { errorCode, errString ->
+                                        handleBiometricError(errorCode, errString) {
+                                            showContent = true
+                                        }
                                     }
-                                }
-                            )
+                                )
+                            }
                         }
                     }
                 }
-            }
 
-            GritTheme(
-                theme = settingsState.theme
-            ) {
-                if (showContent) {
-                    Grit()
-                } else {
-                    InitialLoading()
+                GritTheme(
+                    theme = settingsState.theme
+                ) {
+                    if (showContent) {
+                        Grit()
+                    } else {
+                        InitialLoading()
+                    }
                 }
             }
         }
