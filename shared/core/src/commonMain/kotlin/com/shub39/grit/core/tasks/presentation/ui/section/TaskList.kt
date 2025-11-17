@@ -48,6 +48,8 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButtonShapes
 import androidx.compose.material3.IconToggleButtonShapes
 import androidx.compose.material3.LargeFlexibleTopAppBar
+import androidx.compose.material3.ListItem
+import androidx.compose.material3.ListItemDefaults
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.MediumFloatingActionButton
 import androidx.compose.material3.OutlinedIconButton
@@ -66,10 +68,12 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardCapitalization
 import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import com.shub39.grit.core.shared_ui.Empty
 import com.shub39.grit.core.shared_ui.GritBottomSheet
@@ -91,6 +95,7 @@ import grit.shared.core.generated.resources.delete_tasks
 import grit.shared.core.generated.resources.done
 import grit.shared.core.generated.resources.edit_categories
 import grit.shared.core.generated.resources.items_completed
+import grit.shared.core.generated.resources.reorder_tasks
 import grit.shared.core.generated.resources.tasks
 import org.jetbrains.compose.resources.stringResource
 import sh.calvin.reorderable.ReorderableItem
@@ -398,10 +403,11 @@ private fun CompactTasksView(
                                             if (!isReorderMode) {
                                                 val updatedTask = task.copy(status = !task.status)
                                                 if (updatedTask.status && state.reorderTasks) {
-                                                    val newList = reorderableTasks.toMutableList().apply {
-                                                        removeAt(index)
-                                                        add(updatedTask)
-                                                    }
+                                                    val newList =
+                                                        reorderableTasks.toMutableList().apply {
+                                                            removeAt(index)
+                                                            add(updatedTask)
+                                                        }
                                                     reorderableTasks = newList
                                                     onAction(TaskAction.ReorderTasks(newList.mapIndexed { newIndex, it -> newIndex to it }))
                                                 } else {
@@ -409,7 +415,11 @@ private fun CompactTasksView(
                                                 }
                                             }
                                         },
-                                        onLongClick = { if (!isReorderMode && !task.status) onEditTask(task) }
+                                        onLongClick = {
+                                            if (!isReorderMode && !task.status) onEditTask(
+                                                task
+                                            )
+                                        }
                                     )
                             )
                         }
@@ -423,6 +433,7 @@ private fun CompactTasksView(
     }
 }
 
+@OptIn(ExperimentalMaterial3ExpressiveApi::class)
 @Composable
 private fun ExpandedTasksView(
     state: TaskState,
@@ -439,6 +450,8 @@ private fun ExpandedTasksView(
         modifier = Modifier.fillMaxSize()
     ) {
         items(tasksAndCategories, key = { it.first.id }) { (category, tasks) ->
+            var showReorderDialog by remember { mutableStateOf(false) }
+
             Surface(
                 color = MaterialTheme.colorScheme.surfaceContainer,
                 shape = RoundedCornerShape(28.dp),
@@ -453,12 +466,29 @@ private fun ExpandedTasksView(
                     verticalArrangement = Arrangement.spacedBy(8.dp)
                 ) {
                     item {
-                        Text(
-                            text = category.name,
-                            style = MaterialTheme.typography.titleLarge,
-                            textAlign = TextAlign.Center,
-                            modifier = Modifier.padding(8.dp).fillMaxWidth()
-                        )
+                        Row(
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .padding(start = 8.dp),
+                            verticalAlignment = Alignment.CenterVertically
+                        ) {
+                            Text(
+                                text = category.name,
+                                style = MaterialTheme.typography.titleLarge,
+                                modifier = Modifier.padding(end = 8.dp).weight(1f)
+                            )
+
+                            FilledTonalIconToggleButton(
+                                checked = showReorderDialog,
+                                onCheckedChange = { showReorderDialog = it },
+                                enabled = tasks.size > 1
+                            ) {
+                                Icon(
+                                    imageVector = Icons.Rounded.Reorder,
+                                    contentDescription = null
+                                )
+                            }
+                        }
                     }
                     items(tasks, key = { it.id }) { task ->
                         TaskCard(
@@ -480,6 +510,76 @@ private fun ExpandedTasksView(
                     }
                     if (tasks.isEmpty()) {
                         item { Empty(modifier = Modifier.padding(32.dp)) }
+                    }
+                }
+            }
+
+            if (showReorderDialog) {
+                GritDialog(onDismissRequest = { showReorderDialog = false }) {
+                    var reorderableTasks = remember { tasks }
+
+                    val listState = rememberLazyListState()
+                    val reorderableListState =
+                        rememberReorderableLazyListState(listState) { from, to ->
+                            reorderableTasks = reorderableTasks.toMutableList().apply {
+                                add(to.index, removeAt(from.index))
+                            }
+
+                            onAction(TaskAction.ReorderTasks(reorderableTasks.mapIndexed { index, task -> index to task }))
+                        }
+
+                    Column(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .heightIn(max = 600.dp),
+                        horizontalAlignment = Alignment.CenterHorizontally,
+                        verticalArrangement = Arrangement.spacedBy(8.dp)
+                    ) {
+                        Icon(
+                            imageVector = Icons.Rounded.Reorder,
+                            contentDescription = null,
+                            modifier = Modifier.size(48.dp)
+                        )
+
+                        Text(
+                            text = stringResource(Res.string.reorder_tasks),
+                            style = MaterialTheme.typography.titleLarge,
+                            textAlign = TextAlign.Center
+                        )
+
+                        LazyColumn(
+                            modifier = Modifier.fillMaxWidth(),
+                            state = listState,
+                            horizontalAlignment = Alignment.CenterHorizontally,
+                            verticalArrangement = Arrangement.spacedBy(8.dp)
+                        ) {
+                            items(tasks, key = { it.id }) { task ->
+                                ReorderableItem(reorderableListState, key = task.id) {
+                                    ListItem(
+                                        modifier = Modifier.clip(MaterialTheme.shapes.medium),
+                                        colors = ListItemDefaults.colors(
+                                            containerColor = MaterialTheme.colorScheme.surfaceContainerHigh
+                                        ),
+                                        headlineContent = {
+                                            Text(
+                                                text = task.title,
+                                                maxLines = 1,
+                                                overflow = TextOverflow.Ellipsis
+                                            )
+                                        },
+                                        trailingContent = {
+                                            Icon(
+                                                imageVector = Icons.Rounded.DragIndicator,
+                                                contentDescription = null,
+                                                modifier = Modifier
+                                                    .padding(horizontal = 8.dp)
+                                                    .draggableHandle(),
+                                            )
+                                        }
+                                    )
+                                }
+                            }
+                        }
                     }
                 }
             }
