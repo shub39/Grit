@@ -5,7 +5,9 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.widthIn
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.text.KeyboardActions
@@ -27,7 +29,7 @@ import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Switch
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
-import androidx.compose.material3.TimePicker
+import androidx.compose.material3.TimeInput
 import androidx.compose.material3.TimePickerDialog
 import androidx.compose.material3.ToggleButton
 import androidx.compose.material3.ToggleButtonDefaults
@@ -250,7 +252,7 @@ fun TaskUpsertSheetContent(
             },
             dismissButton = {
                 IconButton(
-                    onClick = { updateDateTimePickerVisibility(true) }
+                    onClick = { showTimePicker = true }
                 ) {
                     Icon(
                         imageVector = Icons.Rounded.Schedule,
@@ -265,7 +267,7 @@ fun TaskUpsertSheetContent(
 
             if (showTimePicker) {
                 TimePickerDialog(
-                    onDismissRequest = {},
+                    onDismissRequest = { showTimePicker = false },
                     title = {},
                     confirmButton = {
                         TextButton(
@@ -273,9 +275,12 @@ fun TaskUpsertSheetContent(
                         ) {
                             Text(stringResource(Res.string.done))
                         }
-                    }
+                    },
+                    modifier = Modifier
+                        .widthIn(max = 400.dp)
+                        .heightIn(max = 500.dp)
                 ) {
-                    TimePicker(
+                    TimeInput(
                         state = timePickerState
                     )
                 }
