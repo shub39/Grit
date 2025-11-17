@@ -167,8 +167,21 @@ class DummyStateProvider : StateProvider {
     override fun onTaskAction(action: TaskAction) {
         when (action) {
             is TaskAction.AddCategory -> {
-                val newCategory = action.category.copy(id = Random.nextLong())
-                _taskState.update { it.copy(tasks = it.tasks + (newCategory to emptyList())) }
+                _taskState.update { state ->
+                    val existingCategory = state.tasks.keys.find { it.id == action.category.id }
+                    val newTasks = state.tasks.toMutableMap()
+
+                    if (existingCategory != null) {
+                        val tasksForCategory = newTasks.remove(existingCategory) ?: emptyList()
+                        newTasks[action.category] = tasksForCategory
+                    } else {
+                        newTasks[action.category.copy(id = Random.nextLong())] = emptyList()
+                    }
+                    state.copy(
+                        tasks = newTasks,
+                        currentCategory = newTasks.keys.firstOrNull()
+                    )
+                }
             }
 
             is TaskAction.ChangeCategory -> {
@@ -190,9 +203,12 @@ class DummyStateProvider : StateProvider {
 
             is TaskAction.ReorderCategories -> {
                 _taskState.update { state ->
-                    val reorderedMap = action.mapping.sortedBy { it.first }.map { it.second }
-                        .associateWith { state.tasks[it] ?: emptyList() }
-                    state.copy(tasks = reorderedMap)
+                    val reorderedCategories = action.mapping.map {
+                        it.second.copy(index = it.first)
+                    }.associateWith { category ->
+                        state.tasks[state.tasks.keys.find { it.id == category.id }] ?: emptyList()
+                    }
+                    state.copy(tasks = reorderedCategories, currentCategory = reorderedCategories.keys.firstOrNull())
                 }
             }
 

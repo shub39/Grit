@@ -101,7 +101,7 @@ import sh.calvin.reorderable.rememberReorderableLazyListState
 fun TaskList(
     state: TaskState,
     onAction: (TaskAction) -> Unit,
-    onNavigateToEditCategories: () -> Unit
+    onEditCategories: () -> Unit
 ) = PageFill {
     val windowSizeClass = LocalWindowSizeClass.current
 
@@ -132,7 +132,7 @@ fun TaskList(
             isReorderMode = editState,
             onAction = onAction,
             onAddCategoryClick = { showCategoryAddSheet = true },
-            onEditCategoriesClick = onNavigateToEditCategories,
+            onEditCategoriesClick = onEditCategories,
             isExpanded = windowSizeClass.widthSizeClass == WindowWidthSizeClass.Expanded,
             onReorderModeChange = { editState = it }
         )
@@ -429,7 +429,7 @@ private fun ExpandedTasksView(
     onAction: (TaskAction) -> Unit,
     onEditTask: (Task) -> Unit
 ) {
-    val tasksAndCategories = remember(state.tasks) { state.tasks.toList().sortedBy { it.first.index } }
+    val tasksAndCategories = state.tasks.toList()
 
     LazyVerticalStaggeredGrid(
         columns = StaggeredGridCells.Adaptive(minSize = 350.dp),
