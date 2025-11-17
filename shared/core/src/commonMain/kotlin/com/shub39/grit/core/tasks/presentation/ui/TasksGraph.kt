@@ -1,60 +1,277 @@
 package com.shub39.grit.core.tasks.presentation.ui
 
-import androidx.compose.animation.core.tween
-import androidx.compose.animation.fadeOut
-import androidx.compose.animation.slideInVertically
+import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.heightIn
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.itemsIndexed
+import androidx.compose.foundation.lazy.rememberLazyListState
+import androidx.compose.foundation.text.KeyboardOptions
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.rounded.Delete
+import androidx.compose.material.icons.rounded.DragIndicator
+import androidx.compose.material.icons.rounded.Edit
+import androidx.compose.material.icons.rounded.Warning
+import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonShapes
+import androidx.compose.material3.ExperimentalMaterial3ExpressiveApi
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
+import androidx.compose.material3.ListItem
+import androidx.compose.material3.ListItemDefaults
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.OutlinedTextField
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.navigation.compose.NavHost
-import androidx.navigation.compose.composable
-import androidx.navigation.compose.rememberNavController
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
+import androidx.compose.ui.Alignment
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
+import androidx.compose.ui.focus.FocusRequester
+import androidx.compose.ui.focus.focusRequester
+import androidx.compose.ui.platform.LocalSoftwareKeyboardController
+import androidx.compose.ui.text.input.ImeAction
+import androidx.compose.ui.text.input.KeyboardCapitalization
+import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.unit.dp
+import com.shub39.grit.core.shared_ui.GritBottomSheet
+import com.shub39.grit.core.shared_ui.GritDialog
 import com.shub39.grit.core.tasks.presentation.TaskAction
 import com.shub39.grit.core.tasks.presentation.TaskState
-import com.shub39.grit.core.tasks.presentation.ui.section.EditCategories
 import com.shub39.grit.core.tasks.presentation.ui.section.TaskList
-import kotlinx.serialization.Serializable
-
-@Serializable
-private sealed interface TasksRoutes {
-    @Serializable
-    data object TasksList: TasksRoutes
-
-    @Serializable
-    data object EditCategories: TasksRoutes
-}
+import grit.shared.core.generated.resources.Res
+import grit.shared.core.generated.resources.delete
+import grit.shared.core.generated.resources.delete_category
+import grit.shared.core.generated.resources.done
+import grit.shared.core.generated.resources.edit_categories
+import grit.shared.core.generated.resources.tasks
+import kotlinx.coroutines.delay
+import org.jetbrains.compose.resources.stringResource
+import sh.calvin.reorderable.ReorderableItem
+import sh.calvin.reorderable.rememberReorderableLazyListState
 
 @Composable
 fun TasksGraph(
     state: TaskState,
     onAction: (TaskAction) -> Unit
 ) {
-    val navController = rememberNavController()
+    var showCategoryEditor by remember { mutableStateOf(false) }
 
-    NavHost(
-        navController = navController,
-        startDestination = TasksRoutes.TasksList,
-        enterTransition = { slideInVertically(tween(300), initialOffsetY = { it / 2 }) },
-        exitTransition = { fadeOut(tween(300)) },
-        popEnterTransition = { slideInVertically(tween(300), initialOffsetY = { it / 2 }) },
-        popExitTransition = { fadeOut(tween(300)) }
-    ) {
-        composable<TasksRoutes.TasksList> {
-            TaskList(
-                state = state,
-                onAction = onAction,
-                onNavigateToEditCategories = {
-                    navController.navigate(TasksRoutes.EditCategories) {
-                        launchSingleTop = true
-                    }
-                }
-            )
+    TaskList(
+        state = state,
+        onAction = onAction,
+        onEditCategories = { showCategoryEditor = true }
+    )
+
+    if (showCategoryEditor) {
+        CategoryEditDialog(
+            state = state,
+            onAction = onAction,
+            onDismissRequest = { showCategoryEditor = false }
+        )
+    }
+}
+
+@OptIn(ExperimentalMaterial3ExpressiveApi::class)
+@Composable
+private fun CategoryEditDialog(
+    state: TaskState,
+    onAction: (TaskAction) -> Unit,
+    onDismissRequest: () -> Unit
+) {
+    GritDialog(onDismissRequest = onDismissRequest) {
+        var categories by remember(state.tasks) { mutableStateOf(state.tasks.keys.toList()) }
+
+        val listState = rememberLazyListState()
+        val reorderableListState = rememberReorderableLazyListState(listState) { from, to ->
+            categories = categories.toMutableList().apply {
+                add(to.index, removeAt(from.index))
+            }
+
+            onAction(TaskAction.ReorderCategories(categories.mapIndexed { index, category -> index to category }))
         }
 
-        composable<TasksRoutes.EditCategories> {
-            EditCategories(
-                state = state,
-                onAction = onAction,
-                onNavigateBack = { navController.navigateUp() }
+        Column(
+            modifier = Modifier
+                .fillMaxWidth()
+                .heightIn(max = 600.dp),
+            horizontalAlignment = Alignment.CenterHorizontally,
+            verticalArrangement = Arrangement.spacedBy(8.dp)
+        ) {
+            Icon(
+                imageVector = Icons.Rounded.Edit,
+                contentDescription = null,
+                modifier = Modifier.size(48.dp)
             )
+
+            Text(
+                text = stringResource(Res.string.edit_categories),
+                style = MaterialTheme.typography.titleLarge,
+                textAlign = TextAlign.Center
+            )
+
+            LazyColumn(
+                modifier = Modifier.fillMaxWidth(),
+                state = listState,
+                horizontalAlignment = Alignment.CenterHorizontally,
+                verticalArrangement = Arrangement.spacedBy(8.dp)
+            ) {
+                itemsIndexed(categories, key = { _, it -> it.id }) { _, category ->
+                    var showEditSheet by remember { mutableStateOf(false) }
+                    var showDeleteDialog by remember { mutableStateOf(false) }
+
+                    ReorderableItem(reorderableListState, key = category.id) {
+                        ListItem(
+                            modifier = Modifier.clip(MaterialTheme.shapes.medium),
+                            colors = ListItemDefaults.colors(
+                                containerColor = MaterialTheme.colorScheme.surfaceContainerHigh
+                            ),
+                            headlineContent = { Text(text = category.name) },
+                            supportingContent = {
+                                Text(
+                                    text = "${state.tasks[category]?.size ?: "0"} ${
+                                        stringResource(
+                                            Res.string.tasks
+                                        )
+                                    }"
+                                )
+                            },
+                            trailingContent = {
+                                Row(verticalAlignment = Alignment.CenterVertically) {
+                                    IconButton(
+                                        onClick = { showDeleteDialog = true },
+                                        enabled = categories.size > 1
+                                    ) {
+                                        Icon(
+                                            imageVector = Icons.Rounded.Delete,
+                                            contentDescription = "Delete"
+                                        )
+                                    }
+
+                                    IconButton(
+                                        onClick = { showEditSheet = true }
+                                    ) {
+                                        Icon(
+                                            imageVector = Icons.Rounded.Edit,
+                                            contentDescription = "Edit"
+                                        )
+                                    }
+
+                                    AnimatedVisibility(visible = categories.size > 1) {
+                                        Icon(
+                                            imageVector = Icons.Rounded.DragIndicator,
+                                            contentDescription = null,
+                                            modifier = Modifier
+                                                .padding(horizontal = 8.dp)
+                                                .draggableHandle(),
+                                        )
+                                    }
+                                }
+                            }
+                        )
+                    }
+
+                    if (showDeleteDialog) {
+                        GritDialog(
+                            onDismissRequest = { showDeleteDialog = false }
+                        ) {
+                            Icon(
+                                imageVector = Icons.Rounded.Warning,
+                                contentDescription = null,
+                                modifier = Modifier.size(64.dp)
+                            )
+
+                            Text(
+                                text = stringResource(Res.string.delete_category),
+                                textAlign = TextAlign.Center
+                            )
+
+                            Button(
+                                onClick = {
+                                    onAction(TaskAction.DeleteCategory(category))
+                                    showDeleteDialog = false
+                                },
+                                modifier = Modifier.fillMaxWidth(),
+                                shapes = ButtonShapes(
+                                    shape = MaterialTheme.shapes.extraLarge,
+                                    pressedShape = MaterialTheme.shapes.small
+                                )
+                            ) {
+                                Text(stringResource(Res.string.delete))
+                            }
+                        }
+                    }
+
+                    if (showEditSheet) {
+                        GritBottomSheet(
+                            onDismissRequest = { showEditSheet = false }
+                        ) {
+                            var name by remember { mutableStateOf(category.name) }
+                            val keyboardController = LocalSoftwareKeyboardController.current
+                            val focusRequester = remember { FocusRequester() }
+
+                            LaunchedEffect(Unit) {
+                                delay(200)
+                                focusRequester.requestFocus()
+                                keyboardController?.show()
+                            }
+
+                            Icon(
+                                imageVector = Icons.Rounded.Edit,
+                                contentDescription = "Edit Category"
+                            )
+
+                            Text(
+                                text = stringResource(Res.string.edit_categories),
+                                style = MaterialTheme.typography.headlineSmall,
+                                textAlign = TextAlign.Center
+                            )
+
+                            OutlinedTextField(
+                                value = name,
+                                onValueChange = { name = it },
+                                shape = MaterialTheme.shapes.medium,
+                                keyboardOptions = KeyboardOptions.Default.copy(
+                                    capitalization = KeyboardCapitalization.Sentences,
+                                    imeAction = ImeAction.Done
+                                ),
+                                singleLine = true,
+                                modifier = Modifier
+                                    .fillMaxWidth()
+                                    .focusRequester(focusRequester)
+                            )
+
+                            Button(
+                                onClick = {
+                                    onAction(
+                                        TaskAction.AddCategory(
+                                            category.copy(name = name)
+                                        )
+                                    )
+                                    showEditSheet = false
+                                },
+                                shapes = ButtonShapes(
+                                    shape = MaterialTheme.shapes.extraLarge,
+                                    pressedShape = MaterialTheme.shapes.small
+                                ),
+                                modifier = Modifier.fillMaxWidth(),
+                                enabled = name.isNotBlank() && name.length <= 20
+                            ) {
+                                Text(text = stringResource(Res.string.done))
+                            }
+                        }
+                    }
+                }
+            }
         }
     }
 }

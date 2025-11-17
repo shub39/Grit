@@ -29,6 +29,7 @@ import kotlinx.datetime.minus
 import kotlinx.datetime.plus
 import kotlinx.datetime.toLocalDateTime
 import kotlinx.datetime.todayIn
+import kotlin.random.Random
 import kotlin.time.Clock
 import kotlin.time.ExperimentalTime
 
@@ -166,7 +167,21 @@ class DummyStateProvider : StateProvider {
     override fun onTaskAction(action: TaskAction) {
         when (action) {
             is TaskAction.AddCategory -> {
-                _taskState.update { it.copy(tasks = it.tasks + (action.category to emptyList())) }
+                _taskState.update { state ->
+                    val existingCategory = state.tasks.keys.find { it.id == action.category.id }
+                    val newTasks = state.tasks.toMutableMap()
+
+                    if (existingCategory != null) {
+                        val tasksForCategory = newTasks.remove(existingCategory) ?: emptyList()
+                        newTasks[action.category] = tasksForCategory
+                    } else {
+                        newTasks[action.category.copy(id = Random.nextLong())] = emptyList()
+                    }
+                    state.copy(
+                        tasks = newTasks,
+                        currentCategory = newTasks.keys.firstOrNull()
+                    )
+                }
             }
 
             is TaskAction.ChangeCategory -> {
@@ -188,9 +203,12 @@ class DummyStateProvider : StateProvider {
 
             is TaskAction.ReorderCategories -> {
                 _taskState.update { state ->
-                    val reorderedMap = action.mapping.sortedBy { it.first }.map { it.second }
-                        .associateWith { state.tasks[it] ?: emptyList() }
-                    state.copy(tasks = reorderedMap)
+                    val reorderedCategories = action.mapping.map {
+                        it.second.copy(index = it.first)
+                    }.associateWith { category ->
+                        state.tasks[state.tasks.keys.find { it.id == category.id }] ?: emptyList()
+                    }
+                    state.copy(tasks = reorderedCategories, currentCategory = reorderedCategories.keys.firstOrNull())
                 }
             }
 
@@ -209,16 +227,24 @@ class DummyStateProvider : StateProvider {
 
             is TaskAction.UpsertTask -> {
                 _taskState.update { state ->
-                    val category = state.tasks.keys.find { it.id == action.task.categoryId } ?: return@update state
+                    val newTask = if (action.task.id !in state.tasks.values.flatten().map { it.id }) {
+                        action.task.copy(id = Random.nextLong())
+                    } else action.task
+                    val category = state.tasks.keys.find { it.id == newTask.categoryId } ?: return@update state
                     val taskList = state.tasks[category] ?: emptyList()
-                    val updatedTaskList = if (taskList.any { it.id == action.task.id }) {
-                        taskList.map { if (it.id == action.task.id) action.task else it }
+                    val updatedTaskList = if (taskList.any { it.id == newTask.id }) {
+                        taskList.map { if (it.id == newTask.id) newTask else it }
                     } else {
-                        taskList + action.task
+                        taskList + newTask
                     }
                     val newTasks = state.tasks.toMutableMap()
+                    val completedTasks = if (newTask.status) {
+                        state.completedTasks + newTask
+                    } else {
+                        state.completedTasks.filter { it.id != newTask.id }
+                    }
                     newTasks[category] = updatedTaskList
-                    state.copy(tasks = newTasks)
+                    state.copy(tasks = newTasks, completedTasks = completedTasks)
                 }
             }
         }

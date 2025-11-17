@@ -3,7 +3,6 @@ package com.shub39.grit.core.shared_ui
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.rounded.FormatListBulleted
@@ -20,11 +19,11 @@ import grit.shared.core.generated.resources.add
 import org.jetbrains.compose.resources.stringResource
 
 @Composable
-fun Empty() {
+fun Empty(
+    modifier: Modifier = Modifier
+) {
     Column(
-        modifier = Modifier
-            .padding(top = 150.dp)
-            .fillMaxWidth(),
+        modifier = modifier.fillMaxWidth(),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
         val color = LocalContentColor.current.copy(alpha = 0.4f)
