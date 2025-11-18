@@ -3,6 +3,7 @@ package com.shub39.grit.core.tasks.presentation.ui
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.heightIn
@@ -88,7 +89,10 @@ private fun CategoryEditDialog(
     onAction: (TaskAction) -> Unit,
     onDismissRequest: () -> Unit
 ) {
-    GritDialog(onDismissRequest = onDismissRequest) {
+    GritDialog(
+        onDismissRequest = onDismissRequest,
+        padding = 0.dp
+    ) {
         var categories by remember(state.tasks) { mutableStateOf(state.tasks.keys.toList()) }
 
         val listState = rememberLazyListState()
@@ -103,7 +107,12 @@ private fun CategoryEditDialog(
         Column(
             modifier = Modifier
                 .fillMaxWidth()
-                .heightIn(max = 600.dp),
+                .heightIn(max = 600.dp)
+                .padding(
+                    start = 16.dp,
+                    end = 16.dp,
+                    top = 16.dp
+                ),
             horizontalAlignment = Alignment.CenterHorizontally,
             verticalArrangement = Arrangement.spacedBy(8.dp)
         ) {
@@ -123,7 +132,8 @@ private fun CategoryEditDialog(
                 modifier = Modifier.fillMaxWidth(),
                 state = listState,
                 horizontalAlignment = Alignment.CenterHorizontally,
-                verticalArrangement = Arrangement.spacedBy(8.dp)
+                verticalArrangement = Arrangement.spacedBy(8.dp),
+                contentPadding = PaddingValues(vertical = 16.dp)
             ) {
                 itemsIndexed(categories, key = { _, it -> it.id }) { _, category ->
                     var showEditSheet by remember { mutableStateOf(false) }

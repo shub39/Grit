@@ -402,6 +402,8 @@ private fun CompactTasksView(
                                         onClick = {
                                             if (!isReorderMode) {
                                                 val updatedTask = task.copy(status = !task.status)
+
+                                                onAction(TaskAction.UpsertTask(updatedTask))
                                                 if (updatedTask.status && state.reorderTasks) {
                                                     val newList =
                                                         reorderableTasks.toMutableList().apply {
@@ -410,8 +412,6 @@ private fun CompactTasksView(
                                                         }
                                                     reorderableTasks = newList
                                                     onAction(TaskAction.ReorderTasks(newList.mapIndexed { newIndex, it -> newIndex to it }))
-                                                } else {
-                                                    onAction(TaskAction.UpsertTask(updatedTask))
                                                 }
                                             }
                                         },
@@ -515,7 +515,10 @@ private fun ExpandedTasksView(
             }
 
             if (showReorderDialog) {
-                GritDialog(onDismissRequest = { showReorderDialog = false }) {
+                GritDialog(
+                    onDismissRequest = { showReorderDialog = false },
+                    padding = 0.dp
+                ) {
                     var reorderableTasks = remember { tasks }
 
                     val listState = rememberLazyListState()
@@ -531,7 +534,12 @@ private fun ExpandedTasksView(
                     Column(
                         modifier = Modifier
                             .fillMaxWidth()
-                            .heightIn(max = 600.dp),
+                            .heightIn(max = 600.dp)
+                            .padding(
+                                top = 16.dp,
+                                start = 16.dp,
+                                end = 16.dp
+                            ),
                         horizontalAlignment = Alignment.CenterHorizontally,
                         verticalArrangement = Arrangement.spacedBy(8.dp)
                     ) {
@@ -551,7 +559,8 @@ private fun ExpandedTasksView(
                             modifier = Modifier.fillMaxWidth(),
                             state = listState,
                             horizontalAlignment = Alignment.CenterHorizontally,
-                            verticalArrangement = Arrangement.spacedBy(8.dp)
+                            verticalArrangement = Arrangement.spacedBy(8.dp),
+                            contentPadding = PaddingValues(vertical = 16.dp)
                         ) {
                             items(tasks, key = { it.id }) { task ->
                                 ReorderableItem(reorderableListState, key = task.id) {

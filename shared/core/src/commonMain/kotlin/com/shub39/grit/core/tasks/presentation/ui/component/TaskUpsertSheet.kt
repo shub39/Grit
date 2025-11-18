@@ -2,14 +2,13 @@ package com.shub39.grit.core.tasks.presentation.ui.component
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.FlowRow
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.widthIn
-import androidx.compose.foundation.lazy.LazyRow
-import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
@@ -110,113 +109,133 @@ fun TaskUpsertSheetContent(
         padding = 0.dp,
         onDismissRequest = onDismissRequest
     ) {
-        Icon(
-            imageVector = if (edit) Icons.Rounded.Edit else Icons.Rounded.Add,
-            contentDescription = "Upsert",
-        )
-
-        Text(
-            text = stringResource(if (edit) Res.string.edit_task else Res.string.add_task),
-            style = MaterialTheme.typography.headlineSmall,
-            textAlign = TextAlign.Center,
-            modifier = Modifier.padding(horizontal = 16.dp)
-        )
-
-        LazyRow(
-            horizontalArrangement = Arrangement.Center,
-            contentPadding = PaddingValues(horizontal = 16.dp)
+        LazyColumn(
+            modifier = Modifier.fillMaxWidth(),
+            verticalArrangement = Arrangement.spacedBy(8.dp),
+            horizontalAlignment = Alignment.CenterHorizontally,
         ) {
-            items(categories) { category ->
-                ToggleButton(
-                    checked = category.id == newTask.categoryId,
-                    onCheckedChange = { newTask = newTask.copy(categoryId = category.id) },
-                    colors = ToggleButtonDefaults.tonalToggleButtonColors(),
-                    modifier = Modifier.padding(horizontal = 4.dp),
-                    content = { Text(category.name) }
+            item {
+                Icon(
+                    imageVector = if (edit) Icons.Rounded.Edit else Icons.Rounded.Add,
+                    contentDescription = "Upsert",
                 )
             }
-        }
 
-        OutlinedTextField(
-            value = newTask.title,
-            onValueChange = { newTask = newTask.copy(title = it) },
-            shape = MaterialTheme.shapes.medium,
-            keyboardOptions = KeyboardOptions.Default.copy(
-                capitalization = KeyboardCapitalization.Sentences,
-                imeAction = ImeAction.None
-            ),
-            keyboardActions = KeyboardActions(
-                onAny = {
-                    newTask = newTask.copy(title = newTask.title.plus("\n"))
-                }
-            ),
-            modifier = Modifier
-                .padding(horizontal = 16.dp)
-                .fillMaxWidth()
-        )
-
-        Row(
-            modifier = Modifier
-                .padding(vertical = 8.dp, horizontal = 16.dp)
-                .fillMaxWidth(),
-            verticalAlignment = Alignment.CenterVertically
-        ) {
-            Column(modifier = Modifier.weight(1f)) {
+            item {
                 Text(
-                    text = stringResource(Res.string.add_reminder),
-                    style = MaterialTheme.typography.titleLarge,
+                    text = stringResource(if (edit) Res.string.edit_task else Res.string.add_task),
+                    style = MaterialTheme.typography.headlineSmall,
+                    textAlign = TextAlign.Center,
+                    modifier = Modifier.padding(horizontal = 16.dp)
                 )
-
-                if (newTask.reminder != null) {
-                    Text(
-                        text = newTask.reminder!!.toFormattedString(is24Hr = is24Hr),
-                        style = MaterialTheme.typography.bodySmall
-                    )
-                }
-
-                if (!isValidDateTime) {
-                    Text(
-                        text = stringResource(Res.string.invalid_date_time),
-                        style = MaterialTheme.typography.bodySmall,
-                        color = MaterialTheme.colorScheme.error
-                    )
-                }
             }
 
-            Switch(
-                checked = newTask.reminder != null,
-                onCheckedChange = { checked ->
-                    if (checked) {
-                        if (notificationPermission) {
-                            updateDateTimePickerVisibility(true)
-                        } else {
-                            onPermissionRequest()
-                        }
-                    } else {
-                        newTask = newTask.copy(reminder = null)
+            item {
+                FlowRow(
+                    horizontalArrangement = Arrangement.Center,
+                    verticalArrangement = Arrangement.Center,
+                    itemVerticalAlignment = Alignment.CenterVertically,
+                    modifier = Modifier.padding(horizontal = 16.dp)
+                ) {
+                    categories.forEach { category ->
+                        ToggleButton(
+                            checked = category.id == newTask.categoryId,
+                            onCheckedChange = { newTask = newTask.copy(categoryId = category.id) },
+                            colors = ToggleButtonDefaults.tonalToggleButtonColors(),
+                            modifier = Modifier.padding(horizontal = 4.dp),
+                            content = { Text(category.name) }
+                        )
                     }
                 }
-            )
-        }
+            }
 
-        Button(
-            onClick = {
-                onUpsert(newTask)
-                onDismissRequest()
-            },
-            shapes = ButtonShapes(
-                shape = MaterialTheme.shapes.extraLarge,
-                pressedShape = MaterialTheme.shapes.small
-            ),
-            modifier = Modifier
-                .padding(start = 16.dp, end = 16.dp, bottom = 32.dp)
-                .fillMaxWidth(),
-            enabled = newTask.title.isNotBlank()
-                    && newTask.title.length <= 100
-                    && newTask != task
-                    && isValidDateTime
-        ) {
-            Text(stringResource(if (edit) Res.string.edit_task else Res.string.add_task))
+            item {
+                OutlinedTextField(
+                    value = newTask.title,
+                    onValueChange = { newTask = newTask.copy(title = it) },
+                    shape = MaterialTheme.shapes.medium,
+                    keyboardOptions = KeyboardOptions.Default.copy(
+                        capitalization = KeyboardCapitalization.Sentences,
+                        imeAction = ImeAction.None
+                    ),
+                    keyboardActions = KeyboardActions(
+                        onAny = {
+                            newTask = newTask.copy(title = newTask.title.plus("\n"))
+                        }
+                    ),
+                    modifier = Modifier
+                        .padding(horizontal = 16.dp)
+                        .fillMaxWidth()
+                )
+            }
+
+            item {
+                Row(
+                    modifier = Modifier
+                        .padding(vertical = 8.dp, horizontal = 16.dp)
+                        .fillMaxWidth(),
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
+                    Column(modifier = Modifier.weight(1f)) {
+                        Text(
+                            text = stringResource(Res.string.add_reminder),
+                            style = MaterialTheme.typography.titleLarge,
+                        )
+
+                        if (newTask.reminder != null) {
+                            Text(
+                                text = newTask.reminder!!.toFormattedString(is24Hr = is24Hr),
+                                style = MaterialTheme.typography.bodySmall
+                            )
+                        }
+
+                        if (!isValidDateTime) {
+                            Text(
+                                text = stringResource(Res.string.invalid_date_time),
+                                style = MaterialTheme.typography.bodySmall,
+                                color = MaterialTheme.colorScheme.error
+                            )
+                        }
+                    }
+
+                    Switch(
+                        checked = newTask.reminder != null,
+                        onCheckedChange = { checked ->
+                            if (checked) {
+                                if (notificationPermission) {
+                                    updateDateTimePickerVisibility(true)
+                                } else {
+                                    onPermissionRequest()
+                                }
+                            } else {
+                                newTask = newTask.copy(reminder = null)
+                            }
+                        }
+                    )
+                }
+            }
+
+            item {
+                Button(
+                    onClick = {
+                        onUpsert(newTask)
+                        onDismissRequest()
+                    },
+                    shapes = ButtonShapes(
+                        shape = MaterialTheme.shapes.extraLarge,
+                        pressedShape = MaterialTheme.shapes.small
+                    ),
+                    modifier = Modifier
+                        .padding(start = 16.dp, end = 16.dp, bottom = 32.dp)
+                        .fillMaxWidth(),
+                    enabled = newTask.title.isNotBlank()
+                            && newTask.title.length <= 100
+                            && newTask != task
+                            && isValidDateTime
+                ) {
+                    Text(stringResource(if (edit) Res.string.edit_task else Res.string.add_task))
+                }
+            }
         }
     }
 
