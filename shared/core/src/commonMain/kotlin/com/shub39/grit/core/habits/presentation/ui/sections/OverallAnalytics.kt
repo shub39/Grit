@@ -3,10 +3,10 @@ package com.shub39.grit.core.habits.presentation.ui.sections
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
-import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.layout.widthIn
+import androidx.compose.foundation.lazy.staggeredgrid.LazyVerticalStaggeredGrid
+import androidx.compose.foundation.lazy.staggeredgrid.StaggeredGridCells
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -14,12 +14,11 @@ import androidx.compose.material3.ExperimentalMaterial3ExpressiveApi
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.MediumFlexibleTopAppBar
 import androidx.compose.material3.Text
+import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.SolidColor
@@ -57,7 +56,8 @@ import kotlin.time.ExperimentalTime
 fun OverallAnalytics(
     state: HabitState,
     onAction: (HabitsAction) -> Unit,
-    onNavigateBack: () -> Unit
+    onNavigateBack: () -> Unit,
+    showNavigateBack: Boolean = true
 ) {
     val primary = MaterialTheme.colorScheme.primary
     val currentMonth = remember { YearMonth.now() }
@@ -108,10 +108,11 @@ fun OverallAnalytics(
             .nestedScroll(scrollBehavior.nestedScrollConnection)
             .fillMaxSize()
     ) {
-        MediumFlexibleTopAppBar(
+        TopAppBar(
             scrollBehavior = scrollBehavior,
             colors = TopAppBarDefaults.topAppBarColors(
-                scrolledContainerColor = MaterialTheme.colorScheme.surface
+                scrolledContainerColor = Color.Transparent,
+                containerColor = Color.Transparent
             ),
             title = {
                 Text(
@@ -119,28 +120,33 @@ fun OverallAnalytics(
                 )
             },
             navigationIcon = {
-                IconButton(
-                    onClick = onNavigateBack
-                ) {
-                    Icon(
-                        imageVector = Icons.AutoMirrored.Filled.ArrowBack,
-                        contentDescription = "Navigate Back"
-                    )
+                if (showNavigateBack) {
+                    IconButton(
+                        onClick = onNavigateBack
+                    ) {
+                        Icon(
+                            imageVector = Icons.AutoMirrored.Filled.ArrowBack,
+                            contentDescription = "Navigate Back"
+                        )
+                    }
                 }
             }
         )
 
-        LazyColumn(
+        val maxWidth = 400.dp
+        LazyVerticalStaggeredGrid(
             modifier = Modifier.fillMaxSize(),
-            contentPadding = PaddingValues(16.dp),
-            verticalArrangement = Arrangement.spacedBy(8.dp),
-            horizontalAlignment = Alignment.CenterHorizontally
+            columns = StaggeredGridCells.Adaptive(minSize = 300.dp),
+            contentPadding = PaddingValues(start = 16.dp, end = 16.dp, top = 16.dp, bottom = 60.dp),
+            horizontalArrangement = Arrangement.spacedBy(8.dp),
+            verticalItemSpacing = 8.dp
         ) {
             item {
                 HabitHeatMap(
                     heatMapState = heatMapState,
                     heatMapData = heatMapData,
-                    state = state
+                    state = state,
+                    modifier = Modifier.widthIn(max = maxWidth)
                 )
             }
 
@@ -149,7 +155,8 @@ fun OverallAnalytics(
                     canSeeContent = state.isUserSubscribed,
                     onAction = onAction,
                     weekDayData = weeklyBreakdownData,
-                    primary = primary
+                    primary = primary,
+                    modifier = Modifier.widthIn(max = maxWidth)
                 )
             }
 
@@ -159,12 +166,10 @@ fun OverallAnalytics(
                     primary = primary,
                     onAction = onAction,
                     weeklyGraphData = weeklyGraphData,
+                    modifier = Modifier.widthIn(max = maxWidth)
                 )
             }
 
-            item {
-                Spacer(modifier = Modifier.height(60.dp))
-            }
         }
     }
 }

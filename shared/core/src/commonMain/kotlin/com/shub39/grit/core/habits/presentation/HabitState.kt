@@ -13,6 +13,7 @@ data class HabitState(
     val analyticsHabitId: Long? = null,
     val showHabitAddSheet: Boolean = false,
     val isUserSubscribed: Boolean = false,
+    val editState: Boolean = false,
 
     // datastore
     val compactHabitView: Boolean = false,

@@ -1,17 +1,24 @@
 package com.shub39.grit.core.habits.presentation.ui.component
 
 import androidx.compose.foundation.background
+import androidx.compose.foundation.gestures.animateScrollBy
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.rounded.ArrowBack
+import androidx.compose.material.icons.automirrored.rounded.ArrowForward
 import androidx.compose.material.icons.rounded.Map
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
@@ -20,6 +27,7 @@ import com.kizitonwose.calendar.compose.heatmapcalendar.HeatMapCalendarState
 import com.shub39.grit.core.habits.presentation.HabitState
 import grit.shared.core.generated.resources.Res
 import grit.shared.core.generated.resources.habit_map
+import kotlinx.coroutines.launch
 import kotlinx.datetime.LocalDate
 import kotlinx.datetime.format.FormatStringsInDatetimeFormats
 import org.jetbrains.compose.resources.stringResource
@@ -32,10 +40,36 @@ fun HabitHeatMap(
     state: HabitState,
     modifier: Modifier = Modifier
 ) {
+    val scope = rememberCoroutineScope()
+
     AnalyticsCard(
         title = stringResource(Res.string.habit_map),
         icon = Icons.Rounded.Map,
-        modifier = modifier.heightIn(max = 400.dp)
+        modifier = modifier.heightIn(max = 400.dp),
+        header = {
+            Row {
+                IconButton(
+                    onClick = {
+                        scope.launch { heatMapState.animateScrollBy(-100f) }
+                    }
+                ) {
+                    Icon(
+                        imageVector = Icons.AutoMirrored.Rounded.ArrowBack,
+                        contentDescription = null
+                    )
+                }
+                IconButton(
+                    onClick = {
+                        scope.launch { heatMapState.animateScrollBy(100f) }
+                    }
+                ) {
+                    Icon(
+                        imageVector = Icons.AutoMirrored.Rounded.ArrowForward,
+                        contentDescription = null
+                    )
+                }
+            }
+        }
     ) {
         HeatMapCalendar(
             state = heatMapState,

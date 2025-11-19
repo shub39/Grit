@@ -6,11 +6,12 @@ import kotlinx.datetime.LocalDate
 
 sealed interface HabitsAction {
     data class OnToggleCompactView(val pref: Boolean) : HabitsAction
+    data class OnToggleEditState(val pref: Boolean): HabitsAction
 
     data object OnShowPaywall : HabitsAction
     data object DismissAddHabitDialog : HabitsAction
     data object OnAddHabitClicked : HabitsAction
-    data class PrepareAnalytics(val habit: Habit) : HabitsAction
+    data class PrepareAnalytics(val habit: Habit?) : HabitsAction
     data class AddHabit(val habit: Habit) : HabitsAction
     data class DeleteHabit(val habit: Habit) : HabitsAction
     data class InsertStatus(val habit: Habit, val date: LocalDate) :

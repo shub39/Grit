@@ -6,36 +6,27 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.rememberLazyListState
-import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.rounded.Add
 import androidx.compose.material.icons.rounded.Analytics
-import androidx.compose.material.icons.rounded.DensityLarge
 import androidx.compose.material.icons.rounded.DragIndicator
-import androidx.compose.material.icons.rounded.Expand
-import androidx.compose.material.icons.rounded.Reorder
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.ExperimentalMaterial3ExpressiveApi
-import androidx.compose.material3.FilledTonalIconToggleButton
 import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.FloatingActionButtonDefaults
 import androidx.compose.material3.Icon
-import androidx.compose.material3.IconToggleButtonShapes
-import androidx.compose.material3.LargeFlexibleTopAppBar
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.MediumFloatingActionButton
 import androidx.compose.material3.Text
-import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.material3.animateFloatingActionButton
+import androidx.compose.material3.windowsizeclass.WindowWidthSizeClass
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
@@ -44,7 +35,6 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.unit.dp
 import com.shub39.grit.core.habits.domain.Habit
 import com.shub39.grit.core.habits.presentation.HabitState
@@ -53,10 +43,9 @@ import com.shub39.grit.core.habits.presentation.ui.component.HabitCard
 import com.shub39.grit.core.habits.presentation.ui.component.HabitUpsertSheet
 import com.shub39.grit.core.shared_ui.Empty
 import com.shub39.grit.core.shared_ui.PageFill
+import com.shub39.grit.core.utils.LocalWindowSizeClass
 import grit.shared.core.generated.resources.Res
 import grit.shared.core.generated.resources.add_habit
-import grit.shared.core.generated.resources.completed
-import grit.shared.core.generated.resources.habits
 import kotlinx.datetime.DayOfWeek
 import kotlinx.datetime.TimeZone
 import kotlinx.datetime.toLocalDateTime
@@ -76,9 +65,11 @@ fun HabitsList(
     state: HabitState,
     onAction: (HabitsAction) -> Unit,
     onNavigateToAnalytics: () -> Unit,
-    onNavigateToOverallAnalytics: () -> Unit
-) = PageFill {
-    var editState by remember { mutableStateOf(false) }
+    onNavigateToOverallAnalytics: () -> Unit,
+    modifier: Modifier = Modifier
+) = PageFill(Modifier) {
+    val windowSizeClass = LocalWindowSizeClass.current
+
     val lazyListState = rememberLazyListState()
     val fabVisible by remember {
         derivedStateOf {
@@ -96,80 +87,13 @@ fun HabitsList(
             }
         }
 
-    val scrollBehavior = TopAppBarDefaults.enterAlwaysScrollBehavior()
-    Column(
-        modifier = Modifier
-            .nestedScroll(scrollBehavior.nestedScrollConnection)
-            .fillMaxSize()
-    ) {
-        LargeFlexibleTopAppBar(
-            scrollBehavior = scrollBehavior,
-            colors = TopAppBarDefaults.topAppBarColors(
-                scrolledContainerColor = MaterialTheme.colorScheme.surface
-            ),
-            title = {
-                Text(text = stringResource(Res.string.habits))
-            },
-            subtitle = {
-                Column {
-                    Text(
-                        text = "${state.completedHabitIds.size}/${state.habitsWithAnalytics.size} " + stringResource(Res.string.completed)
-                    )
-                }
-            },
-            actions = {
-                AnimatedVisibility(
-                    visible = state.habitsWithAnalytics.isNotEmpty()
-                ) {
-                    Row {
-                        FilledTonalIconToggleButton(
-                            checked = state.compactHabitView,
-                            shapes = IconToggleButtonShapes(
-                                shape = CircleShape,
-                                checkedShape = MaterialTheme.shapes.small,
-                                pressedShape = MaterialTheme.shapes.extraSmall,
-                            ),
-                            onCheckedChange = {
-                                onAction(
-                                    HabitsAction.OnToggleCompactView(it)
-                                )
-                            }
-                        ) {
-                            Icon(
-                                imageVector = if (state.compactHabitView) {
-                                    Icons.Rounded.Expand
-                                } else {
-                                    Icons.Rounded.DensityLarge
-                                },
-                                contentDescription = "Compact View"
-                            )
-                        }
 
-                        FilledTonalIconToggleButton(
-                            checked = editState,
-                            shapes = IconToggleButtonShapes(
-                                shape = CircleShape,
-                                checkedShape = MaterialTheme.shapes.small,
-                                pressedShape = MaterialTheme.shapes.extraSmall,
-                            ),
-                            onCheckedChange = { editState = it },
-                            enabled = state.habitsWithAnalytics.isNotEmpty()
-                        ) {
-                            Icon(
-                                imageVector = Icons.Rounded.Reorder,
-                                contentDescription = null
-                            )
-                        }
-                    }
-                }
-            }
-        )
-
+    Column(modifier = modifier) {
         LazyColumn(
             state = lazyListState,
-            modifier = Modifier.fillMaxSize(),
-            contentPadding = PaddingValues(16.dp),
-            verticalArrangement = Arrangement.spacedBy(8.dp)
+            contentPadding = PaddingValues(start = 16.dp, end = 16.dp, top = 16.dp, bottom = 60.dp),
+            verticalArrangement = Arrangement.spacedBy(8.dp),
+            modifier = Modifier.fillMaxHeight()
         ) {
             // habits
             items(reorderableHabits, key = { it.habit.id }) { habitWithAnalytics ->
@@ -183,7 +107,7 @@ fun HabitsList(
                         completed = state.completedHabitIds.contains(habitWithAnalytics.habit.id),
                         action = onAction,
                         startingDay = state.startingDay,
-                        editState = editState,
+                        editState = state.editState,
                         onNavigateToAnalytics = onNavigateToAnalytics,
                         is24Hr = state.is24Hr,
                         reorderHandle = {
@@ -200,67 +124,117 @@ fun HabitsList(
                             )
                         },
                         shape = RoundedCornerShape(cardCorners),
-                        compactView = state.compactHabitView
+                        compactView = state.compactHabitView,
+                        analyticsEnabled = state.analyticsHabitId != habitWithAnalytics.habit.id || windowSizeClass.widthSizeClass != WindowWidthSizeClass.Expanded
                     )
                 }
             }
 
             // when no habits
             if (state.habitsWithAnalytics.isEmpty()) {
-                item { Empty() }
+                item { Empty(Modifier.padding(top = 150.dp)) }
             }
-
-            item { Spacer(modifier = Modifier.height(60.dp)) }
         }
     }
 
     Row(
         modifier = Modifier
             .padding(16.dp)
-            .align(Alignment.BottomEnd),
+            .align(
+                if (windowSizeClass.widthSizeClass == WindowWidthSizeClass.Expanded) {
+                    Alignment.BottomStart
+                } else {
+                    Alignment.BottomEnd
+                }
+            ),
         horizontalArrangement = Arrangement.spacedBy(8.dp),
         verticalAlignment = Alignment.Bottom
     ) {
-        FloatingActionButton(
-            onClick = onNavigateToOverallAnalytics,
-            containerColor = MaterialTheme.colorScheme.secondaryContainer,
-            contentColor = MaterialTheme.colorScheme.onSecondaryContainer,
-            modifier = Modifier.animateFloatingActionButton(
-                visible = state.habitsWithAnalytics.isNotEmpty() && fabVisible,
-                alignment = Alignment.BottomEnd
-            )
-        ) {
-            Icon(
-                imageVector = Icons.Rounded.Analytics,
-                contentDescription = "All Analytics"
-            )
-        }
-
-        MediumFloatingActionButton(
-            onClick = {
-                onAction(HabitsAction.OnAddHabitClicked)
-            },
-            modifier = Modifier.animateFloatingActionButton(
-                visible = fabVisible,
-                alignment = Alignment.BottomEnd
-            )
-        ) {
-            Row(
-                modifier = Modifier.padding(16.dp),
-                horizontalArrangement = Arrangement.spacedBy(8.dp),
-                verticalAlignment = Alignment.CenterVertically,
+        if (windowSizeClass.widthSizeClass != WindowWidthSizeClass.Expanded) {
+            FloatingActionButton(
+                onClick = onNavigateToOverallAnalytics,
+                containerColor = MaterialTheme.colorScheme.secondaryContainer,
+                contentColor = MaterialTheme.colorScheme.onSecondaryContainer,
+                modifier = Modifier.animateFloatingActionButton(
+                    visible = state.habitsWithAnalytics.isNotEmpty() && fabVisible,
+                    alignment = Alignment.BottomEnd
+                )
             ) {
                 Icon(
-                    imageVector = Icons.Rounded.Add,
-                    contentDescription = "Add Habit",
-                    modifier = Modifier.size(FloatingActionButtonDefaults.MediumIconSize)
+                    imageVector = Icons.Rounded.Analytics,
+                    contentDescription = "All Analytics"
                 )
+            }
 
-                AnimatedVisibility(
-                    visible = state.habitsWithAnalytics.isEmpty()
+            MediumFloatingActionButton(
+                onClick = {
+                    onAction(HabitsAction.OnAddHabitClicked)
+                },
+                modifier = Modifier.animateFloatingActionButton(
+                    visible = fabVisible,
+                    alignment = Alignment.BottomEnd
+                )
+            ) {
+                Row(
+                    modifier = Modifier.padding(16.dp),
+                    horizontalArrangement = Arrangement.spacedBy(8.dp),
+                    verticalAlignment = Alignment.CenterVertically,
                 ) {
-                    Text(text = stringResource(Res.string.add_habit))
+                    Icon(
+                        imageVector = Icons.Rounded.Add,
+                        contentDescription = "Add Habit",
+                        modifier = Modifier.size(FloatingActionButtonDefaults.MediumIconSize)
+                    )
+
+                    AnimatedVisibility(
+                        visible = state.habitsWithAnalytics.isEmpty()
+                    ) {
+                        Text(text = stringResource(Res.string.add_habit))
+                    }
                 }
+            }
+        } else {
+            MediumFloatingActionButton(
+                onClick = {
+                    onAction(HabitsAction.OnAddHabitClicked)
+                },
+                modifier = Modifier.animateFloatingActionButton(
+                    visible = fabVisible,
+                    alignment = Alignment.BottomEnd
+                )
+            ) {
+                Row(
+                    modifier = Modifier.padding(16.dp),
+                    horizontalArrangement = Arrangement.spacedBy(8.dp),
+                    verticalAlignment = Alignment.CenterVertically,
+                ) {
+                    Icon(
+                        imageVector = Icons.Rounded.Add,
+                        contentDescription = "Add Habit",
+                        modifier = Modifier.size(FloatingActionButtonDefaults.MediumIconSize)
+                    )
+
+                    AnimatedVisibility(
+                        visible = state.habitsWithAnalytics.isEmpty()
+                    ) {
+                        Text(text = stringResource(Res.string.add_habit))
+                    }
+                }
+            }
+
+            FloatingActionButton(
+                onClick = onNavigateToOverallAnalytics,
+                containerColor = MaterialTheme.colorScheme.secondaryContainer,
+                contentColor = MaterialTheme.colorScheme.onSecondaryContainer,
+                modifier = Modifier.animateFloatingActionButton(
+                    visible = state.habitsWithAnalytics.isNotEmpty() && fabVisible,
+                    alignment = Alignment.BottomEnd
+                )
+            ) {
+                Icon(
+                    imageVector = Icons.Rounded.Analytics,
+                    contentDescription = "All Analytics"
+                )
             }
         }
     }

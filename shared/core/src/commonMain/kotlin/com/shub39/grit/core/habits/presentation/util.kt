@@ -45,7 +45,7 @@ fun formatDateWithOrdinal(date: LocalDate): String {
     val day = date.day
     val yearMonth = date.yearMonth.format(
         YearMonth.Format {
-            monthName(MonthNames.ENGLISH_FULL)
+            monthName(MonthNames.ENGLISH_ABBREVIATED)
             char(' ')
             year()
         }

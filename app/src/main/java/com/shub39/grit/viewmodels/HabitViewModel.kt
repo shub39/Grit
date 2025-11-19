@@ -80,7 +80,7 @@ class HabitViewModel(
                 is HabitsAction.PrepareAnalytics -> {
                     _state.update {
                         it.copy(
-                            analyticsHabitId = action.habit.id
+                            analyticsHabitId = action.habit?.id
                         )
                     }
                 }
@@ -124,6 +124,8 @@ class HabitViewModel(
                 }
 
                 is HabitsAction.OnToggleCompactView -> datastore.setCompactView(action.pref)
+
+                is HabitsAction.OnToggleEditState -> _state.update { it.copy(editState = action.pref) }
             }
         }
     }
