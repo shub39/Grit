@@ -3,6 +3,8 @@ package com.shub39.grit.core.habits.presentation.ui.component
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.RowScope
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.heightIn
@@ -32,6 +34,7 @@ fun AnalyticsCard(
     modifier: Modifier = Modifier,
     canSeeContent: Boolean = true,
     onPlusClick: () -> Unit = {},
+    header:  @Composable (RowScope.() -> Unit) = {},
     content: @Composable () -> Unit
 ) {
     Card(
@@ -58,6 +61,10 @@ fun AnalyticsCard(
                     fontWeight = FontWeight.Bold
                 ),
             )
+
+            Spacer(modifier = Modifier.weight(1f))
+
+            header()
         }
 
         if (!canSeeContent) {

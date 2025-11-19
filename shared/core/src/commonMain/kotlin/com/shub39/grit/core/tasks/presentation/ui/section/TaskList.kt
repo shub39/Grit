@@ -56,6 +56,7 @@ import androidx.compose.material3.OutlinedIconButton
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextButton
 import androidx.compose.material3.ToggleButton
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.material3.TopAppBarScrollBehavior
@@ -90,6 +91,7 @@ import com.shub39.grit.core.utils.LocalWindowSizeClass
 import grit.shared.core.generated.resources.Res
 import grit.shared.core.generated.resources.add_category
 import grit.shared.core.generated.resources.add_task
+import grit.shared.core.generated.resources.cancel
 import grit.shared.core.generated.resources.delete
 import grit.shared.core.generated.resources.delete_tasks
 import grit.shared.core.generated.resources.done
@@ -603,21 +605,39 @@ private fun DeleteTasksDialog(onDismiss: () -> Unit, onConfirm: () -> Unit) {
         Icon(
             imageVector = Icons.Rounded.Warning,
             contentDescription = "Warning",
-            modifier = Modifier.size(64.dp)
+        )
+        Text(
+            text = stringResource(Res.string.delete),
+            textAlign = TextAlign.Center,
+            style = MaterialTheme.typography.titleMedium,
         )
         Text(
             text = stringResource(Res.string.delete_tasks),
             textAlign = TextAlign.Center
         )
-        Button(
-            onClick = onConfirm,
-            shapes = ButtonShapes(
-                shape = MaterialTheme.shapes.extraLarge,
-                pressedShape = MaterialTheme.shapes.small
-            ),
-            modifier = Modifier.fillMaxWidth()
+        Row(
+            modifier = Modifier.fillMaxWidth(),
+            horizontalArrangement = Arrangement.End
         ) {
-            Text(stringResource(Res.string.delete))
+            TextButton(
+                onClick = onDismiss,
+                shapes = ButtonShapes(
+                    shape = MaterialTheme.shapes.extraLarge,
+                    pressedShape = MaterialTheme.shapes.small
+                )
+            ) {
+                Text(stringResource(Res.string.cancel))
+            }
+
+            TextButton(
+                onClick = onConfirm,
+                shapes = ButtonShapes(
+                    shape = MaterialTheme.shapes.extraLarge,
+                    pressedShape = MaterialTheme.shapes.small
+                )
+            ) {
+                Text(stringResource(Res.string.delete))
+            }
         }
     }
 }

@@ -10,10 +10,11 @@ import androidx.compose.ui.Modifier
 // Wrapper to center everything
 @Composable
 fun  PageFill(
+    modifier: Modifier = Modifier.fillMaxSize(),
     content: @Composable (BoxScope.() -> Unit)
 ) {
     Box(
-        modifier = Modifier.fillMaxSize(),
+        modifier = modifier,
         contentAlignment = Alignment.Center,
         content = content
     )

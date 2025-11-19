@@ -1,21 +1,20 @@
 package com.shub39.grit.core.habits.presentation.ui.sections
 
-import androidx.compose.animation.animateContentSize
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
-import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.layout.widthIn
+import androidx.compose.foundation.lazy.staggeredgrid.LazyVerticalStaggeredGrid
+import androidx.compose.foundation.lazy.staggeredgrid.StaggeredGridCells
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.rounded.Delete
 import androidx.compose.material.icons.rounded.Edit
 import androidx.compose.material.icons.rounded.Warning
-import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonShapes
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.ExperimentalMaterial3ExpressiveApi
@@ -24,9 +23,10 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.IconButtonShapes
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.MediumFlexibleTopAppBar
 import androidx.compose.material3.OutlinedIconButton
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextButton
+import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -34,8 +34,8 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.input.nestedscroll.nestedScroll
-import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import com.kizitonwose.calendar.compose.heatmapcalendar.rememberHeatMapCalendarState
@@ -55,6 +55,7 @@ import com.shub39.grit.core.habits.presentation.ui.component.WeeklyBooleanHeatMa
 import com.shub39.grit.core.shared_ui.GritDialog
 import com.shub39.grit.core.shared_ui.PageFill
 import grit.shared.core.generated.resources.Res
+import grit.shared.core.generated.resources.cancel
 import grit.shared.core.generated.resources.delete
 import grit.shared.core.generated.resources.delete_warning
 import kotlinx.datetime.YearMonth
@@ -97,10 +98,11 @@ fun AnalyticsPage(
             .nestedScroll(scrollBehavior.nestedScrollConnection)
             .fillMaxSize()
     ) {
-        MediumFlexibleTopAppBar(
+        TopAppBar(
             scrollBehavior = scrollBehavior,
             colors = TopAppBarDefaults.topAppBarColors(
-                scrolledContainerColor = MaterialTheme.colorScheme.surface
+                scrolledContainerColor = Color.Transparent,
+                containerColor = Color.Transparent
             ),
             title = {
                 Text(text = currentHabit.habit.title)
@@ -149,24 +151,27 @@ fun AnalyticsPage(
             }
         )
 
-        LazyColumn(
-            modifier = Modifier
-                .fillMaxSize()
-                .animateContentSize(),
-            verticalArrangement = Arrangement.spacedBy(8.dp),
-            contentPadding = PaddingValues(16.dp)
+        val maxWidth = 400.dp
+        LazyVerticalStaggeredGrid(
+            modifier = Modifier.fillMaxSize(),
+            columns = StaggeredGridCells.Adaptive(minSize = 300.dp),
+            contentPadding = PaddingValues(start = 16.dp, end = 16.dp, top = 16.dp, bottom = 60.dp),
+            horizontalArrangement = Arrangement.spacedBy(8.dp),
+            verticalItemSpacing = 8.dp
         ) {
             item {
                 HabitStartCard(
                     habit = currentHabit.habit,
                     startedDaysAgo = currentHabit.startedDaysAgo,
+                    modifier = Modifier.widthIn(max = maxWidth)
                 )
             }
 
             item {
                 HabitStreakCard(
                     currentStreak = currentHabit.currentStreak,
-                    bestStreak = currentHabit.bestStreak
+                    bestStreak = currentHabit.bestStreak,
+                    modifier = Modifier.widthIn(max = maxWidth)
                 )
             }
 
@@ -175,14 +180,16 @@ fun AnalyticsPage(
                     heatMapState = heatMapState,
                     onAction = onAction,
                     currentHabit = currentHabit,
-                    primary = primary
+                    primary = primary,
+                    modifier = Modifier.widthIn(max = maxWidth)
                 )
             }
 
             item {
                 WeeklyActivity(
                     primary = primary,
-                    lineChartData = currentHabit.weeklyComparisonData
+                    lineChartData = currentHabit.weeklyComparisonData,
+                    modifier = Modifier.widthIn(max = maxWidth)
                 )
             }
 
@@ -192,7 +199,8 @@ fun AnalyticsPage(
                     onAction = onAction,
                     calendarState = calendarState,
                     currentHabit = currentHabit,
-                    primary = primary
+                    primary = primary,
+                    modifier = Modifier.widthIn(max = maxWidth)
                 )
             }
 
@@ -202,11 +210,8 @@ fun AnalyticsPage(
                     onAction = onAction,
                     weekDayData = prepareWeekDayDataToBars(currentHabit.weekDayFrequencyData, primary),
                     primary = primary,
+                    modifier = Modifier.widthIn(max = maxWidth)
                 )
-            }
-
-            item {
-                Spacer(modifier = Modifier.height(60.dp))
             }
         }
     }
@@ -225,7 +230,6 @@ fun AnalyticsPage(
                 text = stringResource(Res.string.delete),
                 textAlign = TextAlign.Center,
                 style = MaterialTheme.typography.titleMedium,
-                fontWeight = FontWeight.Bold
             )
 
             Text(
@@ -233,19 +237,35 @@ fun AnalyticsPage(
                 textAlign = TextAlign.Center
             )
 
-            Button(
-                onClick = {
-                    deleteDialog = false
-                    onNavigateBack()
-                    onAction(HabitsAction.DeleteHabit(currentHabit.habit))
-                },
+            Row(
                 modifier = Modifier.fillMaxWidth(),
-                shapes = ButtonShapes(
-                    shape = CircleShape,
-                    pressedShape = MaterialTheme.shapes.medium
-                )
+                horizontalArrangement = Arrangement.End
             ) {
-                Text(text = stringResource(Res.string.delete))
+                TextButton(
+                    onClick = {
+                        deleteDialog = false
+                    },
+                    shapes = ButtonShapes(
+                        shape = MaterialTheme.shapes.extraLarge,
+                        pressedShape = MaterialTheme.shapes.small
+                    )
+                ) {
+                    Text(stringResource(Res.string.cancel))
+                }
+
+                TextButton(
+                    onClick = {
+                        onAction(HabitsAction.DeleteHabit(currentHabit.habit))
+                        onNavigateBack()
+                        deleteDialog = false
+                    },
+                    shapes = ButtonShapes(
+                        shape = MaterialTheme.shapes.extraLarge,
+                        pressedShape = MaterialTheme.shapes.small
+                    )
+                ) {
+                    Text(stringResource(Res.string.delete))
+                }
             }
         }
     }

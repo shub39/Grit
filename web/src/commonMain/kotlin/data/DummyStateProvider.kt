@@ -139,7 +139,7 @@ class DummyStateProvider : StateProvider {
             }
 
             is HabitsAction.PrepareAnalytics -> {
-                _habitState.update { it.copy(analyticsHabitId = action.habit.id) }
+                _habitState.update { it.copy(analyticsHabitId = action.habit?.id) }
             }
 
             is HabitsAction.ReorderHabits -> {
@@ -161,6 +161,8 @@ class DummyStateProvider : StateProvider {
                     state.copy(habitsWithAnalytics = updatedHabits)
                 }
             }
+
+            is HabitsAction.OnToggleEditState -> _habitState.update { it.copy(editState = action.pref) }
         }
     }
 

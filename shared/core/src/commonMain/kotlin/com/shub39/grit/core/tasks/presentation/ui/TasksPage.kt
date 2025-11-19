@@ -28,6 +28,7 @@ import androidx.compose.material3.ListItemDefaults
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
@@ -50,6 +51,7 @@ import com.shub39.grit.core.tasks.presentation.TaskAction
 import com.shub39.grit.core.tasks.presentation.TaskState
 import com.shub39.grit.core.tasks.presentation.ui.section.TaskList
 import grit.shared.core.generated.resources.Res
+import grit.shared.core.generated.resources.cancel
 import grit.shared.core.generated.resources.delete
 import grit.shared.core.generated.resources.delete_category
 import grit.shared.core.generated.resources.done
@@ -61,7 +63,7 @@ import sh.calvin.reorderable.ReorderableItem
 import sh.calvin.reorderable.rememberReorderableLazyListState
 
 @Composable
-fun TasksGraph(
+fun TasksPage(
     state: TaskState,
     onAction: (TaskAction) -> Unit
 ) {
@@ -155,6 +157,16 @@ private fun CategoryEditDialog(
                                     }"
                                 )
                             },
+                            leadingContent = {
+                                IconButton(
+                                    onClick = { showEditSheet = true }
+                                ) {
+                                    Icon(
+                                        imageVector = Icons.Rounded.Edit,
+                                        contentDescription = "Edit"
+                                    )
+                                }
+                            },
                             trailingContent = {
                                 Row(verticalAlignment = Alignment.CenterVertically) {
                                     IconButton(
@@ -164,15 +176,6 @@ private fun CategoryEditDialog(
                                         Icon(
                                             imageVector = Icons.Rounded.Delete,
                                             contentDescription = "Delete"
-                                        )
-                                    }
-
-                                    IconButton(
-                                        onClick = { showEditSheet = true }
-                                    ) {
-                                        Icon(
-                                            imageVector = Icons.Rounded.Edit,
-                                            contentDescription = "Edit"
                                         )
                                     }
 
@@ -196,8 +199,13 @@ private fun CategoryEditDialog(
                         ) {
                             Icon(
                                 imageVector = Icons.Rounded.Warning,
-                                contentDescription = null,
-                                modifier = Modifier.size(64.dp)
+                                contentDescription = null
+                            )
+
+                            Text(
+                                text = stringResource(Res.string.delete),
+                                textAlign = TextAlign.Center,
+                                style = MaterialTheme.typography.titleMedium,
                             )
 
                             Text(
@@ -205,18 +213,34 @@ private fun CategoryEditDialog(
                                 textAlign = TextAlign.Center
                             )
 
-                            Button(
-                                onClick = {
-                                    onAction(TaskAction.DeleteCategory(category))
-                                    showDeleteDialog = false
-                                },
+                            Row(
                                 modifier = Modifier.fillMaxWidth(),
-                                shapes = ButtonShapes(
-                                    shape = MaterialTheme.shapes.extraLarge,
-                                    pressedShape = MaterialTheme.shapes.small
-                                )
+                                horizontalArrangement = Arrangement.End
                             ) {
-                                Text(stringResource(Res.string.delete))
+                                TextButton(
+                                    onClick = {
+                                        showDeleteDialog = false
+                                    },
+                                    shapes = ButtonShapes(
+                                        shape = MaterialTheme.shapes.extraLarge,
+                                        pressedShape = MaterialTheme.shapes.small
+                                    )
+                                ) {
+                                    Text(stringResource(Res.string.cancel))
+                                }
+
+                                TextButton(
+                                    onClick = {
+                                        onAction(TaskAction.DeleteCategory(category))
+                                        showDeleteDialog = false
+                                    },
+                                    shapes = ButtonShapes(
+                                        shape = MaterialTheme.shapes.extraLarge,
+                                        pressedShape = MaterialTheme.shapes.small
+                                    )
+                                ) {
+                                    Text(stringResource(Res.string.delete))
+                                }
                             }
                         }
                     }

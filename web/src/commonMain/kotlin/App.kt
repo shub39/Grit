@@ -38,7 +38,7 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import com.materialkolor.DynamicMaterialTheme
 import com.shub39.grit.core.habits.presentation.ui.HabitsGraph
-import com.shub39.grit.core.tasks.presentation.ui.TasksGraph
+import com.shub39.grit.core.tasks.presentation.ui.TasksPage
 import com.shub39.grit.core.utils.LocalWindowSizeClass
 import domain.StateProvider
 import kotlinx.serialization.Serializable
@@ -197,7 +197,7 @@ private fun AppContent(
         composable<Routes.Tasks> {
             val state by stateProvider.taskState.collectAsState()
 
-            TasksGraph(
+            TasksPage(
                 state = state,
                 onAction = stateProvider::onTaskAction
             )

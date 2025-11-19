@@ -34,7 +34,7 @@ import com.shub39.grit.core.domain.Pages
 import com.shub39.grit.core.habits.presentation.ui.HabitsGraph
 import com.shub39.grit.core.presentation.settings.SettingsAction
 import com.shub39.grit.core.presentation.settings.SettingsGraph
-import com.shub39.grit.core.tasks.presentation.ui.TasksGraph
+import com.shub39.grit.core.tasks.presentation.ui.TasksPage
 import com.shub39.grit.viewmodels.HabitViewModel
 import com.shub39.grit.viewmodels.SettingsViewModel
 import com.shub39.grit.viewmodels.TasksViewModel
@@ -155,7 +155,7 @@ fun Grit() {
                         val tvm: TasksViewModel = koinViewModel()
                         val taskPageState by tvm.state.collectAsStateWithLifecycle()
 
-                        TasksGraph(
+                        TasksPage(
                             state = taskPageState,
                             onAction = tvm::onAction
                         )

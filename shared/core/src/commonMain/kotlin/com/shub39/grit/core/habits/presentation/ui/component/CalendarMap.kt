@@ -4,15 +4,21 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.rounded.ArrowBack
+import androidx.compose.material.icons.automirrored.rounded.ArrowForward
 import androidx.compose.material.icons.rounded.CalendarMonth
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -26,11 +32,15 @@ import com.shub39.grit.core.habits.domain.HabitWithAnalytics
 import com.shub39.grit.core.habits.presentation.HabitsAction
 import grit.shared.core.generated.resources.Res
 import grit.shared.core.generated.resources.monthly_progress
+import kotlinx.coroutines.launch
+import kotlinx.datetime.DateTimeUnit
 import kotlinx.datetime.TimeZone
 import kotlinx.datetime.YearMonth
 import kotlinx.datetime.format
 import kotlinx.datetime.format.MonthNames
 import kotlinx.datetime.format.char
+import kotlinx.datetime.minus
+import kotlinx.datetime.plus
 import kotlinx.datetime.todayIn
 import org.jetbrains.compose.resources.stringResource
 import kotlin.time.Clock
@@ -43,15 +53,56 @@ fun CalendarMap(
     onAction: (HabitsAction) -> Unit,
     calendarState: CalendarState,
     currentHabit: HabitWithAnalytics,
-    primary: Color
+    primary: Color,
+    modifier: Modifier = Modifier
 ) {
     val today = Clock.System.todayIn(TimeZone.currentSystemDefault())
+    val scope = rememberCoroutineScope()
 
     AnalyticsCard(
         title = stringResource(Res.string.monthly_progress),
         icon = Icons.Rounded.CalendarMonth,
         canSeeContent = canSeeContent,
-        onPlusClick = { onAction(HabitsAction.OnShowPaywall) }
+        onPlusClick = { onAction(HabitsAction.OnShowPaywall) },
+        header = {
+            Row {
+                IconButton(
+                    onClick = {
+                        scope.launch {
+                            calendarState.animateScrollToMonth(
+                                calendarState.firstVisibleMonth.yearMonth.minus(
+                                    1,
+                                    DateTimeUnit.MONTH
+                                )
+                            )
+                        }
+                    }
+                ) {
+                    Icon(
+                        imageVector = Icons.AutoMirrored.Rounded.ArrowBack,
+                        contentDescription = null
+                    )
+                }
+                IconButton(
+                    onClick = {
+                        scope.launch {
+                            calendarState.animateScrollToMonth(
+                                calendarState.firstVisibleMonth.yearMonth.plus(
+                                    1,
+                                    DateTimeUnit.MONTH
+                                )
+                            )
+                        }
+                    }
+                ) {
+                    Icon(
+                        imageVector = Icons.AutoMirrored.Rounded.ArrowForward,
+                        contentDescription = null
+                    )
+                }
+            }
+        },
+        modifier = modifier
     ) {
         HorizontalCalendar(
             state = calendarState,
@@ -79,12 +130,14 @@ fun CalendarMap(
             dayContent = { day ->
                 if (day.position.name == "MonthDate") {
                     val done = currentHabit.statuses.any { it.date == day.date }
-                    val validDate = day.date <= today && canSeeContent && day.date.dayOfWeek in currentHabit.habit.days
+                    val validDate =
+                        day.date <= today && canSeeContent && day.date.dayOfWeek in currentHabit.habit.days
 
                     Box(
                         modifier = Modifier
                             .padding(2.dp)
-                            .size(45.dp)
+                            .fillMaxWidth()
+                            .height(45.dp)
                             .clickable(enabled = validDate) {
                                 onAction(
                                     HabitsAction.InsertStatus(

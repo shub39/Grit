@@ -11,7 +11,6 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -61,6 +60,7 @@ fun HabitCard(
     onNavigateToAnalytics: () -> Unit,
     editState: Boolean,
     compactView: Boolean,
+    analyticsEnabled: Boolean,
     startingDay: DayOfWeek,
     reorderHandle: @Composable () -> Unit,
     is24Hr: Boolean,
@@ -175,7 +175,7 @@ fun HabitCard(
                             action(HabitsAction.PrepareAnalytics(habitWithAnalytics.habit))
                             onNavigateToAnalytics()
                         },
-                        enabled = !editState
+                        enabled = analyticsEnabled
                     ) {
                         Icon(
                             imageVector = Icons.Rounded.Analytics,
@@ -203,8 +203,8 @@ fun HabitCard(
 
                     Box(
                         modifier = Modifier
-                            .aspectRatio(1f)
                             .padding(2.dp)
+                            .fillMaxWidth(1f)
                             .then(
                                 if (done) {
                                     val donePrevious =
@@ -239,7 +239,7 @@ fun HabitCard(
                         contentAlignment = Alignment.Center
                     ) {
                         Column(
-                            modifier = Modifier.padding(4.dp),
+                            modifier = Modifier.padding(6.dp),
                             horizontalAlignment = Alignment.CenterHorizontally
                         ) {
                             Text(
