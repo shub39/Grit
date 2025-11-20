@@ -82,13 +82,13 @@ fun App() {
     var currentRoute: Routes by remember { mutableStateOf(Routes.Tasks) }
     var isDark by remember { mutableStateOf(true) }
 
-    val widthSizeClass = LocalWindowSizeClass.current.widthSizeClass
+    val windowSizeClass = LocalWindowSizeClass.current
 
     DynamicMaterialTheme(
         primary = Color(0xFABD2F),
         isDark = isDark
     ) {
-        when (widthSizeClass) {
+        when (windowSizeClass.widthSizeClass) {
             WindowWidthSizeClass.Compact -> {
                 Scaffold(
                     bottomBar = {

@@ -3,6 +3,7 @@ package com.shub39.grit.core.habits.presentation.ui.sections
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.widthIn
 import androidx.compose.foundation.lazy.staggeredgrid.LazyVerticalStaggeredGrid
@@ -17,6 +18,7 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
+import androidx.compose.material3.windowsizeclass.WindowWidthSizeClass
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
@@ -35,6 +37,7 @@ import com.shub39.grit.core.habits.presentation.prepareWeekDayDataToBars
 import com.shub39.grit.core.habits.presentation.ui.component.HabitHeatMap
 import com.shub39.grit.core.habits.presentation.ui.component.WeekDayBreakdown
 import com.shub39.grit.core.habits.presentation.ui.component.WeeklyGraph
+import com.shub39.grit.core.utils.LocalWindowSizeClass
 import grit.shared.core.generated.resources.Res
 import grit.shared.core.generated.resources.overall_analytics
 import ir.ehsannarmani.compose_charts.models.DotProperties
@@ -59,6 +62,8 @@ fun OverallAnalytics(
     onNavigateBack: () -> Unit,
     showNavigateBack: Boolean = true
 ) {
+    val windowSizeClass = LocalWindowSizeClass.current
+
     val primary = MaterialTheme.colorScheme.primary
     val currentMonth = remember { YearMonth.now() }
 
@@ -119,6 +124,11 @@ fun OverallAnalytics(
                 Text(
                     text = stringResource(Res.string.overall_analytics),
                 )
+            },
+            windowInsets = if (windowSizeClass.widthSizeClass == WindowWidthSizeClass.Expanded) {
+                WindowInsets(0)
+            } else {
+                TopAppBarDefaults.windowInsets
             },
             navigationIcon = {
                 if (showNavigateBack) {

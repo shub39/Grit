@@ -142,11 +142,12 @@ class DummyStateProvider : StateProvider {
                 _habitState.update { it.copy(analyticsHabitId = action.habit?.id) }
             }
 
-            is HabitsAction.ReorderHabits -> {
-                _habitState.update { state ->
-                    val reorderedHabits = action.pairs.sortedBy { it.first }.map { it.second }
-                    state.copy(habitsWithAnalytics = reorderedHabits)
-                }
+            is HabitsAction.ReorderHabits -> {}
+
+            is HabitsAction.OnTransientHabitReorder -> {
+                val currentList = _habitState.value.habitsWithAnalytics.toMutableList()
+                currentList.add(action.to, currentList.removeAt(action.from))
+                _habitState.update { it.copy(habitsWithAnalytics = currentList) }
             }
 
             is HabitsAction.UpdateHabit -> {

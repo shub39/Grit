@@ -4,6 +4,7 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.widthIn
@@ -28,6 +29,7 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
+import androidx.compose.material3.windowsizeclass.WindowWidthSizeClass
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -54,6 +56,7 @@ import com.shub39.grit.core.habits.presentation.ui.component.WeeklyActivity
 import com.shub39.grit.core.habits.presentation.ui.component.WeeklyBooleanHeatMap
 import com.shub39.grit.core.shared_ui.GritDialog
 import com.shub39.grit.core.shared_ui.PageFill
+import com.shub39.grit.core.utils.LocalWindowSizeClass
 import grit.shared.core.generated.resources.Res
 import grit.shared.core.generated.resources.cancel
 import grit.shared.core.generated.resources.delete
@@ -71,6 +74,8 @@ fun AnalyticsPage(
     onAction: (HabitsAction) -> Unit,
     onNavigateBack: () -> Unit
 ) = PageFill {
+    val windowSizeClass = LocalWindowSizeClass.current
+
     val primary = MaterialTheme.colorScheme.primary
     val currentMonth = remember { YearMonth.now() }
 
@@ -114,6 +119,11 @@ fun AnalyticsPage(
                 if (currentHabit.habit.description.isNotEmpty()) {
                     Text(text = currentHabit.habit.description)
                 }
+            },
+            windowInsets = if (windowSizeClass.widthSizeClass == WindowWidthSizeClass.Expanded) {
+                WindowInsets(0)
+            } else {
+                TopAppBarDefaults.windowInsets
             },
             navigationIcon = {
                 IconButton(
@@ -259,6 +269,7 @@ fun AnalyticsPage(
                 TextButton(
                     onClick = {
                         onAction(HabitsAction.DeleteHabit(currentHabit.habit))
+                        onAction(HabitsAction.PrepareAnalytics(null))
                         onNavigateBack()
                         deleteDialog = false
                     },

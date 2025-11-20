@@ -231,6 +231,7 @@ fun HabitUpsertSheetContent(
                                         )
                                     )
                                 },
+                                modifier = Modifier.weight(1f),
                                 colors = ToggleButtonDefaults.tonalToggleButtonColors(),
                                 shapes = when (dayOfWeek) {
                                     DayOfWeek.MONDAY -> ButtonGroupDefaults.connectedLeadingButtonShapes()
@@ -238,7 +239,9 @@ fun HabitUpsertSheetContent(
                                     else -> ButtonGroupDefaults.connectedMiddleButtonShapes()
                                 },
                                 content = {
-                                    Text(text = dayOfWeek.name.take(3))
+                                    Text(
+                                        text = dayOfWeek.name.take(1),
+                                    )
                                 }
                             )
                         }

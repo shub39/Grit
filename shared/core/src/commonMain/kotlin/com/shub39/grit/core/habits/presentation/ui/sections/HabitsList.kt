@@ -30,9 +30,7 @@ import androidx.compose.material3.windowsizeclass.WindowWidthSizeClass
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
@@ -77,14 +75,9 @@ fun HabitsList(
         }
     }
 
-    var reorderableHabits by remember(state.habitsWithAnalytics) {
-        mutableStateOf(state.habitsWithAnalytics)
-    }
     val reorderableListState =
         rememberReorderableLazyListState(lazyListState) { from, to ->
-            reorderableHabits = reorderableHabits.toMutableList().apply {
-                add(to.index, removeAt(from.index))
-            }
+            onAction(HabitsAction.OnTransientHabitReorder(from.index, to.index))
         }
 
 
@@ -96,7 +89,7 @@ fun HabitsList(
             modifier = Modifier.fillMaxHeight()
         ) {
             // habits
-            items(reorderableHabits, key = { it.habit.id }) { habitWithAnalytics ->
+            items(state.habitsWithAnalytics, key = { it.habit.id }) { habitWithAnalytics ->
                 ReorderableItem(reorderableListState, key = habitWithAnalytics.habit.id) {
                     val cardCorners by animateDpAsState(
                         targetValue = if (!it) 20.dp else 16.dp
@@ -115,11 +108,7 @@ fun HabitsList(
                                 imageVector = Icons.Rounded.DragIndicator,
                                 contentDescription = "Drag Indicator",
                                 modifier = Modifier.draggableHandle(
-                                    onDragStopped = {
-                                        onAction(
-                                            HabitsAction.ReorderHabits(reorderableHabits.mapIndexed { index, entry -> index to entry })
-                                        )
-                                    }
+                                    onDragStopped = { onAction(HabitsAction.ReorderHabits) }
                                 )
                             )
                         },
@@ -132,7 +121,12 @@ fun HabitsList(
 
             // when no habits
             if (state.habitsWithAnalytics.isEmpty()) {
-                item { Empty(Modifier.padding(top = 150.dp)) }
+                item {
+                    Empty(
+                        modifier = Modifier.padding(top = 150.dp),
+                        color = MaterialTheme.colorScheme.onSurface
+                    )
+                }
             }
         }
     }
@@ -251,7 +245,7 @@ fun HabitsList(
                 description = "",
                 time = Clock.System.now().toLocalDateTime(TimeZone.currentSystemDefault()),
                 days = DayOfWeek.entries.toSet(),
-                index = reorderableHabits.size,
+                index = state.habitsWithAnalytics.size,
                 reminder = false
             ),
             onDismissRequest = { onAction(HabitsAction.DismissAddHabitDialog) },

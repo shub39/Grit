@@ -55,33 +55,25 @@ class HabitViewModel(
     fun onAction(action: HabitsAction) {
         viewModelScope.launch {
             when (action) {
-                is HabitsAction.AddHabit -> {
-                    upsertHabit(action.habit)
-                }
+                is HabitsAction.AddHabit -> upsertHabit(action.habit)
 
-                is HabitsAction.DeleteHabit -> {
-                    deleteHabit(action.habit)
-                }
+                is HabitsAction.DeleteHabit -> deleteHabit(action.habit)
 
-                is HabitsAction.InsertStatus -> {
-                    insertHabitStatus(action.habit, action.date)
-                }
+                is HabitsAction.InsertStatus -> insertHabitStatus(action.habit, action.date)
 
-                is HabitsAction.UpdateHabit -> {
-                    upsertHabit(action.habit)
-                }
+                is HabitsAction.UpdateHabit -> upsertHabit(action.habit)
 
-                is HabitsAction.ReorderHabits -> {
-                    for (habitWithIndex in action.pairs) {
-                        upsertHabit(habitWithIndex.second.habit.copy(index = habitWithIndex.first))
+                HabitsAction.ReorderHabits -> {
+                    val currentList = _state.value.habitsWithAnalytics.mapIndexed { index, analytics ->
+                        analytics.habit.copy(index = index)
                     }
+
+                    currentList.forEach { upsertHabit(it) }
                 }
 
                 is HabitsAction.PrepareAnalytics -> {
                     _state.update {
-                        it.copy(
-                            analyticsHabitId = action.habit?.id
-                        )
+                        it.copy(analyticsHabitId = action.habit?.id)
                     }
                 }
 
@@ -90,22 +82,16 @@ class HabitViewModel(
 
                     if (!isSubscribed && _state.value.habitsWithAnalytics.size >= 5) {
                         stateLayer.settingsState.update {
-                            it.copy(
-                                showPaywall = true
-                            )
+                            it.copy(showPaywall = true)
                         }
                     } else {
                         _state.update {
-                            it.copy(
-                                showHabitAddSheet = true
-                            )
+                            it.copy(showHabitAddSheet = true)
                         }
 
                         if (isSubscribed) {
                             stateLayer.settingsState.update {
-                                it.copy(
-                                    isUserSubscribed = true
-                                )
+                                it.copy(isUserSubscribed = true)
                             }
 
                             _state.update {
@@ -118,14 +104,18 @@ class HabitViewModel(
                 HabitsAction.DismissAddHabitDialog -> _state.update { it.copy(showHabitAddSheet = false) }
 
                 HabitsAction.OnShowPaywall -> stateLayer.settingsState.update {
-                    it.copy(
-                        showPaywall = true
-                    )
+                    it.copy(showPaywall = true)
                 }
 
                 is HabitsAction.OnToggleCompactView -> datastore.setCompactView(action.pref)
 
                 is HabitsAction.OnToggleEditState -> _state.update { it.copy(editState = action.pref) }
+
+                is HabitsAction.OnTransientHabitReorder -> {
+                    val currentList = _state.value.habitsWithAnalytics.toMutableList()
+                    currentList.add(action.to, currentList.removeAt(action.from))
+                    _state.update { it.copy(habitsWithAnalytics = currentList) }
+                }
             }
         }
     }
