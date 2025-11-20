@@ -88,6 +88,9 @@ fun AnalyticsPage(
         firstVisibleMonth = currentMonth,
         firstDayOfWeek = state.startingDay
     )
+    val weekDayBreakdownData = remember(currentHabit.weekDayFrequencyData) {
+        prepareWeekDayDataToBars(currentHabit.weekDayFrequencyData, primary)
+    }
 
     var editDialog by remember { mutableStateOf(false) }
     var deleteDialog by remember { mutableStateOf(false) }
@@ -154,7 +157,7 @@ fun AnalyticsPage(
         val maxWidth = 400.dp
         LazyVerticalStaggeredGrid(
             modifier = Modifier.fillMaxSize(),
-            columns = StaggeredGridCells.Adaptive(minSize = 300.dp),
+            columns = StaggeredGridCells.Adaptive(minSize = 400.dp),
             contentPadding = PaddingValues(start = 16.dp, end = 16.dp, top = 16.dp, bottom = 60.dp),
             horizontalArrangement = Arrangement.spacedBy(8.dp),
             verticalItemSpacing = 8.dp
@@ -208,7 +211,7 @@ fun AnalyticsPage(
                 WeekDayBreakdown(
                     canSeeContent = state.isUserSubscribed,
                     onAction = onAction,
-                    weekDayData = prepareWeekDayDataToBars(currentHabit.weekDayFrequencyData, primary),
+                    weekDayData = weekDayBreakdownData,
                     primary = primary,
                     modifier = Modifier.widthIn(max = maxWidth)
                 )
