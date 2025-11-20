@@ -1,5 +1,6 @@
 package com.shub39.grit.core.habits.presentation.ui.component
 
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
@@ -12,6 +13,7 @@ import androidx.compose.material3.ExperimentalMaterial3ExpressiveApi
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.material3.ToggleButton
+import androidx.compose.material3.ToggleButtonDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -60,12 +62,20 @@ fun WeeklyActivity(
                 horizontal = 16.dp,
                 vertical = 8.dp
             ),
-            horizontalArrangement = ButtonGroupDefaults.HorizontalArrangement
+            horizontalArrangement = Arrangement.spacedBy(ButtonGroupDefaults.ConnectedSpaceBetween)
         ) {
             items(WeeklyTimePeriod.entries) { period ->
                 ToggleButton(
                     checked = period == selectedTimePeriod,
-                    onCheckedChange = { selectedTimePeriod = period }
+                    onCheckedChange = { selectedTimePeriod = period },
+                    shapes = when (period) {
+                        WeeklyTimePeriod.WEEKS_16 -> ButtonGroupDefaults.connectedLeadingButtonShapes()
+                        WeeklyTimePeriod.WEEKS_8 -> ButtonGroupDefaults.connectedMiddleButtonShapes()
+                        WeeklyTimePeriod.WEEKS_4 -> ButtonGroupDefaults.connectedTrailingButtonShapes()
+                    },
+                    colors = ToggleButtonDefaults.toggleButtonColors(
+                        containerColor = MaterialTheme.colorScheme.surfaceContainerHigh
+                    )
                 ) {
                     Text(text = "${period.toWeeks()} ${stringResource(Res.string.weeks)}")
                 }

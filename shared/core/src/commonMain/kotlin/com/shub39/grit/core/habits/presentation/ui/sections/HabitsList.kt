@@ -222,19 +222,23 @@ fun HabitsList(
                 }
             }
 
-            FloatingActionButton(
-                onClick = onNavigateToOverallAnalytics,
-                containerColor = MaterialTheme.colorScheme.secondaryContainer,
-                contentColor = MaterialTheme.colorScheme.onSecondaryContainer,
-                modifier = Modifier.animateFloatingActionButton(
-                    visible = state.habitsWithAnalytics.isNotEmpty() && fabVisible,
-                    alignment = Alignment.BottomEnd
-                )
+            AnimatedVisibility(
+                visible = state.analyticsHabitId != null
             ) {
-                Icon(
-                    imageVector = Icons.Rounded.Analytics,
-                    contentDescription = "All Analytics"
-                )
+                FloatingActionButton(
+                    onClick = onNavigateToOverallAnalytics,
+                    containerColor = MaterialTheme.colorScheme.secondaryContainer,
+                    contentColor = MaterialTheme.colorScheme.onSecondaryContainer,
+                    modifier = Modifier.animateFloatingActionButton(
+                        visible = state.habitsWithAnalytics.isNotEmpty() && fabVisible,
+                        alignment = Alignment.BottomEnd
+                    )
+                ) {
+                    Icon(
+                        imageVector = Icons.Rounded.Analytics,
+                        contentDescription = "All Analytics"
+                    )
+                }
             }
         }
     }
