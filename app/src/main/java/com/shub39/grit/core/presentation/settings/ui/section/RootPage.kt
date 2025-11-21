@@ -1,5 +1,8 @@
 package com.shub39.grit.core.presentation.settings.ui.section
 
+import android.Manifest
+import android.content.pm.PackageManager
+import android.os.Build
 import android.widget.Toast
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
@@ -33,6 +36,7 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -40,6 +44,7 @@ import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
+import androidx.core.content.ContextCompat
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.shub39.grit.core.domain.Pages
 import com.shub39.grit.core.presentation.getRandomLine
@@ -160,40 +165,40 @@ fun RootPage(
             item { Spacer(modifier = Modifier.height(16.dp)) }
 
             // disabled for now...
-//            item {
-//                val isRunning by serverRepo.isRunning.collectAsState()
-//                val serverUrl by serverRepo.serverUrl.collectAsState()
-//
-//                ListItem(
-//                    headlineContent = {
-//                        Text("Start Server")
-//                    },
-//                    supportingContent = {
-//                        serverUrl?.let { Text(text = it) }
-//                    },
-//                    trailingContent = {
-//                        Switch(
-//                            checked = isRunning,
-//                            onCheckedChange = {
-//                                if (!isRunning) {
-//                                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU &&
-//                                        ContextCompat.checkSelfPermission(
-//                                            context,
-//                                            Manifest.permission.POST_NOTIFICATIONS
-//                                        ) != PackageManager.PERMISSION_GRANTED
-//                                    ) {
-//                                        launcher.launch(Manifest.permission.POST_NOTIFICATIONS)
-//                                    } else {
-//                                        GritServerService.startService(context , serverPort)
-//                                    }
-//                                } else {
-//                                    GritServerService.stopService(context)
-//                                }
-//                            }
-//                        )
-//                    }
-//                )
-//            }
+            item {
+                val isRunning by serverRepo.isRunning.collectAsState()
+                val serverUrl by serverRepo.serverUrl.collectAsState()
+
+                ListItem(
+                    headlineContent = {
+                        Text("Start Server")
+                    },
+                    supportingContent = {
+                        serverUrl?.let { Text(text = it) }
+                    },
+                    trailingContent = {
+                        Switch(
+                            checked = isRunning,
+                            onCheckedChange = {
+                                if (!isRunning) {
+                                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU &&
+                                        ContextCompat.checkSelfPermission(
+                                            context,
+                                            Manifest.permission.POST_NOTIFICATIONS
+                                        ) != PackageManager.PERMISSION_GRANTED
+                                    ) {
+                                        launcher.launch(Manifest.permission.POST_NOTIFICATIONS)
+                                    } else {
+                                        GritServerService.startService(context , serverPort)
+                                    }
+                                } else {
+                                    GritServerService.stopService(context)
+                                }
+                            }
+                        )
+                    }
+                )
+            }
 
             item {
                 ListItem(

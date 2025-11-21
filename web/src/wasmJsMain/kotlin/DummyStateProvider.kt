@@ -1,6 +1,3 @@
-
-package data
-
 import com.shub39.grit.core.habits.domain.Habit
 import com.shub39.grit.core.habits.domain.HabitStatus
 import com.shub39.grit.core.habits.domain.HabitWithAnalytics
@@ -12,7 +9,6 @@ import com.shub39.grit.core.tasks.domain.Category
 import com.shub39.grit.core.tasks.domain.Task
 import com.shub39.grit.core.tasks.presentation.TaskAction
 import com.shub39.grit.core.tasks.presentation.TaskState
-import domain.StateProvider
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -252,6 +248,8 @@ class DummyStateProvider : StateProvider {
             }
         }
     }
+
+    override fun onRefresh() {}
 
     private fun countCurrentStreak(
         dates: List<LocalDate>,

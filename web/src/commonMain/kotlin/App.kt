@@ -9,6 +9,7 @@ import androidx.compose.material.icons.rounded.Checklist
 import androidx.compose.material.icons.rounded.DarkMode
 import androidx.compose.material.icons.rounded.LightMode
 import androidx.compose.material.icons.rounded.Loop
+import androidx.compose.material.icons.rounded.Refresh
 import androidx.compose.material3.ExperimentalMaterial3ExpressiveApi
 import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Icon
@@ -26,23 +27,20 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
-import com.materialkolor.DynamicMaterialTheme
 import com.shub39.grit.core.habits.presentation.ui.HabitsGraph
 import com.shub39.grit.core.tasks.presentation.ui.TasksPage
 import com.shub39.grit.core.utils.LocalWindowSizeClass
-import domain.StateProvider
 import kotlinx.serialization.Serializable
-import org.koin.compose.koinInject
 
 @Serializable
 private sealed interface Routes {
@@ -75,83 +73,25 @@ private sealed interface Routes {
 
 @OptIn(ExperimentalMaterial3ExpressiveApi::class, ExperimentalMaterial3WindowSizeClassApi::class)
 @Composable
-fun App() {
+fun App(
+    stateProvider: StateProvider,
+    isDark: Boolean,
+    onSwitchTheme: (Boolean) -> Unit
+) {
     val navController = rememberNavController()
+    val scope = rememberCoroutineScope()
 
-    val stateProvider: StateProvider = koinInject()
     var currentRoute: Routes by remember { mutableStateOf(Routes.Tasks) }
-    var isDark by remember { mutableStateOf(true) }
 
     val windowSizeClass = LocalWindowSizeClass.current
 
-    DynamicMaterialTheme(
-        primary = Color(0xFABD2F),
-        isDark = isDark
-    ) {
-        when (windowSizeClass.widthSizeClass) {
-            WindowWidthSizeClass.Compact -> {
-                Scaffold(
-                    bottomBar = {
-                        NavigationBar {
-                            Routes.allRoutes.forEach { route: Routes ->
-                                NavigationBarItem(
-                                    selected = currentRoute == route,
-                                    onClick = {
-                                        currentRoute = route
-                                        navController.navigate(currentRoute)
-                                    },
-                                    icon = {
-                                        Icon(
-                                            imageVector = route.toImageVector(),
-                                            contentDescription = null
-                                        )
-                                    },
-                                    label = {
-                                        Text(
-                                            text = route.toDisplayText()
-                                        )
-                                    },
-                                    alwaysShowLabel = true
-                                )
-                            }
-                        }
-                    }
-                ) {
-                    AppContent(
-                        navController = navController,
-                        stateProvider = stateProvider,
-                        modifier = Modifier.padding(it)
-                    )
-                }
-            }
-
-            else -> {
-                Row(
-                    modifier = Modifier.background(MaterialTheme.colorScheme.surface)
-                ) {
-                    NavigationRail(
-                        header = {
-                            FloatingActionButton(
-                                onClick = { isDark = !isDark },
-                                modifier = Modifier.padding(top = 16.dp)
-                            ) {
-                                Icon(
-                                    imageVector = if (isDark) {
-                                        Icons.Rounded.LightMode
-                                    } else {
-                                        Icons.Rounded.DarkMode
-                                    },
-                                    contentDescription = null
-                                )
-                            }
-                        },
-                        containerColor = MaterialTheme.colorScheme.surfaceContainer,
-                        modifier = Modifier.clip(
-                            RoundedCornerShape(topEnd = 28.dp, bottomEnd = 28.dp)
-                        )
-                    ) {
+    when (windowSizeClass.widthSizeClass) {
+        WindowWidthSizeClass.Compact -> {
+            Scaffold(
+                bottomBar = {
+                    NavigationBar {
                         Routes.allRoutes.forEach { route: Routes ->
-                            NavigationRailItem(
+                            NavigationBarItem(
                                 selected = currentRoute == route,
                                 onClick = {
                                     currentRoute = route
@@ -172,12 +112,77 @@ fun App() {
                             )
                         }
                     }
-
-                    AppContent(
-                        navController = navController,
-                        stateProvider = stateProvider,
-                    )
                 }
+            ) {
+                AppContent(
+                    navController = navController,
+                    stateProvider = stateProvider,
+                    modifier = Modifier.padding(it)
+                )
+            }
+        }
+
+        else -> {
+            Row(
+                modifier = Modifier.background(MaterialTheme.colorScheme.surface)
+            ) {
+                NavigationRail(
+                    header = {
+                        FloatingActionButton(
+                            onClick = { onSwitchTheme(!isDark) },
+                            modifier = Modifier.padding(top = 16.dp)
+                        ) {
+                            Icon(
+                                imageVector = if (isDark) {
+                                    Icons.Rounded.LightMode
+                                } else {
+                                    Icons.Rounded.DarkMode
+                                },
+                                contentDescription = null
+                            )
+                        }
+
+                        FloatingActionButton(
+                            onClick = { stateProvider.onRefresh() }
+                        ) {
+                            Icon(
+                                imageVector = Icons.Rounded.Refresh,
+                                contentDescription = null
+                            )
+                        }
+                    },
+                    containerColor = MaterialTheme.colorScheme.surfaceContainer,
+                    modifier = Modifier.clip(
+                        RoundedCornerShape(topEnd = 28.dp, bottomEnd = 28.dp)
+                    )
+                ) {
+                    Routes.allRoutes.forEach { route: Routes ->
+                        NavigationRailItem(
+                            selected = currentRoute == route,
+                            onClick = {
+                                currentRoute = route
+                                navController.navigate(currentRoute)
+                            },
+                            icon = {
+                                Icon(
+                                    imageVector = route.toImageVector(),
+                                    contentDescription = null
+                                )
+                            },
+                            label = {
+                                Text(
+                                    text = route.toDisplayText()
+                                )
+                            },
+                            alwaysShowLabel = true
+                        )
+                    }
+                }
+
+                AppContent(
+                    navController = navController,
+                    stateProvider = stateProvider,
+                )
             }
         }
     }

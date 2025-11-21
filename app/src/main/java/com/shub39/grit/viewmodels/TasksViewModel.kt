@@ -126,9 +126,7 @@ class TasksViewModel(
                     }
                 }
 
-                if (tasks.isEmpty()) {
-                    addDefault()
-                }
+                if (tasks.isEmpty()) addDefault()
             }
             .launchIn(viewModelScope)
     }

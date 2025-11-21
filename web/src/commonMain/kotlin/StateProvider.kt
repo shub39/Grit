@@ -1,5 +1,3 @@
-package domain
-
 import com.shub39.grit.core.habits.presentation.HabitState
 import com.shub39.grit.core.habits.presentation.HabitsAction
 import com.shub39.grit.core.tasks.presentation.TaskAction
@@ -12,4 +10,6 @@ interface StateProvider {
 
     fun onHabitAction(action: HabitsAction)
     fun onTaskAction(action: TaskAction)
+
+    fun onRefresh()
 }
