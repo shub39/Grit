@@ -52,8 +52,8 @@ import com.shub39.grit.core.presentation.settings.SettingsAction
 import com.shub39.grit.core.presentation.settings.SettingsState
 import com.shub39.grit.core.presentation.settings.ui.component.AboutApp
 import com.shub39.grit.core.shared_ui.PageFill
+import com.shub39.grit.server.GritServerRepository
 import com.shub39.grit.server.GritServerService
-import com.shub39.grit.server.domain.GritServerRepository
 import grit.shared.core.generated.resources.Res
 import grit.shared.core.generated.resources.about_libraries
 import grit.shared.core.generated.resources.backup

@@ -5,11 +5,13 @@ import android.net.wifi.WifiManager
 import android.util.Log
 import com.shub39.grit.billing.BillingHandler
 import com.shub39.grit.core.domain.GritDatastore
+import com.shub39.grit.core.habits.domain.Habit
 import com.shub39.grit.core.habits.domain.HabitRepo
+import com.shub39.grit.core.habits.domain.HabitStatus
 import com.shub39.grit.core.tasks.domain.TaskRepo
+import com.shub39.grit.core.utils.ErrorResponse
 import com.shub39.grit.core.utils.StateData
-import com.shub39.grit.server.domain.ErrorResponse
-import com.shub39.grit.server.domain.GritServerRepository
+import com.shub39.grit.core.utils.SuccessResponse
 import io.ktor.http.HttpStatusCode
 import io.ktor.serialization.kotlinx.json.json
 import io.ktor.server.application.install
@@ -18,8 +20,10 @@ import io.ktor.server.cio.CIOApplicationEngine
 import io.ktor.server.engine.EmbeddedServer
 import io.ktor.server.engine.embeddedServer
 import io.ktor.server.plugins.contentnegotiation.ContentNegotiation
+import io.ktor.server.request.receive
 import io.ktor.server.response.respond
 import io.ktor.server.routing.get
+import io.ktor.server.routing.post
 import io.ktor.server.routing.routing
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -30,6 +34,7 @@ import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
+import kotlinx.datetime.LocalDate
 import kotlinx.datetime.TimeZone
 import kotlinx.datetime.todayIn
 import kotlinx.serialization.json.Json
@@ -158,6 +163,43 @@ class GritServerRepositoryImpl(
                             call.respond(
                                 HttpStatusCode.InternalServerError,
                                 ErrorResponse("Error sending data: ${e.message}")
+                            )
+                        }
+                    }
+
+                    get("/api") {
+                        try {
+                            call.respond(HttpStatusCode.OK, SuccessResponse("Server OK"))
+                        } catch (e: Exception) {
+                            Log.e(TAG, "Error sending status", e)
+                            call.respond(
+                                HttpStatusCode.InternalServerError,
+                                ErrorResponse("Error sending status: ${e.message}")
+                            )
+                        }
+                    }
+
+                    post("/api/habit/status") {
+                        try {
+                            val request = call.receive<Pair<Habit, LocalDate>>()
+
+                            val isHabitCompleted =
+                                _stateData.value.habitData.find { it.habit == request.first }?.statuses?.any { it.date == request.second }
+                                    ?: false
+
+                            if (isHabitCompleted) {
+                                habitRepo.deleteHabitStatus(request.first.id, request.second)
+                            } else {
+                                habitRepo.insertHabitStatus(
+                                    HabitStatus(habitId = request.first.id, date = request.second)
+                                )
+                            }
+
+                        } catch (e: Exception) {
+                            Log.e(TAG, "Error receiving status data", e)
+                            call.respond(
+                                HttpStatusCode.InternalServerError,
+                                ErrorResponse("Error receiving status data: ${e.message}")
                             )
                         }
                     }

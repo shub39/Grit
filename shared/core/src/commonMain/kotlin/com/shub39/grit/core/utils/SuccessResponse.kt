@@ -1,4 +1,4 @@
-package com.shub39.grit.server.domain
+package com.shub39.grit.core.utils
 
 import kotlinx.serialization.Serializable
 

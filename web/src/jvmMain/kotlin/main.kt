@@ -3,7 +3,10 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.height
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.rounded.Check
 import androidx.compose.material3.Button
+import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Surface
@@ -11,6 +14,7 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.windowsizeclass.ExperimentalMaterial3WindowSizeClassApi
 import androidx.compose.material3.windowsizeclass.calculateWindowSizeClass
 import androidx.compose.runtime.CompositionLocalProvider
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -53,6 +57,8 @@ fun main() {
                         onSwitchTheme = { isDark = it }
                     )
                 } else {
+                    val isValidUrl by stateProvider.isValidUrl.collectAsState()
+
                     var url by remember { mutableStateOf("") }
 
                     Surface {
@@ -70,9 +76,21 @@ fun main() {
 
                             OutlinedTextField(
                                 value = url,
-                                onValueChange = { url = it },
+                                onValueChange = {
+                                    url = it
+                                    stateProvider.checkUrl(it)
+                                },
                                 label = { Text("Enter Server Url") },
-                                placeholder = { Text("192.168.") }
+                                placeholder = { Text("192.168.") },
+                                shape = MaterialTheme.shapes.medium,
+                                trailingIcon = {
+                                    if (isValidUrl) {
+                                        Icon(
+                                            imageVector = Icons.Rounded.Check,
+                                            contentDescription = null
+                                        )
+                                    }
+                                }
                             )
 
                             Spacer(modifier = Modifier.height(6.dp))
@@ -82,7 +100,7 @@ fun main() {
                                     stateProvider.setUrl(url)
                                     showApp = true
                                 },
-                                enabled = SyncedStateProvider.checkUrl(url)
+                                enabled = isValidUrl
                             ) {
                                 Text("Start App")
                             }

@@ -5,7 +5,13 @@ import com.shub39.grit.core.habits.presentation.HabitsAction
 import com.shub39.grit.core.tasks.presentation.TaskAction
 import com.shub39.grit.core.tasks.presentation.TaskState
 import com.shub39.grit.core.utils.StateData
+import com.shub39.grit.core.utils.SuccessResponse
 import io.ktor.client.request.get
+import io.ktor.client.request.post
+import io.ktor.client.request.setBody
+import io.ktor.http.ContentType
+import io.ktor.http.contentType
+import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
@@ -18,16 +24,17 @@ class SyncedStateProvider() : StateProvider, ViewModel() {
     private val client = createHttpClent()
 
     private var url: String? = null
+    private var urlCheckJob: Job? = null
 
     private val _habitState = MutableStateFlow(HabitState())
-    private val _taskState = MutableStateFlow(TaskState())
-
     override val habitState: StateFlow<HabitState> = _habitState.asStateFlow()
         .stateIn(
             scope = viewModelScope,
             SharingStarted.WhileSubscribed(5000),
             HabitState()
         )
+
+    private val _taskState = MutableStateFlow(TaskState())
     override val taskState: StateFlow<TaskState> = _taskState.asStateFlow()
         .stateIn(
             scope = viewModelScope,
@@ -35,16 +42,45 @@ class SyncedStateProvider() : StateProvider, ViewModel() {
             TaskState()
         )
 
+    private val _isValidUrl = MutableStateFlow(false)
+    val isValidUrl = _isValidUrl.asStateFlow()
+
     fun setUrl(passedUrl: String) = viewModelScope.launch {
         url = passedUrl
         getData()
     }
+
+    fun checkUrl(url: String) {
+        urlCheckJob?.cancel()
+        urlCheckJob = viewModelScope.launch {
+            val response = safeCall<SuccessResponse> {
+                client.get(urlString = "http://$url/api")
+            }
+
+            when (response) {
+                is Result.Error -> _isValidUrl.update { false }
+                is Result.Success -> _isValidUrl.update { true }
+            }
+        }
+    }
+
     override fun onHabitAction(action: HabitsAction) {
         when (action) {
             is HabitsAction.AddHabit -> {}
             is HabitsAction.DeleteHabit -> {}
             HabitsAction.DismissAddHabitDialog -> _habitState.update { it.copy(showHabitAddSheet = false) }
-            is HabitsAction.InsertStatus -> {}
+            is HabitsAction.InsertStatus -> viewModelScope.launch {
+                if (url == null) return@launch
+
+                client.post(
+                    urlString = "http://$url/api/habit/status"
+                ) {
+                    contentType(ContentType.Application.Json)
+                    setBody(Pair(action.habit, action.date))
+                }
+
+                getData()
+            }
             HabitsAction.OnAddHabitClicked -> _habitState.update { it.copy(showHabitAddSheet = true) }
             HabitsAction.OnShowPaywall -> {}
             is HabitsAction.OnToggleCompactView -> _habitState.update { it.copy(compactHabitView = action.pref) }
@@ -54,11 +90,13 @@ class SyncedStateProvider() : StateProvider, ViewModel() {
                 currentList.add(action.to, currentList.removeAt(action.from))
                 _habitState.update { it.copy(habitsWithAnalytics = currentList) }
             }
+
             is HabitsAction.PrepareAnalytics -> _habitState.update { it.copy(analyticsHabitId = action.habit?.id) }
             HabitsAction.ReorderHabits -> {}
             is HabitsAction.UpdateHabit -> {}
         }
     }
+
     override fun onTaskAction(action: TaskAction) {
         when (action) {
             is TaskAction.AddCategory -> {}
@@ -108,10 +146,4 @@ class SyncedStateProvider() : StateProvider, ViewModel() {
         }
     }
 
-    companion object {
-        fun checkUrl(url: String): Boolean {
-            // TODO: Check if url is valid
-            return true
-        }
-    }
 }
