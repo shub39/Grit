@@ -4,6 +4,7 @@ import com.shub39.grit.core.data.toHabit
 import com.shub39.grit.core.data.toHabitEntity
 import com.shub39.grit.core.data.toHabitStatus
 import com.shub39.grit.core.data.toHabitStatusEntity
+import com.shub39.grit.core.domain.GritDatastore
 import com.shub39.grit.core.habits.domain.Habit
 import com.shub39.grit.core.habits.domain.HabitRepo
 import com.shub39.grit.core.habits.domain.HabitStatus
@@ -13,11 +14,17 @@ import com.shub39.grit.habits.data.database.HabitDao
 import com.shub39.grit.habits.data.database.HabitStatusDao
 import com.shub39.grit.widgets.HabitOverviewWidgetRepository
 import com.shub39.grit.widgets.HabitStreakWidgetRepository
+import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.flowOn
+import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.flow.onEach
+import kotlinx.coroutines.flow.update
+import kotlinx.coroutines.launch
 import kotlinx.datetime.DayOfWeek
 import kotlinx.datetime.LocalDate
 import kotlinx.datetime.TimeZone
@@ -30,9 +37,11 @@ import kotlin.time.ExperimentalTime
 class HabitRepository(
     private val habitDao: HabitDao,
     private val habitStatusDao: HabitStatusDao,
+    private val datastore: GritDatastore,
     private val habitOverviewWidgetRepository: HabitOverviewWidgetRepository,
     private val habitHeatMapWidgetRepository: HabitStreakWidgetRepository
 ) : HabitRepo {
+
     private val habits = habitDao
         .getAllHabitsFlow()
         .map { habits ->
@@ -46,6 +55,16 @@ class HabitRepository(
             habitStatuses.map { it.toHabitStatus() }
         }
         .flowOn(Dispatchers.IO)
+
+    private val firstDayOfWeek = MutableStateFlow(DayOfWeek.MONDAY)
+
+    init {
+        CoroutineScope(Dispatchers.IO).launch {
+            datastore.getStartOfTheWeekPref()
+                .onEach { firstDayOfWeek.update { it } }
+                .launchIn(this)
+        }
+    }
 
     override suspend fun upsertHabit(habit: Habit) {
         habitDao.upsertHabit(habit.toHabitEntity())
@@ -71,7 +90,7 @@ class HabitRepository(
         return habitStatusDao.getHabitStatuses().map { it.toHabitStatus() }
     }
 
-    override fun getHabitStatus(firstDayOfWeek: DayOfWeek): Flow<List<HabitWithAnalytics>> {
+    override fun getHabitStatus(): Flow<List<HabitWithAnalytics>> {
         return habits.combine(habitStatuses) { habitsFlow, habitStatusesFlow ->
             habitsFlow.map { habit ->
                 val habitStatusesForHabit = habitStatusesFlow.filter { it.habitId == habit.id }
@@ -86,7 +105,7 @@ class HabitRepository(
                     ),
                     bestStreak = countBestStreak(dates = dates, eligibleWeekdays = habit.days),
                     weeklyComparisonData = prepareLineChartData(
-                        firstDay = firstDayOfWeek,
+                        firstDay = firstDayOfWeek.value,
                         habitStatuses = habitStatusesForHabit
                     ),
                     weekDayFrequencyData = prepareWeekDayFrequencyData(dates = dates),
@@ -96,7 +115,16 @@ class HabitRepository(
         }.flowOn(Dispatchers.Default)
     }
 
-    override fun getOverallAnalytics(firstDayOfWeek: DayOfWeek): Flow<OverallAnalytics> {
+    override fun getCompletedHabitIds(): Flow<List<Long>> {
+        return habitStatuses
+            .map { habitStatuses ->
+                habitStatuses
+                    .filter { it.date == Clock.System.todayIn(TimeZone.currentSystemDefault()) }
+                    .map { it.habitId }
+            }.flowOn(Dispatchers.Default)
+    }
+
+    override fun getOverallAnalytics(): Flow<OverallAnalytics> {
         return habits.combine(habitStatuses) { habitsFlow, habitStatusesFlow ->
             OverallAnalytics(
                 heatMapData = prepareHeatMapData(habitStatusesFlow),
@@ -105,7 +133,7 @@ class HabitRepository(
                     val habitStatusesForHabit = habitStatusesFlow.filter { it.habitId == habit.id }
 
                     prepareLineChartData(
-                        firstDay = firstDayOfWeek,
+                        firstDay = firstDayOfWeek.value,
                         habitStatuses = habitStatusesForHabit
                     )
                 }

@@ -1,0 +1,23 @@
+package com.shub39.grit.core.utils
+
+import com.shub39.grit.core.habits.domain.HabitWithAnalytics
+import com.shub39.grit.core.habits.domain.OverallAnalytics
+import com.shub39.grit.core.tasks.domain.Category
+import com.shub39.grit.core.tasks.domain.Task
+import kotlinx.coroutines.flow.Flow
+import kotlinx.datetime.DayOfWeek
+import kotlinx.rpc.annotations.Rpc
+
+@Rpc
+interface RpcService {
+    fun getTaskData(): Flow<Map<Category, List<Task>>>
+    fun getCompletedTasks(): Flow<List<Task>>
+    fun getHabitData(): Flow<List<HabitWithAnalytics>>
+    fun getCompletedHabits(): Flow<List<Long>>
+    fun overallAnalytics(): Flow<OverallAnalytics>
+    fun startingDay(): Flow<DayOfWeek>
+    fun is24Hr(): Flow<Boolean>
+    fun isUserSubscribed(): Flow<Boolean>
+
+
+}

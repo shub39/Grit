@@ -1,7 +1,6 @@
 package com.shub39.grit.core.habits.domain
 
 import kotlinx.coroutines.flow.Flow
-import kotlinx.datetime.DayOfWeek
 import kotlinx.datetime.LocalDate
 
 interface HabitRepo {
@@ -12,8 +11,9 @@ interface HabitRepo {
     suspend fun getHabitById(id: Long): Habit?
     suspend fun getHabitStatuses(): List<HabitStatus>
 
-    fun getHabitStatus(firstDayOfWeek: DayOfWeek): Flow<List<HabitWithAnalytics>>
-    fun getOverallAnalytics(firstDayOfWeek: DayOfWeek): Flow<OverallAnalytics>
+    fun getHabitStatus(): Flow<List<HabitWithAnalytics>>
+    fun getCompletedHabitIds(): Flow<List<Long>>
+    fun getOverallAnalytics(): Flow<OverallAnalytics>
 
     suspend fun getStatusForHabit(id: Long): List<HabitStatus>
     suspend fun insertHabitStatus(habitStatus: HabitStatus)

@@ -8,6 +8,7 @@ plugins {
     alias(libs.plugins.compose.compiler)
     alias(libs.plugins.kotlin.serialization)
     alias(libs.plugins.composeHotReload)
+    id("org.jetbrains.kotlinx.rpc.plugin") version "0.10.1"
 }
 
 kotlin {
@@ -44,6 +45,10 @@ kotlin {
             implementation(libs.ktor.client.core)
             implementation(libs.ktor.client.content.negotiation)
             implementation(libs.ktor.serialization.kotlinx.json)
+
+            implementation("org.jetbrains.kotlinx:kotlinx-rpc-krpc-client:0.10.1")
+            implementation("org.jetbrains.kotlinx:kotlinx-rpc-krpc-ktor-client:0.10.1")
+            implementation("org.jetbrains.kotlinx:kotlinx-rpc-krpc-serialization-json:0.10.1")
         }
     }
 }

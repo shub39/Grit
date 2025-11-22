@@ -10,32 +10,44 @@ import com.shub39.grit.core.tasks.domain.TaskRepo
 import com.shub39.grit.tasks.data.database.CategoryDao
 import com.shub39.grit.tasks.data.database.TasksDao
 import com.shub39.grit.widgets.AllTasksWidgetRepository
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.combine
+import kotlinx.coroutines.flow.flowOn
 import kotlinx.coroutines.flow.map
 
 class TasksRepository(
     private val tasksDao: TasksDao,
     private val categoryDao: CategoryDao,
     private val allTasksWidgetRepository: AllTasksWidgetRepository
-): TaskRepo {
-    override fun getTasksFlow(): Flow<Map<Category, List<Task>>> {
-        val tasksFlow = tasksDao.getTasksFlow().map { entities ->
-            entities.map { it.toTask() }.sortedBy { it.index }
-        }
-        val categoriesFlow = categoryDao.getCategoriesFlow().map { entities ->
-            entities.map { it.toCategory() }.sortedBy { it.index }
-        }
+) : TaskRepo {
 
+    private val tasksFlow = tasksDao
+        .getTasksFlow()
+        .map { entities -> entities.map { it.toTask() }.sortedBy { it.index } }
+        .flowOn(Dispatchers.IO)
+
+    val categoriesFlow = categoryDao
+        .getCategoriesFlow()
+        .map { entities -> entities.map { it.toCategory() }.sortedBy { it.index } }
+        .flowOn(Dispatchers.IO)
+
+    override fun getTasksFlow(): Flow<Map<Category, List<Task>>> {
         return tasksFlow.combine(categoriesFlow) { tasks, categories ->
             categories.associateWith { category ->
                 tasks.filter { it.categoryId == category.id }
             }
-        }
+        }.flowOn(Dispatchers.Default)
+    }
+
+    override fun getCompletedTasksFlow(): Flow<List<Task>> {
+        return tasksFlow
+            .map { tasks -> tasks.filter { it.status } }
+            .flowOn(Dispatchers.IO)
     }
 
     override suspend fun getTasks(): List<Task> {
-       return tasksDao.getTasks().map { it.toTask() }
+        return tasksDao.getTasks().map { it.toTask() }
     }
 
     override suspend fun getTaskById(id: Long): Task? {

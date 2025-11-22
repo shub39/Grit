@@ -13,6 +13,7 @@ import com.shub39.grit.core.habits.presentation.HabitsAction
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.flow.onStart
@@ -20,9 +21,6 @@ import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import kotlinx.datetime.LocalDate
-import kotlinx.datetime.TimeZone
-import kotlinx.datetime.todayIn
-import kotlin.time.Clock
 import kotlin.time.ExperimentalTime
 
 class HabitViewModel(
@@ -35,7 +33,7 @@ class HabitViewModel(
 
     private var habitStatusJob: Job? = null
     private var overallAnalyticsJob: Job? = null
-    private var observeJob: Job? = null
+    private var observeDatastoreJob: Job? = null
 
     private val _state = stateLayer.habitsState
 
@@ -123,29 +121,25 @@ class HabitViewModel(
     @OptIn(ExperimentalTime::class)
     private fun observeHabitStatuses() {
         habitStatusJob?.cancel()
-        habitStatusJob = repo
-            .getHabitStatus(_state.value.startingDay)
-            .onEach { habitsWithAnalytics ->
-                _state.update { habitPageState ->
-                    habitPageState.copy(
-                        habitsWithAnalytics = habitsWithAnalytics,
-                        completedHabitIds = habitsWithAnalytics
-                            .filter { habitWithAnalytics ->
-                                habitWithAnalytics.statuses.any {
-                                    it.date == Clock.System.todayIn(TimeZone.currentSystemDefault())
-                                }
-                            }
-                            .map { it.habit.id }
+        habitStatusJob = viewModelScope.launch {
+            combine(
+                repo.getHabitStatus(),
+                repo.getCompletedHabitIds()
+            ) { habits, completedHabits ->
+                _state.update {
+                    it.copy(
+                        habitsWithAnalytics = habits,
+                        completedHabitIds = completedHabits
                     )
                 }
-            }
-            .launchIn(viewModelScope)
+            }.launchIn(this)
+        }
     }
 
     private fun observeOverallAnalytics() {
         overallAnalyticsJob?.cancel()
         overallAnalyticsJob = repo
-            .getOverallAnalytics(_state.value.startingDay)
+            .getOverallAnalytics()
             .onEach { overallAnalytics ->
                 _state.update {
                     it.copy(
@@ -157,8 +151,8 @@ class HabitViewModel(
     }
 
     private fun observeDataStore() {
-        observeJob?.cancel()
-        observeJob = viewModelScope.launch {
+        observeDatastoreJob?.cancel()
+        observeDatastoreJob = viewModelScope.launch {
             datastore
                 .getCompactViewPref()
                 .onEach { pref ->

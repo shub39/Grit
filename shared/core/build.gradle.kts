@@ -9,6 +9,7 @@ plugins {
     alias(libs.plugins.composeMultiplatform)
     alias(libs.plugins.compose.compiler)
     alias(libs.plugins.kotlin.serialization)
+    id("org.jetbrains.kotlinx.rpc.plugin") version "0.10.1"
 }
 
 kotlin {
@@ -50,6 +51,8 @@ kotlin {
             implementation(libs.compose.charts)
             implementation(libs.calendar)
             implementation(libs.materialKolor)
+
+            implementation("org.jetbrains.kotlinx:kotlinx-rpc-krpc-client:0.10.1")
         }
     }
 }

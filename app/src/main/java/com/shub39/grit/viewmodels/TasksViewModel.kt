@@ -12,8 +12,8 @@ import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.launchIn
-import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.flow.onStart
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.flow.update
@@ -108,13 +108,15 @@ class TasksViewModel(
 
     private fun observeTasks() {
         savedJob?.cancel()
-        savedJob = repo
-            .getTasksFlow()
-            .onEach { tasks ->
-                _state.update { task ->
-                    task.copy(
+        savedJob = viewModelScope.launch {
+            combine(
+                repo.getTasksFlow(),
+                repo.getCompletedTasksFlow()
+            ) { tasks, completedTasks ->
+                _state.update {
+                    it.copy(
                         tasks = tasks,
-                        completedTasks = tasks.values.flatten().filter { it.status },
+                        completedTasks = completedTasks
                     )
                 }
 
@@ -127,8 +129,8 @@ class TasksViewModel(
                 }
 
                 if (tasks.isEmpty()) addDefault()
-            }
-            .launchIn(viewModelScope)
+            }.launchIn(this)
+        }
     }
 
     private suspend fun addDefault() {

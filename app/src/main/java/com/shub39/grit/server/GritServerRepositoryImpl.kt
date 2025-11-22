@@ -25,22 +25,14 @@ import io.ktor.server.response.respond
 import io.ktor.server.routing.get
 import io.ktor.server.routing.post
 import io.ktor.server.routing.routing
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
-import kotlinx.coroutines.flow.launchIn
-import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.flow.update
-import kotlinx.coroutines.launch
 import kotlinx.datetime.LocalDate
-import kotlinx.datetime.TimeZone
-import kotlinx.datetime.todayIn
 import kotlinx.serialization.json.Json
 import java.net.NetworkInterface
 import java.util.Locale
-import kotlin.time.Clock
 import kotlin.time.ExperimentalTime
 
 typealias GritServer = EmbeddedServer<CIOApplicationEngine, CIOApplicationEngine.Configuration>?
@@ -70,58 +62,6 @@ class GritServerRepositoryImpl(
 
     private val _serverPort = MutableStateFlow(8080)
     override val serverPort: StateFlow<Int> = _serverPort.asStateFlow()
-
-    init {
-        CoroutineScope(Dispatchers.IO).launch {
-            datastore.getServerPort().onEach { port ->
-                _serverPort.update { port }
-            }.launchIn(this)
-
-            datastore.getStartOfTheWeekPref().onEach { dayOfWeek ->
-                _stateData.update { it.copy(startingDay = dayOfWeek) }
-            }.launchIn(this)
-
-            datastore.getIs24Hr().onEach { pref ->
-                _stateData.update { it.copy(is24Hr = pref) }
-            }.launchIn(this)
-
-            taskRepo
-                .getTasksFlow()
-                .onEach { tasks ->
-                    _stateData.update { task ->
-                        task.copy(
-                            taskData = tasks,
-                            completedTasks = tasks.values.flatten().filter { it.status },
-                        )
-                    }
-                }.launchIn(this)
-
-            habitRepo
-                .getHabitStatus(_stateData.value.startingDay)
-                .onEach { habitsWithAnalytics ->
-                    _stateData.update { habitPageState ->
-                        habitPageState.copy(
-                            habitData = habitsWithAnalytics,
-                            completedHabitIds = habitsWithAnalytics
-                                .filter { habitWithAnalytics ->
-                                    habitWithAnalytics.statuses.any {
-                                        it.date == Clock.System.todayIn(TimeZone.currentSystemDefault())
-                                    }
-                                }
-                                .map { it.habit.id }
-                        )
-                    }
-                }.launchIn(this)
-
-            habitRepo
-                .getOverallAnalytics(_stateData.value.startingDay)
-                .onEach { overallAnalytics ->
-                    _stateData.update {
-                        it.copy(overallAnalytics = overallAnalytics)
-                    }
-                }.launchIn(this)
-        }
-    }
 
     override suspend fun startServer(port: Int) {
         if (isRunning.value) {
