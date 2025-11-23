@@ -1,30 +1,53 @@
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.shub39.grit.core.habits.domain.HabitStatus
 import com.shub39.grit.core.habits.presentation.HabitState
 import com.shub39.grit.core.habits.presentation.HabitsAction
 import com.shub39.grit.core.tasks.presentation.TaskAction
 import com.shub39.grit.core.tasks.presentation.TaskState
-import com.shub39.grit.core.utils.StateData
+import com.shub39.grit.core.utils.RpcService
 import com.shub39.grit.core.utils.SuccessResponse
+import io.ktor.client.HttpClient
+import io.ktor.client.engine.okhttp.OkHttp
+import io.ktor.client.plugins.contentnegotiation.ContentNegotiation
 import io.ktor.client.request.get
-import io.ktor.client.request.post
-import io.ktor.client.request.setBody
-import io.ktor.http.ContentType
-import io.ktor.http.contentType
+import io.ktor.client.request.url
+import io.ktor.serialization.kotlinx.json.json
 import kotlinx.coroutines.Job
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.combine
+import kotlinx.coroutines.flow.launchIn
+import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
+import kotlinx.rpc.krpc.ktor.client.installKrpc
+import kotlinx.rpc.krpc.ktor.client.rpc
+import kotlinx.rpc.krpc.ktor.client.rpcConfig
+import kotlinx.rpc.krpc.serialization.json.json
+import kotlinx.rpc.withService
+import kotlinx.serialization.json.Json
 
 class SyncedStateProvider() : StateProvider, ViewModel() {
-    private val client = createHttpClent()
+    private val client = HttpClient(OkHttp) {
+        installKrpc()
+        install(ContentNegotiation) {
+            json(
+                json = Json {
+                    ignoreUnknownKeys = true
+                }
+            )
+        }
+    }
 
-    private var url: String? = null
+    private var rpcService: RpcService? = null
+
     private var urlCheckJob: Job? = null
+    private var dataSyncJob: Job? = null
 
     private val _habitState = MutableStateFlow(HabitState())
     override val habitState: StateFlow<HabitState> = _habitState.asStateFlow()
@@ -45,46 +68,123 @@ class SyncedStateProvider() : StateProvider, ViewModel() {
     private val _isValidUrl = MutableStateFlow(false)
     val isValidUrl = _isValidUrl.asStateFlow()
 
-    fun setUrl(passedUrl: String) = viewModelScope.launch {
-        url = passedUrl
-        getData()
+    fun setUrl(passedUrl: String) {
+        rpcService = client.rpc {
+            url("ws://$passedUrl/rpc")
+            rpcConfig {
+                serialization {
+                    json {
+                        allowStructuredMapKeys = true
+                    }
+                }
+            }
+        }.withService<RpcService>()
+
+        rpcService?.let { service ->
+            dataSyncJob = viewModelScope.launch {
+                combine(
+                    service.getTaskData(),
+                    service.getCompletedTasks()
+                ) { tasks, completedTasks ->
+                    _taskState.update {
+                        it.copy(
+                            tasks = tasks,
+                            completedTasks = completedTasks,
+                            currentCategory = if (it.currentCategory == null) {
+                                tasks.keys.firstOrNull()
+                            } else {
+                                it.currentCategory
+                            }
+                        )
+                    }
+                }.launchIn(this)
+
+                combine(
+                    service.getHabitData(),
+                    service.getCompletedHabits(),
+                    service.overallAnalytics(),
+                    service.startingDay(),
+                    service.is24Hr()
+                ) { habits, completedHabits, overallAnalytics, startingDay, is24Hr ->
+                    _habitState.update {
+                        it.copy(
+                            habitsWithAnalytics = habits,
+                            completedHabitIds = completedHabits,
+                            overallAnalytics = overallAnalytics,
+                            startingDay = startingDay,
+                            is24Hr = is24Hr
+                        )
+                    }
+                }.launchIn(this)
+
+                service
+                    .isUserSubscribed()
+                    .onEach { pref ->
+                        _habitState.update { it.copy(isUserSubscribed = pref) }
+                    }.launchIn(this)
+            }
+        }
     }
 
     fun checkUrl(url: String) {
         urlCheckJob?.cancel()
         urlCheckJob = viewModelScope.launch {
             val response = safeCall<SuccessResponse> {
-                client.get(urlString = "http://$url/api")
+                client.get(
+                    urlString = "http://$url/status"
+                )
             }
 
             when (response) {
-                is Result.Error -> _isValidUrl.update { false }
-                is Result.Success -> _isValidUrl.update { true }
+                is Result.Success -> { _isValidUrl.update { true } }
+                is Result.Error -> { _isValidUrl.update { false } }
             }
         }
     }
 
     override fun onHabitAction(action: HabitsAction) {
         when (action) {
-            is HabitsAction.AddHabit -> {}
-            is HabitsAction.DeleteHabit -> {}
-            HabitsAction.DismissAddHabitDialog -> _habitState.update { it.copy(showHabitAddSheet = false) }
-            is HabitsAction.InsertStatus -> viewModelScope.launch {
-                if (url == null) return@launch
-
-                client.post(
-                    urlString = "http://$url/api/habit/status"
-                ) {
-                    contentType(ContentType.Application.Json)
-                    setBody(Pair(action.habit, action.date))
-                }
-
-                getData()
+            is HabitsAction.AddHabit -> viewModelScope.launch {
+                rpcService?.upsertHabit(action.habit)
             }
-            HabitsAction.OnAddHabitClicked -> _habitState.update { it.copy(showHabitAddSheet = true) }
+
+            is HabitsAction.DeleteHabit -> viewModelScope.launch {
+                rpcService?.deleteHabit(action.habit.id)
+            }
+
+            HabitsAction.DismissAddHabitDialog -> _habitState.update { it.copy(showHabitAddSheet = false) }
+
+            is HabitsAction.InsertStatus -> viewModelScope.launch {
+                val isHabitCompleted =
+                    _habitState.value.habitsWithAnalytics.find { it.habit == action.habit }?.statuses?.any { it.date == action.date }
+                        ?: false
+
+                if (isHabitCompleted) {
+
+                    rpcService?.deleteHabitStatus(action.habit.id, action.date)
+
+                } else {
+                    rpcService?.insertHabitStatus(
+                        HabitStatus(
+                            habitId = action.habit.id,
+                            date = action.date
+                        )
+                    )
+                }
+            }
+
+            HabitsAction.OnAddHabitClicked -> {
+                if (_habitState.value.isUserSubscribed || _habitState.value.habitsWithAnalytics.size <= 5) {
+                    _habitState.update { it.copy(showHabitAddSheet = true) }
+                }
+            }
+
             HabitsAction.OnShowPaywall -> {}
+
             is HabitsAction.OnToggleCompactView -> _habitState.update { it.copy(compactHabitView = action.pref) }
+
             is HabitsAction.OnToggleEditState -> _habitState.update { it.copy(editState = action.pref) }
+
             is HabitsAction.OnTransientHabitReorder -> {
                 val currentList = _habitState.value.habitsWithAnalytics.toMutableList()
                 currentList.add(action.to, currentList.removeAt(action.from))
@@ -92,57 +192,61 @@ class SyncedStateProvider() : StateProvider, ViewModel() {
             }
 
             is HabitsAction.PrepareAnalytics -> _habitState.update { it.copy(analyticsHabitId = action.habit?.id) }
-            HabitsAction.ReorderHabits -> {}
-            is HabitsAction.UpdateHabit -> {}
+
+            HabitsAction.ReorderHabits -> viewModelScope.launch {
+                val currentList =
+                    _habitState.value.habitsWithAnalytics.mapIndexed { index, analytics ->
+                        analytics.habit.copy(index = index)
+                    }
+
+                currentList.forEach { rpcService?.upsertHabit(it) }
+            }
+
+            is HabitsAction.UpdateHabit -> viewModelScope.launch {
+                rpcService?.upsertHabit(action.habit)
+            }
         }
     }
 
     override fun onTaskAction(action: TaskAction) {
         when (action) {
-            is TaskAction.AddCategory -> {}
+            is TaskAction.AddCategory -> viewModelScope.launch {
+                rpcService?.upsertCategory(action.category)
+            }
+
             is TaskAction.ChangeCategory -> _taskState.update { it.copy(currentCategory = action.category) }
-            is TaskAction.DeleteCategory -> {}
-            TaskAction.DeleteTasks -> {}
-            is TaskAction.ReorderCategories -> {}
-            is TaskAction.ReorderTasks -> {}
-            is TaskAction.UpsertTask -> {}
-        }
-    }
 
-    override fun onRefresh() {
-        viewModelScope.launch { getData() }
-    }
+            is TaskAction.DeleteCategory -> viewModelScope.launch {
+                rpcService?.deleteCategory(action.category)
+            }
 
-    private suspend fun getData() {
-        if (url == null) return
-
-        val response = safeCall<StateData> {
-            client.get(urlString = "http://$url/api/data")
-        }
-
-        when (response) {
-            is Result.Success -> {
-                _taskState.update {
-                    it.copy(
-                        tasks = response.data.taskData,
-                        completedTasks = response.data.completedTasks,
-                        is24Hour = response.data.is24Hr
-                    )
-                }
-
-                _habitState.update {
-                    it.copy(
-                        habitsWithAnalytics = response.data.habitData,
-                        completedHabitIds = response.data.completedHabitIds,
-                        overallAnalytics = response.data.overallAnalytics,
-                        startingDay = response.data.startingDay,
-                        isUserSubscribed = response.data.isUserSubscribed,
-                        is24Hr = response.data.is24Hr
-                    )
+            TaskAction.DeleteTasks -> viewModelScope.launch {
+                _taskState.value.completedTasks.forEach {
+                    rpcService?.deleteTask(it)
                 }
             }
 
-            else -> {}
+            is TaskAction.ReorderCategories -> viewModelScope.launch {
+                action.mapping.forEach {
+                    rpcService?.upsertCategory(it.second.copy(index = it.first))
+                }
+
+                delay(200)
+
+                _taskState.update {
+                    it.copy(currentCategory = it.tasks.keys.firstOrNull())
+                }
+            }
+
+            is TaskAction.ReorderTasks -> viewModelScope.launch {
+                action.mapping.forEach {
+                    rpcService?.updateTaskIndexById(it.second.id, it.first)
+                }
+            }
+
+            is TaskAction.UpsertTask -> viewModelScope.launch {
+                rpcService?.upsertTask(action.task)
+            }
         }
     }
 

@@ -3,14 +3,8 @@ package com.shub39.grit.server
 import android.content.Context
 import android.net.wifi.WifiManager
 import android.util.Log
-import com.shub39.grit.billing.BillingHandler
 import com.shub39.grit.core.domain.GritDatastore
-import com.shub39.grit.core.habits.domain.Habit
-import com.shub39.grit.core.habits.domain.HabitRepo
-import com.shub39.grit.core.habits.domain.HabitStatus
-import com.shub39.grit.core.tasks.domain.TaskRepo
-import com.shub39.grit.core.utils.ErrorResponse
-import com.shub39.grit.core.utils.StateData
+import com.shub39.grit.core.utils.RpcService
 import com.shub39.grit.core.utils.SuccessResponse
 import io.ktor.http.HttpStatusCode
 import io.ktor.serialization.kotlinx.json.json
@@ -20,27 +14,19 @@ import io.ktor.server.cio.CIOApplicationEngine
 import io.ktor.server.engine.EmbeddedServer
 import io.ktor.server.engine.embeddedServer
 import io.ktor.server.plugins.contentnegotiation.ContentNegotiation
-import io.ktor.server.request.receive
 import io.ktor.server.response.respond
 import io.ktor.server.routing.get
-import io.ktor.server.routing.post
 import io.ktor.server.routing.routing
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
-import kotlinx.coroutines.flow.launchIn
-import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.flow.update
-import kotlinx.coroutines.launch
-import kotlinx.datetime.LocalDate
-import kotlinx.datetime.TimeZone
-import kotlinx.datetime.todayIn
+import kotlinx.rpc.krpc.ktor.server.Krpc
+import kotlinx.rpc.krpc.ktor.server.rpc
+import kotlinx.rpc.krpc.serialization.json.json
 import kotlinx.serialization.json.Json
 import java.net.NetworkInterface
 import java.util.Locale
-import kotlin.time.Clock
 import kotlin.time.ExperimentalTime
 
 typealias GritServer = EmbeddedServer<CIOApplicationEngine, CIOApplicationEngine.Configuration>?
@@ -48,10 +34,8 @@ typealias GritServer = EmbeddedServer<CIOApplicationEngine, CIOApplicationEngine
 @OptIn(ExperimentalTime::class)
 class GritServerRepositoryImpl(
     private val context: Context,
-    private val taskRepo: TaskRepo,
-    private val habitRepo: HabitRepo,
     private val datastore: GritDatastore,
-    private val billingHandler: BillingHandler
+    private val rpcService: RpcService
 ) : GritServerRepository {
 
     companion object {
@@ -59,8 +43,6 @@ class GritServerRepositoryImpl(
     }
 
     private var server: GritServer = null
-
-    private val _stateData = MutableStateFlow(StateData())
 
     private val _isRunning = MutableStateFlow(false)
     override val isRunning: StateFlow<Boolean> = _isRunning.asStateFlow()
@@ -70,58 +52,6 @@ class GritServerRepositoryImpl(
 
     private val _serverPort = MutableStateFlow(8080)
     override val serverPort: StateFlow<Int> = _serverPort.asStateFlow()
-
-    init {
-        CoroutineScope(Dispatchers.IO).launch {
-            datastore.getServerPort().onEach { port ->
-                _serverPort.update { port }
-            }.launchIn(this)
-
-            datastore.getStartOfTheWeekPref().onEach { dayOfWeek ->
-                _stateData.update { it.copy(startingDay = dayOfWeek) }
-            }.launchIn(this)
-
-            datastore.getIs24Hr().onEach { pref ->
-                _stateData.update { it.copy(is24Hr = pref) }
-            }.launchIn(this)
-
-            taskRepo
-                .getTasksFlow()
-                .onEach { tasks ->
-                    _stateData.update { task ->
-                        task.copy(
-                            taskData = tasks,
-                            completedTasks = tasks.values.flatten().filter { it.status },
-                        )
-                    }
-                }.launchIn(this)
-
-            habitRepo
-                .getHabitStatus(_stateData.value.startingDay)
-                .onEach { habitsWithAnalytics ->
-                    _stateData.update { habitPageState ->
-                        habitPageState.copy(
-                            habitData = habitsWithAnalytics,
-                            completedHabitIds = habitsWithAnalytics
-                                .filter { habitWithAnalytics ->
-                                    habitWithAnalytics.statuses.any {
-                                        it.date == Clock.System.todayIn(TimeZone.currentSystemDefault())
-                                    }
-                                }
-                                .map { it.habit.id }
-                        )
-                    }
-                }.launchIn(this)
-
-            habitRepo
-                .getOverallAnalytics(_stateData.value.startingDay)
-                .onEach { overallAnalytics ->
-                    _stateData.update {
-                        it.copy(overallAnalytics = overallAnalytics)
-                    }
-                }.launchIn(this)
-        }
-    }
 
     override suspend fun startServer(port: Int) {
         if (isRunning.value) {
@@ -139,69 +69,36 @@ class GritServerRepositoryImpl(
             val port = port
 
             server = embeddedServer(CIO, host = "0.0.0.0", port = port) {
+                install(Krpc)
                 install(ContentNegotiation) {
                     json(
-                        Json {
-                            prettyPrint = true
-                            isLenient = true
+                        json = Json {
                             ignoreUnknownKeys = true
-                            allowStructuredMapKeys = true
                         }
                     )
                 }
 
                 routing {
-                    get("/api/data") {
+                    get("/status") {
                         try {
-                            val response = _stateData.value.copy(
-                                isUserSubscribed = billingHandler.isPlusUser()
-                            )
-
-                            call.respond(HttpStatusCode.OK, response)
-                        } catch (e: Exception) {
-                            Log.e(TAG, "Error sending data", e)
                             call.respond(
-                                HttpStatusCode.InternalServerError,
-                                ErrorResponse("Error sending data: ${e.message}")
+                                HttpStatusCode.OK,
+                                SuccessResponse("Server Running")
                             )
-                        }
-                    }
-
-                    get("/api") {
-                        try {
-                            call.respond(HttpStatusCode.OK, SuccessResponse("Server OK"))
                         } catch (e: Exception) {
                             Log.e(TAG, "Error sending status", e)
-                            call.respond(
-                                HttpStatusCode.InternalServerError,
-                                ErrorResponse("Error sending status: ${e.message}")
-                            )
                         }
                     }
 
-                    post("/api/habit/status") {
-                        try {
-                            val request = call.receive<Pair<Habit, LocalDate>>()
-
-                            val isHabitCompleted =
-                                _stateData.value.habitData.find { it.habit == request.first }?.statuses?.any { it.date == request.second }
-                                    ?: false
-
-                            if (isHabitCompleted) {
-                                habitRepo.deleteHabitStatus(request.first.id, request.second)
-                            } else {
-                                habitRepo.insertHabitStatus(
-                                    HabitStatus(habitId = request.first.id, date = request.second)
-                                )
+                    rpc("/rpc") {
+                        rpcConfig {
+                            serialization {
+                                json {
+                                    allowStructuredMapKeys = true
+                                }
                             }
-
-                        } catch (e: Exception) {
-                            Log.e(TAG, "Error receiving status data", e)
-                            call.respond(
-                                HttpStatusCode.InternalServerError,
-                                ErrorResponse("Error receiving status data: ${e.message}")
-                            )
                         }
+                        registerService<RpcService> { rpcService }
                     }
                 }
             }

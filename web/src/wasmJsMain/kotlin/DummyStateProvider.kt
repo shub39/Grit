@@ -249,8 +249,6 @@ class DummyStateProvider : StateProvider {
         }
     }
 
-    override fun onRefresh() {}
-
     private fun countCurrentStreak(
         dates: List<LocalDate>,
         eligibleWeekdays: Set<DayOfWeek> = DayOfWeek.entries.toSet()

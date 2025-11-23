@@ -11,6 +11,7 @@ plugins {
     alias(libs.plugins.aboutLibraries)
     alias(libs.plugins.room)
     alias(libs.plugins.composeMultiplatform)
+    alias(libs.plugins.kotlinx.rpc)
 }
 
 val appName = "Grit"
@@ -162,6 +163,10 @@ dependencies {
     implementation(libs.ktor.server.cio)
     implementation(libs.ktor.serialization.kotlinx.json)
     implementation(libs.ktor.server.content.negotiation)
+
+    implementation(libs.kotlinx.rpc.krpc.server)
+    implementation(libs.kotlinx.rpc.krpc.serialization.json)
+    implementation(libs.kotlinx.rpc.krpc.ktor.server)
 }
 
 room {

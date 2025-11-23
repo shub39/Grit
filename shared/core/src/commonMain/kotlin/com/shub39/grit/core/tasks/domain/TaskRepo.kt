@@ -4,6 +4,7 @@ import kotlinx.coroutines.flow.Flow
 
 interface TaskRepo {
     fun getTasksFlow(): Flow<Map<Category, List<Task>>>
+    fun getCompletedTasksFlow(): Flow<List<Task>>
 
     suspend fun getTasks(): List<Task>
     suspend fun getTaskById(id: Long): Task?

@@ -9,6 +9,7 @@ plugins {
     alias(libs.plugins.composeMultiplatform)
     alias(libs.plugins.compose.compiler)
     alias(libs.plugins.kotlin.serialization)
+    alias(libs.plugins.kotlinx.rpc)
 }
 
 kotlin {
@@ -50,6 +51,8 @@ kotlin {
             implementation(libs.compose.charts)
             implementation(libs.calendar)
             implementation(libs.materialKolor)
+
+            implementation(libs.kotlinx.rpc.krpc.client)
         }
     }
 }

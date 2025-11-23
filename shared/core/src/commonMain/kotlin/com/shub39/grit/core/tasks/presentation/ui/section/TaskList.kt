@@ -163,8 +163,8 @@ fun TaskList(
 
     MediumFloatingActionButton(
         onClick = { showTaskAddSheet = true },
-        containerColor = MaterialTheme.colorScheme.primaryContainer,
-        contentColor = MaterialTheme.colorScheme.onPrimaryContainer,
+        containerColor = MaterialTheme.colorScheme.tertiaryContainer,
+        contentColor = MaterialTheme.colorScheme.onTertiaryContainer,
         modifier = Modifier
             .align(Alignment.BottomEnd)
             .padding(16.dp)

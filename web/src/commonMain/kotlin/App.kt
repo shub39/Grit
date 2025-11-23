@@ -9,7 +9,6 @@ import androidx.compose.material.icons.rounded.Checklist
 import androidx.compose.material.icons.rounded.DarkMode
 import androidx.compose.material.icons.rounded.LightMode
 import androidx.compose.material.icons.rounded.Loop
-import androidx.compose.material.icons.rounded.Refresh
 import androidx.compose.material3.ExperimentalMaterial3ExpressiveApi
 import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Icon
@@ -27,7 +26,6 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -79,7 +77,6 @@ fun App(
     onSwitchTheme: (Boolean) -> Unit
 ) {
     val navController = rememberNavController()
-    val scope = rememberCoroutineScope()
 
     var currentRoute: Routes by remember { mutableStateOf(Routes.Tasks) }
 
@@ -138,15 +135,6 @@ fun App(
                                 } else {
                                     Icons.Rounded.DarkMode
                                 },
-                                contentDescription = null
-                            )
-                        }
-
-                        FloatingActionButton(
-                            onClick = { stateProvider.onRefresh() }
-                        ) {
-                            Icon(
-                                imageVector = Icons.Rounded.Refresh,
                                 contentDescription = null
                             )
                         }
