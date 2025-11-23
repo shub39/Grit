@@ -4,9 +4,9 @@ import org.jetbrains.kotlin.gradle.ExperimentalWasmDsl
 import org.jetbrains.kotlin.gradle.dsl.JvmTarget
 
 plugins {
-    alias(libs.plugins.kotlinMultiplatform)
+    alias(libs.plugins.kotlin.multiplatform)
     alias(libs.plugins.android.library)
-    alias(libs.plugins.composeMultiplatform)
+    alias(libs.plugins.compose.multiplatform)
     alias(libs.plugins.compose.compiler)
     alias(libs.plugins.kotlin.serialization)
     alias(libs.plugins.kotlinx.rpc)
@@ -44,13 +44,13 @@ kotlin {
             implementation(compose.components.resources)
             implementation(compose.components.uiToolingPreview)
             implementation(libs.navigation.compose)
-            implementation(libs.compose.windowSizeClass)
+            implementation(libs.compose.windowsizeclass)
 
             implementation(libs.kotlinx.datetime)
             implementation(libs.reorderable)
             implementation(libs.compose.charts)
             implementation(libs.calendar)
-            implementation(libs.materialKolor)
+            implementation(libs.materialkolor)
 
             implementation(libs.kotlinx.rpc.krpc.client)
         }

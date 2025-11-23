@@ -1,13 +1,14 @@
 @file:OptIn(ExperimentalWasmDsl::class)
 
+import org.jetbrains.compose.desktop.application.dsl.TargetFormat
 import org.jetbrains.kotlin.gradle.ExperimentalWasmDsl
 
 plugins {
-    alias(libs.plugins.kotlinMultiplatform)
-    alias(libs.plugins.composeMultiplatform)
+    alias(libs.plugins.kotlin.multiplatform)
+    alias(libs.plugins.compose.multiplatform)
     alias(libs.plugins.compose.compiler)
     alias(libs.plugins.kotlin.serialization)
-    alias(libs.plugins.composeHotReload)
+    alias(libs.plugins.compose.hot.reload)
     alias(libs.plugins.kotlinx.rpc)
 }
 
@@ -32,14 +33,14 @@ kotlin {
             implementation(compose.components.uiToolingPreview)
             implementation(libs.navigation.compose)
             implementation(libs.kotlinx.datetime)
-            implementation(libs.compose.windowSizeClass)
+            implementation(libs.compose.windowsizeclass)
 
-            implementation(libs.materialKolor)
+            implementation(libs.materialkolor)
         }
 
         jvmMain.dependencies {
             implementation(compose.desktop.currentOs)
-            implementation(libs.kotlinx.coroutinesSwing)
+            implementation(libs.kotlinx.coroutines.swing)
 
             implementation(libs.ktor.client.okhttp)
             implementation(libs.ktor.client.core)
@@ -56,5 +57,10 @@ kotlin {
 compose.desktop {
     application {
         mainClass = "MainKt"
+
+        nativeDistributions {
+            targetFormats(TargetFormat.Exe, TargetFormat.Deb, TargetFormat.AppImage)
+            packageName = "com.shub39.grit"
+        }
     }
 }
