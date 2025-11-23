@@ -164,6 +164,8 @@ fun HabitsList(
                 onClick = {
                     onAction(HabitsAction.OnAddHabitClicked)
                 },
+                containerColor = MaterialTheme.colorScheme.tertiaryContainer,
+                contentColor = MaterialTheme.colorScheme.onTertiaryContainer,
                 modifier = Modifier.animateFloatingActionButton(
                     visible = fabVisible,
                     alignment = Alignment.BottomEnd
@@ -192,6 +194,8 @@ fun HabitsList(
                 onClick = {
                     onAction(HabitsAction.OnAddHabitClicked)
                 },
+                containerColor = MaterialTheme.colorScheme.tertiaryContainer,
+                contentColor = MaterialTheme.colorScheme.onTertiaryContainer,
                 modifier = Modifier.animateFloatingActionButton(
                     visible = fabVisible,
                     alignment = Alignment.BottomEnd

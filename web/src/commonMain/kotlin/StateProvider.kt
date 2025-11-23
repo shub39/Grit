@@ -10,6 +10,4 @@ interface StateProvider {
 
     fun onHabitAction(action: HabitsAction)
     fun onTaskAction(action: TaskAction)
-
-    fun onRefresh()
 }

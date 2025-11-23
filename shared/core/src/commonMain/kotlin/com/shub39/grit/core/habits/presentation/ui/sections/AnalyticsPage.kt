@@ -270,8 +270,8 @@ fun AnalyticsPage(
                     onClick = {
                         onAction(HabitsAction.DeleteHabit(currentHabit.habit))
                         onAction(HabitsAction.PrepareAnalytics(null))
-                        onNavigateBack()
                         deleteDialog = false
+                        onNavigateBack()
                     },
                     shapes = ButtonShapes(
                         shape = MaterialTheme.shapes.extraLarge,
