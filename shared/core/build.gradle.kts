@@ -9,7 +9,7 @@ plugins {
     alias(libs.plugins.composeMultiplatform)
     alias(libs.plugins.compose.compiler)
     alias(libs.plugins.kotlin.serialization)
-    id("org.jetbrains.kotlinx.rpc.plugin") version "0.10.1"
+    alias(libs.plugins.kotlinx.rpc)
 }
 
 kotlin {
@@ -52,11 +52,7 @@ kotlin {
             implementation(libs.calendar)
             implementation(libs.materialKolor)
 
-            implementation("org.jetbrains.kotlinx:kotlinx-rpc-krpc-client:0.10.1")
-            implementation("org.jetbrains.kotlinx:kotlinx-rpc-krpc-server:0.10.1")
-            implementation("org.jetbrains.kotlinx:kotlinx-rpc-krpc-serialization-json:0.10.1")
-            implementation("org.jetbrains.kotlinx:kotlinx-rpc-krpc-ktor-client:0.10.1")
-            implementation("org.jetbrains.kotlinx:kotlinx-rpc-krpc-ktor-server:0.10.1")
+            implementation(libs.kotlinx.rpc.krpc.client)
         }
     }
 }

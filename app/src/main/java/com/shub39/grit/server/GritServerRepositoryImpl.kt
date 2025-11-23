@@ -5,11 +5,17 @@ import android.net.wifi.WifiManager
 import android.util.Log
 import com.shub39.grit.core.domain.GritDatastore
 import com.shub39.grit.core.utils.RpcService
+import com.shub39.grit.core.utils.SuccessResponse
+import io.ktor.http.HttpStatusCode
+import io.ktor.serialization.kotlinx.json.json
 import io.ktor.server.application.install
 import io.ktor.server.cio.CIO
 import io.ktor.server.cio.CIOApplicationEngine
 import io.ktor.server.engine.EmbeddedServer
 import io.ktor.server.engine.embeddedServer
+import io.ktor.server.plugins.contentnegotiation.ContentNegotiation
+import io.ktor.server.response.respond
+import io.ktor.server.routing.get
 import io.ktor.server.routing.routing
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -18,6 +24,7 @@ import kotlinx.coroutines.flow.update
 import kotlinx.rpc.krpc.ktor.server.Krpc
 import kotlinx.rpc.krpc.ktor.server.rpc
 import kotlinx.rpc.krpc.serialization.json.json
+import kotlinx.serialization.json.Json
 import java.net.NetworkInterface
 import java.util.Locale
 import kotlin.time.ExperimentalTime
@@ -63,8 +70,26 @@ class GritServerRepositoryImpl(
 
             server = embeddedServer(CIO, host = "0.0.0.0", port = port) {
                 install(Krpc)
+                install(ContentNegotiation) {
+                    json(
+                        json = Json {
+                            ignoreUnknownKeys = true
+                        }
+                    )
+                }
 
                 routing {
+                    get("/status") {
+                        try {
+                            call.respond(
+                                HttpStatusCode.OK,
+                                SuccessResponse("Server Running")
+                            )
+                        } catch (e: Exception) {
+                            Log.e(TAG, "Error sending status", e)
+                        }
+                    }
+
                     rpc("/rpc") {
                         rpcConfig {
                             serialization {

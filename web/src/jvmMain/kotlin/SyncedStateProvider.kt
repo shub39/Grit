@@ -6,9 +6,13 @@ import com.shub39.grit.core.habits.presentation.HabitsAction
 import com.shub39.grit.core.tasks.presentation.TaskAction
 import com.shub39.grit.core.tasks.presentation.TaskState
 import com.shub39.grit.core.utils.RpcService
+import com.shub39.grit.core.utils.SuccessResponse
 import io.ktor.client.HttpClient
 import io.ktor.client.engine.okhttp.OkHttp
+import io.ktor.client.plugins.contentnegotiation.ContentNegotiation
+import io.ktor.client.request.get
 import io.ktor.client.request.url
+import io.ktor.serialization.kotlinx.json.json
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -26,11 +30,22 @@ import kotlinx.rpc.krpc.ktor.client.rpc
 import kotlinx.rpc.krpc.ktor.client.rpcConfig
 import kotlinx.rpc.krpc.serialization.json.json
 import kotlinx.rpc.withService
+import kotlinx.serialization.json.Json
 
 class SyncedStateProvider() : StateProvider, ViewModel() {
+    private val client = HttpClient(OkHttp) {
+        installKrpc()
+        install(ContentNegotiation) {
+            json(
+                json = Json {
+                    ignoreUnknownKeys = true
+                }
+            )
+        }
+    }
+
     private var rpcService: RpcService? = null
 
-    private var url: String? = null
     private var urlCheckJob: Job? = null
     private var dataSyncJob: Job? = null
 
@@ -50,14 +65,11 @@ class SyncedStateProvider() : StateProvider, ViewModel() {
             TaskState()
         )
 
-    private val _isValidUrl = MutableStateFlow(true)
+    private val _isValidUrl = MutableStateFlow(false)
     val isValidUrl = _isValidUrl.asStateFlow()
 
     fun setUrl(passedUrl: String) {
-        url = passedUrl
-        rpcService = HttpClient(OkHttp) {
-            installKrpc()
-        }.rpc {
+        rpcService = client.rpc {
             url("ws://$passedUrl/rpc")
             rpcConfig {
                 serialization {
@@ -117,7 +129,16 @@ class SyncedStateProvider() : StateProvider, ViewModel() {
     fun checkUrl(url: String) {
         urlCheckJob?.cancel()
         urlCheckJob = viewModelScope.launch {
+            val response = safeCall<SuccessResponse> {
+                client.get(
+                    urlString = "http://$url/status"
+                )
+            }
 
+            when (response) {
+                is Result.Success -> { _isValidUrl.update { true } }
+                is Result.Error -> { _isValidUrl.update { false } }
+            }
         }
     }
 
@@ -173,9 +194,10 @@ class SyncedStateProvider() : StateProvider, ViewModel() {
             is HabitsAction.PrepareAnalytics -> _habitState.update { it.copy(analyticsHabitId = action.habit?.id) }
 
             HabitsAction.ReorderHabits -> viewModelScope.launch {
-                val currentList = _habitState.value.habitsWithAnalytics.mapIndexed { index, analytics ->
-                    analytics.habit.copy(index = index)
-                }
+                val currentList =
+                    _habitState.value.habitsWithAnalytics.mapIndexed { index, analytics ->
+                        analytics.habit.copy(index = index)
+                    }
 
                 currentList.forEach { rpcService?.upsertHabit(it) }
             }

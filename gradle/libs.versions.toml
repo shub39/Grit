@@ -1,6 +1,7 @@
 [versions]
 agp = "8.13.1"
 compileSdk = "36"
+kotlinxRpcKrpcClient = "0.10.1"
 minSdk = "29"
 targetSdk = "36"
 calendar = "2.9.0"
@@ -17,7 +18,7 @@ glance = "1.1.1"
 koin = "4.1.1"
 kotlin = "2.2.21"
 ksp = "2.3.0"
-material3 = "1.10.0-alpha04"
+material3 = "1.10.0-alpha05"
 reorderable = "3.0.0"
 room = "2.8.4"
 navigation = "2.9.1"
@@ -58,6 +59,13 @@ ktor-client-core = { module = "io.ktor:ktor-client-core", version.ref = "ktor" }
 ktor-client-content-negotiation = { module = "io.ktor:ktor-client-content-negotiation", version.ref = "ktor" }
 ktor-client-okhttp = { module = "io.ktor:ktor-client-okhttp", version.ref = "ktor" }
 
+# Rpc
+kotlinx-rpc-krpc-client = { module = "org.jetbrains.kotlinx:kotlinx-rpc-krpc-client", version.ref = "kotlinxRpcKrpcClient" }
+kotlinx-rpc-krpc-ktor-client = { module = "org.jetbrains.kotlinx:kotlinx-rpc-krpc-ktor-client", version.ref = "kotlinxRpcKrpcClient" }
+kotlinx-rpc-krpc-ktor-server = { module = "org.jetbrains.kotlinx:kotlinx-rpc-krpc-ktor-server", version.ref = "kotlinxRpcKrpcClient" }
+kotlinx-rpc-krpc-serialization-json = { module = "org.jetbrains.kotlinx:kotlinx-rpc-krpc-serialization-json", version.ref = "kotlinxRpcKrpcClient" }
+kotlinx-rpc-krpc-server = { module = "org.jetbrains.kotlinx:kotlinx-rpc-krpc-server", version.ref = "kotlinxRpcKrpcClient" }
+
 # Koin
 koin-androidx-compose = { module = "io.insert-koin:koin-androidx-compose", version.ref = "koin" }
 
@@ -78,6 +86,7 @@ truth = { module = "com.google.truth:truth", version.ref = "truth" }
 kotlinx-coroutinesSwing = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-swing", version.ref = "kotlinx-coroutines" }
 
 [plugins]
+kotlinx-rpc = { id = "org.jetbrains.kotlinx.rpc.plugin", version.ref = "kotlinxRpcKrpcClient" }
 room = { id = "androidx.room", version.ref = "room" }
 ksp = { id = "com.google.devtools.ksp", version.ref = "ksp" }
 android-application = { id = "com.android.application", version.ref = "agp" }

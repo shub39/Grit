@@ -11,7 +11,7 @@ plugins {
     alias(libs.plugins.aboutLibraries)
     alias(libs.plugins.room)
     alias(libs.plugins.composeMultiplatform)
-    id("org.jetbrains.kotlinx.rpc.plugin") version "0.10.1"
+    alias(libs.plugins.kotlinx.rpc)
 }
 
 val appName = "Grit"
@@ -164,11 +164,9 @@ dependencies {
     implementation(libs.ktor.serialization.kotlinx.json)
     implementation(libs.ktor.server.content.negotiation)
 
-    implementation("org.jetbrains.kotlinx:kotlinx-rpc-krpc-client:0.10.1")
-    implementation("org.jetbrains.kotlinx:kotlinx-rpc-krpc-server:0.10.1")
-    implementation("org.jetbrains.kotlinx:kotlinx-rpc-krpc-serialization-json:0.10.1")
-    implementation("org.jetbrains.kotlinx:kotlinx-rpc-krpc-ktor-client:0.10.1")
-    implementation("org.jetbrains.kotlinx:kotlinx-rpc-krpc-ktor-server:0.10.1")
+    implementation(libs.kotlinx.rpc.krpc.server)
+    implementation(libs.kotlinx.rpc.krpc.serialization.json)
+    implementation(libs.kotlinx.rpc.krpc.ktor.server)
 }
 
 room {
