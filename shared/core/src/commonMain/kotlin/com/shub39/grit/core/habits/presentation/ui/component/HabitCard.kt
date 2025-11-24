@@ -6,6 +6,7 @@ import androidx.compose.animation.animateColorAsState
 import androidx.compose.animation.animateContentSize
 import androidx.compose.foundation.background
 import androidx.compose.foundation.basicMarquee
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -34,6 +35,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Shape
+import androidx.compose.ui.semantics.Role
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import com.kizitonwose.calendar.compose.WeekCalendar
@@ -205,12 +207,32 @@ fun HabitCard(
                         modifier = Modifier
                             .padding(2.dp)
                             .fillMaxWidth(1f)
+                            .clickable(
+                                role = Role.Button,
+                                enabled = validDay,
+                                onClick = {
+                                    action(
+                                        HabitsAction.InsertStatus(
+                                            habit = habitWithAnalytics.habit,
+                                            date = weekDay.date
+                                        )
+                                    )
+                                }
+                            )
                             .then(
                                 if (done) {
                                     val donePrevious =
-                                        habitWithAnalytics.statuses.any { it.date == weekDay.date.minusDays(1) }
+                                        habitWithAnalytics.statuses.any {
+                                            it.date == weekDay.date.minusDays(
+                                                1
+                                            )
+                                        }
                                     val doneAfter =
-                                        habitWithAnalytics.statuses.any { it.date == weekDay.date.plusDays(1) }
+                                        habitWithAnalytics.statuses.any {
+                                            it.date == weekDay.date.plusDays(
+                                                1
+                                            )
+                                        }
 
                                     Modifier.background(
                                         color = MaterialTheme.colorScheme.primary,
@@ -240,7 +262,7 @@ fun HabitCard(
                     ) {
                         Column(
                             modifier = Modifier.padding(6.dp),
-                            horizontalAlignment = Alignment.CenterHorizontally
+                            horizontalAlignment = Alignment.CenterHorizontally,
                         ) {
                             Text(
                                 text = weekDay.date.day.toString(),
