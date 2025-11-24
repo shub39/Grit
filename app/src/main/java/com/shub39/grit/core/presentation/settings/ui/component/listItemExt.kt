@@ -8,7 +8,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.graphics.Shape
 import androidx.compose.ui.unit.dp
 
-private const val connectedCornerRadius = 8
+private const val connectedCornerRadius = 4
 private const val endCornerRadius = 16
 
 @Composable
@@ -38,3 +38,5 @@ fun endItemShape(): Shape = RoundedCornerShape(
     bottomEnd = endCornerRadius.dp,
     bottomStart = endCornerRadius.dp
 )
+
+fun detachedItemShape(): Shape = RoundedCornerShape(endCornerRadius.dp)

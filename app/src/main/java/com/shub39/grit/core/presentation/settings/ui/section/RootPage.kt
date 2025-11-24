@@ -162,7 +162,7 @@ fun RootPage(
 
             item {
                 Column(
-                    verticalArrangement = Arrangement.spacedBy(4.dp)
+                    verticalArrangement = Arrangement.spacedBy(2.dp)
                 ) {
                     ListItem(
                         headlineContent = {
@@ -311,7 +311,7 @@ fun RootPage(
 
             item {
                 Column(
-                    verticalArrangement = Arrangement.spacedBy(4.dp)
+                    verticalArrangement = Arrangement.spacedBy(2.dp)
                 ) {
                     ListItem(
                         modifier = Modifier
