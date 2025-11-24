@@ -52,6 +52,7 @@ import kotlinx.datetime.minus
 import kotlinx.datetime.todayIn
 import kotlin.time.Clock
 import kotlin.time.ExperimentalTime
+
 @OptIn(ExperimentalMaterial3Api::class, ExperimentalTime::class)
 @Composable
 fun HabitCard(
@@ -206,12 +207,32 @@ fun HabitCard(
                         modifier = Modifier
                             .padding(2.dp)
                             .fillMaxWidth(1f)
+                            .clickable(
+                                role = Role.Button,
+                                enabled = validDay,
+                                onClick = {
+                                    action(
+                                        HabitsAction.InsertStatus(
+                                            habit = habitWithAnalytics.habit,
+                                            date = weekDay.date
+                                        )
+                                    )
+                                }
+                            )
                             .then(
                                 if (done) {
                                     val donePrevious =
-                                        habitWithAnalytics.statuses.any { it.date == weekDay.date.minusDays(1) }
+                                        habitWithAnalytics.statuses.any {
+                                            it.date == weekDay.date.minusDays(
+                                                1
+                                            )
+                                        }
                                     val doneAfter =
-                                        habitWithAnalytics.statuses.any { it.date == weekDay.date.plusDays(1) }
+                                        habitWithAnalytics.statuses.any {
+                                            it.date == weekDay.date.plusDays(
+                                                1
+                                            )
+                                        }
 
                                     Modifier.background(
                                         color = MaterialTheme.colorScheme.primary,
@@ -240,14 +261,7 @@ fun HabitCard(
                         contentAlignment = Alignment.Center
                     ) {
                         Column(
-                            modifier = Modifier
-                                .padding(6.dp)
-                                .clickable(role = Role.Button, onClick = {
-                                    action(HabitsAction.InsertStatus(
-                                        habit = habitWithAnalytics.habit,
-                                        date = weekDay.date
-                                    ))
-                                }),
+                            modifier = Modifier.padding(6.dp),
                             horizontalAlignment = Alignment.CenterHorizontally,
                         ) {
                             Text(
