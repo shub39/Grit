@@ -6,6 +6,7 @@ import androidx.compose.animation.animateColorAsState
 import androidx.compose.animation.animateContentSize
 import androidx.compose.foundation.background
 import androidx.compose.foundation.basicMarquee
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -34,6 +35,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Shape
+import androidx.compose.ui.semantics.Role
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import com.kizitonwose.calendar.compose.WeekCalendar
@@ -50,7 +52,6 @@ import kotlinx.datetime.minus
 import kotlinx.datetime.todayIn
 import kotlin.time.Clock
 import kotlin.time.ExperimentalTime
-
 @OptIn(ExperimentalMaterial3Api::class, ExperimentalTime::class)
 @Composable
 fun HabitCard(
@@ -239,8 +240,15 @@ fun HabitCard(
                         contentAlignment = Alignment.Center
                     ) {
                         Column(
-                            modifier = Modifier.padding(6.dp),
-                            horizontalAlignment = Alignment.CenterHorizontally
+                            modifier = Modifier
+                                .padding(6.dp)
+                                .clickable(role = Role.Button, onClick = {
+                                    action(HabitsAction.InsertStatus(
+                                        habit = habitWithAnalytics.habit,
+                                        date = weekDay.date
+                                    ))
+                                }),
+                            horizontalAlignment = Alignment.CenterHorizontally,
                         ) {
                             Text(
                                 text = weekDay.date.day.toString(),
