@@ -356,25 +356,25 @@ private fun CompactTasksView(
     onEditTask: (Task) -> Unit,
     isCompact: Boolean
 ) {
-    AnimatedContent(targetState = state.currentCategory?.id) { categoryId ->
-        val category = state.tasks.keys.firstOrNull { it.id == categoryId }
-        if (category != null) {
-            val lazyListState = rememberLazyListState()
-            var reorderableTasks by remember(state.tasks.values) {
-                mutableStateOf(state.tasks[category] ?: emptyList())
-            }
-            val reorderableListState =
-                rememberReorderableLazyListState(lazyListState) { from, to ->
-                    reorderableTasks = reorderableTasks.toMutableList().apply {
-                        add(to.index, removeAt(from.index))
-                    }
+    Surface(
+        color = MaterialTheme.colorScheme.surfaceContainer,
+        shape = RoundedCornerShape(topStart = 28.dp, topEnd = 28.dp),
+        modifier = Modifier.padding(horizontal = if (isCompact) 0.dp else 16.dp)
+    ) {
+        AnimatedContent(targetState = state.currentCategory?.id) { categoryId ->
+            val category = state.tasks.keys.firstOrNull { it.id == categoryId }
+            if (category != null) {
+                val lazyListState = rememberLazyListState()
+                var reorderableTasks by remember(state.tasks.values) {
+                    mutableStateOf(state.tasks[category] ?: emptyList())
                 }
+                val reorderableListState =
+                    rememberReorderableLazyListState(lazyListState) { from, to ->
+                        reorderableTasks = reorderableTasks.toMutableList().apply {
+                            add(to.index, removeAt(from.index))
+                        }
+                    }
 
-            Surface(
-                color = MaterialTheme.colorScheme.surfaceContainer,
-                shape = RoundedCornerShape(topStart = 28.dp, topEnd = 28.dp),
-                modifier = Modifier.padding(horizontal = if (isCompact) 0.dp else 16.dp)
-            ) {
                 LazyColumn(
                     modifier = Modifier.fillMaxSize(),
                     state = lazyListState,

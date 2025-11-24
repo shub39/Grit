@@ -15,9 +15,11 @@ import com.shub39.grit.core.domain.backup.RestoreResult
 import com.shub39.grit.core.domain.backup.RestoreState
 import com.shub39.grit.core.presentation.settings.BackupState
 import com.shub39.grit.core.presentation.settings.SettingsAction
+import com.shub39.grit.server.GritServerRepository
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.flow.onStart
@@ -30,7 +32,8 @@ class SettingsViewModel(
     private val billingHandler: BillingHandler,
     private val exportRepo: ExportRepo,
     private val restoreRepo: RestoreRepo,
-    private val datastore: GritDatastore
+    private val datastore: GritDatastore,
+    private val server: GritServerRepository
 ) : ViewModel() {
 
     private var observeJob: Job? = null
@@ -174,6 +177,22 @@ class SettingsViewModel(
     private fun observeJob() = viewModelScope.launch {
         observeJob?.cancel()
         observeJob = launch {
+            combine(
+                server.serverPort,
+                server.serverUrl,
+                server.isRunning
+            ) { port, serverUrl, isRunning ->
+                _state.update {
+                    it.copy(
+                        serverState = it.serverState.copy(
+                            serverPort = port,
+                            serverUrl = serverUrl,
+                            isRunning = isRunning
+                        )
+                    )
+                }
+            }.launchIn(this)
+
             datastore.getTaskReorderPref()
                 .onEach { pref ->
                     _state.update {

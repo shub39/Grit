@@ -41,7 +41,6 @@ fun AboutApp() {
 
     Card(
         modifier = Modifier
-            .padding(horizontal = 16.dp)
             .fillMaxWidth(),
         colors = CardDefaults.cardColors(
             containerColor = MaterialTheme.colorScheme.primaryContainer,

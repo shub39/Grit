@@ -15,8 +15,8 @@ plugins {
 }
 
 val appName = "Grit"
-val appVersionCode = 5100
-val appVersionName = "5.1.0"
+val appVersionCode = 5500
+val appVersionName = "5.5.0"
 
 val gitHash = execute("git", "rev-parse", "HEAD").take(7)
 
@@ -123,7 +123,7 @@ aboutLibraries {
 }
 
 dependencies {
-    implementation(project(":shared:core"))
+    implementation(projects.shared.core)
 
     "playImplementation"(libs.purchases)
     "playImplementation"(libs.purchases.ui)
@@ -134,6 +134,7 @@ dependencies {
     implementation(compose.materialIconsExtended)
     implementation(compose.components.resources)
     implementation(compose.components.uiToolingPreview)
+    debugImplementation(compose.uiTooling)
     implementation(libs.navigation.compose)
     implementation(libs.compose.windowsizeclass)
     implementation(libs.androidx.core.splashscreen)
