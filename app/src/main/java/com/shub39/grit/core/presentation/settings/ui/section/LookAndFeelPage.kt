@@ -160,6 +160,7 @@ fun LookAndFeelPage(
                         Row(
                             horizontalArrangement = Arrangement.spacedBy(ButtonGroupDefaults.ConnectedSpaceBetween),
                             modifier = Modifier
+                                .fillParentMaxWidth()
                                 .background(listItemColors().containerColor)
                                 .padding(start = 52.dp, end = 16.dp, bottom = 8.dp)
                         ) {

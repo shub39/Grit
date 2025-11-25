@@ -1,6 +1,4 @@
 import com.android.build.gradle.internal.api.ApkVariantOutputImpl
-import com.mikepenz.aboutlibraries.plugin.DuplicateMode
-import com.mikepenz.aboutlibraries.plugin.DuplicateRule
 
 plugins {
     alias(libs.plugins.android.application)
@@ -8,7 +6,6 @@ plugins {
     alias(libs.plugins.compose.compiler)
     alias(libs.plugins.ksp)
     alias(libs.plugins.kotlin.serialization)
-    alias(libs.plugins.aboutlibraries)
     alias(libs.plugins.room)
     alias(libs.plugins.compose.multiplatform)
     alias(libs.plugins.kotlinx.rpc)
@@ -114,14 +111,6 @@ android {
     }
 }
 
-aboutLibraries {
-    export.excludeFields.add("generated")
-    library {
-        duplicationMode = DuplicateMode.MERGE
-        duplicationRule = DuplicateRule.SIMPLE
-    }
-}
-
 dependencies {
     implementation(projects.shared.core)
 
@@ -146,9 +135,7 @@ dependencies {
     implementation(libs.materialkolor)
     implementation(libs.colorpicker.compose)
     implementation(libs.androidx.datastore.preferences.core)
-    implementation(libs.aboutlibraries)
     implementation(libs.composeicons.fontawesome)
-    implementation(libs.aboutlibraries.compose.m3)
     implementation(libs.androidx.biometric)
     implementation(libs.kotlinx.datetime)
 

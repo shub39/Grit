@@ -15,7 +15,7 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import com.shub39.grit.core.domain.AppTheme
-import com.shub39.grit.core.presentation.settings.ui.section.Backup
+import com.shub39.grit.core.presentation.settings.ui.section.BackupPage
 import com.shub39.grit.core.presentation.settings.ui.section.LookAndFeelPage
 import com.shub39.grit.core.presentation.settings.ui.section.RootPage
 import com.shub39.grit.core.presentation.theme.GritTheme
@@ -84,7 +84,7 @@ fun SettingsGraph(
         }
 
         composable<SettingsRoutes.Backup> {
-            Backup(
+            BackupPage(
                 state = state,
                 onAction = onAction,
                 onNavigateBack = { navController.navigateUp() }
