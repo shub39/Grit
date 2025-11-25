@@ -130,4 +130,8 @@
     <string name="stop">Stop</string>
     <string name="server">Server</string>
     <string name="server_desc">Connect to desktop app</string>
+    <string name="start_server">Start server</string>
+    <string name="grit_desktop">Grit Desktop</string>
+    <string name="grit_desktop_desc">Access your tasks and habits on your PC directly form your phone, No cloud involved</string>
+    <string name="install">Install</string>
 </resources>

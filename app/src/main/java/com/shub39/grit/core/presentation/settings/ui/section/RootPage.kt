@@ -82,14 +82,6 @@ fun RootPage(
 ) {
     val context = LocalContext.current
 
-//    val launcher = rememberLauncherForActivityResult(
-//        contract = ActivityResultContracts.RequestPermission()
-//    ) { granted ->
-//        if (granted) {
-//            GritServerService.startService(context, state.serverState.serverPort)
-//        } else Toast.makeText(context, "Notification permission denied", Toast.LENGTH_SHORT).show()
-//    }
-
     LaunchedEffect(Unit) {
         onAction(SettingsAction.OnCheckBiometric(context))
     }
@@ -368,26 +360,6 @@ fun RootPage(
                                 imageVector = Icons.AutoMirrored.Rounded.ArrowForwardIos,
                                 contentDescription = "Navigate"
                             )
-
-//                        Switch(
-//                            checked = state.serverState.isRunning,
-//                            onCheckedChange = {
-//                                if (! state.serverState.isRunning) {
-//                                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU &&
-//                                        ContextCompat.checkSelfPermission(
-//                                            context,
-//                                            Manifest.permission.POST_NOTIFICATIONS
-//                                        ) != PackageManager.PERMISSION_GRANTED
-//                                    ) {
-//                                        launcher.launch(Manifest.permission.POST_NOTIFICATIONS)
-//                                    } else {
-//                                        GritServerService.startService(context , state.serverState.serverPort)
-//                                    }
-//                                } else {
-//                                    GritServerService.stopService(context)
-//                                }
-//                            }
-//                        )
                         },
                     )
 
