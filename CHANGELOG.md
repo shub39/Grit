@@ -1,7 +1,7 @@
 # Changelog
 
 ## 5.5.0
-- Made ui adaptive to larger screen sizes
+- Made UI adaptive to larger screen sizes
 - Added grit server to manage tasks and habits on desktop in sync with app
 - Made dates clickable on Habits list (#173)
 
