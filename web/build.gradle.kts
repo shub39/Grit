@@ -22,7 +22,7 @@ kotlin {
 
     sourceSets {
         commonMain.dependencies {
-            implementation(project(":shared:core"))
+            implementation(projects.shared.core)
 
             implementation(libs.material3)
             implementation(compose.runtime)

@@ -21,7 +21,16 @@ data class SettingsState(
     val biometric: Boolean? = null,
     val biometricAvailable: Boolean = false,
     val showPaywall: Boolean = false,
-    val isUserSubscribed: Boolean = false
+    val isUserSubscribed: Boolean = false,
+    val serverState: ServerState = ServerState()
+)
+
+@Stable
+@Immutable
+data class ServerState(
+    val isRunning: Boolean = false,
+    val serverPort: Int = 8080,
+    val serverUrl: String? = null
 )
 
 @Stable

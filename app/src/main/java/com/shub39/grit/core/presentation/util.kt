@@ -4,10 +4,13 @@ import android.Manifest
 import android.app.NotificationChannel
 import android.app.NotificationManager
 import android.app.PendingIntent
+import android.content.ClipData
 import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.util.Log
+import androidx.compose.ui.platform.ClipEntry
+import androidx.compose.ui.platform.Clipboard
 import androidx.core.app.ActivityCompat
 import androidx.core.app.NotificationCompat
 import androidx.core.app.NotificationManagerCompat
@@ -18,6 +21,14 @@ import com.shub39.grit.core.domain.IntentActions
 import com.shub39.grit.core.habits.domain.Habit
 import com.shub39.grit.core.tasks.domain.Task
 import kotlin.random.Random
+
+suspend fun Clipboard.copyToClipboard(text: String) {
+    setClipEntry(
+        ClipEntry(
+            ClipData.newPlainText("Copied Text", text)
+        )
+    )
+}
 
 fun createNotificationChannel(context: Context) {
     val name = getString(context, R.string.channel_name)

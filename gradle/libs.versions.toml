@@ -22,7 +22,6 @@ reorderable = "3.0.0"
 room = "2.8.4"
 navigation = "2.9.1"
 materialkolor = "4.0.4"
-aboutlibraries = "13.1.0"
 composeicons = "1.1.1"
 compose = "1.9.5"
 biometric = "1.4.0-alpha02"
@@ -77,8 +76,6 @@ purchases-ui = { module = "com.revenuecat.purchases:purchases-ui", version.ref =
 reorderable = { module = "sh.calvin.reorderable:reorderable", version.ref = "reorderable" }
 materialkolor = { module = "com.materialkolor:material-kolor", version.ref = "materialkolor" }
 colorpicker-compose = { module = "com.github.skydoves:colorpicker-compose", version.ref = "colorpicker" }
-aboutlibraries = { group = "com.mikepenz", name = "aboutlibraries-compose", version.ref = "aboutlibraries" }
-aboutlibraries-compose-m3 = { module = "com.mikepenz:aboutlibraries-compose-m3", version.ref = "aboutlibraries" }
 composeicons-fontawesome = { module = "br.com.devsrsouza.compose.icons:font-awesome", version.ref = "composeicons" }
 calendar = { module = "com.kizitonwose.calendar:compose-multiplatform", version.ref = "calendar" }
 compose-charts = { module = "io.github.ehsannarmani:compose-charts", version.ref = "compose-charts" }
@@ -93,7 +90,6 @@ android-application = { id = "com.android.application", version.ref = "agp" }
 android-library = { id = "com.android.library", version.ref = "agp" }
 jetbrains-kotlin-android = { id = "org.jetbrains.kotlin.android", version.ref = "kotlin" }
 compose-compiler = { id = "org.jetbrains.kotlin.plugin.compose", version.ref = "kotlin" }
-aboutlibraries = { id = "com.mikepenz.aboutlibraries.plugin.android", version.ref = "aboutlibraries" }
 kotlin-serialization = { id = "org.jetbrains.kotlin.plugin.serialization", version.ref = "kotlin" }
 compose-multiplatform = { id = "org.jetbrains.compose", version.ref = "compose-multiplatform" }
 kotlin-multiplatform = { id = "org.jetbrains.kotlin.multiplatform", version.ref = "kotlin" }

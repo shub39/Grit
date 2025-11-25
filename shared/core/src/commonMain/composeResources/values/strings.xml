@@ -77,7 +77,6 @@
     <string name="use_24Hr">Use 24 hr clock</string>
     <string name="use_24Hr_desc">Use 24 hr clock to set time</string>
     <string name="staring_day">Start weeks from Sundays</string>
-    <string name="about_libraries">About Libraries</string>
     <string name="system">System</string>
     <string name="dark">Dark</string>
     <string name="light">Light</string>
@@ -129,4 +128,10 @@
     <string name="local_server_notification_text">Server URL: %s</string>
     <string name="local_server_starting">starting server</string>
     <string name="stop">Stop</string>
+    <string name="server">Server</string>
+    <string name="server_desc">Connect to desktop app</string>
+    <string name="start_server">Start server</string>
+    <string name="grit_desktop">Grit Desktop</string>
+    <string name="grit_desktop_desc">Access your tasks and habits on your PC directly form your phone, No cloud involved</string>
+    <string name="install">Install</string>
 </resources>

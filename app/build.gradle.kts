@@ -1,6 +1,4 @@
 import com.android.build.gradle.internal.api.ApkVariantOutputImpl
-import com.mikepenz.aboutlibraries.plugin.DuplicateMode
-import com.mikepenz.aboutlibraries.plugin.DuplicateRule
 
 plugins {
     alias(libs.plugins.android.application)
@@ -8,15 +6,14 @@ plugins {
     alias(libs.plugins.compose.compiler)
     alias(libs.plugins.ksp)
     alias(libs.plugins.kotlin.serialization)
-    alias(libs.plugins.aboutlibraries)
     alias(libs.plugins.room)
     alias(libs.plugins.compose.multiplatform)
     alias(libs.plugins.kotlinx.rpc)
 }
 
 val appName = "Grit"
-val appVersionCode = 5100
-val appVersionName = "5.1.0"
+val appVersionCode = 5500
+val appVersionName = "5.5.0"
 
 val gitHash = execute("git", "rev-parse", "HEAD").take(7)
 
@@ -114,16 +111,8 @@ android {
     }
 }
 
-aboutLibraries {
-    export.excludeFields.add("generated")
-    library {
-        duplicationMode = DuplicateMode.MERGE
-        duplicationRule = DuplicateRule.SIMPLE
-    }
-}
-
 dependencies {
-    implementation(project(":shared:core"))
+    implementation(projects.shared.core)
 
     "playImplementation"(libs.purchases)
     "playImplementation"(libs.purchases.ui)
@@ -134,6 +123,7 @@ dependencies {
     implementation(compose.materialIconsExtended)
     implementation(compose.components.resources)
     implementation(compose.components.uiToolingPreview)
+    debugImplementation(compose.uiTooling)
     implementation(libs.navigation.compose)
     implementation(libs.compose.windowsizeclass)
     implementation(libs.androidx.core.splashscreen)
@@ -145,9 +135,7 @@ dependencies {
     implementation(libs.materialkolor)
     implementation(libs.colorpicker.compose)
     implementation(libs.androidx.datastore.preferences.core)
-    implementation(libs.aboutlibraries)
     implementation(libs.composeicons.fontawesome)
-    implementation(libs.aboutlibraries.compose.m3)
     implementation(libs.androidx.biometric)
     implementation(libs.kotlinx.datetime)
 
