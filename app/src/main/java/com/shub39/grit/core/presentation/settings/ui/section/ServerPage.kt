@@ -55,9 +55,9 @@ import com.shub39.grit.core.presentation.theme.GritTheme
 import com.shub39.grit.core.presentation.theme.Theme
 import com.shub39.grit.server.GritServerService
 import grit.shared.core.generated.resources.Res
+import grit.shared.core.generated.resources.download
 import grit.shared.core.generated.resources.grit_desktop
 import grit.shared.core.generated.resources.grit_desktop_desc
-import grit.shared.core.generated.resources.install
 import grit.shared.core.generated.resources.server
 import grit.shared.core.generated.resources.server_running
 import grit.shared.core.generated.resources.start_server
@@ -141,7 +141,7 @@ fun ServerPage(
                         }
                     ) {
                         Text(
-                            text = stringResource(Res.string.install)
+                            text = stringResource(Res.string.download)
                         )
                     }
                 }
