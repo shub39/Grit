@@ -147,7 +147,7 @@ private fun CategoryEditDialog(
                             colors = ListItemDefaults.colors(
                                 containerColor = MaterialTheme.colorScheme.surfaceContainerHigh
                             ),
-                            headlineContent = { Text(text = category.name) },
+                            headlineContent = { Text(text = category.name, maxLines = 1) },
                             supportingContent = {
                                 Text(
                                     text = "${state.tasks[category]?.size ?: "0"} ${

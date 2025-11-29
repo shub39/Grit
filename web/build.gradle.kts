@@ -59,8 +59,17 @@ compose.desktop {
         mainClass = "MainKt"
 
         nativeDistributions {
-            targetFormats(TargetFormat.Exe, TargetFormat.Deb, TargetFormat.AppImage)
+            targetFormats(TargetFormat.Exe, TargetFormat.AppImage)
             packageName = "com.shub39.grit"
+            packageVersion = "1.0.0"
+            licenseFile.set(project.file("../LICENSE"))
+        }
+
+        buildTypes.release.proguard {
+            isEnabled = false
+            obfuscate = false
+            optimize = true
+            configurationFiles.setFrom("src/commonMain/proguard-rules.pro")
         }
     }
 }
