@@ -15,7 +15,7 @@ actual fun HabitUpsertSheet(
     onUpsertHabit: (Habit) -> Unit,
     is24Hr: Boolean,
     modifier: Modifier,
-    edit: Boolean
+    save: Boolean
 ) {
     var newHabit by remember { mutableStateOf(habit) }
 
@@ -25,7 +25,7 @@ actual fun HabitUpsertSheet(
         onDismissRequest = onDismissRequest,
         onUpsertHabit = onUpsertHabit,
         is24Hr = is24Hr,
-        edit = edit,
+        save = save,
         notificationPermission = true,
         onRequestPermission = {},
         modifier = modifier

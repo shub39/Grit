@@ -11,7 +11,6 @@
     <string name="add_task">Add Task</string>
     <string name="add_urgent_task">Add Urgent</string>
     <string name="add_habit">Add New Habit</string>
-    <string name="update">Edit</string>
     <string name="update_description">Edit Description</string>
     <string name="delete">Delete</string>
     <string name="task_deleted">Task Deleted</string>
@@ -34,6 +33,7 @@
     <string name="habit_exists">Habit Already Exists</string>
     <string name="days_ago_format">%1$d Days ago…</string>
     <string name="too_long">Too Long</string>
+    <string name="save">Save</string>
     <string name="edit_task">Edit Task</string>
     <string name="tasks_guide_1">Tap to mark as done</string>
     <string name="tasks_guide_2">Tap and Hold to edit</string>

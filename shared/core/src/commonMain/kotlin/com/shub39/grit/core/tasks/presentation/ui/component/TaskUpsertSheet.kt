@@ -55,6 +55,7 @@ import grit.shared.core.generated.resources.add_task
 import grit.shared.core.generated.resources.done
 import grit.shared.core.generated.resources.edit_task
 import grit.shared.core.generated.resources.invalid_date_time
+import grit.shared.core.generated.resources.save
 import kotlinx.datetime.LocalDateTime
 import kotlinx.datetime.LocalTime
 import kotlinx.datetime.TimeZone
@@ -72,7 +73,7 @@ expect fun TaskUpsertSheet(
     onUpsert: (Task) -> Unit,
     is24Hr: Boolean,
     modifier: Modifier = Modifier,
-    edit: Boolean = false
+    save: Boolean = false
 )
 
 @OptIn(
@@ -87,7 +88,7 @@ fun TaskUpsertSheetContent(
     onDismissRequest: () -> Unit,
     onUpsert: (Task) -> Unit,
     is24Hr: Boolean,
-    edit: Boolean = false,
+    save: Boolean = false,
     notificationPermission: Boolean,
     showDateTimePicker: Boolean,
     updateDateTimePickerVisibility: (Boolean) -> Unit,
@@ -116,14 +117,14 @@ fun TaskUpsertSheetContent(
         ) {
             item {
                 Icon(
-                    imageVector = if (edit) Icons.Rounded.Edit else Icons.Rounded.Add,
+                    imageVector = if (save) Icons.Rounded.Edit else Icons.Rounded.Add,
                     contentDescription = "Upsert",
                 )
             }
 
             item {
                 Text(
-                    text = stringResource(if (edit) Res.string.edit_task else Res.string.add_task),
+                    text = stringResource(if (save) Res.string.edit_task else Res.string.add_task),
                     style = MaterialTheme.typography.headlineSmall,
                     textAlign = TextAlign.Center,
                     modifier = Modifier.padding(horizontal = 16.dp)
@@ -233,7 +234,7 @@ fun TaskUpsertSheetContent(
                             && newTask != task
                             && isValidDateTime
                 ) {
-                    Text(stringResource(if (edit) Res.string.edit_task else Res.string.add_task))
+                    Text(stringResource(if (save) Res.string.save else Res.string.add_task))
                 }
             }
         }

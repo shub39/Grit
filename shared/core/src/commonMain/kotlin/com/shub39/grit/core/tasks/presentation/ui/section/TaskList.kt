@@ -218,7 +218,7 @@ fun TaskList(
             task = editTask!!,
             categories = state.tasks.keys.toList(),
             onDismissRequest = { editTask = null },
-            edit = true,
+            save = true,
             is24Hr = state.is24Hour,
             onUpsert = { onAction(TaskAction.UpsertTask(it)) }
         )

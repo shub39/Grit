@@ -25,7 +25,7 @@ actual fun TaskUpsertSheet(
     onUpsert: (Task) -> Unit,
     is24Hr: Boolean,
     modifier: Modifier,
-    edit: Boolean
+    save: Boolean
 ) {
     val context = LocalContext.current
 
@@ -57,7 +57,7 @@ actual fun TaskUpsertSheet(
         onDismissRequest = onDismissRequest,
         onUpsert = onUpsert,
         is24Hr = is24Hr,
-        edit = edit,
+        save = save,
         notificationPermission = notificationPermission,
         showDateTimePicker = showDateTimePicker,
         updateDateTimePickerVisibility = { showDateTimePicker = it },
