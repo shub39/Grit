@@ -138,6 +138,7 @@ dependencies {
     implementation(libs.composeicons.fontawesome)
     implementation(libs.androidx.biometric)
     implementation(libs.kotlinx.datetime)
+    implementation(libs.kotlinx.serialization.json) // remove if added ktor
 
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
@@ -147,14 +148,14 @@ dependencies {
     testImplementation(libs.androidx.room.testing)
     androidTestImplementation(libs.truth)
 
-    implementation(libs.ktor.server.core)
-    implementation(libs.ktor.server.cio)
-    implementation(libs.ktor.serialization.kotlinx.json)
-    implementation(libs.ktor.server.content.negotiation)
-
-    implementation(libs.kotlinx.rpc.krpc.server)
-    implementation(libs.kotlinx.rpc.krpc.serialization.json)
-    implementation(libs.kotlinx.rpc.krpc.ktor.server)
+//    implementation(libs.ktor.server.core)
+//    implementation(libs.ktor.server.cio)
+//    implementation(libs.ktor.serialization.kotlinx.json)
+//    implementation(libs.ktor.server.content.negotiation)
+//
+//    implementation(libs.kotlinx.rpc.krpc.server)
+//    implementation(libs.kotlinx.rpc.krpc.serialization.json)
+//    implementation(libs.kotlinx.rpc.krpc.ktor.server)
 }
 
 room {

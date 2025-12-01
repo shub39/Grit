@@ -16,7 +16,6 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.KeyboardArrowRight
 import androidx.compose.material.icons.automirrored.rounded.ArrowForwardIos
 import androidx.compose.material.icons.rounded.Add
-import androidx.compose.material.icons.rounded.DesktopWindows
 import androidx.compose.material.icons.rounded.Download
 import androidx.compose.material.icons.rounded.Palette
 import androidx.compose.material3.Card
@@ -60,8 +59,6 @@ import grit.shared.core.generated.resources.pause_notifications
 import grit.shared.core.generated.resources.pause_notifications_desc
 import grit.shared.core.generated.resources.reorder_tasks
 import grit.shared.core.generated.resources.reorder_tasks_desc
-import grit.shared.core.generated.resources.server
-import grit.shared.core.generated.resources.server_desc
 import grit.shared.core.generated.resources.settings
 import grit.shared.core.generated.resources.show_habits
 import grit.shared.core.generated.resources.show_habits_desc
@@ -78,7 +75,7 @@ fun RootPage(
     onAction: (SettingsAction) -> Unit,
     onNavigateToLookAndFeel: () -> Unit,
     onNavigateToBackup: () -> Unit,
-    onNavigateToServer: () -> Unit
+//    onNavigateToServer: () -> Unit
 ) {
     val context = LocalContext.current
 
@@ -334,34 +331,34 @@ fun RootPage(
                         colors = listItemColors()
                     )
 
-                    ListItem(
-                        modifier = Modifier
-                            .clip(middleItemShape())
-                            .clickable { onNavigateToServer() },
-                        colors = listItemColors(),
-                        headlineContent = {
-                            Text(
-                                text = stringResource(Res.string.server)
-                            )
-                        },
-                        leadingContent = {
-                            Icon(
-                                imageVector = Icons.Rounded.DesktopWindows,
-                                contentDescription = null
-                            )
-                        },
-                        supportingContent = {
-                            Text(
-                                text = stringResource(Res.string.server_desc)
-                            )
-                        },
-                        trailingContent = {
-                            Icon(
-                                imageVector = Icons.AutoMirrored.Rounded.ArrowForwardIos,
-                                contentDescription = "Navigate"
-                            )
-                        },
-                    )
+//                    ListItem(
+//                        modifier = Modifier
+//                            .clip(middleItemShape())
+//                            .clickable { onNavigateToServer() },
+//                        colors = listItemColors(),
+//                        headlineContent = {
+//                            Text(
+//                                text = stringResource(Res.string.server)
+//                            )
+//                        },
+//                        leadingContent = {
+//                            Icon(
+//                                imageVector = Icons.Rounded.DesktopWindows,
+//                                contentDescription = null
+//                            )
+//                        },
+//                        supportingContent = {
+//                            Text(
+//                                text = stringResource(Res.string.server_desc)
+//                            )
+//                        },
+//                        trailingContent = {
+//                            Icon(
+//                                imageVector = Icons.AutoMirrored.Rounded.ArrowForwardIos,
+//                                contentDescription = "Navigate"
+//                            )
+//                        },
+//                    )
 
                     ListItem(
                         modifier = Modifier

@@ -31,6 +31,7 @@ compose-multiplatform = "1.9.3"
 compose-hot-reload = "1.0.0"
 kotlinx-coroutines = "1.10.2"
 kotlinx-rpc-krpc-client = "0.10.1"
+kotlinx-serialization-json = "1.9.0"
 
 [libraries]
 # Android and compose stuff
@@ -81,6 +82,7 @@ calendar = { module = "com.kizitonwose.calendar:compose-multiplatform", version.
 compose-charts = { module = "io.github.ehsannarmani:compose-charts", version.ref = "compose-charts" }
 truth = { module = "com.google.truth:truth", version.ref = "truth" }
 kotlinx-coroutines-swing = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-swing", version.ref = "kotlinx-coroutines" }
+kotlinx-serialization-json = { module = "org.jetbrains.kotlinx:kotlinx-serialization-json", version.ref = "kotlinx-serialization-json" }
 
 [plugins]
 kotlinx-rpc = { id = "org.jetbrains.kotlinx.rpc.plugin", version.ref = "kotlinx-rpc-krpc-client" }
