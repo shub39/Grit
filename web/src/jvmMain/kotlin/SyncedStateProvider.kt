@@ -210,6 +210,10 @@ class SyncedStateProvider() : StateProvider, ViewModel() {
 
     override fun onTaskAction(action: TaskAction) {
         when (action) {
+            is TaskAction.DeleteTask -> viewModelScope.launch {
+                rpcService?.deleteTask(action.task)
+            }
+
             is TaskAction.AddCategory -> viewModelScope.launch {
                 rpcService?.upsertCategory(action.category)
             }

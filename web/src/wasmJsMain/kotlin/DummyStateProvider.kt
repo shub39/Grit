@@ -165,6 +165,15 @@ class DummyStateProvider : StateProvider {
 
     override fun onTaskAction(action: TaskAction) {
         when (action) {
+            is TaskAction.DeleteTask -> {
+                _taskState.update { state ->
+                    val updatedTasks = state.tasks.mapValues { (_, taskList) ->
+                        taskList.filter { it.id == action.task.id }
+                    }.toMutableMap()
+                    state.copy(tasks = updatedTasks)
+                }
+            }
+
             is TaskAction.AddCategory -> {
                 _taskState.update { state ->
                     val existingCategory = state.tasks.keys.find { it.id == action.category.id }

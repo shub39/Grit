@@ -220,7 +220,11 @@ fun TaskList(
             onDismissRequest = { editTask = null },
             save = true,
             is24Hr = state.is24Hour,
-            onUpsert = { onAction(TaskAction.UpsertTask(it)) }
+            onUpsert = { onAction(TaskAction.UpsertTask(it)) },
+            onDelete = {
+                editTask?.let { onAction(TaskAction.DeleteTask(it)) }
+                editTask = null
+            }
         )
     }
 
@@ -237,6 +241,7 @@ fun TaskList(
             categories = state.tasks.keys.toList(),
             onDismissRequest = { showTaskAddSheet = false },
             onUpsert = { onAction(TaskAction.UpsertTask(it)) },
+            onDelete = {}
         )
     }
 }

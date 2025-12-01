@@ -23,6 +23,7 @@ actual fun TaskUpsertSheet(
     categories: List<Category>,
     onDismissRequest: () -> Unit,
     onUpsert: (Task) -> Unit,
+    onDelete: () -> Unit,
     is24Hr: Boolean,
     modifier: Modifier,
     save: Boolean
@@ -56,6 +57,7 @@ actual fun TaskUpsertSheet(
         categories = categories,
         onDismissRequest = onDismissRequest,
         onUpsert = onUpsert,
+        onDelete = onDelete,
         is24Hr = is24Hr,
         save = save,
         notificationPermission = notificationPermission,
