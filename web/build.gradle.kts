@@ -60,9 +60,16 @@ compose.desktop {
 
         nativeDistributions {
             targetFormats(TargetFormat.Exe, TargetFormat.AppImage)
-            packageName = "com.shub39.grit"
             packageVersion = "1.0.0"
             licenseFile.set(project.file("../LICENSE"))
+
+            linux {
+                packageName = "com.shub39.grit"
+                iconFile.set(project.file("../fastlane/metadata/android/en-US/images/icon200x200.png"))
+            }
+            windows {
+                iconFile.set(project.file("../fastlane/metadata/android/en-US/images/icon200x200.ico"))
+            }
         }
 
         buildTypes.release.proguard {
