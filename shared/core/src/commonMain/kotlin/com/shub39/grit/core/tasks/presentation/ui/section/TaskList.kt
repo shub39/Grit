@@ -434,7 +434,7 @@ private fun CompactTasksView(
                     if (state.reorderTasks) {
                         itemsIndexed(
                             items = (state.tasks[category] ?: emptyList()).filter { it.status },
-                            key = { index, it -> it.id * index }
+                            key = { _, it -> "completed_task_${it.id}" }
                         ) { _, task ->
                             TaskCard(
                                 task = task,
@@ -628,7 +628,7 @@ private fun ExpandedTasksView(
                             contentPadding = PaddingValues(vertical = 16.dp)
                         ) {
                             items(
-                                items = tasks.run {
+                                items = reorderableTasks.run {
                                     if (state.reorderTasks) {
                                         filter { !it.status }
                                     } else this
