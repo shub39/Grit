@@ -7,6 +7,7 @@
 - Optimised task reordering logic (#182)
 - Added delete button on task edit sheet (#181)
 - Replaced "Edit" with "Save" on task edit sheet (#180)
+- Removed about libraries (#168)
 
 ## 5.1.0
 - Added new all tasks widget
