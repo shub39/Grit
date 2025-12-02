@@ -12,13 +12,9 @@ import com.shub39.grit.core.domain.backup.ExportRepo
 import com.shub39.grit.core.domain.backup.RestoreRepo
 import com.shub39.grit.core.habits.domain.HabitRepo
 import com.shub39.grit.core.tasks.domain.TaskRepo
-import com.shub39.grit.core.utils.RpcService
 import com.shub39.grit.habits.data.database.HabitDatabase
 import com.shub39.grit.habits.data.database.HabitDbFactory
 import com.shub39.grit.habits.data.repository.HabitRepository
-import com.shub39.grit.server.GritServerRepository
-import com.shub39.grit.server.GritServerRepositoryImpl
-import com.shub39.grit.server.RpcServiceImpl
 import com.shub39.grit.tasks.data.database.TaskDatabase
 import com.shub39.grit.tasks.data.database.TaskDbFactory
 import com.shub39.grit.tasks.data.repository.TasksRepository
@@ -78,8 +74,8 @@ val appModule = module {
     singleOf(::BillingHandler)
 
     // server
-    singleOf(::RpcServiceImpl).bind<RpcService>()
-    singleOf(::GritServerRepositoryImpl).bind<GritServerRepository>()
+//    singleOf(::RpcServiceImpl).bind<RpcService>()
+//    singleOf(::GritServerRepositoryImpl).bind<GritServerRepository>()
 
     // view models
     singleOf(::StateLayer)

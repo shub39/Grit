@@ -18,7 +18,6 @@ import com.shub39.grit.core.domain.AppTheme
 import com.shub39.grit.core.presentation.settings.ui.section.BackupPage
 import com.shub39.grit.core.presentation.settings.ui.section.LookAndFeelPage
 import com.shub39.grit.core.presentation.settings.ui.section.RootPage
-import com.shub39.grit.core.presentation.settings.ui.section.ServerPage
 import com.shub39.grit.core.presentation.theme.GritTheme
 import com.shub39.grit.core.presentation.theme.Theme
 import com.shub39.grit.core.shared_ui.PageFill
@@ -35,8 +34,8 @@ private sealed interface SettingsRoutes {
     @Serializable
     data object Backup: SettingsRoutes
 
-    @Serializable
-    data object Server: SettingsRoutes
+//    @Serializable
+//    data object Server: SettingsRoutes
 }
 
 @Composable
@@ -72,7 +71,7 @@ fun SettingsGraph(
                 onAction = onAction,
                 onNavigateToLookAndFeel = { navController.navigate(SettingsRoutes.LookAndFeel) },
                 onNavigateToBackup = { navController.navigate(SettingsRoutes.Backup) },
-                onNavigateToServer = { navController.navigate(SettingsRoutes.Server) }
+//                onNavigateToServer = { navController.navigate(SettingsRoutes.Server) }
             )
         }
 
@@ -92,12 +91,12 @@ fun SettingsGraph(
             )
         }
 
-        composable<SettingsRoutes.Server> {
-            ServerPage(
-                state = state,
-                onNavigateBack = { navController.navigateUp() }
-            )
-        }
+//        composable<SettingsRoutes.Server> {
+//            ServerPage(
+//                state = state,
+//                onNavigateBack = { navController.navigateUp() }
+//            )
+//        }
     }
 }
 

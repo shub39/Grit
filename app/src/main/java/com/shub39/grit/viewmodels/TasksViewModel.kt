@@ -102,6 +102,8 @@ class TasksViewModel(
                         )
                     }
                 }
+
+                is TaskAction.DeleteTask -> repo.deleteTask(action.task)
             }
         }
     }

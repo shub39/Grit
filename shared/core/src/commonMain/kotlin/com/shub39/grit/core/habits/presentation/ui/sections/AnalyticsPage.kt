@@ -290,7 +290,7 @@ fun AnalyticsPage(
             onDismissRequest = { editDialog = false },
             onUpsertHabit = { onAction(HabitsAction.UpdateHabit(it)) },
             is24Hr = state.is24Hr,
-            edit = true
+            save = true
         )
     }
 }

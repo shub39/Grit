@@ -48,10 +48,10 @@ import grit.shared.core.generated.resources.add_reminder
 import grit.shared.core.generated.resources.description
 import grit.shared.core.generated.resources.done
 import grit.shared.core.generated.resources.edit_habit
+import grit.shared.core.generated.resources.save
 import grit.shared.core.generated.resources.select_time
 import grit.shared.core.generated.resources.title
 import grit.shared.core.generated.resources.too_long
-import grit.shared.core.generated.resources.update
 import grit.shared.core.generated.resources.update_description
 import grit.shared.core.generated.resources.update_title
 import kotlinx.datetime.DayOfWeek
@@ -66,7 +66,7 @@ expect fun HabitUpsertSheet(
     onUpsertHabit: (Habit) -> Unit,
     is24Hr: Boolean,
     modifier: Modifier = Modifier,
-    edit: Boolean = false
+    save: Boolean = false
 )
 
 @OptIn(ExperimentalMaterial3ExpressiveApi::class, ExperimentalMaterial3Api::class)
@@ -77,7 +77,7 @@ fun HabitUpsertSheetContent(
     onDismissRequest: () -> Unit,
     onUpsertHabit: (Habit) -> Unit,
     is24Hr: Boolean,
-    edit: Boolean = false,
+    save: Boolean = false,
     notificationPermission: Boolean,
     onRequestPermission: () -> Unit,
     modifier: Modifier = Modifier,
@@ -102,7 +102,7 @@ fun HabitUpsertSheetContent(
 
             item {
                 Text(
-                    text = stringResource(if (edit) Res.string.edit_habit else Res.string.add_habit),
+                    text = stringResource(if (save) Res.string.edit_habit else Res.string.add_habit),
                     style = MaterialTheme.typography.headlineSmall,
                     textAlign = TextAlign.Center
                 )
@@ -121,7 +121,7 @@ fun HabitUpsertSheetContent(
                     modifier = Modifier.fillMaxWidth(),
                     label = {
                         if (newHabit.title.length <= 20) {
-                            Text(text = stringResource(if (edit) Res.string.update_title else Res.string.title))
+                            Text(text = stringResource(if (save) Res.string.update_title else Res.string.title))
                         } else {
                             Text(text = stringResource(Res.string.too_long))
                         }
@@ -143,7 +143,7 @@ fun HabitUpsertSheetContent(
                     onValueChange = { updateHabit(newHabit.copy(description = it)) },
                     label = {
                         if (newHabit.description.length <= 50) {
-                            Text(text = stringResource(if (edit) Res.string.update_description else Res.string.description))
+                            Text(text = stringResource(if (save) Res.string.update_description else Res.string.description))
                         } else {
                             Text(text = stringResource(Res.string.too_long))
                         }
@@ -260,7 +260,7 @@ fun HabitUpsertSheetContent(
                             newHabit.title.length <= 20 &&
                             newHabit.title.isNotBlank(),
                 ) {
-                    Text(text = stringResource(if (edit) Res.string.update else Res.string.add_habit))
+                    Text(text = stringResource(if (save) Res.string.save else Res.string.add_habit))
                 }
             }
         }

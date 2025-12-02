@@ -23,9 +23,10 @@ actual fun TaskUpsertSheet(
     categories: List<Category>,
     onDismissRequest: () -> Unit,
     onUpsert: (Task) -> Unit,
+    onDelete: () -> Unit,
     is24Hr: Boolean,
     modifier: Modifier,
-    edit: Boolean
+    save: Boolean
 ) {
     val context = LocalContext.current
 
@@ -56,8 +57,9 @@ actual fun TaskUpsertSheet(
         categories = categories,
         onDismissRequest = onDismissRequest,
         onUpsert = onUpsert,
+        onDelete = onDelete,
         is24Hr = is24Hr,
-        edit = edit,
+        save = save,
         notificationPermission = notificationPermission,
         showDateTimePicker = showDateTimePicker,
         updateDateTimePickerVisibility = { showDateTimePicker = it },

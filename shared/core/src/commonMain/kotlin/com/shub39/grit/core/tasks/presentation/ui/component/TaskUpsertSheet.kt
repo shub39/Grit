@@ -24,6 +24,7 @@ import androidx.compose.material3.ExperimentalMaterial3ExpressiveApi
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Switch
 import androidx.compose.material3.Text
@@ -52,9 +53,11 @@ import com.shub39.grit.core.utils.toFormattedString
 import grit.shared.core.generated.resources.Res
 import grit.shared.core.generated.resources.add_reminder
 import grit.shared.core.generated.resources.add_task
+import grit.shared.core.generated.resources.delete
 import grit.shared.core.generated.resources.done
 import grit.shared.core.generated.resources.edit_task
 import grit.shared.core.generated.resources.invalid_date_time
+import grit.shared.core.generated.resources.save
 import kotlinx.datetime.LocalDateTime
 import kotlinx.datetime.LocalTime
 import kotlinx.datetime.TimeZone
@@ -70,9 +73,10 @@ expect fun TaskUpsertSheet(
     categories: List<Category>,
     onDismissRequest: () -> Unit,
     onUpsert: (Task) -> Unit,
+    onDelete: () -> Unit,
     is24Hr: Boolean,
     modifier: Modifier = Modifier,
-    edit: Boolean = false
+    save: Boolean = false
 )
 
 @OptIn(
@@ -86,8 +90,9 @@ fun TaskUpsertSheetContent(
     categories: List<Category>,
     onDismissRequest: () -> Unit,
     onUpsert: (Task) -> Unit,
+    onDelete: () -> Unit,
     is24Hr: Boolean,
-    edit: Boolean = false,
+    save: Boolean = false,
     notificationPermission: Boolean,
     showDateTimePicker: Boolean,
     updateDateTimePickerVisibility: (Boolean) -> Unit,
@@ -116,14 +121,14 @@ fun TaskUpsertSheetContent(
         ) {
             item {
                 Icon(
-                    imageVector = if (edit) Icons.Rounded.Edit else Icons.Rounded.Add,
+                    imageVector = if (save) Icons.Rounded.Edit else Icons.Rounded.Add,
                     contentDescription = "Upsert",
                 )
             }
 
             item {
                 Text(
-                    text = stringResource(if (edit) Res.string.edit_task else Res.string.add_task),
+                    text = stringResource(if (save) Res.string.edit_task else Res.string.add_task),
                     style = MaterialTheme.typography.headlineSmall,
                     textAlign = TextAlign.Center,
                     modifier = Modifier.padding(horizontal = 16.dp)
@@ -216,24 +221,41 @@ fun TaskUpsertSheetContent(
             }
 
             item {
-                Button(
-                    onClick = {
-                        onUpsert(newTask)
-                        onDismissRequest()
-                    },
-                    shapes = ButtonShapes(
-                        shape = MaterialTheme.shapes.extraLarge,
-                        pressedShape = MaterialTheme.shapes.small
-                    ),
+                Row(
                     modifier = Modifier
-                        .padding(start = 16.dp, end = 16.dp, bottom = 32.dp)
-                        .fillMaxWidth(),
-                    enabled = newTask.title.isNotBlank()
-                            && newTask.title.length <= 100
-                            && newTask != task
-                            && isValidDateTime
+                        .padding(start = 16.dp, end = 16.dp, bottom = 32.dp),
+                    horizontalArrangement = Arrangement.spacedBy(8.dp)
                 ) {
-                    Text(stringResource(if (edit) Res.string.edit_task else Res.string.add_task))
+                    if (save) {
+                        OutlinedButton(
+                            onClick = onDelete,
+                            shapes = ButtonShapes(
+                                shape = MaterialTheme.shapes.extraLarge,
+                                pressedShape = MaterialTheme.shapes.small
+                            ),
+                            modifier = Modifier.weight(1f)
+                        ) {
+                            Text(stringResource(Res.string.delete))
+                        }
+                    }
+
+                    Button(
+                        onClick = {
+                            onUpsert(newTask)
+                            onDismissRequest()
+                        },
+                        shapes = ButtonShapes(
+                            shape = MaterialTheme.shapes.extraLarge,
+                            pressedShape = MaterialTheme.shapes.small
+                        ),
+                        modifier = Modifier.weight(1f),
+                        enabled = newTask.title.isNotBlank()
+                                && newTask.title.length <= 100
+                                && newTask != task
+                                && isValidDateTime
+                    ) {
+                        Text(stringResource(if (save) Res.string.save else Res.string.add_task))
+                    }
                 }
             }
         }
