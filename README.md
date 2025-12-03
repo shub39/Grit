@@ -1,6 +1,5 @@
 ![](fastlane/metadata/android/en-US/images/featureGraphic.png)
 
-# Grit 
 ### A simple ToDo list and Daily Habit Tracker
 
 > [<img src="https://ziadoua.github.io/m3-Markdown-Badges/badges/Android/android2.svg">]()
