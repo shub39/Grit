@@ -1,4 +1,4 @@
-![](fastlane/metadata/android/en-US/images/icon200x200.png)
+![](fastlane/metadata/android/en-US/images/featureGraphic.png)
 
 # Grit 
 ### A simple ToDo list and Daily Habit Tracker
@@ -13,6 +13,7 @@
 > [<img src="https://ziadoua.github.io/m3-Markdown-Badges/badges/Discord/discord2.svg">](https://discord.gg/https://discord.gg/nxA2hgtEKf)
 
 > ### Get On
+> Check out [demo](https://shub39.github.io/Grit)
 > [<img src="https://play.google.com/intl/en_us/badges/images/generic/en-play-badge.png" alt="Get it on Google Play" height="80">](https://play.google.com/store/apps/details?id=com.shub39.grit)
 
 ## Screenshots 📱
@@ -23,7 +24,7 @@
 | ![Image 5](fastlane/metadata/android/en-US/images/phoneScreenshots/5.png) | ![Image 6](fastlane/metadata/android/en-US/images/phoneScreenshots/6.png) |
 
 ## Features ✨
->- [x] Todo List
+>- [x] Todo List with reminders
 >- [x] Daily Habit Tracking
 >- [x] Analytics with Habit Maps
 >- [x] Notification Reminders
