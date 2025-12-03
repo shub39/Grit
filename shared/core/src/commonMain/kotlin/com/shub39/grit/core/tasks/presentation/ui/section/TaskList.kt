@@ -371,7 +371,13 @@ private fun CompactTasksView(
             if (category != null) {
                 val lazyListState = rememberLazyListState()
                 var reorderableTasks by remember(state.tasks.values) {
-                    mutableStateOf((state.tasks[category] ?: emptyList()))
+                    mutableStateOf(
+                        (state.tasks[category] ?: emptyList()).run {
+                            if (state.reorderTasks) {
+                                filter { !it.status }
+                            } else this
+                        }
+                    )
                 }
                 val reorderableListState =
                     rememberReorderableLazyListState(lazyListState) { from, to ->
@@ -387,11 +393,7 @@ private fun CompactTasksView(
                     verticalArrangement = Arrangement.spacedBy(8.dp)
                 ) {
                     itemsIndexed(
-                        items = reorderableTasks.run {
-                            if (state.reorderTasks) {
-                                filter { !it.status }
-                            } else this
-                        },
+                        items = reorderableTasks,
                         key = { _, it -> it.id }
                     ) { _, task ->
                         ReorderableItem(reorderableListState, key = task.id) {

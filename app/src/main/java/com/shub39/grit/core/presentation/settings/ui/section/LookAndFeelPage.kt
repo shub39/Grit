@@ -64,7 +64,6 @@ import com.shub39.grit.core.domain.Fonts
 import com.shub39.grit.core.presentation.component.ColorPickerDialog
 import com.shub39.grit.core.presentation.settings.SettingsAction
 import com.shub39.grit.core.presentation.settings.SettingsState
-import com.shub39.grit.core.presentation.settings.ui.component.detachedItemShape
 import com.shub39.grit.core.presentation.settings.ui.component.endItemShape
 import com.shub39.grit.core.presentation.settings.ui.component.leadingItemShape
 import com.shub39.grit.core.presentation.settings.ui.component.listItemColors
@@ -132,9 +131,7 @@ fun LookAndFeelPage(
                     verticalArrangement = Arrangement.spacedBy(2.dp)
                 ) {
                     Column(
-                        modifier = Modifier.clip(
-                            if (state.isUserSubscribed) leadingItemShape() else detachedItemShape()
-                        )
+                        modifier = Modifier.clip(leadingItemShape())
                     ) {
                         ListItem(
                             leadingContent = {
@@ -177,6 +174,35 @@ fun LookAndFeelPage(
                                 }
                             }
                         }
+                    }
+
+                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
+                        ListItem(
+                            headlineContent = {
+                                Text(
+                                    text = stringResource(Res.string.material_theme)
+                                )
+                            },
+                            supportingContent = {
+                                Text(
+                                    text = stringResource(Res.string.material_theme_desc)
+                                )
+                            },
+                            trailingContent = {
+                                Switch(
+                                    checked = state.theme.isMaterialYou,
+                                    onCheckedChange = {
+                                        onAction(
+                                            SettingsAction.ChangeMaterialYou(it)
+                                        )
+                                    }
+                                )
+                            },
+                            colors = listItemColors(),
+                            modifier = Modifier.clip(
+                                if (state.isUserSubscribed) middleItemShape() else endItemShape()
+                            )
+                        )
                     }
 
                     // plus redirect
@@ -273,34 +299,6 @@ fun LookAndFeelPage(
                         colors = listItemColors(),
                         modifier = Modifier.clip(middleItemShape())
                     )
-
-                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
-                        ListItem(
-                            headlineContent = {
-                                Text(
-                                    text = stringResource(Res.string.material_theme)
-                                )
-                            },
-                            supportingContent = {
-                                Text(
-                                    text = stringResource(Res.string.material_theme_desc)
-                                )
-                            },
-                            trailingContent = {
-                                Switch(
-                                    checked = state.theme.isMaterialYou,
-                                    enabled = state.isUserSubscribed,
-                                    onCheckedChange = {
-                                        onAction(
-                                            SettingsAction.ChangeMaterialYou(it)
-                                        )
-                                    }
-                                )
-                            },
-                            colors = listItemColors(),
-                            modifier = Modifier.clip(middleItemShape())
-                        )
-                    }
 
                     AnimatedVisibility(
                         visible = !state.theme.isMaterialYou
