@@ -1,7 +1,5 @@
 ![](fastlane/metadata/android/en-US/images/featureGraphic.png)
 
-### A simple ToDo list and Daily Habit Tracker
-
 > [<img src="https://ziadoua.github.io/m3-Markdown-Badges/badges/Android/android2.svg">]()
 > [<img src="https://ziadoua.github.io/m3-Markdown-Badges/badges/AndroidStudio/androidstudio3.svg">]()
 > [<img src="https://ziadoua.github.io/m3-Markdown-Badges/badges/Kotlin/kotlin1.svg">]()
