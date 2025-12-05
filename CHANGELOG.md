@@ -1,7 +1,7 @@
 # Changelog
 
 ## 5.5.2
-- Fixed Habit Notifications not appearing
+- Fixed Habit Notifications not appearing.
 
 ## 5.5.1
 - Replaced habit heatmap month text to abbreviated month
