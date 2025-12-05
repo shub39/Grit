@@ -15,11 +15,11 @@
 
 # Features
 
-[x] Todo List with reminders
-[x] Daily Habit Tracking
-[x] Analytics with Habit Maps
-[x] Notification Reminders
-[x] Widgets
+- [x] Todo List with reminders
+- [x] Daily Habit Tracking
+- [x] Analytics with Habit Maps
+- [x] Notification Reminders
+- [x] Widgets
 
 Check out planned changes in [RoadMap](https://github.com/shub39/Grit/discussions/66)
 
