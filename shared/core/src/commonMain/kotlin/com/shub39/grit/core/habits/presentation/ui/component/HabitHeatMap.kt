@@ -29,7 +29,10 @@ import grit.shared.core.generated.resources.Res
 import grit.shared.core.generated.resources.habit_map
 import kotlinx.coroutines.launch
 import kotlinx.datetime.LocalDate
+import kotlinx.datetime.YearMonth
+import kotlinx.datetime.format
 import kotlinx.datetime.format.FormatStringsInDatetimeFormats
+import kotlinx.datetime.format.MonthNames
 import org.jetbrains.compose.resources.stringResource
 
 @OptIn(FormatStringsInDatetimeFormats::class)
@@ -80,7 +83,11 @@ fun HabitHeatMap(
                     modifier = Modifier.padding(2.dp)
                 ) {
                     Text(
-                        text = it.yearMonth.toString(),
+                        text = it.yearMonth.format(
+                            YearMonth.Format {
+                                monthName(MonthNames.ENGLISH_ABBREVIATED)
+                            }
+                        ),
                         color = MaterialTheme.colorScheme.primary,
                         modifier = Modifier.align(Alignment.Center)
                     )
