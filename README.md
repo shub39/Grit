@@ -1,10 +1,10 @@
 ![](fastlane/metadata/android/en-US/images/featureGraphic.png)
 
-[<img alt="Try web demo" src="badges/webDemo.png" width="200px"](https://shub39.github.io/Grit)
-[<img alt="Get it on Google Play" src="badges/playstore.png" width="200px"](https://play.google.com/store/apps/details?id=com.shub39.grit)
-[<img alt="Get it on github" src="badges/github.png" width="200px"](https://github.com/shub39/Grit/releases)
-[<img alt="Get it on izzyondroid" src="badges/izzyondroid.png" width="200px"](https://apt.izzysoft.de/fdroid/index/apk/com.shub39.grit)
-[<img alt="Get it on fdroid" src="badges/fdroid.png" width="200px"](https://f-droid.org/en/packages/com.shub39.grit/)
+[<img alt="Try web demo" src="badges/webDemo.png" width="200px">](https://shub39.github.io/Grit)
+[<img alt="Get it on Google Play" src="badges/playstore.png" width="200px">](https://play.google.com/store/apps/details?id=com.shub39.grit)
+[<img alt="Get it on github" src="badges/github.png" width="200px">](https://github.com/shub39/Grit/releases)
+[<img alt="Get it on izzyondroid" src="badges/izzyondroid.png" width="200px">](https://apt.izzysoft.de/fdroid/index/apk/com.shub39.grit)
+[<img alt="Get it on fdroid" src="badges/fdroid.png" width="200px">](https://f-droid.org/en/packages/com.shub39.grit/)
 
 ## Screenshots
 
