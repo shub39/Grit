@@ -31,10 +31,13 @@ class NotificationAlarmScheduler(
     override fun schedule(habit: Habit) {
         cancel(habit)
         if (!habit.reminder) return
+
         var scheduleTime = habit.time
 
+        val now = Clock.System.now().toLocalDateTime(TimeZone.currentSystemDefault())
+
         var attempt = 0
-        while (scheduleTime < Clock.System.now().toLocalDateTime(TimeZone.currentSystemDefault()) && attempt < 365) {
+        while (scheduleTime < now && attempt <= 365) {
             scheduleTime = LocalDateTime(date = scheduleTime.date.plus(1, DateTimeUnit.DAY), time = scheduleTime.time)
             attempt++
         }
@@ -53,7 +56,7 @@ class NotificationAlarmScheduler(
 
         alarmManager.setExactAndAllowWhileIdle(
             AlarmManager.RTC_WAKEUP,
-            scheduleTime.toInstant(TimeZone.UTC).toEpochMilliseconds(),
+            scheduleTime.toInstant(TimeZone.currentSystemDefault()).toEpochMilliseconds(),
             pendingIntent
         )
 
@@ -68,7 +71,9 @@ class NotificationAlarmScheduler(
         if (task.reminder == null) return
         val scheduleTime = task.reminder!!
 
-        if (scheduleTime < Clock.System.now().toLocalDateTime(TimeZone.currentSystemDefault())) {
+        val now = Clock.System.now().toLocalDateTime(TimeZone.currentSystemDefault())
+
+        if (scheduleTime < now) {
             Log.d(tag, "Task '${task.title}' reminder time is in the past")
             return
         }
