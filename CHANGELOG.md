@@ -1,5 +1,9 @@
 # Changelog
 
+## 5.5.1
+- Replaced habit heatmap month text to abbreviated month
+- updated metadata
+
 ## 5.5.0
 - Made UI adaptive to larger screen sizes
 - Added grit server to manage tasks and habits on desktop in sync with app
