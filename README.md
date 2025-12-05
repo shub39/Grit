@@ -29,7 +29,7 @@ While learning android I made this app for myself that brings together all the f
 I eventually want to turn this app into a productivity hub with many social features like progress sharing in the form of beautiful cards.
 
 # References and Inspiration 
->- [Loop Habit Tracker](https://github.com/iSoron/uhabits)
+- [Loop Habit Tracker](https://github.com/iSoron/uhabits)
 
 # Stargazers over time 
 [![Stargazers over time](https://starchart.cc/shub39/Grit.svg?background=%23282828&axis=%23f2dfd3&line=%23ffb780)](https://starchart.cc/shub39/Grit)
