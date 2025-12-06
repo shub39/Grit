@@ -385,7 +385,6 @@ private fun CompactTasksView(
                             add(to.index, removeAt(from.index))
                         }
                     }
-
                 LazyColumn(
                     modifier = Modifier.fillMaxSize(),
                     state = lazyListState,
@@ -410,10 +409,10 @@ private fun CompactTasksView(
                                         })
                                     )
                                 },
-                                shape = RoundedCornerShape(cardCorners),
                                 is24Hr = state.is24Hour,
                                 modifier = Modifier
                                     .fillMaxWidth()
+                                    .clip(RoundedCornerShape(cardCorners))
                                     .combinedClickable(
                                         onClick = {
                                             if (!isReorderMode) {
@@ -427,7 +426,8 @@ private fun CompactTasksView(
                                             if (!isReorderMode && !task.status) {
                                                 onEditTask(task)
                                             }
-                                        }
+                                        },
+
                                     )
                             )
                         }
@@ -442,10 +442,10 @@ private fun CompactTasksView(
                                 task = task,
                                 dragState = false,
                                 reorderIcon = {},
-                                shape = RoundedCornerShape(28),
                                 is24Hr = state.is24Hour,
                                 modifier = Modifier
                                     .fillMaxWidth()
+                                    .clip(RoundedCornerShape(28))
                                     .combinedClickable(
                                         onClick = {
                                             if (!isReorderMode) {
@@ -539,10 +539,10 @@ private fun ExpandedTasksView(
                             task = task,
                             dragState = false,
                             reorderIcon = {},
-                            shape = RoundedCornerShape(20.dp),
                             is24Hr = state.is24Hour,
                             modifier = Modifier
                                 .fillMaxWidth()
+                                .clip(RoundedCornerShape(20.dp))
                                 .combinedClickable(
                                     onClick = {
                                         val updatedTask = task.copy(status = !task.status)
@@ -561,10 +561,10 @@ private fun ExpandedTasksView(
                                 task = task,
                                 dragState = false,
                                 reorderIcon = {},
-                                shape = RoundedCornerShape(20.dp),
                                 is24Hr = state.is24Hour,
                                 modifier = Modifier
                                     .fillMaxWidth()
+                                    .clip(RoundedCornerShape(20.dp))
                                     .combinedClickable(
                                         onClick = {
                                             val updatedTask = task.copy(status = !task.status)
