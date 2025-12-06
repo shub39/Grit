@@ -24,7 +24,6 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Shape
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.unit.dp
@@ -38,7 +37,6 @@ fun TaskCard(
     task: Task,
     dragState: Boolean = false,
     reorderIcon: @Composable () -> Unit,
-    shape: Shape,
     is24Hr: Boolean,
     modifier: Modifier
 ) {
@@ -64,7 +62,6 @@ fun TaskCard(
     Card(
         modifier = modifier.animateContentSize(),
         colors = cardColors,
-        shape = shape,
     ) {
         Row(
             verticalAlignment = Alignment.CenterVertically,
