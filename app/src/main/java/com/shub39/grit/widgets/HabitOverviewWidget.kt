@@ -1,12 +1,17 @@
 package com.shub39.grit.widgets
 
 import android.content.Context
+import android.util.Log
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.datastore.core.DataStore
+import androidx.datastore.core.DataStoreFactory
+import androidx.datastore.core.Serializer
+import androidx.datastore.dataStoreFile
 import androidx.glance.GlanceId
 import androidx.glance.GlanceModifier
 import androidx.glance.GlanceTheme
@@ -30,6 +35,7 @@ import androidx.glance.layout.fillMaxSize
 import androidx.glance.layout.fillMaxWidth
 import androidx.glance.layout.height
 import androidx.glance.layout.padding
+import androidx.glance.state.GlanceStateDefinition
 import androidx.glance.text.FontWeight
 import androidx.glance.text.Text
 import androidx.glance.text.TextAlign
@@ -48,8 +54,14 @@ import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.launch
 import kotlinx.datetime.TimeZone
 import kotlinx.datetime.todayIn
+import kotlinx.serialization.Serializable
+import kotlinx.serialization.SerializationException
+import kotlinx.serialization.json.Json
 import org.koin.core.component.KoinComponent
 import org.koin.core.component.get
+import java.io.File
+import java.io.InputStream
+import java.io.OutputStream
 import kotlin.time.Clock
 import kotlin.time.ExperimentalTime
 
@@ -102,8 +114,58 @@ class HabitOverviewWidgetRepository(
     }
 }
 
+@Serializable
+data class HabitOverviewWidgetState(
+    val message: String? = null
+)
+
+object HabitOverviewWidgetStateDefinition: GlanceStateDefinition<HabitOverviewWidgetState> {
+    private const val DATA_STORE_FILENAME_PREFIX = "overview_widget_info_"
+
+    override suspend fun getDataStore(
+        context: Context,
+        fileKey: String
+    ): DataStore<HabitOverviewWidgetState> = DataStoreFactory.create(
+        serializer = HabitOverviewWidgetStateSerializer,
+        produceFile = { context.dataStoreFile(fileKey) }
+    )
+
+    override fun getLocation(
+        context: Context,
+        fileKey: String
+    ): File {
+        return context.dataStoreFile(DATA_STORE_FILENAME_PREFIX + fileKey)
+    }
+
+    object HabitOverviewWidgetStateSerializer: Serializer<HabitOverviewWidgetState> {
+        override val defaultValue: HabitOverviewWidgetState
+            get() = HabitOverviewWidgetState()
+
+        override suspend fun readFrom(input: InputStream): HabitOverviewWidgetState = try {
+            Json.decodeFromString(
+                deserializer = HabitOverviewWidgetState.serializer(),
+                string = input.readBytes().decodeToString()
+            )
+        } catch (e: SerializationException) {
+            Log.e("HabitOverviewWidgetStateSerializer", e.message, e)
+            HabitOverviewWidgetState(message = e.message)
+        }
+
+        override suspend fun writeTo(t: HabitOverviewWidgetState, output: OutputStream) {
+            output.use {
+                it.write(
+                    Json.encodeToString(HabitOverviewWidgetState.serializer(), t).encodeToByteArray()
+                )
+            }
+        }
+    }
+}
+
 @OptIn(ExperimentalTime::class)
 class HabitOverviewWidget : GlanceAppWidget(), KoinComponent {
+
+    override val stateDefinition = HabitOverviewWidgetStateDefinition
+
     override suspend fun provideGlance(context: Context, id: GlanceId) {
         val repo = get<HabitOverviewWidgetRepository>()
 

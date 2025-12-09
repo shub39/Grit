@@ -132,6 +132,8 @@ dependencies {
     implementation(libs.koin.androidx.compose)
     implementation(libs.androidx.glance.appwidget)
     implementation(libs.androidx.glance.material3)
+    implementation(libs.androidx.glance.appwidget.preview)
+    implementation(libs.androidx.glance.preview)
     implementation(libs.materialkolor)
     implementation(libs.colorpicker.compose)
     implementation(libs.androidx.datastore.preferences.core)
