@@ -40,6 +40,7 @@ import androidx.glance.layout.size
 import androidx.glance.layout.width
 import androidx.glance.text.FontWeight
 import androidx.glance.text.Text
+import androidx.glance.text.TextAlign
 import androidx.glance.text.TextStyle
 import com.shub39.grit.R
 import com.shub39.grit.app.MainActivity
@@ -69,6 +70,7 @@ class HabitStreakWidgetReceiver : GlanceAppWidgetReceiver() {
 }
 
 private val directionKey = ActionParameters.Key<String>("DirectionKey")
+private val habitIdKey = longPreferencesKey("habit_id")
 
 class HabitStreakWidgetRepository(
     private val context: Context,
@@ -81,15 +83,17 @@ class HabitStreakWidgetRepository(
     ) {
         updateAppWidgetState(context, glanceId) { prefs ->
             val habitIds = habitDao.getAllHabits().map { it.id }
-            val currentId = prefs[longPreferencesKey(glanceId.toString())] ?: habitIds.firstOrNull()
+            val currentId = prefs[habitIdKey] ?: habitIds.firstOrNull()
             val index = habitIds.indexOf(currentId)
 
             val newIndex = when (actionParameters[directionKey]) {
                 "back" -> (index - 1).coerceAtLeast(0)
                 else -> (index + 1).coerceAtMost(habitIds.size - 1)
             }
-
-            prefs[longPreferencesKey(glanceId.toString())] = habitIds[newIndex]
+            
+            if (habitIds.isNotEmpty()) {
+                prefs[habitIdKey] = habitIds[newIndex]
+            }
         }
 
         HabitStreakWidget().update(context, glanceId)
@@ -127,7 +131,7 @@ class HabitStreakWidget : GlanceAppWidget(), KoinComponent {
 
             val allHabits by repo.getHabits().collectAsState(emptyList())
             val allStatuses by repo.getHabitStatuses().collectAsState(emptyList())
-            val habitId = state[longPreferencesKey(id.toString())] ?: allHabits.firstOrNull()?.id
+            val habitId = state[habitIdKey] ?: allHabits.firstOrNull()?.id
 
             val habit = allHabits.find { it.id == habitId } ?: allHabits.firstOrNull()
             val statuses = allStatuses.filter { it.habitId == habitId }.map { it.date }
@@ -240,7 +244,7 @@ class HabitStreakWidget : GlanceAppWidget(), KoinComponent {
                                     contentAlignment = Alignment.Center
                                 ) {
                                     Text(
-                                        text = it.dayOfWeek.name,
+                                        text = it.dayOfWeek.name.take(1),
                                         style = TextStyle(
                                             fontSize = 12.sp,
                                             fontWeight = FontWeight.Bold,
@@ -290,7 +294,8 @@ class HabitStreakWidget : GlanceAppWidget(), KoinComponent {
                         style = TextStyle(
                             color = GlanceTheme.colors.primary,
                             fontWeight = FontWeight.Bold,
-                            fontSize = 20.sp
+                            fontSize = 16.sp,
+                            textAlign = TextAlign.Center
                         )
                     )
                 }

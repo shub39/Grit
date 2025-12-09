@@ -87,7 +87,7 @@ class HabitOverviewWidgetRepository(
         return habitDao
             .getAllHabitsFlow()
             .map { flow ->
-                flow.map { it.toHabit() }
+                flow.map { it.toHabit() }.sortedBy { it.index }
             }
             .distinctUntilChanged()
     }

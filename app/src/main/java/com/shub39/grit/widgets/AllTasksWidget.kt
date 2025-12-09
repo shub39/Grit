@@ -41,6 +41,7 @@ import com.shub39.grit.core.data.toCategory
 import com.shub39.grit.core.data.toTask
 import com.shub39.grit.core.data.toTaskEntity
 import com.shub39.grit.core.domain.AlarmScheduler
+import com.shub39.grit.core.domain.GritDatastore
 import com.shub39.grit.core.tasks.domain.Category
 import com.shub39.grit.core.tasks.domain.Task
 import com.shub39.grit.tasks.data.database.CategoryDao
@@ -62,7 +63,8 @@ class AllTasksWidgetRepository(
     private val context: Context,
     private val tasksDao: TasksDao,
     private val categoryDao: CategoryDao,
-    private val scheduler: AlarmScheduler
+    private val scheduler: AlarmScheduler,
+    private val datastore: GritDatastore
 ) {
     suspend fun update() {
         AllTasksWidget().updateAll(context)
@@ -74,6 +76,7 @@ class AllTasksWidgetRepository(
     }
 
     fun getGroupedTasks(): Flow<GroupedTasks> {
+        val reorderTasks = datastore.getTaskReorderPref()
         val tasksFlow = tasksDao.getTasksFlow().map { entities ->
             entities.map { it.toTask() }.sortedBy { it.index }
         }
@@ -81,9 +84,15 @@ class AllTasksWidgetRepository(
             entities.map { it.toCategory() }.sortedBy { it.index }
         }
 
-        return tasksFlow.combine(categoriesFlow) { tasks, categories ->
+        return combine(tasksFlow, categoriesFlow, reorderTasks) { tasks, categories, reorderTask ->
             categories.associateWith { category ->
-                tasks.filter { it.categoryId == category.id }
+                tasks.filter { it.categoryId == category.id }.run {
+                    if (reorderTask) {
+                        this.filter { !it.status } + this.filter { it.status }
+                    } else {
+                        this
+                    }
+                }
             }.filter { it.value.isNotEmpty() }.map { it }
         }
     }
