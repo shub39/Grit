@@ -18,7 +18,6 @@ import androidx.glance.GlanceTheme
 import androidx.glance.action.actionStartActivity
 import androidx.glance.action.clickable
 import androidx.glance.appwidget.GlanceAppWidget
-import androidx.glance.appwidget.GlanceAppWidgetManager
 import androidx.glance.appwidget.GlanceAppWidgetReceiver
 import androidx.glance.appwidget.components.Scaffold
 import androidx.glance.appwidget.cornerRadius
@@ -72,20 +71,11 @@ class AllTasksWidgetReceiver : GlanceAppWidgetReceiver() {
 }
 
 class AllTasksWidgetRepository(
-    private val context: Context,
     private val tasksDao: TasksDao,
     private val categoryDao: CategoryDao,
     private val scheduler: AlarmScheduler,
     private val datastore: GritDatastore
 ) {
-    suspend fun update() {
-        val mgr = GlanceAppWidgetManager(context)
-        val widget = AllTasksWidget()
-        val ids = mgr.getGlanceIds(widget.javaClass)
-        ids.forEach { id ->
-            AllTasksWidget().update(context, id)
-        }
-    }
 
     suspend fun updateTask(task: Task) {
         tasksDao.upsertTask(task.toTaskEntity())

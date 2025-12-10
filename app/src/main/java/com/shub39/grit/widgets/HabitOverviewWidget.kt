@@ -18,7 +18,6 @@ import androidx.glance.GlanceTheme
 import androidx.glance.action.actionStartActivity
 import androidx.glance.action.clickable
 import androidx.glance.appwidget.GlanceAppWidget
-import androidx.glance.appwidget.GlanceAppWidgetManager
 import androidx.glance.appwidget.GlanceAppWidgetReceiver
 import androidx.glance.appwidget.components.Scaffold
 import androidx.glance.appwidget.cornerRadius
@@ -71,19 +70,9 @@ class HabitOverviewWidgetReceiver : GlanceAppWidgetReceiver() {
 
 @OptIn(ExperimentalTime::class)
 class HabitOverviewWidgetRepository(
-    private val context: Context,
     private val statusDao: HabitStatusDao,
     private val habitDao: HabitDao
 ) {
-    suspend fun update() {
-        val mgr = GlanceAppWidgetManager(context)
-        val widget = HabitOverviewWidget()
-        val ids = mgr.getGlanceIds(widget.javaClass)
-        ids.forEach { glanceId ->
-            widget.update(context, glanceId)
-        }
-    }
-
     suspend fun setStatus(id: Long) {
         statusDao.insertHabitStatus(
             habitStatusEntity = HabitStatus(

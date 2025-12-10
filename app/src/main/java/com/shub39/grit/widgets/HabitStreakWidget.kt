@@ -24,7 +24,6 @@ import androidx.glance.appwidget.components.Scaffold
 import androidx.glance.appwidget.cornerRadius
 import androidx.glance.appwidget.provideContent
 import androidx.glance.appwidget.state.updateAppWidgetState
-import androidx.glance.appwidget.updateAll
 import androidx.glance.background
 import androidx.glance.currentState
 import androidx.glance.layout.Alignment
@@ -113,10 +112,6 @@ class HabitStreakWidgetRepository(
                 flow.map { it.toHabitStatus() }
             }
             .distinctUntilChanged()
-    }
-
-    suspend fun update() {
-        HabitStreakWidget().updateAll(context)
     }
 }
 
