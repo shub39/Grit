@@ -18,13 +18,13 @@ import androidx.glance.GlanceTheme
 import androidx.glance.action.actionStartActivity
 import androidx.glance.action.clickable
 import androidx.glance.appwidget.GlanceAppWidget
+import androidx.glance.appwidget.GlanceAppWidgetManager
 import androidx.glance.appwidget.GlanceAppWidgetReceiver
 import androidx.glance.appwidget.components.Scaffold
 import androidx.glance.appwidget.cornerRadius
 import androidx.glance.appwidget.lazy.LazyColumn
 import androidx.glance.appwidget.lazy.items
 import androidx.glance.appwidget.provideContent
-import androidx.glance.appwidget.updateAll
 import androidx.glance.background
 import androidx.glance.layout.Alignment
 import androidx.glance.layout.Box
@@ -79,7 +79,12 @@ class AllTasksWidgetRepository(
     private val datastore: GritDatastore
 ) {
     suspend fun update() {
-        AllTasksWidget().updateAll(context)
+        val mgr = GlanceAppWidgetManager(context)
+        val widget = AllTasksWidget()
+        val ids = mgr.getGlanceIds(widget.javaClass)
+        ids.forEach { id ->
+            AllTasksWidget().update(context, id)
+        }
     }
 
     suspend fun updateTask(task: Task) {
