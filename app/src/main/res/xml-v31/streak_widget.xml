@@ -9,4 +9,4 @@
     android:previewImage="@drawable/habit_streak_widget"
     android:updatePeriodMillis="3600000"
     android:widgetCategory="home_screen"
-    android:resizeMode="none" />
+    android:resizeMode="horizontal" />

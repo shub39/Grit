@@ -50,8 +50,10 @@ import com.shub39.grit.core.habits.domain.HabitStatus
 import com.shub39.grit.habits.data.database.HabitDao
 import com.shub39.grit.habits.data.database.HabitStatusDao
 import com.shub39.grit.habits.data.repository.countCurrentStreak
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.distinctUntilChanged
+import kotlinx.coroutines.flow.flowOn
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.launch
 import kotlinx.datetime.DateTimeUnit
@@ -103,6 +105,7 @@ class HabitStreakWidgetRepository(
             .getAllHabitsFlow()
             .map { flow -> flow.map { it.toHabit() } }
             .distinctUntilChanged()
+            .flowOn(Dispatchers.IO)
     }
 
     fun getHabitStatuses(): Flow<List<HabitStatus>> {
@@ -112,6 +115,7 @@ class HabitStreakWidgetRepository(
                 flow.map { it.toHabitStatus() }
             }
             .distinctUntilChanged()
+            .flowOn(Dispatchers.IO)
     }
 }
 

@@ -51,8 +51,10 @@ import com.shub39.grit.core.tasks.domain.Category
 import com.shub39.grit.core.tasks.domain.Task
 import com.shub39.grit.tasks.data.database.CategoryDao
 import com.shub39.grit.tasks.data.database.TasksDao
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.combine
+import kotlinx.coroutines.flow.flowOn
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.launch
 import kotlinx.serialization.Serializable
@@ -76,7 +78,6 @@ class AllTasksWidgetRepository(
     private val scheduler: AlarmScheduler,
     private val datastore: GritDatastore
 ) {
-
     suspend fun updateTask(task: Task) {
         tasksDao.upsertTask(task.toTaskEntity())
         scheduler.schedule(task)
@@ -101,7 +102,7 @@ class AllTasksWidgetRepository(
                     }
                 }
             }.filter { it.value.isNotEmpty() }.map { it }
-        }
+        }.flowOn(Dispatchers.IO)
     }
 }
 
@@ -110,7 +111,7 @@ data class AllTasksWidgetState(
     val message: String? = null
 )
 
-object AllTasksWidgetStateDefinition: GlanceStateDefinition<AllTasksWidgetState> {
+object AllTasksWidgetStateDefinition : GlanceStateDefinition<AllTasksWidgetState> {
     private const val DATA_STORE_FILENAME_PREFIX = "alltasks_widget_info_"
 
     override suspend fun getDataStore(
@@ -128,7 +129,7 @@ object AllTasksWidgetStateDefinition: GlanceStateDefinition<AllTasksWidgetState>
         return context.dataStoreFile(DATA_STORE_FILENAME_PREFIX + fileKey)
     }
 
-    object AllTasksWidgetStateSerializer: Serializer<AllTasksWidgetState> {
+    object AllTasksWidgetStateSerializer : Serializer<AllTasksWidgetState> {
         override val defaultValue: AllTasksWidgetState
             get() = AllTasksWidgetState()
 
@@ -170,9 +171,11 @@ class AllTasksWidget : GlanceAppWidget(), KoinComponent {
                 TaskList(
                     context = context,
                     tasks = tasks,
-                    onTaskStatusUpdate = { scope.launch {
-                        repo.updateTask(it.copy(status = !it.status))
-                    } }
+                    onTaskStatusUpdate = {
+                        scope.launch {
+                            repo.updateTask(it.copy(status = !it.status))
+                        }
+                    }
                 )
             }
         }
@@ -244,11 +247,11 @@ class AllTasksWidget : GlanceAppWidget(), KoinComponent {
                                             .padding(8.dp),
                                         style = TextStyle(
                                             color = if (!status) GlanceTheme.colors.onSecondaryContainer
-                                                    else GlanceTheme.colors.onTertiaryContainer,
+                                            else GlanceTheme.colors.onTertiaryContainer,
                                             fontSize = 20.sp,
                                             fontWeight = FontWeight.Bold,
                                             textDecoration = if (!status) TextDecoration.None
-                                                             else TextDecoration.LineThrough
+                                            else TextDecoration.LineThrough
                                         ),
                                         maxLines = 2
                                     )
