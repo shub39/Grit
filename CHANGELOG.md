@@ -1,5 +1,9 @@
 # Changelog
 
+## 5.5.3
+- Fixed weird widget behaviour #170 #192
+- Edited widget previews
+
 ## 5.5.2
 - Fixed Habit Notifications not appearing.
 
