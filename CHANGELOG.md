@@ -1,5 +1,8 @@
 # Changelog
 
+## 5.5.4
+- Removed unnecessary permissions #184
+
 ## 5.5.3
 - Fixed weird widget behaviour #170 #192
 - Edited widget previews
