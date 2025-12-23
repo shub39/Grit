@@ -45,3 +45,10 @@ I eventually want to turn this app into a productivity hub with many social feat
 - [Compose Icons](https://github.com/DevSrSouza/compose-icons)
 - [Compose Calendar](https://github.com/boguszpawlowski/ComposeCalendar)
 - [Revenuecat Android SDK](https://github.com/RevenueCat/purchases-android)
+
+# Security
+
+SHA-256 fingerprint for the signing certificate used for github releases
+```text
+0F:E1:B9:F4:4A:4D:B9:7E:C5:09:48:F5:18:9F:6B:43:00:71:6C:C6:D4:84:3F:56:98:D6:14:A2:15:2E:21:88
+```
