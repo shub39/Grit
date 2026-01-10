@@ -28,15 +28,18 @@ import androidx.compose.ui.unit.dp
 import com.shub39.grit.core.habits.domain.Habit
 import com.shub39.grit.core.habits.presentation.formatDateWithOrdinal
 import grit.shared.core.generated.resources.Res
-import grit.shared.core.generated.resources.days_ago_format
+import grit.shared.core.generated.resources.hours_ago_format
 import grit.shared.core.generated.resources.started_on
+import kotlinx.datetime.LocalTime
+import kotlinx.datetime.format
+import kotlinx.datetime.format.char
 import org.jetbrains.compose.resources.stringResource
 
 @OptIn(ExperimentalMaterial3ExpressiveApi::class)
 @Composable
 fun HabitStartCard(
     habit: Habit,
-    startedDaysAgo: Long,
+    startedHoursAgo: Long,
     modifier: Modifier = Modifier
 ) {
     Card(
@@ -76,17 +79,21 @@ fun HabitStartCard(
                 modifier = Modifier.weight(1f),
             ) {
                 Text(
-                    text = stringResource(Res.string.started_on),
-                    style = MaterialTheme.typography.labelMedium
-                )
-                Text(
-                    text = formatDateWithOrdinal(habit.time.date),
-                    style = MaterialTheme.typography.titleLarge.copy(fontWeight = FontWeight.Bold)
+                    text = stringResource(
+                        Res.string.started_on,
+                        formatDateWithOrdinal(habit.time.date),
+                        habit.time.time.format(LocalTime.Format {
+                            hour()
+                            char(':')
+                            minute()
+                        })
+                    ),
+                    style = MaterialTheme.typography.titleMedium.copy(fontWeight = FontWeight.Bold)
                 )
                 Text(
                     text = stringResource(
-                        Res.string.days_ago_format,
-                        startedDaysAgo
+                        Res.string.hours_ago_format,
+                        startedHoursAgo
                     ),
                     style = MaterialTheme.typography.bodyMedium
                 )

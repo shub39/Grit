@@ -26,9 +26,7 @@ import kotlinx.coroutines.launch
 import kotlinx.datetime.DayOfWeek
 import kotlinx.datetime.LocalDate
 import kotlinx.datetime.TimeZone
-import kotlinx.datetime.daysUntil
-import kotlinx.datetime.todayIn
-import kotlin.time.Clock
+import kotlinx.datetime.toInstant
 import kotlin.time.ExperimentalTime
 
 @OptIn(ExperimentalTime::class)
@@ -87,6 +85,8 @@ class HabitRepository(
             habitsFlow.map { habit ->
                 val habitStatusesForHabit = habitStatusesFlow.filter { it.habitId == habit.id }
                 val dates = habitStatusesForHabit.map { it.date }
+                val nowEpoch = System.currentTimeMillis() / 1000
+                val startedEpoch = habit.time.toInstant(TimeZone.currentSystemDefault()).epochSeconds
 
                 HabitWithAnalytics(
                     habit = habit,
@@ -101,19 +101,22 @@ class HabitRepository(
                         habitStatuses = habitStatusesForHabit
                     ),
                     weekDayFrequencyData = prepareWeekDayFrequencyData(dates = dates),
-                    startedDaysAgo = habit.time.date.daysUntil(Clock.System.todayIn(TimeZone.currentSystemDefault())).toLong()
+                    startedHoursAgo = (nowEpoch - startedEpoch) / 3600
                 )
             }
         }.flowOn(Dispatchers.Default)
     }
 
     override fun getCompletedHabitIds(): Flow<List<Long>> {
-        return habitStatuses
-            .map { habitStatuses ->
-                habitStatuses
-                    .filter { it.date == Clock.System.todayIn(TimeZone.currentSystemDefault()) }
-                    .map { it.habitId }
-            }.flowOn(Dispatchers.Default)
+        return habitStatuses.map { habitStatuses ->
+            val nowMillis = java.lang.System.currentTimeMillis()
+            val epochDays = nowMillis / (1000 * 60 * 60 * 24)
+            val today = kotlinx.datetime.LocalDate.fromEpochDays(epochDays.toInt())
+
+            habitStatuses
+                .filter { it.date == today }
+                .map { it.habitId }
+        }.flowOn(Dispatchers.Default)
     }
 
     override fun getOverallAnalytics(): Flow<OverallAnalytics> {

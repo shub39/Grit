@@ -59,7 +59,7 @@ class DummyStateProvider : StateProvider {
                         weekDayFrequencyData = emptyMap(),
                         currentStreak = 0,
                         bestStreak = 0,
-                        startedDaysAgo = 0
+                        startedHoursAgo = 0
                     )
                     it.copy(
                         habitsWithAnalytics = it.habitsWithAnalytics + newHabitWithAnalytics,
@@ -413,7 +413,7 @@ class DummyStateProvider : StateProvider {
                 weekDayFrequencyData = emptyMap(),
                 currentStreak = 5,
                 bestStreak = 10,
-                startedDaysAgo = 30
+                startedHoursAgo = 720
             ),
             HabitWithAnalytics(
                 habit = Habit(
@@ -430,7 +430,7 @@ class DummyStateProvider : StateProvider {
                 weekDayFrequencyData = emptyMap(),
                 currentStreak = 3,
                 bestStreak = 8,
-                startedDaysAgo = 25
+                startedHoursAgo = 600
             )
         )
     }

@@ -175,7 +175,7 @@ fun AnalyticsPage(
             item {
                 HabitStartCard(
                     habit = currentHabit.habit,
-                    startedDaysAgo = currentHabit.startedDaysAgo,
+                    startedHoursAgo = currentHabit.startedHoursAgo,
                     modifier = Modifier.widthIn(max = maxWidth)
                 )
             }

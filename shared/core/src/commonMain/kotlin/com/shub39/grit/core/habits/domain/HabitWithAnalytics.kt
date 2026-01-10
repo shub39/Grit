@@ -13,5 +13,5 @@ data class HabitWithAnalytics(
     val weekDayFrequencyData: WeekDayFrequencyData,
     val currentStreak: Int,
     val bestStreak: Int,
-    val startedDaysAgo: Long
+    val startedHoursAgo: Long
 )

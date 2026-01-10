@@ -31,7 +31,7 @@
     <string name="new_habit">New Habit </string>
     <string name="at">Reminder at </string>
     <string name="habit_exists">Habit Already Exists</string>
-    <string name="days_ago_format">%1$d Days ago…</string>
+    <string name="hours_ago_format">%1$d hours ago…</string>
     <string name="too_long">Too Long</string>
     <string name="save">Save</string>
     <string name="edit_task">Edit Task</string>
@@ -85,7 +85,7 @@
     <string name="pause_notifications">Pause Notifications</string>
     <string name="pause_notifications_desc">Pause all app notifications</string>
     <string name="overview">Overview</string>
-    <string name="started_on">Started On</string>
+    <string name="started_on">Started on %1$s at %2$s</string>
     <string name="weekly_graph">Weekly Comparison</string>
     <string name="not_enough_data">Not enough data</string>
     <string name="sponsor">Sponsor</string>
