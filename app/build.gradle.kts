@@ -1,8 +1,5 @@
-import com.android.build.gradle.internal.api.ApkVariantOutputImpl
-
 plugins {
     alias(libs.plugins.android.application)
-    alias(libs.plugins.jetbrains.kotlin.android)
     alias(libs.plugins.compose.compiler)
     alias(libs.plugins.ksp)
     alias(libs.plugins.kotlin.serialization)
@@ -31,16 +28,6 @@ android {
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
         vectorDrawables {
             useSupportLibrary = true
-        }
-    }
-
-    sourceSets {
-        getByName("androidTest").assets.srcDir("$projectDir/schemas")
-    }
-
-    kotlin {
-        compilerOptions {
-            jvmToolchain(17)
         }
     }
 
@@ -85,26 +72,23 @@ android {
         }
     }
 
-    applicationVariants.all {
-        outputs.all {
-            val apkOutput = this as ApkVariantOutputImpl
-            apkOutput.outputFileName = "app-release.apk"
-        }
-    }
-
     compileOptions {
         sourceCompatibility = JavaVersion.VERSION_17
         targetCompatibility = JavaVersion.VERSION_17
     }
+
     buildFeatures {
         compose = true
         buildConfig = true
+        resValues = true
     }
+
     packaging {
         resources {
             excludes += "/META-INF/{AL2.0,LGPL2.1}"
         }
     }
+
     dependenciesInfo {
         includeInApk = false
         includeInBundle = false
@@ -116,14 +100,16 @@ dependencies {
 
     "playImplementation"(libs.purchases)
     "playImplementation"(libs.purchases.ui)
-    implementation(libs.material3)
-    implementation(compose.runtime)
-    implementation(compose.foundation)
-    implementation(compose.ui)
-    implementation(compose.materialIconsExtended)
-    implementation(compose.components.resources)
-    implementation(compose.components.uiToolingPreview)
-    debugImplementation(compose.uiTooling)
+
+    implementation(libs.compose.material3)
+    implementation(libs.compose.runtime)
+    implementation(libs.compose.foundation)
+    implementation(libs.compose.ui)
+    implementation(libs.compose.components.resources)
+    implementation(libs.compose.ui.tooling)
+    implementation(libs.compose.ui.tooling.preview)
+    debugImplementation(libs.compose.ui.tooling.preview)
+
     implementation(libs.navigation.compose)
     implementation(libs.compose.windowsizeclass)
     implementation(libs.androidx.core.splashscreen)
@@ -162,12 +148,6 @@ dependencies {
 
 room {
     schemaDirectory("$projectDir/schemas")
-}
-
-java {
-    toolchain {
-        languageVersion = JavaLanguageVersion.of(17)
-    }
 }
 
 fun execute(vararg command: String): String = providers.exec {

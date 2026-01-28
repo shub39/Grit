@@ -24,13 +24,11 @@ kotlin {
         commonMain.dependencies {
             implementation(projects.shared.core)
 
-            implementation(libs.material3)
-            implementation(compose.runtime)
-            implementation(compose.foundation)
-            implementation(compose.ui)
-            implementation(compose.materialIconsExtended)
-            implementation(compose.components.resources)
-            implementation(compose.components.uiToolingPreview)
+            implementation(libs.compose.material3)
+            implementation(libs.compose.runtime)
+            implementation(libs.compose.foundation)
+            implementation(libs.compose.ui)
+            implementation(libs.compose.components.resources)
             implementation(libs.navigation.compose)
             implementation(libs.kotlinx.datetime)
             implementation(libs.compose.windowsizeclass)

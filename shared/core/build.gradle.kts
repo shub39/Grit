@@ -5,11 +5,11 @@ import org.jetbrains.kotlin.gradle.dsl.JvmTarget
 
 plugins {
     alias(libs.plugins.kotlin.multiplatform)
-    alias(libs.plugins.android.library)
     alias(libs.plugins.compose.multiplatform)
     alias(libs.plugins.compose.compiler)
     alias(libs.plugins.kotlin.serialization)
     alias(libs.plugins.kotlinx.rpc)
+    alias(libs.plugins.android.kotlin.multiplatform.library)
 }
 
 kotlin {
@@ -23,7 +23,10 @@ kotlin {
 
     jvm()
 
-    androidTarget {
+    androidLibrary {
+        namespace = "com.shub39.grit.core"
+        compileSdk = libs.versions.compileSdk.get().toInt()
+
         compilerOptions {
             jvmTarget.set(JvmTarget.JVM_17)
         }
@@ -36,13 +39,11 @@ kotlin {
 
     sourceSets {
         commonMain.dependencies {
-            implementation(libs.material3)
-            implementation(compose.runtime)
-            implementation(compose.foundation)
-            implementation(compose.ui)
-            implementation(compose.materialIconsExtended)
-            implementation(compose.components.resources)
-            implementation(compose.components.uiToolingPreview)
+            implementation(libs.compose.material3)
+            implementation(libs.compose.runtime)
+            implementation(libs.compose.foundation)
+            implementation(libs.compose.ui)
+            implementation(libs.compose.components.resources)
             implementation(libs.navigation.compose)
             implementation(libs.compose.windowsizeclass)
 
@@ -59,14 +60,4 @@ kotlin {
 
 compose.resources {
     publicResClass = true
-}
-
-android {
-    namespace = "com.shub39.grit.core"
-    compileSdk = libs.versions.compileSdk.get().toInt()
-
-    compileOptions {
-        sourceCompatibility = JavaVersion.VERSION_17
-        targetCompatibility = JavaVersion.VERSION_17
-    }
 }
