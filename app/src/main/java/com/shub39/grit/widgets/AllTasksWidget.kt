@@ -60,6 +60,7 @@ import kotlinx.coroutines.launch
 import kotlinx.serialization.Serializable
 import kotlinx.serialization.SerializationException
 import kotlinx.serialization.json.Json
+import org.koin.core.annotation.Factory
 import org.koin.core.component.KoinComponent
 import org.koin.core.component.get
 import java.io.File
@@ -72,6 +73,7 @@ class AllTasksWidgetReceiver : GlanceAppWidgetReceiver() {
     override val glanceAppWidget: GlanceAppWidget = AllTasksWidget()
 }
 
+@Factory
 class AllTasksWidgetRepository(
     private val tasksDao: TasksDao,
     private val categoryDao: CategoryDao,

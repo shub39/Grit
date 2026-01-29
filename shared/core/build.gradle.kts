@@ -1,7 +1,6 @@
 @file:OptIn(ExperimentalWasmDsl::class)
 
 import org.jetbrains.kotlin.gradle.ExperimentalWasmDsl
-import org.jetbrains.kotlin.gradle.dsl.JvmTarget
 
 plugins {
     alias(libs.plugins.kotlin.multiplatform)
@@ -27,10 +26,6 @@ kotlin {
         namespace = "com.shub39.grit.core"
         compileSdk = libs.versions.compileSdk.get().toInt()
         androidResources.enable = true
-
-        compilerOptions {
-            jvmTarget.set(JvmTarget.JVM_17)
-        }
     }
 
     wasmJs {
@@ -53,8 +48,6 @@ kotlin {
             implementation(libs.compose.charts)
             implementation(libs.calendar)
             implementation(libs.materialkolor)
-
-            implementation(libs.kotlinx.rpc.krpc.client)
         }
     }
 }

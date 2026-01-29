@@ -81,7 +81,7 @@ class MainActivity : FragmentActivity() {
                     theme = settingsState.theme
                 ) {
                     if (showContent) {
-                        Grit()
+                        App()
                     } else {
                         InitialLoading()
                     }

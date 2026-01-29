@@ -21,8 +21,10 @@ import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import kotlinx.datetime.LocalDate
+import org.koin.android.annotation.KoinViewModel
 import kotlin.time.ExperimentalTime
 
+@KoinViewModel
 class HabitViewModel(
     private val stateLayer: StateLayer,
     private val billingHandler: BillingHandler,

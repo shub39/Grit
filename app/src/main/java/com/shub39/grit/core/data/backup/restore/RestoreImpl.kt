@@ -21,9 +21,11 @@ import kotlinx.coroutines.awaitAll
 import kotlinx.coroutines.withContext
 import kotlinx.serialization.SerializationException
 import kotlinx.serialization.json.Json
+import org.koin.core.annotation.Single
 import kotlin.io.path.outputStream
 import kotlin.io.path.readText
 
+@Single(binds = [RestoreRepo::class])
 class RestoreImpl(
     private val taskRepo: TaskRepo,
     private val habitRepo: HabitRepo,
