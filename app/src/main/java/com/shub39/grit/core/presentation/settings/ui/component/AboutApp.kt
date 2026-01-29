@@ -109,6 +109,7 @@ fun AboutApp() {
                     Icon(
                         imageVector = vectorResource(Res.drawable.buymeacoffee),
                         contentDescription = "Buy me a coffee",
+                        modifier = Modifier.size(24.dp)
                     )
 
                     Text(text = stringResource(Res.string.bmc))
