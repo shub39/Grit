@@ -17,14 +17,6 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.shape.CircleShape
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.automirrored.filled.ArrowBack
-import androidx.compose.material.icons.filled.Create
-import androidx.compose.material.icons.rounded.Check
-import androidx.compose.material.icons.rounded.DarkMode
-import androidx.compose.material.icons.rounded.FontDownload
-import androidx.compose.material.icons.rounded.LightMode
-import androidx.compose.material.icons.rounded.Palette
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonGroupDefaults
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -56,6 +48,7 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.text.font.Font
 import androidx.compose.ui.text.font.FontFamily
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.materialkolor.PaletteStyle
 import com.materialkolor.rememberDynamicColorScheme
@@ -72,10 +65,16 @@ import com.shub39.grit.core.presentation.theme.GritTheme
 import com.shub39.grit.core.presentation.theme.Theme
 import grit.shared.core.generated.resources.Res
 import grit.shared.core.generated.resources.app_theme
+import grit.shared.core.generated.resources.arrow_back
+import grit.shared.core.generated.resources.check_circle
+import grit.shared.core.generated.resources.dark_mode
+import grit.shared.core.generated.resources.edit
 import grit.shared.core.generated.resources.font
+import grit.shared.core.generated.resources.light_mode
 import grit.shared.core.generated.resources.look_and_feel
 import grit.shared.core.generated.resources.material_theme
 import grit.shared.core.generated.resources.material_theme_desc
+import grit.shared.core.generated.resources.palette
 import grit.shared.core.generated.resources.palette_style
 import grit.shared.core.generated.resources.select_seed
 import grit.shared.core.generated.resources.select_seed_desc
@@ -83,7 +82,7 @@ import grit.shared.core.generated.resources.unlock_more_plus
 import grit.shared.core.generated.resources.use_amoled
 import grit.shared.core.generated.resources.use_amoled_desc
 import org.jetbrains.compose.resources.stringResource
-import org.jetbrains.compose.ui.tooling.preview.Preview
+import org.jetbrains.compose.resources.vectorResource
 import java.util.Locale
 
 @OptIn(ExperimentalMaterial3Api::class, ExperimentalMaterial3ExpressiveApi::class)
@@ -114,7 +113,7 @@ fun LookAndFeelPage(
                     onClick = onNavigateBack
                 ) {
                     Icon(
-                        imageVector = Icons.AutoMirrored.Default.ArrowBack,
+                        imageVector = vectorResource(Res.drawable.arrow_back),
                         contentDescription = "Navigate Back"
                     )
                 }
@@ -136,13 +135,16 @@ fun LookAndFeelPage(
                         ListItem(
                             leadingContent = {
                                 Icon(
-                                    imageVector = when (state.theme.appTheme) {
-                                        AppTheme.SYSTEM -> {
-                                            if (isSystemInDarkTheme()) Icons.Rounded.DarkMode else Icons.Rounded.LightMode
+                                    imageVector = vectorResource(
+                                        when (state.theme.appTheme) {
+                                            AppTheme.SYSTEM -> {
+                                                if (isSystemInDarkTheme()) Res.drawable.dark_mode else Res.drawable.light_mode
+                                            }
+
+                                            AppTheme.DARK -> Res.drawable.dark_mode
+                                            AppTheme.LIGHT -> Res.drawable.light_mode
                                         }
-                                        AppTheme.DARK -> Icons.Rounded.DarkMode
-                                        AppTheme.LIGHT -> Icons.Rounded.LightMode
-                                    },
+                                    ),
                                     contentDescription = null
                                 )
                             },
@@ -164,7 +166,13 @@ fun LookAndFeelPage(
                             AppTheme.entries.forEach { appTheme ->
                                 ToggleButton(
                                     checked = appTheme == state.theme.appTheme,
-                                    onCheckedChange = { onAction(SettingsAction.ChangeAppTheme(appTheme)) },
+                                    onCheckedChange = {
+                                        onAction(
+                                            SettingsAction.ChangeAppTheme(
+                                                appTheme
+                                            )
+                                        )
+                                    },
                                     modifier = Modifier.weight(1f),
                                     colors = ToggleButtonDefaults.toggleButtonColors(
                                         containerColor = MaterialTheme.colorScheme.surfaceContainerLow
@@ -242,7 +250,7 @@ fun LookAndFeelPage(
                             },
                             leadingContent = {
                                 Icon(
-                                    imageVector = Icons.Rounded.FontDownload,
+                                    imageVector = vectorResource(Res.drawable.font),
                                     contentDescription = null
                                 )
                             },
@@ -268,7 +276,11 @@ fun LookAndFeelPage(
                                 ) {
                                     Text(
                                         text = font.name.lowercase()
-                                            .replaceFirstChar { if (it.isLowerCase()) it.titlecase(Locale.getDefault()) else it.toString() },
+                                            .replaceFirstChar {
+                                                if (it.isLowerCase()) it.titlecase(
+                                                    Locale.getDefault()
+                                                ) else it.toString()
+                                            },
                                         fontFamily = FontFamily(Font(font.resource))
                                     )
                                 }
@@ -324,7 +336,7 @@ fun LookAndFeelPage(
                                     enabled = state.isUserSubscribed
                                 ) {
                                     Icon(
-                                        imageVector = Icons.Default.Create,
+                                        imageVector = vectorResource(Res.drawable.edit),
                                         contentDescription = "Select Color"
                                     )
                                 }
@@ -347,7 +359,7 @@ fun LookAndFeelPage(
                             colors = listItemColors(),
                             leadingContent = {
                                 Icon(
-                                    imageVector = Icons.Rounded.Palette,
+                                    imageVector = vectorResource(Res.drawable.palette),
                                     contentDescription = null
                                 )
                             }
@@ -390,7 +402,7 @@ fun LookAndFeelPage(
                                 ) {
                                     if (selected) {
                                         Icon(
-                                            imageVector = Icons.Rounded.Check,
+                                            imageVector = vectorResource(Res.drawable.check_circle),
                                             contentDescription = null,
                                             tint = scheme.onTertiary
                                         )

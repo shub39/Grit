@@ -19,18 +19,19 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.BlurredEdgeTreatment
 import androidx.compose.ui.draw.blur
-import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import com.shub39.grit.core.utils.blurPossible
 import grit.shared.core.generated.resources.Res
 import grit.shared.core.generated.resources.unlock_plus
+import org.jetbrains.compose.resources.DrawableResource
+import org.jetbrains.compose.resources.painterResource
 import org.jetbrains.compose.resources.stringResource
 
 @Composable
 fun AnalyticsCard(
     title: String,
-    icon: ImageVector,
+    icon: DrawableResource,
     modifier: Modifier = Modifier,
     canSeeContent: Boolean = true,
     onPlusClick: () -> Unit = {},
@@ -49,7 +50,7 @@ fun AnalyticsCard(
             verticalAlignment = Alignment.CenterVertically
         ) {
             Icon(
-                imageVector = icon,
+                painter = painterResource(icon),
                 contentDescription = null,
                 tint = MaterialTheme.colorScheme.primary
             )

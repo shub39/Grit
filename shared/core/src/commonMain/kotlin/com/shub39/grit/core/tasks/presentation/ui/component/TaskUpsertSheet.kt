@@ -11,10 +11,6 @@ import androidx.compose.foundation.layout.widthIn
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.rounded.Add
-import androidx.compose.material.icons.rounded.Edit
-import androidx.compose.material.icons.rounded.Schedule
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonShapes
 import androidx.compose.material3.DatePicker
@@ -51,18 +47,22 @@ import com.shub39.grit.core.tasks.domain.Category
 import com.shub39.grit.core.tasks.domain.Task
 import com.shub39.grit.core.utils.toFormattedString
 import grit.shared.core.generated.resources.Res
+import grit.shared.core.generated.resources.add
 import grit.shared.core.generated.resources.add_reminder
 import grit.shared.core.generated.resources.add_task
 import grit.shared.core.generated.resources.delete
 import grit.shared.core.generated.resources.done
+import grit.shared.core.generated.resources.edit
 import grit.shared.core.generated.resources.edit_task
 import grit.shared.core.generated.resources.invalid_date_time
 import grit.shared.core.generated.resources.save
+import grit.shared.core.generated.resources.schedule
 import kotlinx.datetime.LocalDateTime
 import kotlinx.datetime.LocalTime
 import kotlinx.datetime.TimeZone
 import kotlinx.datetime.toLocalDateTime
 import org.jetbrains.compose.resources.stringResource
+import org.jetbrains.compose.resources.vectorResource
 import kotlin.time.Clock
 import kotlin.time.ExperimentalTime
 import kotlin.time.Instant
@@ -121,7 +121,7 @@ fun TaskUpsertSheetContent(
         ) {
             item {
                 Icon(
-                    imageVector = if (save) Icons.Rounded.Edit else Icons.Rounded.Add,
+                    imageVector = vectorResource(if (save) Res.drawable.edit else Res.drawable.add),
                     contentDescription = "Upsert",
                 )
             }
@@ -296,7 +296,7 @@ fun TaskUpsertSheetContent(
                     onClick = { showTimePicker = true }
                 ) {
                     Icon(
-                        imageVector = Icons.Rounded.Schedule,
+                        imageVector = vectorResource(Res.drawable.schedule),
                         contentDescription = "Select Time"
                     )
                 }

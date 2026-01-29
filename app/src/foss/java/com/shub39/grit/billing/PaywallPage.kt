@@ -9,8 +9,6 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Warning
 import androidx.compose.material3.Button
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
@@ -37,7 +35,9 @@ import grit.shared.core.generated.resources.Res
 import grit.shared.core.generated.resources.bmc
 import grit.shared.core.generated.resources.foss
 import grit.shared.core.generated.resources.foss_desc
+import grit.shared.core.generated.resources.warning
 import org.jetbrains.compose.resources.stringResource
+import org.jetbrains.compose.resources.vectorResource
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -65,7 +65,7 @@ fun PaywallPage(
                 verticalArrangement = Arrangement.spacedBy(8.dp)
             ) {
                 Icon(
-                    imageVector = Icons.Default.Warning,
+                    imageVector = vectorResource(Res.drawable.warning),
                     contentDescription = "Warning",
                     modifier = Modifier.size(48.dp)
                 )

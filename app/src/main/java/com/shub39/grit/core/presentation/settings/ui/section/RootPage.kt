@@ -12,12 +12,6 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.automirrored.filled.KeyboardArrowRight
-import androidx.compose.material.icons.automirrored.rounded.ArrowForwardIos
-import androidx.compose.material.icons.rounded.Add
-import androidx.compose.material.icons.rounded.Download
-import androidx.compose.material.icons.rounded.Palette
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -48,13 +42,17 @@ import com.shub39.grit.core.presentation.settings.ui.component.leadingItemShape
 import com.shub39.grit.core.presentation.settings.ui.component.listItemColors
 import com.shub39.grit.core.presentation.settings.ui.component.middleItemShape
 import grit.shared.core.generated.resources.Res
+import grit.shared.core.generated.resources.add
+import grit.shared.core.generated.resources.arrow_forward
 import grit.shared.core.generated.resources.backup
 import grit.shared.core.generated.resources.backup_desc
 import grit.shared.core.generated.resources.biometric_lock
 import grit.shared.core.generated.resources.biometric_lock_desc
+import grit.shared.core.generated.resources.download
 import grit.shared.core.generated.resources.grit_plus
 import grit.shared.core.generated.resources.look_and_feel
 import grit.shared.core.generated.resources.look_and_feel_desc
+import grit.shared.core.generated.resources.palette
 import grit.shared.core.generated.resources.pause_notifications
 import grit.shared.core.generated.resources.pause_notifications_desc
 import grit.shared.core.generated.resources.reorder_tasks
@@ -67,6 +65,7 @@ import grit.shared.core.generated.resources.use_24Hr
 import grit.shared.core.generated.resources.use_24Hr_desc
 import kotlinx.datetime.DayOfWeek
 import org.jetbrains.compose.resources.stringResource
+import org.jetbrains.compose.resources.vectorResource
 
 @OptIn(ExperimentalMaterial3Api::class, ExperimentalMaterial3ExpressiveApi::class)
 @Composable
@@ -125,7 +124,7 @@ fun RootPage(
                         verticalAlignment = Alignment.CenterVertically
                     ) {
                         Icon(
-                            imageVector = Icons.Rounded.Add,
+                            imageVector = vectorResource(Res.drawable.add),
                             contentDescription = "Grit Plus",
                         )
 
@@ -140,7 +139,7 @@ fun RootPage(
                         Spacer(modifier = Modifier.weight(1f))
 
                         Icon(
-                            imageVector = Icons.AutoMirrored.Filled.KeyboardArrowRight,
+                            imageVector = vectorResource(Res.drawable.arrow_forward),
                             contentDescription = "Grit Plus"
                         )
                     }
@@ -318,13 +317,13 @@ fun RootPage(
                         },
                         trailingContent = {
                             Icon(
-                                imageVector = Icons.AutoMirrored.Rounded.ArrowForwardIos,
+                                imageVector = vectorResource(Res.drawable.arrow_forward),
                                 contentDescription = "Navigate"
                             )
                         },
                         leadingContent = {
                             Icon(
-                                imageVector = Icons.Rounded.Palette,
+                                imageVector = vectorResource(Res.drawable.palette),
                                 contentDescription = "Navigate",
                             )
                         },
@@ -377,13 +376,13 @@ fun RootPage(
                         },
                         trailingContent = {
                             Icon(
-                                imageVector = Icons.AutoMirrored.Rounded.ArrowForwardIos,
+                                imageVector = vectorResource(Res.drawable.arrow_forward),
                                 contentDescription = "Navigate"
                             )
                         },
                         leadingContent = {
                             Icon(
-                                imageVector = Icons.Rounded.Download,
+                                imageVector = vectorResource(Res.drawable.download),
                                 contentDescription = "Backup",
                             )
                         }

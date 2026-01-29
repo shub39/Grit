@@ -27,12 +27,10 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalLayoutDirection
-import androidx.compose.ui.res.painterResource
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
-import com.shub39.grit.R
 import com.shub39.grit.app.Routes.Companion.toIconRes
 import com.shub39.grit.app.Routes.Companion.toStringRes
 import com.shub39.grit.billing.PaywallPage
@@ -46,11 +44,15 @@ import com.shub39.grit.viewmodels.HabitViewModel
 import com.shub39.grit.viewmodels.SettingsViewModel
 import com.shub39.grit.viewmodels.TasksViewModel
 import grit.shared.core.generated.resources.Res
+import grit.shared.core.generated.resources.alarm
+import grit.shared.core.generated.resources.check_list
 import grit.shared.core.generated.resources.habits
 import grit.shared.core.generated.resources.settings
 import grit.shared.core.generated.resources.tasks
 import kotlinx.serialization.Serializable
+import org.jetbrains.compose.resources.DrawableResource
 import org.jetbrains.compose.resources.StringResource
+import org.jetbrains.compose.resources.painterResource
 import org.jetbrains.compose.resources.stringResource
 import org.koin.androidx.compose.koinViewModel
 import org.koin.compose.koinInject
@@ -77,11 +79,11 @@ private sealed interface Routes {
             }
         }
 
-        fun Routes.toIconRes(): Int {
+        fun Routes.toIconRes(): DrawableResource {
             return when (this) {
-                HabitsPages -> R.drawable.round_alarm_24
-                TaskPages -> R.drawable.round_checklist_24
-                SettingsPages -> R.drawable.round_settings_24
+                HabitsPages -> Res.drawable.alarm
+                TaskPages -> Res.drawable.check_list
+                SettingsPages -> Res.drawable.settings
             }
         }
     }

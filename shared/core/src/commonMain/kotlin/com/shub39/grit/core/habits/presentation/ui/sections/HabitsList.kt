@@ -13,10 +13,6 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.rounded.Add
-import androidx.compose.material.icons.rounded.Analytics
-import androidx.compose.material.icons.rounded.DragIndicator
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.ExperimentalMaterial3ExpressiveApi
 import androidx.compose.material3.FloatingActionButton
@@ -43,11 +39,15 @@ import com.shub39.grit.core.shared_ui.Empty
 import com.shub39.grit.core.shared_ui.PageFill
 import com.shub39.grit.core.utils.LocalWindowSizeClass
 import grit.shared.core.generated.resources.Res
+import grit.shared.core.generated.resources.add
 import grit.shared.core.generated.resources.add_habit
+import grit.shared.core.generated.resources.analytics
+import grit.shared.core.generated.resources.drag_indicator
 import kotlinx.datetime.DayOfWeek
 import kotlinx.datetime.TimeZone
 import kotlinx.datetime.toLocalDateTime
 import org.jetbrains.compose.resources.stringResource
+import org.jetbrains.compose.resources.vectorResource
 import sh.calvin.reorderable.ReorderableItem
 import sh.calvin.reorderable.rememberReorderableLazyListState
 import kotlin.time.Clock
@@ -105,7 +105,7 @@ fun HabitsList(
                         is24Hr = state.is24Hr,
                         reorderHandle = {
                             Icon(
-                                imageVector = Icons.Rounded.DragIndicator,
+                                imageVector = vectorResource(Res.drawable.drag_indicator),
                                 contentDescription = "Drag Indicator",
                                 modifier = Modifier.draggableHandle(
                                     onDragStopped = { onAction(HabitsAction.ReorderHabits) }
@@ -155,7 +155,7 @@ fun HabitsList(
                 )
             ) {
                 Icon(
-                    imageVector = Icons.Rounded.Analytics,
+                    imageVector = vectorResource(Res.drawable.analytics),
                     contentDescription = "All Analytics"
                 )
             }
@@ -177,7 +177,7 @@ fun HabitsList(
                     verticalAlignment = Alignment.CenterVertically,
                 ) {
                     Icon(
-                        imageVector = Icons.Rounded.Add,
+                        imageVector = vectorResource(Res.drawable.add),
                         contentDescription = "Add Habit",
                         modifier = Modifier.size(FloatingActionButtonDefaults.MediumIconSize)
                     )
@@ -207,7 +207,7 @@ fun HabitsList(
                     verticalAlignment = Alignment.CenterVertically,
                 ) {
                     Icon(
-                        imageVector = Icons.Rounded.Add,
+                        imageVector = vectorResource(Res.drawable.add),
                         contentDescription = "Add Habit",
                         modifier = Modifier.size(FloatingActionButtonDefaults.MediumIconSize)
                     )
@@ -233,7 +233,7 @@ fun HabitsList(
                     )
                 ) {
                     Icon(
-                        imageVector = Icons.Rounded.Analytics,
+                        imageVector = vectorResource(Res.drawable.analytics),
                         contentDescription = "All Analytics"
                     )
                 }

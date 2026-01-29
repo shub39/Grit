@@ -4,13 +4,10 @@ import android.Manifest
 import android.app.NotificationChannel
 import android.app.NotificationManager
 import android.app.PendingIntent
-import android.content.ClipData
 import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.util.Log
-import androidx.compose.ui.platform.ClipEntry
-import androidx.compose.ui.platform.Clipboard
 import androidx.core.app.ActivityCompat
 import androidx.core.app.NotificationCompat
 import androidx.core.app.NotificationManagerCompat
@@ -21,14 +18,6 @@ import com.shub39.grit.core.domain.IntentActions
 import com.shub39.grit.core.habits.domain.Habit
 import com.shub39.grit.core.tasks.domain.Task
 import kotlin.random.Random
-
-suspend fun Clipboard.copyToClipboard(text: String) {
-    setClipEntry(
-        ClipEntry(
-            ClipData.newPlainText("Copied Text", text)
-        )
-    )
-}
 
 fun createNotificationChannel(context: Context) {
     val name = getString(context, R.string.channel_name)
@@ -60,12 +49,12 @@ fun habitNotification(context: Context, habit: Habit) {
 
     val builder = NotificationCompat
         .Builder(context, "1")
-        .setSmallIcon(R.drawable.round_alarm_24)
+        .setSmallIcon(R.mipmap.ic_launcher)
         .setContentTitle(habit.title)
         .setContentText(habit.description)
         .setPriority(NotificationCompat.PRIORITY_DEFAULT)
         .setAutoCancel(true)
-        .addAction(R.drawable.round_check_circle_24, context.getString(R.string.mark_done), pendingBroadcast)
+        .addAction(R.mipmap.ic_launcher, context.getString(R.string.mark_done), pendingBroadcast)
 
     with(NotificationManagerCompat.from(context)) {
         if (
@@ -97,11 +86,11 @@ fun taskNotification(context: Context, task: Task) {
     )
     val builder = NotificationCompat
         .Builder(context, "1")
-        .setSmallIcon(R.drawable.round_checklist_24)
+        .setSmallIcon(R.mipmap.ic_launcher)
         .setContentTitle(task.title)
         .setPriority(NotificationCompat.PRIORITY_DEFAULT)
         .setAutoCancel(true)
-        .addAction(R.drawable.round_check_circle_24, context.getString(R.string.mark_done), pendingBroadcast)
+        .addAction(R.mipmap.ic_launcher, context.getString(R.string.mark_done), pendingBroadcast)
 
     with(NotificationManagerCompat.from(context)){
         if (
@@ -120,15 +109,15 @@ fun taskNotification(context: Context, task: Task) {
 // gotta add this somewhere fr 💯
 fun getRandomLine(): String {
     return when(Random.nextInt(0, 10)) {
-        1 -> "💣🐊✈ Bombardino Crocodilo"
-        2 -> "🌳🦶👃 Brr Brr Patapim"
-        3 -> "🐘🌵 Lirili Larila"
-        4 -> "😺🦐 Trippi Troppi"
-        5 -> "☕🔪 Capucino Assassaino"
-        6 -> "😺🐟 Trulimero Trulichina"
-        7 -> "💀 Tung Tung Tung Sahur"
-        8 -> "🐵🍌 Chimpanzini Bananini"
-        9 -> "🦒🍉🌌 Giraffa Celeste"
-        else -> "🦈👟 Tralalero Tralala"
+        1 -> "Bombardino Crocodilo"
+        2 -> "Brr Brr Patapim"
+        3 -> "Lirili Larila"
+        4 -> "Trippi Troppi"
+        5 -> "Capucino Assassaino"
+        6 -> "Trulimero Trulichina"
+        7 -> "Tung Tung Tung Sahur"
+        8 -> "Chimpanzini Bananini"
+        9 -> "Giraffa Celeste"
+        else -> "Tralalero Tralala"
     }
 }

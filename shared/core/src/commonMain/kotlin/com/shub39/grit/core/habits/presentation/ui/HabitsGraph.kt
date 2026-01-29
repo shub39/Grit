@@ -11,10 +11,6 @@ import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.widthIn
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.rounded.DensityLarge
-import androidx.compose.material.icons.rounded.Expand
-import androidx.compose.material.icons.rounded.Reorder
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.ExperimentalMaterial3ExpressiveApi
 import androidx.compose.material3.FilledTonalIconToggleButton
@@ -42,9 +38,13 @@ import com.shub39.grit.core.habits.presentation.ui.sections.HabitsList
 import com.shub39.grit.core.habits.presentation.ui.sections.OverallAnalytics
 import com.shub39.grit.core.utils.LocalWindowSizeClass
 import grit.shared.core.generated.resources.Res
+import grit.shared.core.generated.resources.collapse
 import grit.shared.core.generated.resources.completed
+import grit.shared.core.generated.resources.expand
 import grit.shared.core.generated.resources.habits
+import grit.shared.core.generated.resources.reorder
 import kotlinx.serialization.Serializable
+import org.jetbrains.compose.resources.painterResource
 import org.jetbrains.compose.resources.stringResource
 
 @Serializable
@@ -212,11 +212,11 @@ private fun HabitsBar(
                         }
                     ) {
                         Icon(
-                            imageVector = if (state.compactHabitView) {
-                                Icons.Rounded.Expand
+                            painter = painterResource(if (state.compactHabitView) {
+                                Res.drawable.expand
                             } else {
-                                Icons.Rounded.DensityLarge
-                            },
+                                Res.drawable.collapse
+                            }),
                             contentDescription = "Compact View"
                         )
                     }
@@ -232,7 +232,7 @@ private fun HabitsBar(
                         enabled = state.habitsWithAnalytics.isNotEmpty()
                     ) {
                         Icon(
-                            imageVector = Icons.Rounded.Reorder,
+                            painter = painterResource(Res.drawable.reorder),
                             contentDescription = null
                         )
                     }

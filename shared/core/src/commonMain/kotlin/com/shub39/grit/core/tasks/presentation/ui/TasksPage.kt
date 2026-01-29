@@ -13,11 +13,6 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.text.KeyboardOptions
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.rounded.Delete
-import androidx.compose.material.icons.rounded.DragIndicator
-import androidx.compose.material.icons.rounded.Edit
-import androidx.compose.material.icons.rounded.Warning
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonShapes
 import androidx.compose.material3.ExperimentalMaterial3ExpressiveApi
@@ -55,10 +50,14 @@ import grit.shared.core.generated.resources.cancel
 import grit.shared.core.generated.resources.delete
 import grit.shared.core.generated.resources.delete_category
 import grit.shared.core.generated.resources.done
+import grit.shared.core.generated.resources.drag_indicator
+import grit.shared.core.generated.resources.edit
 import grit.shared.core.generated.resources.edit_categories
 import grit.shared.core.generated.resources.tasks
+import grit.shared.core.generated.resources.warning
 import kotlinx.coroutines.delay
 import org.jetbrains.compose.resources.stringResource
+import org.jetbrains.compose.resources.vectorResource
 import sh.calvin.reorderable.ReorderableItem
 import sh.calvin.reorderable.rememberReorderableLazyListState
 
@@ -119,7 +118,7 @@ private fun CategoryEditDialog(
             verticalArrangement = Arrangement.spacedBy(8.dp)
         ) {
             Icon(
-                imageVector = Icons.Rounded.Edit,
+                imageVector = vectorResource(Res.drawable.edit),
                 contentDescription = null,
                 modifier = Modifier.size(48.dp)
             )
@@ -162,7 +161,7 @@ private fun CategoryEditDialog(
                                     onClick = { showEditSheet = true }
                                 ) {
                                     Icon(
-                                        imageVector = Icons.Rounded.Edit,
+                                        imageVector = vectorResource(Res.drawable.edit),
                                         contentDescription = "Edit"
                                     )
                                 }
@@ -174,14 +173,14 @@ private fun CategoryEditDialog(
                                         enabled = categories.size > 1
                                     ) {
                                         Icon(
-                                            imageVector = Icons.Rounded.Delete,
+                                            imageVector = vectorResource(Res.drawable.delete),
                                             contentDescription = "Delete"
                                         )
                                     }
 
                                     AnimatedVisibility(visible = categories.size > 1) {
                                         Icon(
-                                            imageVector = Icons.Rounded.DragIndicator,
+                                            imageVector = vectorResource(Res.drawable.drag_indicator),
                                             contentDescription = null,
                                             modifier = Modifier
                                                 .padding(horizontal = 8.dp)
@@ -198,7 +197,7 @@ private fun CategoryEditDialog(
                             onDismissRequest = { showDeleteDialog = false }
                         ) {
                             Icon(
-                                imageVector = Icons.Rounded.Warning,
+                                imageVector = vectorResource(Res.drawable.warning),
                                 contentDescription = null
                             )
 
@@ -260,7 +259,7 @@ private fun CategoryEditDialog(
                             }
 
                             Icon(
-                                imageVector = Icons.Rounded.Edit,
+                                imageVector = vectorResource(Res.drawable.edit),
                                 contentDescription = "Edit Category"
                             )
 

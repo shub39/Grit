@@ -11,11 +11,6 @@ import androidx.compose.foundation.layout.widthIn
 import androidx.compose.foundation.lazy.staggeredgrid.LazyVerticalStaggeredGrid
 import androidx.compose.foundation.lazy.staggeredgrid.StaggeredGridCells
 import androidx.compose.foundation.shape.CircleShape
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.automirrored.filled.ArrowBack
-import androidx.compose.material.icons.rounded.Delete
-import androidx.compose.material.icons.rounded.Edit
-import androidx.compose.material.icons.rounded.Warning
 import androidx.compose.material3.ButtonShapes
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.ExperimentalMaterial3ExpressiveApi
@@ -58,11 +53,15 @@ import com.shub39.grit.core.shared_ui.GritDialog
 import com.shub39.grit.core.shared_ui.PageFill
 import com.shub39.grit.core.utils.LocalWindowSizeClass
 import grit.shared.core.generated.resources.Res
+import grit.shared.core.generated.resources.arrow_back
 import grit.shared.core.generated.resources.cancel
 import grit.shared.core.generated.resources.delete
 import grit.shared.core.generated.resources.delete_warning
+import grit.shared.core.generated.resources.edit
+import grit.shared.core.generated.resources.warning
 import kotlinx.datetime.YearMonth
 import org.jetbrains.compose.resources.stringResource
+import org.jetbrains.compose.resources.vectorResource
 import kotlin.time.ExperimentalTime
 
 @OptIn(ExperimentalMaterial3Api::class, ExperimentalMaterial3ExpressiveApi::class,
@@ -130,7 +129,7 @@ fun AnalyticsPage(
                     onClick = onNavigateBack
                 ) {
                     Icon(
-                        imageVector = Icons.AutoMirrored.Filled.ArrowBack,
+                        imageVector = vectorResource(Res.drawable.arrow_back),
                         contentDescription = "Navigate Back"
                     )
                 }
@@ -144,7 +143,7 @@ fun AnalyticsPage(
                     )
                 ) {
                     Icon(
-                        imageVector = Icons.Rounded.Delete,
+                        imageVector = vectorResource(Res.drawable.delete),
                         contentDescription = "Delete Habit"
                     )
                 }
@@ -157,7 +156,7 @@ fun AnalyticsPage(
                     )
                 ) {
                     Icon(
-                        imageVector = Icons.Rounded.Edit,
+                        imageVector = vectorResource(Res.drawable.edit),
                         contentDescription = "Edit Habit"
                     )
                 }
@@ -235,7 +234,7 @@ fun AnalyticsPage(
             onDismissRequest = { deleteDialog = false }
         ) {
             Icon(
-                imageVector = Icons.Rounded.Warning,
+                imageVector = vectorResource(Res.drawable.warning),
                 contentDescription = "Warning"
             )
 

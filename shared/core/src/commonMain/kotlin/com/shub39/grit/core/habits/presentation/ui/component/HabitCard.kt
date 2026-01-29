@@ -15,11 +15,6 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.outlined.Circle
-import androidx.compose.material.icons.rounded.Analytics
-import androidx.compose.material.icons.rounded.CheckCircleOutline
-import androidx.compose.material.icons.rounded.LocalFireDepartment
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -45,11 +40,17 @@ import com.kizitonwose.calendar.core.plusDays
 import com.shub39.grit.core.habits.domain.HabitWithAnalytics
 import com.shub39.grit.core.habits.presentation.HabitsAction
 import com.shub39.grit.core.utils.toFormattedString
+import grit.shared.core.generated.resources.Res
+import grit.shared.core.generated.resources.analytics
+import grit.shared.core.generated.resources.check_circle
+import grit.shared.core.generated.resources.circle_border
+import grit.shared.core.generated.resources.heat
 import kotlinx.datetime.DateTimeUnit
 import kotlinx.datetime.DayOfWeek
 import kotlinx.datetime.TimeZone
 import kotlinx.datetime.minus
 import kotlinx.datetime.todayIn
+import org.jetbrains.compose.resources.vectorResource
 import kotlin.time.Clock
 import kotlin.time.ExperimentalTime
 
@@ -128,7 +129,7 @@ fun HabitCard(
                     targetState = completed
                 ) {
                     Icon(
-                        imageVector = if (!it) Icons.Outlined.Circle else Icons.Rounded.CheckCircleOutline,
+                        imageVector = vectorResource(if (!it) Res.drawable.circle_border else Res.drawable.check_circle),
                         contentDescription = null,
                     )
                 }
@@ -163,7 +164,7 @@ fun HabitCard(
                         horizontalArrangement = Arrangement.spacedBy(4.dp)
                     ) {
                         Icon(
-                            imageVector = Icons.Rounded.LocalFireDepartment,
+                            imageVector = vectorResource(Res.drawable.heat),
                             contentDescription = null
                         )
 
@@ -180,7 +181,7 @@ fun HabitCard(
                         enabled = analyticsEnabled
                     ) {
                         Icon(
-                            imageVector = Icons.Rounded.Analytics,
+                            imageVector = vectorResource(Res.drawable.analytics),
                             contentDescription = "Analytics"
                         )
                     }

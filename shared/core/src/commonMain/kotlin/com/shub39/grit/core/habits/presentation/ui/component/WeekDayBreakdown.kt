@@ -2,8 +2,6 @@ package com.shub39.grit.core.habits.presentation.ui.component
 
 import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.rounded.ViewDay
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
@@ -13,6 +11,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import com.shub39.grit.core.habits.presentation.HabitsAction
 import grit.shared.core.generated.resources.Res
+import grit.shared.core.generated.resources.view_day
 import grit.shared.core.generated.resources.week_breakdown
 import ir.ehsannarmani.compose_charts.RowChart
 import ir.ehsannarmani.compose_charts.models.AnimationMode
@@ -36,7 +35,7 @@ fun WeekDayBreakdown(
 ) {
     AnalyticsCard(
         title = stringResource(Res.string.week_breakdown),
-        icon = Icons.Rounded.ViewDay,
+        icon = Res.drawable.view_day,
         canSeeContent = canSeeContent,
         onPlusClick = { onAction(HabitsAction.OnShowPaywall) },
         modifier = modifier.heightIn(max = 300.dp)
