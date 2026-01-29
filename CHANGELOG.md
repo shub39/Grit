@@ -1,5 +1,8 @@
 # Changelog
 
+## 5.6.0
+- migrated to `koin-annotations`
+
 ## 5.5.4
 - Removed unnecessary permissions #184
 

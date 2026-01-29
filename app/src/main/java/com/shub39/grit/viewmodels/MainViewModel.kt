@@ -7,7 +7,9 @@ import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.flow.update
+import org.koin.android.annotation.KoinViewModel
 
+@KoinViewModel
 class MainViewModel : ViewModel() {
     private var _state = MutableStateFlow(false)
 

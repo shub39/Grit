@@ -16,10 +16,12 @@ import kotlinx.datetime.TimeZone
 import kotlinx.datetime.plus
 import kotlinx.datetime.toInstant
 import kotlinx.datetime.toLocalDateTime
+import org.koin.core.annotation.Single
 import kotlin.time.Clock
 import kotlin.time.ExperimentalTime
 
 //implementation of AlarmScheduler using AlarmManager
+@Single(binds = [AlarmScheduler::class])
 @OptIn(ExperimentalTime::class)
 class NotificationAlarmScheduler(
     private val context: Context

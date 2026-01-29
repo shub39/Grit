@@ -73,8 +73,8 @@ android {
     }
 
     compileOptions {
-        sourceCompatibility = JavaVersion.VERSION_17
-        targetCompatibility = JavaVersion.VERSION_17
+        sourceCompatibility = JavaVersion.VERSION_21
+        targetCompatibility = JavaVersion.VERSION_21
     }
 
     buildFeatures {
@@ -115,7 +115,6 @@ dependencies {
     implementation(libs.androidx.core.splashscreen)
     implementation(libs.androidx.room.runtime)
     ksp(libs.androidx.room.compiler)
-    implementation(libs.koin.androidx.compose)
     implementation(libs.androidx.glance.appwidget)
     implementation(libs.androidx.glance.material3)
     implementation(libs.androidx.glance.appwidget.preview)
@@ -126,7 +125,7 @@ dependencies {
     implementation(libs.composeicons.fontawesome)
     implementation(libs.androidx.biometric)
     implementation(libs.kotlinx.datetime)
-    implementation(libs.kotlinx.serialization.json) // remove if added ktor
+    implementation(libs.kotlinx.serialization.json)
 
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
@@ -136,14 +135,17 @@ dependencies {
     testImplementation(libs.androidx.room.testing)
     androidTestImplementation(libs.truth)
 
+    implementation(libs.koin.core)
+    implementation(libs.koin.compose)
+    implementation(libs.koin.compose.viewmodel)
+    implementation(libs.koin.compose.viewmodel.navigation)
+    ksp(libs.koin.ksp.compiler)
+    api(libs.koin.annotations)
+
 //    implementation(libs.ktor.server.core)
 //    implementation(libs.ktor.server.cio)
 //    implementation(libs.ktor.serialization.kotlinx.json)
 //    implementation(libs.ktor.server.content.negotiation)
-//
-//    implementation(libs.kotlinx.rpc.krpc.server)
-//    implementation(libs.kotlinx.rpc.krpc.serialization.json)
-//    implementation(libs.kotlinx.rpc.krpc.ktor.server)
 }
 
 room {

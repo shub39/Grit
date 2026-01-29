@@ -54,8 +54,8 @@ import org.jetbrains.compose.resources.DrawableResource
 import org.jetbrains.compose.resources.StringResource
 import org.jetbrains.compose.resources.painterResource
 import org.jetbrains.compose.resources.stringResource
-import org.koin.androidx.compose.koinViewModel
 import org.koin.compose.koinInject
+import org.koin.compose.viewmodel.koinViewModel
 
 @Serializable
 private sealed interface Routes {
@@ -91,7 +91,7 @@ private sealed interface Routes {
 
 @OptIn(ExperimentalMaterial3Api::class, ExperimentalMaterial3ExpressiveApi::class)
 @Composable
-fun Grit() {
+fun App() {
     val windowSizeClass = LocalWindowSizeClass.current
 
     val svm: SettingsViewModel = koinInject()

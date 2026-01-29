@@ -27,7 +27,7 @@
         android:roundIcon="@mipmap/ic_launcher"
         android:supportsRtl="true"
         android:theme="@style/Theme.Grit"
-        android:name=".app.GritApp"
+        android:name=".app.GritApplication"
         tools:targetApi="31">
         <activity
             android:name=".app.MainActivity"

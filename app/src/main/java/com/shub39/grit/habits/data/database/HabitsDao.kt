@@ -6,7 +6,7 @@ import androidx.room.Upsert
 import kotlinx.coroutines.flow.Flow
 
 @Dao
-interface HabitDao {
+interface HabitsDao {
     @Query("SELECT * FROM habit_index WHERE id = :habitId")
     suspend fun getHabitById(habitId: Long): HabitEntity?
 

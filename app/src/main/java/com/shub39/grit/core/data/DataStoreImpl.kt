@@ -16,7 +16,9 @@ import com.shub39.grit.core.domain.Pages
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
 import kotlinx.datetime.DayOfWeek
+import org.koin.core.annotation.Single
 
+@Single(binds = [GritDatastore::class])
 class DataStoreImpl(
     private val datastore: DataStore<Preferences>
 ) : GritDatastore {

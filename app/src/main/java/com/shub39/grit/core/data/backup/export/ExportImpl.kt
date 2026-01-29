@@ -16,10 +16,12 @@ import kotlinx.coroutines.withContext
 import kotlinx.datetime.TimeZone
 import kotlinx.datetime.toLocalDateTime
 import kotlinx.serialization.json.Json
+import org.koin.core.annotation.Single
 import java.io.File
 import kotlin.time.Clock
 import kotlin.time.ExperimentalTime
 
+@Single(binds = [ExportRepo::class])
 class ExportImpl(
     private val taskRepo: TaskRepo,
     private val habitsRepo: HabitRepo

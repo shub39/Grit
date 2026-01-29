@@ -48,8 +48,8 @@ import com.shub39.grit.core.data.toHabit
 import com.shub39.grit.core.data.toHabitStatus
 import com.shub39.grit.core.habits.domain.Habit
 import com.shub39.grit.core.habits.domain.HabitStatus
-import com.shub39.grit.habits.data.database.HabitDao
 import com.shub39.grit.habits.data.database.HabitStatusDao
+import com.shub39.grit.habits.data.database.HabitsDao
 import com.shub39.grit.habits.data.repository.countCurrentStreak
 import grit.shared.core.generated.resources.Res
 import grit.shared.core.generated.resources.arrow_back
@@ -66,6 +66,7 @@ import kotlinx.datetime.TimeZone
 import kotlinx.datetime.minus
 import kotlinx.datetime.todayIn
 import org.jetbrains.compose.resources.imageResource
+import org.koin.core.annotation.Factory
 import org.koin.core.component.KoinComponent
 import org.koin.core.component.get
 import kotlin.time.Clock
@@ -78,10 +79,11 @@ class HabitStreakWidgetReceiver : GlanceAppWidgetReceiver() {
 private val directionKey = ActionParameters.Key<String>("DirectionKey")
 private val habitIdKey = longPreferencesKey("habit_id")
 
+@Factory
 class HabitStreakWidgetRepository(
     private val context: Context,
     private val statusDao: HabitStatusDao,
-    private val habitDao: HabitDao
+    private val habitDao: HabitsDao
 ) {
     suspend fun update(
         glanceId: GlanceId,
