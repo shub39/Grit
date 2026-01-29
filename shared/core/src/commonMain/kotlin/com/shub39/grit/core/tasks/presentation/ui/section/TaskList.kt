@@ -56,6 +56,7 @@ import androidx.compose.material3.TopAppBarScrollBehavior
 import androidx.compose.material3.animateFloatingActionButton
 import androidx.compose.material3.windowsizeclass.WindowWidthSizeClass
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -63,7 +64,10 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.focus.FocusRequester
+import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.input.nestedscroll.nestedScroll
+import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardCapitalization
 import androidx.compose.ui.text.style.TextAlign
@@ -97,6 +101,7 @@ import grit.shared.core.generated.resources.reorder
 import grit.shared.core.generated.resources.reorder_tasks
 import grit.shared.core.generated.resources.tasks
 import grit.shared.core.generated.resources.warning
+import kotlinx.coroutines.delay
 import org.jetbrains.compose.resources.stringResource
 import org.jetbrains.compose.resources.vectorResource
 import sh.calvin.reorderable.ReorderableItem
@@ -722,6 +727,15 @@ private fun AddCategorySheet(
     var name by remember { mutableStateOf("") }
 
     GritBottomSheet(onDismissRequest = onDismiss) {
+        val keyboardController = LocalSoftwareKeyboardController.current
+        val focusRequester = remember { FocusRequester() }
+
+        LaunchedEffect(Unit) {
+            delay(200)
+            focusRequester.requestFocus()
+            keyboardController?.show()
+        }
+
         Icon(imageVector = vectorResource(Res.drawable.add), contentDescription = "Add")
         Text(
             text = stringResource(Res.string.add_category),
@@ -737,7 +751,7 @@ private fun AddCategorySheet(
                 imeAction = ImeAction.Done
             ),
             singleLine = true,
-            modifier = Modifier.fillMaxWidth()
+            modifier = Modifier.fillMaxWidth().focusRequester(focusRequester)
         )
         Button(
             onClick = { onAddCategory(Category(name = name, color = CategoryColors.GRAY.color)) },
