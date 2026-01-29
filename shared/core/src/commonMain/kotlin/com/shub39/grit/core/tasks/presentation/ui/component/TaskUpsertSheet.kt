@@ -32,12 +32,16 @@ import androidx.compose.material3.ToggleButtonDefaults
 import androidx.compose.material3.rememberDatePickerState
 import androidx.compose.material3.rememberTimePickerState
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.focus.FocusRequester
+import androidx.compose.ui.focus.focusRequester
+import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardCapitalization
 import androidx.compose.ui.text.style.TextAlign
@@ -57,6 +61,7 @@ import grit.shared.core.generated.resources.edit_task
 import grit.shared.core.generated.resources.invalid_date_time
 import grit.shared.core.generated.resources.save
 import grit.shared.core.generated.resources.schedule
+import kotlinx.coroutines.delay
 import kotlinx.datetime.LocalDateTime
 import kotlinx.datetime.LocalTime
 import kotlinx.datetime.TimeZone
@@ -155,6 +160,15 @@ fun TaskUpsertSheetContent(
             }
 
             item {
+                val keyboardController = LocalSoftwareKeyboardController.current
+                val focusRequester = remember { FocusRequester() }
+
+                LaunchedEffect(Unit) {
+                    delay(200)
+                    focusRequester.requestFocus()
+                    keyboardController?.show()
+                }
+
                 OutlinedTextField(
                     value = newTask.title,
                     onValueChange = { newTask = newTask.copy(title = it) },
@@ -171,6 +185,7 @@ fun TaskUpsertSheetContent(
                     modifier = Modifier
                         .padding(horizontal = 16.dp)
                         .fillMaxWidth()
+                        .focusRequester(focusRequester)
                 )
             }
 
