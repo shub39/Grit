@@ -70,7 +70,7 @@ class MainActivity : FragmentActivity() {
 
                 GritTheme(theme = state.theme) {
                     if (showContent) {
-                        App()
+                        App(state = state)
                     } else {
                         InitialLoading()
                     }

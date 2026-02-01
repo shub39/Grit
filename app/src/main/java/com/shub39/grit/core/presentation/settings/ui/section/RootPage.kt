@@ -32,7 +32,7 @@ import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
-import com.shub39.grit.core.domain.Pages
+import com.shub39.grit.core.domain.Sections
 import com.shub39.grit.core.presentation.getRandomLine
 import com.shub39.grit.core.presentation.settings.SettingsAction
 import com.shub39.grit.core.presentation.settings.SettingsState
@@ -212,11 +212,11 @@ fun RootPage(
                         },
                         trailingContent = {
                             Switch(
-                                checked = state.startingPage == Pages.Habits,
+                                checked = state.startingPage == Sections.Habits,
                                 onCheckedChange = {
                                     onAction(
                                         SettingsAction.ChangeStartingPage(
-                                            if (it) Pages.Habits else Pages.Tasks
+                                            if (it) Sections.Habits else Sections.Tasks
                                         )
                                     )
                                 }

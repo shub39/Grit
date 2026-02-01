@@ -9,5 +9,7 @@ import com.shub39.grit.core.presentation.theme.Theme
 data class MainAppState(
     val isAppUnlocked: Boolean = false,
     val isBiometricLockOn: Boolean? = null,
+    val isUserSubscribed: Boolean = false,
+    val startingSection: Sections = Sections.Tasks,
     val theme: Theme = Theme()
 )

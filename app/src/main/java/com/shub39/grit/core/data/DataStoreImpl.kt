@@ -12,7 +12,7 @@ import com.materialkolor.PaletteStyle
 import com.shub39.grit.core.domain.AppTheme
 import com.shub39.grit.core.domain.Fonts
 import com.shub39.grit.core.domain.GritDatastore
-import com.shub39.grit.core.domain.Pages
+import com.shub39.grit.core.domain.Sections
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
 import kotlinx.datetime.DayOfWeek
@@ -103,12 +103,12 @@ class DataStoreImpl(
         }
     }
 
-    override fun getStartingPagePref(): Flow<Pages> = datastore.data.map { pref ->
-        val page = pref[startingPageKey] ?: Pages.Tasks.name
-        return@map Pages.valueOf(page)
+    override fun getStartingPagePref(): Flow<Sections> = datastore.data.map { pref ->
+        val page = pref[startingPageKey] ?: Sections.Tasks.name
+        return@map Sections.valueOf(page)
     }
 
-    override suspend fun setStartingPage(page: Pages) {
+    override suspend fun setStartingPage(page: Sections) {
         datastore.edit { prefs ->
             prefs[startingPageKey] = page.name
         }

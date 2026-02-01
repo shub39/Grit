@@ -2,7 +2,7 @@ package com.shub39.grit.core.presentation.settings
 
 import androidx.compose.runtime.Immutable
 import androidx.compose.runtime.Stable
-import com.shub39.grit.core.domain.Pages
+import com.shub39.grit.core.domain.Sections
 import com.shub39.grit.core.domain.backup.ExportState
 import com.shub39.grit.core.domain.backup.RestoreState
 import com.shub39.grit.core.presentation.theme.Theme
@@ -16,7 +16,7 @@ data class SettingsState(
     val reorderTasks: Boolean = false,
     val startOfTheWeek: DayOfWeek = DayOfWeek.MONDAY,
     val pauseNotifications: Boolean = false,
-    val startingPage: Pages = Pages.Tasks,
+    val startingPage: Sections = Sections.Tasks,
     val backupState: BackupState = BackupState(),
     val isBiometricLockOn: Boolean? = null,
     val isBiometricLockAvailable: Boolean = false,

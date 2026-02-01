@@ -27,17 +27,16 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalLayoutDirection
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import com.shub39.grit.app.AppSections.Companion.toIconRes
 import com.shub39.grit.app.AppSections.Companion.toStringRes
 import com.shub39.grit.billing.PaywallPage
-import com.shub39.grit.core.domain.Pages
+import com.shub39.grit.core.domain.MainAppState
+import com.shub39.grit.core.domain.Sections
 import com.shub39.grit.core.habits.presentation.ui.HabitsGraph
 import com.shub39.grit.core.presentation.settings.SettingsGraph
-import com.shub39.grit.core.presentation.settings.SettingsState
 import com.shub39.grit.core.tasks.presentation.ui.TasksPage
 import com.shub39.grit.core.utils.LocalWindowSizeClass
 import com.shub39.grit.viewmodels.HabitViewModel
@@ -100,10 +99,9 @@ private sealed interface AppSections {
 
 @OptIn(ExperimentalMaterial3Api::class, ExperimentalMaterial3ExpressiveApi::class)
 @Composable
-fun App() {
-    val svm: SettingsViewModel = koinInject()
-    val settingsState by svm.state.collectAsStateWithLifecycle()
-    
+fun App(
+    state: MainAppState
+) {
     val mainNavController = rememberNavController()
     
     NavHost(
@@ -112,7 +110,7 @@ fun App() {
     ) {
         composable<GlobalRoutes.PaywallPage> {
             PaywallPage(
-                isPlusUser = settingsState.isUserSubscribed,
+                isPlusUser = state.isUserSubscribed,
                 onDismissRequest = { mainNavController.navigateUp() }
             ) 
         }
@@ -129,16 +127,27 @@ fun App() {
                         bottomBar = {
                             AppNavBar(
                                 currentRoute = currentRoute,
-                                navController = navController,
-                                settingsState = settingsState
+                                onNavigate = { route ->
+                                    navController.navigate(route) {
+                                        launchSingleTop = true
+                                        popUpTo(
+                                            route = when (state.startingSection) {
+                                                Sections.Habits -> AppSections.HabitsPages
+                                                Sections.Tasks -> AppSections.TaskPages
+                                            },
+                                            popUpToBuilder = { saveState = true }
+                                        )
+                                        restoreState = true
+                                    }
+                                }
                             )
                         }
                     ) { padding ->
                         NavHost(
                             navController = navController,
-                            startDestination = when (settingsState.startingPage) {
-                                Pages.Tasks -> AppSections.TaskPages
-                                Pages.Habits -> AppSections.HabitsPages
+                            startDestination = when (state.startingSection) {
+                                Sections.Tasks -> AppSections.TaskPages
+                                Sections.Habits -> AppSections.HabitsPages
                             },
                             modifier = Modifier
                                 .padding(
@@ -165,6 +174,8 @@ fun App() {
 
                             composable<AppSections.SettingsPages> {
                                 currentRoute = AppSections.SettingsPages
+                                val svm: SettingsViewModel = koinInject()
+                                val settingsState by svm.state.collectAsStateWithLifecycle()
 
                                 SettingsGraph(
                                     state = settingsState,
@@ -198,15 +209,26 @@ fun App() {
                     ) {
                         AppNavRail(
                             currentRoute = currentRoute,
-                            navController = navController,
-                            settingsState = settingsState
+                            onNavigate = { route ->
+                                navController.navigate(route) {
+                                    launchSingleTop = true
+                                    popUpTo(
+                                        route = when (state.startingSection) {
+                                            Sections.Habits -> AppSections.HabitsPages
+                                            Sections.Tasks -> AppSections.TaskPages
+                                        },
+                                        popUpToBuilder = { saveState = true }
+                                    )
+                                    restoreState = true
+                                }
+                            }
                         )
 
                         NavHost(
                             navController = navController,
-                            startDestination = when (settingsState.startingPage) {
-                                Pages.Tasks -> AppSections.TaskPages
-                                Pages.Habits -> AppSections.HabitsPages
+                            startDestination = when (state.startingSection) {
+                                Sections.Tasks -> AppSections.TaskPages
+                                Sections.Habits -> AppSections.HabitsPages
                             },
                             modifier = Modifier.background(MaterialTheme.colorScheme.background),
                             enterTransition = { fadeIn(animationSpec = tween(300)) },
@@ -227,6 +249,8 @@ fun App() {
 
                             composable<AppSections.SettingsPages> {
                                 currentRoute = AppSections.SettingsPages
+                                val svm: SettingsViewModel = koinInject()
+                                val settingsState by svm.state.collectAsStateWithLifecycle()
 
                                 SettingsGraph(
                                     state = settingsState,
@@ -261,8 +285,7 @@ fun App() {
 @Composable
 private fun AppNavRail(
     currentRoute: AppSections,
-    navController: NavHostController,
-    settingsState: SettingsState,
+    onNavigate: (AppSections) -> Unit,
     modifier: Modifier = Modifier
 ) {
     NavigationRail(
@@ -274,17 +297,7 @@ private fun AppNavRail(
                 selected = currentRoute == route,
                 onClick = {
                     if (currentRoute != route) {
-                        navController.navigate(route) {
-                            launchSingleTop = true
-                            popUpTo(
-                                route = when (settingsState.startingPage) {
-                                    Pages.Habits -> AppSections.HabitsPages
-                                    Pages.Tasks -> AppSections.TaskPages
-                                },
-                                popUpToBuilder = { saveState = true }
-                            )
-                            restoreState = true
-                        }
+                        onNavigate(route)
                     }
                 },
                 icon = {
@@ -303,8 +316,7 @@ private fun AppNavRail(
 @Composable
 private fun AppNavBar(
     currentRoute: AppSections,
-    navController: NavHostController,
-    settingsState: SettingsState,
+    onNavigate: (AppSections) -> Unit,
     modifier: Modifier = Modifier
 ) {
     NavigationBar(
@@ -315,17 +327,7 @@ private fun AppNavBar(
                 selected = currentRoute == route,
                 onClick = {
                     if (currentRoute != route) {
-                        navController.navigate(route) {
-                            launchSingleTop = true
-                            popUpTo(
-                                route = when (settingsState.startingPage) {
-                                    Pages.Habits -> AppSections.HabitsPages
-                                    Pages.Tasks -> AppSections.TaskPages
-                                },
-                                popUpToBuilder = { saveState = true }
-                            )
-                            restoreState = true
-                        }
+                        onNavigate(route)
                     }
                 },
                 icon = {
