@@ -5,12 +5,11 @@ plugins {
     alias(libs.plugins.kotlin.serialization)
     alias(libs.plugins.room)
     alias(libs.plugins.compose.multiplatform)
-    alias(libs.plugins.kotlinx.rpc)
 }
 
 val appName = "Grit"
-val appVersionCode = 5540
-val appVersionName = "5.5.4"
+val appVersionCode = 5550
+val appVersionName = "5.5.5"
 
 val gitHash = execute("git", "rev-parse", "HEAD").take(7)
 

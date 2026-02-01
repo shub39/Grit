@@ -69,7 +69,7 @@ fun WeeklyBooleanHeatMap(
                     }
                 ) {
                     Icon(
-                        imageVector = vectorResource(Res.drawable.arrow_forward),
+                        imageVector = vectorResource(Res.drawable.arrow_back),
                         contentDescription = null
                     )
                 }
@@ -79,7 +79,7 @@ fun WeeklyBooleanHeatMap(
                     }
                 ) {
                     Icon(
-                        imageVector = vectorResource(Res.drawable.arrow_back),
+                        imageVector = vectorResource(Res.drawable.arrow_forward),
                         contentDescription = null
                     )
                 }

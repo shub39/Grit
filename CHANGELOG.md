@@ -1,7 +1,10 @@
 # Changelog
 
-## 5.6.0
-- migrated to `koin-annotations`
+## 5.5.5
+- Redid all icons due to tech reasons
+- migration and refactors to new libs
+- tasks and categories add sheet now open keyboard on launch (#206) by @madhan-selvaraj
+- miscellaneous fixes and improvements
 
 ## 5.5.4
 - Removed unnecessary permissions #184

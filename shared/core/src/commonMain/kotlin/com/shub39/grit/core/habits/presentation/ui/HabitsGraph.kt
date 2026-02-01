@@ -5,6 +5,7 @@ import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.core.tween
 import androidx.compose.animation.fadeOut
 import androidx.compose.animation.slideInVertically
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxHeight
@@ -161,7 +162,7 @@ fun HabitsGraph(
             Row(
                 modifier = Modifier.weight(1f)
             ) {
-                PageFill {
+                Box {
                     val lazyListState = rememberLazyListState()
                     val fabVisible by remember {
                         derivedStateOf {
