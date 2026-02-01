@@ -1,7 +1,10 @@
 # Changelog
 
 ## 5.5.5
-- Redid all icons due to tech reasons
+Due to life and college stuff, wasn't able to ship properly for a long time. This update is mostly 
+a maintenance and getting familiar with the codebase again. expect more releases soon
+
+- Redid all icons due to technical reasons
 - migration and refactors to new libs
 - tasks and categories add sheet now open keyboard on launch (#206) by @madhan-selvaraj
 - miscellaneous fixes and improvements

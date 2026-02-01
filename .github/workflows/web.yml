@@ -29,12 +29,12 @@ jobs:
           java-version: 21
 
       - name: Build Web App
-        run: ./gradlew :web:wasmJsBrowserDistribution
+        run: ./gradlew :webdemo:wasmJsBrowserDistribution
 
       - name: Upload Pages artifact
         uses: actions/upload-pages-artifact@v3
         with:
-          path: web/build/dist/wasmJs/productionExecutable
+          path: webdemo/build/dist/wasmJs/productionExecutable
 
   deploy:
     name: Deploy to GitHub Pages
