@@ -20,18 +20,16 @@ data class SettingsState(
     val backupState: BackupState = BackupState(),
     val isBiometricLockOn: Boolean? = null,
     val isBiometricLockAvailable: Boolean = false,
-    val showPaywall: Boolean = false,
-    val isUserSubscribed: Boolean = false,
-    val serverState: ServerState = ServerState()
+//    val serverState: ServerState = ServerState()
 )
 
-@Stable
-@Immutable
-data class ServerState(
-    val isRunning: Boolean = false,
-    val serverPort: Int = 8080,
-    val serverUrl: String? = null
-)
+//@Stable
+//@Immutable
+//data class ServerState(
+//    val isRunning: Boolean = false,
+//    val serverPort: Int = 8080,
+//    val serverUrl: String? = null
+//)
 
 @Stable
 @Immutable

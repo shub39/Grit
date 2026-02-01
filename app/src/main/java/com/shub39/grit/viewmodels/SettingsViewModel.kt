@@ -307,7 +307,7 @@ class SettingsViewModel(
                 }
                 .launchIn(this)
 
-            datastore.getStartingPagePref()
+            datastore.getStartingSectionPref()
                 .onEach { flow ->
                     _state.update {
                         it.copy(

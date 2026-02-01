@@ -60,6 +60,7 @@ fun OverallAnalytics(
     onNavigateBack: () -> Unit,
     onNavigateToPaywall: () -> Unit,
     showNavigateBack: Boolean = true,
+    isUserSubscribed: Boolean,
     modifier: Modifier = Modifier
 ) {
     val windowSizeClass = LocalWindowSizeClass.current
@@ -163,7 +164,7 @@ fun OverallAnalytics(
 
             item {
                 WeekDayBreakdown(
-                    canSeeContent = state.isUserSubscribed,
+                    canSeeContent = isUserSubscribed,
                     weekDayData = weeklyBreakdownData,
                     primary = primary,
                     onNavigateToPaywall = onNavigateToPaywall,
@@ -173,7 +174,7 @@ fun OverallAnalytics(
 
             item {
                 WeeklyGraph(
-                    canSeeContent = state.isUserSubscribed,
+                    canSeeContent = isUserSubscribed,
                     primary = primary,
                     weeklyGraphData = weeklyGraphData,
                     onNavigateToPaywall = onNavigateToPaywall,

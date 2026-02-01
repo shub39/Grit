@@ -37,6 +37,7 @@ fun BoxScope.HabitListFABs(
     fabVisible: Boolean,
     onAction: (HabitsAction) -> Unit,
     onNavigateToPaywall: () -> Unit,
+    isUserSubscribed: Boolean,
     modifier: Modifier = Modifier
 ) {
     val windowSizeClass = LocalWindowSizeClass.current
@@ -102,7 +103,7 @@ fun BoxScope.HabitListFABs(
         } else {
             MediumFloatingActionButton(
                 onClick = {
-                    if (state.isUserSubscribed || state.habitsWithAnalytics.size <= 5) {
+                    if (isUserSubscribed || state.habitsWithAnalytics.size <= 5) {
                         onAction(HabitsAction.OnAddHabitClicked)
                     } else {
                         onNavigateToPaywall()

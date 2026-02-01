@@ -71,6 +71,7 @@ fun HabitsGraph(
     state: HabitState,
     onAction: (HabitsAction) -> Unit,
     onNavigateToPaywall: () -> Unit,
+    isUserSubscribed: Boolean,
     modifier: Modifier = Modifier
 ) {
     val windowSizeClass = LocalWindowSizeClass.current
@@ -121,7 +122,8 @@ fun HabitsGraph(
                             state = state,
                             fabVisible = fabVisible,
                             onAction = onAction,
-                            onNavigateToPaywall = onNavigateToPaywall
+                            onNavigateToPaywall = onNavigateToPaywall,
+                            isUserSubscribed = isUserSubscribed
                         )
                     }
                 }
@@ -132,7 +134,8 @@ fun HabitsGraph(
                     state = state,
                     onAction = onAction,
                     onNavigateBack = { navController.navigateUp() },
-                    onNavigateToPaywall = onNavigateToPaywall
+                    onNavigateToPaywall = onNavigateToPaywall,
+                    isUserSubscribed = isUserSubscribed
                 )
             }
 
@@ -140,7 +143,8 @@ fun HabitsGraph(
                 OverallAnalytics(
                     state = state,
                     onNavigateBack = { navController.navigateUp() },
-                    onNavigateToPaywall = onNavigateToPaywall
+                    onNavigateToPaywall = onNavigateToPaywall,
+                    isUserSubscribed = isUserSubscribed
                 )
             }
         }
@@ -181,7 +185,8 @@ fun HabitsGraph(
                         state = state,
                         fabVisible = fabVisible,
                         onAction = onAction,
-                        onNavigateToPaywall = onNavigateToPaywall
+                        onNavigateToPaywall = onNavigateToPaywall,
+                        isUserSubscribed = isUserSubscribed
                     )
                 }
 
@@ -198,14 +203,16 @@ fun HabitsGraph(
                                 state = state,
                                 onAction = onAction,
                                 onNavigateBack = { onAction(HabitsAction.PrepareAnalytics(null)) },
-                                onNavigateToPaywall = onNavigateToPaywall
+                                onNavigateToPaywall = onNavigateToPaywall,
+                                isUserSubscribed = isUserSubscribed
                             )
                         } else {
                             OverallAnalytics(
                                 state = state,
                                 onNavigateBack = {},
                                 showNavigateBack = false,
-                                onNavigateToPaywall = onNavigateToPaywall
+                                onNavigateToPaywall = onNavigateToPaywall,
+                                isUserSubscribed = isUserSubscribed
                             )
                         }
                     }

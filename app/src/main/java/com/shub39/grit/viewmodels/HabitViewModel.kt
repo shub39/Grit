@@ -64,9 +64,10 @@ class HabitViewModel(
                 is HabitsAction.UpdateHabit -> upsertHabit(action.habit)
 
                 HabitsAction.ReorderHabits -> {
-                    val currentList = _state.value.habitsWithAnalytics.mapIndexed { index, analytics ->
-                        analytics.habit.copy(index = index)
-                    }
+                    val currentList =
+                        _state.value.habitsWithAnalytics.mapIndexed { index, analytics ->
+                            analytics.habit.copy(index = index)
+                        }
 
                     currentList.forEach { upsertHabit(it) }
                 }
@@ -78,26 +79,8 @@ class HabitViewModel(
                 }
 
                 HabitsAction.OnAddHabitClicked -> {
-                    val isSubscribed = billingHandler.isPlusUser()
-
-                    if (!isSubscribed && _state.value.habitsWithAnalytics.size >= 5) {
-                        stateLayer.settingsState.update {
-                            it.copy(showPaywall = true)
-                        }
-                    } else {
-                        _state.update {
-                            it.copy(showHabitAddSheet = true)
-                        }
-
-                        if (isSubscribed) {
-                            stateLayer.settingsState.update {
-                                it.copy(isUserSubscribed = true)
-                            }
-
-                            _state.update {
-                                it.copy(isUserSubscribed = true)
-                            }
-                        }
+                    _state.update {
+                        it.copy(showHabitAddSheet = true)
                     }
                 }
 

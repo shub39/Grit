@@ -70,7 +70,10 @@ class MainActivity : FragmentActivity() {
 
                 GritTheme(theme = state.theme) {
                     if (showContent) {
-                        App(state = state)
+                        App(
+                            state = state,
+                            onRefreshSub = { mainViewModel.updateSubscription() }
+                        )
                     } else {
                         InitialLoading()
                     }

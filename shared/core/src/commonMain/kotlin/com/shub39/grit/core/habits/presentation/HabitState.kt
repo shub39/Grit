@@ -16,7 +16,6 @@ data class HabitState(
     val overallAnalytics: OverallAnalytics = OverallAnalytics(),
     val analyticsHabitId: Long? = null,
     val showHabitAddSheet: Boolean = false,
-    val isUserSubscribed: Boolean = false,
     val editState: Boolean = false,
 
     // datastore

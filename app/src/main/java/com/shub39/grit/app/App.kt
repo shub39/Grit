@@ -20,6 +20,7 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.windowsizeclass.WindowWidthSizeClass
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -100,7 +101,8 @@ private sealed interface AppSections {
 @OptIn(ExperimentalMaterial3Api::class, ExperimentalMaterial3ExpressiveApi::class)
 @Composable
 fun App(
-    state: MainAppState
+    state: MainAppState,
+    onRefreshSub: () -> Unit
 ) {
     val mainNavController = rememberNavController()
     
@@ -109,6 +111,10 @@ fun App(
         startDestination = GlobalRoutes.App
     ) {
         composable<GlobalRoutes.PaywallPage> {
+            DisposableEffect(Unit) {
+                onDispose { onRefreshSub() }
+            }
+
             PaywallPage(
                 isPlusUser = state.isUserSubscribed,
                 onDismissRequest = { mainNavController.navigateUp() }
@@ -194,6 +200,7 @@ fun App(
                                 HabitsGraph(
                                     state = habitsPageState,
                                     onAction = hvm::onAction,
+                                    isUserSubscribed = state.isUserSubscribed,
                                     onNavigateToPaywall = {
                                         mainNavController.navigate(GlobalRoutes.PaywallPage)
                                     }
@@ -269,6 +276,7 @@ fun App(
                                 HabitsGraph(
                                     state = habitsPageState,
                                     onAction = hvm::onAction,
+                                    isUserSubscribed = state.isUserSubscribed,
                                     onNavigateToPaywall = {
                                         mainNavController.navigate(GlobalRoutes.PaywallPage)
                                     }

@@ -29,7 +29,7 @@ class DataStoreImpl(
         private val amoledKey = booleanPreferencesKey("amoled")
         private val paletteKey = stringPreferencesKey("palette")
         private val startOfWeekKey = stringPreferencesKey("start_of_week")
-        private val startingPageKey = stringPreferencesKey("starting_page")
+        private val startingSectionKey = stringPreferencesKey("starting_page")
         private val is24HrKey = booleanPreferencesKey("is_24Hr")
         private val materialYouKey = booleanPreferencesKey("material_you")
         private val notificationsKey = booleanPreferencesKey("notifications")
@@ -103,14 +103,14 @@ class DataStoreImpl(
         }
     }
 
-    override fun getStartingPagePref(): Flow<Sections> = datastore.data.map { pref ->
-        val page = pref[startingPageKey] ?: Sections.Tasks.name
+    override fun getStartingSectionPref(): Flow<Sections> = datastore.data.map { pref ->
+        val page = pref[startingSectionKey] ?: Sections.Tasks.name
         return@map Sections.valueOf(page)
     }
 
     override suspend fun setStartingPage(page: Sections) {
         datastore.edit { prefs ->
-            prefs[startingPageKey] = page.name
+            prefs[startingSectionKey] = page.name
         }
     }
 

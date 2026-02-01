@@ -3,6 +3,8 @@ package com.shub39.grit.viewmodels
 import androidx.compose.ui.graphics.Color
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.shub39.grit.billing.BillingHandler
+import com.shub39.grit.billing.SubscriptionResult
 import com.shub39.grit.core.domain.GritDatastore
 import com.shub39.grit.core.domain.MainAppState
 import kotlinx.coroutines.Job
@@ -20,7 +22,8 @@ import org.koin.android.annotation.KoinViewModel
 
 @KoinViewModel
 class MainViewModel(
-    private val datastore: GritDatastore
+    private val datastore: GritDatastore,
+    private val billingHandler: BillingHandler
 ) : ViewModel() {
     var observerJob: Job? = null
 
@@ -28,6 +31,7 @@ class MainViewModel(
 
     val state = _state.asStateFlow()
         .onStart {
+            checkSubscription()
             observeDatastore()
         }
         .stateIn(
@@ -44,6 +48,11 @@ class MainViewModel(
     fun setBiometricLock(value: Boolean) {
         viewModelScope.launch {
             datastore.setBiometricPref(value)
+        }
+    }
+    fun updateSubscription() {
+        viewModelScope.launch {
+            checkSubscription()
         }
     }
 
@@ -80,6 +89,16 @@ class MainViewModel(
                 }
                 .launchIn(this)
 
+            datastore.getStartingSectionPref()
+                .onEach { pref ->
+                    _state.update {
+                        it.copy(
+                            startingSection = pref
+                        )
+                    }
+                }
+                .launchIn(this)
+
             datastore.getBiometricLockPref()
                 .onEach { pref ->
                     _state.update {
@@ -87,6 +106,17 @@ class MainViewModel(
                     }
                 }
                 .launchIn(this)
+        }
+    }
+
+    private suspend fun checkSubscription() {
+        val isSubscribed = billingHandler.userResult()
+
+        when (isSubscribed) {
+            SubscriptionResult.Subscribed -> {
+                _state.update { it.copy(isUserSubscribed = true) }
+            }
+            else -> {}
         }
     }
 }

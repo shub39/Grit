@@ -72,6 +72,7 @@ fun AnalyticsPage(
     onAction: (HabitsAction) -> Unit,
     onNavigateBack: () -> Unit,
     onNavigateToPaywall: () -> Unit,
+    isUserSubscribed: Boolean,
     modifier: Modifier = Modifier
 ) {
     val windowSizeClass = LocalWindowSizeClass.current
@@ -208,7 +209,7 @@ fun AnalyticsPage(
 
             item {
                 CalendarMap(
-                    canSeeContent = state.isUserSubscribed,
+                    canSeeContent = isUserSubscribed,
                     onAction = onAction,
                     calendarState = calendarState,
                     currentHabit = currentHabit,
@@ -220,7 +221,7 @@ fun AnalyticsPage(
 
             item {
                 WeekDayBreakdown(
-                    canSeeContent = state.isUserSubscribed,
+                    canSeeContent = isUserSubscribed,
                     weekDayData = weekDayBreakdownData,
                     primary = primary,
                     onNavigateToPaywall = onNavigateToPaywall,

@@ -22,7 +22,7 @@ interface GritDatastore {
     fun getStartOfTheWeekPref(): Flow<DayOfWeek>
     suspend fun setStartOfWeek(day: DayOfWeek)
 
-    fun getStartingPagePref(): Flow<Sections>
+    fun getStartingSectionPref(): Flow<Sections>
     suspend fun setStartingPage(page: Sections)
 
     fun getIs24Hr(): Flow<Boolean>
