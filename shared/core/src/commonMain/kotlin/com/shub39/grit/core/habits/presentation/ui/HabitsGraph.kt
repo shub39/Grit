@@ -119,7 +119,7 @@ fun HabitsGraph(
                         )
 
                         HabitListFABs(
-                            onNavigateToOverallAnalytics = { onAction(HabitsAction.PrepareAnalytics(null)) },
+                            onNavigateToOverallAnalytics = { navController.navigate(HabitRoutes.OverallAnalytics) },
                             state = state,
                             fabVisible = fabVisible,
                             onAction = onAction,
