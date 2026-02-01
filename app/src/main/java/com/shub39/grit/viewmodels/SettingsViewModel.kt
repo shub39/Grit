@@ -4,8 +4,6 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.toArgb
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.shub39.grit.billing.BillingHandler
-import com.shub39.grit.billing.SubscriptionResult
 import com.shub39.grit.core.data.Utils
 import com.shub39.grit.core.domain.GritDatastore
 import com.shub39.grit.core.domain.backup.ExportRepo
@@ -15,7 +13,9 @@ import com.shub39.grit.core.domain.backup.RestoreResult
 import com.shub39.grit.core.domain.backup.RestoreState
 import com.shub39.grit.core.presentation.settings.BackupState
 import com.shub39.grit.core.presentation.settings.SettingsAction
+import com.shub39.grit.core.presentation.settings.SettingsState
 import kotlinx.coroutines.Job
+import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.launchIn
@@ -28,27 +28,23 @@ import org.koin.android.annotation.KoinViewModel
 
 @KoinViewModel
 class SettingsViewModel(
-    private val stateLayer: StateLayer,
-    private val billingHandler: BillingHandler,
     private val exportRepo: ExportRepo,
     private val restoreRepo: RestoreRepo,
     private val datastore: GritDatastore,
 //    private val server: GritServerRepository
 ) : ViewModel() {
-
     private var observeJob: Job? = null
 
-    private val _state = stateLayer.settingsState
+    private val _state = MutableStateFlow(SettingsState())
 
     val state = _state.asStateFlow()
         .onStart {
-            checkSubscription()
             observeJob()
         }
         .stateIn(
             viewModelScope,
             SharingStarted.WhileSubscribed(5000),
-            _state.value
+            SettingsState()
         )
 
     fun onAction(action: SettingsAction) = viewModelScope.launch {
@@ -130,47 +126,9 @@ class SettingsViewModel(
                 }
             }
 
-            SettingsAction.OnPaywallDismiss -> {
-                _state.update {
-                    it.copy(
-                        showPaywall = false
-                    )
-                }
-
-                checkSubscription()
-            }
-
-            SettingsAction.OnCheckSubscription -> checkSubscription()
-
-            SettingsAction.OnPaywallShow -> _state.update {
-                it.copy(
-                    showPaywall = true
-                )
-            }
-
             SettingsAction.OnResetTheme -> datastore.resetAppTheme()
 
             is SettingsAction.ChangeReorderTasks -> datastore.setTaskReorderPref(action.pref)
-        }
-    }
-
-    private suspend fun checkSubscription() {
-        val isSubscribed = billingHandler.userResult()
-
-        when (isSubscribed) {
-            SubscriptionResult.Subscribed -> {
-                _state.update {
-                    it.copy(isUserSubscribed = true)
-                }
-
-                stateLayer.habitsState.update {
-                    it.copy(isUserSubscribed = true)
-                }
-            }
-
-            SubscriptionResult.NotSubscribed -> datastore.resetAppTheme()
-
-            else -> {}
         }
     }
 
@@ -196,12 +154,6 @@ class SettingsViewModel(
             datastore.getTaskReorderPref()
                 .onEach { pref ->
                     _state.update {
-                        it.copy(
-                            reorderTasks = pref
-                        )
-                    }
-
-                    stateLayer.tasksState.update {
                         it.copy(
                             reorderTasks = pref
                         )
@@ -294,15 +246,7 @@ class SettingsViewModel(
             datastore.getIs24Hr()
                 .onEach { flow ->
                     _state.update {
-                        it.copy(
-                            is24Hr = flow
-                        )
-                    }
-
-                    stateLayer.tasksState.update {
-                        it.copy(
-                            is24Hour = flow
-                        )
+                        it.copy(is24Hr = flow)
                     }
                 }
                 .launchIn(this)
@@ -338,5 +282,4 @@ class SettingsViewModel(
                 .launchIn(this)
         }
     }
-
 }

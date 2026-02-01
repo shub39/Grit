@@ -2,7 +2,6 @@ package com.shub39.grit.viewmodels
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.shub39.grit.billing.BillingHandler
 import com.shub39.grit.core.domain.AlarmScheduler
 import com.shub39.grit.core.domain.GritDatastore
 import com.shub39.grit.core.habits.domain.Habit
@@ -11,6 +10,7 @@ import com.shub39.grit.core.habits.domain.HabitStatus
 import com.shub39.grit.core.habits.presentation.HabitState
 import com.shub39.grit.core.habits.presentation.HabitsAction
 import kotlinx.coroutines.Job
+import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.combine
@@ -26,18 +26,15 @@ import kotlin.time.ExperimentalTime
 
 @KoinViewModel
 class HabitViewModel(
-    private val stateLayer: StateLayer,
-    private val billingHandler: BillingHandler,
     private val scheduler: AlarmScheduler,
     private val repo: HabitRepo,
     private val datastore: GritDatastore,
 ) : ViewModel() {
-
     private var habitStatusJob: Job? = null
     private var overallAnalyticsJob: Job? = null
     private var observeDatastoreJob: Job? = null
 
-    private val _state = stateLayer.habitsState
+    private val _state = MutableStateFlow(HabitState())
 
     val state = _state.asStateFlow()
         .onStart {

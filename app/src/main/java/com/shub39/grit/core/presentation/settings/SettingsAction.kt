@@ -10,10 +10,6 @@ import com.shub39.grit.core.domain.Sections
 import kotlinx.datetime.DayOfWeek
 
 sealed interface SettingsAction {
-    data object OnPaywallShow: SettingsAction
-    data object OnPaywallDismiss: SettingsAction
-    data object OnCheckSubscription: SettingsAction
-
     data object OnResetBackupState : SettingsAction
     data object OnExport : SettingsAction
     data class OnRestore(val uri: Uri) : SettingsAction

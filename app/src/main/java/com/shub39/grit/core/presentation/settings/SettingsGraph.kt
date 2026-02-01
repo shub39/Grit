@@ -42,6 +42,7 @@ private sealed interface SettingsRoutes {
 fun SettingsGraph(
     state: SettingsState,
     onAction: (SettingsAction) -> Unit,
+    isUserSubscribed: Boolean,
     onNavigateToPaywall: () -> Unit,
     modifier: Modifier = Modifier
 ) = PageFill(modifier = modifier) {
@@ -82,6 +83,8 @@ fun SettingsGraph(
             LookAndFeelPage(
                 state = state,
                 onAction = onAction,
+                isUserSubscribed = isUserSubscribed,
+                onNavigateToPaywall = onNavigateToPaywall,
                 onNavigateBack = { navController.navigateUp() }
             )
         }
@@ -114,7 +117,8 @@ private fun Preview() {
         SettingsGraph(
             state = SettingsState(),
             onAction = {},
-            onNavigateToPaywall = {}
+            onNavigateToPaywall = {},
+            isUserSubscribed = true
         )
     }
 }

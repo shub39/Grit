@@ -37,7 +37,6 @@ import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.contentColorFor
 import androidx.compose.material3.toShape
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -90,13 +89,10 @@ import java.util.Locale
 fun LookAndFeelPage(
     state: SettingsState,
     onAction: (SettingsAction) -> Unit,
+    isUserSubscribed: Boolean,
+    onNavigateToPaywall: () -> Unit,
     onNavigateBack: () -> Unit
 ) {
-
-    LaunchedEffect(Unit) {
-        onAction(SettingsAction.OnCheckSubscription)
-    }
-
     var colorPickerDialog by remember { mutableStateOf(false) }
 
     Column(
@@ -208,13 +204,13 @@ fun LookAndFeelPage(
                             },
                             colors = listItemColors(),
                             modifier = Modifier.clip(
-                                if (state.isUserSubscribed) middleItemShape() else endItemShape()
+                                if (isUserSubscribed) middleItemShape() else endItemShape()
                             )
                         )
                     }
 
                     // plus redirect
-                    if (!state.isUserSubscribed) {
+                    if (!isUserSubscribed) {
                         Box(
                             contentAlignment = Alignment.Center,
                             modifier = Modifier
@@ -227,7 +223,7 @@ fun LookAndFeelPage(
                             )
 
                             Button(
-                                onClick = { onAction(SettingsAction.OnPaywallShow) }
+                                onClick = onNavigateToPaywall
                             ) {
                                 Text(
                                     text = stringResource(Res.string.unlock_more_plus)
@@ -239,7 +235,7 @@ fun LookAndFeelPage(
                     // font picker
                     Column(
                         modifier = Modifier.clip(
-                            if (state.isUserSubscribed) middleItemShape() else leadingItemShape()
+                            if (isUserSubscribed) middleItemShape() else leadingItemShape()
                         )
                     ) {
                         ListItem(
@@ -302,7 +298,7 @@ fun LookAndFeelPage(
                         trailingContent = {
                             Switch(
                                 checked = state.theme.isAmoled,
-                                enabled = state.isUserSubscribed,
+                                enabled = isUserSubscribed,
                                 onCheckedChange = {
                                     onAction(SettingsAction.ChangeAmoled(it))
                                 }
@@ -333,7 +329,7 @@ fun LookAndFeelPage(
                                         containerColor = state.theme.seedColor,
                                         contentColor = contentColorFor(state.theme.seedColor)
                                     ),
-                                    enabled = state.isUserSubscribed
+                                    enabled = isUserSubscribed
                                 ) {
                                     Icon(
                                         imageVector = vectorResource(Res.drawable.edit),
@@ -435,9 +431,11 @@ private fun Preview() {
     ) {
         Surface {
             LookAndFeelPage(
-                state = SettingsState(isUserSubscribed = true),
+                state = SettingsState(),
+                isUserSubscribed = true,
                 onAction = {},
-                onNavigateBack = {}
+                onNavigateBack = {},
+                onNavigateToPaywall = {}
             )
         }
     }

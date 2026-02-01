@@ -186,6 +186,7 @@ fun App(
                                 SettingsGraph(
                                     state = settingsState,
                                     onAction = svm::onAction,
+                                    isUserSubscribed = state.isUserSubscribed,
                                     onNavigateToPaywall = {
                                         mainNavController.navigate(GlobalRoutes.PaywallPage)
                                     }
@@ -262,6 +263,7 @@ fun App(
                                 SettingsGraph(
                                     state = settingsState,
                                     onAction = svm::onAction,
+                                    isUserSubscribed = state.isUserSubscribed,
                                     onNavigateToPaywall = {
                                         mainNavController.navigate(GlobalRoutes.PaywallPage)
                                     }
