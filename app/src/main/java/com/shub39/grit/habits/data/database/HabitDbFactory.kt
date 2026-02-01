@@ -3,7 +3,9 @@ package com.shub39.grit.habits.data.database
 import android.content.Context
 import androidx.room.Room
 import androidx.room.RoomDatabase
+import org.koin.core.annotation.Single
 
+@Single
 class HabitDbFactory(
     private val context: Context
 ) {

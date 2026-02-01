@@ -46,6 +46,10 @@ I eventually want to turn this app into a productivity hub with many social feat
 - [Compose Calendar](https://github.com/boguszpawlowski/ComposeCalendar)
 - [Revenuecat Android SDK](https://github.com/RevenueCat/purchases-android)
 
+# Contributing
+
+Please read [CONTRIBUTING.md](CONTRIBUTING.md) for details on our code of conduct, and the process for submitting pull requests.
+
 # Security
 
 SHA-256 fingerprint for the signing certificate used for github releases

@@ -12,8 +12,6 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.rounded.Alarm
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.ExperimentalMaterial3ExpressiveApi
@@ -30,6 +28,9 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.shub39.grit.core.tasks.domain.Task
 import com.shub39.grit.core.utils.toFormattedString
+import grit.shared.core.generated.resources.Res
+import grit.shared.core.generated.resources.alarm
+import org.jetbrains.compose.resources.vectorResource
 
 @OptIn(ExperimentalFoundationApi::class, ExperimentalMaterial3ExpressiveApi::class,)
 @Composable
@@ -90,7 +91,7 @@ fun TaskCard(
                         horizontalArrangement = Arrangement.spacedBy(4.dp)
                     ) {
                         Icon(
-                            imageVector = Icons.Rounded.Alarm,
+                            imageVector = vectorResource(Res.drawable.alarm),
                             contentDescription = "Reminder",
                             modifier = Modifier.size(12.dp)
                         )

@@ -8,8 +8,6 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.widthIn
 import androidx.compose.foundation.lazy.staggeredgrid.LazyVerticalStaggeredGrid
 import androidx.compose.foundation.lazy.staggeredgrid.StaggeredGridCells
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.ExperimentalMaterial3ExpressiveApi
 import androidx.compose.material3.Icon
@@ -32,13 +30,13 @@ import com.kizitonwose.calendar.core.now
 import com.materialkolor.ktx.fixIfDisliked
 import com.materialkolor.ktx.harmonize
 import com.shub39.grit.core.habits.presentation.HabitState
-import com.shub39.grit.core.habits.presentation.HabitsAction
 import com.shub39.grit.core.habits.presentation.prepareWeekDayDataToBars
 import com.shub39.grit.core.habits.presentation.ui.component.HabitHeatMap
 import com.shub39.grit.core.habits.presentation.ui.component.WeekDayBreakdown
 import com.shub39.grit.core.habits.presentation.ui.component.WeeklyGraph
 import com.shub39.grit.core.utils.LocalWindowSizeClass
 import grit.shared.core.generated.resources.Res
+import grit.shared.core.generated.resources.arrow_back
 import grit.shared.core.generated.resources.overall_analytics
 import ir.ehsannarmani.compose_charts.models.DotProperties
 import ir.ehsannarmani.compose_charts.models.DrawStyle
@@ -47,6 +45,7 @@ import ir.ehsannarmani.compose_charts.models.PopupProperties
 import ir.ehsannarmani.compose_charts.models.StrokeStyle
 import kotlinx.datetime.YearMonth
 import org.jetbrains.compose.resources.stringResource
+import org.jetbrains.compose.resources.vectorResource
 import kotlin.random.Random
 import kotlin.time.ExperimentalTime
 
@@ -58,9 +57,11 @@ import kotlin.time.ExperimentalTime
 @Composable
 fun OverallAnalytics(
     state: HabitState,
-    onAction: (HabitsAction) -> Unit,
     onNavigateBack: () -> Unit,
-    showNavigateBack: Boolean = true
+    onNavigateToPaywall: () -> Unit,
+    showNavigateBack: Boolean = true,
+    isUserSubscribed: Boolean,
+    modifier: Modifier = Modifier
 ) {
     val windowSizeClass = LocalWindowSizeClass.current
 
@@ -110,7 +111,7 @@ fun OverallAnalytics(
 
     val scrollBehavior = TopAppBarDefaults.enterAlwaysScrollBehavior()
     Column(
-        modifier = Modifier
+        modifier = modifier
             .nestedScroll(scrollBehavior.nestedScrollConnection)
             .fillMaxSize()
     ) {
@@ -136,7 +137,7 @@ fun OverallAnalytics(
                         onClick = onNavigateBack
                     ) {
                         Icon(
-                            imageVector = Icons.AutoMirrored.Filled.ArrowBack,
+                            imageVector = vectorResource(Res.drawable.arrow_back),
                             contentDescription = "Navigate Back"
                         )
                     }
@@ -163,20 +164,20 @@ fun OverallAnalytics(
 
             item {
                 WeekDayBreakdown(
-                    canSeeContent = state.isUserSubscribed,
-                    onAction = onAction,
+                    canSeeContent = isUserSubscribed,
                     weekDayData = weeklyBreakdownData,
                     primary = primary,
+                    onNavigateToPaywall = onNavigateToPaywall,
                     modifier = Modifier.widthIn(max = maxWidth)
                 )
             }
 
             item {
                 WeeklyGraph(
-                    canSeeContent = state.isUserSubscribed,
+                    canSeeContent = isUserSubscribed,
                     primary = primary,
-                    onAction = onAction,
                     weeklyGraphData = weeklyGraphData,
+                    onNavigateToPaywall = onNavigateToPaywall,
                     modifier = Modifier.widthIn(max = maxWidth)
                 )
             }

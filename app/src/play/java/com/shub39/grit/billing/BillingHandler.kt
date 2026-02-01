@@ -5,7 +5,9 @@ import com.revenuecat.purchases.Purchases
 import com.revenuecat.purchases.awaitCustomerInfo
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
+import org.koin.core.annotation.Single
 
+@Single
 class BillingHandler {
     companion object {
         private const val ENTITLEMENT_PLUS = "Plus"

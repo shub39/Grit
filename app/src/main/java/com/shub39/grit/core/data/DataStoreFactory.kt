@@ -5,7 +5,9 @@ import androidx.datastore.core.DataStore
 import androidx.datastore.preferences.core.PreferenceDataStoreFactory
 import androidx.datastore.preferences.core.Preferences
 import okio.Path.Companion.toPath
+import org.koin.core.annotation.Single
 
+@Single
 class DatastoreFactory(private val context: Context) {
     fun getPreferencesDataStore() : DataStore<Preferences> = createDataStore (
         producePath = { context.filesDir.resolve(DATA_STORE_FILE_NAME).absolutePath }

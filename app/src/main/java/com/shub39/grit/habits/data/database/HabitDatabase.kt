@@ -18,7 +18,7 @@ import com.shub39.grit.core.data.Converters
 )
 @TypeConverters(Converters::class)
 abstract class HabitDatabase : RoomDatabase() {
-    abstract fun habitDao(): HabitDao
+    abstract fun habitDao(): HabitsDao
     abstract fun habitStatusDao(): HabitStatusDao
 
     companion object {

@@ -18,8 +18,6 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.foundation.shape.CircleShape
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.rounded.LocalFireDepartment
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.ExperimentalMaterial3ExpressiveApi
@@ -39,8 +37,10 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import grit.shared.core.generated.resources.Res
 import grit.shared.core.generated.resources.best_streak
+import grit.shared.core.generated.resources.heat
 import grit.shared.core.generated.resources.streak
 import org.jetbrains.compose.resources.stringResource
+import org.jetbrains.compose.resources.vectorResource
 
 @OptIn(ExperimentalMaterial3ExpressiveApi::class)
 @Composable
@@ -123,7 +123,7 @@ fun HabitStreakCard(
                     )
 
                     Icon(
-                        imageVector = Icons.Rounded.LocalFireDepartment,
+                        imageVector = vectorResource(Res.drawable.heat),
                         contentDescription = "Flag",
                         tint = MaterialTheme.colorScheme.onTertiary,
                         modifier = Modifier.size(36.dp)

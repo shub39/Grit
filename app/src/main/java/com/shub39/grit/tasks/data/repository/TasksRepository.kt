@@ -14,7 +14,9 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.flowOn
 import kotlinx.coroutines.flow.map
+import org.koin.core.annotation.Single
 
+@Single(binds = [TaskRepo::class])
 class TasksRepository(
     private val tasksDao: TasksDao,
     private val categoryDao: CategoryDao,

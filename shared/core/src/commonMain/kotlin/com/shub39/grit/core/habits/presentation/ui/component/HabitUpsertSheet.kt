@@ -7,10 +7,6 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.text.KeyboardOptions
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.rounded.Alarm
-import androidx.compose.material.icons.rounded.Create
-import androidx.compose.material.icons.rounded.Edit
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonGroupDefaults
 import androidx.compose.material3.ButtonShapes
@@ -45,8 +41,10 @@ import com.shub39.grit.core.utils.toFormattedString
 import grit.shared.core.generated.resources.Res
 import grit.shared.core.generated.resources.add_habit
 import grit.shared.core.generated.resources.add_reminder
+import grit.shared.core.generated.resources.alarm
 import grit.shared.core.generated.resources.description
 import grit.shared.core.generated.resources.done
+import grit.shared.core.generated.resources.edit
 import grit.shared.core.generated.resources.edit_habit
 import grit.shared.core.generated.resources.save
 import grit.shared.core.generated.resources.select_time
@@ -58,6 +56,7 @@ import kotlinx.datetime.DayOfWeek
 import kotlinx.datetime.LocalDateTime
 import kotlinx.datetime.LocalTime
 import org.jetbrains.compose.resources.stringResource
+import org.jetbrains.compose.resources.vectorResource
 
 @Composable
 expect fun HabitUpsertSheet(
@@ -95,7 +94,7 @@ fun HabitUpsertSheetContent(
         ) {
             item {
                 Icon(
-                    imageVector = Icons.Rounded.Edit,
+                    imageVector = vectorResource(Res.drawable.edit),
                     contentDescription = "Edit Habit"
                 )
             }
@@ -194,7 +193,7 @@ fun HabitUpsertSheetContent(
                             modifier = Modifier.weight(1f)
                         ) {
                             Icon(
-                                imageVector = Icons.Rounded.Alarm,
+                                imageVector = vectorResource(Res.drawable.alarm),
                                 contentDescription = "Alarm Icon"
                             )
 
@@ -208,7 +207,7 @@ fun HabitUpsertSheetContent(
                             onClick = { timePickerDialog = true }
                         ) {
                             Icon(
-                                imageVector = Icons.Rounded.Create,
+                                imageVector = vectorResource(Res.drawable.edit),
                                 contentDescription = "Pick Time"
                             )
                         }
@@ -276,7 +275,7 @@ fun HabitUpsertSheetContent(
                 onDismissRequest = { timePickerDialog = false }
             ) {
                 Icon(
-                    imageVector = Icons.Rounded.Alarm,
+                    imageVector = vectorResource(Res.drawable.alarm),
                     contentDescription = "Add Time"
                 )
 

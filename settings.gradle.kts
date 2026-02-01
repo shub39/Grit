@@ -33,5 +33,5 @@ plugins {
 }
 
 include(":app")
-include(":web")
+include(":webdemo")
 include(":shared:core")

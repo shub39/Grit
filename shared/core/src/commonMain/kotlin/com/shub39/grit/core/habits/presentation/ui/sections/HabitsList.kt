@@ -1,37 +1,22 @@
 package com.shub39.grit.core.habits.presentation.ui.sections
 
-import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.core.animateDpAsState
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
-import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.LazyListState
 import androidx.compose.foundation.lazy.items
-import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.rounded.Add
-import androidx.compose.material.icons.rounded.Analytics
-import androidx.compose.material.icons.rounded.DragIndicator
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.ExperimentalMaterial3ExpressiveApi
-import androidx.compose.material3.FloatingActionButton
-import androidx.compose.material3.FloatingActionButtonDefaults
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.MediumFloatingActionButton
-import androidx.compose.material3.Text
-import androidx.compose.material3.animateFloatingActionButton
 import androidx.compose.material3.windowsizeclass.WindowWidthSizeClass
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.remember
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import com.shub39.grit.core.habits.domain.Habit
@@ -40,14 +25,13 @@ import com.shub39.grit.core.habits.presentation.HabitsAction
 import com.shub39.grit.core.habits.presentation.ui.component.HabitCard
 import com.shub39.grit.core.habits.presentation.ui.component.HabitUpsertSheet
 import com.shub39.grit.core.shared_ui.Empty
-import com.shub39.grit.core.shared_ui.PageFill
 import com.shub39.grit.core.utils.LocalWindowSizeClass
 import grit.shared.core.generated.resources.Res
-import grit.shared.core.generated.resources.add_habit
+import grit.shared.core.generated.resources.drag_indicator
 import kotlinx.datetime.DayOfWeek
 import kotlinx.datetime.TimeZone
 import kotlinx.datetime.toLocalDateTime
-import org.jetbrains.compose.resources.stringResource
+import org.jetbrains.compose.resources.vectorResource
 import sh.calvin.reorderable.ReorderableItem
 import sh.calvin.reorderable.rememberReorderableLazyListState
 import kotlin.time.Clock
@@ -61,25 +45,16 @@ import kotlin.time.ExperimentalTime
 @Composable
 fun HabitsList(
     state: HabitState,
+    lazyListState: LazyListState,
     onAction: (HabitsAction) -> Unit,
     onNavigateToAnalytics: () -> Unit,
-    onNavigateToOverallAnalytics: () -> Unit,
     modifier: Modifier = Modifier
-) = PageFill(Modifier) {
+) {
     val windowSizeClass = LocalWindowSizeClass.current
-
-    val lazyListState = rememberLazyListState()
-    val fabVisible by remember {
-        derivedStateOf {
-            lazyListState.firstVisibleItemIndex == 0
-        }
-    }
-
     val reorderableListState =
         rememberReorderableLazyListState(lazyListState) { from, to ->
             onAction(HabitsAction.OnTransientHabitReorder(from.index, to.index))
         }
-
 
     Column(modifier = modifier) {
         LazyColumn(
@@ -105,7 +80,7 @@ fun HabitsList(
                         is24Hr = state.is24Hr,
                         reorderHandle = {
                             Icon(
-                                imageVector = Icons.Rounded.DragIndicator,
+                                imageVector = vectorResource(Res.drawable.drag_indicator),
                                 contentDescription = "Drag Indicator",
                                 modifier = Modifier.draggableHandle(
                                     onDragStopped = { onAction(HabitsAction.ReorderHabits) }
@@ -125,116 +100,6 @@ fun HabitsList(
                     Empty(
                         modifier = Modifier.padding(top = 150.dp),
                         color = MaterialTheme.colorScheme.onSurface
-                    )
-                }
-            }
-        }
-    }
-
-    Row(
-        modifier = Modifier
-            .padding(16.dp)
-            .align(
-                if (windowSizeClass.widthSizeClass == WindowWidthSizeClass.Expanded) {
-                    Alignment.BottomStart
-                } else {
-                    Alignment.BottomEnd
-                }
-            ),
-        horizontalArrangement = Arrangement.spacedBy(8.dp),
-        verticalAlignment = Alignment.Bottom
-    ) {
-        if (windowSizeClass.widthSizeClass != WindowWidthSizeClass.Expanded) {
-            FloatingActionButton(
-                onClick = onNavigateToOverallAnalytics,
-                containerColor = MaterialTheme.colorScheme.secondaryContainer,
-                contentColor = MaterialTheme.colorScheme.onSecondaryContainer,
-                modifier = Modifier.animateFloatingActionButton(
-                    visible = state.habitsWithAnalytics.isNotEmpty() && fabVisible,
-                    alignment = Alignment.BottomEnd
-                )
-            ) {
-                Icon(
-                    imageVector = Icons.Rounded.Analytics,
-                    contentDescription = "All Analytics"
-                )
-            }
-
-            MediumFloatingActionButton(
-                onClick = {
-                    onAction(HabitsAction.OnAddHabitClicked)
-                },
-                containerColor = MaterialTheme.colorScheme.tertiaryContainer,
-                contentColor = MaterialTheme.colorScheme.onTertiaryContainer,
-                modifier = Modifier.animateFloatingActionButton(
-                    visible = fabVisible,
-                    alignment = Alignment.BottomEnd
-                )
-            ) {
-                Row(
-                    modifier = Modifier.padding(16.dp),
-                    horizontalArrangement = Arrangement.spacedBy(8.dp),
-                    verticalAlignment = Alignment.CenterVertically,
-                ) {
-                    Icon(
-                        imageVector = Icons.Rounded.Add,
-                        contentDescription = "Add Habit",
-                        modifier = Modifier.size(FloatingActionButtonDefaults.MediumIconSize)
-                    )
-
-                    AnimatedVisibility(
-                        visible = state.habitsWithAnalytics.isEmpty()
-                    ) {
-                        Text(text = stringResource(Res.string.add_habit))
-                    }
-                }
-            }
-        } else {
-            MediumFloatingActionButton(
-                onClick = {
-                    onAction(HabitsAction.OnAddHabitClicked)
-                },
-                containerColor = MaterialTheme.colorScheme.tertiaryContainer,
-                contentColor = MaterialTheme.colorScheme.onTertiaryContainer,
-                modifier = Modifier.animateFloatingActionButton(
-                    visible = fabVisible,
-                    alignment = Alignment.BottomEnd
-                )
-            ) {
-                Row(
-                    modifier = Modifier.padding(16.dp),
-                    horizontalArrangement = Arrangement.spacedBy(8.dp),
-                    verticalAlignment = Alignment.CenterVertically,
-                ) {
-                    Icon(
-                        imageVector = Icons.Rounded.Add,
-                        contentDescription = "Add Habit",
-                        modifier = Modifier.size(FloatingActionButtonDefaults.MediumIconSize)
-                    )
-
-                    AnimatedVisibility(
-                        visible = state.habitsWithAnalytics.isEmpty()
-                    ) {
-                        Text(text = stringResource(Res.string.add_habit))
-                    }
-                }
-            }
-
-            AnimatedVisibility(
-                visible = state.analyticsHabitId != null
-            ) {
-                FloatingActionButton(
-                    onClick = onNavigateToOverallAnalytics,
-                    containerColor = MaterialTheme.colorScheme.secondaryContainer,
-                    contentColor = MaterialTheme.colorScheme.onSecondaryContainer,
-                    modifier = Modifier.animateFloatingActionButton(
-                        visible = state.habitsWithAnalytics.isNotEmpty() && fabVisible,
-                        alignment = Alignment.BottomEnd
-                    )
-                ) {
-                    Icon(
-                        imageVector = Icons.Rounded.Analytics,
-                        contentDescription = "All Analytics"
                     )
                 }
             }

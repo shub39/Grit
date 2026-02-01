@@ -8,8 +8,6 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.rounded.Coffee
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Card
@@ -32,8 +30,10 @@ import compose.icons.fontawesomeicons.brands.Github
 import compose.icons.fontawesomeicons.brands.GooglePlay
 import grit.shared.core.generated.resources.Res
 import grit.shared.core.generated.resources.bmc
+import grit.shared.core.generated.resources.buymeacoffee
 import grit.shared.core.generated.resources.rate_on_play
 import org.jetbrains.compose.resources.stringResource
+import org.jetbrains.compose.resources.vectorResource
 
 @Composable
 fun AboutApp() {
@@ -107,8 +107,9 @@ fun AboutApp() {
                     verticalAlignment = Alignment.CenterVertically
                 ) {
                     Icon(
-                        imageVector = Icons.Rounded.Coffee,
+                        imageVector = vectorResource(Res.drawable.buymeacoffee),
                         contentDescription = "Buy me a coffee",
+                        modifier = Modifier.size(24.dp)
                     )
 
                     Text(text = stringResource(Res.string.bmc))

@@ -9,10 +9,6 @@ import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.CircleShape
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.automirrored.rounded.ArrowBack
-import androidx.compose.material.icons.automirrored.rounded.ArrowForward
-import androidx.compose.material.icons.rounded.Map
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
@@ -26,7 +22,10 @@ import com.kizitonwose.calendar.compose.HeatMapCalendar
 import com.kizitonwose.calendar.compose.heatmapcalendar.HeatMapCalendarState
 import com.shub39.grit.core.habits.presentation.HabitState
 import grit.shared.core.generated.resources.Res
+import grit.shared.core.generated.resources.arrow_back
+import grit.shared.core.generated.resources.arrow_forward
 import grit.shared.core.generated.resources.habit_map
+import grit.shared.core.generated.resources.map
 import kotlinx.coroutines.launch
 import kotlinx.datetime.LocalDate
 import kotlinx.datetime.YearMonth
@@ -34,6 +33,7 @@ import kotlinx.datetime.format
 import kotlinx.datetime.format.FormatStringsInDatetimeFormats
 import kotlinx.datetime.format.MonthNames
 import org.jetbrains.compose.resources.stringResource
+import org.jetbrains.compose.resources.vectorResource
 
 @OptIn(FormatStringsInDatetimeFormats::class)
 @Composable
@@ -47,7 +47,7 @@ fun HabitHeatMap(
 
     AnalyticsCard(
         title = stringResource(Res.string.habit_map),
-        icon = Icons.Rounded.Map,
+        icon = Res.drawable.map,
         modifier = modifier.heightIn(max = 400.dp),
         header = {
             Row {
@@ -57,7 +57,7 @@ fun HabitHeatMap(
                     }
                 ) {
                     Icon(
-                        imageVector = Icons.AutoMirrored.Rounded.ArrowBack,
+                        imageVector = vectorResource(Res.drawable.arrow_back),
                         contentDescription = null
                     )
                 }
@@ -67,7 +67,7 @@ fun HabitHeatMap(
                     }
                 ) {
                     Icon(
-                        imageVector = Icons.AutoMirrored.Rounded.ArrowForward,
+                        imageVector = vectorResource(Res.drawable.arrow_forward),
                         contentDescription = null
                     )
                 }

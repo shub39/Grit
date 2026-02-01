@@ -13,12 +13,6 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.automirrored.filled.ArrowBack
-import androidx.compose.material.icons.filled.CheckCircle
-import androidx.compose.material.icons.filled.Warning
-import androidx.compose.material.icons.rounded.DriveFolderUpload
-import androidx.compose.material.icons.rounded.FileDownload
 import androidx.compose.material3.Button
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -36,10 +30,8 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import com.shub39.grit.R
 import com.shub39.grit.core.domain.AppTheme
 import com.shub39.grit.core.domain.backup.ExportState
 import com.shub39.grit.core.domain.backup.RestoreState
@@ -51,13 +43,21 @@ import com.shub39.grit.core.presentation.settings.ui.component.listItemColors
 import com.shub39.grit.core.presentation.theme.GritTheme
 import com.shub39.grit.core.presentation.theme.Theme
 import grit.shared.core.generated.resources.Res
+import grit.shared.core.generated.resources.arrow_back
 import grit.shared.core.generated.resources.backup
+import grit.shared.core.generated.resources.check_circle
 import grit.shared.core.generated.resources.choose_file
+import grit.shared.core.generated.resources.download
+import grit.shared.core.generated.resources.drive_folder_upload
 import grit.shared.core.generated.resources.export
 import grit.shared.core.generated.resources.export_desc
+import grit.shared.core.generated.resources.play_arrow
 import grit.shared.core.generated.resources.restore
 import grit.shared.core.generated.resources.restore_desc
+import grit.shared.core.generated.resources.warning
+import org.jetbrains.compose.resources.painterResource
 import org.jetbrains.compose.resources.stringResource
+import org.jetbrains.compose.resources.vectorResource
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -89,7 +89,7 @@ fun BackupPage(
                     onClick = onNavigateBack
                 ) {
                     Icon(
-                        imageVector = Icons.AutoMirrored.Default.ArrowBack,
+                        imageVector = vectorResource(Res.drawable.arrow_back),
                         contentDescription = "Navigate Back"
                     )
                 }
@@ -115,7 +115,7 @@ fun BackupPage(
                             },
                             leadingContent = {
                                 Icon(
-                                    imageVector = Icons.Rounded.DriveFolderUpload,
+                                    imageVector = vectorResource(Res.drawable.drive_folder_upload),
                                     contentDescription = null
                                 )
                             },
@@ -140,7 +140,7 @@ fun BackupPage(
                             ) {
                                 when (state.backupState.exportState) {
                                     ExportState.IDLE -> Icon(
-                                        painter = painterResource(R.drawable.round_play_arrow_24),
+                                        painter = painterResource(Res.drawable.play_arrow),
                                         contentDescription = "Start"
                                     )
 
@@ -149,7 +149,7 @@ fun BackupPage(
                                     )
 
                                     ExportState.EXPORTED -> Icon(
-                                        imageVector = Icons.Default.CheckCircle,
+                                        imageVector = vectorResource(Res.drawable.check_circle),
                                         contentDescription = "Done"
                                     )
                                 }
@@ -164,7 +164,7 @@ fun BackupPage(
                             colors = listItemColors(),
                             leadingContent = {
                                 Icon(
-                                    imageVector = Icons.Rounded.FileDownload,
+                                    imageVector = vectorResource(Res.drawable.download),
                                     contentDescription = null
                                 )
                             },
@@ -203,7 +203,7 @@ fun BackupPage(
                                 ) {
                                     when (state.backupState.restoreState) {
                                         RestoreState.IDLE -> Icon(
-                                            painter = painterResource(R.drawable.round_play_arrow_24),
+                                            painter = painterResource(Res.drawable.play_arrow),
                                             contentDescription = "Start"
                                         )
 
@@ -212,12 +212,12 @@ fun BackupPage(
                                         )
 
                                         RestoreState.RESTORED -> Icon(
-                                            imageVector = Icons.Default.CheckCircle,
+                                            imageVector = vectorResource(Res.drawable.check_circle),
                                             contentDescription = "Done"
                                         )
 
                                         RestoreState.FAILURE -> Icon(
-                                            imageVector = Icons.Default.Warning,
+                                            imageVector = vectorResource(Res.drawable.warning),
                                             contentDescription = "Fail"
                                         )
                                     }

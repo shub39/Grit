@@ -2,7 +2,8 @@ name: Build and Deploy to GitHub Pages
 
 on:
   push:
-    branches: [ main, master ]
+    branches:
+      - master
   workflow_dispatch:
 
 permissions:
@@ -25,15 +26,15 @@ jobs:
         uses: actions/setup-java@v4
         with:
           distribution: temurin
-          java-version: 17
+          java-version: 21
 
       - name: Build Web App
-        run: ./gradlew :web:wasmJsBrowserDistribution
+        run: ./gradlew :webdemo:wasmJsBrowserDistribution
 
       - name: Upload Pages artifact
         uses: actions/upload-pages-artifact@v3
         with:
-          path: web/build/dist/wasmJs/productionExecutable
+          path: webdemo/build/dist/wasmJs/productionExecutable
 
   deploy:
     name: Deploy to GitHub Pages

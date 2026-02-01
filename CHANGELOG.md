@@ -1,5 +1,14 @@
 # Changelog
 
+## 5.5.5
+Due to life and college stuff, wasn't able to ship properly for a long time. This update is mostly 
+a maintenance and getting familiar with the codebase again. expect more releases soon
+
+- Redid all icons due to technical reasons
+- migration and refactors to new libs
+- tasks and categories add sheet now open keyboard on launch (#206) by @madhan-selvaraj
+- miscellaneous fixes and improvements
+
 ## 5.5.4
 - Removed unnecessary permissions #184
 

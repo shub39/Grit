@@ -9,10 +9,6 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.automirrored.rounded.ArrowBack
-import androidx.compose.material.icons.automirrored.rounded.ArrowForward
-import androidx.compose.material.icons.rounded.CalendarMonth
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
@@ -31,6 +27,9 @@ import com.kizitonwose.calendar.core.plusDays
 import com.shub39.grit.core.habits.domain.HabitWithAnalytics
 import com.shub39.grit.core.habits.presentation.HabitsAction
 import grit.shared.core.generated.resources.Res
+import grit.shared.core.generated.resources.arrow_back
+import grit.shared.core.generated.resources.arrow_forward
+import grit.shared.core.generated.resources.calendar_month
 import grit.shared.core.generated.resources.monthly_progress
 import kotlinx.coroutines.launch
 import kotlinx.datetime.DateTimeUnit
@@ -42,6 +41,7 @@ import kotlinx.datetime.format.char
 import kotlinx.datetime.minus
 import kotlinx.datetime.plus
 import kotlinx.datetime.todayIn
+import org.jetbrains.compose.resources.painterResource
 import org.jetbrains.compose.resources.stringResource
 import kotlin.time.Clock
 import kotlin.time.ExperimentalTime
@@ -54,6 +54,7 @@ fun CalendarMap(
     calendarState: CalendarState,
     currentHabit: HabitWithAnalytics,
     primary: Color,
+    onNavigateToPaywall: () -> Unit,
     modifier: Modifier = Modifier
 ) {
     val today = Clock.System.todayIn(TimeZone.currentSystemDefault())
@@ -61,25 +62,23 @@ fun CalendarMap(
 
     AnalyticsCard(
         title = stringResource(Res.string.monthly_progress),
-        icon = Icons.Rounded.CalendarMonth,
+        icon = Res.drawable.calendar_month,
         canSeeContent = canSeeContent,
-        onPlusClick = { onAction(HabitsAction.OnShowPaywall) },
+        onPlusClick = onNavigateToPaywall,
         header = {
             Row {
                 IconButton(
                     onClick = {
                         scope.launch {
                             calendarState.animateScrollToMonth(
-                                calendarState.firstVisibleMonth.yearMonth.minus(
-                                    1,
-                                    DateTimeUnit.MONTH
-                                )
+                                calendarState.firstVisibleMonth.yearMonth
+                                    .minus(1, DateTimeUnit.MONTH)
                             )
                         }
                     }
                 ) {
                     Icon(
-                        imageVector = Icons.AutoMirrored.Rounded.ArrowBack,
+                        painter = painterResource(Res.drawable.arrow_back),
                         contentDescription = null
                     )
                 }
@@ -87,16 +86,14 @@ fun CalendarMap(
                     onClick = {
                         scope.launch {
                             calendarState.animateScrollToMonth(
-                                calendarState.firstVisibleMonth.yearMonth.plus(
-                                    1,
-                                    DateTimeUnit.MONTH
-                                )
+                                calendarState.firstVisibleMonth.yearMonth
+                                    .plus(1, DateTimeUnit.MONTH)
                             )
                         }
                     }
                 ) {
                     Icon(
-                        imageVector = Icons.AutoMirrored.Rounded.ArrowForward,
+                        painter = painterResource(Res.drawable.arrow_forward),
                         contentDescription = null
                     )
                 }
@@ -116,11 +113,13 @@ fun CalendarMap(
                     modifier = Modifier.padding(4.dp)
                 ) {
                     Text(
-                        text = it.yearMonth.format(YearMonth.Format {
-                            monthName(MonthNames.ENGLISH_FULL)
-                            char(' ')
-                            year()
-                        }),
+                        text = it.yearMonth.format(
+                            YearMonth.Format {
+                                monthName(MonthNames.ENGLISH_FULL)
+                                char(' ')
+                                year()
+                            }
+                        ),
                         color = MaterialTheme.colorScheme.secondary,
                         style = MaterialTheme.typography.titleMedium,
                         modifier = Modifier.align(Alignment.Center)

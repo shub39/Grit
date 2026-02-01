@@ -3,7 +3,9 @@ package com.shub39.grit.tasks.data.database
 import android.content.Context
 import androidx.room.Room
 import androidx.room.RoomDatabase
+import org.koin.core.annotation.Single
 
+@Single
 class TaskDbFactory(
     private val context: Context
 ) {

@@ -3,6 +3,7 @@ package com.shub39.grit.viewmodels
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.shub39.grit.core.domain.AlarmScheduler
+import com.shub39.grit.core.domain.GritDatastore
 import com.shub39.grit.core.tasks.domain.Category
 import com.shub39.grit.core.tasks.domain.CategoryColors
 import com.shub39.grit.core.tasks.domain.TaskRepo
@@ -10,6 +11,7 @@ import com.shub39.grit.core.tasks.presentation.TaskAction
 import com.shub39.grit.core.tasks.presentation.TaskState
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
+import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.combine
@@ -18,20 +20,23 @@ import kotlinx.coroutines.flow.onStart
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
+import org.koin.android.annotation.KoinViewModel
 
+@KoinViewModel
 class TasksViewModel(
-    stateLayer: StateLayer,
     private val repo: TaskRepo,
-    private val scheduler: AlarmScheduler
+    private val scheduler: AlarmScheduler,
+    private val datastore: GritDatastore
 ) : ViewModel() {
-
     private var savedJob: Job? = null
-    private val _state = stateLayer.tasksState
+    private var observerJob: Job? = null
+
+    private val _state = MutableStateFlow(TaskState())
 
     val state = _state.asStateFlow()
         .onStart {
-            // runs when flow starts
             observeTasks()
+            observeDatastore()
         }
         .stateIn(
             viewModelScope,
@@ -39,7 +44,6 @@ class TasksViewModel(
             TaskState()
         )
 
-    // handles actions from task page
     fun onAction(action: TaskAction) {
         viewModelScope.launch {
             when (action) {
@@ -105,6 +109,23 @@ class TasksViewModel(
 
                 is TaskAction.DeleteTask -> repo.deleteTask(action.task)
             }
+        }
+    }
+
+    private fun observeDatastore() {
+        observerJob?.cancel()
+        observerJob = viewModelScope.launch {
+            combine(
+                datastore.getIs24Hr(),
+                datastore.getTaskReorderPref()
+            ) { is24Hr, reorderTasks ->
+                _state.update {
+                    it.copy(
+                        is24Hour = is24Hr,
+                        reorderTasks = reorderTasks
+                    )
+                }
+            }.launchIn(this)
         }
     }
 

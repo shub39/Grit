@@ -4,8 +4,6 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.size
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.automirrored.rounded.FormatListBulleted
 import androidx.compose.material3.Icon
 import androidx.compose.material3.LocalContentColor
 import androidx.compose.material3.Text
@@ -17,7 +15,9 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import grit.shared.core.generated.resources.Res
 import grit.shared.core.generated.resources.add
+import grit.shared.core.generated.resources.bulleted_list
 import org.jetbrains.compose.resources.stringResource
+import org.jetbrains.compose.resources.vectorResource
 
 @Composable
 fun Empty(
@@ -29,7 +29,7 @@ fun Empty(
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
         Icon(
-            imageVector = Icons.AutoMirrored.Rounded.FormatListBulleted,
+            imageVector = vectorResource(Res.drawable.bulleted_list),
             contentDescription = null,
             modifier = Modifier.size(64.dp),
             tint = color

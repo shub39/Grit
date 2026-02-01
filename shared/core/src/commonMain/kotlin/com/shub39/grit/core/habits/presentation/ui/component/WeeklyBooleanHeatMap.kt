@@ -10,10 +10,6 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.automirrored.rounded.ArrowBack
-import androidx.compose.material.icons.automirrored.rounded.ArrowForward
-import androidx.compose.material.icons.rounded.ViewWeek
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
@@ -32,6 +28,9 @@ import com.kizitonwose.calendar.core.plusDays
 import com.shub39.grit.core.habits.domain.HabitWithAnalytics
 import com.shub39.grit.core.habits.presentation.HabitsAction
 import grit.shared.core.generated.resources.Res
+import grit.shared.core.generated.resources.arrow_back
+import grit.shared.core.generated.resources.arrow_forward
+import grit.shared.core.generated.resources.view_week
 import grit.shared.core.generated.resources.weekly_progress
 import kotlinx.coroutines.launch
 import kotlinx.datetime.TimeZone
@@ -42,6 +41,7 @@ import kotlinx.datetime.format.MonthNames
 import kotlinx.datetime.format.char
 import kotlinx.datetime.todayIn
 import org.jetbrains.compose.resources.stringResource
+import org.jetbrains.compose.resources.vectorResource
 import kotlin.time.Clock
 import kotlin.time.ExperimentalTime
 
@@ -59,7 +59,7 @@ fun WeeklyBooleanHeatMap(
 
     AnalyticsCard(
         title = stringResource(Res.string.weekly_progress),
-        icon = Icons.Rounded.ViewWeek,
+        icon = Res.drawable.view_week,
         modifier = modifier,
         header = {
             Row {
@@ -69,7 +69,7 @@ fun WeeklyBooleanHeatMap(
                     }
                 ) {
                     Icon(
-                        imageVector = Icons.AutoMirrored.Rounded.ArrowBack,
+                        imageVector = vectorResource(Res.drawable.arrow_back),
                         contentDescription = null
                     )
                 }
@@ -79,7 +79,7 @@ fun WeeklyBooleanHeatMap(
                     }
                 ) {
                     Icon(
-                        imageVector = Icons.AutoMirrored.Rounded.ArrowForward,
+                        imageVector = vectorResource(Res.drawable.arrow_forward),
                         contentDescription = null
                     )
                 }

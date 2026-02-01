@@ -10,8 +10,8 @@ import com.shub39.grit.core.habits.domain.HabitRepo
 import com.shub39.grit.core.habits.domain.HabitStatus
 import com.shub39.grit.core.habits.domain.HabitWithAnalytics
 import com.shub39.grit.core.habits.domain.OverallAnalytics
-import com.shub39.grit.habits.data.database.HabitDao
 import com.shub39.grit.habits.data.database.HabitStatusDao
+import com.shub39.grit.habits.data.database.HabitsDao
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
@@ -28,12 +28,14 @@ import kotlinx.datetime.LocalDate
 import kotlinx.datetime.TimeZone
 import kotlinx.datetime.daysUntil
 import kotlinx.datetime.todayIn
+import org.koin.core.annotation.Single
 import kotlin.time.Clock
 import kotlin.time.ExperimentalTime
 
+@Single(binds = [HabitRepo::class])
 @OptIn(ExperimentalTime::class)
 class HabitRepository(
-    private val habitDao: HabitDao,
+    private val habitDao: HabitsDao,
     private val habitStatusDao: HabitStatusDao,
     private val datastore: GritDatastore,
 ) : HabitRepo {

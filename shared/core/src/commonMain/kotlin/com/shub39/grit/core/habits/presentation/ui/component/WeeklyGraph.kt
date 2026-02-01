@@ -6,8 +6,6 @@ import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.rounded.AutoGraph
 import androidx.compose.material3.ButtonGroupDefaults
 import androidx.compose.material3.ExperimentalMaterial3ExpressiveApi
 import androidx.compose.material3.MaterialTheme
@@ -25,8 +23,8 @@ import androidx.compose.ui.graphics.SolidColor
 import androidx.compose.ui.unit.dp
 import com.shub39.grit.core.habits.domain.WeeklyTimePeriod
 import com.shub39.grit.core.habits.domain.WeeklyTimePeriod.Companion.toWeeks
-import com.shub39.grit.core.habits.presentation.HabitsAction
 import grit.shared.core.generated.resources.Res
+import grit.shared.core.generated.resources.chart_data
 import grit.shared.core.generated.resources.weekly_graph
 import grit.shared.core.generated.resources.weeks
 import ir.ehsannarmani.compose_charts.LineChart
@@ -44,18 +42,18 @@ import org.jetbrains.compose.resources.stringResource
 fun WeeklyGraph(
     canSeeContent: Boolean,
     primary: Color,
-    onAction: (HabitsAction) -> Unit,
     weeklyGraphData: List<Line>,
+    onNavigateToPaywall: () -> Unit,
     modifier: Modifier = Modifier
 ) {
     var selectedTimePeriod by rememberSaveable { mutableStateOf(WeeklyTimePeriod.WEEKS_8) }
 
     AnalyticsCard(
         title = stringResource(Res.string.weekly_graph),
-        icon = Icons.Rounded.AutoGraph,
+        icon = Res.drawable.chart_data,
         canSeeContent = canSeeContent,
         modifier = modifier.heightIn(max = 400.dp),
-        onPlusClick = { onAction(HabitsAction.OnShowPaywall) }
+        onPlusClick = onNavigateToPaywall
     ) {
         LazyRow(
             contentPadding = PaddingValues(

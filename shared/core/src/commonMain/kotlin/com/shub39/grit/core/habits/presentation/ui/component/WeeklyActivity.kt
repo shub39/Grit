@@ -6,8 +6,6 @@ import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.rounded.AutoGraph
 import androidx.compose.material3.ButtonGroupDefaults
 import androidx.compose.material3.ExperimentalMaterial3ExpressiveApi
 import androidx.compose.material3.MaterialTheme
@@ -26,6 +24,7 @@ import androidx.compose.ui.unit.dp
 import com.shub39.grit.core.habits.domain.WeeklyTimePeriod
 import com.shub39.grit.core.habits.domain.WeeklyTimePeriod.Companion.toWeeks
 import grit.shared.core.generated.resources.Res
+import grit.shared.core.generated.resources.chart_data
 import grit.shared.core.generated.resources.progress
 import grit.shared.core.generated.resources.weekly_graph
 import grit.shared.core.generated.resources.weeks
@@ -54,7 +53,7 @@ fun WeeklyActivity(
 
     AnalyticsCard(
         title = stringResource(Res.string.weekly_graph),
-        icon = Icons.Rounded.AutoGraph,
+        icon = Res.drawable.chart_data,
         modifier = modifier.heightIn(max = 400.dp)
     ) {
         LazyRow(

@@ -2,7 +2,7 @@ package com.shub39.grit.core.presentation.settings
 
 import androidx.compose.runtime.Immutable
 import androidx.compose.runtime.Stable
-import com.shub39.grit.core.domain.Pages
+import com.shub39.grit.core.domain.Sections
 import com.shub39.grit.core.domain.backup.ExportState
 import com.shub39.grit.core.domain.backup.RestoreState
 import com.shub39.grit.core.presentation.theme.Theme
@@ -16,22 +16,20 @@ data class SettingsState(
     val reorderTasks: Boolean = false,
     val startOfTheWeek: DayOfWeek = DayOfWeek.MONDAY,
     val pauseNotifications: Boolean = false,
-    val startingPage: Pages = Pages.Tasks,
+    val startingPage: Sections = Sections.Tasks,
     val backupState: BackupState = BackupState(),
-    val biometric: Boolean? = null,
-    val biometricAvailable: Boolean = false,
-    val showPaywall: Boolean = false,
-    val isUserSubscribed: Boolean = false,
-    val serverState: ServerState = ServerState()
+    val isBiometricLockOn: Boolean? = null,
+    val isBiometricLockAvailable: Boolean = false,
+//    val serverState: ServerState = ServerState()
 )
 
-@Stable
-@Immutable
-data class ServerState(
-    val isRunning: Boolean = false,
-    val serverPort: Int = 8080,
-    val serverUrl: String? = null
-)
+//@Stable
+//@Immutable
+//data class ServerState(
+//    val isRunning: Boolean = false,
+//    val serverPort: Int = 8080,
+//    val serverUrl: String? = null
+//)
 
 @Stable
 @Immutable

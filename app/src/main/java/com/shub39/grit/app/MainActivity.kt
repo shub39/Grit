@@ -21,23 +21,21 @@ import com.shub39.grit.R
 import com.shub39.grit.core.data.Utils
 import com.shub39.grit.core.presentation.component.InitialLoading
 import com.shub39.grit.core.presentation.createNotificationChannel
-import com.shub39.grit.core.presentation.settings.SettingsAction
 import com.shub39.grit.core.presentation.theme.GritTheme
 import com.shub39.grit.core.utils.LocalWindowSizeClass
 import com.shub39.grit.viewmodels.MainViewModel
-import com.shub39.grit.viewmodels.SettingsViewModel
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class MainActivity : FragmentActivity() {
-    private val settingsViewModel: SettingsViewModel by viewModel()
     private val mainViewModel: MainViewModel by viewModel()
 
     @OptIn(ExperimentalMaterial3WindowSizeClassApi::class)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         installSplashScreen()
-        createNotificationChannel(this)
         enableEdgeToEdge()
+
+        createNotificationChannel(this)
 
         setContent {
             val windowSizeClass = calculateWindowSizeClass(this)
@@ -45,21 +43,14 @@ class MainActivity : FragmentActivity() {
             CompositionLocalProvider(
                 LocalWindowSizeClass provides windowSizeClass
             ) {
-                val settingsState by settingsViewModel.state.collectAsStateWithLifecycle()
-                val isAppUnlocked by mainViewModel.isAppUnlocked.collectAsStateWithLifecycle()
+                val state by mainViewModel.state.collectAsStateWithLifecycle()
+
                 var showContent by remember { mutableStateOf(false) }
 
-                LaunchedEffect(settingsState.biometric, isAppUnlocked) {
-                    settingsState.biometric?.let {
+                LaunchedEffect(state.isAppUnlocked, state.isBiometricLockOn) {
+                    state.isBiometricLockOn?.let {
                         when {
-                            !it -> {
-                                showContent = true
-                            }
-
-                            isAppUnlocked -> {
-                                showContent = true
-                            }
-
+                            !it || state.isAppUnlocked -> showContent = true
                             else -> {
                                 showBiometricPrompt(
                                     onSuccess = {
@@ -77,11 +68,12 @@ class MainActivity : FragmentActivity() {
                     }
                 }
 
-                GritTheme(
-                    theme = settingsState.theme
-                ) {
+                GritTheme(theme = state.theme) {
                     if (showContent) {
-                        Grit()
+                        App(
+                            state = state,
+                            onRefreshSub = { mainViewModel.updateSubscription() }
+                        )
                     } else {
                         InitialLoading()
                     }
@@ -130,7 +122,8 @@ class MainActivity : FragmentActivity() {
             BiometricPrompt.ERROR_USER_CANCELED,
             BiometricPrompt.ERROR_NEGATIVE_BUTTON,
             BiometricPrompt.ERROR_CANCELED -> {
-                Toast.makeText(this, getString(R.string.biometric_failed), Toast.LENGTH_SHORT)
+                Toast
+                    .makeText(this, getString(R.string.biometric_failed), Toast.LENGTH_SHORT)
                     .show()
                 finish()
             }
@@ -139,17 +132,18 @@ class MainActivity : FragmentActivity() {
             BiometricPrompt.ERROR_HW_NOT_PRESENT,
             BiometricPrompt.ERROR_HW_UNAVAILABLE -> {
                 mainViewModel.setAppUnlocked(true)
-                settingsViewModel.onAction(SettingsAction.ChangeBiometricLock(false))
-                Toast.makeText(
-                    this,
-                    getString(R.string.biometric_not_available),
-                    Toast.LENGTH_LONG
-                ).show()
+                mainViewModel.setBiometricLock(false)
+
+                Toast
+                    .makeText(this, getString(R.string.biometric_not_available), Toast.LENGTH_LONG)
+                    .show()
                 onComplete()
             }
 
             else -> {
-                Toast.makeText(this, "Authentication error: $errString", Toast.LENGTH_SHORT).show()
+                Toast
+                    .makeText(this, "Authentication error: $errString", Toast.LENGTH_SHORT)
+                    .show()
                 finish()
             }
         }

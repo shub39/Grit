@@ -11,11 +11,6 @@ import androidx.compose.foundation.layout.widthIn
 import androidx.compose.foundation.lazy.staggeredgrid.LazyVerticalStaggeredGrid
 import androidx.compose.foundation.lazy.staggeredgrid.StaggeredGridCells
 import androidx.compose.foundation.shape.CircleShape
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.automirrored.filled.ArrowBack
-import androidx.compose.material.icons.rounded.Delete
-import androidx.compose.material.icons.rounded.Edit
-import androidx.compose.material.icons.rounded.Warning
 import androidx.compose.material3.ButtonShapes
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.ExperimentalMaterial3ExpressiveApi
@@ -55,31 +50,39 @@ import com.shub39.grit.core.habits.presentation.ui.component.WeekDayBreakdown
 import com.shub39.grit.core.habits.presentation.ui.component.WeeklyActivity
 import com.shub39.grit.core.habits.presentation.ui.component.WeeklyBooleanHeatMap
 import com.shub39.grit.core.shared_ui.GritDialog
-import com.shub39.grit.core.shared_ui.PageFill
 import com.shub39.grit.core.utils.LocalWindowSizeClass
 import grit.shared.core.generated.resources.Res
+import grit.shared.core.generated.resources.arrow_back
 import grit.shared.core.generated.resources.cancel
 import grit.shared.core.generated.resources.delete
 import grit.shared.core.generated.resources.delete_warning
+import grit.shared.core.generated.resources.edit
+import grit.shared.core.generated.resources.warning
 import kotlinx.datetime.YearMonth
 import org.jetbrains.compose.resources.stringResource
+import org.jetbrains.compose.resources.vectorResource
 import kotlin.time.ExperimentalTime
 
-@OptIn(ExperimentalMaterial3Api::class, ExperimentalMaterial3ExpressiveApi::class,
+@OptIn(
+    ExperimentalMaterial3Api::class,
+    ExperimentalMaterial3ExpressiveApi::class,
     ExperimentalTime::class
 )
 @Composable
 fun AnalyticsPage(
     state: HabitState,
     onAction: (HabitsAction) -> Unit,
-    onNavigateBack: () -> Unit
-) = PageFill {
+    onNavigateBack: () -> Unit,
+    onNavigateToPaywall: () -> Unit,
+    isUserSubscribed: Boolean,
+    modifier: Modifier = Modifier
+) {
     val windowSizeClass = LocalWindowSizeClass.current
 
     val primary = MaterialTheme.colorScheme.primary
     val currentMonth = remember { YearMonth.now() }
 
-    val currentHabit = state.habitsWithAnalytics.find { it.habit.id == state.analyticsHabitId } ?: return@PageFill
+    val currentHabit = state.habitsWithAnalytics.find { it.habit.id == state.analyticsHabitId } ?: return
 
     val heatMapState = rememberHeatMapCalendarState(
         startMonth = currentMonth.minusMonths(12),
@@ -102,7 +105,7 @@ fun AnalyticsPage(
 
     val scrollBehavior = TopAppBarDefaults.enterAlwaysScrollBehavior()
     Column(
-        modifier = Modifier
+        modifier = modifier
             .nestedScroll(scrollBehavior.nestedScrollConnection)
             .fillMaxSize()
     ) {
@@ -130,7 +133,7 @@ fun AnalyticsPage(
                     onClick = onNavigateBack
                 ) {
                     Icon(
-                        imageVector = Icons.AutoMirrored.Filled.ArrowBack,
+                        imageVector = vectorResource(Res.drawable.arrow_back),
                         contentDescription = "Navigate Back"
                     )
                 }
@@ -144,7 +147,7 @@ fun AnalyticsPage(
                     )
                 ) {
                     Icon(
-                        imageVector = Icons.Rounded.Delete,
+                        imageVector = vectorResource(Res.drawable.delete),
                         contentDescription = "Delete Habit"
                     )
                 }
@@ -157,7 +160,7 @@ fun AnalyticsPage(
                     )
                 ) {
                     Icon(
-                        imageVector = Icons.Rounded.Edit,
+                        imageVector = vectorResource(Res.drawable.edit),
                         contentDescription = "Edit Habit"
                     )
                 }
@@ -208,21 +211,22 @@ fun AnalyticsPage(
 
             item {
                 CalendarMap(
-                    canSeeContent = state.isUserSubscribed,
+                    canSeeContent = isUserSubscribed,
                     onAction = onAction,
                     calendarState = calendarState,
                     currentHabit = currentHabit,
                     primary = primary,
-                    modifier = Modifier.widthIn(max = maxWidth)
+                    modifier = Modifier.widthIn(max = maxWidth),
+                    onNavigateToPaywall = onNavigateToPaywall
                 )
             }
 
             item {
                 WeekDayBreakdown(
-                    canSeeContent = state.isUserSubscribed,
-                    onAction = onAction,
+                    canSeeContent = isUserSubscribed,
                     weekDayData = weekDayBreakdownData,
                     primary = primary,
+                    onNavigateToPaywall = onNavigateToPaywall,
                     modifier = Modifier.widthIn(max = maxWidth)
                 )
             }
@@ -235,7 +239,7 @@ fun AnalyticsPage(
             onDismissRequest = { deleteDialog = false }
         ) {
             Icon(
-                imageVector = Icons.Rounded.Warning,
+                imageVector = vectorResource(Res.drawable.warning),
                 contentDescription = "Warning"
             )
 

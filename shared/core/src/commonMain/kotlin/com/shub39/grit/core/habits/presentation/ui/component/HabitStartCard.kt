@@ -10,8 +10,6 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.CircleShape
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.rounded.FlagCircle
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.ExperimentalMaterial3ExpressiveApi
@@ -29,8 +27,10 @@ import com.shub39.grit.core.habits.domain.Habit
 import com.shub39.grit.core.habits.presentation.formatDateWithOrdinal
 import grit.shared.core.generated.resources.Res
 import grit.shared.core.generated.resources.days_ago_format
+import grit.shared.core.generated.resources.flag_circle
 import grit.shared.core.generated.resources.started_on
 import org.jetbrains.compose.resources.stringResource
+import org.jetbrains.compose.resources.vectorResource
 
 @OptIn(ExperimentalMaterial3ExpressiveApi::class)
 @Composable
@@ -63,7 +63,7 @@ fun HabitStartCard(
                 contentAlignment = Alignment.Center
             ) {
                 Icon(
-                    imageVector = Icons.Rounded.FlagCircle,
+                    imageVector = vectorResource(Res.drawable.flag_circle),
                     contentDescription = "Flag",
                     tint = MaterialTheme.colorScheme.onSecondary,
                     modifier = Modifier.size(36.dp)

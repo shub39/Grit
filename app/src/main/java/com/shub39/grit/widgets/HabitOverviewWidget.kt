@@ -45,8 +45,8 @@ import com.shub39.grit.core.data.toHabit
 import com.shub39.grit.core.data.toHabitStatusEntity
 import com.shub39.grit.core.habits.domain.Habit
 import com.shub39.grit.core.habits.domain.HabitStatus
-import com.shub39.grit.habits.data.database.HabitDao
 import com.shub39.grit.habits.data.database.HabitStatusDao
+import com.shub39.grit.habits.data.database.HabitsDao
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.distinctUntilChanged
@@ -58,6 +58,7 @@ import kotlinx.datetime.todayIn
 import kotlinx.serialization.Serializable
 import kotlinx.serialization.SerializationException
 import kotlinx.serialization.json.Json
+import org.koin.core.annotation.Factory
 import org.koin.core.component.KoinComponent
 import org.koin.core.component.get
 import java.io.File
@@ -70,10 +71,11 @@ class HabitOverviewWidgetReceiver : GlanceAppWidgetReceiver() {
     override val glanceAppWidget: GlanceAppWidget = HabitOverviewWidget()
 }
 
+@Factory
 @OptIn(ExperimentalTime::class)
 class HabitOverviewWidgetRepository(
     private val statusDao: HabitStatusDao,
-    private val habitDao: HabitDao
+    private val habitDao: HabitsDao
 ) {
     suspend fun setStatus(id: Long) {
         statusDao.insertHabitStatus(

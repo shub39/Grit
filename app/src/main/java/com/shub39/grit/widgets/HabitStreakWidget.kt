@@ -5,6 +5,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.ui.graphics.asAndroidBitmap
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.datastore.preferences.core.Preferences
@@ -47,9 +48,12 @@ import com.shub39.grit.core.data.toHabit
 import com.shub39.grit.core.data.toHabitStatus
 import com.shub39.grit.core.habits.domain.Habit
 import com.shub39.grit.core.habits.domain.HabitStatus
-import com.shub39.grit.habits.data.database.HabitDao
 import com.shub39.grit.habits.data.database.HabitStatusDao
+import com.shub39.grit.habits.data.database.HabitsDao
 import com.shub39.grit.habits.data.repository.countCurrentStreak
+import grit.shared.core.generated.resources.Res
+import grit.shared.core.generated.resources.arrow_back
+import grit.shared.core.generated.resources.arrow_forward
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.distinctUntilChanged
@@ -61,6 +65,8 @@ import kotlinx.datetime.LocalDate
 import kotlinx.datetime.TimeZone
 import kotlinx.datetime.minus
 import kotlinx.datetime.todayIn
+import org.jetbrains.compose.resources.imageResource
+import org.koin.core.annotation.Factory
 import org.koin.core.component.KoinComponent
 import org.koin.core.component.get
 import kotlin.time.Clock
@@ -73,10 +79,11 @@ class HabitStreakWidgetReceiver : GlanceAppWidgetReceiver() {
 private val directionKey = ActionParameters.Key<String>("DirectionKey")
 private val habitIdKey = longPreferencesKey("habit_id")
 
+@Factory
 class HabitStreakWidgetRepository(
     private val context: Context,
     private val statusDao: HabitStatusDao,
-    private val habitDao: HabitDao
+    private val habitDao: HabitsDao
 ) {
     suspend fun update(
         glanceId: GlanceId,
@@ -180,7 +187,7 @@ class HabitStreakWidget : GlanceAppWidget(), KoinComponent {
 
                         Row {
                             CircleIconButton(
-                                imageProvider = ImageProvider(R.drawable.round_arrow_back_ios_24),
+                                imageProvider = ImageProvider(imageResource(Res.drawable.arrow_back).asAndroidBitmap()),
                                 onClick = {
                                     onAction(
                                         actionParametersOf(directionKey to "back")
@@ -195,7 +202,7 @@ class HabitStreakWidget : GlanceAppWidget(), KoinComponent {
                             Spacer(modifier = GlanceModifier.size(8.dp))
 
                             CircleIconButton(
-                                imageProvider = ImageProvider(R.drawable.round_arrow_forward_ios_24),
+                                imageProvider = ImageProvider(imageResource(Res.drawable.arrow_forward).asAndroidBitmap()),
                                 onClick = {
                                     onAction(
                                         actionParametersOf(directionKey to "next")
