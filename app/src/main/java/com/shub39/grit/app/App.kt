@@ -1,6 +1,5 @@
 package com.shub39.grit.app
 
-import androidx.compose.animation.AnimatedContent
 import androidx.compose.animation.core.tween
 import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
@@ -21,6 +20,7 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.windowsizeclass.WindowWidthSizeClass
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -31,12 +31,12 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
-import com.shub39.grit.app.Routes.Companion.toIconRes
-import com.shub39.grit.app.Routes.Companion.toStringRes
+import com.shub39.grit.app.AppSections.Companion.toIconRes
+import com.shub39.grit.app.AppSections.Companion.toStringRes
 import com.shub39.grit.billing.PaywallPage
-import com.shub39.grit.core.domain.Pages
+import com.shub39.grit.core.domain.MainAppState
+import com.shub39.grit.core.domain.Sections
 import com.shub39.grit.core.habits.presentation.ui.HabitsGraph
-import com.shub39.grit.core.presentation.settings.SettingsAction
 import com.shub39.grit.core.presentation.settings.SettingsGraph
 import com.shub39.grit.core.tasks.presentation.ui.TasksPage
 import com.shub39.grit.core.utils.LocalWindowSizeClass
@@ -58,20 +58,29 @@ import org.koin.compose.koinInject
 import org.koin.compose.viewmodel.koinViewModel
 
 @Serializable
-private sealed interface Routes {
+private sealed interface GlobalRoutes {
     @Serializable
-    data object HabitsPages : Routes
+    data object PaywallPage : GlobalRoutes
+    
+    @Serializable
+    data object App : GlobalRoutes
+}
+
+@Serializable
+private sealed interface AppSections {
+    @Serializable
+    data object HabitsPages : AppSections
 
     @Serializable
-    data object TaskPages : Routes
+    data object TaskPages : AppSections
 
     @Serializable
-    data object SettingsPages : Routes
+    data object SettingsPages : AppSections
 
     companion object {
         val mainRoutes = listOf(TaskPages, HabitsPages, SettingsPages)
 
-        fun Routes.toStringRes(): StringResource {
+        fun AppSections.toStringRes(): StringResource {
             return when (this) {
                 HabitsPages -> Res.string.habits
                 TaskPages -> Res.string.tasks
@@ -79,7 +88,7 @@ private sealed interface Routes {
             }
         }
 
-        fun Routes.toIconRes(): DrawableResource {
+        fun AppSections.toIconRes(): DrawableResource {
             return when (this) {
                 HabitsPages -> Res.drawable.alarm
                 TaskPages -> Res.drawable.check_list
@@ -91,61 +100,60 @@ private sealed interface Routes {
 
 @OptIn(ExperimentalMaterial3Api::class, ExperimentalMaterial3ExpressiveApi::class)
 @Composable
-fun App() {
-    val windowSizeClass = LocalWindowSizeClass.current
+fun App(
+    state: MainAppState,
+    onRefreshSub: () -> Unit
+) {
+    val mainNavController = rememberNavController()
+    
+    NavHost(
+        navController = mainNavController,
+        startDestination = GlobalRoutes.App
+    ) {
+        composable<GlobalRoutes.PaywallPage> {
+            DisposableEffect(Unit) {
+                onDispose { onRefreshSub() }
+            }
 
-    val svm: SettingsViewModel = koinInject()
-    val settingsState by svm.state.collectAsStateWithLifecycle()
+            PaywallPage(
+                isPlusUser = state.isUserSubscribed,
+                onDismissRequest = { mainNavController.navigateUp() }
+            ) 
+        }
+        
+        composable<GlobalRoutes.App> {
+            val windowSizeClass = LocalWindowSizeClass.current
+            
+            var currentRoute: AppSections by remember { mutableStateOf(AppSections.TaskPages) }
+            val navController = rememberNavController()
 
-    var currentRoute: Routes by remember { mutableStateOf(Routes.TaskPages) }
-    val navController = rememberNavController()
-
-    AnimatedContent(
-        targetState = settingsState.showPaywall,
-        modifier = Modifier.background(MaterialTheme.colorScheme.background)
-    ) { showPaywall ->
-        if (!showPaywall) {
             when (windowSizeClass.widthSizeClass) {
                 WindowWidthSizeClass.Compact -> {
                     Scaffold(
                         bottomBar = {
-                            NavigationBar {
-                                Routes.mainRoutes.forEach { route ->
-                                    NavigationBarItem(
-                                        selected = currentRoute == route,
-                                        onClick = {
-                                            if (currentRoute != route) {
-                                                navController.navigate(route) {
-                                                    launchSingleTop = true
-                                                    popUpTo(
-                                                        route = when (settingsState.startingPage) {
-                                                            Pages.Habits -> Routes.HabitsPages
-                                                            Pages.Tasks -> Routes.TaskPages
-                                                        },
-                                                        popUpToBuilder = { saveState = true }
-                                                    )
-                                                    restoreState = true
-                                                }
-                                            }
-                                        },
-                                        icon = {
-                                            Icon(
-                                                painter = painterResource(route.toIconRes()),
-                                                contentDescription = null,
-                                            )
-                                        },
-                                        label = { Text(text = stringResource(route.toStringRes())) },
-                                        alwaysShowLabel = false
-                                    )
+                            AppNavBar(
+                                currentRoute = currentRoute,
+                                onNavigate = { route ->
+                                    navController.navigate(route) {
+                                        launchSingleTop = true
+                                        popUpTo(
+                                            route = when (state.startingSection) {
+                                                Sections.Habits -> AppSections.HabitsPages
+                                                Sections.Tasks -> AppSections.TaskPages
+                                            },
+                                            popUpToBuilder = { saveState = true }
+                                        )
+                                        restoreState = true
+                                    }
                                 }
-                            }
+                            )
                         }
                     ) { padding ->
                         NavHost(
                             navController = navController,
-                            startDestination = when (settingsState.startingPage) {
-                                Pages.Tasks -> Routes.TaskPages
-                                Pages.Habits -> Routes.HabitsPages
+                            startDestination = when (state.startingSection) {
+                                Sections.Tasks -> AppSections.TaskPages
+                                Sections.Habits -> AppSections.HabitsPages
                             },
                             modifier = Modifier
                                 .padding(
@@ -159,8 +167,8 @@ fun App() {
                             popEnterTransition = { fadeIn(animationSpec = tween(300)) },
                             popExitTransition = { fadeOut(animationSpec = tween(300)) }
                         ) {
-                            composable<Routes.TaskPages> {
-                                currentRoute = Routes.TaskPages
+                            composable<AppSections.TaskPages> {
+                                currentRoute = AppSections.TaskPages
                                 val tvm: TasksViewModel = koinViewModel()
                                 val taskPageState by tvm.state.collectAsStateWithLifecycle()
 
@@ -170,23 +178,33 @@ fun App() {
                                 )
                             }
 
-                            composable<Routes.SettingsPages> {
-                                currentRoute = Routes.SettingsPages
+                            composable<AppSections.SettingsPages> {
+                                currentRoute = AppSections.SettingsPages
+                                val svm: SettingsViewModel = koinInject()
+                                val settingsState by svm.state.collectAsStateWithLifecycle()
 
                                 SettingsGraph(
                                     state = settingsState,
                                     onAction = svm::onAction,
+                                    isUserSubscribed = state.isUserSubscribed,
+                                    onNavigateToPaywall = {
+                                        mainNavController.navigate(GlobalRoutes.PaywallPage)
+                                    }
                                 )
                             }
 
-                            composable<Routes.HabitsPages> {
-                                currentRoute = Routes.HabitsPages
+                            composable<AppSections.HabitsPages> {
+                                currentRoute = AppSections.HabitsPages
                                 val hvm: HabitViewModel = koinViewModel()
                                 val habitsPageState by hvm.state.collectAsStateWithLifecycle()
 
                                 HabitsGraph(
                                     state = habitsPageState,
                                     onAction = hvm::onAction,
+                                    isUserSubscribed = state.isUserSubscribed,
+                                    onNavigateToPaywall = {
+                                        mainNavController.navigate(GlobalRoutes.PaywallPage)
+                                    }
                                 )
                             }
                         }
@@ -197,44 +215,28 @@ fun App() {
                     Row(
                         modifier = Modifier.background(MaterialTheme.colorScheme.surface)
                     ) {
-                        NavigationRail(
-                            containerColor = MaterialTheme.colorScheme.surfaceContainer
-                        ) {
-                            Routes.mainRoutes.forEach { route ->
-                                NavigationRailItem(
-                                    selected = currentRoute == route,
-                                    onClick = {
-                                        if (currentRoute != route) {
-                                            navController.navigate(route) {
-                                                launchSingleTop = true
-                                                popUpTo(
-                                                    route = when (settingsState.startingPage) {
-                                                        Pages.Habits -> Routes.HabitsPages
-                                                        Pages.Tasks -> Routes.TaskPages
-                                                    },
-                                                    popUpToBuilder = { saveState = true }
-                                                )
-                                                restoreState = true
-                                            }
-                                        }
-                                    },
-                                    icon = {
-                                        Icon(
-                                            painter = painterResource(route.toIconRes()),
-                                            contentDescription = null,
-                                        )
-                                    },
-                                    label = { Text(text = stringResource(route.toStringRes())) },
-                                    alwaysShowLabel = false
-                                )
+                        AppNavRail(
+                            currentRoute = currentRoute,
+                            onNavigate = { route ->
+                                navController.navigate(route) {
+                                    launchSingleTop = true
+                                    popUpTo(
+                                        route = when (state.startingSection) {
+                                            Sections.Habits -> AppSections.HabitsPages
+                                            Sections.Tasks -> AppSections.TaskPages
+                                        },
+                                        popUpToBuilder = { saveState = true }
+                                    )
+                                    restoreState = true
+                                }
                             }
-                        }
+                        )
 
                         NavHost(
                             navController = navController,
-                            startDestination = when (settingsState.startingPage) {
-                                Pages.Tasks -> Routes.TaskPages
-                                Pages.Habits -> Routes.HabitsPages
+                            startDestination = when (state.startingSection) {
+                                Sections.Tasks -> AppSections.TaskPages
+                                Sections.Habits -> AppSections.HabitsPages
                             },
                             modifier = Modifier.background(MaterialTheme.colorScheme.background),
                             enterTransition = { fadeIn(animationSpec = tween(300)) },
@@ -242,8 +244,8 @@ fun App() {
                             popEnterTransition = { fadeIn(animationSpec = tween(300)) },
                             popExitTransition = { fadeOut(animationSpec = tween(300)) }
                         ) {
-                            composable<Routes.TaskPages> {
-                                currentRoute = Routes.TaskPages
+                            composable<AppSections.TaskPages> {
+                                currentRoute = AppSections.TaskPages
                                 val tvm: TasksViewModel = koinViewModel()
                                 val taskPageState by tvm.state.collectAsStateWithLifecycle()
 
@@ -253,33 +255,99 @@ fun App() {
                                 )
                             }
 
-                            composable<Routes.SettingsPages> {
-                                currentRoute = Routes.SettingsPages
+                            composable<AppSections.SettingsPages> {
+                                currentRoute = AppSections.SettingsPages
+                                val svm: SettingsViewModel = koinInject()
+                                val settingsState by svm.state.collectAsStateWithLifecycle()
 
                                 SettingsGraph(
                                     state = settingsState,
                                     onAction = svm::onAction,
+                                    isUserSubscribed = state.isUserSubscribed,
+                                    onNavigateToPaywall = {
+                                        mainNavController.navigate(GlobalRoutes.PaywallPage)
+                                    }
                                 )
                             }
 
-                            composable<Routes.HabitsPages> {
-                                currentRoute = Routes.HabitsPages
+                            composable<AppSections.HabitsPages> {
+                                currentRoute = AppSections.HabitsPages
                                 val hvm: HabitViewModel = koinViewModel()
                                 val habitsPageState by hvm.state.collectAsStateWithLifecycle()
 
                                 HabitsGraph(
                                     state = habitsPageState,
                                     onAction = hvm::onAction,
+                                    isUserSubscribed = state.isUserSubscribed,
+                                    onNavigateToPaywall = {
+                                        mainNavController.navigate(GlobalRoutes.PaywallPage)
+                                    }
                                 )
                             }
                         }
                     }
                 }
-            }
-        } else {
-            PaywallPage(
-                isPlusUser = settingsState.isUserSubscribed,
-                onDismissRequest = { svm.onAction(SettingsAction.OnPaywallDismiss) }
+            } 
+        }
+    }
+}
+
+@Composable
+private fun AppNavRail(
+    currentRoute: AppSections,
+    onNavigate: (AppSections) -> Unit,
+    modifier: Modifier = Modifier
+) {
+    NavigationRail(
+        modifier = modifier,
+        containerColor = MaterialTheme.colorScheme.surfaceContainer
+    ) {
+        AppSections.mainRoutes.forEach { route ->
+            NavigationRailItem(
+                selected = currentRoute == route,
+                onClick = {
+                    if (currentRoute != route) {
+                        onNavigate(route)
+                    }
+                },
+                icon = {
+                    Icon(
+                        painter = painterResource(route.toIconRes()),
+                        contentDescription = null,
+                    )
+                },
+                label = { Text(text = stringResource(route.toStringRes())) },
+                alwaysShowLabel = false
+            )
+        }
+    }
+}
+
+@Composable
+private fun AppNavBar(
+    currentRoute: AppSections,
+    onNavigate: (AppSections) -> Unit,
+    modifier: Modifier = Modifier
+) {
+    NavigationBar(
+        modifier = modifier
+    ) {
+        AppSections.mainRoutes.forEach { route ->
+            NavigationBarItem(
+                selected = currentRoute == route,
+                onClick = {
+                    if (currentRoute != route) {
+                        onNavigate(route)
+                    }
+                },
+                icon = {
+                    Icon(
+                        painter = painterResource(route.toIconRes()),
+                        contentDescription = null,
+                    )
+                },
+                label = { Text(text = stringResource(route.toStringRes())) },
+                alwaysShowLabel = false
             )
         }
     }

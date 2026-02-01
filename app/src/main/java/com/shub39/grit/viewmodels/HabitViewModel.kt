@@ -2,7 +2,6 @@ package com.shub39.grit.viewmodels
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.shub39.grit.billing.BillingHandler
 import com.shub39.grit.core.domain.AlarmScheduler
 import com.shub39.grit.core.domain.GritDatastore
 import com.shub39.grit.core.habits.domain.Habit
@@ -11,6 +10,7 @@ import com.shub39.grit.core.habits.domain.HabitStatus
 import com.shub39.grit.core.habits.presentation.HabitState
 import com.shub39.grit.core.habits.presentation.HabitsAction
 import kotlinx.coroutines.Job
+import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.combine
@@ -26,18 +26,15 @@ import kotlin.time.ExperimentalTime
 
 @KoinViewModel
 class HabitViewModel(
-    private val stateLayer: StateLayer,
-    private val billingHandler: BillingHandler,
     private val scheduler: AlarmScheduler,
     private val repo: HabitRepo,
     private val datastore: GritDatastore,
 ) : ViewModel() {
-
     private var habitStatusJob: Job? = null
     private var overallAnalyticsJob: Job? = null
     private var observeDatastoreJob: Job? = null
 
-    private val _state = stateLayer.habitsState
+    private val _state = MutableStateFlow(HabitState())
 
     val state = _state.asStateFlow()
         .onStart {
@@ -64,9 +61,10 @@ class HabitViewModel(
                 is HabitsAction.UpdateHabit -> upsertHabit(action.habit)
 
                 HabitsAction.ReorderHabits -> {
-                    val currentList = _state.value.habitsWithAnalytics.mapIndexed { index, analytics ->
-                        analytics.habit.copy(index = index)
-                    }
+                    val currentList =
+                        _state.value.habitsWithAnalytics.mapIndexed { index, analytics ->
+                            analytics.habit.copy(index = index)
+                        }
 
                     currentList.forEach { upsertHabit(it) }
                 }
@@ -78,34 +76,12 @@ class HabitViewModel(
                 }
 
                 HabitsAction.OnAddHabitClicked -> {
-                    val isSubscribed = billingHandler.isPlusUser()
-
-                    if (!isSubscribed && _state.value.habitsWithAnalytics.size >= 5) {
-                        stateLayer.settingsState.update {
-                            it.copy(showPaywall = true)
-                        }
-                    } else {
-                        _state.update {
-                            it.copy(showHabitAddSheet = true)
-                        }
-
-                        if (isSubscribed) {
-                            stateLayer.settingsState.update {
-                                it.copy(isUserSubscribed = true)
-                            }
-
-                            _state.update {
-                                it.copy(isUserSubscribed = true)
-                            }
-                        }
+                    _state.update {
+                        it.copy(showHabitAddSheet = true)
                     }
                 }
 
                 HabitsAction.DismissAddHabitDialog -> _state.update { it.copy(showHabitAddSheet = false) }
-
-                HabitsAction.OnShowPaywall -> stateLayer.settingsState.update {
-                    it.copy(showPaywall = true)
-                }
 
                 is HabitsAction.OnToggleCompactView -> datastore.setCompactView(action.pref)
 
@@ -202,13 +178,13 @@ class HabitViewModel(
 
     private suspend fun insertHabitStatus(habit: Habit, date: LocalDate) {
         val isHabitCompleted =
-            _state.value.habitsWithAnalytics.find { it.habit == habit }?.statuses?.any { it.date == date }
+            _state.value.habitsWithAnalytics
+                .find { it.habit == habit }?.statuses
+                ?.any { it.date == date }
                 ?: false
 
         if (isHabitCompleted) {
-
             repo.deleteHabitStatus(habit.id, date)
-
         } else {
             repo.insertHabitStatus(
                 HabitStatus(

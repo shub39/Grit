@@ -12,7 +12,7 @@ import com.materialkolor.PaletteStyle
 import com.shub39.grit.core.domain.AppTheme
 import com.shub39.grit.core.domain.Fonts
 import com.shub39.grit.core.domain.GritDatastore
-import com.shub39.grit.core.domain.Pages
+import com.shub39.grit.core.domain.Sections
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
 import kotlinx.datetime.DayOfWeek
@@ -29,7 +29,7 @@ class DataStoreImpl(
         private val amoledKey = booleanPreferencesKey("amoled")
         private val paletteKey = stringPreferencesKey("palette")
         private val startOfWeekKey = stringPreferencesKey("start_of_week")
-        private val startingPageKey = stringPreferencesKey("starting_page")
+        private val startingSectionKey = stringPreferencesKey("starting_page")
         private val is24HrKey = booleanPreferencesKey("is_24Hr")
         private val materialYouKey = booleanPreferencesKey("material_you")
         private val notificationsKey = booleanPreferencesKey("notifications")
@@ -103,14 +103,14 @@ class DataStoreImpl(
         }
     }
 
-    override fun getStartingPagePref(): Flow<Pages> = datastore.data.map { pref ->
-        val page = pref[startingPageKey] ?: Pages.Tasks.name
-        return@map Pages.valueOf(page)
+    override fun getStartingSectionPref(): Flow<Sections> = datastore.data.map { pref ->
+        val page = pref[startingSectionKey] ?: Sections.Tasks.name
+        return@map Sections.valueOf(page)
     }
 
-    override suspend fun setStartingPage(page: Pages) {
+    override suspend fun setStartingPage(page: Sections) {
         datastore.edit { prefs ->
-            prefs[startingPageKey] = page.name
+            prefs[startingSectionKey] = page.name
         }
     }
 

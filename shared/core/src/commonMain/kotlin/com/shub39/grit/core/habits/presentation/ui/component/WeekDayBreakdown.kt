@@ -9,7 +9,6 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
-import com.shub39.grit.core.habits.presentation.HabitsAction
 import grit.shared.core.generated.resources.Res
 import grit.shared.core.generated.resources.view_day
 import grit.shared.core.generated.resources.week_breakdown
@@ -28,16 +27,16 @@ import org.jetbrains.compose.resources.stringResource
 @Composable
 fun WeekDayBreakdown(
     canSeeContent: Boolean,
-    onAction: (HabitsAction) -> Unit,
     weekDayData: List<Bars>,
     primary: Color,
+    onNavigateToPaywall: () -> Unit,
     modifier: Modifier = Modifier
 ) {
     AnalyticsCard(
         title = stringResource(Res.string.week_breakdown),
         icon = Res.drawable.view_day,
         canSeeContent = canSeeContent,
-        onPlusClick = { onAction(HabitsAction.OnShowPaywall) },
+        onPlusClick = onNavigateToPaywall,
         modifier = modifier.heightIn(max = 300.dp)
     ) {
         RowChart(

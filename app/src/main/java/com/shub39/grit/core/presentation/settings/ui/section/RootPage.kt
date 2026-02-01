@@ -32,7 +32,7 @@ import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
-import com.shub39.grit.core.domain.Pages
+import com.shub39.grit.core.domain.Sections
 import com.shub39.grit.core.presentation.getRandomLine
 import com.shub39.grit.core.presentation.settings.SettingsAction
 import com.shub39.grit.core.presentation.settings.SettingsState
@@ -74,6 +74,7 @@ fun RootPage(
     onAction: (SettingsAction) -> Unit,
     onNavigateToLookAndFeel: () -> Unit,
     onNavigateToBackup: () -> Unit,
+    onNavigateToPaywall: () -> Unit,
 //    onNavigateToServer: () -> Unit
 ) {
     val context = LocalContext.current
@@ -109,7 +110,7 @@ fun RootPage(
 
             item {
                 Card(
-                    onClick = { onAction(SettingsAction.OnPaywallShow) },
+                    onClick = onNavigateToPaywall,
                     modifier = Modifier.padding(top = 16.dp),
                     shape = MaterialTheme.shapes.extraLarge,
                     colors = CardDefaults.cardColors(
@@ -211,11 +212,11 @@ fun RootPage(
                         },
                         trailingContent = {
                             Switch(
-                                checked = state.startingPage == Pages.Habits,
+                                checked = state.startingPage == Sections.Habits,
                                 onCheckedChange = {
                                     onAction(
                                         SettingsAction.ChangeStartingPage(
-                                            if (it) Pages.Habits else Pages.Tasks
+                                            if (it) Sections.Habits else Sections.Tasks
                                         )
                                     )
                                 }
@@ -245,7 +246,7 @@ fun RootPage(
                         modifier = Modifier.clip(middleItemShape())
                     )
 
-                    if (state.biometricAvailable) {
+                    if (state.isBiometricLockAvailable) {
                         ListItem(
                             headlineContent = {
                                 Text(
@@ -259,7 +260,7 @@ fun RootPage(
                             },
                             trailingContent = {
                                 Switch(
-                                    checked = state.biometric == true,
+                                    checked = state.isBiometricLockOn == true,
                                     onCheckedChange = {
                                         onAction(SettingsAction.ChangeBiometricLock(it))
                                     }

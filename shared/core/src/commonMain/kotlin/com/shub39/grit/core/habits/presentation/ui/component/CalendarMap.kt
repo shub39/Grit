@@ -54,6 +54,7 @@ fun CalendarMap(
     calendarState: CalendarState,
     currentHabit: HabitWithAnalytics,
     primary: Color,
+    onNavigateToPaywall: () -> Unit,
     modifier: Modifier = Modifier
 ) {
     val today = Clock.System.todayIn(TimeZone.currentSystemDefault())
@@ -63,17 +64,15 @@ fun CalendarMap(
         title = stringResource(Res.string.monthly_progress),
         icon = Res.drawable.calendar_month,
         canSeeContent = canSeeContent,
-        onPlusClick = { onAction(HabitsAction.OnShowPaywall) },
+        onPlusClick = onNavigateToPaywall,
         header = {
             Row {
                 IconButton(
                     onClick = {
                         scope.launch {
                             calendarState.animateScrollToMonth(
-                                calendarState.firstVisibleMonth.yearMonth.minus(
-                                    1,
-                                    DateTimeUnit.MONTH
-                                )
+                                calendarState.firstVisibleMonth.yearMonth
+                                    .minus(1, DateTimeUnit.MONTH)
                             )
                         }
                     }
@@ -87,10 +86,8 @@ fun CalendarMap(
                     onClick = {
                         scope.launch {
                             calendarState.animateScrollToMonth(
-                                calendarState.firstVisibleMonth.yearMonth.plus(
-                                    1,
-                                    DateTimeUnit.MONTH
-                                )
+                                calendarState.firstVisibleMonth.yearMonth
+                                    .plus(1, DateTimeUnit.MONTH)
                             )
                         }
                     }
@@ -116,11 +113,13 @@ fun CalendarMap(
                     modifier = Modifier.padding(4.dp)
                 ) {
                     Text(
-                        text = it.yearMonth.format(YearMonth.Format {
-                            monthName(MonthNames.ENGLISH_FULL)
-                            char(' ')
-                            year()
-                        }),
+                        text = it.yearMonth.format(
+                            YearMonth.Format {
+                                monthName(MonthNames.ENGLISH_FULL)
+                                char(' ')
+                                year()
+                            }
+                        ),
                         color = MaterialTheme.colorScheme.secondary,
                         style = MaterialTheme.typography.titleMedium,
                         modifier = Modifier.align(Alignment.Center)

@@ -6,14 +6,10 @@ import androidx.compose.ui.graphics.Color
 import com.materialkolor.PaletteStyle
 import com.shub39.grit.core.domain.AppTheme
 import com.shub39.grit.core.domain.Fonts
-import com.shub39.grit.core.domain.Pages
+import com.shub39.grit.core.domain.Sections
 import kotlinx.datetime.DayOfWeek
 
 sealed interface SettingsAction {
-    data object OnPaywallShow: SettingsAction
-    data object OnPaywallDismiss: SettingsAction
-    data object OnCheckSubscription: SettingsAction
-
     data object OnResetBackupState : SettingsAction
     data object OnExport : SettingsAction
     data class OnRestore(val uri: Uri) : SettingsAction
@@ -21,7 +17,7 @@ sealed interface SettingsAction {
 
     data class ChangeStartOfTheWeek(val pref: DayOfWeek) : SettingsAction
     data class ChangeIs24Hr(val pref: Boolean) : SettingsAction
-    data class ChangeStartingPage(val page: Pages) : SettingsAction
+    data class ChangeStartingPage(val page: Sections) : SettingsAction
     data class ChangePauseNotifications(val pref: Boolean) : SettingsAction
     data class ChangeReorderTasks(val pref: Boolean) : SettingsAction
 
