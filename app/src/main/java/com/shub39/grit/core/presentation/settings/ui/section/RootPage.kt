@@ -245,7 +245,7 @@ fun RootPage(
                         modifier = Modifier.clip(middleItemShape())
                     )
 
-                    if (state.biometricAvailable) {
+                    if (state.isBiometricLockAvailable) {
                         ListItem(
                             headlineContent = {
                                 Text(
@@ -259,7 +259,7 @@ fun RootPage(
                             },
                             trailingContent = {
                                 Switch(
-                                    checked = state.biometric == true,
+                                    checked = state.isBiometricLockOn == true,
                                     onCheckedChange = {
                                         onAction(SettingsAction.ChangeBiometricLock(it))
                                     }

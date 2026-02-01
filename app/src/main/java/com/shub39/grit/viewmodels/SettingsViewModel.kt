@@ -125,7 +125,7 @@ class SettingsViewModel(
             is SettingsAction.OnCheckBiometric -> {
                 _state.update {
                     it.copy(
-                        biometricAvailable = Utils.authenticationAvailable(action.context)
+                        isBiometricLockAvailable = Utils.authenticationAvailable(action.context)
                     )
                 }
             }
@@ -331,7 +331,7 @@ class SettingsViewModel(
                 .onEach { flow ->
                     _state.update {
                         it.copy(
-                            biometric = flow
+                            isBiometricLockOn = flow
                         )
                     }
                 }
