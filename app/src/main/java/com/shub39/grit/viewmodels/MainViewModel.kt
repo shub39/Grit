@@ -1,12 +1,10 @@
 package com.shub39.grit.viewmodels
 
-import androidx.compose.runtime.Immutable
-import androidx.compose.runtime.Stable
 import androidx.compose.ui.graphics.Color
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.shub39.grit.core.domain.GritDatastore
-import com.shub39.grit.core.presentation.theme.Theme
+import com.shub39.grit.core.domain.MainAppState
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
@@ -19,14 +17,6 @@ import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import org.koin.android.annotation.KoinViewModel
-
-@Stable
-@Immutable
-data class MainAppState(
-    val isAppUnlocked: Boolean = false,
-    val isBiometricLockOn: Boolean? = null,
-    val theme: Theme = Theme()
-)
 
 @KoinViewModel
 class MainViewModel(

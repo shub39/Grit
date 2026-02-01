@@ -103,10 +103,6 @@ class HabitViewModel(
 
                 HabitsAction.DismissAddHabitDialog -> _state.update { it.copy(showHabitAddSheet = false) }
 
-                HabitsAction.OnShowPaywall -> stateLayer.settingsState.update {
-                    it.copy(showPaywall = true)
-                }
-
                 is HabitsAction.OnToggleCompactView -> datastore.setCompactView(action.pref)
 
                 is HabitsAction.OnToggleEditState -> _state.update { it.copy(editState = action.pref) }
@@ -202,13 +198,13 @@ class HabitViewModel(
 
     private suspend fun insertHabitStatus(habit: Habit, date: LocalDate) {
         val isHabitCompleted =
-            _state.value.habitsWithAnalytics.find { it.habit == habit }?.statuses?.any { it.date == date }
+            _state.value.habitsWithAnalytics
+                .find { it.habit == habit }?.statuses
+                ?.any { it.date == date }
                 ?: false
 
         if (isHabitCompleted) {
-
             repo.deleteHabitStatus(habit.id, date)
-
         } else {
             repo.insertHabitStatus(
                 HabitStatus(

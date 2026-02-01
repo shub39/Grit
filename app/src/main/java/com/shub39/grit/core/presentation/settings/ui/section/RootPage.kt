@@ -74,6 +74,7 @@ fun RootPage(
     onAction: (SettingsAction) -> Unit,
     onNavigateToLookAndFeel: () -> Unit,
     onNavigateToBackup: () -> Unit,
+    onNavigateToPaywall: () -> Unit,
 //    onNavigateToServer: () -> Unit
 ) {
     val context = LocalContext.current
@@ -109,7 +110,7 @@ fun RootPage(
 
             item {
                 Card(
-                    onClick = { onAction(SettingsAction.OnPaywallShow) },
+                    onClick = onNavigateToPaywall,
                     modifier = Modifier.padding(top = 16.dp),
                     shape = MaterialTheme.shapes.extraLarge,
                     colors = CardDefaults.cardColors(

@@ -23,7 +23,6 @@ import androidx.compose.ui.graphics.SolidColor
 import androidx.compose.ui.unit.dp
 import com.shub39.grit.core.habits.domain.WeeklyTimePeriod
 import com.shub39.grit.core.habits.domain.WeeklyTimePeriod.Companion.toWeeks
-import com.shub39.grit.core.habits.presentation.HabitsAction
 import grit.shared.core.generated.resources.Res
 import grit.shared.core.generated.resources.chart_data
 import grit.shared.core.generated.resources.weekly_graph
@@ -43,8 +42,8 @@ import org.jetbrains.compose.resources.stringResource
 fun WeeklyGraph(
     canSeeContent: Boolean,
     primary: Color,
-    onAction: (HabitsAction) -> Unit,
     weeklyGraphData: List<Line>,
+    onNavigateToPaywall: () -> Unit,
     modifier: Modifier = Modifier
 ) {
     var selectedTimePeriod by rememberSaveable { mutableStateOf(WeeklyTimePeriod.WEEKS_8) }
@@ -54,7 +53,7 @@ fun WeeklyGraph(
         icon = Res.drawable.chart_data,
         canSeeContent = canSeeContent,
         modifier = modifier.heightIn(max = 400.dp),
-        onPlusClick = { onAction(HabitsAction.OnShowPaywall) }
+        onPlusClick = onNavigateToPaywall
     ) {
         LazyRow(
             contentPadding = PaddingValues(

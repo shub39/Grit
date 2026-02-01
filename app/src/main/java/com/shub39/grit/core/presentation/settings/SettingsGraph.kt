@@ -42,7 +42,9 @@ private sealed interface SettingsRoutes {
 fun SettingsGraph(
     state: SettingsState,
     onAction: (SettingsAction) -> Unit,
-) = PageFill {
+    onNavigateToPaywall: () -> Unit,
+    modifier: Modifier = Modifier
+) = PageFill(modifier = modifier) {
     val navController = rememberNavController()
 
     NavHost(
@@ -71,6 +73,7 @@ fun SettingsGraph(
                 onAction = onAction,
                 onNavigateToLookAndFeel = { navController.navigate(SettingsRoutes.LookAndFeel) },
                 onNavigateToBackup = { navController.navigate(SettingsRoutes.Backup) },
+                onNavigateToPaywall = onNavigateToPaywall
 //                onNavigateToServer = { navController.navigate(SettingsRoutes.Server) }
             )
         }
@@ -110,7 +113,8 @@ private fun Preview() {
     ) {
         SettingsGraph(
             state = SettingsState(),
-            onAction = {}
+            onAction = {},
+            onNavigateToPaywall = {}
         )
     }
 }

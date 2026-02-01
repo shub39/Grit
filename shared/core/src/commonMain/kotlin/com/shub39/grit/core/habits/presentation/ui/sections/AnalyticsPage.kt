@@ -50,7 +50,6 @@ import com.shub39.grit.core.habits.presentation.ui.component.WeekDayBreakdown
 import com.shub39.grit.core.habits.presentation.ui.component.WeeklyActivity
 import com.shub39.grit.core.habits.presentation.ui.component.WeeklyBooleanHeatMap
 import com.shub39.grit.core.shared_ui.GritDialog
-import com.shub39.grit.core.shared_ui.PageFill
 import com.shub39.grit.core.utils.LocalWindowSizeClass
 import grit.shared.core.generated.resources.Res
 import grit.shared.core.generated.resources.arrow_back
@@ -71,14 +70,16 @@ import kotlin.time.ExperimentalTime
 fun AnalyticsPage(
     state: HabitState,
     onAction: (HabitsAction) -> Unit,
-    onNavigateBack: () -> Unit
-) = PageFill {
+    onNavigateBack: () -> Unit,
+    onNavigateToPaywall: () -> Unit,
+    modifier: Modifier = Modifier
+) {
     val windowSizeClass = LocalWindowSizeClass.current
 
     val primary = MaterialTheme.colorScheme.primary
     val currentMonth = remember { YearMonth.now() }
 
-    val currentHabit = state.habitsWithAnalytics.find { it.habit.id == state.analyticsHabitId } ?: return@PageFill
+    val currentHabit = state.habitsWithAnalytics.find { it.habit.id == state.analyticsHabitId } ?: return
 
     val heatMapState = rememberHeatMapCalendarState(
         startMonth = currentMonth.minusMonths(12),
@@ -101,7 +102,7 @@ fun AnalyticsPage(
 
     val scrollBehavior = TopAppBarDefaults.enterAlwaysScrollBehavior()
     Column(
-        modifier = Modifier
+        modifier = modifier
             .nestedScroll(scrollBehavior.nestedScrollConnection)
             .fillMaxSize()
     ) {
@@ -212,16 +213,17 @@ fun AnalyticsPage(
                     calendarState = calendarState,
                     currentHabit = currentHabit,
                     primary = primary,
-                    modifier = Modifier.widthIn(max = maxWidth)
+                    modifier = Modifier.widthIn(max = maxWidth),
+                    onNavigateToPaywall = onNavigateToPaywall
                 )
             }
 
             item {
                 WeekDayBreakdown(
                     canSeeContent = state.isUserSubscribed,
-                    onAction = onAction,
                     weekDayData = weekDayBreakdownData,
                     primary = primary,
+                    onNavigateToPaywall = onNavigateToPaywall,
                     modifier = Modifier.widthIn(max = maxWidth)
                 )
             }

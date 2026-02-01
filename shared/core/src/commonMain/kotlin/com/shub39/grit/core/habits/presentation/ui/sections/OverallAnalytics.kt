@@ -30,7 +30,6 @@ import com.kizitonwose.calendar.core.now
 import com.materialkolor.ktx.fixIfDisliked
 import com.materialkolor.ktx.harmonize
 import com.shub39.grit.core.habits.presentation.HabitState
-import com.shub39.grit.core.habits.presentation.HabitsAction
 import com.shub39.grit.core.habits.presentation.prepareWeekDayDataToBars
 import com.shub39.grit.core.habits.presentation.ui.component.HabitHeatMap
 import com.shub39.grit.core.habits.presentation.ui.component.WeekDayBreakdown
@@ -58,9 +57,10 @@ import kotlin.time.ExperimentalTime
 @Composable
 fun OverallAnalytics(
     state: HabitState,
-    onAction: (HabitsAction) -> Unit,
     onNavigateBack: () -> Unit,
-    showNavigateBack: Boolean = true
+    onNavigateToPaywall: () -> Unit,
+    showNavigateBack: Boolean = true,
+    modifier: Modifier = Modifier
 ) {
     val windowSizeClass = LocalWindowSizeClass.current
 
@@ -110,7 +110,7 @@ fun OverallAnalytics(
 
     val scrollBehavior = TopAppBarDefaults.enterAlwaysScrollBehavior()
     Column(
-        modifier = Modifier
+        modifier = modifier
             .nestedScroll(scrollBehavior.nestedScrollConnection)
             .fillMaxSize()
     ) {
@@ -164,9 +164,9 @@ fun OverallAnalytics(
             item {
                 WeekDayBreakdown(
                     canSeeContent = state.isUserSubscribed,
-                    onAction = onAction,
                     weekDayData = weeklyBreakdownData,
                     primary = primary,
+                    onNavigateToPaywall = onNavigateToPaywall,
                     modifier = Modifier.widthIn(max = maxWidth)
                 )
             }
@@ -175,8 +175,8 @@ fun OverallAnalytics(
                 WeeklyGraph(
                     canSeeContent = state.isUserSubscribed,
                     primary = primary,
-                    onAction = onAction,
                     weeklyGraphData = weeklyGraphData,
+                    onNavigateToPaywall = onNavigateToPaywall,
                     modifier = Modifier.widthIn(max = maxWidth)
                 )
             }
