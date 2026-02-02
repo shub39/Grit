@@ -1,16 +1,11 @@
 package com.shub39.grit.core.habits.domain
 
-import androidx.compose.runtime.Immutable
-import androidx.compose.runtime.Stable
-
 typealias WeeklyComparisonData = List<Double>
 typealias WeekDayFrequencyData = Map<String, Int>
 
 /**
  * Grouped model for [habit] and its constituent analytics calculated from [statuses]
  */
-@Stable
-@Immutable
 data class HabitWithAnalytics(
     val habit: Habit,
     val statuses: List<HabitStatus>,
