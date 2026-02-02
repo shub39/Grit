@@ -1,5 +1,6 @@
 package com.shub39.grit.core.habits.presentation.ui.component
 
+import androidx.compose.animation.animateContentSize
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
@@ -19,13 +20,20 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.kizitonwose.calendar.compose.CalendarState
 import com.kizitonwose.calendar.compose.HorizontalCalendar
+import com.kizitonwose.calendar.compose.rememberCalendarState
 import com.kizitonwose.calendar.core.minusDays
+import com.kizitonwose.calendar.core.minusYears
+import com.kizitonwose.calendar.core.now
 import com.kizitonwose.calendar.core.plusDays
+import com.shub39.grit.core.habits.domain.Habit
+import com.shub39.grit.core.habits.domain.HabitStatus
 import com.shub39.grit.core.habits.domain.HabitWithAnalytics
 import com.shub39.grit.core.habits.presentation.HabitsAction
+import com.shub39.grit.core.utils.now
 import grit.shared.core.generated.resources.Res
 import grit.shared.core.generated.resources.arrow_back
 import grit.shared.core.generated.resources.arrow_forward
@@ -33,6 +41,9 @@ import grit.shared.core.generated.resources.calendar_month
 import grit.shared.core.generated.resources.monthly_progress
 import kotlinx.coroutines.launch
 import kotlinx.datetime.DateTimeUnit
+import kotlinx.datetime.DayOfWeek
+import kotlinx.datetime.LocalDate
+import kotlinx.datetime.LocalDateTime
 import kotlinx.datetime.TimeZone
 import kotlinx.datetime.YearMonth
 import kotlinx.datetime.format
@@ -46,6 +57,9 @@ import org.jetbrains.compose.resources.stringResource
 import kotlin.time.Clock
 import kotlin.time.ExperimentalTime
 
+/**
+ * Boolean Calendar map highlighting days
+ */
 @OptIn(ExperimentalTime::class)
 @Composable
 fun CalendarMap(
@@ -79,7 +93,8 @@ fun CalendarMap(
                 ) {
                     Icon(
                         painter = painterResource(Res.drawable.arrow_back),
-                        contentDescription = null
+                        contentDescription = null,
+                        tint = primary
                     )
                 }
                 IconButton(
@@ -94,7 +109,8 @@ fun CalendarMap(
                 ) {
                     Icon(
                         painter = painterResource(Res.drawable.arrow_forward),
-                        contentDescription = null
+                        contentDescription = null,
+                        tint = primary
                     )
                 }
             }
@@ -104,7 +120,7 @@ fun CalendarMap(
         HorizontalCalendar(
             state = calendarState,
             modifier = Modifier
-                .height(350.dp)
+                .animateContentSize()
                 .padding(bottom = 16.dp),
             contentPadding = PaddingValues(horizontal = 16.dp),
             userScrollEnabled = canSeeContent,
@@ -189,6 +205,46 @@ fun CalendarMap(
                     }
                 }
             }
+        )
+    }
+}
+
+@Preview
+@Composable
+private fun Preview() {
+    MaterialTheme {
+        CalendarMap(
+            canSeeContent = true,
+            onAction = {},
+            calendarState = rememberCalendarState(
+                startMonth = YearMonth.now().minusYears(1),
+                endMonth = YearMonth.now(),
+                firstVisibleMonth = YearMonth.now()
+            ),
+            currentHabit = HabitWithAnalytics(
+                habit = Habit(
+                    id = 1,
+                    title = "Test Habit",
+                    description = "Just a test Habit",
+                    time = LocalDateTime.now(),
+                    days = DayOfWeek.entries.toSet(),
+                    index = 1,
+                    reminder = false
+                ),
+                statuses = (0..40).map {
+                    HabitStatus(
+                        habitId = 1,
+                        date = LocalDate.now().minus(it, DateTimeUnit.DAY)
+                    )
+                },
+                weeklyComparisonData = listOf(),
+                weekDayFrequencyData = mapOf(),
+                currentStreak = 0,
+                bestStreak = 0,
+                startedDaysAgo = 0
+            ),
+            primary = MaterialTheme.colorScheme.primary,
+            onNavigateToPaywall = { },
         )
     }
 }
