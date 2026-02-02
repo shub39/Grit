@@ -9,16 +9,15 @@ import com.shub39.grit.core.data.backup.toTaskSchema
 import com.shub39.grit.core.domain.backup.ExportRepo
 import com.shub39.grit.core.habits.domain.HabitRepo
 import com.shub39.grit.core.tasks.domain.TaskRepo
+import com.shub39.grit.core.utils.now
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.async
 import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.withContext
-import kotlinx.datetime.TimeZone
-import kotlinx.datetime.toLocalDateTime
+import kotlinx.datetime.LocalDateTime
 import kotlinx.serialization.json.Json
 import org.koin.core.annotation.Single
 import java.io.File
-import kotlin.time.Clock
 import kotlin.time.ExperimentalTime
 
 @Single(binds = [ExportRepo::class])
@@ -59,7 +58,7 @@ class ExportImpl(
 
         if (!exportFolder.exists() || !exportFolder.isDirectory) exportFolder.mkdirs()
 
-        val time = Clock.System.now().toLocalDateTime(TimeZone.currentSystemDefault()).toString().replace(":", "").replace(" ", "")
+        val time = LocalDateTime.now().toString().replace(":", "").replace(" ", "")
         val file = File(exportFolder, "Grit-Export-$time.json")
 
         file.writeText(

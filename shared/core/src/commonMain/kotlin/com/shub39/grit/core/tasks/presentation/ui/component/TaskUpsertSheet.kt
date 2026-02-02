@@ -49,6 +49,7 @@ import androidx.compose.ui.unit.dp
 import com.shub39.grit.core.shared_ui.GritBottomSheet
 import com.shub39.grit.core.tasks.domain.Category
 import com.shub39.grit.core.tasks.domain.Task
+import com.shub39.grit.core.utils.now
 import com.shub39.grit.core.utils.toFormattedString
 import grit.shared.core.generated.resources.Res
 import grit.shared.core.generated.resources.add
@@ -68,7 +69,6 @@ import kotlinx.datetime.TimeZone
 import kotlinx.datetime.toLocalDateTime
 import org.jetbrains.compose.resources.stringResource
 import org.jetbrains.compose.resources.vectorResource
-import kotlin.time.Clock
 import kotlin.time.ExperimentalTime
 import kotlin.time.Instant
 
@@ -111,7 +111,7 @@ fun TaskUpsertSheetContent(
     )
     val datePickerState = rememberDatePickerState()
     val isValidDateTime = if (newTask.reminder != null) {
-        newTask.reminder!! > Clock.System.now().toLocalDateTime(TimeZone.currentSystemDefault())
+        newTask.reminder!! > LocalDateTime.now()
     } else true
 
     GritBottomSheet(

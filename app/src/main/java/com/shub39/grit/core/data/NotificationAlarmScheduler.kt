@@ -10,14 +10,13 @@ import com.shub39.grit.core.domain.AlarmScheduler
 import com.shub39.grit.core.domain.IntentActions
 import com.shub39.grit.core.habits.domain.Habit
 import com.shub39.grit.core.tasks.domain.Task
+import com.shub39.grit.core.utils.now
 import kotlinx.datetime.DateTimeUnit
 import kotlinx.datetime.LocalDateTime
 import kotlinx.datetime.TimeZone
 import kotlinx.datetime.plus
 import kotlinx.datetime.toInstant
-import kotlinx.datetime.toLocalDateTime
 import org.koin.core.annotation.Single
-import kotlin.time.Clock
 import kotlin.time.ExperimentalTime
 
 //implementation of AlarmScheduler using AlarmManager
@@ -36,7 +35,7 @@ class NotificationAlarmScheduler(
 
         var scheduleTime = habit.time
 
-        val now = Clock.System.now().toLocalDateTime(TimeZone.currentSystemDefault())
+        val now = LocalDateTime.now()
 
         var attempt = 0
         while (scheduleTime < now && attempt <= 365) {
@@ -73,7 +72,7 @@ class NotificationAlarmScheduler(
         if (task.reminder == null) return
         val scheduleTime = task.reminder!!
 
-        val now = Clock.System.now().toLocalDateTime(TimeZone.currentSystemDefault())
+        val now = LocalDateTime.now()
 
         if (scheduleTime < now) {
             Log.d(tag, "Task '${task.title}' reminder time is in the past")

@@ -26,15 +26,14 @@ import com.shub39.grit.core.habits.presentation.ui.component.HabitCard
 import com.shub39.grit.core.habits.presentation.ui.component.HabitUpsertSheet
 import com.shub39.grit.core.shared_ui.Empty
 import com.shub39.grit.core.utils.LocalWindowSizeClass
+import com.shub39.grit.core.utils.now
 import grit.shared.core.generated.resources.Res
 import grit.shared.core.generated.resources.drag_indicator
 import kotlinx.datetime.DayOfWeek
-import kotlinx.datetime.TimeZone
-import kotlinx.datetime.toLocalDateTime
+import kotlinx.datetime.LocalDateTime
 import org.jetbrains.compose.resources.vectorResource
 import sh.calvin.reorderable.ReorderableItem
 import sh.calvin.reorderable.rememberReorderableLazyListState
-import kotlin.time.Clock
 import kotlin.time.ExperimentalTime
 
 @OptIn(
@@ -112,7 +111,7 @@ fun HabitsList(
             habit = Habit(
                 title = "",
                 description = "",
-                time = Clock.System.now().toLocalDateTime(TimeZone.currentSystemDefault()),
+                time = LocalDateTime.now(),
                 days = DayOfWeek.entries.toSet(),
                 index = state.habitsWithAnalytics.size,
                 reminder = false

@@ -41,6 +41,7 @@ kotlin {
             implementation(libs.compose.components.resources)
             implementation(libs.navigation.compose)
             implementation(libs.compose.windowsizeclass)
+            implementation(libs.compose.ui.tooling.preview)
 
             implementation(libs.kotlinx.datetime)
             implementation(libs.reorderable)
@@ -49,6 +50,11 @@ kotlin {
             implementation(libs.materialkolor)
         }
     }
+}
+
+dependencies {
+    androidRuntimeClasspath(libs.compose.ui.tooling)
+    androidRuntimeClasspath(libs.compose.ui.tooling.preview)
 }
 
 compose.resources {

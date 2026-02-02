@@ -48,6 +48,7 @@ import com.shub39.grit.core.data.toHabit
 import com.shub39.grit.core.data.toHabitStatus
 import com.shub39.grit.core.habits.domain.Habit
 import com.shub39.grit.core.habits.domain.HabitStatus
+import com.shub39.grit.core.utils.now
 import com.shub39.grit.habits.data.database.HabitStatusDao
 import com.shub39.grit.habits.data.database.HabitsDao
 import com.shub39.grit.habits.data.repository.countCurrentStreak
@@ -62,14 +63,11 @@ import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.launch
 import kotlinx.datetime.DateTimeUnit
 import kotlinx.datetime.LocalDate
-import kotlinx.datetime.TimeZone
 import kotlinx.datetime.minus
-import kotlinx.datetime.todayIn
 import org.jetbrains.compose.resources.imageResource
 import org.koin.core.annotation.Factory
 import org.koin.core.component.KoinComponent
 import org.koin.core.component.get
-import kotlin.time.Clock
 import kotlin.time.ExperimentalTime
 
 class HabitStreakWidgetReceiver : GlanceAppWidgetReceiver() {
@@ -162,7 +160,7 @@ class HabitStreakWidget : GlanceAppWidget(), KoinComponent {
         onAction: (ActionParameters) -> Unit
     ) {
         if (habit != null) {
-            val today = Clock.System.todayIn(TimeZone.currentSystemDefault())
+            val today = LocalDate.now()
             val last5Days = (0..4).map { today.minus(it, DateTimeUnit.DAY) }.reversed()
             val currentStreak = countCurrentStreak(statuses)
 
