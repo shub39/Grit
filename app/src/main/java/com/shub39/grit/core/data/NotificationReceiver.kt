@@ -21,7 +21,6 @@ import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
 import kotlinx.datetime.LocalDate
 import kotlinx.datetime.LocalDateTime
-import kotlinx.datetime.LocalTime
 import org.koin.core.component.KoinComponent
 import org.koin.core.component.get
 import kotlin.time.ExperimentalTime
@@ -55,10 +54,9 @@ class NotificationReceiver : BroadcastReceiver(), KoinComponent {
 
                             // check if habit is completed today, if not then show notification
                             val habitStatus = habitRepo.getStatusForHabit(habitId)
-                            val time = LocalTime.now()
                             val todayDayOfWeek = LocalDateTime.now().dayOfWeek
 
-                            if (habitStatus.any { it.date == time }) {
+                            if (habitStatus.any { it.date == LocalDate.now() }) {
                                 Log.d(tag, "Habit already completed today")
                             } else if (!habit.days.contains(todayDayOfWeek)) {
                                 Log.d(tag, "Habit is notification not scheduled for today")

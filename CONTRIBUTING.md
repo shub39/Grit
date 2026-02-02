@@ -21,7 +21,7 @@ I'll review your pull request as soon as possible. Thank you for your contributi
 * `:shared:core` : All presentation logic for the app, including habits and tasks ui and shared common components 
 * `:webdemo:` : Builds the web demo which is deployed by CI on push to master. Also can be used as hot reload
 ```shell
-./gradlew :weddemo:hotRunJvm --auto
+./gradlew :webdemo:hotRunJvm --auto
 ```
 
 ## Compose Guidelines
