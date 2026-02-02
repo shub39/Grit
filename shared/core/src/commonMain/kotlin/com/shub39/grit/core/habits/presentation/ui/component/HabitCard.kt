@@ -39,6 +39,7 @@ import com.kizitonwose.calendar.core.minusDays
 import com.kizitonwose.calendar.core.plusDays
 import com.shub39.grit.core.habits.domain.HabitWithAnalytics
 import com.shub39.grit.core.habits.presentation.HabitsAction
+import com.shub39.grit.core.utils.now
 import com.shub39.grit.core.utils.toFormattedString
 import grit.shared.core.generated.resources.Res
 import grit.shared.core.generated.resources.analytics
@@ -47,11 +48,9 @@ import grit.shared.core.generated.resources.circle_border
 import grit.shared.core.generated.resources.heat
 import kotlinx.datetime.DateTimeUnit
 import kotlinx.datetime.DayOfWeek
-import kotlinx.datetime.TimeZone
+import kotlinx.datetime.LocalDate
 import kotlinx.datetime.minus
-import kotlinx.datetime.todayIn
 import org.jetbrains.compose.resources.vectorResource
-import kotlin.time.Clock
 import kotlin.time.ExperimentalTime
 
 @OptIn(ExperimentalMaterial3Api::class, ExperimentalTime::class)
@@ -70,7 +69,7 @@ fun HabitCard(
     shape: Shape,
     modifier: Modifier = Modifier
 ) {
-    val today = Clock.System.todayIn(TimeZone.currentSystemDefault())
+    val today = LocalDate.now()
     val canCompleteToday = today.dayOfWeek in habitWithAnalytics.habit.days
 
     // animated colors

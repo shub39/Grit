@@ -9,6 +9,7 @@ import com.shub39.grit.core.tasks.domain.Category
 import com.shub39.grit.core.tasks.domain.Task
 import com.shub39.grit.core.tasks.presentation.TaskAction
 import com.shub39.grit.core.tasks.presentation.TaskState
+import com.shub39.grit.core.utils.now
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -17,16 +18,13 @@ import kotlinx.datetime.DatePeriod
 import kotlinx.datetime.DateTimeUnit
 import kotlinx.datetime.DayOfWeek
 import kotlinx.datetime.LocalDate
-import kotlinx.datetime.TimeZone
+import kotlinx.datetime.LocalDateTime
 import kotlinx.datetime.daysUntil
 import kotlinx.datetime.format.DayOfWeekNames
 import kotlinx.datetime.isoDayNumber
 import kotlinx.datetime.minus
 import kotlinx.datetime.plus
-import kotlinx.datetime.toLocalDateTime
-import kotlinx.datetime.todayIn
 import kotlin.random.Random
-import kotlin.time.Clock
 import kotlin.time.ExperimentalTime
 
 @OptIn(ExperimentalTime::class)
@@ -39,7 +37,7 @@ object DummyStateProvider {
                         id = 1,
                         title = "Morning Walk",
                         description = "A 30-minute walk every morning",
-                        time = Clock.System.now().toLocalDateTime(TimeZone.currentSystemDefault()),
+                        time = LocalDateTime.now(),
                         days = DayOfWeek.entries.toSet(),
                         index = 0,
                         reminder = true
@@ -56,7 +54,7 @@ object DummyStateProvider {
                         id = 2,
                         title = "Read a book",
                         description = "Read 20 pages of a book",
-                        time = Clock.System.now().toLocalDateTime(TimeZone.currentSystemDefault()),
+                        time = LocalDateTime.now(),
                         days = DayOfWeek.entries.toSet(),
                         index = 1,
                         reminder = false
@@ -133,7 +131,7 @@ object DummyStateProvider {
                         habitWithAnalytics.statuses + newStatus
                     }
 
-                    val today = Clock.System.todayIn(TimeZone.currentSystemDefault())
+                    val today = LocalDate.now()
                     val updatedCompletedHabitIds = if (action.date == today) {
                         if (isCompleted) {
                             state.completedHabitIds - action.habit.id
@@ -314,7 +312,7 @@ object DummyStateProvider {
     ): Int {
         if (dates.isEmpty()) return 0
 
-        val today = Clock.System.todayIn(TimeZone.currentSystemDefault())
+        val today = LocalDate.now()
         val filteredDates = dates.filter { eligibleWeekdays.contains(it.dayOfWeek) }.sorted()
 
         if (filteredDates.isEmpty()) return 0
@@ -383,7 +381,7 @@ object DummyStateProvider {
         firstDay: DayOfWeek,
         habitStatuses: List<HabitStatus>
     ): WeeklyComparisonData {
-        val today = Clock.System.todayIn(TimeZone.currentSystemDefault())
+        val today = LocalDate.now()
         val totalWeeks = 15
 
         val startDateOfTodayWeek = today.minus(

@@ -4,14 +4,15 @@ import androidx.sqlite.db.framework.FrameworkSQLiteOpenHelperFactory
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import androidx.test.platform.app.InstrumentationRegistry
 import com.google.common.truth.Truth.assertThat
-import com.kizitonwose.calendar.core.minusDays
-import com.kizitonwose.calendar.core.now
+import com.shub39.grit.core.utils.now
 import com.shub39.grit.habits.data.database.HabitDatabase
+import kotlinx.datetime.DateTimeUnit
 import kotlinx.datetime.LocalDate
+import kotlinx.datetime.LocalDateTime
+import kotlinx.datetime.minus
 import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith
-import kotlin.time.Clock
 import kotlin.time.ExperimentalTime
 
 private const val DB_NAME = "habits_test.db"
@@ -32,7 +33,7 @@ class HabitDBMigrationTest {
         helper.createDatabase(DB_NAME, 4).apply {
             (1..5).forEach { habit ->
 
-                val timeEpoch = Clock.System.now().toEpochMilliseconds().div(1000)
+                val timeEpoch = LocalDateTime.now()
 
                 execSQL(
                     """
@@ -49,7 +50,7 @@ class HabitDBMigrationTest {
 
                 (1..3).forEach { offset ->
 
-                    val dateEpoch = LocalDate.now().minusDays(offset).toEpochDays()
+                    val dateEpoch = LocalDate.now().minus(offset, DateTimeUnit.DAY).toEpochDays()
 
                     execSQL(
                         """

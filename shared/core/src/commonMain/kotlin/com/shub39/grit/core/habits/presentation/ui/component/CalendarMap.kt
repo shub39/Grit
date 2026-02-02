@@ -44,17 +44,14 @@ import kotlinx.datetime.DateTimeUnit
 import kotlinx.datetime.DayOfWeek
 import kotlinx.datetime.LocalDate
 import kotlinx.datetime.LocalDateTime
-import kotlinx.datetime.TimeZone
 import kotlinx.datetime.YearMonth
 import kotlinx.datetime.format
 import kotlinx.datetime.format.MonthNames
 import kotlinx.datetime.format.char
 import kotlinx.datetime.minus
 import kotlinx.datetime.plus
-import kotlinx.datetime.todayIn
 import org.jetbrains.compose.resources.painterResource
 import org.jetbrains.compose.resources.stringResource
-import kotlin.time.Clock
 import kotlin.time.ExperimentalTime
 
 /**
@@ -71,7 +68,7 @@ fun CalendarMap(
     onNavigateToPaywall: () -> Unit,
     modifier: Modifier = Modifier
 ) {
-    val today = Clock.System.todayIn(TimeZone.currentSystemDefault())
+    val today = LocalDate.now()
     val scope = rememberCoroutineScope()
 
     AnalyticsCard(

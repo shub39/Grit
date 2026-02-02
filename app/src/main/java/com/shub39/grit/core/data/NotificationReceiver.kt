@@ -13,17 +13,17 @@ import com.shub39.grit.core.habits.domain.HabitStatus
 import com.shub39.grit.core.presentation.habitNotification
 import com.shub39.grit.core.presentation.taskNotification
 import com.shub39.grit.core.tasks.domain.TaskRepo
+import com.shub39.grit.core.utils.now
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
-import kotlinx.datetime.TimeZone
-import kotlinx.datetime.toLocalDateTime
-import kotlinx.datetime.todayIn
+import kotlinx.datetime.LocalDate
+import kotlinx.datetime.LocalDateTime
+import kotlinx.datetime.LocalTime
 import org.koin.core.component.KoinComponent
 import org.koin.core.component.get
-import kotlin.time.Clock
 import kotlin.time.ExperimentalTime
 
 class NotificationReceiver : BroadcastReceiver(), KoinComponent {
@@ -55,8 +55,8 @@ class NotificationReceiver : BroadcastReceiver(), KoinComponent {
 
                             // check if habit is completed today, if not then show notification
                             val habitStatus = habitRepo.getStatusForHabit(habitId)
-                            val time = Clock.System.todayIn(TimeZone.currentSystemDefault())
-                            val todayDayOfWeek = Clock.System.now().toLocalDateTime(TimeZone.currentSystemDefault()).dayOfWeek
+                            val time = LocalTime.now()
+                            val todayDayOfWeek = LocalDateTime.now().dayOfWeek
 
                             if (habitStatus.any { it.date == time }) {
                                 Log.d(tag, "Habit already completed today")
@@ -78,7 +78,7 @@ class NotificationReceiver : BroadcastReceiver(), KoinComponent {
 
                             val habitStatus = HabitStatus(
                                 habitId = habitId,
-                                date = Clock.System.todayIn(TimeZone.currentSystemDefault())
+                                date = LocalDate.now()
                             )
                             habitRepo.insertHabitStatus(habitStatus)
 

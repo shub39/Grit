@@ -3,18 +3,16 @@ package com.shub39.grit.habits.data.repository
 import com.shub39.grit.core.habits.domain.HabitStatus
 import com.shub39.grit.core.habits.domain.WeekDayFrequencyData
 import com.shub39.grit.core.habits.domain.WeeklyComparisonData
+import com.shub39.grit.core.utils.now
 import kotlinx.datetime.DatePeriod
 import kotlinx.datetime.DateTimeUnit
 import kotlinx.datetime.DayOfWeek
 import kotlinx.datetime.LocalDate
-import kotlinx.datetime.TimeZone
 import kotlinx.datetime.daysUntil
 import kotlinx.datetime.format.DayOfWeekNames
 import kotlinx.datetime.isoDayNumber
 import kotlinx.datetime.minus
 import kotlinx.datetime.plus
-import kotlinx.datetime.todayIn
-import kotlin.time.Clock
 import kotlin.time.ExperimentalTime
 
 @OptIn(ExperimentalTime::class)
@@ -24,7 +22,7 @@ fun countCurrentStreak(
 ): Int {
     if (dates.isEmpty()) return 0
 
-    val today = Clock.System.todayIn(TimeZone.currentSystemDefault())
+    val today = LocalDate.now()
     val filteredDates = dates.filter { eligibleWeekdays.contains(it.dayOfWeek) }.sorted()
 
     if (filteredDates.isEmpty()) return 0
@@ -98,7 +96,7 @@ fun prepareLineChartData(
     firstDay: DayOfWeek,
     habitStatuses: List<HabitStatus>
 ): WeeklyComparisonData {
-    val today = Clock.System.todayIn(TimeZone.currentSystemDefault())
+    val today = LocalDate.now()
     val totalWeeks = 15
 
     // Find the start date of the 15-week period

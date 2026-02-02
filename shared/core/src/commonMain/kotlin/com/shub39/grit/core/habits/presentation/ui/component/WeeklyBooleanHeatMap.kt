@@ -27,22 +27,21 @@ import com.kizitonwose.calendar.core.minusDays
 import com.kizitonwose.calendar.core.plusDays
 import com.shub39.grit.core.habits.domain.HabitWithAnalytics
 import com.shub39.grit.core.habits.presentation.HabitsAction
+import com.shub39.grit.core.utils.now
 import grit.shared.core.generated.resources.Res
 import grit.shared.core.generated.resources.arrow_back
 import grit.shared.core.generated.resources.arrow_forward
 import grit.shared.core.generated.resources.view_week
 import grit.shared.core.generated.resources.weekly_progress
 import kotlinx.coroutines.launch
-import kotlinx.datetime.TimeZone
+import kotlinx.datetime.LocalDate
 import kotlinx.datetime.YearMonth
 import kotlinx.datetime.format
 import kotlinx.datetime.format.FormatStringsInDatetimeFormats
 import kotlinx.datetime.format.MonthNames
 import kotlinx.datetime.format.char
-import kotlinx.datetime.todayIn
 import org.jetbrains.compose.resources.stringResource
 import org.jetbrains.compose.resources.vectorResource
-import kotlin.time.Clock
 import kotlin.time.ExperimentalTime
 
 @OptIn(ExperimentalTime::class, FormatStringsInDatetimeFormats::class)
@@ -54,7 +53,7 @@ fun WeeklyBooleanHeatMap(
     primary: Color,
     modifier: Modifier = Modifier
 ) {
-    val today = Clock.System.todayIn(TimeZone.currentSystemDefault())
+    val today = LocalDate.now()
     val scope = rememberCoroutineScope()
 
     AnalyticsCard(

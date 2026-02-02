@@ -10,6 +10,7 @@ import com.shub39.grit.core.habits.domain.HabitRepo
 import com.shub39.grit.core.habits.domain.HabitStatus
 import com.shub39.grit.core.habits.domain.HabitWithAnalytics
 import com.shub39.grit.core.habits.domain.OverallAnalytics
+import com.shub39.grit.core.utils.now
 import com.shub39.grit.habits.data.database.HabitStatusDao
 import com.shub39.grit.habits.data.database.HabitsDao
 import kotlinx.coroutines.CoroutineScope
@@ -25,11 +26,8 @@ import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import kotlinx.datetime.DayOfWeek
 import kotlinx.datetime.LocalDate
-import kotlinx.datetime.TimeZone
 import kotlinx.datetime.daysUntil
-import kotlinx.datetime.todayIn
 import org.koin.core.annotation.Single
-import kotlin.time.Clock
 import kotlin.time.ExperimentalTime
 
 @Single(binds = [HabitRepo::class])
@@ -103,7 +101,7 @@ class HabitRepository(
                         habitStatuses = habitStatusesForHabit
                     ),
                     weekDayFrequencyData = prepareWeekDayFrequencyData(dates = dates),
-                    startedDaysAgo = habit.time.date.daysUntil(Clock.System.todayIn(TimeZone.currentSystemDefault())).toLong()
+                    startedDaysAgo = habit.time.date.daysUntil(LocalDate.now()).toLong()
                 )
             }
         }.flowOn(Dispatchers.Default)
@@ -113,7 +111,7 @@ class HabitRepository(
         return habitStatuses
             .map { habitStatuses ->
                 habitStatuses
-                    .filter { it.date == Clock.System.todayIn(TimeZone.currentSystemDefault()) }
+                    .filter { it.date == LocalDate.now() }
                     .map { it.habitId }
             }.flowOn(Dispatchers.Default)
     }

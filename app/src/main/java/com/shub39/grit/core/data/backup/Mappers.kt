@@ -5,10 +5,10 @@ import com.shub39.grit.core.habits.domain.Habit
 import com.shub39.grit.core.habits.domain.HabitStatus
 import com.shub39.grit.core.tasks.domain.Category
 import com.shub39.grit.core.tasks.domain.Task
+import com.shub39.grit.core.utils.now
+import kotlinx.datetime.LocalDateTime
 import kotlinx.datetime.TimeZone
 import kotlinx.datetime.toInstant
-import kotlinx.datetime.toLocalDateTime
-import kotlin.time.Clock
 import kotlin.time.ExperimentalTime
 
 @OptIn(ExperimentalTime::class)
@@ -31,7 +31,7 @@ fun HabitSchema.toHabit(): Habit {
         title = title,
         description = description,
         index = index,
-        time = Clock.System.now().toLocalDateTime(TimeZone.currentSystemDefault()),
+        time = LocalDateTime.now(),
         days = Converters.dayOfWeekFromString(days),
         reminder = reminder
     )

@@ -45,6 +45,7 @@ import com.shub39.grit.core.data.toHabit
 import com.shub39.grit.core.data.toHabitStatusEntity
 import com.shub39.grit.core.habits.domain.Habit
 import com.shub39.grit.core.habits.domain.HabitStatus
+import com.shub39.grit.core.utils.now
 import com.shub39.grit.habits.data.database.HabitStatusDao
 import com.shub39.grit.habits.data.database.HabitsDao
 import kotlinx.coroutines.Dispatchers
@@ -53,8 +54,7 @@ import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.flow.flowOn
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.launch
-import kotlinx.datetime.TimeZone
-import kotlinx.datetime.todayIn
+import kotlinx.datetime.LocalDate
 import kotlinx.serialization.Serializable
 import kotlinx.serialization.SerializationException
 import kotlinx.serialization.json.Json
@@ -64,7 +64,6 @@ import org.koin.core.component.get
 import java.io.File
 import java.io.InputStream
 import java.io.OutputStream
-import kotlin.time.Clock
 import kotlin.time.ExperimentalTime
 
 class HabitOverviewWidgetReceiver : GlanceAppWidgetReceiver() {
@@ -81,7 +80,7 @@ class HabitOverviewWidgetRepository(
         statusDao.insertHabitStatus(
             habitStatusEntity = HabitStatus(
                 habitId = id,
-                date = Clock.System.todayIn(TimeZone.currentSystemDefault())
+                date = LocalDate.now()
             ).toHabitStatusEntity()
         )
     }
@@ -89,7 +88,7 @@ class HabitOverviewWidgetRepository(
     suspend fun deleteStatus(id: Long) {
         statusDao.deleteStatus(
             habitId = id,
-            date = Clock.System.todayIn(TimeZone.currentSystemDefault())
+            date = LocalDate.now()
         )
     }
 
@@ -107,7 +106,7 @@ class HabitOverviewWidgetRepository(
         return statusDao
             .getAllHabitStatuses()
             .map { flow ->
-                flow.filter { it.date == Clock.System.todayIn(TimeZone.currentSystemDefault()) }.map { it.habitId }
+                flow.filter { it.date == LocalDate.now() }.map { it.habitId }
             }
             .distinctUntilChanged()
             .flowOn(Dispatchers.IO)
@@ -178,7 +177,7 @@ class HabitOverviewWidget : GlanceAppWidget(), KoinComponent {
                 HabitOverview(
                     context = context,
                     noHabits = habits.isEmpty(),
-                    habits = habits.filter { Clock.System.todayIn(TimeZone.currentSystemDefault()).dayOfWeek in it.days },
+                    habits = habits.filter { LocalDate.now().dayOfWeek in it.days },
                     completedHabitIds = completedHabitIds,
                     onHabitClick = {
                         coroutineScope.launch {
