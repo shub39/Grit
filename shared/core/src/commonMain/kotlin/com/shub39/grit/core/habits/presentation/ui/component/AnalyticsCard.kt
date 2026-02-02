@@ -28,6 +28,9 @@ import org.jetbrains.compose.resources.DrawableResource
 import org.jetbrains.compose.resources.painterResource
 import org.jetbrains.compose.resources.stringResource
 
+/**
+ * Wrapper card for analytics display
+ */
 @Composable
 fun AnalyticsCard(
     title: String,

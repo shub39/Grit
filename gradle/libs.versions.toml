@@ -27,9 +27,8 @@ composeicons = "1.1.1"
 compose-junit = "1.10.2"
 biometric = "1.4.0-alpha02"
 truth = "1.4.5"
-ktor = "3.4.0"
+#ktor = "3.4.0"
 compose-multiplatform = "1.10.0"
-compose-hot-reload = "1.0.0"
 kotlinx-coroutines = "1.10.2"
 kotlinx-serialization-json = "1.10.0"
 
@@ -98,4 +97,3 @@ compose-compiler = { id = "org.jetbrains.kotlin.plugin.compose", version.ref = "
 kotlin-serialization = { id = "org.jetbrains.kotlin.plugin.serialization", version.ref = "kotlin" }
 compose-multiplatform = { id = "org.jetbrains.compose", version.ref = "compose-multiplatform" }
 kotlin-multiplatform = { id = "org.jetbrains.kotlin.multiplatform", version.ref = "kotlin" }
-compose-hot-reload = { id = "org.jetbrains.compose.hot-reload", version.ref = "compose-hot-reload" }
