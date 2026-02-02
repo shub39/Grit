@@ -8,6 +8,7 @@ on:
 
 jobs:
   build:
+    if: startsWith(github.event.head_commit.message, '[beta]') || contains(github.event.head_commit.message, 'Weblate')
     runs-on: ubuntu-latest
     env:
       VERSION: $( echo ${{ github.event.head_commit.id }} | cut -c1-7 )

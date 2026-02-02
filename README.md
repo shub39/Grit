@@ -33,6 +33,12 @@ I eventually want to turn this app into a productivity hub with many social feat
 
 [![Stargazers over time](https://starchart.cc/shub39/Grit.svg?background=%23282828&axis=%23f2dfd3&line=%23ffb780)](https://starchart.cc/shub39/Grit)
 
+## Translations
+
+Translations are done via weblate, you can contribute there!
+[<img src="https://hosted.weblate.org/widget/grit/multi-auto.svg" alt="Translation status" />](https://hosted.weblate.org/engage/grit/)
+[<img src="https://hosted.weblate.org/widget/grit/287x66-grey.png" alt="Translation status" />](https://hosted.weblate.org/engage/grit/)
+
 # Inspiration and Tech used
 
 - [Loop Habit Tracker](https://github.com/iSoron/uhabits)
