@@ -23,7 +23,6 @@ reorderable = "3.0.0"
 room = "2.8.4"
 navigation = "2.9.1"
 materialkolor = "4.1.1"
-composeicons = "1.1.1"
 compose-junit = "1.10.2"
 biometric = "1.4.0-alpha02"
 truth = "1.4.5"
@@ -81,7 +80,6 @@ purchases-ui = { module = "com.revenuecat.purchases:purchases-ui", version.ref =
 reorderable = { module = "sh.calvin.reorderable:reorderable", version.ref = "reorderable" }
 materialkolor = { module = "com.materialkolor:material-kolor", version.ref = "materialkolor" }
 colorpicker-compose = { module = "com.github.skydoves:colorpicker-compose", version.ref = "colorpicker" }
-composeicons-fontawesome = { module = "br.com.devsrsouza.compose.icons:font-awesome", version.ref = "composeicons" }
 calendar = { module = "com.kizitonwose.calendar:compose-multiplatform", version.ref = "calendar" }
 compose-charts = { module = "io.github.ehsannarmani:compose-charts", version.ref = "compose-charts" }
 truth = { module = "com.google.truth:truth", version.ref = "truth" }

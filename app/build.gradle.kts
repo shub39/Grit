@@ -127,7 +127,6 @@ dependencies {
     implementation(libs.materialkolor)
     implementation(libs.colorpicker.compose)
     implementation(libs.androidx.datastore.preferences.core)
-    implementation(libs.composeicons.fontawesome)
     implementation(libs.androidx.biometric)
     implementation(libs.kotlinx.datetime)
     implementation(libs.kotlinx.serialization.json)
