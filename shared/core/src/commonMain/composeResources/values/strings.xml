@@ -134,4 +134,5 @@
     <string name="grit_desktop">Grit Desktop</string>
     <string name="grit_desktop_desc">Access your tasks and habits on your PC directly from your phone, No cloud involved</string>
     <string name="download">Download</string>
+    <string name="translate">Translate</string>
 </resources>

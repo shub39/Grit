@@ -1,5 +1,10 @@
 # Changelog
 
+## 5.5.51
+- Fixed widgets stuck on loading
+- Added weblate info on settings
+- Dependency updates
+
 ## 5.5.5
 Due to life and college stuff, wasn't able to ship properly for a long time. This update is mostly 
 a maintenance and getting familiar with the codebase again. expect more releases soon

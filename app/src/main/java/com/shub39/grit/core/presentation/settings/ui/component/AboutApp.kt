@@ -23,15 +23,14 @@ import androidx.compose.ui.platform.LocalUriHandler
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import com.shub39.grit.BuildConfig
-import compose.icons.FontAwesomeIcons
-import compose.icons.fontawesomeicons.Brands
-import compose.icons.fontawesomeicons.brands.Discord
-import compose.icons.fontawesomeicons.brands.Github
-import compose.icons.fontawesomeicons.brands.GooglePlay
 import grit.shared.core.generated.resources.Res
 import grit.shared.core.generated.resources.bmc
 import grit.shared.core.generated.resources.buymeacoffee
+import grit.shared.core.generated.resources.discord
+import grit.shared.core.generated.resources.github
+import grit.shared.core.generated.resources.playstore
 import grit.shared.core.generated.resources.rate_on_play
+import grit.shared.core.generated.resources.translate
 import org.jetbrains.compose.resources.stringResource
 import org.jetbrains.compose.resources.vectorResource
 
@@ -76,7 +75,7 @@ fun AboutApp() {
                     onClick = { uriHandler.openUri("https://discord.gg/nxA2hgtEKf") }
                 ) {
                     Icon(
-                        imageVector = FontAwesomeIcons.Brands.Discord,
+                        imageVector = vectorResource(Res.drawable.discord),
                         contentDescription = "Discord",
                         modifier = Modifier.size(24.dp)
                     )
@@ -86,7 +85,7 @@ fun AboutApp() {
                     onClick = { uriHandler.openUri("https://github.com/shub39/Grit") }
                 ) {
                     Icon(
-                        imageVector = FontAwesomeIcons.Brands.Github,
+                        imageVector = vectorResource(Res.drawable.github),
                         contentDescription = "Github",
                         modifier = Modifier.size(24.dp)
                     )
@@ -117,6 +116,24 @@ fun AboutApp() {
             }
 
             Button(
+                onClick = { uriHandler.openUri("https://hosted.weblate.org/engage/grit/") },
+                colors = buttonColors
+            ) {
+                Row(
+                    horizontalArrangement = Arrangement.spacedBy(8.dp),
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
+                    Icon(
+                        imageVector = vectorResource(Res.drawable.translate),
+                        contentDescription = "Translate",
+                        modifier = Modifier.size(24.dp)
+                    )
+
+                    Text(text = stringResource(Res.string.translate))
+                }
+            }
+
+            Button(
                 colors = buttonColors,
                 onClick = { uriHandler.openUri("https://play.google.com/store/apps/details?id=com.shub39.grit") }
             ) {
@@ -125,7 +142,7 @@ fun AboutApp() {
                     verticalAlignment = Alignment.CenterVertically
                 ) {
                     Icon(
-                        imageVector = FontAwesomeIcons.Brands.GooglePlay,
+                        imageVector = vectorResource(Res.drawable.playstore),
                         contentDescription = "Rate On Google Play",
                         modifier = Modifier.size(20.dp)
                     )

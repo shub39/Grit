@@ -28,11 +28,9 @@ import com.shub39.grit.core.domain.AppTheme
 import com.shub39.grit.core.domain.Fonts
 import com.shub39.grit.core.presentation.theme.GritTheme
 import com.shub39.grit.core.presentation.theme.Theme
-import compose.icons.FontAwesomeIcons
-import compose.icons.fontawesomeicons.Solid
-import compose.icons.fontawesomeicons.solid.Coffee
 import grit.shared.core.generated.resources.Res
 import grit.shared.core.generated.resources.bmc
+import grit.shared.core.generated.resources.buymeacoffee
 import grit.shared.core.generated.resources.foss
 import grit.shared.core.generated.resources.foss_desc
 import grit.shared.core.generated.resources.warning
@@ -90,7 +88,7 @@ fun PaywallPage(
                         verticalAlignment = Alignment.CenterVertically
                     ) {
                         Icon(
-                            imageVector = FontAwesomeIcons.Solid.Coffee,
+                            imageVector = vectorResource(Res.drawable.buymeacoffee),
                             contentDescription = "Buy me a coffee",
                             modifier = Modifier.size(24.dp)
                         )

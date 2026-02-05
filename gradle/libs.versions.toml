@@ -9,11 +9,11 @@ espresso-core = "3.7.0"
 junit = "4.13.2"
 junit-version = "1.3.0"
 kotlinx-datetime = "0.7.1"
-purchases = "9.19.2"
+purchases = "9.20.0"
 splashscreen = "1.2.0"
 datastore = "1.2.0"
 colorpicker = "1.1.3"
-glance = "1.1.1"
+glance = "1.2.0-rc01"
 koin = "4.1.1"
 koin-annotations = "2.3.1"
 kotlin = "2.3.0"
@@ -22,8 +22,7 @@ material3 = "1.10.0-alpha05"
 reorderable = "3.0.0"
 room = "2.8.4"
 navigation = "2.9.1"
-materialkolor = "4.1.0"
-composeicons = "1.1.1"
+materialkolor = "4.1.1"
 compose-junit = "1.10.2"
 biometric = "1.4.0-alpha02"
 truth = "1.4.5"
@@ -81,7 +80,6 @@ purchases-ui = { module = "com.revenuecat.purchases:purchases-ui", version.ref =
 reorderable = { module = "sh.calvin.reorderable:reorderable", version.ref = "reorderable" }
 materialkolor = { module = "com.materialkolor:material-kolor", version.ref = "materialkolor" }
 colorpicker-compose = { module = "com.github.skydoves:colorpicker-compose", version.ref = "colorpicker" }
-composeicons-fontawesome = { module = "br.com.devsrsouza.compose.icons:font-awesome", version.ref = "composeicons" }
 calendar = { module = "com.kizitonwose.calendar:compose-multiplatform", version.ref = "calendar" }
 compose-charts = { module = "io.github.ehsannarmani:compose-charts", version.ref = "compose-charts" }
 truth = { module = "com.google.truth:truth", version.ref = "truth" }

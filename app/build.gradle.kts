@@ -8,8 +8,8 @@ plugins {
 }
 
 val appName = "Grit"
-val appVersionCode = 5550
-val appVersionName = "5.5.5"
+val appVersionCode = 5551
+val appVersionName = "5.5.51"
 
 val gitHash = execute("git", "rev-parse", "HEAD").take(7)
 
@@ -56,6 +56,12 @@ android {
         debug {
             applicationIdSuffix = ".debug"
             resValue("string", "app_name", "$appName Debug")
+//            isMinifyEnabled = true
+//            isShrinkResources = true
+//            proguardFiles(
+//                getDefaultProguardFile("proguard-android-optimize.txt"),
+//                "proguard-rules.pro"
+//            )
         }
     }
 
@@ -121,7 +127,6 @@ dependencies {
     implementation(libs.materialkolor)
     implementation(libs.colorpicker.compose)
     implementation(libs.androidx.datastore.preferences.core)
-    implementation(libs.composeicons.fontawesome)
     implementation(libs.androidx.biometric)
     implementation(libs.kotlinx.datetime)
     implementation(libs.kotlinx.serialization.json)
