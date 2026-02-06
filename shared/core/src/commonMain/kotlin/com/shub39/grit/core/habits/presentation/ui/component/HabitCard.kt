@@ -53,6 +53,9 @@ import kotlinx.datetime.minus
 import org.jetbrains.compose.resources.vectorResource
 import kotlin.time.ExperimentalTime
 
+/**
+ * Habit Card for list
+ */
 @OptIn(ExperimentalMaterial3Api::class, ExperimentalTime::class)
 @Composable
 fun HabitCard(

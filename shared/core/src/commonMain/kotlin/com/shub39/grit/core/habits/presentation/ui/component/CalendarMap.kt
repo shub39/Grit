@@ -6,8 +6,8 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Icon
@@ -148,9 +148,9 @@ fun CalendarMap(
 
                     Box(
                         modifier = Modifier
-                            .padding(2.dp)
+                            .padding(1.dp)
                             .fillMaxWidth()
-                            .height(45.dp)
+                            .aspectRatio(1f)
                             .clickable(enabled = validDate) {
                                 onAction(
                                     HabitsAction.InsertStatus(
@@ -168,24 +168,21 @@ fun CalendarMap(
 
                                     Modifier.background(
                                         color = primary.copy(alpha = 0.2f),
-                                        shape = if (donePrevious && doneAfter) {
-                                            RoundedCornerShape(5.dp)
-                                        } else if (donePrevious) {
-                                            RoundedCornerShape(
-                                                topStart = 5.dp,
-                                                bottomStart = 5.dp,
-                                                topEnd = 20.dp,
-                                                bottomEnd = 20.dp
+                                        shape = when {
+                                            donePrevious && doneAfter -> RoundedCornerShape(8.dp)
+                                            donePrevious -> RoundedCornerShape(
+                                                topStart = 8.dp,
+                                                bottomStart = 8.dp,
+                                                topEnd = 16.dp,
+                                                bottomEnd = 16.dp
                                             )
-                                        } else if (doneAfter) {
-                                            RoundedCornerShape(
-                                                topStart = 20.dp,
-                                                bottomStart = 20.dp,
-                                                topEnd = 5.dp,
-                                                bottomEnd = 5.dp
+                                            doneAfter -> RoundedCornerShape(
+                                                topStart = 16.dp,
+                                                bottomStart = 16.dp,
+                                                topEnd = 8.dp,
+                                                bottomEnd = 8.dp
                                             )
-                                        } else {
-                                            RoundedCornerShape(20.dp)
+                                            else -> RoundedCornerShape(16.dp)
                                         }
                                     )
                                 } else Modifier
