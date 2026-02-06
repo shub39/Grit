@@ -1,4 +1,4 @@
-package com.shub39.grit.core.presentation.settings
+package com.shub39.grit.core.presentation.settings.ui
 
 import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
@@ -15,13 +15,15 @@ import androidx.compose.ui.unit.dp
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
-import com.shub39.grit.core.domain.AppTheme
+import com.shub39.grit.core.presentation.settings.SettingsAction
+import com.shub39.grit.core.presentation.settings.SettingsState
 import com.shub39.grit.core.presentation.settings.ui.section.BackupPage
 import com.shub39.grit.core.presentation.settings.ui.section.LookAndFeelPage
 import com.shub39.grit.core.presentation.settings.ui.section.RootPage
-import com.shub39.grit.core.presentation.theme.GritTheme
-import com.shub39.grit.core.presentation.theme.Theme
 import com.shub39.grit.core.shared_ui.PageFill
+import com.shub39.grit.core.theme.AppTheme
+import com.shub39.grit.core.theme.GritTheme
+import com.shub39.grit.core.theme.Theme
 import kotlinx.serialization.Serializable
 
 private sealed interface SettingsRoutes {

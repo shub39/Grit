@@ -32,7 +32,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import com.shub39.grit.core.domain.AppTheme
 import com.shub39.grit.core.domain.backup.ExportState
 import com.shub39.grit.core.domain.backup.RestoreState
 import com.shub39.grit.core.presentation.settings.SettingsAction
@@ -40,8 +39,9 @@ import com.shub39.grit.core.presentation.settings.SettingsState
 import com.shub39.grit.core.presentation.settings.ui.component.endItemShape
 import com.shub39.grit.core.presentation.settings.ui.component.leadingItemShape
 import com.shub39.grit.core.presentation.settings.ui.component.listItemColors
-import com.shub39.grit.core.presentation.theme.GritTheme
-import com.shub39.grit.core.presentation.theme.Theme
+import com.shub39.grit.core.theme.AppTheme
+import com.shub39.grit.core.theme.GritTheme
+import com.shub39.grit.core.theme.Theme
 import grit.shared.core.generated.resources.Res
 import grit.shared.core.generated.resources.arrow_back
 import grit.shared.core.generated.resources.backup

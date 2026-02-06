@@ -23,19 +23,24 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
-import com.shub39.grit.core.habits.domain.Habit
 import com.shub39.grit.core.habits.presentation.formatDateWithOrdinal
+import com.shub39.grit.core.theme.GritTheme
+import com.shub39.grit.core.utils.AllPreviews
+import com.shub39.grit.core.utils.now
 import grit.shared.core.generated.resources.Res
 import grit.shared.core.generated.resources.days_ago_format
 import grit.shared.core.generated.resources.flag_circle
 import grit.shared.core.generated.resources.started_on
+import kotlinx.datetime.DateTimeUnit
+import kotlinx.datetime.LocalDate
+import kotlinx.datetime.minus
 import org.jetbrains.compose.resources.stringResource
 import org.jetbrains.compose.resources.vectorResource
 
 @OptIn(ExperimentalMaterial3ExpressiveApi::class)
 @Composable
 fun HabitStartCard(
-    habit: Habit,
+    date: LocalDate,
     startedDaysAgo: Long,
     modifier: Modifier = Modifier
 ) {
@@ -80,7 +85,7 @@ fun HabitStartCard(
                     style = MaterialTheme.typography.labelMedium
                 )
                 Text(
-                    text = formatDateWithOrdinal(habit.time.date),
+                    text = formatDateWithOrdinal(date),
                     style = MaterialTheme.typography.titleLarge.copy(fontWeight = FontWeight.Bold)
                 )
                 Text(
@@ -92,5 +97,16 @@ fun HabitStartCard(
                 )
             }
         }
+    }
+}
+
+@AllPreviews
+@Composable
+private fun Preview() {
+    GritTheme {
+        HabitStartCard(
+            date = LocalDate.now().minus(10, DateTimeUnit.DAY),
+            startedDaysAgo = 10
+        )
     }
 }

@@ -24,10 +24,10 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import com.shub39.grit.core.domain.AppTheme
-import com.shub39.grit.core.domain.Fonts
-import com.shub39.grit.core.presentation.theme.GritTheme
-import com.shub39.grit.core.presentation.theme.Theme
+import com.shub39.grit.core.theme.AppTheme
+import com.shub39.grit.core.theme.Fonts
+import com.shub39.grit.core.theme.GritTheme
+import com.shub39.grit.core.theme.Theme
 import grit.shared.core.generated.resources.Res
 import grit.shared.core.generated.resources.bmc
 import grit.shared.core.generated.resources.buymeacoffee

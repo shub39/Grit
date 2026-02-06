@@ -18,11 +18,12 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.SolidColor
 import androidx.compose.ui.unit.dp
 import com.shub39.grit.core.habits.domain.WeeklyTimePeriod
 import com.shub39.grit.core.habits.domain.WeeklyTimePeriod.Companion.toWeeks
+import com.shub39.grit.core.theme.GritTheme
+import com.shub39.grit.core.utils.AllPreviews
 import grit.shared.core.generated.resources.Res
 import grit.shared.core.generated.resources.chart_data
 import grit.shared.core.generated.resources.progress
@@ -45,10 +46,10 @@ import org.jetbrains.compose.resources.stringResource
 @OptIn(ExperimentalMaterial3ExpressiveApi::class)
 @Composable
 fun WeeklyActivity(
-    primary: Color,
     lineChartData: List<Double>,
     modifier: Modifier = Modifier
 ) {
+    val primary = MaterialTheme.colorScheme.primary
     var selectedTimePeriod by rememberSaveable { mutableStateOf(WeeklyTimePeriod.WEEKS_8) }
 
     AnalyticsCard(
@@ -137,6 +138,16 @@ fun WeeklyActivity(
             minValue = 0.0,
             curvedEdges = false,
             animationMode = AnimationMode.Together(delayBuilder = { it * 500L })
+        )
+    }
+}
+
+@AllPreviews
+@Composable
+private fun Preview() {
+    GritTheme {
+        WeeklyActivity(
+            lineChartData = (0..7).map { it.toDouble() },
         )
     }
 }

@@ -45,14 +45,11 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.res.colorResource
-import androidx.compose.ui.text.font.Font
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.materialkolor.PaletteStyle
 import com.materialkolor.rememberDynamicColorScheme
-import com.shub39.grit.core.domain.AppTheme
-import com.shub39.grit.core.domain.Fonts
 import com.shub39.grit.core.presentation.component.ColorPickerDialog
 import com.shub39.grit.core.presentation.settings.SettingsAction
 import com.shub39.grit.core.presentation.settings.SettingsState
@@ -60,8 +57,13 @@ import com.shub39.grit.core.presentation.settings.ui.component.endItemShape
 import com.shub39.grit.core.presentation.settings.ui.component.leadingItemShape
 import com.shub39.grit.core.presentation.settings.ui.component.listItemColors
 import com.shub39.grit.core.presentation.settings.ui.component.middleItemShape
-import com.shub39.grit.core.presentation.theme.GritTheme
-import com.shub39.grit.core.presentation.theme.Theme
+import com.shub39.grit.core.theme.AppTheme
+import com.shub39.grit.core.theme.AppTheme.Companion.toDisplayString
+import com.shub39.grit.core.theme.Fonts
+import com.shub39.grit.core.theme.Fonts.Companion.toDisplayString
+import com.shub39.grit.core.theme.Fonts.Companion.toFontRes
+import com.shub39.grit.core.theme.GritTheme
+import com.shub39.grit.core.theme.Theme
 import grit.shared.core.generated.resources.Res
 import grit.shared.core.generated.resources.app_theme
 import grit.shared.core.generated.resources.arrow_back
@@ -80,9 +82,9 @@ import grit.shared.core.generated.resources.select_seed_desc
 import grit.shared.core.generated.resources.unlock_more_plus
 import grit.shared.core.generated.resources.use_amoled
 import grit.shared.core.generated.resources.use_amoled_desc
+import org.jetbrains.compose.resources.Font
 import org.jetbrains.compose.resources.stringResource
 import org.jetbrains.compose.resources.vectorResource
-import java.util.Locale
 
 @OptIn(ExperimentalMaterial3Api::class, ExperimentalMaterial3ExpressiveApi::class)
 @Composable
@@ -174,7 +176,7 @@ fun LookAndFeelPage(
                                         containerColor = MaterialTheme.colorScheme.surfaceContainerLow
                                     )
                                 ) {
-                                    Text(text = stringResource(appTheme.fullName))
+                                    Text(text = stringResource(appTheme.toDisplayString()))
                                 }
                             }
                         }
@@ -271,13 +273,8 @@ fun LookAndFeelPage(
                                     )
                                 ) {
                                     Text(
-                                        text = font.name.lowercase()
-                                            .replaceFirstChar {
-                                                if (it.isLowerCase()) it.titlecase(
-                                                    Locale.getDefault()
-                                                ) else it.toString()
-                                            },
-                                        fontFamily = FontFamily(Font(font.resource))
+                                        text = font.toDisplayString(),
+                                        fontFamily = font.toFontRes()?.let { FontFamily(Font(it)) } ?: FontFamily.Default
                                     )
                                 }
                             }

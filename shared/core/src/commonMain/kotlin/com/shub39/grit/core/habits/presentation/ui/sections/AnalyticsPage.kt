@@ -81,7 +81,6 @@ fun AnalyticsPage(
 
     val primary = MaterialTheme.colorScheme.primary
     val currentMonth = remember { YearMonth.now() }
-
     val currentHabit = state.habitsWithAnalytics.find { it.habit.id == state.analyticsHabitId } ?: return
 
     val heatMapState = rememberHeatMapCalendarState(
@@ -177,7 +176,7 @@ fun AnalyticsPage(
         ) {
             item {
                 HabitStartCard(
-                    habit = currentHabit.habit,
+                    date = currentHabit.habit.time.date,
                     startedDaysAgo = currentHabit.startedDaysAgo,
                     modifier = Modifier.widthIn(max = maxWidth)
                 )
@@ -195,15 +194,14 @@ fun AnalyticsPage(
                 WeeklyBooleanHeatMap(
                     heatMapState = heatMapState,
                     onAction = onAction,
-                    currentHabit = currentHabit,
-                    primary = primary,
-                    modifier = Modifier.widthIn(max = maxWidth)
+                    modifier = Modifier.widthIn(max = maxWidth),
+                    habit = currentHabit.habit,
+                    statuses = currentHabit.statuses,
                 )
             }
 
             item {
                 WeeklyActivity(
-                    primary = primary,
                     lineChartData = currentHabit.weeklyComparisonData,
                     modifier = Modifier.widthIn(max = maxWidth)
                 )
@@ -225,7 +223,6 @@ fun AnalyticsPage(
                 WeekDayBreakdown(
                     canSeeContent = isUserSubscribed,
                     weekDayData = weekDayBreakdownData,
-                    primary = primary,
                     onNavigateToPaywall = onNavigateToPaywall,
                     modifier = Modifier.widthIn(max = maxWidth)
                 )
@@ -294,7 +291,7 @@ fun AnalyticsPage(
             onDismissRequest = { editDialog = false },
             onUpsertHabit = { onAction(HabitsAction.UpdateHabit(it)) },
             is24Hr = state.is24Hr,
-            save = true
+            isEditSheet = true
         )
     }
 }

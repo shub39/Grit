@@ -1,9 +1,12 @@
 package com.shub39.grit.core.habits.presentation.ui.component
 
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.imePadding
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.text.KeyboardOptions
@@ -13,6 +16,7 @@ import androidx.compose.material3.ButtonShapes
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.ExperimentalMaterial3ExpressiveApi
 import androidx.compose.material3.FilledTonalIconButton
+import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
@@ -33,10 +37,13 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardCapitalization
 import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.shub39.grit.core.habits.domain.Habit
 import com.shub39.grit.core.shared_ui.GritBottomSheet
 import com.shub39.grit.core.shared_ui.GritDialog
+import com.shub39.grit.core.theme.GritTheme
+import com.shub39.grit.core.utils.now
 import com.shub39.grit.core.utils.toFormattedString
 import grit.shared.core.generated.resources.Res
 import grit.shared.core.generated.resources.add_habit
@@ -65,7 +72,7 @@ expect fun HabitUpsertSheet(
     onUpsertHabit: (Habit) -> Unit,
     is24Hr: Boolean,
     modifier: Modifier = Modifier,
-    save: Boolean = false
+    isEditSheet: Boolean = false
 )
 
 @OptIn(ExperimentalMaterial3ExpressiveApi::class, ExperimentalMaterial3Api::class)
@@ -76,7 +83,7 @@ fun HabitUpsertSheetContent(
     onDismissRequest: () -> Unit,
     onUpsertHabit: (Habit) -> Unit,
     is24Hr: Boolean,
-    save: Boolean = false,
+    isEditSheet: Boolean = false,
     notificationPermission: Boolean,
     onRequestPermission: () -> Unit,
     modifier: Modifier = Modifier,
@@ -85,28 +92,33 @@ fun HabitUpsertSheetContent(
 
     GritBottomSheet(
         onDismissRequest = onDismissRequest,
-        modifier = modifier
+        padding = 0.dp,
+        modifier = modifier.imePadding()
     ) {
+        Column(
+            horizontalAlignment = Alignment.CenterHorizontally,
+            verticalArrangement = Arrangement.spacedBy(8.dp)
+        ) {
+            Icon(
+                imageVector = vectorResource(Res.drawable.edit),
+                contentDescription = "Edit Habit"
+            )
+
+            Text(
+                text = stringResource(if (isEditSheet) Res.string.edit_habit else Res.string.add_habit),
+                style = MaterialTheme.typography.headlineSmall,
+                textAlign = TextAlign.Center
+            )
+
+            HorizontalDivider()
+        }
+
         LazyColumn(
             modifier = Modifier.fillMaxWidth(),
             verticalArrangement = Arrangement.spacedBy(8.dp),
             horizontalAlignment = Alignment.CenterHorizontally,
+            contentPadding = PaddingValues(16.dp)
         ) {
-            item {
-                Icon(
-                    imageVector = vectorResource(Res.drawable.edit),
-                    contentDescription = "Edit Habit"
-                )
-            }
-
-            item {
-                Text(
-                    text = stringResource(if (save) Res.string.edit_habit else Res.string.add_habit),
-                    style = MaterialTheme.typography.headlineSmall,
-                    textAlign = TextAlign.Center
-                )
-            }
-
             item {
                 OutlinedTextField(
                     value = newHabit.title,
@@ -120,7 +132,7 @@ fun HabitUpsertSheetContent(
                     modifier = Modifier.fillMaxWidth(),
                     label = {
                         if (newHabit.title.length <= 20) {
-                            Text(text = stringResource(if (save) Res.string.update_title else Res.string.title))
+                            Text(text = stringResource(if (isEditSheet) Res.string.update_title else Res.string.title))
                         } else {
                             Text(text = stringResource(Res.string.too_long))
                         }
@@ -142,7 +154,7 @@ fun HabitUpsertSheetContent(
                     onValueChange = { updateHabit(newHabit.copy(description = it)) },
                     label = {
                         if (newHabit.description.length <= 50) {
-                            Text(text = stringResource(if (save) Res.string.update_description else Res.string.description))
+                            Text(text = stringResource(if (isEditSheet) Res.string.update_description else Res.string.description))
                         } else {
                             Text(text = stringResource(Res.string.too_long))
                         }
@@ -181,8 +193,8 @@ fun HabitUpsertSheetContent(
                 }
             }
 
-            item {
-                if (newHabit.reminder) {
+            if (newHabit.reminder) {
+                item {
                     Row(
                         modifier = Modifier.fillMaxWidth(),
                         verticalAlignment = Alignment.CenterVertically,
@@ -238,29 +250,34 @@ fun HabitUpsertSheetContent(
                                     else -> ButtonGroupDefaults.connectedMiddleButtonShapes()
                                 },
                                 content = {
-                                    Text(
-                                        text = dayOfWeek.name.take(1),
-                                    )
+                                    Text(text = dayOfWeek.name.take(1))
                                 }
                             )
                         }
                     }
                 }
             }
+        }
 
-            item {
-                Button(
-                    onClick = {
-                        onUpsertHabit(newHabit)
-                        onDismissRequest()
-                    },
-                    modifier = Modifier.fillMaxWidth(),
-                    enabled = newHabit.description.length <= 50 &&
-                            newHabit.title.length <= 20 &&
-                            newHabit.title.isNotBlank(),
-                ) {
-                    Text(text = stringResource(if (save) Res.string.save else Res.string.add_habit))
-                }
+        Column(
+            horizontalAlignment = Alignment.CenterHorizontally,
+            verticalArrangement = Arrangement.spacedBy(8.dp)
+        ) {
+            HorizontalDivider()
+
+            Button(
+                onClick = {
+                    onUpsertHabit(newHabit)
+                    onDismissRequest()
+                },
+                modifier = Modifier
+                    .padding(16.dp)
+                    .fillMaxWidth(),
+                enabled = newHabit.description.length <= 50 &&
+                        newHabit.title.length <= 20 &&
+                        newHabit.title.isNotBlank(),
+            ) {
+                Text(text = stringResource(if (isEditSheet) Res.string.save else Res.string.add_habit))
             }
         }
 
@@ -320,5 +337,27 @@ fun HabitUpsertSheetContent(
                 }
             }
         }
+    }
+}
+
+@Preview
+@Composable
+private fun Preview() {
+    GritTheme {
+        HabitUpsertSheet(
+            habit = Habit(
+                id = 1,
+                title = "New Habit",
+                description = "A new Habit",
+                time = LocalDateTime.now(),
+                days = DayOfWeek.entries.toSet(),
+                index = 1,
+                reminder = false
+            ),
+            onDismissRequest = { },
+            onUpsertHabit = { },
+            is24Hr = true,
+            isEditSheet = true
+        )
     }
 }

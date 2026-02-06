@@ -9,10 +9,10 @@ import androidx.datastore.preferences.core.edit
 import androidx.datastore.preferences.core.intPreferencesKey
 import androidx.datastore.preferences.core.stringPreferencesKey
 import com.materialkolor.PaletteStyle
-import com.shub39.grit.core.domain.AppTheme
-import com.shub39.grit.core.domain.Fonts
 import com.shub39.grit.core.domain.GritDatastore
 import com.shub39.grit.core.domain.Sections
+import com.shub39.grit.core.theme.AppTheme
+import com.shub39.grit.core.theme.Fonts
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
 import kotlinx.datetime.DayOfWeek

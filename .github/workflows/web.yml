@@ -28,6 +28,9 @@ jobs:
           distribution: temurin
           java-version: 21
 
+      - name: Remove Foojay
+        run: sed -i -e '/foojay/d' settings.gradle.kts
+
       - name: Build Web App
         run: ./gradlew :webdemo:wasmJsBrowserDistribution
 

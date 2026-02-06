@@ -157,8 +157,8 @@ fun OverallAnalytics(
                 HabitHeatMap(
                     heatMapState = heatMapState,
                     heatMapData = heatMapData,
-                    state = state,
-                    modifier = Modifier.widthIn(max = maxWidth)
+                    modifier = Modifier.widthIn(max = maxWidth),
+                    totalHabits = state.habitsWithAnalytics.size
                 )
             }
 
@@ -166,7 +166,6 @@ fun OverallAnalytics(
                 WeekDayBreakdown(
                     canSeeContent = isUserSubscribed,
                     weekDayData = weeklyBreakdownData,
-                    primary = primary,
                     onNavigateToPaywall = onNavigateToPaywall,
                     modifier = Modifier.widthIn(max = maxWidth)
                 )

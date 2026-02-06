@@ -9,6 +9,7 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -20,7 +21,6 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.kizitonwose.calendar.compose.CalendarState
 import com.kizitonwose.calendar.compose.HorizontalCalendar
@@ -33,6 +33,8 @@ import com.shub39.grit.core.habits.domain.Habit
 import com.shub39.grit.core.habits.domain.HabitStatus
 import com.shub39.grit.core.habits.domain.HabitWithAnalytics
 import com.shub39.grit.core.habits.presentation.HabitsAction
+import com.shub39.grit.core.theme.GritTheme
+import com.shub39.grit.core.utils.AllPreviews
 import com.shub39.grit.core.utils.now
 import grit.shared.core.generated.resources.Res
 import grit.shared.core.generated.resources.arrow_back
@@ -147,9 +149,9 @@ fun CalendarMap(
 
                     Box(
                         modifier = Modifier
-                            .padding(2.dp)
+                            .padding(1.dp)
                             .fillMaxWidth()
-                            .height(45.dp)
+                            .height(40.dp)
                             .clickable(enabled = validDate) {
                                 onAction(
                                     HabitsAction.InsertStatus(
@@ -167,24 +169,21 @@ fun CalendarMap(
 
                                     Modifier.background(
                                         color = primary.copy(alpha = 0.2f),
-                                        shape = if (donePrevious && doneAfter) {
-                                            RoundedCornerShape(5.dp)
-                                        } else if (donePrevious) {
-                                            RoundedCornerShape(
-                                                topStart = 5.dp,
-                                                bottomStart = 5.dp,
-                                                topEnd = 20.dp,
-                                                bottomEnd = 20.dp
+                                        shape = when {
+                                            donePrevious && doneAfter -> RoundedCornerShape(4.dp)
+                                            donePrevious -> RoundedCornerShape(
+                                                topEnd = 1000.dp,
+                                                bottomEnd = 1000.dp,
+                                                topStart = 4.dp,
+                                                bottomStart = 4.dp
                                             )
-                                        } else if (doneAfter) {
-                                            RoundedCornerShape(
-                                                topStart = 20.dp,
-                                                bottomStart = 20.dp,
-                                                topEnd = 5.dp,
-                                                bottomEnd = 5.dp
+                                            doneAfter -> RoundedCornerShape(
+                                                topStart = 1000.dp,
+                                                bottomStart = 1000.dp,
+                                                topEnd = 4.dp,
+                                                bottomEnd = 4.dp
                                             )
-                                        } else {
-                                            RoundedCornerShape(20.dp)
+                                            else -> CircleShape
                                         }
                                     )
                                 } else Modifier
@@ -206,10 +205,10 @@ fun CalendarMap(
     }
 }
 
-@Preview
+@AllPreviews
 @Composable
 private fun Preview() {
-    MaterialTheme {
+    GritTheme {
         CalendarMap(
             canSeeContent = true,
             onAction = {},
