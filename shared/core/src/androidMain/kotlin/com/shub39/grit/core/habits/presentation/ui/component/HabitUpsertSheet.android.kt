@@ -23,7 +23,7 @@ actual fun HabitUpsertSheet(
     onUpsertHabit: (Habit) -> Unit,
     is24Hr: Boolean,
     modifier: Modifier,
-    save: Boolean
+    isEditSheet: Boolean
 ) {
     val context = LocalContext.current
 
@@ -54,7 +54,7 @@ actual fun HabitUpsertSheet(
         onDismissRequest = onDismissRequest,
         onUpsertHabit = onUpsertHabit,
         is24Hr = is24Hr,
-        save = save,
+        isEditSheet = isEditSheet,
         notificationPermission = notificationPermission,
         onRequestPermission = {
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {

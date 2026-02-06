@@ -177,7 +177,7 @@ fun AnalyticsPage(
         ) {
             item {
                 HabitStartCard(
-                    habit = currentHabit.habit,
+                    date = currentHabit.habit.time.date,
                     startedDaysAgo = currentHabit.startedDaysAgo,
                     modifier = Modifier.widthIn(max = maxWidth)
                 )
@@ -294,7 +294,7 @@ fun AnalyticsPage(
             onDismissRequest = { editDialog = false },
             onUpsertHabit = { onAction(HabitsAction.UpdateHabit(it)) },
             is24Hr = state.is24Hr,
-            save = true
+            isEditSheet = true
         )
     }
 }
