@@ -14,6 +14,7 @@ import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
@@ -208,8 +209,7 @@ fun HabitCard(
 
                     Box(
                         modifier = Modifier
-                            .padding(2.dp)
-                            .fillMaxWidth(1f)
+                            .fillMaxWidth()
                             .clickable(
                                 role = Role.Button,
                                 enabled = validDay,
@@ -226,37 +226,26 @@ fun HabitCard(
                                 if (done) {
                                     val donePrevious =
                                         habitWithAnalytics.statuses.any {
-                                            it.date == weekDay.date.minusDays(
-                                                1
-                                            )
+                                            it.date == weekDay.date.minusDays(1)
                                         }
                                     val doneAfter =
                                         habitWithAnalytics.statuses.any {
-                                            it.date == weekDay.date.plusDays(
-                                                1
-                                            )
+                                            it.date == weekDay.date.plusDays(1)
                                         }
 
                                     Modifier.background(
                                         color = MaterialTheme.colorScheme.primary,
-                                        shape = if (donePrevious && doneAfter) {
-                                            RoundedCornerShape(10.dp)
-                                        } else if (donePrevious) {
-                                            RoundedCornerShape(
-                                                topStart = 10.dp,
-                                                bottomStart = 10.dp,
-                                                topEnd = 20.dp,
-                                                bottomEnd = 20.dp
+                                        shape =  when {
+                                            donePrevious && doneAfter -> RoundedCornerShape(0.dp)
+                                            donePrevious -> RoundedCornerShape(
+                                                topEnd = 1000.dp,
+                                                bottomEnd = 1000.dp
                                             )
-                                        } else if (doneAfter) {
-                                            RoundedCornerShape(
-                                                topStart = 20.dp,
-                                                bottomStart = 20.dp,
-                                                topEnd = 10.dp,
-                                                bottomEnd = 10.dp
+                                            doneAfter -> RoundedCornerShape(
+                                                topStart = 1000.dp,
+                                                bottomStart = 1000.dp,
                                             )
-                                        } else {
-                                            RoundedCornerShape(20.dp)
+                                            else -> CircleShape
                                         }
                                     )
                                 } else Modifier
@@ -270,6 +259,9 @@ fun HabitCard(
                             Text(
                                 text = weekDay.date.day.toString(),
                                 style = MaterialTheme.typography.bodyMedium,
+                                fontWeight = FontWeight.Bold,
+                                maxLines = 1,
+                                modifier = Modifier.basicMarquee(),
                                 color = if (done) MaterialTheme.colorScheme.onPrimary
                                 else if (!validDay) cardContent.copy(alpha = 0.5f)
                                 else cardContent
@@ -278,6 +270,8 @@ fun HabitCard(
                             Text(
                                 text = weekDay.date.dayOfWeek.toString().take(3),
                                 style = MaterialTheme.typography.bodySmall,
+                                maxLines = 1,
+                                modifier = Modifier.basicMarquee(),
                                 color = if (done) MaterialTheme.colorScheme.onPrimary
                                 else if (!validDay) cardContent.copy(alpha = 0.5f)
                                 else cardContent

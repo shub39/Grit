@@ -166,7 +166,6 @@ fun OverallAnalytics(
                 WeekDayBreakdown(
                     canSeeContent = isUserSubscribed,
                     weekDayData = weeklyBreakdownData,
-                    primary = primary,
                     onNavigateToPaywall = onNavigateToPaywall,
                     modifier = Modifier.widthIn(max = maxWidth)
                 )

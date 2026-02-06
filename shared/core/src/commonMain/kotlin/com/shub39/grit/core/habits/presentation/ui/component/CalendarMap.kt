@@ -6,9 +6,10 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -150,7 +151,7 @@ fun CalendarMap(
                         modifier = Modifier
                             .padding(1.dp)
                             .fillMaxWidth()
-                            .aspectRatio(1f)
+                            .height(40.dp)
                             .clickable(enabled = validDate) {
                                 onAction(
                                     HabitsAction.InsertStatus(
@@ -169,20 +170,20 @@ fun CalendarMap(
                                     Modifier.background(
                                         color = primary.copy(alpha = 0.2f),
                                         shape = when {
-                                            donePrevious && doneAfter -> RoundedCornerShape(8.dp)
+                                            donePrevious && doneAfter -> RoundedCornerShape(4.dp)
                                             donePrevious -> RoundedCornerShape(
-                                                topStart = 8.dp,
-                                                bottomStart = 8.dp,
-                                                topEnd = 16.dp,
-                                                bottomEnd = 16.dp
+                                                topEnd = 1000.dp,
+                                                bottomEnd = 1000.dp,
+                                                topStart = 4.dp,
+                                                bottomStart = 4.dp
                                             )
                                             doneAfter -> RoundedCornerShape(
-                                                topStart = 16.dp,
-                                                bottomStart = 16.dp,
-                                                topEnd = 8.dp,
-                                                bottomEnd = 8.dp
+                                                topStart = 1000.dp,
+                                                bottomStart = 1000.dp,
+                                                topEnd = 4.dp,
+                                                bottomEnd = 4.dp
                                             )
-                                            else -> RoundedCornerShape(16.dp)
+                                            else -> CircleShape
                                         }
                                     )
                                 } else Modifier
