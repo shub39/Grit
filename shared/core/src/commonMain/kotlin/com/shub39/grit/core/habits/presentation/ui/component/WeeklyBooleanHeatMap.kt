@@ -154,7 +154,7 @@ fun WeeklyBooleanHeatMap(
 
                         Box(
                             modifier = Modifier
-                                .padding(horizontal = 1.dp)
+                                .padding(1.dp)
                                 .size(40.dp)
                                 .clickable(enabled = validDay) {
                                     onAction(HabitsAction.InsertStatus(habit, day.date))
@@ -169,18 +169,18 @@ fun WeeklyBooleanHeatMap(
                                         Modifier.background(
                                             color = primary.copy(alpha = 0.2f),
                                             shape =  when {
-                                                donePrevious && doneAfter -> RoundedCornerShape(0.dp)
+                                                donePrevious && doneAfter -> RoundedCornerShape(4.dp)
                                                 donePrevious -> RoundedCornerShape(
-                                                    topStart = 0.dp,
+                                                    topStart = 4.dp,
                                                     bottomStart = 1000.dp,
-                                                    topEnd = 0.dp,
+                                                    topEnd = 4.dp,
                                                     bottomEnd = 1000.dp
                                                 )
                                                 doneAfter -> RoundedCornerShape(
                                                     topStart = 1000.dp,
-                                                    bottomStart = 0.dp,
+                                                    bottomStart = 4.dp,
                                                     topEnd = 1000.dp,
-                                                    bottomEnd = 0.dp
+                                                    bottomEnd = 4.dp
                                                 )
                                                 else -> CircleShape
                                             }
