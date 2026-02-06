@@ -20,7 +20,6 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.kizitonwose.calendar.compose.CalendarState
 import com.kizitonwose.calendar.compose.HorizontalCalendar
@@ -33,6 +32,8 @@ import com.shub39.grit.core.habits.domain.Habit
 import com.shub39.grit.core.habits.domain.HabitStatus
 import com.shub39.grit.core.habits.domain.HabitWithAnalytics
 import com.shub39.grit.core.habits.presentation.HabitsAction
+import com.shub39.grit.core.theme.GritTheme
+import com.shub39.grit.core.utils.AllPreviews
 import com.shub39.grit.core.utils.now
 import grit.shared.core.generated.resources.Res
 import grit.shared.core.generated.resources.arrow_back
@@ -206,10 +207,10 @@ fun CalendarMap(
     }
 }
 
-@Preview
+@AllPreviews
 @Composable
 private fun Preview() {
-    MaterialTheme {
+    GritTheme {
         CalendarMap(
             canSeeContent = true,
             onAction = {},
