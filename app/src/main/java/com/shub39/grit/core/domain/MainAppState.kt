@@ -2,7 +2,7 @@ package com.shub39.grit.core.domain
 
 import androidx.compose.runtime.Immutable
 import androidx.compose.runtime.Stable
-import com.shub39.grit.core.presentation.theme.Theme
+import com.shub39.grit.core.theme.Theme
 
 @Stable
 @Immutable

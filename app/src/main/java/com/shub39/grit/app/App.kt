@@ -37,7 +37,7 @@ import com.shub39.grit.billing.PaywallPage
 import com.shub39.grit.core.domain.MainAppState
 import com.shub39.grit.core.domain.Sections
 import com.shub39.grit.core.habits.presentation.ui.HabitsGraph
-import com.shub39.grit.core.presentation.settings.SettingsGraph
+import com.shub39.grit.core.presentation.settings.ui.SettingsGraph
 import com.shub39.grit.core.tasks.presentation.ui.TasksPage
 import com.shub39.grit.core.utils.LocalWindowSizeClass
 import com.shub39.grit.viewmodels.HabitViewModel

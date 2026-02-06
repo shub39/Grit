@@ -1,9 +1,7 @@
-package com.shub39.grit.core.presentation.theme
+package com.shub39.grit.core.theme
 
 import androidx.compose.ui.graphics.Color
 import com.materialkolor.PaletteStyle
-import com.shub39.grit.core.domain.AppTheme
-import com.shub39.grit.core.domain.Fonts
 
 data class Theme(
     val appTheme: AppTheme = AppTheme.SYSTEM,

@@ -5,7 +5,7 @@ import androidx.compose.runtime.Stable
 import com.shub39.grit.core.domain.Sections
 import com.shub39.grit.core.domain.backup.ExportState
 import com.shub39.grit.core.domain.backup.RestoreState
-import com.shub39.grit.core.presentation.theme.Theme
+import com.shub39.grit.core.theme.Theme
 import kotlinx.datetime.DayOfWeek
 
 @Stable

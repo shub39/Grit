@@ -1,6 +1,8 @@
 package com.shub39.grit.core.domain
 
 import com.materialkolor.PaletteStyle
+import com.shub39.grit.core.theme.AppTheme
+import com.shub39.grit.core.theme.Fonts
 import kotlinx.coroutines.flow.Flow
 import kotlinx.datetime.DayOfWeek
 
