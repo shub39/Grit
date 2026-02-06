@@ -33,7 +33,7 @@ class DataStoreImpl(
         private val is24HrKey = booleanPreferencesKey("is_24Hr")
         private val materialYouKey = booleanPreferencesKey("material_you")
         private val notificationsKey = booleanPreferencesKey("notifications")
-        private val fontPrefKey = stringPreferencesKey("composeResources/font")
+        private val fontPrefKey = stringPreferencesKey("font")
         private val biometricLockKey = booleanPreferencesKey("biometric")
         private val taskReorderKey = booleanPreferencesKey("task_reorder")
         private val compactHabitView = booleanPreferencesKey("compact_habit_view")

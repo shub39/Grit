@@ -169,17 +169,17 @@ fun WeeklyBooleanHeatMap(
                                         Modifier.background(
                                             color = primary.copy(alpha = 0.2f),
                                             shape =  when {
-                                                donePrevious && doneAfter -> RoundedCornerShape(4.dp)
+                                                donePrevious && doneAfter -> RoundedCornerShape(6.dp)
                                                 donePrevious -> RoundedCornerShape(
                                                     topStart = 4.dp,
-                                                    bottomStart = 1000.dp,
                                                     topEnd = 4.dp,
-                                                    bottomEnd = 1000.dp
+                                                    bottomStart = 20.dp,
+                                                    bottomEnd = 20.dp
                                                 )
                                                 doneAfter -> RoundedCornerShape(
-                                                    topStart = 1000.dp,
+                                                    topStart = 20.dp,
+                                                    topEnd = 20.dp,
                                                     bottomStart = 4.dp,
-                                                    topEnd = 1000.dp,
                                                     bottomEnd = 4.dp
                                                 )
                                                 else -> CircleShape
