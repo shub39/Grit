@@ -36,7 +36,7 @@
     <string name="too_long">Zu lange</string>
     <string name="edit_task">Aufgabe bearbeiten</string>
     <string name="tasks_guide_1">Tippen, um als erledigt zu markieren.</string>
-    <string name="tasks_guide_2">Zum bearbeiten, dedrückt halten.</string>
+    <string name="tasks_guide_2">Zum Bearbeiten, gedrückt halten</string>
     <string name="habits_guide_1">Tippen, um als erledigt zu markieren.</string>
     <string name="habits_guide_2">Doppeltippen, um die Statistik anzuzeigen.</string>
     <string name="habits_guide_3">Zum bearbeiten, dedrückt halten.</string>
