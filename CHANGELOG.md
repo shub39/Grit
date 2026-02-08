@@ -1,5 +1,10 @@
 # Changelog
 
+## 5.5.52
+- Fixed time picker mismatch #193
+- Optimised habit cards
+- Added google sans and system default font options
+
 ## 5.5.51
 - Fixed widgets stuck on loading
 - Added weblate info on settings
