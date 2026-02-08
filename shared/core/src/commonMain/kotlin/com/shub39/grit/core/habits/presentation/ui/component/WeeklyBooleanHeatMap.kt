@@ -30,6 +30,7 @@ import com.kizitonwose.calendar.core.plusDays
 import com.shub39.grit.core.habits.domain.Habit
 import com.shub39.grit.core.habits.domain.HabitStatus
 import com.shub39.grit.core.habits.presentation.HabitsAction
+import com.shub39.grit.core.habits.presentation.daysStartingFrom
 import com.shub39.grit.core.theme.GritTheme
 import com.shub39.grit.core.utils.AllPreviews
 import com.shub39.grit.core.utils.now
@@ -103,7 +104,7 @@ fun WeeklyBooleanHeatMap(
             Column(
                 modifier = Modifier.padding(top = 10.dp)
             ) {
-                DayOfWeek.entries.forEach { dayOfWeek ->
+                daysStartingFrom(heatMapState.firstDayOfWeek).forEach { dayOfWeek ->
                     Box(
                         modifier = Modifier
                             .padding(start = 6.dp, top = 2.dp, bottom = 2.dp, end = 4.dp)
@@ -213,7 +214,8 @@ private fun Preview() {
             heatMapState = rememberHeatMapCalendarState(
                 startMonth = YearMonth.now().minus(1, DateTimeUnit.YEAR),
                 endMonth = YearMonth.now(),
-                firstVisibleMonth = YearMonth.now()
+                firstVisibleMonth = YearMonth.now(),
+                firstDayOfWeek = DayOfWeek.MONDAY
             ),
             onAction = { },
             habit = Habit(

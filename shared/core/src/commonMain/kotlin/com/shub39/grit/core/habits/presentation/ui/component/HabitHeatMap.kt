@@ -24,6 +24,7 @@ import com.kizitonwose.calendar.compose.HeatMapCalendar
 import com.kizitonwose.calendar.compose.heatmapcalendar.HeatMapCalendarState
 import com.kizitonwose.calendar.compose.heatmapcalendar.rememberHeatMapCalendarState
 import com.kizitonwose.calendar.core.now
+import com.shub39.grit.core.habits.presentation.daysStartingFrom
 import com.shub39.grit.core.theme.AppTheme
 import com.shub39.grit.core.theme.GritTheme
 import com.shub39.grit.core.theme.Theme
@@ -96,7 +97,7 @@ fun HabitHeatMap(
             Column(
                 modifier = Modifier.padding(top = 10.dp)
             ) {
-                DayOfWeek.entries.forEach { dayOfWeek ->
+                daysStartingFrom(heatMapState.firstDayOfWeek).forEach { dayOfWeek ->
                     Box(
                         modifier = Modifier
                             .padding(start = 6.dp, top = 2.dp, bottom = 2.dp, end = 4.dp)
@@ -181,7 +182,8 @@ private fun Preview() {
             heatMapState = rememberHeatMapCalendarState(
                 startMonth = YearMonth.now().minus(1, DateTimeUnit.YEAR),
                 endMonth = YearMonth.now(),
-                firstVisibleMonth = YearMonth.now()
+                firstVisibleMonth = YearMonth.now(),
+                firstDayOfWeek = DayOfWeek.MONDAY
             ),
             heatMapData = (0..100).associate { it ->
                 LocalDate.now().minus(it, DateTimeUnit.DAY) to Random.nextInt(0, 11)
