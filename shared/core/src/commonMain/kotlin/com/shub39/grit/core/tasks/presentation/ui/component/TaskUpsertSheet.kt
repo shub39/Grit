@@ -289,7 +289,7 @@ fun TaskUpsertSheetContent(
                                 reminder = LocalDateTime(
                                     date = Instant
                                         .fromEpochMilliseconds(datePickerState.selectedDateMillis!!)
-                                        .toLocalDateTime(TimeZone.currentSystemDefault())
+                                        .toLocalDateTime(TimeZone.UTC)
                                         .date,
                                     time = LocalTime(
                                         hour = timePickerState.hour,
