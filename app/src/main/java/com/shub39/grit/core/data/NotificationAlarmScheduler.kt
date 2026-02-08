@@ -38,9 +38,14 @@ class NotificationAlarmScheduler(
         val now = LocalDateTime.now()
 
         var attempt = 0
-        while (scheduleTime < now && attempt <= 365) {
+        while ((scheduleTime < now || !habit.days.contains(scheduleTime.dayOfWeek)) && attempt <= 7) {
             scheduleTime = LocalDateTime(date = scheduleTime.date.plus(1, DateTimeUnit.DAY), time = scheduleTime.time)
             attempt++
+        }
+
+        if (attempt > 7) {
+            Log.wtf(tag, "Cant set alarm, something is wrong... Schedule Time: $scheduleTime Reminder: ${habit.time}")
+            return
         }
 
         val notificationIntent = Intent(context, NotificationReceiver::class.java).apply {
