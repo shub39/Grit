@@ -12,8 +12,6 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.lazy.rememberLazyListState
-import androidx.compose.foundation.text.KeyboardOptions
-import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonShapes
 import androidx.compose.material3.ExperimentalMaterial3ExpressiveApi
 import androidx.compose.material3.Icon
@@ -21,11 +19,9 @@ import androidx.compose.material3.IconButton
 import androidx.compose.material3.ListItem
 import androidx.compose.material3.ListItemDefaults
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -33,29 +29,22 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.focus.FocusRequester
-import androidx.compose.ui.focus.focusRequester
-import androidx.compose.ui.platform.LocalSoftwareKeyboardController
-import androidx.compose.ui.text.input.ImeAction
-import androidx.compose.ui.text.input.KeyboardCapitalization
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
-import com.shub39.grit.core.shared_ui.GritBottomSheet
 import com.shub39.grit.core.shared_ui.GritDialog
 import com.shub39.grit.core.tasks.presentation.TaskAction
 import com.shub39.grit.core.tasks.presentation.TaskState
+import com.shub39.grit.core.tasks.presentation.ui.component.CategoryUpsertSheet
 import com.shub39.grit.core.tasks.presentation.ui.section.TaskList
 import grit.shared.core.generated.resources.Res
 import grit.shared.core.generated.resources.cancel
 import grit.shared.core.generated.resources.delete
 import grit.shared.core.generated.resources.delete_category
-import grit.shared.core.generated.resources.done
 import grit.shared.core.generated.resources.drag_indicator
 import grit.shared.core.generated.resources.edit
 import grit.shared.core.generated.resources.edit_categories
 import grit.shared.core.generated.resources.tasks
 import grit.shared.core.generated.resources.warning
-import kotlinx.coroutines.delay
 import org.jetbrains.compose.resources.stringResource
 import org.jetbrains.compose.resources.vectorResource
 import sh.calvin.reorderable.ReorderableItem
@@ -245,63 +234,16 @@ private fun CategoryEditDialog(
                     }
 
                     if (showEditSheet) {
-                        GritBottomSheet(
-                            onDismissRequest = { showEditSheet = false }
-                        ) {
-                            var name by remember { mutableStateOf(category.name) }
-                            val keyboardController = LocalSoftwareKeyboardController.current
-                            val focusRequester = remember { FocusRequester() }
-
-                            LaunchedEffect(Unit) {
-                                delay(200)
-                                focusRequester.requestFocus()
-                                keyboardController?.show()
-                            }
-
-                            Icon(
-                                imageVector = vectorResource(Res.drawable.edit),
-                                contentDescription = "Edit Category"
-                            )
-
-                            Text(
-                                text = stringResource(Res.string.edit_categories),
-                                style = MaterialTheme.typography.headlineSmall,
-                                textAlign = TextAlign.Center
-                            )
-
-                            OutlinedTextField(
-                                value = name,
-                                onValueChange = { name = it },
-                                shape = MaterialTheme.shapes.medium,
-                                keyboardOptions = KeyboardOptions.Default.copy(
-                                    capitalization = KeyboardCapitalization.Sentences,
-                                    imeAction = ImeAction.Done
-                                ),
-                                singleLine = true,
-                                modifier = Modifier
-                                    .fillMaxWidth()
-                                    .focusRequester(focusRequester)
-                            )
-
-                            Button(
-                                onClick = {
-                                    onAction(
-                                        TaskAction.AddCategory(
-                                            category.copy(name = name)
-                                        )
-                                    )
-                                    showEditSheet = false
-                                },
-                                shapes = ButtonShapes(
-                                    shape = MaterialTheme.shapes.extraLarge,
-                                    pressedShape = MaterialTheme.shapes.small
-                                ),
-                                modifier = Modifier.fillMaxWidth(),
-                                enabled = name.isNotBlank() && name.length <= 20
-                            ) {
-                                Text(text = stringResource(Res.string.done))
-                            }
-                        }
+                        CategoryUpsertSheet(
+                            isEditSheet = true,
+                            modifier = Modifier,
+                            category = category,
+                            onDismiss = { showEditSheet = false },
+                            onUpsertCategory = {
+                                onAction(TaskAction.AddCategory(it))
+                                showEditSheet = false
+                            },
+                        )
                     }
                 }
             }

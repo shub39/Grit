@@ -100,8 +100,8 @@ fun HabitHeatMap(
                 daysStartingFrom(heatMapState.firstDayOfWeek).forEach { dayOfWeek ->
                     Box(
                         modifier = Modifier
-                            .padding(start = 6.dp, top = 2.dp, bottom = 2.dp, end = 4.dp)
-                            .size(40.dp)
+                            .padding(start = 6.dp, top = 1.dp, bottom = 1.dp, end = 6.dp)
+                            .size(30.dp)
                             .background(
                                 color = MaterialTheme.colorScheme.secondaryContainer,
                                 shape = CircleShape
@@ -109,7 +109,9 @@ fun HabitHeatMap(
                     ) {
                         Text(
                             text = dayOfWeek.name.take(1),
-                            color = MaterialTheme.colorScheme.onSecondaryContainer,
+                            style = MaterialTheme.typography.labelSmall.copy(
+                                color = MaterialTheme.colorScheme.onSecondaryContainer
+                            ),
                             modifier = Modifier.align(Alignment.Center)
                         )
                     }
@@ -149,8 +151,8 @@ fun HabitHeatMap(
 
                         Box(
                             modifier = Modifier
-                                .padding(2.dp)
-                                .size(40.dp)
+                                .padding(1.dp)
+                                .size(30.dp)
                                 .background(
                                     shape = MaterialTheme.shapes.small,
                                     color = when (count) {

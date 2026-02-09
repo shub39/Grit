@@ -107,8 +107,8 @@ fun WeeklyBooleanHeatMap(
                 daysStartingFrom(heatMapState.firstDayOfWeek).forEach { dayOfWeek ->
                     Box(
                         modifier = Modifier
-                            .padding(start = 6.dp, top = 2.dp, bottom = 2.dp, end = 4.dp)
-                            .size(40.dp)
+                            .padding(start = 6.dp, top = 1.dp, bottom = 1.dp, end = 6.dp)
+                            .size(30.dp)
                             .background(
                                 color = MaterialTheme.colorScheme.secondaryContainer,
                                 shape = CircleShape
@@ -116,7 +116,9 @@ fun WeeklyBooleanHeatMap(
                     ) {
                         Text(
                             text = dayOfWeek.name.take(1),
-                            color = MaterialTheme.colorScheme.onSecondaryContainer,
+                            style = MaterialTheme.typography.labelSmall.copy(
+                                color = MaterialTheme.colorScheme.onSecondaryContainer
+                            ),
                             modifier = Modifier.align(Alignment.Center)
                         )
                     }
@@ -156,7 +158,7 @@ fun WeeklyBooleanHeatMap(
                         Box(
                             modifier = Modifier
                                 .padding(1.dp)
-                                .size(40.dp)
+                                .size(30.dp)
                                 .clickable(enabled = validDay) {
                                     onAction(HabitsAction.InsertStatus(habit, day.date))
                                 }
@@ -170,7 +172,7 @@ fun WeeklyBooleanHeatMap(
                                         Modifier.background(
                                             color = primary.copy(alpha = 0.2f),
                                             shape =  when {
-                                                donePrevious && doneAfter -> RoundedCornerShape(6.dp)
+                                                donePrevious && doneAfter -> RoundedCornerShape(4.dp)
                                                 donePrevious -> RoundedCornerShape(
                                                     topStart = 4.dp,
                                                     topEnd = 4.dp,

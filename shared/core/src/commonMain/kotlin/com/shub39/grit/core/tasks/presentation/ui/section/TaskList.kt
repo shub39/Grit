@@ -27,8 +27,6 @@ import androidx.compose.foundation.lazy.staggeredgrid.StaggeredGridCells
 import androidx.compose.foundation.lazy.staggeredgrid.items
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.foundation.text.KeyboardOptions
-import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.ButtonShapes
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -46,7 +44,6 @@ import androidx.compose.material3.ListItemDefaults
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.MediumFloatingActionButton
 import androidx.compose.material3.OutlinedIconButton
-import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
@@ -56,7 +53,6 @@ import androidx.compose.material3.TopAppBarScrollBehavior
 import androidx.compose.material3.animateFloatingActionButton
 import androidx.compose.material3.windowsizeclass.WindowWidthSizeClass
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -64,17 +60,11 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.focus.FocusRequester
-import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.input.nestedscroll.nestedScroll
-import androidx.compose.ui.platform.LocalSoftwareKeyboardController
-import androidx.compose.ui.text.input.ImeAction
-import androidx.compose.ui.text.input.KeyboardCapitalization
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import com.shub39.grit.core.shared_ui.Empty
-import com.shub39.grit.core.shared_ui.GritBottomSheet
 import com.shub39.grit.core.shared_ui.GritDialog
 import com.shub39.grit.core.shared_ui.PageFill
 import com.shub39.grit.core.tasks.domain.Category
@@ -82,6 +72,7 @@ import com.shub39.grit.core.tasks.domain.CategoryColors
 import com.shub39.grit.core.tasks.domain.Task
 import com.shub39.grit.core.tasks.presentation.TaskAction
 import com.shub39.grit.core.tasks.presentation.TaskState
+import com.shub39.grit.core.tasks.presentation.ui.component.CategoryUpsertSheet
 import com.shub39.grit.core.tasks.presentation.ui.component.TaskCard
 import com.shub39.grit.core.tasks.presentation.ui.component.TaskUpsertSheet
 import com.shub39.grit.core.utils.LocalWindowSizeClass
@@ -92,7 +83,6 @@ import grit.shared.core.generated.resources.add_task
 import grit.shared.core.generated.resources.cancel
 import grit.shared.core.generated.resources.delete
 import grit.shared.core.generated.resources.delete_tasks
-import grit.shared.core.generated.resources.done
 import grit.shared.core.generated.resources.drag_indicator
 import grit.shared.core.generated.resources.edit
 import grit.shared.core.generated.resources.edit_categories
@@ -101,7 +91,6 @@ import grit.shared.core.generated.resources.reorder
 import grit.shared.core.generated.resources.reorder_tasks
 import grit.shared.core.generated.resources.tasks
 import grit.shared.core.generated.resources.warning
-import kotlinx.coroutines.delay
 import org.jetbrains.compose.resources.stringResource
 import org.jetbrains.compose.resources.vectorResource
 import sh.calvin.reorderable.ReorderableItem
@@ -208,9 +197,13 @@ fun TaskList(
     }
 
     if (showCategoryAddSheet) {
-        AddCategorySheet(
+        CategoryUpsertSheet(
             onDismiss = { showCategoryAddSheet = false },
-            onAddCategory = {
+            category = Category(
+                name = "",
+                color = CategoryColors.GRAY.color
+            ),
+            onUpsertCategory = {
                 onAction(TaskAction.AddCategory(it))
                 showCategoryAddSheet = false
             }
@@ -222,7 +215,7 @@ fun TaskList(
             task = editTask!!,
             categories = state.tasks.keys.toList(),
             onDismissRequest = { editTask = null },
-            save = true,
+            isEditSheet = true,
             is24Hr = state.is24Hour,
             onUpsert = { onAction(TaskAction.UpsertTask(it)) },
             onDelete = {
@@ -714,55 +707,6 @@ private fun DeleteTasksDialog(onDismiss: () -> Unit, onConfirm: () -> Unit) {
             ) {
                 Text(stringResource(Res.string.delete))
             }
-        }
-    }
-}
-
-@OptIn(ExperimentalMaterial3Api::class, ExperimentalMaterial3ExpressiveApi::class)
-@Composable
-private fun AddCategorySheet(
-    onDismiss: () -> Unit,
-    onAddCategory: (Category) -> Unit
-) {
-    var name by remember { mutableStateOf("") }
-
-    GritBottomSheet(onDismissRequest = onDismiss) {
-        val keyboardController = LocalSoftwareKeyboardController.current
-        val focusRequester = remember { FocusRequester() }
-
-        LaunchedEffect(Unit) {
-            delay(200)
-            focusRequester.requestFocus()
-            keyboardController?.show()
-        }
-
-        Icon(imageVector = vectorResource(Res.drawable.add), contentDescription = "Add")
-        Text(
-            text = stringResource(Res.string.add_category),
-            style = MaterialTheme.typography.headlineSmall,
-            textAlign = TextAlign.Center
-        )
-        OutlinedTextField(
-            value = name,
-            onValueChange = { name = it },
-            shape = MaterialTheme.shapes.medium,
-            keyboardOptions = KeyboardOptions.Default.copy(
-                capitalization = KeyboardCapitalization.Sentences,
-                imeAction = ImeAction.Done
-            ),
-            singleLine = true,
-            modifier = Modifier.fillMaxWidth().focusRequester(focusRequester)
-        )
-        Button(
-            onClick = { onAddCategory(Category(name = name, color = CategoryColors.GRAY.color)) },
-            shapes = ButtonShapes(
-                shape = MaterialTheme.shapes.extraLarge,
-                pressedShape = MaterialTheme.shapes.small
-            ),
-            modifier = Modifier.fillMaxWidth(),
-            enabled = name.isNotBlank() && name.length <= 20
-        ) {
-            Text(text = stringResource(Res.string.done))
         }
     }
 }
