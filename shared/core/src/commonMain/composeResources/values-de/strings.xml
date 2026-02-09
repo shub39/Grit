@@ -1,3 +1,4 @@
+<?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="made_by">Erstellt von</string>
     <string name="tasks">Aufgaben</string>
@@ -35,11 +36,48 @@
     <string name="too_long">Zu lange</string>
     <string name="edit_task">Aufgabe bearbeiten</string>
     <string name="tasks_guide_1">Tippen, um als erledigt zu markieren.</string>
-    <string name="tasks_guide_2">Zum bearbeiten, dedrückt halten.</string>
+    <string name="tasks_guide_2">Zum Bearbeiten, gedrückt halten</string>
     <string name="habits_guide_1">Tippen, um als erledigt zu markieren.</string>
     <string name="habits_guide_2">Doppeltippen, um die Statistik anzuzeigen.</string>
     <string name="habits_guide_3">Zum bearbeiten, dedrückt halten.</string>
     <string name="delete_tasks">Sind Sie sicher, dass Sie alle abgeschlossenen Aufgaben löschen möchten?</string>
     <string name="channel_name">Routinen-Kanal</string>
     <string name="channel_description">Benachrichtigungskanal für Neuigkeiten in den Routinen</string>
+    <string name="days_ago_format">Vor %1$d Tagen…</string>
+    <string name="save">Speichern</string>
+    <string name="update_title">Titel bearbeiten</string>
+    <string name="categories">Kategorien</string>
+    <string name="delete_category">Bist du sicher? Alle Aufgaben in dieser Kategorie werden gelöscht</string>
+    <string name="add_category">Kategorie hinzufügen</string>
+    <string name="add">Füge etwas hinzu</string>
+    <string name="about">Über die App</string>
+    <string name="select_habit">Wähle Gewohnheit</string>
+    <string name="habit_stats">Gewohnheit Stats</string>
+    <string name="use_amoled_desc">Funktioniert am besten auf AMOLED Displays</string>
+    <string name="select_seed_desc">Wähle Farbe zum Generieren der Palette</string>
+    <string name="backup">Backup</string>
+    <string name="backup_desc">Exportiere oder stelle deine Aufgaben und Gewohnheiten wieder her</string>
+    <string name="export">Exportiere Daten</string>
+    <string name="export_desc">Alle Daten nach Downloads/Grit exportiert</string>
+    <string name="restore">Wiederherstellen</string>
+    <string name="restore_desc">Stelle Aufgaben und Gewohnheiten aus ausgewählter Datei wieder her</string>
+    <string name="choose_file">Wähle Datei</string>
+    <string name="material_theme_desc">Nutze Farben basierend auf Hintergrund</string>
+    <string name="show_habits">Zeige Gewohnheiten zuerst</string>
+    <string name="use_24Hr">Nutze 24 Std Uhr</string>
+    <string name="staring_day">Starte Woche mit Sonntag</string>
+    <string name="system">System</string>
+    <string name="dark">Dunkel</string>
+    <string name="light">Hell</string>
+    <string name="pause_notifications">Pausiere Benachrichtigungen</string>
+    <string name="pause_notifications_desc">Pausiere alle App-Benachrichtigungen</string>
+    <string name="overview">Übersicht</string>
+    <string name="started_on">Gestartet am</string>
+    <string name="weekly_graph">Wochenvergleich</string>
+    <string name="not_enough_data">Nicht genug Daten</string>
+    <string name="sponsor">Sponsor</string>
+    <string name="items_completed">abgeschlossen</string>
+    <string name="completed">Heute abgeschlossen</string>
+    <string name="title">Titel</string>
+    <string name="description">Beschreibung</string>
 </resources>

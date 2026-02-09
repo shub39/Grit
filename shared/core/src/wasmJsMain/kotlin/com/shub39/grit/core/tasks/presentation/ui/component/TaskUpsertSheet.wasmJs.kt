@@ -18,7 +18,7 @@ actual fun TaskUpsertSheet(
     onDelete: () -> Unit,
     is24Hr: Boolean,
     modifier: Modifier,
-    save: Boolean
+    isEditSheet: Boolean
 ) {
     var showDateTimePicker by remember { mutableStateOf(false) }
 
@@ -29,7 +29,7 @@ actual fun TaskUpsertSheet(
         onUpsert = onUpsert,
         onDelete = onDelete,
         is24Hr = is24Hr,
-        save = save,
+        isEditSheet = isEditSheet,
         notificationPermission = true,
         showDateTimePicker = showDateTimePicker,
         updateDateTimePickerVisibility = { showDateTimePicker = it },

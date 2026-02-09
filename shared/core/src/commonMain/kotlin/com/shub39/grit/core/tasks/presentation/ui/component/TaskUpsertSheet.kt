@@ -3,11 +3,11 @@ package com.shub39.grit.core.tasks.presentation.ui.component
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.FlowRow
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.heightIn
+import androidx.compose.foundation.layout.imePadding
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.widthIn
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
@@ -17,6 +17,7 @@ import androidx.compose.material3.DatePicker
 import androidx.compose.material3.DatePickerDialog
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.ExperimentalMaterial3ExpressiveApi
+import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
@@ -25,8 +26,6 @@ import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Switch
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
-import androidx.compose.material3.TimeInput
-import androidx.compose.material3.TimePickerDialog
 import androidx.compose.material3.ToggleButton
 import androidx.compose.material3.ToggleButtonDefaults
 import androidx.compose.material3.rememberDatePickerState
@@ -47,6 +46,7 @@ import androidx.compose.ui.text.input.KeyboardCapitalization
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import com.shub39.grit.core.shared_ui.GritBottomSheet
+import com.shub39.grit.core.shared_ui.GritTimePicker
 import com.shub39.grit.core.tasks.domain.Category
 import com.shub39.grit.core.tasks.domain.Task
 import com.shub39.grit.core.utils.now
@@ -81,7 +81,7 @@ expect fun TaskUpsertSheet(
     onDelete: () -> Unit,
     is24Hr: Boolean,
     modifier: Modifier = Modifier,
-    save: Boolean = false
+    isEditSheet: Boolean = false
 )
 
 @OptIn(
@@ -97,7 +97,7 @@ fun TaskUpsertSheetContent(
     onUpsert: (Task) -> Unit,
     onDelete: () -> Unit,
     is24Hr: Boolean,
-    save: Boolean = false,
+    isEditSheet: Boolean = false,
     notificationPermission: Boolean,
     showDateTimePicker: Boolean,
     updateDateTimePickerVisibility: (Boolean) -> Unit,
@@ -115,37 +115,40 @@ fun TaskUpsertSheetContent(
     } else true
 
     GritBottomSheet(
-        modifier = modifier,
+        modifier = modifier.imePadding(),
         padding = 0.dp,
         onDismissRequest = onDismissRequest
     ) {
+        Column(
+            horizontalAlignment = Alignment.CenterHorizontally,
+            verticalArrangement = Arrangement.spacedBy(8.dp)
+        ) {
+            Icon(
+                imageVector = vectorResource(if (isEditSheet) Res.drawable.edit else Res.drawable.add),
+                contentDescription = "Upsert",
+            )
+
+            Text(
+                text = stringResource(if (isEditSheet) Res.string.edit_task else Res.string.add_task),
+                style = MaterialTheme.typography.headlineSmall,
+                textAlign = TextAlign.Center,
+                modifier = Modifier.padding(horizontal = 16.dp)
+            )
+
+            HorizontalDivider()
+        }
+
         LazyColumn(
             modifier = Modifier.fillMaxWidth(),
             verticalArrangement = Arrangement.spacedBy(8.dp),
             horizontalAlignment = Alignment.CenterHorizontally,
+            contentPadding = PaddingValues(16.dp)
         ) {
-            item {
-                Icon(
-                    imageVector = vectorResource(if (save) Res.drawable.edit else Res.drawable.add),
-                    contentDescription = "Upsert",
-                )
-            }
-
-            item {
-                Text(
-                    text = stringResource(if (save) Res.string.edit_task else Res.string.add_task),
-                    style = MaterialTheme.typography.headlineSmall,
-                    textAlign = TextAlign.Center,
-                    modifier = Modifier.padding(horizontal = 16.dp)
-                )
-            }
-
             item {
                 FlowRow(
                     horizontalArrangement = Arrangement.Center,
                     verticalArrangement = Arrangement.Center,
-                    itemVerticalAlignment = Alignment.CenterVertically,
-                    modifier = Modifier.padding(horizontal = 16.dp)
+                    itemVerticalAlignment = Alignment.CenterVertically
                 ) {
                     categories.forEach { category ->
                         ToggleButton(
@@ -183,7 +186,6 @@ fun TaskUpsertSheetContent(
                         }
                     ),
                     modifier = Modifier
-                        .padding(horizontal = 16.dp)
                         .fillMaxWidth()
                         .focusRequester(focusRequester)
                 )
@@ -191,9 +193,7 @@ fun TaskUpsertSheetContent(
 
             item {
                 Row(
-                    modifier = Modifier
-                        .padding(vertical = 8.dp, horizontal = 16.dp)
-                        .fillMaxWidth(),
+                    modifier = Modifier.fillMaxWidth(),
                     verticalAlignment = Alignment.CenterVertically
                 ) {
                     Column(modifier = Modifier.weight(1f)) {
@@ -234,43 +234,48 @@ fun TaskUpsertSheetContent(
                     )
                 }
             }
+        }
 
-            item {
-                Row(
-                    modifier = Modifier
-                        .padding(start = 16.dp, end = 16.dp, bottom = 32.dp),
-                    horizontalArrangement = Arrangement.spacedBy(8.dp)
-                ) {
-                    if (save) {
-                        OutlinedButton(
-                            onClick = onDelete,
-                            shapes = ButtonShapes(
-                                shape = MaterialTheme.shapes.extraLarge,
-                                pressedShape = MaterialTheme.shapes.small
-                            ),
-                            modifier = Modifier.weight(1f)
-                        ) {
-                            Text(stringResource(Res.string.delete))
-                        }
-                    }
+        Column(
+            horizontalAlignment = Alignment.CenterHorizontally,
+            verticalArrangement = Arrangement.spacedBy(8.dp)
+        ) {
+            HorizontalDivider()
 
-                    Button(
-                        onClick = {
-                            onUpsert(newTask)
-                            onDismissRequest()
-                        },
+            Row(
+                modifier = Modifier
+                    .padding(start = 16.dp, end = 16.dp, bottom = 32.dp),
+                horizontalArrangement = Arrangement.spacedBy(8.dp)
+            ) {
+                if (isEditSheet) {
+                    OutlinedButton(
+                        onClick = onDelete,
                         shapes = ButtonShapes(
                             shape = MaterialTheme.shapes.extraLarge,
                             pressedShape = MaterialTheme.shapes.small
                         ),
-                        modifier = Modifier.weight(1f),
-                        enabled = newTask.title.isNotBlank()
-                                && newTask.title.length <= 100
-                                && newTask != task
-                                && isValidDateTime
+                        modifier = Modifier.weight(1f)
                     ) {
-                        Text(stringResource(if (save) Res.string.save else Res.string.add_task))
+                        Text(stringResource(Res.string.delete))
                     }
+                }
+
+                Button(
+                    onClick = {
+                        onUpsert(newTask)
+                        onDismissRequest()
+                    },
+                    shapes = ButtonShapes(
+                        shape = MaterialTheme.shapes.extraLarge,
+                        pressedShape = MaterialTheme.shapes.small
+                    ),
+                    modifier = Modifier.weight(1f),
+                    enabled = newTask.title.isNotBlank()
+                            && newTask.title.length <= 100
+                            && newTask != task
+                            && isValidDateTime
+                ) {
+                    Text(stringResource(if (isEditSheet) Res.string.save else Res.string.add_task))
                 }
             }
         }
@@ -289,7 +294,7 @@ fun TaskUpsertSheetContent(
                                 reminder = LocalDateTime(
                                     date = Instant
                                         .fromEpochMilliseconds(datePickerState.selectedDateMillis!!)
-                                        .toLocalDateTime(TimeZone.currentSystemDefault())
+                                        .toLocalDateTime(TimeZone.UTC)
                                         .date,
                                     time = LocalTime(
                                         hour = timePickerState.hour,
@@ -322,24 +327,11 @@ fun TaskUpsertSheetContent(
             )
 
             if (showTimePicker) {
-                TimePickerDialog(
+                GritTimePicker(
                     onDismissRequest = { showTimePicker = false },
-                    title = {},
-                    confirmButton = {
-                        TextButton(
-                            onClick = { showTimePicker = false }
-                        ) {
-                            Text(stringResource(Res.string.done))
-                        }
-                    },
-                    modifier = Modifier
-                        .widthIn(max = 400.dp)
-                        .heightIn(max = 500.dp)
-                ) {
-                    TimeInput(
-                        state = timePickerState
-                    )
-                }
+                    state = timePickerState,
+                    onConfirm = { showTimePicker = false }
+                )
             }
         }
     }

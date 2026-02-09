@@ -48,7 +48,6 @@ Translations are done via weblate, you can contribute there!
 - [Compose Reorderable](https://github.com/Calvin-LL/Reorderable)
 - [MaterialKolor](https://github.com/jordond/MaterialKolor)
 - [ColorPicker Compose](https://github.com/skydoves/colorpicker-compose)
-- [Compose Icons](https://github.com/DevSrSouza/compose-icons)
 - [Compose Calendar](https://github.com/boguszpawlowski/ComposeCalendar)
 - [Revenuecat Android SDK](https://github.com/RevenueCat/purchases-android)
 

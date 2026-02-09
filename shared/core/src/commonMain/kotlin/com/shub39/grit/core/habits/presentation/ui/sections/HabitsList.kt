@@ -66,7 +66,7 @@ fun HabitsList(
             items(state.habitsWithAnalytics, key = { it.habit.id }) { habitWithAnalytics ->
                 ReorderableItem(reorderableListState, key = habitWithAnalytics.habit.id) {
                     val cardCorners by animateDpAsState(
-                        targetValue = if (!it) 20.dp else 16.dp
+                        targetValue = if (!it) 32.dp else 16.dp
                     )
 
                     HabitCard(

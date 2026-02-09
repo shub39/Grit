@@ -4,7 +4,6 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.imePadding
 import androidx.compose.foundation.layout.padding
@@ -12,7 +11,6 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonGroupDefaults
-import androidx.compose.material3.ButtonShapes
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.ExperimentalMaterial3ExpressiveApi
 import androidx.compose.material3.FilledTonalIconButton
@@ -22,8 +20,6 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Switch
 import androidx.compose.material3.Text
-import androidx.compose.material3.TextButton
-import androidx.compose.material3.TimeInput
 import androidx.compose.material3.ToggleButton
 import androidx.compose.material3.ToggleButtonDefaults
 import androidx.compose.material3.rememberTimePickerState
@@ -41,7 +37,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.shub39.grit.core.habits.domain.Habit
 import com.shub39.grit.core.shared_ui.GritBottomSheet
-import com.shub39.grit.core.shared_ui.GritDialog
+import com.shub39.grit.core.shared_ui.GritTimePicker
 import com.shub39.grit.core.theme.GritTheme
 import com.shub39.grit.core.utils.now
 import com.shub39.grit.core.utils.toFormattedString
@@ -50,11 +46,9 @@ import grit.shared.core.generated.resources.add_habit
 import grit.shared.core.generated.resources.add_reminder
 import grit.shared.core.generated.resources.alarm
 import grit.shared.core.generated.resources.description
-import grit.shared.core.generated.resources.done
 import grit.shared.core.generated.resources.edit
 import grit.shared.core.generated.resources.edit_habit
 import grit.shared.core.generated.resources.save
-import grit.shared.core.generated.resources.select_time
 import grit.shared.core.generated.resources.title
 import grit.shared.core.generated.resources.too_long
 import grit.shared.core.generated.resources.update_description
@@ -288,54 +282,24 @@ fun HabitUpsertSheetContent(
                 is24Hour = is24Hr
             )
 
-            GritDialog(
-                onDismissRequest = { timePickerDialog = false }
-            ) {
-                Icon(
-                    imageVector = vectorResource(Res.drawable.alarm),
-                    contentDescription = "Add Time"
-                )
-
-                Text(
-                    text = stringResource(Res.string.select_time),
-                    style = MaterialTheme.typography.headlineSmall,
-                    textAlign = TextAlign.Center
-                )
-
-                Spacer(modifier = Modifier.padding(vertical = 4.dp))
-
-                TimeInput(
-                    state = timePickerState
-                )
-
-                Row(
-                    modifier = Modifier.fillMaxWidth(),
-                    horizontalArrangement = Arrangement.End
-                ) {
-                    TextButton(
-                        onClick = {
-                            updateHabit(
-                                newHabit.copy(
-                                    time = LocalDateTime(
-                                        date = newHabit.time.date,
-                                        time = LocalTime(
-                                            minute = timePickerState.minute,
-                                            hour = timePickerState.hour
-                                        )
-                                    )
+            GritTimePicker(
+                onDismissRequest = { timePickerDialog = false },
+                state = timePickerState,
+                onConfirm = {
+                    updateHabit(
+                        newHabit.copy(
+                            time = LocalDateTime(
+                                date = newHabit.time.date,
+                                time = LocalTime(
+                                    minute = timePickerState.minute,
+                                    hour = timePickerState.hour
                                 )
                             )
-                            timePickerDialog = false
-                        },
-                        shapes = ButtonShapes(
-                            shape = MaterialTheme.shapes.extraLarge,
-                            pressedShape = MaterialTheme.shapes.small
                         )
-                    ) {
-                        Text(stringResource(Res.string.done))
-                    }
+                    )
+                    timePickerDialog = false
                 }
-            }
+            )
         }
     }
 }
