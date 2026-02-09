@@ -5,9 +5,7 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.FlowRow
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.widthIn
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
@@ -25,8 +23,6 @@ import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Switch
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
-import androidx.compose.material3.TimeInput
-import androidx.compose.material3.TimePickerDialog
 import androidx.compose.material3.ToggleButton
 import androidx.compose.material3.ToggleButtonDefaults
 import androidx.compose.material3.rememberDatePickerState
@@ -47,6 +43,7 @@ import androidx.compose.ui.text.input.KeyboardCapitalization
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import com.shub39.grit.core.shared_ui.GritBottomSheet
+import com.shub39.grit.core.shared_ui.GritTimePicker
 import com.shub39.grit.core.tasks.domain.Category
 import com.shub39.grit.core.tasks.domain.Task
 import com.shub39.grit.core.utils.now
@@ -322,24 +319,11 @@ fun TaskUpsertSheetContent(
             )
 
             if (showTimePicker) {
-                TimePickerDialog(
+                GritTimePicker(
                     onDismissRequest = { showTimePicker = false },
-                    title = {},
-                    confirmButton = {
-                        TextButton(
-                            onClick = { showTimePicker = false }
-                        ) {
-                            Text(stringResource(Res.string.done))
-                        }
-                    },
-                    modifier = Modifier
-                        .widthIn(max = 400.dp)
-                        .heightIn(max = 500.dp)
-                ) {
-                    TimeInput(
-                        state = timePickerState
-                    )
-                }
+                    state = timePickerState,
+                    onConfirm = { showTimePicker = false }
+                )
             }
         }
     }
