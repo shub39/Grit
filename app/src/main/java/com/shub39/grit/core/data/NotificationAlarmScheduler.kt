@@ -31,21 +31,15 @@ class NotificationAlarmScheduler(
 
     override fun schedule(habit: Habit) {
         cancel(habit)
-        if (!habit.reminder) return
+        if (!habit.reminder || habit.days.isEmpty()) return
 
         var scheduleTime = habit.time
-
         val now = LocalDateTime.now()
 
-        var attempt = 0
-        while ((scheduleTime < now || !habit.days.contains(scheduleTime.dayOfWeek)) && attempt <= 7) {
-            scheduleTime = LocalDateTime(date = scheduleTime.date.plus(1, DateTimeUnit.DAY), time = scheduleTime.time)
-            attempt++
-        }
-
-        if (attempt > 7) {
-            Log.wtf(tag, "Cant set alarm, something is wrong... Schedule Time: $scheduleTime Reminder: ${habit.time}")
-            return
+        while ((scheduleTime < now) || !habit.days.contains(scheduleTime.dayOfWeek)) {
+            scheduleTime = scheduleTime.date.plus(1, DateTimeUnit.DAY).let {
+                LocalDateTime(date = it, time = scheduleTime.time)
+            }
         }
 
         val notificationIntent = Intent(context, NotificationReceiver::class.java).apply {
@@ -102,10 +96,7 @@ class NotificationAlarmScheduler(
             pendingIntent
         )
 
-        Log.d(
-            tag,
-            "Scheduled: Task '${task.title}' at $scheduleTime"
-        )
+        Log.d(tag, "Scheduled: Task '${task.title}' at $scheduleTime")
     }
 
     override fun cancel(habit: Habit) {

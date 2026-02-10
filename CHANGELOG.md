@@ -1,5 +1,8 @@
 # Changelog
 
+## 5.5.53
+- Fixed Notifications not working #229
+
 ## 5.5.52
 - Fixed time picker mismatch #193
 - Refreshed habit cards design
