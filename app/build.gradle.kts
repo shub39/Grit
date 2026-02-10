@@ -145,11 +145,6 @@ dependencies {
     implementation(libs.koin.compose.viewmodel.navigation)
     ksp(libs.koin.ksp.compiler)
     api(libs.koin.annotations)
-
-//    implementation(libs.ktor.server.core)
-//    implementation(libs.ktor.server.cio)
-//    implementation(libs.ktor.serialization.kotlinx.json)
-//    implementation(libs.ktor.server.content.negotiation)
 }
 
 room {
