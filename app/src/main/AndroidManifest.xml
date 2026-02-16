@@ -12,12 +12,6 @@
     <uses-permission android:name="android.permission.READ_PHONE_STATE" tools:node="remove"/>
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" tools:node="remove" tools:ignore="ScopedStorage"/>
 
-<!--    <uses-permission android:name="android.permission.INTERNET" />-->
-<!--    <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />-->
-<!--    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />-->
-<!--    <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />-->
-<!--    <uses-permission android:name="android.permission.FOREGROUND_SERVICE_SPECIAL_USE" />-->
-
     <application
         android:allowBackup="true"
         android:dataExtractionRules="@xml/data_extraction_rules"
@@ -59,16 +53,6 @@
                 android:resource="@xml/overview_widget"/>
         </receiver>
 
-        <receiver android:name=".widgets.HabitStreakWidgetReceiver"
-            android:exported="true">
-            <intent-filter>
-                <action android:name="android.appwidget.action.APPWIDGET_UPDATE"/>
-            </intent-filter>
-            <meta-data
-                android:name="android.appwidget.provider"
-                android:resource="@xml/streak_widget"/>
-        </receiver>
-
         <receiver android:name=".widgets.all_tasks_widget.AllTasksWidgetReceiver"
             android:exported="true">
             <intent-filter>
@@ -79,15 +63,15 @@
                 android:resource="@xml/all_tasks_widget"/>
         </receiver>
 
-<!--        <service-->
-<!--            android:name=".server.GritServerService"-->
-<!--            android:enabled="true"-->
-<!--            android:exported="false"-->
-<!--            android:foregroundServiceType="specialUse">-->
-<!--            <property-->
-<!--                android:name="android.app.PROPERTY_SPECIAL_USE_FGS_SUBTYPE"-->
-<!--                android:value="Local network server for managing tasks and habits"/>-->
-<!--        </service>-->
+        <receiver android:name=".widgets.habit_details_widget.HabitDetailsWidgetReceiver"
+            android:exported="true">
+            <intent-filter>
+                <action android:name="android.appwidget.action.APPWIDGET_UPDATE"/>
+            </intent-filter>
+            <meta-data
+                android:name="android.appwidget.provider"
+                android:resource="@xml/habit_details_widget"/>
+        </receiver>
 
     </application>
 
