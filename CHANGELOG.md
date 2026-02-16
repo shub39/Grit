@@ -1,5 +1,9 @@
 # Changelog
 
+## 5.6.0
+- Fixed Tasks widget corners, Added Refresh button
+- 
+
 ## 5.5.53
 - Fixed Notifications not working #229
 

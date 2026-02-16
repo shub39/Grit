@@ -10,7 +10,7 @@
     <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
 
     <uses-permission android:name="android.permission.READ_PHONE_STATE" tools:node="remove"/>
-    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" tools:node="remove"/>
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" tools:node="remove" tools:ignore="ScopedStorage"/>
 
 <!--    <uses-permission android:name="android.permission.INTERNET" />-->
 <!--    <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />-->
@@ -69,7 +69,7 @@
                 android:resource="@xml/streak_widget"/>
         </receiver>
 
-        <receiver android:name=".widgets.AllTasksWidgetReceiver"
+        <receiver android:name=".widgets.all_tasks_widget.AllTasksWidgetReceiver"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.appwidget.action.APPWIDGET_UPDATE"/>
