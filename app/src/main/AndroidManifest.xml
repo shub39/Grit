@@ -49,7 +49,7 @@
             </intent-filter>
         </receiver>
 
-        <receiver android:name=".widgets.HabitOverviewWidgetReceiver"
+        <receiver android:name=".widgets.habit_overview_widget.HabitOverviewWidgetReceiver"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.appwidget.action.APPWIDGET_UPDATE"/>
