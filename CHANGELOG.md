@@ -2,7 +2,11 @@
 
 ## 5.6.0
 - Fixed Tasks widget corners, Added Refresh button
-- 
+- Fixed Habits Overview Widget proportions, Added Refresh button
+- Revamped Habit Streaks widget
+- Added Habit Week Chart Widget
+- Added dynamic Widget previews for launchers
+- Changed Notification Icon to previous icon
 
 ## 5.5.53
 - Fixed Notifications not working #229

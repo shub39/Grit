@@ -101,7 +101,7 @@ class HabitViewModel(
         habitStatusJob?.cancel()
         habitStatusJob = viewModelScope.launch {
             combine(
-                repo.getHabitStatus(),
+                repo.getHabitsWithAnalytics(),
                 repo.getCompletedHabitIds()
             ) { habits, completedHabits ->
                 _state.update {

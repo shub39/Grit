@@ -36,7 +36,6 @@ import androidx.glance.layout.fillMaxSize
 import androidx.glance.layout.fillMaxWidth
 import androidx.glance.layout.height
 import androidx.glance.layout.padding
-import androidx.glance.layout.wrapContentSize
 import androidx.glance.preview.ExperimentalGlancePreviewApi
 import androidx.glance.preview.Preview
 import androidx.glance.text.FontWeight
@@ -84,6 +83,49 @@ class AllTasksWidget : GlanceAppWidget(), KoinComponent {
             }
         }
     }
+
+    override suspend fun providePreview(context: Context, widgetCategory: Int) {
+        val previewItems = mapOf(
+            Category(
+                name = "Chores",
+                index = 1,
+                color = CategoryColors.GRAY.color
+            ) to listOf(
+                Task(
+                    id = 1,
+                    categoryId = 1,
+                    title = "Laundry",
+                    index = 1,
+                    status = false,
+                    reminder = null
+                ),
+                Task(
+                    id = 2,
+                    categoryId = 1,
+                    title = "Watch a 5 hour long video essay on a video game i will never play",
+                    index = 2,
+                    status = false,
+                    reminder = null
+                ),
+                Task(
+                    id = 3,
+                    categoryId = 1,
+                    title = "Get Groceries, Meat",
+                    index = 3,
+                    status = true,
+                    reminder = null
+                )
+            )
+        )
+        
+        provideContent { 
+            Content(
+                tasks = previewItems,
+                onUpdateTaskStatus = {},
+                onUpdateWidget = {},
+            )
+        }
+    }
 }
 
 @Composable
@@ -91,14 +133,15 @@ class AllTasksWidget : GlanceAppWidget(), KoinComponent {
 private fun Content(
     tasks: Map<Category, List<Task>>,
     onUpdateTaskStatus: (Task) -> Unit,
-    onUpdateWidget: () -> Unit
+    onUpdateWidget: () -> Unit,
+    modifier: GlanceModifier = GlanceModifier
 ) {
     val size = LocalSize.current
     val context = LocalContext.current
     val roundedCornerSupported = Build.VERSION.SDK_INT >= Build.VERSION_CODES.S
 
     Column(
-        modifier = GlanceModifier
+        modifier = modifier
             .fillMaxSize()
             .then(
                 if (roundedCornerSupported) {
@@ -134,8 +177,7 @@ private fun Content(
 
         LazyColumn(
             modifier = GlanceModifier
-                .wrapContentSize()
-                .padding(start = 8.dp, end = 8.dp)
+                .padding(horizontal = 8.dp)
                 .fillMaxSize(),
             horizontalAlignment = Alignment.Start
         ) {
@@ -201,6 +243,10 @@ private fun Content(
                         }
                     }
                 }
+            }
+
+            item {
+                Spacer(modifier = GlanceModifier.height(4.dp))
             }
         }
     }
