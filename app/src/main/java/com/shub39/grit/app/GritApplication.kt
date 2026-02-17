@@ -9,6 +9,7 @@ import com.shub39.grit.di.GritModules
 import com.shub39.grit.widgets.all_tasks_widget.AllTasksWidgetReceiver
 import com.shub39.grit.widgets.habit_overview_widget.HabitOverviewWidgetReceiver
 import com.shub39.grit.widgets.habit_streak_widget.HabitStreakWidgetReceiver
+import com.shub39.grit.widgets.habit_weekchart_widget.HabitWeekChartWidgetReceiver
 import kotlinx.coroutines.MainScope
 import kotlinx.coroutines.launch
 import org.koin.android.ext.koin.androidContext
@@ -37,6 +38,7 @@ class GritApplication: Application() {
                 manager.setWidgetPreviews(HabitOverviewWidgetReceiver::class)
                 manager.setWidgetPreviews(HabitStreakWidgetReceiver::class)
                 manager.setWidgetPreviews(AllTasksWidgetReceiver::class)
+                manager.setWidgetPreviews(HabitWeekChartWidgetReceiver::class)
             }
         }
     }

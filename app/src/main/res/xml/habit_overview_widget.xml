@@ -2,7 +2,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:initialLayout="@layout/glance_default_loading_layout"
     android:maxResizeWidth="624dp"
-    android:maxResizeHeight="264dp"
+    android:maxResizeHeight="422dp"
     android:minWidth="109dp"
     android:minHeight="132dp"
     android:minResizeWidth="109dp"

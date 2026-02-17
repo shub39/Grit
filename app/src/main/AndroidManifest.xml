@@ -76,6 +76,17 @@
                 android:resource="@xml/habit_streak_widget"/>
         </receiver>
 
+        <receiver android:name=".widgets.habit_weekchart_widget.HabitWeekChartWidgetReceiver"
+            android:exported="true"
+            android:label="@string/habit_week_chart_widget">
+            <intent-filter>
+                <action android:name="android.appwidget.action.APPWIDGET_UPDATE"/>
+            </intent-filter>
+            <meta-data
+                android:name="android.appwidget.provider"
+                android:resource="@xml/habit_week_chart_widget"/>
+        </receiver>
+
     </application>
 
 </manifest>
