@@ -44,17 +44,19 @@
         </receiver>
 
         <receiver android:name=".widgets.habit_overview_widget.HabitOverviewWidgetReceiver"
-            android:exported="true">
+            android:exported="true"
+            android:label="@string/habit_overview_widget">
             <intent-filter>
                 <action android:name="android.appwidget.action.APPWIDGET_UPDATE"/>
             </intent-filter>
             <meta-data
                 android:name="android.appwidget.provider"
-                android:resource="@xml/overview_widget"/>
+                android:resource="@xml/habit_overview_widget"/>
         </receiver>
 
         <receiver android:name=".widgets.all_tasks_widget.AllTasksWidgetReceiver"
-            android:exported="true">
+            android:exported="true"
+            android:label="@string/all_tasks">
             <intent-filter>
                 <action android:name="android.appwidget.action.APPWIDGET_UPDATE"/>
             </intent-filter>
@@ -64,7 +66,8 @@
         </receiver>
 
         <receiver android:name=".widgets.habit_details_widget.HabitDetailsWidgetReceiver"
-            android:exported="true">
+            android:exported="true"
+            android:label="@string/habit_details_widget">
             <intent-filter>
                 <action android:name="android.appwidget.action.APPWIDGET_UPDATE"/>
             </intent-filter>

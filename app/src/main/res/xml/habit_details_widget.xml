@@ -7,7 +7,6 @@
     android:minHeight="56dp"
     android:minResizeWidth="109dp"
     android:minResizeHeight="56dp"
-    android:description="@string/habit_details_widget"
     android:updatePeriodMillis="1800000"
     android:targetCellWidth="4"
     android:targetCellHeight="2"

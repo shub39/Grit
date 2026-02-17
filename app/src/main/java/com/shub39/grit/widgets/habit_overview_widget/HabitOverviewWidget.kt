@@ -100,6 +100,36 @@ class HabitOverviewWidget : GlanceAppWidget(), KoinComponent {
         }
     }
 
+    override suspend fun providePreview(context: Context, widgetCategory: Int) {
+        val previewItems = listOf(
+            Habit(
+                id = 1,
+                title = "Read a Book",
+                description = "20 pages at least",
+                time = LocalDateTime.now(),
+                days = emptySet(),
+                index = 1,
+                reminder = false
+            ) to true,
+            Habit(
+                id = 2,
+                title = "Excercise",
+                description = "40 Minutes daily",
+                time = LocalDateTime.now(),
+                days = setOf(),
+                index = 2,
+                reminder = false
+            ) to false
+        )
+
+        provideContent {
+            Content(
+                habitsWithStatus = previewItems,
+                onUpdateHabit = {},
+                onUpdateWidget = {}
+            )
+        }
+    }
 
 }
 

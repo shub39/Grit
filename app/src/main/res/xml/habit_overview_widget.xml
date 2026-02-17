@@ -1,8 +1,6 @@
-<appwidget-provider
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<appwidget-provider xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:initialLayout="@layout/glance_default_loading_layout"
-    android:previewImage="@drawable/habit_overview_widget"
     android:maxResizeWidth="624dp"
     android:maxResizeHeight="132dp"
     android:minWidth="109dp"
