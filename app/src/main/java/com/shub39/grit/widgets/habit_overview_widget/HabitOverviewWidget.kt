@@ -250,6 +250,10 @@ private fun Content(
                     Spacer(modifier = GlanceModifier.height(4.dp))
                 }
             }
+
+            item {
+                Spacer(modifier = GlanceModifier.height(4.dp))
+            }
         }
     }
 }

@@ -201,6 +201,10 @@ private fun Content(
                     }
                 }
             }
+
+            item {
+                Spacer(modifier = GlanceModifier.height(4.dp))
+            }
         }
     }
 }
