@@ -65,15 +65,15 @@
                 android:resource="@xml/all_tasks_widget"/>
         </receiver>
 
-        <receiver android:name=".widgets.habit_details_widget.HabitDetailsWidgetReceiver"
+        <receiver android:name=".widgets.habit_streak_widget.HabitStreakWidgetReceiver"
             android:exported="true"
-            android:label="@string/habit_details_widget">
+            android:label="@string/habit_streak_widget">
             <intent-filter>
                 <action android:name="android.appwidget.action.APPWIDGET_UPDATE"/>
             </intent-filter>
             <meta-data
                 android:name="android.appwidget.provider"
-                android:resource="@xml/habit_details_widget"/>
+                android:resource="@xml/habit_streak_widget"/>
         </receiver>
 
     </application>

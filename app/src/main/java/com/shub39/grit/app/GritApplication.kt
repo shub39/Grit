@@ -7,8 +7,8 @@ import androidx.glance.appwidget.GlanceAppWidgetManager
 import com.shub39.grit.billing.BillingInitializer
 import com.shub39.grit.di.GritModules
 import com.shub39.grit.widgets.all_tasks_widget.AllTasksWidgetReceiver
-import com.shub39.grit.widgets.habit_details_widget.HabitDetailsWidgetReceiver
 import com.shub39.grit.widgets.habit_overview_widget.HabitOverviewWidgetReceiver
+import com.shub39.grit.widgets.habit_streak_widget.HabitStreakWidgetReceiver
 import kotlinx.coroutines.MainScope
 import kotlinx.coroutines.launch
 import org.koin.android.ext.koin.androidContext
@@ -35,7 +35,7 @@ class GritApplication: Application() {
             @SuppressLint("CheckResult")
             MainScope().launch {
                 manager.setWidgetPreviews(HabitOverviewWidgetReceiver::class)
-                manager.setWidgetPreviews(HabitDetailsWidgetReceiver::class)
+                manager.setWidgetPreviews(HabitStreakWidgetReceiver::class)
                 manager.setWidgetPreviews(AllTasksWidgetReceiver::class)
             }
         }

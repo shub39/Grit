@@ -1,4 +1,4 @@
-package com.shub39.grit.widgets.habit_details_widget
+package com.shub39.grit.widgets.habit_streak_widget
 
 import android.content.Context
 import android.os.Build
@@ -60,7 +60,7 @@ import kotlinx.datetime.LocalDateTime
 import org.koin.core.component.KoinComponent
 import org.koin.core.component.get
 
-class HabitDetailsWidget : GlanceAppWidget(), KoinComponent {
+class HabitStreakWidget : GlanceAppWidget(), KoinComponent {
 
     companion object {
         private val habitIdKey = longPreferencesKey("habit_id")
@@ -95,7 +95,7 @@ class HabitDetailsWidget : GlanceAppWidget(), KoinComponent {
                         habitWithAnalytics = currentData,
                         onUpdateWidget = {
                             scope.launch {
-                                this@HabitDetailsWidget.update(context, id)
+                                this@HabitStreakWidget.update(context, id)
                             }
                         },
                         onChangeHabit = {

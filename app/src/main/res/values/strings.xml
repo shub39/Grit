@@ -7,7 +7,7 @@
     <string name="channel_description">Notification channel for habit status update</string>
     <string name="add">Add Something</string>
     <string name="habit_overview_widget">Habit Overview</string>
-    <string name="habit_details_widget">Habit Details</string>
+    <string name="habit_streak_widget">Habit Streak</string>
     <string name="biometric_lock">Biometric Lock</string>
     <string name="biometric_lock_desc">Use biometric authentication to unlock app</string>
     <string name="biometric_failed">Authentication required to use app</string>
