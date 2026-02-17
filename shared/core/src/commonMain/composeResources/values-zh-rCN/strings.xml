@@ -1,3 +1,4 @@
+<?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="made_by">由…制作</string>
     <string name="tasks">任务</string>
@@ -114,4 +115,8 @@
     <string name="foss">您正在使用 FOSS 版本</string>
     <string name="download_from_playstore">从 Playstore 下载</string>
     <string name="foss_desc">所有功能均已解锁。此版本不支持应用内购买。如果这个应用对你有所帮助，欢迎通过以下方式支持我</string>
+    <string name="reorder_tasks">重新排序</string>
+    <string name="reorder_tasks_desc">完成后重新排序任务</string>
+    <string name="weeks">周内</string>
+    <string name="translate">翻译</string>
 </resources>
