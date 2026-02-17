@@ -86,8 +86,8 @@ class HabitDetailsWidget : GlanceAppWidget(), KoinComponent {
             val state = currentState<Preferences>()
             val habitId = state[habitIdKey] ?: sortedData.firstOrNull()?.habit?.id ?: 0
 
-            val currentData = sortedData.find { it.habit.id == habitId }
-            val currentIndex = sortedData.indexOf(currentData)
+            val currentData = sortedData.find { it.habit.id == habitId } ?: sortedData.firstOrNull()
+            val currentIndex = if (currentData == null) 0 else sortedData.indexOf(currentData)
 
             key(size) {
                 GlanceTheme {
@@ -112,6 +112,32 @@ class HabitDetailsWidget : GlanceAppWidget(), KoinComponent {
                     )
                 }
             }
+        }
+    }
+
+    override suspend fun providePreview(context: Context, widgetCategory: Int) {
+        provideContent {
+            Content(
+                onUpdateWidget = {},
+                onChangeHabit = {},
+                habitWithAnalytics = HabitWithAnalytics(
+                    habit = Habit(
+                        id = 1,
+                        title = "Exercise",
+                        description = "40 mins daily",
+                        time = LocalDateTime.now(),
+                        days = setOf(),
+                        index = 1,
+                        reminder = false
+                    ),
+                    statuses = listOf(),
+                    weeklyComparisonData = listOf(),
+                    weekDayFrequencyData = mapOf(),
+                    currentStreak = 12,
+                    bestStreak = 20,
+                    startedDaysAgo = 100
+                )
+            )
         }
     }
 

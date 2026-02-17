@@ -113,7 +113,7 @@ class HabitOverviewWidget : GlanceAppWidget(), KoinComponent {
             ) to true,
             Habit(
                 id = 2,
-                title = "Excercise",
+                title = "Exercise",
                 description = "40 Minutes daily",
                 time = LocalDateTime.now(),
                 days = setOf(),
