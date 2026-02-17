@@ -45,8 +45,6 @@ import androidx.glance.preview.ExperimentalGlancePreviewApi
 import androidx.glance.preview.Preview
 import androidx.glance.state.GlanceStateDefinition
 import androidx.glance.state.PreferencesGlanceStateDefinition
-import androidx.glance.text.FontStyle
-import androidx.glance.text.FontWeight
 import androidx.glance.text.Text
 import androidx.glance.text.TextStyle
 import com.shub39.grit.R
@@ -220,27 +218,6 @@ private fun Content(
             Column(
                 modifier = GlanceModifier.padding(start = 16.dp, end = 16.dp, bottom = 16.dp)
             ) {
-                Row {
-                    Text(
-                        text = "${habitWithAnalytics.weeklyComparisonData.average().roundToInt()} ",
-                        style = TextStyle(
-                            color = GlanceTheme.colors.onSurface,
-                            fontSize = 26.sp,
-                            fontWeight = FontWeight.Bold
-                        )
-                    )
-
-                    Text(
-                        text = if (size.width >= WidgetSize.Width4) {
-                            "times per week (avg)"
-                        } else "(avg)",
-                        style = TextStyle(
-                            color = GlanceTheme.colors.onSurface,
-                            fontStyle = FontStyle.Italic
-                        )
-                    )
-                }
-
                 Row(
                     horizontalAlignment = Alignment.CenterHorizontally,
                     modifier = GlanceModifier.fillMaxWidth()
@@ -259,7 +236,7 @@ private fun Content(
                             modifier = GlanceModifier.fillMaxHeight()
                         ) {
                             Box(
-                                modifier = GlanceModifier.padding(end =  4.dp)
+                                modifier = GlanceModifier.padding(end = 4.dp)
                             ) {
                                 Box(
                                     modifier = GlanceModifier
