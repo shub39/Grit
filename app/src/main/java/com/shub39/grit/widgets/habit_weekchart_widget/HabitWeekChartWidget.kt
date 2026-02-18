@@ -43,8 +43,6 @@ import androidx.glance.layout.padding
 import androidx.glance.layout.width
 import androidx.glance.preview.ExperimentalGlancePreviewApi
 import androidx.glance.preview.Preview
-import androidx.glance.state.GlanceStateDefinition
-import androidx.glance.state.PreferencesGlanceStateDefinition
 import androidx.glance.text.Text
 import androidx.glance.text.TextStyle
 import com.shub39.grit.R
@@ -68,8 +66,6 @@ class HabitWeekChartWidget : GlanceAppWidget(), KoinComponent {
     }
 
     override val sizeMode: SizeMode = SizeMode.Exact
-    override val stateDefinition: GlanceStateDefinition<Preferences> =
-        PreferencesGlanceStateDefinition
 
     override suspend fun provideGlance(
         context: Context,

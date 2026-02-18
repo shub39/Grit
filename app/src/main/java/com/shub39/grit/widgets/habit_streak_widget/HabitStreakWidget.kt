@@ -42,8 +42,6 @@ import androidx.glance.layout.size
 import androidx.glance.layout.width
 import androidx.glance.preview.ExperimentalGlancePreviewApi
 import androidx.glance.preview.Preview
-import androidx.glance.state.GlanceStateDefinition
-import androidx.glance.state.PreferencesGlanceStateDefinition
 import androidx.glance.text.FontStyle
 import androidx.glance.text.FontWeight
 import androidx.glance.text.Text
@@ -67,8 +65,6 @@ class HabitStreakWidget : GlanceAppWidget(), KoinComponent {
     }
 
     override val sizeMode: SizeMode = SizeMode.Exact
-    override val stateDefinition: GlanceStateDefinition<Preferences> =
-        PreferencesGlanceStateDefinition
 
     override suspend fun provideGlance(
         context: Context,
