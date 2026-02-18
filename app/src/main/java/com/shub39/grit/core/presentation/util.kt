@@ -49,12 +49,12 @@ fun habitNotification(context: Context, habit: Habit) {
 
     val builder = NotificationCompat
         .Builder(context, "1")
-        .setSmallIcon(R.mipmap.ic_launcher)
+        .setSmallIcon(R.drawable.notif_icon)
         .setContentTitle(habit.title)
         .setContentText(habit.description)
         .setPriority(NotificationCompat.PRIORITY_DEFAULT)
         .setAutoCancel(true)
-        .addAction(R.mipmap.ic_launcher, context.getString(R.string.mark_done), pendingBroadcast)
+        .addAction(R.drawable.notif_icon, context.getString(R.string.mark_done), pendingBroadcast)
 
     with(NotificationManagerCompat.from(context)) {
         if (
@@ -86,11 +86,11 @@ fun taskNotification(context: Context, task: Task) {
     )
     val builder = NotificationCompat
         .Builder(context, "1")
-        .setSmallIcon(R.mipmap.ic_launcher)
+        .setSmallIcon(R.drawable.notif_icon)
         .setContentTitle(task.title)
         .setPriority(NotificationCompat.PRIORITY_DEFAULT)
         .setAutoCancel(true)
-        .addAction(R.mipmap.ic_launcher, context.getString(R.string.mark_done), pendingBroadcast)
+        .addAction(R.drawable.notif_icon, context.getString(R.string.mark_done), pendingBroadcast)
 
     with(NotificationManagerCompat.from(context)){
         if (

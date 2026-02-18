@@ -1,8 +1,0 @@
-<appwidget-provider
-    xmlns:android="http://schemas.android.com/apk/res/android"
-    android:initialLayout="@layout/glance_default_loading_layout"
-    android:previewImage="@drawable/habit_overview_widget"
-    android:minWidth="100dp"
-    android:minHeight="30dp"
-    android:updatePeriodMillis="3600000"
-    android:resizeMode="horizontal|vertical" />

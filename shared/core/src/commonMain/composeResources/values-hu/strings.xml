@@ -114,7 +114,13 @@
     <string name="invalid_date_time">Kiválasztott ídő a múltban van :\\')</string>
     <string name="reorder_tasks">Tennivalók átrendezése</string>
     <string name="reorder_tasks_desc">Tennivalók átrendezése ha azok befejezettként vannak jelölve</string>
-    <string name="weeks">Hetek</string>
+    <string name="weeks">Hét</string>
     <string name="open_app">Alkalmazás megnyitása</string>
     <string name="all_tasks">Minden tennivaló</string>
+    <string name="made_by">Készítette</string>
+    <string name="clear_preference">Tennivalók törlése</string>
+    <string name="empty">Csúsztassa lefelé egy új elem hozzáadásához</string>
+    <string name="add_urgent_task">Sürgős tennivaló hozzáadása</string>
+    <string name="unlock_plus">Feloldás a plusz csomaggal</string>
+    <string name="translate">Fordítás</string>
 </resources>

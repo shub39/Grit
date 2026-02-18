@@ -7,6 +7,7 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.calculateEndPadding
 import androidx.compose.foundation.layout.calculateStartPadding
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.ExperimentalMaterial3ExpressiveApi
@@ -25,6 +26,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalLayoutDirection
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
@@ -37,6 +39,7 @@ import com.shub39.grit.billing.PaywallPage
 import com.shub39.grit.core.domain.MainAppState
 import com.shub39.grit.core.domain.Sections
 import com.shub39.grit.core.habits.presentation.ui.HabitsGraph
+import com.shub39.grit.core.presentation.ChangelogDialog
 import com.shub39.grit.core.presentation.settings.ui.SettingsGraph
 import com.shub39.grit.core.tasks.presentation.ui.TasksPage
 import com.shub39.grit.core.utils.LocalWindowSizeClass
@@ -102,13 +105,21 @@ private sealed interface AppSections {
 @Composable
 fun App(
     state: MainAppState,
-    onRefreshSub: () -> Unit
+    onRefreshSub: () -> Unit,
+    onDismissChangelog: () -> Unit
 ) {
     val mainNavController = rememberNavController()
-    
+
+    if (state.currentChangelog != null) {
+        ChangelogDialog(
+            currentLog = state.currentChangelog,
+            onDismissRequest = onDismissChangelog
+        )
+    }
+
     NavHost(
         navController = mainNavController,
-        startDestination = GlobalRoutes.App
+        startDestination = GlobalRoutes.App,
     ) {
         composable<GlobalRoutes.PaywallPage> {
             DisposableEffect(Unit) {
@@ -238,7 +249,10 @@ fun App(
                                 Sections.Tasks -> AppSections.TaskPages
                                 Sections.Habits -> AppSections.HabitsPages
                             },
-                            modifier = Modifier.background(MaterialTheme.colorScheme.background),
+                            contentAlignment = Alignment.Center,
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .background(MaterialTheme.colorScheme.background),
                             enterTransition = { fadeIn(animationSpec = tween(300)) },
                             exitTransition = { fadeOut(animationSpec = tween(300)) },
                             popEnterTransition = { fadeIn(animationSpec = tween(300)) },

@@ -82,7 +82,7 @@ class HabitRepository(
         return habitStatusDao.getHabitStatuses().map { it.toHabitStatus() }
     }
 
-    override fun getHabitStatus(): Flow<List<HabitWithAnalytics>> {
+    override fun getHabitsWithAnalytics(): Flow<List<HabitWithAnalytics>> {
         return habits.combine(habitStatuses) { habitsFlow, habitStatusesFlow ->
             habitsFlow.map { habit ->
                 val habitStatusesForHabit = habitStatusesFlow.filter { it.habitId == habit.id }
@@ -133,6 +133,18 @@ class HabitRepository(
         }.flowOn(Dispatchers.Default)
     }
 
+    override fun getHabitsWithStatus(): Flow<List<Pair<Habit, Boolean>>> {
+        return habits.combine(habitStatuses) { habitsFlow, statusFlow ->
+            habitsFlow.map { habit ->
+                val dates = statusFlow
+                    .filter { it.habitId == habit.id }
+                    .map { it.date }
+
+                habit to dates.any { it == LocalDate.now() }
+            }
+        }
+    }
+
     override suspend fun getStatusForHabit(id: Long): List<HabitStatus> {
         return habitStatusDao.getStatusForHabit(id).map { it.toHabitStatus() }
     }
@@ -141,7 +153,7 @@ class HabitRepository(
         habitStatusDao.insertHabitStatus(habitStatus.toHabitStatusEntity())
     }
 
-    override suspend fun deleteHabitStatus(id: Long, date: LocalDate) {
-        habitStatusDao.deleteStatus(id, date)
+    override suspend fun deleteHabitStatus(habitId: Long, date: LocalDate) {
+        habitStatusDao.deleteStatus(habitId, date)
     }
 }

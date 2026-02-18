@@ -2,6 +2,7 @@ package com.shub39.grit.core.presentation.settings
 
 import androidx.compose.runtime.Immutable
 import androidx.compose.runtime.Stable
+import com.shub39.grit.core.domain.Changelog
 import com.shub39.grit.core.domain.Sections
 import com.shub39.grit.core.domain.backup.ExportState
 import com.shub39.grit.core.domain.backup.RestoreState
@@ -20,16 +21,8 @@ data class SettingsState(
     val backupState: BackupState = BackupState(),
     val isBiometricLockOn: Boolean? = null,
     val isBiometricLockAvailable: Boolean = false,
-//    val serverState: ServerState = ServerState()
+    val changelog: Changelog = emptyList()
 )
-
-//@Stable
-//@Immutable
-//data class ServerState(
-//    val isRunning: Boolean = false,
-//    val serverPort: Int = 8080,
-//    val serverUrl: String? = null
-//)
 
 @Stable
 @Immutable

@@ -11,11 +11,12 @@ interface HabitRepo {
     suspend fun getHabitById(id: Long): Habit?
     suspend fun getHabitStatuses(): List<HabitStatus>
 
-    fun getHabitStatus(): Flow<List<HabitWithAnalytics>>
+    fun getHabitsWithAnalytics(): Flow<List<HabitWithAnalytics>>
     fun getCompletedHabitIds(): Flow<List<Long>>
     fun getOverallAnalytics(): Flow<OverallAnalytics>
+    fun getHabitsWithStatus(): Flow<List<Pair<Habit, Boolean>>>
 
     suspend fun getStatusForHabit(id: Long): List<HabitStatus>
     suspend fun insertHabitStatus(habitStatus: HabitStatus)
-    suspend fun deleteHabitStatus(id: Long, date: LocalDate)
+    suspend fun deleteHabitStatus(habitId: Long, date: LocalDate)
 }
