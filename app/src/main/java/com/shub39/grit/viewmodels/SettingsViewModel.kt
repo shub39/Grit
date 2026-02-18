@@ -4,6 +4,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.toArgb
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.shub39.grit.core.data.ChangelogManager
 import com.shub39.grit.core.data.Utils
 import com.shub39.grit.core.domain.GritDatastore
 import com.shub39.grit.core.domain.backup.ExportRepo
@@ -18,6 +19,7 @@ import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.flow.onStart
@@ -31,7 +33,7 @@ class SettingsViewModel(
     private val exportRepo: ExportRepo,
     private val restoreRepo: RestoreRepo,
     private val datastore: GritDatastore,
-//    private val server: GritServerRepository
+    private val changelogManager: ChangelogManager
 ) : ViewModel() {
     private var observeJob: Job? = null
 
@@ -40,6 +42,7 @@ class SettingsViewModel(
     val state = _state.asStateFlow()
         .onStart {
             observeJob()
+            getChangeLogs()
         }
         .stateIn(
             viewModelScope,
@@ -132,25 +135,19 @@ class SettingsViewModel(
         }
     }
 
+    private fun getChangeLogs() {
+        viewModelScope.launch {
+            _state.update {
+                it.copy(
+                    changelog = changelogManager.changelogs.first()
+                )
+            }
+        }
+    }
+
     private fun observeJob() = viewModelScope.launch {
         observeJob?.cancel()
         observeJob = launch {
-//            combine(
-//                server.serverPort,
-//                server.serverUrl,
-//                server.isRunning
-//            ) { port, serverUrl, isRunning ->
-//                _state.update {
-//                    it.copy(
-//                        serverState = it.serverState.copy(
-//                            serverPort = port,
-//                            serverUrl = serverUrl,
-//                            isRunning = isRunning
-//                        )
-//                    )
-//                }
-//            }.launchIn(this)
-
             datastore.getTaskReorderPref()
                 .onEach { pref ->
                     _state.update {

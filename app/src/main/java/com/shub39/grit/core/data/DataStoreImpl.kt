@@ -37,7 +37,7 @@ class DataStoreImpl(
         private val biometricLockKey = booleanPreferencesKey("biometric")
         private val taskReorderKey = booleanPreferencesKey("task_reorder")
         private val compactHabitView = booleanPreferencesKey("compact_habit_view")
-        private val serverPortKey = intPreferencesKey("server_port")
+        private val lastChangelogShownKey = stringPreferencesKey("last_changelog_shown")
     }
 
     override suspend fun resetAppTheme() {
@@ -185,13 +185,13 @@ class DataStoreImpl(
         }
     }
 
-    override fun getServerPort(): Flow<Int> = datastore.data.map { prefs ->
-        prefs[serverPortKey] ?: 8080
-    }
+    override fun getLastChangelogShown(): Flow<String> = datastore.data
+        .map { prefs -> prefs[lastChangelogShownKey] ?: "" }
 
-    override suspend fun setServerPort(port: Int) {
-        datastore.edit { prefs ->
-            prefs[serverPortKey] = port
+    override suspend fun updateLastChangelogShown(version: String) {
+        datastore.edit { settings ->
+            settings[lastChangelogShownKey] = version
         }
     }
+
 }

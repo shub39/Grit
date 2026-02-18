@@ -37,6 +37,7 @@ import com.shub39.grit.core.presentation.getRandomLine
 import com.shub39.grit.core.presentation.settings.SettingsAction
 import com.shub39.grit.core.presentation.settings.SettingsState
 import com.shub39.grit.core.presentation.settings.ui.component.AboutApp
+import com.shub39.grit.core.presentation.settings.ui.component.detachedItemShape
 import com.shub39.grit.core.presentation.settings.ui.component.endItemShape
 import com.shub39.grit.core.presentation.settings.ui.component.leadingItemShape
 import com.shub39.grit.core.presentation.settings.ui.component.listItemColors
@@ -48,6 +49,7 @@ import grit.shared.core.generated.resources.backup
 import grit.shared.core.generated.resources.backup_desc
 import grit.shared.core.generated.resources.biometric_lock
 import grit.shared.core.generated.resources.biometric_lock_desc
+import grit.shared.core.generated.resources.check_list
 import grit.shared.core.generated.resources.download
 import grit.shared.core.generated.resources.grit_plus
 import grit.shared.core.generated.resources.look_and_feel
@@ -75,7 +77,7 @@ fun RootPage(
     onNavigateToLookAndFeel: () -> Unit,
     onNavigateToBackup: () -> Unit,
     onNavigateToPaywall: () -> Unit,
-//    onNavigateToServer: () -> Unit
+    onNavigateToChangelog: () -> Unit
 ) {
     val context = LocalContext.current
 
@@ -331,35 +333,6 @@ fun RootPage(
                         colors = listItemColors()
                     )
 
-//                    ListItem(
-//                        modifier = Modifier
-//                            .clip(middleItemShape())
-//                            .clickable { onNavigateToServer() },
-//                        colors = listItemColors(),
-//                        headlineContent = {
-//                            Text(
-//                                text = stringResource(Res.string.server)
-//                            )
-//                        },
-//                        leadingContent = {
-//                            Icon(
-//                                imageVector = Icons.Rounded.DesktopWindows,
-//                                contentDescription = null
-//                            )
-//                        },
-//                        supportingContent = {
-//                            Text(
-//                                text = stringResource(Res.string.server_desc)
-//                            )
-//                        },
-//                        trailingContent = {
-//                            Icon(
-//                                imageVector = Icons.AutoMirrored.Rounded.ArrowForwardIos,
-//                                contentDescription = "Navigate"
-//                            )
-//                        },
-//                    )
-
                     ListItem(
                         modifier = Modifier
                             .clip(endItemShape())
@@ -389,6 +362,34 @@ fun RootPage(
                         }
                     )
                 }
+            }
+
+            item { Spacer(modifier = Modifier.height(16.dp)) }
+
+            item {
+                ListItem(
+                    colors = listItemColors(),
+                    leadingContent = {
+                        Icon(
+                            imageVector = vectorResource(Res.drawable.check_list),
+                            contentDescription = null
+                        )
+                    },
+                    trailingContent = {
+                        Icon(
+                            imageVector = vectorResource(Res.drawable.arrow_forward),
+                            contentDescription = "Navigate"
+                        )
+                    },
+                    headlineContent = {
+                        Text(
+                            text = "Changelog"
+                        )
+                    },
+                    modifier = Modifier
+                        .clip(detachedItemShape())
+                        .clickable { onNavigateToChangelog() }
+                )
             }
         }
     }

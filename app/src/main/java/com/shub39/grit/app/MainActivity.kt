@@ -72,7 +72,8 @@ class MainActivity : FragmentActivity() {
                     if (showContent) {
                         App(
                             state = state,
-                            onRefreshSub = { mainViewModel.updateSubscription() }
+                            onRefreshSub = { mainViewModel.updateSubscription() },
+                            onDismissChangelog = { mainViewModel.dismissChangelog() }
                         )
                     } else {
                         InitialLoading()

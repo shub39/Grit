@@ -3,8 +3,10 @@ package com.shub39.grit.viewmodels
 import androidx.compose.ui.graphics.Color
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.shub39.grit.BuildConfig
 import com.shub39.grit.billing.BillingHandler
 import com.shub39.grit.billing.SubscriptionResult
+import com.shub39.grit.core.data.ChangelogManager
 import com.shub39.grit.core.domain.GritDatastore
 import com.shub39.grit.core.domain.MainAppState
 import kotlinx.coroutines.Job
@@ -12,6 +14,7 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.combine
+import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.flow.onStart
@@ -23,7 +26,8 @@ import org.koin.android.annotation.KoinViewModel
 @KoinViewModel
 class MainViewModel(
     private val datastore: GritDatastore,
-    private val billingHandler: BillingHandler
+    private val billingHandler: BillingHandler,
+    private val changelogManager: ChangelogManager
 ) : ViewModel() {
     var observerJob: Job? = null
 
@@ -32,6 +36,7 @@ class MainViewModel(
     val state = _state.asStateFlow()
         .onStart {
             checkSubscription()
+            checkChangelog()
             observeDatastore()
         }
         .stateIn(
@@ -109,6 +114,20 @@ class MainViewModel(
         }
     }
 
+    private fun checkChangelog() {
+        viewModelScope.launch {
+            val changeLogs = changelogManager.changelogs.first()
+            val lastShownChangelog = datastore.getLastChangelogShown().first()
+
+            if (BuildConfig.DEBUG || lastShownChangelog != BuildConfig.VERSION_NAME) {
+                _state.update {
+                    it.copy(currentChangelog = changeLogs.firstOrNull())
+                }
+                datastore.updateLastChangelogShown(BuildConfig.VERSION_NAME)
+            }
+        }
+    }
+
     private suspend fun checkSubscription() {
         val isSubscribed = billingHandler.userResult()
 
@@ -118,5 +137,9 @@ class MainViewModel(
             }
             else -> {}
         }
+    }
+
+    fun dismissChangelog() {
+        _state.update { it.copy(currentChangelog = null) }
     }
 }

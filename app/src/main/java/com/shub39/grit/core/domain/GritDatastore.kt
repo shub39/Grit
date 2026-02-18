@@ -48,6 +48,6 @@ interface GritDatastore {
     fun getCompactViewPref(): Flow<Boolean>
     suspend fun setCompactView(pref: Boolean)
 
-    fun getServerPort(): Flow<Int>
-    suspend fun setServerPort(port: Int)
+    fun getLastChangelogShown(): Flow<String>
+    suspend fun updateLastChangelogShown(version: String)
 }
