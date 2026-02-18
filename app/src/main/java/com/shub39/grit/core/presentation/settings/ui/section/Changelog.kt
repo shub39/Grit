@@ -20,7 +20,6 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalLayoutDirection
-import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -75,9 +74,8 @@ fun Changelog(
             changelog.forEach { versionEntry ->
                 item {
                     Text(
-                        text = "# ${versionEntry.version}",
-                        style = MaterialTheme.typography.headlineSmall.copy(
-                            fontStyle = FontStyle.Italic,
+                        text = versionEntry.version,
+                        style = MaterialTheme.typography.headlineLarge.copy(
                             fontWeight = FontWeight.Bold
                         )
                     )
@@ -103,7 +101,7 @@ fun Changelog(
                 }
 
                 item {
-                    Spacer(modifier = Modifier.height(16.dp))
+                    Spacer(modifier = Modifier.height(32.dp))
                 }
             }
         }
