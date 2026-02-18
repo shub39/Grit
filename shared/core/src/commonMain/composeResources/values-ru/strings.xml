@@ -1,3 +1,4 @@
+<?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="made_by">Создано</string>
     <string name="tasks">Задачи</string>
@@ -124,11 +125,16 @@
     <string name="week_breakdown">Разбивка по дням недели</string>
     <string name="foss">Вы используйте вариант приложения с открытым исходным кодом</string>
     <string name="download_from_playstore">Скачать с Google Play</string>
-    <string name="foss_desc">Все улучшения разблокированы. Эта версия приложения не поддерживает встроенные покупки. Если это приложение сделало вашу жизнь лучше, поддержите меня, сделав пожертвование.</string>
+    <string name="foss_desc">Все улучшения разблокированы. Эта версия приложения не поддерживает встроенные покупки. Если это приложение сделало вашу жизнь лучше, поддержите меня, сделав пожертвование</string>
     <string name="no_habit_for_today">Нет привычек на сегодня</string>
     <string name="add_reminder">Добавить напоминание</string>
     <string name="invalid_date_time">Выбранное время уже прошло :\')</string>
     <string name="reorder_tasks">Изменить порядок задач</string>
     <string name="reorder_tasks_desc">Изменить порядок задач отмеченных выполненными</string>
     <string name="weeks">Неделя</string>
+    <string name="save">Сохранить</string>
+    <string name="open_app">Открыть приложение</string>
+    <string name="all_tasks">Все задачи</string>
+    <string name="server_channel_name">Канал уведомлений сервера</string>
+    <string name="server_channel_description">канал для отправки серверу статуса обновлений</string>
 </resources>
