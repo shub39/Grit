@@ -248,7 +248,7 @@ private fun Content(
                             provider = ImageProvider(R.drawable.heat),
                             contentDescription = null,
                             colorFilter = ColorFilter.tint(GlanceTheme.colors.onPrimary),
-                            modifier = GlanceModifier.size(32.dp)
+                            modifier = GlanceModifier.size(28.dp)
                         )
 
                         if (size.width >= WidgetSize.Width4) {
@@ -260,7 +260,7 @@ private fun Content(
                                     maxLines = 1,
                                     style = TextStyle(
                                         fontWeight = FontWeight.Bold,
-                                        fontSize = 28.sp,
+                                        fontSize = 24.sp,
                                         color = GlanceTheme.colors.onPrimary
                                     )
                                 )
@@ -332,7 +332,7 @@ private fun Content(
                             provider = ImageProvider(R.drawable.heat_outlined),
                             contentDescription = null,
                             colorFilter = ColorFilter.tint(GlanceTheme.colors.onSecondary),
-                            modifier = GlanceModifier.size(32.dp)
+                            modifier = GlanceModifier.size(28.dp)
                         )
 
                         if (size.width >= WidgetSize.Width4) {
@@ -344,7 +344,7 @@ private fun Content(
                                     maxLines = 1,
                                     style = TextStyle(
                                         fontWeight = FontWeight.Bold,
-                                        fontSize = 28.sp,
+                                        fontSize = 24.sp,
                                         color = GlanceTheme.colors.onSecondary
                                     )
                                 )

@@ -132,7 +132,7 @@ class HabitWeekChartWidget : GlanceAppWidget(), KoinComponent {
                         reminder = false
                     ),
                     statuses = listOf(),
-                    weeklyComparisonData = (0..8).map { it.toDouble() },
+                    weeklyComparisonData = (0..7).map { it.toDouble() },
                     weekDayFrequencyData = mapOf(),
                     currentStreak = 12,
                     bestStreak = 20,
