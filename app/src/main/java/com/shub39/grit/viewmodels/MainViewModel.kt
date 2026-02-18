@@ -123,7 +123,6 @@ class MainViewModel(
                 _state.update {
                     it.copy(currentChangelog = changeLogs.firstOrNull())
                 }
-                datastore.updateLastChangelogShown(BuildConfig.VERSION_NAME)
             }
         }
     }
@@ -141,5 +140,8 @@ class MainViewModel(
 
     fun dismissChangelog() {
         _state.update { it.copy(currentChangelog = null) }
+        viewModelScope.launch {
+            datastore.updateLastChangelogShown(BuildConfig.VERSION_NAME)
+        }
     }
 }

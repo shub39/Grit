@@ -23,4 +23,7 @@
     <string name="stop">Stop</string>
     <string name="nothing_to_show">Nothing to show…</string>
     <string name="habit_week_chart_widget">Habit Week Chart</string>
+    <string name="current_streak">Current Streak</string>
+    <string name="day">Day</string>
+    <string name="best_streak">Best Streak</string>
 </resources>

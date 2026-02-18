@@ -1,6 +1,7 @@
 package com.shub39.grit.core.data
 
 import android.content.Context
+import android.util.Log
 import com.shub39.grit.core.domain.Changelog
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -18,13 +19,17 @@ class ChangelogManager(
         .onStart { getChangelogs() }
 
     private fun getChangelogs() {
-        val rawJson = context.assets
-            .open("changelog.json")
-            .bufferedReader()
-            .use { it.readText() }
+        try {
+            val rawJson = context.assets
+                .open("changelog.json")
+                .bufferedReader()
+                .use { it.readText() }
 
-        val json = Json.decodeFromString<Changelog>(rawJson)
+            val json = Json.decodeFromString<Changelog>(rawJson)
 
-        _changelogs.update { json }
+            _changelogs.update { json }
+        } catch (e: Exception) {
+            Log.e("ChangelogManager", "Error reading changelog", e)
+        }
     }
 }

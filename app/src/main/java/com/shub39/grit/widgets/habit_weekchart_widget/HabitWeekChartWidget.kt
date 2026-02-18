@@ -224,7 +224,7 @@ private fun Content(
                             else -> 6
                         }
                     )
-                    val maxData = data.maxOrNull() ?: 0.0
+                    val maxData = data.maxOrNull()?.coerceAtLeast(1.0) ?: 1.0
 
                     data.forEach { double ->
                         Row(

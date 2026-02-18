@@ -49,6 +49,7 @@ import grit.shared.core.generated.resources.backup
 import grit.shared.core.generated.resources.backup_desc
 import grit.shared.core.generated.resources.biometric_lock
 import grit.shared.core.generated.resources.biometric_lock_desc
+import grit.shared.core.generated.resources.changelog
 import grit.shared.core.generated.resources.check_list
 import grit.shared.core.generated.resources.download
 import grit.shared.core.generated.resources.grit_plus
@@ -383,7 +384,7 @@ fun RootPage(
                     },
                     headlineContent = {
                         Text(
-                            text = "Changelog"
+                            text = stringResource(Res.string.changelog)
                         )
                     },
                     modifier = Modifier

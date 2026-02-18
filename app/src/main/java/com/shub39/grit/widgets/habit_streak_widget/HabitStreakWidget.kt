@@ -252,7 +252,7 @@ private fun Content(
 
                             Row {
                                 Text(
-                                    text = "${habitWithAnalytics.currentStreak} Day ",
+                                    text = "${habitWithAnalytics.currentStreak} " + context.getString(R.string.day) + " ",
                                     maxLines = 1,
                                     style = TextStyle(
                                         fontWeight = FontWeight.Bold,
@@ -262,7 +262,7 @@ private fun Content(
                                 )
 
                                 Text(
-                                    text = "Current Streak",
+                                    text = context.getString(R.string.current_streak),
                                     maxLines = 1,
                                     style = TextStyle(
                                         fontStyle = FontStyle.Italic,
@@ -275,7 +275,7 @@ private fun Content(
 
                             Column {
                                 Text(
-                                    text = "${habitWithAnalytics.currentStreak} Day ",
+                                    text = "${habitWithAnalytics.currentStreak} " + context.getString(R.string.day) + " ",
                                     maxLines = 1,
                                     style = TextStyle(
                                         fontWeight = FontWeight.Bold,
@@ -285,7 +285,7 @@ private fun Content(
                                 )
 
                                 Text(
-                                    text = "Current Streak",
+                                    text = context.getString(R.string.current_streak),
                                     maxLines = 1,
                                     style = TextStyle(
                                         fontStyle = FontStyle.Italic,
@@ -336,7 +336,7 @@ private fun Content(
 
                             Row {
                                 Text(
-                                    text = "${habitWithAnalytics.bestStreak} Day ",
+                                    text = "${habitWithAnalytics.bestStreak} " + context.getString(R.string.day) + " ",
                                     maxLines = 1,
                                     style = TextStyle(
                                         fontWeight = FontWeight.Bold,
@@ -346,7 +346,7 @@ private fun Content(
                                 )
 
                                 Text(
-                                    text = "Best Streak",
+                                    text = context.getString(R.string.best_streak),
                                     maxLines = 1,
                                     style = TextStyle(
                                         fontStyle = FontStyle.Italic,
@@ -359,21 +359,21 @@ private fun Content(
 
                             Column {
                                 Text(
-                                    text = "${habitWithAnalytics.bestStreak} Day ",
+                                    text = "${habitWithAnalytics.bestStreak} " + context.getString(R.string.day) + " ",
                                     maxLines = 1,
                                     style = TextStyle(
                                         fontWeight = FontWeight.Bold,
                                         fontSize = 20.sp,
-                                        color = GlanceTheme.colors.onPrimary
+                                        color = GlanceTheme.colors.onSecondary
                                     )
                                 )
 
                                 Text(
-                                    text = "Best Streak",
+                                    text = context.getString(R.string.best_streak),
                                     maxLines = 1,
                                     style = TextStyle(
                                         fontStyle = FontStyle.Italic,
-                                        color = GlanceTheme.colors.onPrimary
+                                        color = GlanceTheme.colors.onSecondary
                                     )
                                 )
                             }
