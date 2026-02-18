@@ -187,7 +187,7 @@ private fun Content(
                         text = taskGroup.key.name,
                         style = TextStyle(
                             fontWeight = FontWeight.Bold,
-                            color = GlanceTheme.colors.onSurface
+                            color = GlanceTheme.colors.onSurfaceVariant
                         )
                     )
                     Spacer(GlanceModifier.height(8.dp))
@@ -253,7 +253,8 @@ private fun Content(
 }
 
 @OptIn(ExperimentalGlancePreviewApi::class)
-@Preview
+@Preview(heightDp = 200, widthDp = 240)
+@Preview(heightDp = 200, widthDp = 300)
 @Composable
 private fun GlancePreview() {
     Content(
@@ -263,7 +264,7 @@ private fun GlancePreview() {
                 name = "Category $it",
                 index = it,
                 color = CategoryColors.GRAY.color
-            ) to (0..10).map { taskId ->
+            ) to (0..1).map { taskId ->
                 Task(
                     id = taskId.toLong(),
                     categoryId = it.toLong(),
