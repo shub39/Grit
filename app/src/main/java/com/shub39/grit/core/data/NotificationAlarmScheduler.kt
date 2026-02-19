@@ -51,7 +51,7 @@ class NotificationAlarmScheduler(
         }
 
         val pendingIntent = PendingIntent.getBroadcast(
-            context, 0, notificationIntent,
+            context, habit.id.toInt(), notificationIntent,
             PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE
         )
 
@@ -85,7 +85,7 @@ class NotificationAlarmScheduler(
         }
 
         val pendingIntent = PendingIntent.getBroadcast(
-            context, 0, notificationIntent,
+            context, task.id.toInt(), notificationIntent,
             PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE
         )
 
@@ -104,7 +104,7 @@ class NotificationAlarmScheduler(
         }
 
         val pendingIntent = PendingIntent.getBroadcast(
-            context, 0, cancelIntent,
+            context, habit.id.toInt(), cancelIntent,
             PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE
         )
 
@@ -118,7 +118,7 @@ class NotificationAlarmScheduler(
         }
 
         val pendingIntent = PendingIntent.getBroadcast(
-            context, 0, cancelIntent,
+            context, task.id.toInt(), cancelIntent,
             PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE
         )
 

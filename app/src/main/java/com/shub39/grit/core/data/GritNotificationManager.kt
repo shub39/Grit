@@ -8,7 +8,6 @@ import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.util.Log
-import androidx.annotation.RequiresPermission
 import androidx.core.app.ActivityCompat
 import androidx.core.app.NotificationCompat
 import androidx.core.app.NotificationManagerCompat
@@ -45,7 +44,6 @@ class GritNotificationManager(
     private val notificationManager by lazy { NotificationManagerCompat.from(context) }
 
     // shows habit notification if permission granted
-    @RequiresPermission(Manifest.permission.POST_NOTIFICATIONS)
     fun habitNotification(habit: Habit) {
         Log.d(TAG, "Sending Habit Notification")
 
@@ -54,7 +52,7 @@ class GritNotificationManager(
             action = IntentActions.ADD_HABIT_STATUS.action
         }
         val pendingBroadcast = PendingIntent.getBroadcast(
-            context, 0, intent, PendingIntent.FLAG_IMMUTABLE
+            context, habit.id.toInt(), intent, PendingIntent.FLAG_IMMUTABLE
         )
 
         val builder = NotificationCompat
