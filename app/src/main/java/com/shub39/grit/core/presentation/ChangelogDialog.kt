@@ -8,12 +8,11 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.material3.BasicAlertDialog
 import androidx.compose.material3.Card
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.HorizontalDivider
-import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
@@ -23,10 +22,8 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import com.shub39.grit.core.domain.VersionEntry
 import grit.shared.core.generated.resources.Res
-import grit.shared.core.generated.resources.arrow_forward
 import grit.shared.core.generated.resources.changelog
 import grit.shared.core.generated.resources.done
-import org.jetbrains.compose.resources.painterResource
 import org.jetbrains.compose.resources.stringResource
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -62,21 +59,16 @@ fun ChangelogDialog(
                 verticalArrangement = Arrangement.spacedBy(8.dp),
                 contentPadding = PaddingValues(vertical = 16.dp)
             ) {
-                items(currentLog.changes) { change ->
+                itemsIndexed(currentLog.changes) { index, change ->
                     Row(
                         modifier = Modifier.padding(horizontal = 16.dp),
                         horizontalArrangement = Arrangement.spacedBy(4.dp)
                     ) {
-                        Icon(
-                            painter = painterResource(Res.drawable.arrow_forward),
-                            contentDescription = null
-                        )
-
                         Text(
-                            text = change,
-                            fontWeight = FontWeight.Bold,
-                            modifier = Modifier.weight(1f)
+                            text = "${index.plus(1)}.",
+                            fontWeight = FontWeight.Bold
                         )
+                        Text(text = change)
                     }
                 }
 

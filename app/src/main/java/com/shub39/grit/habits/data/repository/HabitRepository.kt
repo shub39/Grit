@@ -1,5 +1,6 @@
 package com.shub39.grit.habits.data.repository
 
+import com.shub39.grit.core.data.GritNotificationManager
 import com.shub39.grit.core.data.toHabit
 import com.shub39.grit.core.data.toHabitEntity
 import com.shub39.grit.core.data.toHabitStatus
@@ -36,6 +37,7 @@ class HabitRepository(
     private val habitDao: HabitsDao,
     private val habitStatusDao: HabitStatusDao,
     private val datastore: GritDatastore,
+    private val notificationManager: GritNotificationManager
 ) : HabitRepo {
 
     private val habits = habitDao
@@ -151,6 +153,10 @@ class HabitRepository(
 
     override suspend fun insertHabitStatus(habitStatus: HabitStatus) {
         habitStatusDao.insertHabitStatus(habitStatus.toHabitStatusEntity())
+
+        if (habitStatus.date == LocalDate.now()) {
+            notificationManager.cancelNotification(habitId = habitStatus.habitId.toInt())
+        }
     }
 
     override suspend fun deleteHabitStatus(habitId: Long, date: LocalDate) {

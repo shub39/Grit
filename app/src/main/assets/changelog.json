@@ -2,7 +2,8 @@
   {
     "version": "5.6.1",
     "changes": [
-      "Fixed time picker UI flicker #237"
+      "Fixed time picker UI flicker #237",
+      "Notifications are now dismissed if marked as done within app #238"
     ]
   },
   {

@@ -18,9 +18,9 @@ import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import androidx.fragment.app.FragmentActivity
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.shub39.grit.R
+import com.shub39.grit.core.data.GritNotificationManager.Companion.createNotificationChannel
 import com.shub39.grit.core.data.Utils
 import com.shub39.grit.core.presentation.component.InitialLoading
-import com.shub39.grit.core.presentation.createNotificationChannel
 import com.shub39.grit.core.theme.GritTheme
 import com.shub39.grit.core.utils.LocalWindowSizeClass
 import com.shub39.grit.viewmodels.MainViewModel
