@@ -1,5 +1,8 @@
 # Changelog
 
+## 5.6.1
+- Fixed time picker UI flicker #237
+
 ## 5.6.0
 - Fixed Tasks widget corners, Added Refresh button
 - Fixed Habits Overview Widget proportions, Added Refresh button

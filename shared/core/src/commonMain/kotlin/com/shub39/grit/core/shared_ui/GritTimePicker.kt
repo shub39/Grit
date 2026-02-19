@@ -1,9 +1,7 @@
 package com.shub39.grit.core.shared_ui
 
-import androidx.compose.animation.AnimatedContent
 import androidx.compose.animation.animateContentSize
-import androidx.compose.foundation.layout.heightIn
-import androidx.compose.foundation.layout.widthIn
+import androidx.compose.animation.core.tween
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -12,7 +10,6 @@ import androidx.compose.material3.TextButton
 import androidx.compose.material3.TimeInput
 import androidx.compose.material3.TimePicker
 import androidx.compose.material3.TimePickerDialog
-import androidx.compose.material3.TimePickerLayoutType
 import androidx.compose.material3.TimePickerState
 import androidx.compose.material3.rememberTimePickerState
 import androidx.compose.runtime.Composable
@@ -21,7 +18,6 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.unit.dp
 import grit.shared.core.generated.resources.Res
 import grit.shared.core.generated.resources.clock
 import grit.shared.core.generated.resources.done
@@ -41,7 +37,7 @@ fun GritTimePicker(
     var timeInput by remember { mutableStateOf(false) }
 
     TimePickerDialog(
-        modifier = modifier.animateContentSize(),
+        modifier = modifier.animateContentSize(animationSpec = tween(0)),
         onDismissRequest = onDismissRequest,
         title = {
             Text(text = stringResource(Res.string.select_time))
@@ -66,20 +62,10 @@ fun GritTimePicker(
             }
         }
     ) {
-        AnimatedContent(
-            targetState = timeInput
-        ) {
-            if (it) {
-                TimeInput(state = state)
-            } else {
-                TimePicker(
-                    state = state,
-                    layoutType = TimePickerLayoutType.Vertical,
-                    modifier = Modifier
-                        .widthIn(max = 800.dp)
-                        .heightIn(max = 800.dp)
-                )
-            }
+        if (timeInput) {
+            TimeInput(state = state)
+        } else {
+            TimePicker(state = state)
         }
     }
 }
