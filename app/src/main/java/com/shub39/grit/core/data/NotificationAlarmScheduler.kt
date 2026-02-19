@@ -26,7 +26,10 @@ class NotificationAlarmScheduler(
     private val context: Context
 ) : AlarmScheduler {
 
-    private val tag = "NotificationAlarmScheduler"
+    companion object {
+        private const val TAG = "NotificationAlarmScheduler"
+    }
+
     private val alarmManager = context.getSystemService(Context.ALARM_SERVICE) as AlarmManager
 
     override fun schedule(habit: Habit) {
@@ -42,15 +45,13 @@ class NotificationAlarmScheduler(
             }
         }
 
-        val notificationIntent = Intent(context, NotificationReceiver::class.java).apply {
+        val notificationIntent = Intent(context, GritIntentReceiver::class.java).apply {
             action = IntentActions.HABIT_NOTIFICATION.action
             putExtra("habit_id", habit.id)
         }
 
         val pendingIntent = PendingIntent.getBroadcast(
-            context,
-            habit.id.toInt(),
-            notificationIntent,
+            context, habit.id.toInt(), notificationIntent,
             PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE
         )
 
@@ -61,7 +62,7 @@ class NotificationAlarmScheduler(
         )
 
         Log.d(
-            tag,
+            TAG,
             "Scheduled: Habit '${habit.title}' at $scheduleTime"
         )
     }
@@ -74,19 +75,17 @@ class NotificationAlarmScheduler(
         val now = LocalDateTime.now()
 
         if (scheduleTime < now) {
-            Log.d(tag, "Task '${task.title}' reminder time is in the past")
+            Log.d(TAG, "Task '${task.title}' reminder time is in the past")
             return
         }
 
-        val notificationIntent = Intent(context, NotificationReceiver::class.java).apply {
+        val notificationIntent = Intent(context, GritIntentReceiver::class.java).apply {
             action = IntentActions.TASK_NOTIFICATION.action
             putExtra("task_id", task.id)
         }
 
         val pendingIntent = PendingIntent.getBroadcast(
-            context,
-            task.id.toInt(),
-            notificationIntent,
+            context, task.id.toInt(), notificationIntent,
             PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE
         )
 
@@ -96,39 +95,35 @@ class NotificationAlarmScheduler(
             pendingIntent
         )
 
-        Log.d(tag, "Scheduled: Task '${task.title}' at $scheduleTime")
+        Log.d(TAG, "Scheduled: Task '${task.title}' at $scheduleTime")
     }
 
     override fun cancel(habit: Habit) {
-        val cancelIntent = Intent(context, NotificationReceiver::class.java).apply {
+        val cancelIntent = Intent(context, GritIntentReceiver::class.java).apply {
             action = IntentActions.HABIT_NOTIFICATION.action
         }
 
         val pendingIntent = PendingIntent.getBroadcast(
-            context,
-            habit.id.toInt(),
-            cancelIntent,
+            context, habit.id.toInt(), cancelIntent,
             PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE
         )
 
         alarmManager.cancel(pendingIntent)
-        Log.d(tag, "Cancelled: Habit '${habit.title}'")
+        Log.d(TAG, "Cancelled: Habit '${habit.title}'")
     }
 
     override fun cancel(task: Task) {
-        val cancelIntent = Intent(context, NotificationReceiver::class.java).apply {
+        val cancelIntent = Intent(context, GritIntentReceiver::class.java).apply {
             action = IntentActions.TASK_NOTIFICATION.action
         }
 
         val pendingIntent = PendingIntent.getBroadcast(
-            context,
-            task.id.toInt(),
-            cancelIntent,
+            context, task.id.toInt(), cancelIntent,
             PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE
         )
 
         alarmManager.cancel(pendingIntent)
-        Log.d(tag, "Cancelled: Task '${task.title}'")
+        Log.d(TAG, "Cancelled: Task '${task.title}'")
     }
 
     override fun cancelAll() {

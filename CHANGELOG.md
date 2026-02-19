@@ -1,5 +1,9 @@
 # Changelog
 
+## 5.6.1
+- Fixed time picker UI flicker #237
+- Notifications are now dismissed if marked as done within app #238
+
 ## 5.6.0
 - Fixed Tasks widget corners, Added Refresh button
 - Fixed Habits Overview Widget proportions, Added Refresh button

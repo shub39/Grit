@@ -4,14 +4,11 @@ import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
 import android.util.Log
-import androidx.core.app.NotificationManagerCompat
 import com.shub39.grit.core.domain.AlarmScheduler
 import com.shub39.grit.core.domain.GritDatastore
 import com.shub39.grit.core.domain.IntentActions
 import com.shub39.grit.core.habits.domain.HabitRepo
 import com.shub39.grit.core.habits.domain.HabitStatus
-import com.shub39.grit.core.presentation.habitNotification
-import com.shub39.grit.core.presentation.taskNotification
 import com.shub39.grit.core.tasks.domain.TaskRepo
 import com.shub39.grit.core.utils.now
 import kotlinx.coroutines.CoroutineScope
@@ -24,14 +21,17 @@ import org.koin.core.component.KoinComponent
 import org.koin.core.component.get
 import kotlin.time.ExperimentalTime
 
-class NotificationReceiver : BroadcastReceiver(), KoinComponent {
+class GritIntentReceiver : BroadcastReceiver(), KoinComponent {
 
-    private val tag = "NotificationReceiver"
+    companion object {
+        private const val TAG = "GritIntentReceiver"
+    }
+
     private val receiverScope = CoroutineScope(Dispatchers.IO + SupervisorJob())
 
     @OptIn(ExperimentalTime::class)
     override fun onReceive(context: Context, intent: Intent?) {
-        Log.d(tag, "Received intent")
+        Log.d(TAG, "Received intent")
         val pendingResult = goAsync()
 
         receiverScope.launch {
@@ -42,7 +42,7 @@ class NotificationReceiver : BroadcastReceiver(), KoinComponent {
                 if (intent != null && !pauseNotifications) {
                     when (intent.action) {
                         IntentActions.HABIT_NOTIFICATION.action -> {
-                            Log.d(tag, "Habit notification received")
+                            Log.d(TAG, "Habit notification intent received")
                             val habitId = intent.getLongExtra("habit_id", -1)
                             if (habitId < 0L) return@launch
 
@@ -55,34 +55,35 @@ class NotificationReceiver : BroadcastReceiver(), KoinComponent {
                             val habitStatus = habitRepo.getStatusForHabit(habitId)
 
                             if (habitStatus.any { it.date == LocalDate.now() }) {
-                                Log.d(tag, "Habit already completed today")
+                                Log.d(TAG, "Habit already completed today")
                             } else {
-                                habitNotification(context, habit)
+                                get<GritNotificationManager>().habitNotification(habit)
                             }
 
                             get<AlarmScheduler>().schedule(habit)
                         }
 
                         IntentActions.ADD_HABIT_STATUS.action -> {
-                            Log.d(tag, "Add habit status received")
+                            Log.d(TAG, "Add habit status intent received")
                             val habitId = intent.getLongExtra("habit_id", -1)
                             if (habitId < 0) return@launch
 
                             val habitRepo = get<HabitRepo>()
 
-                            val habitStatus = HabitStatus(
-                                habitId = habitId,
-                                date = LocalDate.now()
+                            habitRepo.insertHabitStatus(
+                                HabitStatus(
+                                    habitId = habitId,
+                                    date = LocalDate.now()
+                                )
                             )
-                            habitRepo.insertHabitStatus(habitStatus)
 
-                            Log.d(tag, "Habit status added successfully")
+                            Log.d(TAG, "Habit status added successfully")
 
-                            NotificationManagerCompat.from(context).cancel(habitId.toInt())
+                            get<GritNotificationManager>().cancelNotification(habitId.toInt())
                         }
 
                         IntentActions.MARK_TASK_DONE.action -> {
-                            Log.d(tag, "Mark task done received")
+                            Log.d(TAG, "Mark task done intent received")
                             val taskId = intent.getLongExtra("task_id", -1)
                             if (taskId < 0) return@launch
 
@@ -93,11 +94,11 @@ class NotificationReceiver : BroadcastReceiver(), KoinComponent {
 
                             taskRepo.upsertTask(task.copy(status = true, reminder = null))
 
-                            NotificationManagerCompat.from(context).cancel(taskId.toInt())
+                            get<GritNotificationManager>().cancelNotification(task)
                         }
 
                         IntentActions.TASK_NOTIFICATION.action -> {
-                            Log.d(tag, "Task notification received")
+                            Log.d(TAG, "Task notification intent received")
                             val taskId = intent.getLongExtra("task_id", -1)
                             if (taskId < 0) return@launch
 
@@ -105,8 +106,8 @@ class NotificationReceiver : BroadcastReceiver(), KoinComponent {
 
                             val task = taskRepo.getTaskById(taskId) ?: return@launch
                             if (!task.status && task.reminder != null) {
-                                Log.d(tag, "Task notification")
-                                taskNotification(context, task)
+                                Log.d(TAG, "sending Task notification")
+                                get<GritNotificationManager>().taskNotification(task)
                             }
                         }
 
@@ -114,7 +115,7 @@ class NotificationReceiver : BroadcastReceiver(), KoinComponent {
                     }
                 }
             } catch (t: Throwable) {
-                Log.e(tag, "Error: ", t)
+                Log.e(TAG, "Error: ", t)
             } finally {
                 pendingResult.finish()
             }

@@ -1,5 +1,6 @@
 package com.shub39.grit.tasks.data.repository
 
+import com.shub39.grit.core.data.GritNotificationManager
 import com.shub39.grit.core.data.toCategory
 import com.shub39.grit.core.data.toCategoryEntity
 import com.shub39.grit.core.data.toTask
@@ -20,6 +21,7 @@ import org.koin.core.annotation.Single
 class TasksRepository(
     private val tasksDao: TasksDao,
     private val categoryDao: CategoryDao,
+    private val notificationManager: GritNotificationManager
 ) : TaskRepo {
 
     private val tasksFlow = tasksDao
@@ -64,6 +66,10 @@ class TasksRepository(
 
     override suspend fun upsertTask(task: Task) {
         tasksDao.upsertTask(task.toTaskEntity())
+
+        if (task.status) {
+           notificationManager.cancelNotification(task)
+        }
     }
 
     override suspend fun deleteTask(task: Task) {

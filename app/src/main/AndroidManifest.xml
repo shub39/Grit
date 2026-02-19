@@ -34,7 +34,7 @@
             </intent-filter>
         </activity>
 
-        <receiver android:name=".core.data.NotificationReceiver" />
+        <receiver android:name=".core.data.GritIntentReceiver" />
 
         <receiver android:name=".core.data.BootReceiver"
             android:exported="true">
