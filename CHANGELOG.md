@@ -1,5 +1,8 @@
 # Changelog
 
+## 5.6.2
+- Fixed past reminders not working #241
+
 ## 5.6.1
 - Fixed time picker UI flicker #237
 - Notifications are now dismissed if marked as done within app #238

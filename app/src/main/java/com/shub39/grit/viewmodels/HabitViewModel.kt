@@ -41,6 +41,8 @@ class HabitViewModel(
             observeDataStore()
             observeHabitStatuses()
             observeOverallAnalytics()
+
+            rescheduleAllHabits()
         }
         .stateIn(
             viewModelScope,
@@ -157,12 +159,16 @@ class HabitViewModel(
                 .getIs24Hr()
                 .onEach { pref ->
                     _state.update {
-                        it.copy(
-                            is24Hr = pref
-                        )
+                        it.copy(is24Hr = pref)
                     }
                 }
                 .launchIn(this)
+        }
+    }
+
+    private suspend fun rescheduleAllHabits() {
+        repo.getHabits().forEach { habit ->
+            scheduler.schedule(habit)
         }
     }
 

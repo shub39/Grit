@@ -119,4 +119,7 @@
     <string name="reorder_tasks_desc">完成后重新排序任务</string>
     <string name="weeks">周内</string>
     <string name="translate">翻译</string>
+    <string name="changelog">更新日志</string>
+    <string name="add_reminder">添加提醒</string>
+    <string name="save">保存</string>
 </resources>

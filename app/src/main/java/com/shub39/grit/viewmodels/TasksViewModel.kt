@@ -37,6 +37,8 @@ class TasksViewModel(
         .onStart {
             observeTasks()
             observeDatastore()
+
+            rescheduleAllTasks()
         }
         .stateIn(
             viewModelScope,
@@ -153,6 +155,12 @@ class TasksViewModel(
 
                 if (tasks.isEmpty()) addDefault()
             }.launchIn(this)
+        }
+    }
+
+    private suspend fun rescheduleAllTasks() {
+        repo.getTasks().forEach { task ->
+            scheduler.schedule(task)
         }
     }
 
