@@ -1,5 +1,11 @@
 [
   {
+    "version": "5.6.2",
+    "changes": [
+      "Fixed past reminders not working #241"
+    ]
+  },
+  {
     "version": "5.6.1",
     "changes": [
       "Fixed time picker UI flicker #237",
