@@ -1,3 +1,19 @@
+/*
+ * Copyright (C) 2026  Shubham Gorai
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <https://www.gnu.org/licenses/>.
+ */
 package com.shub39.grit.widgets.habit_weekchart_widget
 
 import android.content.Context
@@ -52,12 +68,12 @@ import com.shub39.grit.core.habits.domain.HabitRepo
 import com.shub39.grit.core.habits.domain.HabitWithAnalytics
 import com.shub39.grit.core.utils.now
 import com.shub39.grit.widgets.WidgetSize
+import kotlin.math.roundToInt
+import kotlin.random.Random
 import kotlinx.coroutines.launch
 import kotlinx.datetime.LocalDateTime
 import org.koin.core.component.KoinComponent
 import org.koin.core.component.get
-import kotlin.math.roundToInt
-import kotlin.random.Random
 
 class HabitWeekChartWidget : GlanceAppWidget(), KoinComponent {
 
@@ -67,10 +83,7 @@ class HabitWeekChartWidget : GlanceAppWidget(), KoinComponent {
 
     override val sizeMode: SizeMode = SizeMode.Exact
 
-    override suspend fun provideGlance(
-        context: Context,
-        id: GlanceId
-    ) {
+    override suspend fun provideGlance(context: Context, id: GlanceId) {
         val repo = get<HabitRepo>()
 
         provideContent {
@@ -91,21 +104,18 @@ class HabitWeekChartWidget : GlanceAppWidget(), KoinComponent {
                     Content(
                         habitWithAnalytics = currentData,
                         onUpdateWidget = {
-                            scope.launch {
-                                this@HabitWeekChartWidget.update(context, id)
-                            }
+                            scope.launch { this@HabitWeekChartWidget.update(context, id) }
                         },
                         onChangeHabit = {
-                            val nextId = if (currentIndex == sortedData.size - 1) {
-                                sortedData.first().habit.id
-                            } else {
-                                sortedData[currentIndex + 1].habit.id
-                            }
+                            val nextId =
+                                if (currentIndex == sortedData.size - 1) {
+                                    sortedData.first().habit.id
+                                } else {
+                                    sortedData[currentIndex + 1].habit.id
+                                }
 
-                            scope.launch {
-                                updateHabitId(context, id, nextId)
-                            }
-                        }
+                            scope.launch { updateHabitId(context, id, nextId) }
+                        },
                     )
                 }
             }
@@ -117,35 +127,31 @@ class HabitWeekChartWidget : GlanceAppWidget(), KoinComponent {
             Content(
                 onUpdateWidget = {},
                 onChangeHabit = {},
-                habitWithAnalytics = HabitWithAnalytics(
-                    habit = Habit(
-                        id = 1,
-                        title = "Exercise",
-                        description = "40 mins daily",
-                        time = LocalDateTime.now(),
-                        days = setOf(),
-                        index = 1,
-                        reminder = false
+                habitWithAnalytics =
+                    HabitWithAnalytics(
+                        habit =
+                            Habit(
+                                id = 1,
+                                title = "Exercise",
+                                description = "40 mins daily",
+                                time = LocalDateTime.now(),
+                                days = setOf(),
+                                index = 1,
+                                reminder = false,
+                            ),
+                        statuses = listOf(),
+                        weeklyComparisonData = (0..7).map { it.toDouble() },
+                        weekDayFrequencyData = mapOf(),
+                        currentStreak = 12,
+                        bestStreak = 20,
+                        startedDaysAgo = 100,
                     ),
-                    statuses = listOf(),
-                    weeklyComparisonData = (0..7).map { it.toDouble() },
-                    weekDayFrequencyData = mapOf(),
-                    currentStreak = 12,
-                    bestStreak = 20,
-                    startedDaysAgo = 100
-                )
             )
         }
     }
 
-    suspend fun updateHabitId(
-        context: Context,
-        glanceId: GlanceId,
-        newHabitId: Long
-    ) {
-        updateAppWidgetState(context, glanceId) {
-            it[habitIdKey] = newHabitId
-        }
+    suspend fun updateHabitId(context: Context, glanceId: GlanceId, newHabitId: Long) {
+        updateAppWidgetState(context, glanceId) { it[habitIdKey] = newHabitId }
         update(context, glanceId)
     }
 }
@@ -156,28 +162,28 @@ private fun Content(
     modifier: GlanceModifier = GlanceModifier,
     habitWithAnalytics: HabitWithAnalytics?,
     onUpdateWidget: () -> Unit,
-    onChangeHabit: () -> Unit
+    onChangeHabit: () -> Unit,
 ) {
     val context = LocalContext.current
     val size = LocalSize.current
     val roundedCornerSupported = Build.VERSION.SDK_INT >= Build.VERSION_CODES.S
 
     Column(
-        modifier = modifier
-            .fillMaxSize()
-            .then(
-                if (roundedCornerSupported) {
-                    GlanceModifier
-                        .background(GlanceTheme.colors.widgetBackground)
-                        .cornerRadius(24.dp)
-                } else {
-                    GlanceModifier.background(
-                        imageProvider = ImageProvider(R.drawable.rounded_4dp),
-                        colorFilter = ColorFilter.tint(GlanceTheme.colors.widgetBackground)
-                    )
-                }
-            )
-            .clickable(actionStartActivity<MainActivity>())
+        modifier =
+            modifier
+                .fillMaxSize()
+                .then(
+                    if (roundedCornerSupported) {
+                        GlanceModifier.background(GlanceTheme.colors.widgetBackground)
+                            .cornerRadius(24.dp)
+                    } else {
+                        GlanceModifier.background(
+                            imageProvider = ImageProvider(R.drawable.rounded_4dp),
+                            colorFilter = ColorFilter.tint(GlanceTheme.colors.widgetBackground),
+                        )
+                    }
+                )
+                .clickable(actionStartActivity<MainActivity>())
     ) {
         if (habitWithAnalytics != null) {
             TitleBar(
@@ -190,7 +196,7 @@ private fun Content(
                                 provider = ImageProvider(R.drawable.refresh),
                                 contentDescription = null,
                                 colorFilter = ColorFilter.tint(GlanceTheme.colors.onSurface),
-                                modifier = GlanceModifier.clickable { onUpdateWidget() }
+                                modifier = GlanceModifier.clickable { onUpdateWidget() },
                             )
                         }
                         Spacer(modifier = GlanceModifier.width(4.dp))
@@ -199,65 +205,68 @@ private fun Content(
                                 provider = ImageProvider(R.drawable.arrow_forward),
                                 contentDescription = null,
                                 colorFilter = ColorFilter.tint(GlanceTheme.colors.onSurface),
-                                modifier = GlanceModifier.clickable {
-                                    onChangeHabit()
-                                    onUpdateWidget()
-                                }
+                                modifier =
+                                    GlanceModifier.clickable {
+                                        onChangeHabit()
+                                        onUpdateWidget()
+                                    },
                             )
                         }
                     } else {
                         Spacer(modifier = GlanceModifier.width(16.dp))
                     }
-                }
+                },
             )
 
-            Column(
-                modifier = GlanceModifier.padding(start = 16.dp, end = 16.dp, bottom = 16.dp)
-            ) {
+            Column(modifier = GlanceModifier.padding(start = 16.dp, end = 16.dp, bottom = 16.dp)) {
                 Row(
                     horizontalAlignment = Alignment.CenterHorizontally,
-                    modifier = GlanceModifier.fillMaxWidth()
+                    modifier = GlanceModifier.fillMaxWidth(),
                 ) {
-                    val data = habitWithAnalytics.weeklyComparisonData.takeLast(
-                        when {
-                            size.width >= WidgetSize.Width4 -> 9
-                            else -> 6
-                        }
-                    )
+                    val data =
+                        habitWithAnalytics.weeklyComparisonData.takeLast(
+                            when {
+                                size.width >= WidgetSize.Width4 -> 9
+                                else -> 6
+                            }
+                        )
                     val maxData = data.maxOrNull()?.coerceAtLeast(1.0) ?: 1.0
 
                     data.forEach { double ->
                         Row(
                             verticalAlignment = Alignment.Bottom,
-                            modifier = GlanceModifier.fillMaxHeight()
+                            modifier = GlanceModifier.fillMaxHeight(),
                         ) {
-                            Box(
-                                modifier = GlanceModifier.padding(end = 4.dp)
-                            ) {
+                            Box(modifier = GlanceModifier.padding(end = 4.dp)) {
                                 Box(
-                                    modifier = GlanceModifier
-                                        .width(20.dp)
-                                        .height((90 * (double.roundToInt() / maxData)).dp)
-                                        .then(
-                                            if (roundedCornerSupported) {
-                                                GlanceModifier
-                                                    .background(GlanceTheme.colors.primary)
-                                                    .cornerRadius(16.dp)
-                                            } else {
-                                                GlanceModifier.background(
-                                                    ImageProvider(R.drawable.rounded_16dp),
-                                                    colorFilter = ColorFilter.tint(GlanceTheme.colors.primary)
-                                                )
-                                            }
-                                        ),
-                                    contentAlignment = Alignment.TopCenter
+                                    modifier =
+                                        GlanceModifier.width(20.dp)
+                                            .height((90 * (double.roundToInt() / maxData)).dp)
+                                            .then(
+                                                if (roundedCornerSupported) {
+                                                    GlanceModifier.background(
+                                                            GlanceTheme.colors.primary
+                                                        )
+                                                        .cornerRadius(16.dp)
+                                                } else {
+                                                    GlanceModifier.background(
+                                                        ImageProvider(R.drawable.rounded_16dp),
+                                                        colorFilter =
+                                                            ColorFilter.tint(
+                                                                GlanceTheme.colors.primary
+                                                            ),
+                                                    )
+                                                }
+                                            ),
+                                    contentAlignment = Alignment.TopCenter,
                                 ) {
                                     Text(
                                         text = "${double.roundToInt()}",
-                                        style = TextStyle(
-                                            fontSize = 10.sp,
-                                            color = GlanceTheme.colors.onPrimary
-                                        )
+                                        style =
+                                            TextStyle(
+                                                fontSize = 10.sp,
+                                                color = GlanceTheme.colors.onPrimary,
+                                            ),
                                     )
                                 }
                             }
@@ -266,15 +275,10 @@ private fun Content(
                 }
             }
         } else {
-            Box(
-                modifier = GlanceModifier.fillMaxSize(),
-                contentAlignment = Alignment.Center
-            ) {
+            Box(modifier = GlanceModifier.fillMaxSize(), contentAlignment = Alignment.Center) {
                 Text(
                     text = context.getString(R.string.nothing_to_show),
-                    style = TextStyle(
-                        color = GlanceTheme.colors.onSurface,
-                    ),
+                    style = TextStyle(color = GlanceTheme.colors.onSurface),
                 )
             }
         }
@@ -289,22 +293,24 @@ private fun GlancePreview() {
     Content(
         onUpdateWidget = {},
         onChangeHabit = {},
-        habitWithAnalytics = HabitWithAnalytics(
-            habit = Habit(
-                id = 1,
-                title = "Test Habit",
-                description = "A Test Habit",
-                time = LocalDateTime.now(),
-                days = setOf(),
-                index = 1,
-                reminder = false
+        habitWithAnalytics =
+            HabitWithAnalytics(
+                habit =
+                    Habit(
+                        id = 1,
+                        title = "Test Habit",
+                        description = "A Test Habit",
+                        time = LocalDateTime.now(),
+                        days = setOf(),
+                        index = 1,
+                        reminder = false,
+                    ),
+                statuses = listOf(),
+                weeklyComparisonData = (0..10).map { Random.nextDouble(0.0, 10.0) },
+                weekDayFrequencyData = mapOf(),
+                currentStreak = 12,
+                bestStreak = 20,
+                startedDaysAgo = 100,
             ),
-            statuses = listOf(),
-            weeklyComparisonData = (0..10).map { Random.nextDouble(0.0, 10.0) },
-            weekDayFrequencyData = mapOf(),
-            currentStreak = 12,
-            bestStreak = 20,
-            startedDaysAgo = 100
-        ),
     )
 }

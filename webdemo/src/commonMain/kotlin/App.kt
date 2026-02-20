@@ -1,3 +1,19 @@
+/*
+ * Copyright (C) 2026  Shubham Gorai
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <https://www.gnu.org/licenses/>.
+ */
 import Routes.Companion.toDisplayText
 import Routes.Companion.toDrawableRes
 import androidx.compose.foundation.background
@@ -43,16 +59,12 @@ import org.jetbrains.compose.resources.vectorResource
 
 @Serializable
 private sealed interface Routes {
-    @Serializable
-    data object Tasks : Routes
+    @Serializable data object Tasks : Routes
 
-    @Serializable
-    data object Habits : Routes
+    @Serializable data object Habits : Routes
 
     companion object {
-        val allRoutes = listOf<Routes>(
-            Tasks, Habits
-        )
+        val allRoutes = listOf<Routes>(Tasks, Habits)
 
         fun Routes.toDrawableRes(): DrawableResource {
             return when (this) {
@@ -77,10 +89,7 @@ fun App() {
     var currentRoute: Routes by remember { mutableStateOf(Routes.Tasks) }
     val windowSizeClass = LocalWindowSizeClass.current
 
-    DynamicMaterialTheme(
-        seedColor = Color(0xFFBA2C),
-        isDark = isDark
-    ) {
+    DynamicMaterialTheme(seedColor = Color(0xFFBA2C), isDark = isDark) {
         when (windowSizeClass.widthSizeClass) {
             WindowWidthSizeClass.Compact -> {
                 Scaffold(
@@ -96,53 +105,44 @@ fun App() {
                                     icon = {
                                         Icon(
                                             imageVector = vectorResource(route.toDrawableRes()),
-                                            contentDescription = null
+                                            contentDescription = null,
                                         )
                                     },
-                                    label = {
-                                        Text(
-                                            text = route.toDisplayText()
-                                        )
-                                    },
-                                    alwaysShowLabel = true
+                                    label = { Text(text = route.toDisplayText()) },
+                                    alwaysShowLabel = true,
                                 )
                             }
                         }
                     }
                 ) {
-                    AppContent(
-                        navController = navController,
-                        modifier = Modifier.padding(it)
-                    )
+                    AppContent(navController = navController, modifier = Modifier.padding(it))
                 }
             }
 
             else -> {
-                Row(
-                    modifier = Modifier.background(MaterialTheme.colorScheme.surface)
-                ) {
+                Row(modifier = Modifier.background(MaterialTheme.colorScheme.surface)) {
                     NavigationRail(
                         header = {
                             FloatingActionButton(
                                 onClick = { isDark = !isDark },
-                                modifier = Modifier.padding(top = 16.dp)
+                                modifier = Modifier.padding(top = 16.dp),
                             ) {
                                 Icon(
-                                    imageVector = vectorResource(
-                                        if (isDark) {
-                                            Res.drawable.light_mode
-                                        } else {
-                                            Res.drawable.dark_mode
-                                        }
-                                    ),
-                                    contentDescription = null
+                                    imageVector =
+                                        vectorResource(
+                                            if (isDark) {
+                                                Res.drawable.light_mode
+                                            } else {
+                                                Res.drawable.dark_mode
+                                            }
+                                        ),
+                                    contentDescription = null,
                                 )
                             }
                         },
                         containerColor = MaterialTheme.colorScheme.surfaceContainer,
-                        modifier = Modifier.clip(
-                            RoundedCornerShape(topEnd = 28.dp, bottomEnd = 28.dp)
-                        )
+                        modifier =
+                            Modifier.clip(RoundedCornerShape(topEnd = 28.dp, bottomEnd = 28.dp)),
                     ) {
                         Routes.allRoutes.forEach { route: Routes ->
                             NavigationRailItem(
@@ -154,15 +154,11 @@ fun App() {
                                 icon = {
                                     Icon(
                                         imageVector = vectorResource(route.toDrawableRes()),
-                                        contentDescription = null
+                                        contentDescription = null,
                                     )
                                 },
-                                label = {
-                                    Text(
-                                        text = route.toDisplayText()
-                                    )
-                                },
-                                alwaysShowLabel = true
+                                label = { Text(text = route.toDisplayText()) },
+                                alwaysShowLabel = true,
                             )
                         }
                     }
@@ -174,24 +170,13 @@ fun App() {
     }
 }
 
-
 @Composable
-private fun AppContent(
-    navController: NavHostController,
-    modifier: Modifier = Modifier
-) {
-    NavHost(
-        navController = navController,
-        startDestination = Routes.Tasks,
-        modifier = modifier
-    ) {
+private fun AppContent(navController: NavHostController, modifier: Modifier = Modifier) {
+    NavHost(navController = navController, startDestination = Routes.Tasks, modifier = modifier) {
         composable<Routes.Tasks> {
             val state by DummyStateProvider.taskState.collectAsState()
 
-            TasksPage(
-                state = state,
-                onAction = DummyStateProvider::onTaskAction
-            )
+            TasksPage(state = state, onAction = DummyStateProvider::onTaskAction)
         }
 
         composable<Routes.Habits> {
@@ -201,7 +186,7 @@ private fun AppContent(
                 state = state,
                 onAction = DummyStateProvider::onHabitAction,
                 isUserSubscribed = true,
-                onNavigateToPaywall = {}
+                onNavigateToPaywall = {},
             )
         }
     }

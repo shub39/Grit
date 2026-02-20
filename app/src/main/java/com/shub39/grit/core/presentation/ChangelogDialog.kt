@@ -1,3 +1,19 @@
+/*
+ * Copyright (C) 2026  Shubham Gorai
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <https://www.gnu.org/licenses/>.
+ */
 package com.shub39.grit.core.presentation
 
 import androidx.compose.foundation.layout.Arrangement
@@ -31,57 +47,42 @@ import org.jetbrains.compose.resources.stringResource
 fun ChangelogDialog(
     modifier: Modifier = Modifier,
     currentLog: VersionEntry,
-    onDismissRequest: () -> Unit
+    onDismissRequest: () -> Unit,
 ) {
-    BasicAlertDialog(
-        onDismissRequest = onDismissRequest,
-        modifier = modifier
-    ) {
+    BasicAlertDialog(onDismissRequest = onDismissRequest, modifier = modifier) {
         Card(
-            modifier = Modifier
-                .fillMaxWidth()
-                .heightIn(max = 500.dp),
-            shape = MaterialTheme.shapes.extraLarge
+            modifier = Modifier.fillMaxWidth().heightIn(max = 500.dp),
+            shape = MaterialTheme.shapes.extraLarge,
         ) {
             Column(modifier = Modifier.padding(16.dp)) {
                 Text(
                     text = stringResource(Res.string.changelog),
-                    style = MaterialTheme.typography.displaySmall
+                    style = MaterialTheme.typography.displaySmall,
                 )
-                Text(
-                    text = currentLog.version,
-                    style = MaterialTheme.typography.titleLarge
-                )
+                Text(text = currentLog.version, style = MaterialTheme.typography.titleLarge)
             }
             HorizontalDivider()
 
             LazyColumn(
                 verticalArrangement = Arrangement.spacedBy(8.dp),
-                contentPadding = PaddingValues(vertical = 16.dp)
+                contentPadding = PaddingValues(vertical = 16.dp),
             ) {
                 itemsIndexed(currentLog.changes) { index, change ->
                     Row(
                         modifier = Modifier.padding(horizontal = 16.dp),
-                        horizontalArrangement = Arrangement.spacedBy(4.dp)
+                        horizontalArrangement = Arrangement.spacedBy(4.dp),
                     ) {
-                        Text(
-                            text = "${index.plus(1)}.",
-                            fontWeight = FontWeight.Bold
-                        )
+                        Text(text = "${index.plus(1)}.", fontWeight = FontWeight.Bold)
                         Text(text = change)
                     }
                 }
 
                 item {
                     Row(
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .padding(horizontal = 16.dp),
-                        horizontalArrangement = Arrangement.End
+                        modifier = Modifier.fillMaxWidth().padding(horizontal = 16.dp),
+                        horizontalArrangement = Arrangement.End,
                     ) {
-                        TextButton(
-                            onClick = onDismissRequest
-                        ) {
+                        TextButton(onClick = onDismissRequest) {
                             Text(text = stringResource(Res.string.done))
                         }
                     }

@@ -1,3 +1,19 @@
+/*
+ * Copyright (C) 2026  Shubham Gorai
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <https://www.gnu.org/licenses/>.
+ */
 package com.shub39.grit.widgets.habit_overview_widget
 
 import android.content.Context
@@ -51,12 +67,12 @@ import com.shub39.grit.core.habits.domain.HabitRepo
 import com.shub39.grit.core.habits.domain.HabitStatus
 import com.shub39.grit.core.utils.now
 import com.shub39.grit.widgets.WidgetSize
+import kotlin.time.ExperimentalTime
 import kotlinx.coroutines.launch
 import kotlinx.datetime.LocalDate
 import kotlinx.datetime.LocalDateTime
 import org.koin.core.component.KoinComponent
 import org.koin.core.component.get
-import kotlin.time.ExperimentalTime
 
 @OptIn(ExperimentalTime::class)
 class HabitOverviewWidget : GlanceAppWidget(), KoinComponent {
@@ -79,21 +95,22 @@ class HabitOverviewWidget : GlanceAppWidget(), KoinComponent {
                                 if (habitWithStatus.second) {
                                     repo.deleteHabitStatus(
                                         habitId = habitWithStatus.first.id,
-                                        date = LocalDate.now()
+                                        date = LocalDate.now(),
                                     )
                                 } else {
                                     repo.insertHabitStatus(
-                                        habitStatus = HabitStatus(
-                                            habitId = habitWithStatus.first.id,
-                                            date = LocalDate.now()
-                                        )
+                                        habitStatus =
+                                            HabitStatus(
+                                                habitId = habitWithStatus.first.id,
+                                                date = LocalDate.now(),
+                                            )
                                     )
                                 }
                             }
                         },
                         onUpdateWidget = {
                             scope.launch { this@HabitOverviewWidget.updateAll(context) }
-                        }
+                        },
                     )
                 }
             }
@@ -101,36 +118,32 @@ class HabitOverviewWidget : GlanceAppWidget(), KoinComponent {
     }
 
     override suspend fun providePreview(context: Context, widgetCategory: Int) {
-        val previewItems = listOf(
-            Habit(
-                id = 1,
-                title = "Read a Book",
-                description = "20 pages at least",
-                time = LocalDateTime.now(),
-                days = emptySet(),
-                index = 1,
-                reminder = false
-            ) to true,
-            Habit(
-                id = 2,
-                title = "Exercise",
-                description = "40 Minutes daily",
-                time = LocalDateTime.now(),
-                days = setOf(),
-                index = 2,
-                reminder = false
-            ) to false
-        )
+        val previewItems =
+            listOf(
+                Habit(
+                    id = 1,
+                    title = "Read a Book",
+                    description = "20 pages at least",
+                    time = LocalDateTime.now(),
+                    days = emptySet(),
+                    index = 1,
+                    reminder = false,
+                ) to true,
+                Habit(
+                    id = 2,
+                    title = "Exercise",
+                    description = "40 Minutes daily",
+                    time = LocalDateTime.now(),
+                    days = setOf(),
+                    index = 2,
+                    reminder = false,
+                ) to false,
+            )
 
         provideContent {
-            Content(
-                habitsWithStatus = previewItems,
-                onUpdateHabit = {},
-                onUpdateWidget = {}
-            )
+            Content(habitsWithStatus = previewItems, onUpdateHabit = {}, onUpdateWidget = {})
         }
     }
-
 }
 
 @GlanceComposable
@@ -139,28 +152,28 @@ private fun Content(
     habitsWithStatus: List<Pair<Habit, Boolean>>,
     onUpdateHabit: (Pair<Habit, Boolean>) -> Unit,
     onUpdateWidget: () -> Unit,
-    modifier: GlanceModifier = GlanceModifier
+    modifier: GlanceModifier = GlanceModifier,
 ) {
     val context = LocalContext.current
     val size = LocalSize.current
     val roundedCornerSupported = Build.VERSION.SDK_INT >= Build.VERSION_CODES.S
 
     Column(
-        modifier = modifier
-            .fillMaxSize()
-            .then(
-                if (roundedCornerSupported) {
-                    GlanceModifier
-                        .background(GlanceTheme.colors.widgetBackground)
-                        .cornerRadius(24.dp)
-                } else {
-                    GlanceModifier.background(
-                        imageProvider = ImageProvider(R.drawable.rounded_4dp),
-                        colorFilter = ColorFilter.tint(GlanceTheme.colors.widgetBackground)
-                    )
-                }
-            )
-            .clickable(actionStartActivity<MainActivity>())
+        modifier =
+            modifier
+                .fillMaxSize()
+                .then(
+                    if (roundedCornerSupported) {
+                        GlanceModifier.background(GlanceTheme.colors.widgetBackground)
+                            .cornerRadius(24.dp)
+                    } else {
+                        GlanceModifier.background(
+                            imageProvider = ImageProvider(R.drawable.rounded_4dp),
+                            colorFilter = ColorFilter.tint(GlanceTheme.colors.widgetBackground),
+                        )
+                    }
+                )
+                .clickable(actionStartActivity<MainActivity>())
     ) {
         TitleBar(
             startIcon = ImageProvider(R.drawable.alarm),
@@ -168,9 +181,7 @@ private fun Content(
             actions = {
                 Text(
                     text = "${habitsWithStatus.count { it.second }}/${habitsWithStatus.size}",
-                    style = TextStyle(
-                        color = GlanceTheme.colors.onSurface
-                    )
+                    style = TextStyle(color = GlanceTheme.colors.onSurface),
                 )
 
                 if (size.width >= WidgetSize.Width4) {
@@ -179,100 +190,103 @@ private fun Content(
                             provider = ImageProvider(R.drawable.refresh),
                             contentDescription = null,
                             colorFilter = ColorFilter.tint(GlanceTheme.colors.onSurface),
-                            modifier = GlanceModifier.clickable { onUpdateWidget() }
+                            modifier = GlanceModifier.clickable { onUpdateWidget() },
                         )
                     }
                 } else {
                     Spacer(modifier = GlanceModifier.width(16.dp))
                 }
-            }
+            },
         )
 
         LazyColumn(
-            modifier = GlanceModifier
-                .fillMaxSize()
-                .padding(horizontal = 8.dp),
+            modifier = GlanceModifier.fillMaxSize().padding(horizontal = 8.dp),
             horizontalAlignment = Alignment.Start,
         ) {
             items(habitsWithStatus, itemId = { it.first.id }) { habitWithStatus ->
                 Column {
                     Row(
-                        modifier = GlanceModifier
-                            .fillMaxWidth()
-                            .then(
-                                if (roundedCornerSupported) {
-                                    GlanceModifier
-                                        .cornerRadius(16.dp)
-                                        .background(
-                                            if (!habitWithStatus.second) GlanceTheme.colors.secondaryContainer
-                                            else GlanceTheme.colors.tertiaryContainer
-                                        )
-                                } else {
-                                    GlanceModifier
-                                        .background(
-                                            imageProvider = ImageProvider(R.drawable.rounded_16dp),
-                                            colorFilter = ColorFilter.tint(
-                                                if (!habitWithStatus.second) GlanceTheme.colors.secondaryContainer
+                        modifier =
+                            GlanceModifier.fillMaxWidth()
+                                .then(
+                                    if (roundedCornerSupported) {
+                                        GlanceModifier.cornerRadius(16.dp)
+                                            .background(
+                                                if (!habitWithStatus.second)
+                                                    GlanceTheme.colors.secondaryContainer
                                                 else GlanceTheme.colors.tertiaryContainer
                                             )
+                                    } else {
+                                        GlanceModifier.background(
+                                            imageProvider = ImageProvider(R.drawable.rounded_16dp),
+                                            colorFilter =
+                                                ColorFilter.tint(
+                                                    if (!habitWithStatus.second)
+                                                        GlanceTheme.colors.secondaryContainer
+                                                    else GlanceTheme.colors.tertiaryContainer
+                                                ),
                                         )
-                                }
-                            )
-                            .padding(vertical = 8.dp)
-                            .clickable {
-                                onUpdateHabit(habitWithStatus)
-                                onUpdateWidget()
-                            },
-                        verticalAlignment = Alignment.CenterVertically
+                                    }
+                                )
+                                .padding(vertical = 8.dp)
+                                .clickable {
+                                    onUpdateHabit(habitWithStatus)
+                                    onUpdateWidget()
+                                },
+                        verticalAlignment = Alignment.CenterVertically,
                     ) {
                         if (size.width >= WidgetSize.Width4) {
                             Image(
-                                provider = ImageProvider(
-                                    if (habitWithStatus.second) {
-                                        R.drawable.check_circle
-                                    } else R.drawable.circle_border
-                                ),
+                                provider =
+                                    ImageProvider(
+                                        if (habitWithStatus.second) {
+                                            R.drawable.check_circle
+                                        } else R.drawable.circle_border
+                                    ),
                                 contentDescription = null,
                                 modifier = GlanceModifier.padding(start = 12.dp),
-                                colorFilter = ColorFilter.tint(
-                                    if (!habitWithStatus.second) {
-                                        GlanceTheme.colors.onSecondaryContainer
-                                    } else GlanceTheme.colors.onTertiaryContainer
-                                )
+                                colorFilter =
+                                    ColorFilter.tint(
+                                        if (!habitWithStatus.second) {
+                                            GlanceTheme.colors.onSecondaryContainer
+                                        } else GlanceTheme.colors.onTertiaryContainer
+                                    ),
                             )
                         }
 
-                        Column(
-                            modifier = GlanceModifier
-                                .defaultWeight()
-                                .padding(8.dp)
-                        ) {
+                        Column(modifier = GlanceModifier.defaultWeight().padding(8.dp)) {
                             Text(
                                 text = habitWithStatus.first.title,
-                                style = TextStyle(
-                                    color = if (!habitWithStatus.second) {
-                                        GlanceTheme.colors.onSecondaryContainer
-                                    } else GlanceTheme.colors.onTertiaryContainer,
-                                    textDecoration = if (!habitWithStatus.second) {
-                                        TextDecoration.None
-                                    } else TextDecoration.LineThrough,
-                                    fontWeight = FontWeight.Bold
-                                ),
-                                maxLines = 1
+                                style =
+                                    TextStyle(
+                                        color =
+                                            if (!habitWithStatus.second) {
+                                                GlanceTheme.colors.onSecondaryContainer
+                                            } else GlanceTheme.colors.onTertiaryContainer,
+                                        textDecoration =
+                                            if (!habitWithStatus.second) {
+                                                TextDecoration.None
+                                            } else TextDecoration.LineThrough,
+                                        fontWeight = FontWeight.Bold,
+                                    ),
+                                maxLines = 1,
                             )
 
                             if (habitWithStatus.first.description.isNotEmpty()) {
                                 Text(
                                     text = habitWithStatus.first.description,
-                                    style = TextStyle(
-                                        color = if (!habitWithStatus.second) {
-                                            GlanceTheme.colors.onSecondaryContainer
-                                        } else GlanceTheme.colors.onTertiaryContainer,
-                                        textDecoration = if (!habitWithStatus.second) {
-                                            TextDecoration.None
-                                        } else TextDecoration.LineThrough
-                                    ),
-                                    maxLines = 1
+                                    style =
+                                        TextStyle(
+                                            color =
+                                                if (!habitWithStatus.second) {
+                                                    GlanceTheme.colors.onSecondaryContainer
+                                                } else GlanceTheme.colors.onTertiaryContainer,
+                                            textDecoration =
+                                                if (!habitWithStatus.second) {
+                                                    TextDecoration.None
+                                                } else TextDecoration.LineThrough,
+                                        ),
+                                    maxLines = 1,
                                 )
                             }
                         }
@@ -281,9 +295,7 @@ private fun Content(
                 }
             }
 
-            item {
-                Spacer(modifier = GlanceModifier.height(4.dp))
-            }
+            item { Spacer(modifier = GlanceModifier.height(4.dp)) }
         }
     }
 }
@@ -293,18 +305,19 @@ private fun Content(
 @Composable
 private fun GlancePreview() {
     Content(
-        habitsWithStatus = (0..10).map {
-            Habit(
-                id = it.toLong(),
-                title = "Habit $it",
-                description = "Habit Description $it",
-                time = LocalDateTime.now(),
-                days = emptySet(),
-                index = it,
-                reminder = false
-            ) to (it % 2 == 0)
-        },
+        habitsWithStatus =
+            (0..10).map {
+                Habit(
+                    id = it.toLong(),
+                    title = "Habit $it",
+                    description = "Habit Description $it",
+                    time = LocalDateTime.now(),
+                    days = emptySet(),
+                    index = it,
+                    reminder = false,
+                ) to (it % 2 == 0)
+            },
         onUpdateHabit = {},
-        onUpdateWidget = {}
+        onUpdateWidget = {},
     )
 }

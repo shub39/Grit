@@ -1,3 +1,19 @@
+/*
+ * Copyright (C) 2026  Shubham Gorai
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <https://www.gnu.org/licenses/>.
+ */
 import androidx.room.Room
 import androidx.room.testing.MigrationTestHelper
 import androidx.sqlite.db.framework.FrameworkSQLiteOpenHelperFactory
@@ -14,30 +30,40 @@ private const val DB_NAME = "tasks_test.db"
 @RunWith(AndroidJUnit4::class)
 class TaskDBMigrationTest {
     @get:Rule
-    val helper = MigrationTestHelper(
-        InstrumentationRegistry.getInstrumentation(),
-        TaskDatabase::class.java,
-        listOf(),
-        FrameworkSQLiteOpenHelperFactory()
-    )
+    val helper =
+        MigrationTestHelper(
+            InstrumentationRegistry.getInstrumentation(),
+            TaskDatabase::class.java,
+            listOf(),
+            FrameworkSQLiteOpenHelperFactory(),
+        )
 
     @Test
     fun migration4to5_containsCorrectData() {
-        helper.createDatabase(DB_NAME, 4).apply {
-            (0..10).forEach { category ->
-                execSQL("""
+        helper
+            .createDatabase(DB_NAME, 4)
+            .apply {
+                (0..10).forEach { category ->
+                    execSQL(
+                        """
             INSERT INTO categories (id, name, [index], color)
             VALUES (${category.toLong()}, 'Category $category', $category, 'black')
-        """.trimIndent())
+        """
+                            .trimIndent()
+                    )
 
-                (0..10).forEach { task ->
-                    execSQL("""
+                    (0..10).forEach { task ->
+                        execSQL(
+                            """
                 INSERT INTO task (categoryId, title, status, [index])
                 VALUES (${category.toLong()}, 'Task $task', 0, $task)
-            """.trimIndent())
+            """
+                                .trimIndent()
+                        )
+                    }
                 }
             }
-        }.close()
+            .close()
 
         val db = helper.runMigrationsAndValidate(DB_NAME, 5, true)
 
@@ -70,27 +96,28 @@ class TaskDBMigrationTest {
             assertThat(cursor.getInt(0)).isEqualTo(11 * 11)
         }
 
-        db.query("SELECT categoryId, title, status, [index] FROM task ORDER BY categoryId, [index]").use { cursor ->
-            assertThat(cursor.count).isEqualTo(121)
-            cursor.moveToFirst()
-            do {
-                val categoryId = cursor.getLong(0)
-                val title = cursor.getString(1)
-                val status = cursor.getInt(2)
-                val index = cursor.getInt(3)
+        db.query("SELECT categoryId, title, status, [index] FROM task ORDER BY categoryId, [index]")
+            .use { cursor ->
+                assertThat(cursor.count).isEqualTo(121)
+                cursor.moveToFirst()
+                do {
+                    val categoryId = cursor.getLong(0)
+                    val title = cursor.getString(1)
+                    val status = cursor.getInt(2)
+                    val index = cursor.getInt(3)
 
-                // Title pattern
-                assertThat(title).isEqualTo("Task $index")
-                // Default status
-                assertThat(status).isEqualTo(0)
-                // Index matches the looped task value
-                assertThat(index).isAtLeast(0)
-                assertThat(index).isAtMost(10)
-                // CategoryId matches existing categories
-                assertThat(categoryId).isAtLeast(0)
-                assertThat(categoryId).isAtMost(10)
-            } while (cursor.moveToNext())
-        }
+                    // Title pattern
+                    assertThat(title).isEqualTo("Task $index")
+                    // Default status
+                    assertThat(status).isEqualTo(0)
+                    // Index matches the looped task value
+                    assertThat(index).isAtLeast(0)
+                    assertThat(index).isAtMost(10)
+                    // CategoryId matches existing categories
+                    assertThat(categoryId).isAtLeast(0)
+                    assertThat(categoryId).isAtMost(10)
+                } while (cursor.moveToNext())
+            }
     }
 
     @Test
@@ -98,11 +125,11 @@ class TaskDBMigrationTest {
         helper.createDatabase(DB_NAME, 4).apply { close() }
 
         Room.databaseBuilder(
-            InstrumentationRegistry.getInstrumentation().targetContext,
-            TaskDatabase::class.java,
-            DB_NAME
-        ).build().apply {
-            openHelper.writableDatabase.close()
-        }
+                InstrumentationRegistry.getInstrumentation().targetContext,
+                TaskDatabase::class.java,
+                DB_NAME,
+            )
+            .build()
+            .apply { openHelper.writableDatabase.close() }
     }
 }

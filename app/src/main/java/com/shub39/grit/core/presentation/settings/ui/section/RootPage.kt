@@ -1,3 +1,19 @@
+/*
+ * Copyright (C) 2026  Shubham Gorai
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <https://www.gnu.org/licenses/>.
+ */
 package com.shub39.grit.core.presentation.settings.ui.section
 
 import androidx.compose.foundation.clickable
@@ -78,36 +94,27 @@ fun RootPage(
     onNavigateToLookAndFeel: () -> Unit,
     onNavigateToBackup: () -> Unit,
     onNavigateToPaywall: () -> Unit,
-    onNavigateToChangelog: () -> Unit
+    onNavigateToChangelog: () -> Unit,
 ) {
     val context = LocalContext.current
 
-    LaunchedEffect(Unit) {
-        onAction(SettingsAction.OnCheckBiometric(context))
-    }
+    LaunchedEffect(Unit) { onAction(SettingsAction.OnCheckBiometric(context)) }
 
     val scrollBehavior = TopAppBarDefaults.enterAlwaysScrollBehavior()
-    Column(
-        modifier = Modifier
-            .nestedScroll(scrollBehavior.nestedScrollConnection)
-            .fillMaxSize()
-    ) {
+    Column(modifier = Modifier.nestedScroll(scrollBehavior.nestedScrollConnection).fillMaxSize()) {
         LargeFlexibleTopAppBar(
             scrollBehavior = scrollBehavior,
-            title = {
-                Text(text = stringResource(Res.string.settings))
-            },
-            subtitle = {
-                Text(text = getRandomLine())
-            },
-            colors = TopAppBarDefaults.topAppBarColors(
-                scrolledContainerColor = MaterialTheme.colorScheme.surface
-            )
+            title = { Text(text = stringResource(Res.string.settings)) },
+            subtitle = { Text(text = getRandomLine()) },
+            colors =
+                TopAppBarDefaults.topAppBarColors(
+                    scrolledContainerColor = MaterialTheme.colorScheme.surface
+                ),
         )
 
         LazyColumn(
             modifier = Modifier.fillMaxSize(),
-            contentPadding = PaddingValues(start = 12.dp, end = 12.dp, top = 16.dp, bottom = 60.dp)
+            contentPadding = PaddingValues(start = 12.dp, end = 12.dp, top = 16.dp, bottom = 60.dp),
         ) {
             item { AboutApp() }
 
@@ -116,16 +123,15 @@ fun RootPage(
                     onClick = onNavigateToPaywall,
                     modifier = Modifier.padding(top = 16.dp),
                     shape = MaterialTheme.shapes.extraLarge,
-                    colors = CardDefaults.cardColors(
-                        containerColor = MaterialTheme.colorScheme.tertiary,
-                        contentColor = MaterialTheme.colorScheme.onTertiary
-                    )
+                    colors =
+                        CardDefaults.cardColors(
+                            containerColor = MaterialTheme.colorScheme.tertiary,
+                            contentColor = MaterialTheme.colorScheme.onTertiary,
+                        ),
                 ) {
                     Row(
-                        modifier = Modifier
-                            .padding(16.dp)
-                            .fillMaxWidth(),
-                        verticalAlignment = Alignment.CenterVertically
+                        modifier = Modifier.padding(16.dp).fillMaxWidth(),
+                        verticalAlignment = Alignment.CenterVertically,
                     ) {
                         Icon(
                             imageVector = vectorResource(Res.drawable.add),
@@ -137,14 +143,14 @@ fun RootPage(
                         Text(
                             text = stringResource(Res.string.grit_plus),
                             style = MaterialTheme.typography.titleLarge,
-                            fontWeight = FontWeight.Bold
+                            fontWeight = FontWeight.Bold,
                         )
 
                         Spacer(modifier = Modifier.weight(1f))
 
                         Icon(
                             imageVector = vectorResource(Res.drawable.arrow_forward),
-                            contentDescription = "Grit Plus"
+                            contentDescription = "Grit Plus",
                         )
                     }
                 }
@@ -153,65 +159,47 @@ fun RootPage(
             item { Spacer(modifier = Modifier.height(16.dp)) }
 
             item {
-                Column(
-                    verticalArrangement = Arrangement.spacedBy(2.dp)
-                ) {
+                Column(verticalArrangement = Arrangement.spacedBy(2.dp)) {
                     ListItem(
                         headlineContent = {
-                            Text(
-                                text = stringResource(Res.string.pause_notifications)
-                            )
+                            Text(text = stringResource(Res.string.pause_notifications))
                         },
                         supportingContent = {
-                            Text(
-                                text = stringResource(Res.string.pause_notifications_desc)
-                            )
+                            Text(text = stringResource(Res.string.pause_notifications_desc))
                         },
                         trailingContent = {
                             Switch(
                                 checked = state.pauseNotifications,
                                 onCheckedChange = {
                                     onAction(SettingsAction.ChangePauseNotifications(it))
-                                }
+                                },
                             )
                         },
                         colors = listItemColors(),
-                        modifier = Modifier.clip(leadingItemShape())
+                        modifier = Modifier.clip(leadingItemShape()),
                     )
 
                     ListItem(
-                        headlineContent = {
-                            Text(
-                                text = stringResource(Res.string.reorder_tasks)
-                            )
-                        },
+                        headlineContent = { Text(text = stringResource(Res.string.reorder_tasks)) },
                         supportingContent = {
-                            Text(
-                                text = stringResource(Res.string.reorder_tasks_desc)
-                            )
+                            Text(text = stringResource(Res.string.reorder_tasks_desc))
                         },
                         trailingContent = {
                             Switch(
                                 checked = state.reorderTasks,
                                 onCheckedChange = {
                                     onAction(SettingsAction.ChangeReorderTasks(it))
-                                }
+                                },
                             )
                         },
                         colors = listItemColors(),
-                        modifier = Modifier.clip(middleItemShape())
+                        modifier = Modifier.clip(middleItemShape()),
                     )
 
                     ListItem(
-                        headlineContent = {
-                            Text(
-                                text = stringResource(Res.string.show_habits)
-                            )
-                        },
+                        headlineContent = { Text(text = stringResource(Res.string.show_habits)) },
                         supportingContent = {
-                            Text(
-                                text = stringResource(Res.string.show_habits_desc)
-                            )
+                            Text(text = stringResource(Res.string.show_habits_desc))
                         },
                         trailingContent = {
                             Switch(
@@ -222,79 +210,65 @@ fun RootPage(
                                             if (it) Sections.Habits else Sections.Tasks
                                         )
                                     )
-                                }
+                                },
                             )
                         },
                         colors = listItemColors(),
-                        modifier = Modifier.clip(middleItemShape())
+                        modifier = Modifier.clip(middleItemShape()),
                     )
 
                     ListItem(
-                        headlineContent = {
-                            Text(
-                                text = stringResource(Res.string.staring_day)
-                            )
-                        },
+                        headlineContent = { Text(text = stringResource(Res.string.staring_day)) },
                         trailingContent = {
                             Switch(
                                 checked = state.startOfTheWeek == DayOfWeek.SUNDAY,
                                 onCheckedChange = {
                                     onAction(
-                                        SettingsAction.ChangeStartOfTheWeek(if (it) DayOfWeek.SUNDAY else DayOfWeek.MONDAY)
+                                        SettingsAction.ChangeStartOfTheWeek(
+                                            if (it) DayOfWeek.SUNDAY else DayOfWeek.MONDAY
+                                        )
                                     )
-                                }
+                                },
                             )
                         },
                         colors = listItemColors(),
-                        modifier = Modifier.clip(middleItemShape())
+                        modifier = Modifier.clip(middleItemShape()),
                     )
 
                     if (state.isBiometricLockAvailable) {
                         ListItem(
                             headlineContent = {
-                                Text(
-                                    text = stringResource(Res.string.biometric_lock)
-                                )
+                                Text(text = stringResource(Res.string.biometric_lock))
                             },
                             supportingContent = {
-                                Text(
-                                    text = stringResource(Res.string.biometric_lock_desc)
-                                )
+                                Text(text = stringResource(Res.string.biometric_lock_desc))
                             },
                             trailingContent = {
                                 Switch(
                                     checked = state.isBiometricLockOn == true,
                                     onCheckedChange = {
                                         onAction(SettingsAction.ChangeBiometricLock(it))
-                                    }
+                                    },
                                 )
                             },
                             colors = listItemColors(),
-                            modifier = Modifier.clip(middleItemShape())
+                            modifier = Modifier.clip(middleItemShape()),
                         )
                     }
 
                     ListItem(
-                        headlineContent = {
-                            Text(
-                                text = stringResource(Res.string.use_24Hr)
-                            )
-                        },
+                        headlineContent = { Text(text = stringResource(Res.string.use_24Hr)) },
                         supportingContent = {
-                            Text(
-                                text = stringResource(Res.string.use_24Hr_desc)
-                            )
+                            Text(text = stringResource(Res.string.use_24Hr_desc))
                         },
                         trailingContent = {
                             Switch(
                                 checked = state.is24Hr,
-                                onCheckedChange = {
-                                    onAction(SettingsAction.ChangeIs24Hr(it))
-                                }
+                                onCheckedChange = { onAction(SettingsAction.ChangeIs24Hr(it)) },
                             )
                         },
                         colors = listItemColors(),
-                        modifier = Modifier.clip(endItemShape())
+                        modifier = Modifier.clip(endItemShape()),
                     )
                 }
             }
@@ -302,27 +276,20 @@ fun RootPage(
             item { Spacer(modifier = Modifier.height(16.dp)) }
 
             item {
-                Column(
-                    verticalArrangement = Arrangement.spacedBy(2.dp)
-                ) {
+                Column(verticalArrangement = Arrangement.spacedBy(2.dp)) {
                     ListItem(
-                        modifier = Modifier
-                            .clip(leadingItemShape())
-                            .clickable { onNavigateToLookAndFeel() },
-                        headlineContent = {
-                            Text(
-                                text = stringResource(Res.string.look_and_feel)
-                            )
-                        },
+                        modifier =
+                            Modifier.clip(leadingItemShape()).clickable {
+                                onNavigateToLookAndFeel()
+                            },
+                        headlineContent = { Text(text = stringResource(Res.string.look_and_feel)) },
                         supportingContent = {
-                            Text(
-                                text = stringResource(Res.string.look_and_feel_desc)
-                            )
+                            Text(text = stringResource(Res.string.look_and_feel_desc))
                         },
                         trailingContent = {
                             Icon(
                                 imageVector = vectorResource(Res.drawable.arrow_forward),
-                                contentDescription = "Navigate"
+                                contentDescription = "Navigate",
                             )
                         },
                         leadingContent = {
@@ -331,28 +298,18 @@ fun RootPage(
                                 contentDescription = "Navigate",
                             )
                         },
-                        colors = listItemColors()
+                        colors = listItemColors(),
                     )
 
                     ListItem(
-                        modifier = Modifier
-                            .clip(endItemShape())
-                            .clickable { onNavigateToBackup() },
+                        modifier = Modifier.clip(endItemShape()).clickable { onNavigateToBackup() },
                         colors = listItemColors(),
-                        headlineContent = {
-                            Text(
-                                text = stringResource(Res.string.backup)
-                            )
-                        },
-                        supportingContent = {
-                            Text(
-                                text = stringResource(Res.string.backup_desc)
-                            )
-                        },
+                        headlineContent = { Text(text = stringResource(Res.string.backup)) },
+                        supportingContent = { Text(text = stringResource(Res.string.backup_desc)) },
                         trailingContent = {
                             Icon(
                                 imageVector = vectorResource(Res.drawable.arrow_forward),
-                                contentDescription = "Navigate"
+                                contentDescription = "Navigate",
                             )
                         },
                         leadingContent = {
@@ -360,7 +317,7 @@ fun RootPage(
                                 imageVector = vectorResource(Res.drawable.download),
                                 contentDescription = "Backup",
                             )
-                        }
+                        },
                     )
                 }
             }
@@ -373,23 +330,18 @@ fun RootPage(
                     leadingContent = {
                         Icon(
                             imageVector = vectorResource(Res.drawable.check_list),
-                            contentDescription = null
+                            contentDescription = null,
                         )
                     },
                     trailingContent = {
                         Icon(
                             imageVector = vectorResource(Res.drawable.arrow_forward),
-                            contentDescription = "Navigate"
+                            contentDescription = "Navigate",
                         )
                     },
-                    headlineContent = {
-                        Text(
-                            text = stringResource(Res.string.changelog)
-                        )
-                    },
-                    modifier = Modifier
-                        .clip(detachedItemShape())
-                        .clickable { onNavigateToChangelog() }
+                    headlineContent = { Text(text = stringResource(Res.string.changelog)) },
+                    modifier =
+                        Modifier.clip(detachedItemShape()).clickable { onNavigateToChangelog() },
                 )
             }
         }

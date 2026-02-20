@@ -1,3 +1,19 @@
+/*
+ * Copyright (C) 2026  Shubham Gorai
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <https://www.gnu.org/licenses/>.
+ */
 package com.shub39.grit.viewmodels
 
 import androidx.lifecycle.ViewModel
@@ -9,6 +25,7 @@ import com.shub39.grit.core.habits.domain.HabitRepo
 import com.shub39.grit.core.habits.domain.HabitStatus
 import com.shub39.grit.core.habits.presentation.HabitState
 import com.shub39.grit.core.habits.presentation.HabitsAction
+import kotlin.time.ExperimentalTime
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
@@ -22,7 +39,6 @@ import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import kotlinx.datetime.LocalDate
 import org.koin.android.annotation.KoinViewModel
-import kotlin.time.ExperimentalTime
 
 @KoinViewModel
 class HabitViewModel(
@@ -36,19 +52,17 @@ class HabitViewModel(
 
     private val _state = MutableStateFlow(HabitState())
 
-    val state = _state.asStateFlow()
-        .onStart {
-            observeDataStore()
-            observeHabitStatuses()
-            observeOverallAnalytics()
+    val state =
+        _state
+            .asStateFlow()
+            .onStart {
+                observeDataStore()
+                observeHabitStatuses()
+                observeOverallAnalytics()
 
-            rescheduleAllHabits()
-        }
-        .stateIn(
-            viewModelScope,
-            SharingStarted.WhileSubscribed(5000),
-            HabitState()
-        )
+                rescheduleAllHabits()
+            }
+            .stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000), HabitState())
 
     // handles actions from habit page
     fun onAction(action: HabitsAction) {
@@ -72,22 +86,20 @@ class HabitViewModel(
                 }
 
                 is HabitsAction.PrepareAnalytics -> {
-                    _state.update {
-                        it.copy(analyticsHabitId = action.habit?.id)
-                    }
+                    _state.update { it.copy(analyticsHabitId = action.habit?.id) }
                 }
 
                 HabitsAction.OnAddHabitClicked -> {
-                    _state.update {
-                        it.copy(showHabitAddSheet = true)
-                    }
+                    _state.update { it.copy(showHabitAddSheet = true) }
                 }
 
-                HabitsAction.DismissAddHabitDialog -> _state.update { it.copy(showHabitAddSheet = false) }
+                HabitsAction.DismissAddHabitDialog ->
+                    _state.update { it.copy(showHabitAddSheet = false) }
 
                 is HabitsAction.OnToggleCompactView -> datastore.setCompactView(action.pref)
 
-                is HabitsAction.OnToggleEditState -> _state.update { it.copy(editState = action.pref) }
+                is HabitsAction.OnToggleEditState ->
+                    _state.update { it.copy(editState = action.pref) }
 
                 is HabitsAction.OnTransientHabitReorder -> {
                     val currentList = _state.value.habitsWithAnalytics.toMutableList()
@@ -101,75 +113,56 @@ class HabitViewModel(
     @OptIn(ExperimentalTime::class)
     private fun observeHabitStatuses() {
         habitStatusJob?.cancel()
-        habitStatusJob = viewModelScope.launch {
-            combine(
-                repo.getHabitsWithAnalytics(),
-                repo.getCompletedHabitIds()
-            ) { habits, completedHabits ->
-                _state.update {
-                    it.copy(
-                        habitsWithAnalytics = habits,
-                        completedHabitIds = completedHabits
-                    )
-                }
-            }.launchIn(this)
-        }
+        habitStatusJob =
+            viewModelScope.launch {
+                combine(repo.getHabitsWithAnalytics(), repo.getCompletedHabitIds()) {
+                        habits,
+                        completedHabits ->
+                        _state.update {
+                            it.copy(
+                                habitsWithAnalytics = habits,
+                                completedHabitIds = completedHabits,
+                            )
+                        }
+                    }
+                    .launchIn(this)
+            }
     }
 
     private fun observeOverallAnalytics() {
         overallAnalyticsJob?.cancel()
-        overallAnalyticsJob = repo
-            .getOverallAnalytics()
-            .onEach { overallAnalytics ->
-                _state.update {
-                    it.copy(
-                        overallAnalytics = overallAnalytics
-                    )
+        overallAnalyticsJob =
+            repo
+                .getOverallAnalytics()
+                .onEach { overallAnalytics ->
+                    _state.update { it.copy(overallAnalytics = overallAnalytics) }
                 }
-            }
-            .launchIn(viewModelScope)
+                .launchIn(viewModelScope)
     }
 
     private fun observeDataStore() {
         observeDatastoreJob?.cancel()
-        observeDatastoreJob = viewModelScope.launch {
-            datastore
-                .getCompactViewPref()
-                .onEach { pref ->
-                    _state.update {
-                        it.copy(
-                            compactHabitView = pref
-                        )
-                    }
-                }
-                .launchIn(this)
+        observeDatastoreJob =
+            viewModelScope.launch {
+                datastore
+                    .getCompactViewPref()
+                    .onEach { pref -> _state.update { it.copy(compactHabitView = pref) } }
+                    .launchIn(this)
 
-            datastore
-                .getStartOfTheWeekPref()
-                .onEach { pref ->
-                    _state.update {
-                        it.copy(
-                            startingDay = pref
-                        )
-                    }
-                }
-                .launchIn(this)
+                datastore
+                    .getStartOfTheWeekPref()
+                    .onEach { pref -> _state.update { it.copy(startingDay = pref) } }
+                    .launchIn(this)
 
-            datastore
-                .getIs24Hr()
-                .onEach { pref ->
-                    _state.update {
-                        it.copy(is24Hr = pref)
-                    }
-                }
-                .launchIn(this)
-        }
+                datastore
+                    .getIs24Hr()
+                    .onEach { pref -> _state.update { it.copy(is24Hr = pref) } }
+                    .launchIn(this)
+            }
     }
 
     private suspend fun rescheduleAllHabits() {
-        repo.getHabits().forEach { habit ->
-            scheduler.schedule(habit)
-        }
+        repo.getHabits().forEach { habit -> scheduler.schedule(habit) }
     }
 
     private suspend fun upsertHabit(habit: Habit) {
@@ -185,20 +178,14 @@ class HabitViewModel(
     private suspend fun insertHabitStatus(habit: Habit, date: LocalDate) {
         val isHabitCompleted =
             _state.value.habitsWithAnalytics
-                .find { it.habit == habit }?.statuses
-                ?.any { it.date == date }
-                ?: false
+                .find { it.habit == habit }
+                ?.statuses
+                ?.any { it.date == date } ?: false
 
         if (isHabitCompleted) {
             repo.deleteHabitStatus(habit.id, date)
         } else {
-            repo.insertHabitStatus(
-                HabitStatus(
-                    habitId = habit.id,
-                    date = date
-                )
-            )
+            repo.insertHabitStatus(HabitStatus(habitId = habit.id, date = date))
         }
     }
-
 }

@@ -1,3 +1,19 @@
+/*
+ * Copyright (C) 2026  Shubham Gorai
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <https://www.gnu.org/licenses/>.
+ */
 package com.shub39.grit.app
 
 import android.os.Bundle
@@ -40,9 +56,7 @@ class MainActivity : FragmentActivity() {
         setContent {
             val windowSizeClass = calculateWindowSizeClass(this)
 
-            CompositionLocalProvider(
-                LocalWindowSizeClass provides windowSizeClass
-            ) {
+            CompositionLocalProvider(LocalWindowSizeClass provides windowSizeClass) {
                 val state by mainViewModel.state.collectAsStateWithLifecycle()
 
                 var showContent by remember { mutableStateOf(false) }
@@ -61,7 +75,7 @@ class MainActivity : FragmentActivity() {
                                         handleBiometricError(errorCode, errString) {
                                             showContent = true
                                         }
-                                    }
+                                    },
                                 )
                             }
                         }
@@ -73,7 +87,7 @@ class MainActivity : FragmentActivity() {
                         App(
                             state = state,
                             onRefreshSub = { mainViewModel.updateSubscription() },
-                            onDismissChangelog = { mainViewModel.dismissChangelog() }
+                            onDismissChangelog = { mainViewModel.dismissChangelog() },
                         )
                     } else {
                         InitialLoading()
@@ -83,33 +97,32 @@ class MainActivity : FragmentActivity() {
         }
     }
 
-    private fun showBiometricPrompt(
-        onSuccess: () -> Unit,
-        onError: (Int, CharSequence) -> Unit
-    ) {
+    private fun showBiometricPrompt(onSuccess: () -> Unit, onError: (Int, CharSequence) -> Unit) {
         val executor = ContextCompat.getMainExecutor(this)
-        val biometricPrompt = BiometricPrompt(
-            this,
-            executor,
-            object : BiometricPrompt.AuthenticationCallback() {
-                override fun onAuthenticationSucceeded(
-                    result: BiometricPrompt.AuthenticationResult
-                ) {
-                    super.onAuthenticationSucceeded(result)
-                    onSuccess()
-                }
+        val biometricPrompt =
+            BiometricPrompt(
+                this,
+                executor,
+                object : BiometricPrompt.AuthenticationCallback() {
+                    override fun onAuthenticationSucceeded(
+                        result: BiometricPrompt.AuthenticationResult
+                    ) {
+                        super.onAuthenticationSucceeded(result)
+                        onSuccess()
+                    }
 
-                override fun onAuthenticationError(errorCode: Int, errString: CharSequence) {
-                    super.onAuthenticationError(errorCode, errString)
-                    onError(errorCode, errString)
-                }
-            }
-        )
+                    override fun onAuthenticationError(errorCode: Int, errString: CharSequence) {
+                        super.onAuthenticationError(errorCode, errString)
+                        onError(errorCode, errString)
+                    }
+                },
+            )
 
-        val promptInfo = BiometricPrompt.PromptInfo.Builder()
-            .setTitle(getString(R.string.biometric_lock))
-            .setAllowedAuthenticators(Utils.getAuthenticators())
-            .build()
+        val promptInfo =
+            BiometricPrompt.PromptInfo.Builder()
+                .setTitle(getString(R.string.biometric_lock))
+                .setAllowedAuthenticators(Utils.getAuthenticators())
+                .build()
 
         biometricPrompt.authenticate(promptInfo)
     }
@@ -117,14 +130,13 @@ class MainActivity : FragmentActivity() {
     private fun handleBiometricError(
         errorCode: Int,
         errString: CharSequence,
-        onComplete: () -> Unit
+        onComplete: () -> Unit,
     ) {
         when (errorCode) {
             BiometricPrompt.ERROR_USER_CANCELED,
             BiometricPrompt.ERROR_NEGATIVE_BUTTON,
             BiometricPrompt.ERROR_CANCELED -> {
-                Toast
-                    .makeText(this, getString(R.string.biometric_failed), Toast.LENGTH_SHORT)
+                Toast.makeText(this, getString(R.string.biometric_failed), Toast.LENGTH_SHORT)
                     .show()
                 finish()
             }
@@ -135,16 +147,13 @@ class MainActivity : FragmentActivity() {
                 mainViewModel.setAppUnlocked(true)
                 mainViewModel.setBiometricLock(false)
 
-                Toast
-                    .makeText(this, getString(R.string.biometric_not_available), Toast.LENGTH_LONG)
+                Toast.makeText(this, getString(R.string.biometric_not_available), Toast.LENGTH_LONG)
                     .show()
                 onComplete()
             }
 
             else -> {
-                Toast
-                    .makeText(this, "Authentication error: $errString", Toast.LENGTH_SHORT)
-                    .show()
+                Toast.makeText(this, "Authentication error: $errString", Toast.LENGTH_SHORT).show()
                 finish()
             }
         }

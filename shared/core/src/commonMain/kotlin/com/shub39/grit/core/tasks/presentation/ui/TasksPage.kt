@@ -1,3 +1,19 @@
+/*
+ * Copyright (C) 2026  Shubham Gorai
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <https://www.gnu.org/licenses/>.
+ */
 package com.shub39.grit.core.tasks.presentation.ui
 
 import androidx.compose.animation.AnimatedVisibility
@@ -51,23 +67,16 @@ import sh.calvin.reorderable.ReorderableItem
 import sh.calvin.reorderable.rememberReorderableLazyListState
 
 @Composable
-fun TasksPage(
-    state: TaskState,
-    onAction: (TaskAction) -> Unit
-) {
+fun TasksPage(state: TaskState, onAction: (TaskAction) -> Unit) {
     var showCategoryEditor by remember { mutableStateOf(false) }
 
-    TaskList(
-        state = state,
-        onAction = onAction,
-        onEditCategories = { showCategoryEditor = true }
-    )
+    TaskList(state = state, onAction = onAction, onEditCategories = { showCategoryEditor = true })
 
     if (showCategoryEditor) {
         CategoryEditDialog(
             state = state,
             onAction = onAction,
-            onDismissRequest = { showCategoryEditor = false }
+            onDismissRequest = { showCategoryEditor = false },
         )
     }
 }
@@ -77,45 +86,42 @@ fun TasksPage(
 private fun CategoryEditDialog(
     state: TaskState,
     onAction: (TaskAction) -> Unit,
-    onDismissRequest: () -> Unit
+    onDismissRequest: () -> Unit,
 ) {
-    GritDialog(
-        onDismissRequest = onDismissRequest,
-        padding = 0.dp
-    ) {
+    GritDialog(onDismissRequest = onDismissRequest, padding = 0.dp) {
         var categories by remember(state.tasks) { mutableStateOf(state.tasks.keys.toList()) }
 
         val listState = rememberLazyListState()
-        val reorderableListState = rememberReorderableLazyListState(listState) { from, to ->
-            categories = categories.toMutableList().apply {
-                add(to.index, removeAt(from.index))
+        val reorderableListState =
+            rememberReorderableLazyListState(listState) { from, to ->
+                categories =
+                    categories.toMutableList().apply { add(to.index, removeAt(from.index)) }
+
+                onAction(
+                    TaskAction.ReorderCategories(
+                        categories.mapIndexed { index, category -> index to category }
+                    )
+                )
             }
 
-            onAction(TaskAction.ReorderCategories(categories.mapIndexed { index, category -> index to category }))
-        }
-
         Column(
-            modifier = Modifier
-                .fillMaxWidth()
-                .heightIn(max = 600.dp)
-                .padding(
-                    start = 16.dp,
-                    end = 16.dp,
-                    top = 16.dp
-                ),
+            modifier =
+                Modifier.fillMaxWidth()
+                    .heightIn(max = 600.dp)
+                    .padding(start = 16.dp, end = 16.dp, top = 16.dp),
             horizontalAlignment = Alignment.CenterHorizontally,
-            verticalArrangement = Arrangement.spacedBy(8.dp)
+            verticalArrangement = Arrangement.spacedBy(8.dp),
         ) {
             Icon(
                 imageVector = vectorResource(Res.drawable.edit),
                 contentDescription = null,
-                modifier = Modifier.size(48.dp)
+                modifier = Modifier.size(48.dp),
             )
 
             Text(
                 text = stringResource(Res.string.edit_categories),
                 style = MaterialTheme.typography.titleLarge,
-                textAlign = TextAlign.Center
+                textAlign = TextAlign.Center,
             )
 
             LazyColumn(
@@ -123,7 +129,7 @@ private fun CategoryEditDialog(
                 state = listState,
                 horizontalAlignment = Alignment.CenterHorizontally,
                 verticalArrangement = Arrangement.spacedBy(8.dp),
-                contentPadding = PaddingValues(vertical = 16.dp)
+                contentPadding = PaddingValues(vertical = 16.dp),
             ) {
                 itemsIndexed(categories, key = { _, it -> it.id }) { _, category ->
                     var showEditSheet by remember { mutableStateOf(false) }
@@ -132,13 +138,15 @@ private fun CategoryEditDialog(
                     ReorderableItem(reorderableListState, key = category.id) {
                         ListItem(
                             modifier = Modifier.clip(MaterialTheme.shapes.medium),
-                            colors = ListItemDefaults.colors(
-                                containerColor = MaterialTheme.colorScheme.surfaceContainerHigh
-                            ),
+                            colors =
+                                ListItemDefaults.colors(
+                                    containerColor = MaterialTheme.colorScheme.surfaceContainerHigh
+                                ),
                             headlineContent = { Text(text = category.name, maxLines = 1) },
                             supportingContent = {
                                 Text(
-                                    text = "${state.tasks[category]?.size ?: "0"} ${
+                                    text =
+                                        "${state.tasks[category]?.size ?: "0"} ${
                                         stringResource(
                                             Res.string.tasks
                                         )
@@ -146,12 +154,10 @@ private fun CategoryEditDialog(
                                 )
                             },
                             leadingContent = {
-                                IconButton(
-                                    onClick = { showEditSheet = true }
-                                ) {
+                                IconButton(onClick = { showEditSheet = true }) {
                                     Icon(
                                         imageVector = vectorResource(Res.drawable.edit),
-                                        contentDescription = "Edit"
+                                        contentDescription = "Edit",
                                     )
                                 }
                             },
@@ -159,35 +165,34 @@ private fun CategoryEditDialog(
                                 Row(verticalAlignment = Alignment.CenterVertically) {
                                     IconButton(
                                         onClick = { showDeleteDialog = true },
-                                        enabled = categories.size > 1
+                                        enabled = categories.size > 1,
                                     ) {
                                         Icon(
                                             imageVector = vectorResource(Res.drawable.delete),
-                                            contentDescription = "Delete"
+                                            contentDescription = "Delete",
                                         )
                                     }
 
                                     AnimatedVisibility(visible = categories.size > 1) {
                                         Icon(
-                                            imageVector = vectorResource(Res.drawable.drag_indicator),
+                                            imageVector =
+                                                vectorResource(Res.drawable.drag_indicator),
                                             contentDescription = null,
-                                            modifier = Modifier
-                                                .padding(horizontal = 8.dp)
-                                                .draggableHandle(),
+                                            modifier =
+                                                Modifier.padding(horizontal = 8.dp)
+                                                    .draggableHandle(),
                                         )
                                     }
                                 }
-                            }
+                            },
                         )
                     }
 
                     if (showDeleteDialog) {
-                        GritDialog(
-                            onDismissRequest = { showDeleteDialog = false }
-                        ) {
+                        GritDialog(onDismissRequest = { showDeleteDialog = false }) {
                             Icon(
                                 imageVector = vectorResource(Res.drawable.warning),
-                                contentDescription = null
+                                contentDescription = null,
                             )
 
                             Text(
@@ -198,21 +203,20 @@ private fun CategoryEditDialog(
 
                             Text(
                                 text = stringResource(Res.string.delete_category),
-                                textAlign = TextAlign.Center
+                                textAlign = TextAlign.Center,
                             )
 
                             Row(
                                 modifier = Modifier.fillMaxWidth(),
-                                horizontalArrangement = Arrangement.End
+                                horizontalArrangement = Arrangement.End,
                             ) {
                                 TextButton(
-                                    onClick = {
-                                        showDeleteDialog = false
-                                    },
-                                    shapes = ButtonShapes(
-                                        shape = MaterialTheme.shapes.extraLarge,
-                                        pressedShape = MaterialTheme.shapes.small
-                                    )
+                                    onClick = { showDeleteDialog = false },
+                                    shapes =
+                                        ButtonShapes(
+                                            shape = MaterialTheme.shapes.extraLarge,
+                                            pressedShape = MaterialTheme.shapes.small,
+                                        ),
                                 ) {
                                     Text(stringResource(Res.string.cancel))
                                 }
@@ -222,10 +226,11 @@ private fun CategoryEditDialog(
                                         onAction(TaskAction.DeleteCategory(category))
                                         showDeleteDialog = false
                                     },
-                                    shapes = ButtonShapes(
-                                        shape = MaterialTheme.shapes.extraLarge,
-                                        pressedShape = MaterialTheme.shapes.small
-                                    )
+                                    shapes =
+                                        ButtonShapes(
+                                            shape = MaterialTheme.shapes.extraLarge,
+                                            pressedShape = MaterialTheme.shapes.small,
+                                        ),
                                 ) {
                                     Text(stringResource(Res.string.delete))
                                 }

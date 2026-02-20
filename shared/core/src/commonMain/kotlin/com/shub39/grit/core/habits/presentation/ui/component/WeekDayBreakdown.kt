@@ -1,3 +1,19 @@
+/*
+ * Copyright (C) 2026  Shubham Gorai
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <https://www.gnu.org/licenses/>.
+ */
 package com.shub39.grit.core.habits.presentation.ui.component
 
 import androidx.compose.foundation.layout.heightIn
@@ -24,65 +40,55 @@ import ir.ehsannarmani.compose_charts.models.LabelHelperProperties
 import ir.ehsannarmani.compose_charts.models.LabelProperties
 import ir.ehsannarmani.compose_charts.models.PopupProperties
 import ir.ehsannarmani.compose_charts.models.VerticalIndicatorProperties
-import kotlinx.datetime.DayOfWeek
-import org.jetbrains.compose.resources.stringResource
 import kotlin.random.Random
 import kotlin.random.nextInt
+import kotlinx.datetime.DayOfWeek
+import org.jetbrains.compose.resources.stringResource
 
 @Composable
 fun WeekDayBreakdown(
     canSeeContent: Boolean,
     weekDayData: List<Bars>,
     onNavigateToPaywall: () -> Unit,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
 ) {
     AnalyticsCard(
         title = stringResource(Res.string.week_breakdown),
         icon = Res.drawable.view_day,
         canSeeContent = canSeeContent,
         onPlusClick = onNavigateToPaywall,
-        modifier = modifier.heightIn(max = 300.dp)
+        modifier = modifier.heightIn(max = 300.dp),
     ) {
         RowChart(
-            modifier = Modifier.padding(
-                start = 16.dp,
-                end = 16.dp,
-                bottom = 16.dp
-            ),
+            modifier = Modifier.padding(start = 16.dp, end = 16.dp, bottom = 16.dp),
             data = weekDayData,
-            dividerProperties = DividerProperties(
-                enabled = false
-            ),
-            popupProperties = PopupProperties(
-                enabled = false
-            ),
-            gridProperties = GridProperties(
-                enabled = false
-            ),
-            indicatorProperties = VerticalIndicatorProperties(
-                enabled = true,
-                textStyle = MaterialTheme.typography.bodyMedium.copy(
-                    color = MaterialTheme.colorScheme.primary,
-                    textAlign = TextAlign.Center,
-                    fontWeight = FontWeight.Bold
-                )
-            ),
-            labelProperties = LabelProperties(
-                enabled = true,
-                padding = 12.dp,
-                textStyle = MaterialTheme.typography.bodyMedium.copy(
-                    color = MaterialTheme.colorScheme.primary,
-                    textAlign = TextAlign.Center,
-                    fontWeight = FontWeight.Bold
-                )
-            ),
-            labelHelperProperties = LabelHelperProperties(
-                enabled = false
-            ),
-            barProperties = BarProperties(
-                cornerRadius = Bars.Data.Radius.Circular(20.dp)
-            ),
-            animationMode = AnimationMode.Together(delayBuilder = { it * 100L })
+            dividerProperties = DividerProperties(enabled = false),
+            popupProperties = PopupProperties(enabled = false),
+            gridProperties = GridProperties(enabled = false),
+            indicatorProperties =
+                VerticalIndicatorProperties(
+                    enabled = true,
+                    textStyle =
+                        MaterialTheme.typography.bodyMedium.copy(
+                            color = MaterialTheme.colorScheme.primary,
+                            textAlign = TextAlign.Center,
+                            fontWeight = FontWeight.Bold,
+                        ),
+                ),
+            labelProperties =
+                LabelProperties(
+                    enabled = true,
+                    padding = 12.dp,
+                    textStyle =
+                        MaterialTheme.typography.bodyMedium.copy(
+                            color = MaterialTheme.colorScheme.primary,
+                            textAlign = TextAlign.Center,
+                            fontWeight = FontWeight.Bold,
+                        ),
+                ),
+            labelHelperProperties = LabelHelperProperties(enabled = false),
+            barProperties = BarProperties(cornerRadius = Bars.Data.Radius.Circular(20.dp)),
+            animationMode = AnimationMode.Together(delayBuilder = { it * 100L }),
         )
     }
 }
@@ -93,13 +99,15 @@ private fun Preview() {
     GritTheme {
         WeekDayBreakdown(
             canSeeContent = true,
-            weekDayData = prepareWeekDayDataToBars(
-                data = DayOfWeek.entries.associate {
-                    it.toString().take(3) to Random.nextInt(0..10)
-                },
-                lineColor = MaterialTheme.colorScheme.primary
-            ),
-            onNavigateToPaywall = {  },
+            weekDayData =
+                prepareWeekDayDataToBars(
+                    data =
+                        DayOfWeek.entries.associate {
+                            it.toString().take(3) to Random.nextInt(0..10)
+                        },
+                    lineColor = MaterialTheme.colorScheme.primary,
+                ),
+            onNavigateToPaywall = {},
         )
     }
 }

@@ -29,6 +29,8 @@ truth = "1.4.5"
 compose-multiplatform = "1.11.0-alpha02"
 kotlinx-coroutines = "1.10.2"
 kotlinx-serialization-json = "1.10.0"
+spotless = "8.2.1"
+ktfmt = "0.61"
 
 [libraries]
 # Android and compose stuff
@@ -88,3 +90,4 @@ compose-compiler = { id = "org.jetbrains.kotlin.plugin.compose", version.ref = "
 kotlin-serialization = { id = "org.jetbrains.kotlin.plugin.serialization", version.ref = "kotlin" }
 compose-multiplatform = { id = "org.jetbrains.compose", version.ref = "compose-multiplatform" }
 kotlin-multiplatform = { id = "org.jetbrains.kotlin.multiplatform", version.ref = "kotlin" }
+spotless = { id = "com.diffplug.spotless", version.ref = "spotless" }

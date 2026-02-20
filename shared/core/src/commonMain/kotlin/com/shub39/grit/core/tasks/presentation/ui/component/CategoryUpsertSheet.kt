@@ -1,3 +1,19 @@
+/*
+ * Copyright (C) 2026  Shubham Gorai
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <https://www.gnu.org/licenses/>.
+ */
 package com.shub39.grit.core.tasks.presentation.ui.component
 
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -40,7 +56,6 @@ import kotlinx.coroutines.delay
 import org.jetbrains.compose.resources.stringResource
 import org.jetbrains.compose.resources.vectorResource
 
-
 @OptIn(ExperimentalMaterial3Api::class, ExperimentalMaterial3ExpressiveApi::class)
 @Composable
 fun CategoryUpsertSheet(
@@ -55,7 +70,7 @@ fun CategoryUpsertSheet(
     GritBottomSheet(
         modifier = modifier.imePadding(),
         padding = 0.dp,
-        onDismissRequest = onDismiss
+        onDismissRequest = onDismiss,
     ) {
         val keyboardController = LocalSoftwareKeyboardController.current
         val focusRequester = remember { FocusRequester() }
@@ -67,17 +82,16 @@ fun CategoryUpsertSheet(
         }
 
         Icon(
-            imageVector = vectorResource(
-                if (isEditSheet) Res.drawable.edit else Res.drawable.add
-            ),
-            contentDescription = "Add"
+            imageVector = vectorResource(if (isEditSheet) Res.drawable.edit else Res.drawable.add),
+            contentDescription = "Add",
         )
         Text(
-            text = stringResource(
-                if (isEditSheet) Res.string.edit_categories else Res.string.add_category
-            ),
+            text =
+                stringResource(
+                    if (isEditSheet) Res.string.edit_categories else Res.string.add_category
+                ),
             style = MaterialTheme.typography.headlineSmall,
-            textAlign = TextAlign.Center
+            textAlign = TextAlign.Center,
         )
         HorizontalDivider()
 
@@ -85,34 +99,27 @@ fun CategoryUpsertSheet(
             value = newCategory.name,
             onValueChange = { newCategory = category.copy(name = it) },
             shape = MaterialTheme.shapes.medium,
-            keyboardOptions = Default.copy(
-                capitalization = KeyboardCapitalization.Sentences,
-                imeAction = ImeAction.Done
-            ),
+            keyboardOptions =
+                Default.copy(
+                    capitalization = KeyboardCapitalization.Sentences,
+                    imeAction = ImeAction.Done,
+                ),
             singleLine = true,
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(16.dp)
-                .focusRequester(focusRequester)
+            modifier = Modifier.fillMaxWidth().padding(16.dp).focusRequester(focusRequester),
         )
 
         HorizontalDivider()
         Button(
             onClick = { onUpsertCategory(newCategory) },
-            shapes = ButtonShapes(
-                shape = MaterialTheme.shapes.extraLarge,
-                pressedShape = MaterialTheme.shapes.small
-            ),
-            modifier = Modifier
-                .padding(16.dp)
-                .fillMaxWidth(),
-            enabled = newCategory.name.isNotBlank() && newCategory.name.length <= 20
+            shapes =
+                ButtonShapes(
+                    shape = MaterialTheme.shapes.extraLarge,
+                    pressedShape = MaterialTheme.shapes.small,
+                ),
+            modifier = Modifier.padding(16.dp).fillMaxWidth(),
+            enabled = newCategory.name.isNotBlank() && newCategory.name.length <= 20,
         ) {
-            Text(
-                text = stringResource(
-                    if (isEditSheet) Res.string.done else Res.string.save
-                )
-            )
+            Text(text = stringResource(if (isEditSheet) Res.string.done else Res.string.save))
         }
     }
 }

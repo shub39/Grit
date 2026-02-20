@@ -1,3 +1,19 @@
+/*
+ * Copyright (C) 2026  Shubham Gorai
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <https://www.gnu.org/licenses/>.
+ */
 package com.shub39.grit.core.tasks.presentation.ui.component
 
 import androidx.compose.animation.AnimatedVisibility
@@ -32,85 +48,75 @@ import grit.shared.core.generated.resources.Res
 import grit.shared.core.generated.resources.alarm
 import org.jetbrains.compose.resources.vectorResource
 
-@OptIn(ExperimentalFoundationApi::class, ExperimentalMaterial3ExpressiveApi::class,)
+@OptIn(ExperimentalFoundationApi::class, ExperimentalMaterial3ExpressiveApi::class)
 @Composable
 fun TaskCard(
     task: Task,
     dragState: Boolean = false,
     reorderIcon: @Composable () -> Unit,
     is24Hr: Boolean,
-    modifier: Modifier
+    modifier: Modifier,
 ) {
-    val cardContent by animateColorAsState(
-        targetValue = when (task.status) {
-            true -> MaterialTheme.colorScheme.onSurface
-            else -> MaterialTheme.colorScheme.onSecondaryContainer
-        },
-        label = "cardContent"
-    )
-    val cardContainer by animateColorAsState(
-        targetValue = when (task.status) {
-            true -> MaterialTheme.colorScheme.surfaceContainerHighest
-            else -> MaterialTheme.colorScheme.secondaryContainer
-        },
-        label = "cardContainer"
-    )
-    val cardColors = CardDefaults.cardColors(
-        containerColor = cardContainer,
-        contentColor = cardContent
-    )
+    val cardContent by
+        animateColorAsState(
+            targetValue =
+                when (task.status) {
+                    true -> MaterialTheme.colorScheme.onSurface
+                    else -> MaterialTheme.colorScheme.onSecondaryContainer
+                },
+            label = "cardContent",
+        )
+    val cardContainer by
+        animateColorAsState(
+            targetValue =
+                when (task.status) {
+                    true -> MaterialTheme.colorScheme.surfaceContainerHighest
+                    else -> MaterialTheme.colorScheme.secondaryContainer
+                },
+            label = "cardContainer",
+        )
+    val cardColors =
+        CardDefaults.cardColors(containerColor = cardContainer, contentColor = cardContent)
 
-    Card(
-        modifier = modifier.animateContentSize(),
-        colors = cardColors,
-    ) {
+    Card(modifier = modifier.animateContentSize(), colors = cardColors) {
         Row(
             verticalAlignment = Alignment.CenterVertically,
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(16.dp),
-            horizontalArrangement = Arrangement.SpaceBetween
+            modifier = Modifier.fillMaxWidth().padding(16.dp),
+            horizontalArrangement = Arrangement.SpaceBetween,
         ) {
             Column(modifier = Modifier.weight(1f)) {
                 Text(
                     text = task.title,
-                    style = MaterialTheme.typography.bodyLarge.copy(
-                        fontWeight = FontWeight.Bold
-                    ),
-                    textDecoration = if (task.status) {
-                        TextDecoration.LineThrough
-                    } else {
-                        TextDecoration.None
-                    },
+                    style = MaterialTheme.typography.bodyLarge.copy(fontWeight = FontWeight.Bold),
+                    textDecoration =
+                        if (task.status) {
+                            TextDecoration.LineThrough
+                        } else {
+                            TextDecoration.None
+                        },
                 )
 
                 if (task.reminder != null) {
                     Row(
                         modifier = Modifier.padding(vertical = 4.dp),
                         verticalAlignment = Alignment.CenterVertically,
-                        horizontalArrangement = Arrangement.spacedBy(4.dp)
+                        horizontalArrangement = Arrangement.spacedBy(4.dp),
                     ) {
                         Icon(
                             imageVector = vectorResource(Res.drawable.alarm),
                             contentDescription = "Reminder",
-                            modifier = Modifier.size(12.dp)
+                            modifier = Modifier.size(12.dp),
                         )
 
                         Text(
                             text = task.reminder.toFormattedString(is24Hr),
-                            style = MaterialTheme.typography.labelSmall.copy(
-                                fontSize = 11.sp
-                            )
+                            style = MaterialTheme.typography.labelSmall.copy(fontSize = 11.sp),
                         )
                     }
                 }
             }
 
-            AnimatedVisibility(
-                visible = dragState,
-                enter = fadeIn(),
-                exit = fadeOut()
-            ) {
+            AnimatedVisibility(visible = dragState, enter = fadeIn(), exit = fadeOut()) {
                 reorderIcon()
             }
         }

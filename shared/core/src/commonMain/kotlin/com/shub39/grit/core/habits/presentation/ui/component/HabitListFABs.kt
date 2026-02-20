@@ -1,3 +1,19 @@
+/*
+ * Copyright (C) 2026  Shubham Gorai
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <https://www.gnu.org/licenses/>.
+ */
 package com.shub39.grit.core.habits.presentation.ui.component
 
 import androidx.compose.animation.AnimatedVisibility
@@ -38,49 +54,50 @@ fun BoxScope.HabitListFABs(
     onAction: (HabitsAction) -> Unit,
     onNavigateToPaywall: () -> Unit,
     isUserSubscribed: Boolean,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
 ) {
     val windowSizeClass = LocalWindowSizeClass.current
 
     Row(
-        modifier = modifier
-            .padding(16.dp)
-            .align(
-                if (windowSizeClass.widthSizeClass == WindowWidthSizeClass.Expanded) {
-                    Alignment.BottomStart
-                } else {
-                    Alignment.BottomEnd
-                }
-            ),
+        modifier =
+            modifier
+                .padding(16.dp)
+                .align(
+                    if (windowSizeClass.widthSizeClass == WindowWidthSizeClass.Expanded) {
+                        Alignment.BottomStart
+                    } else {
+                        Alignment.BottomEnd
+                    }
+                ),
         horizontalArrangement = Arrangement.spacedBy(8.dp),
-        verticalAlignment = Alignment.Bottom
+        verticalAlignment = Alignment.Bottom,
     ) {
         if (windowSizeClass.widthSizeClass != WindowWidthSizeClass.Expanded) {
             FloatingActionButton(
                 onClick = onNavigateToOverallAnalytics,
                 containerColor = MaterialTheme.colorScheme.secondaryContainer,
                 contentColor = MaterialTheme.colorScheme.onSecondaryContainer,
-                modifier = Modifier.animateFloatingActionButton(
-                    visible = state.habitsWithAnalytics.isNotEmpty() && fabVisible,
-                    alignment = Alignment.BottomEnd
-                )
+                modifier =
+                    Modifier.animateFloatingActionButton(
+                        visible = state.habitsWithAnalytics.isNotEmpty() && fabVisible,
+                        alignment = Alignment.BottomEnd,
+                    ),
             ) {
                 Icon(
                     imageVector = vectorResource(Res.drawable.analytics),
-                    contentDescription = "All Analytics"
+                    contentDescription = "All Analytics",
                 )
             }
 
             MediumFloatingActionButton(
-                onClick = {
-                    onAction(HabitsAction.OnAddHabitClicked)
-                },
+                onClick = { onAction(HabitsAction.OnAddHabitClicked) },
                 containerColor = MaterialTheme.colorScheme.tertiaryContainer,
                 contentColor = MaterialTheme.colorScheme.onTertiaryContainer,
-                modifier = Modifier.animateFloatingActionButton(
-                    visible = fabVisible,
-                    alignment = Alignment.BottomEnd
-                )
+                modifier =
+                    Modifier.animateFloatingActionButton(
+                        visible = fabVisible,
+                        alignment = Alignment.BottomEnd,
+                    ),
             ) {
                 Row(
                     modifier = Modifier.padding(16.dp),
@@ -90,12 +107,10 @@ fun BoxScope.HabitListFABs(
                     Icon(
                         imageVector = vectorResource(Res.drawable.add),
                         contentDescription = "Add Habit",
-                        modifier = Modifier.size(FloatingActionButtonDefaults.MediumIconSize)
+                        modifier = Modifier.size(FloatingActionButtonDefaults.MediumIconSize),
                     )
 
-                    AnimatedVisibility(
-                        visible = state.habitsWithAnalytics.isEmpty()
-                    ) {
+                    AnimatedVisibility(visible = state.habitsWithAnalytics.isEmpty()) {
                         Text(text = stringResource(Res.string.add_habit))
                     }
                 }
@@ -111,10 +126,11 @@ fun BoxScope.HabitListFABs(
                 },
                 containerColor = MaterialTheme.colorScheme.tertiaryContainer,
                 contentColor = MaterialTheme.colorScheme.onTertiaryContainer,
-                modifier = Modifier.animateFloatingActionButton(
-                    visible = fabVisible,
-                    alignment = Alignment.BottomEnd
-                )
+                modifier =
+                    Modifier.animateFloatingActionButton(
+                        visible = fabVisible,
+                        alignment = Alignment.BottomEnd,
+                    ),
             ) {
                 Row(
                     modifier = Modifier.padding(16.dp),
@@ -124,32 +140,29 @@ fun BoxScope.HabitListFABs(
                     Icon(
                         imageVector = vectorResource(Res.drawable.add),
                         contentDescription = "Add Habit",
-                        modifier = Modifier.size(FloatingActionButtonDefaults.MediumIconSize)
+                        modifier = Modifier.size(FloatingActionButtonDefaults.MediumIconSize),
                     )
 
-                    AnimatedVisibility(
-                        visible = state.habitsWithAnalytics.isEmpty()
-                    ) {
+                    AnimatedVisibility(visible = state.habitsWithAnalytics.isEmpty()) {
                         Text(text = stringResource(Res.string.add_habit))
                     }
                 }
             }
 
-            AnimatedVisibility(
-                visible = state.analyticsHabitId != null
-            ) {
+            AnimatedVisibility(visible = state.analyticsHabitId != null) {
                 FloatingActionButton(
                     onClick = onNavigateToOverallAnalytics,
                     containerColor = MaterialTheme.colorScheme.secondaryContainer,
                     contentColor = MaterialTheme.colorScheme.onSecondaryContainer,
-                    modifier = Modifier.animateFloatingActionButton(
-                        visible = state.habitsWithAnalytics.isNotEmpty() && fabVisible,
-                        alignment = Alignment.BottomEnd
-                    )
+                    modifier =
+                        Modifier.animateFloatingActionButton(
+                            visible = state.habitsWithAnalytics.isNotEmpty() && fabVisible,
+                            alignment = Alignment.BottomEnd,
+                        ),
                 ) {
                     Icon(
                         imageVector = vectorResource(Res.drawable.analytics),
-                        contentDescription = "All Analytics"
+                        contentDescription = "All Analytics",
                     )
                 }
             }

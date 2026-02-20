@@ -1,3 +1,19 @@
+/*
+ * Copyright (C) 2026  Shubham Gorai
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <https://www.gnu.org/licenses/>.
+ */
 package com.shub39.grit.core.habits.presentation.ui.component
 
 import androidx.compose.foundation.basicMarquee
@@ -29,9 +45,7 @@ import org.jetbrains.compose.resources.DrawableResource
 import org.jetbrains.compose.resources.painterResource
 import org.jetbrains.compose.resources.stringResource
 
-/**
- * Wrapper card for analytics display
- */
+/** Wrapper card for analytics display */
 @Composable
 fun AnalyticsCard(
     title: String,
@@ -39,35 +53,31 @@ fun AnalyticsCard(
     modifier: Modifier = Modifier,
     canSeeContent: Boolean = true,
     onPlusClick: () -> Unit = {},
-    header:  @Composable (RowScope.() -> Unit) = {},
-    content: @Composable () -> Unit
+    header: @Composable (RowScope.() -> Unit) = {},
+    content: @Composable () -> Unit,
 ) {
-    Card(
-        modifier = modifier,
-        shape = MaterialTheme.shapes.large
-    ) {
+    Card(modifier = modifier, shape = MaterialTheme.shapes.large) {
         Row(
             modifier = Modifier.padding(start = 16.dp, top = 16.dp, bottom = 8.dp),
             horizontalArrangement = Arrangement.spacedBy(8.dp),
-            verticalAlignment = Alignment.CenterVertically
+            verticalAlignment = Alignment.CenterVertically,
         ) {
             Icon(
                 painter = painterResource(icon),
                 contentDescription = null,
-                tint = MaterialTheme.colorScheme.primary
+                tint = MaterialTheme.colorScheme.primary,
             )
 
             Text(
                 text = title,
-                style = MaterialTheme.typography.titleLarge.copy(
-                    fontWeight = FontWeight.Bold,
-                    color = MaterialTheme.colorScheme.primary,
-                ),
+                style =
+                    MaterialTheme.typography.titleLarge.copy(
+                        fontWeight = FontWeight.Bold,
+                        color = MaterialTheme.colorScheme.primary,
+                    ),
                 maxLines = 1,
                 overflow = TextOverflow.Ellipsis,
-                modifier = Modifier
-                    .weight(1f)
-                    .basicMarquee()
+                modifier = Modifier.weight(1f).basicMarquee(),
             )
 
             header()
@@ -76,24 +86,24 @@ fun AnalyticsCard(
         if (!canSeeContent) {
             Box(
                 contentAlignment = Alignment.Center,
-                modifier = Modifier
-                    .heightIn(300.dp)
-                    .fillMaxWidth()
+                modifier = Modifier.heightIn(300.dp).fillMaxWidth(),
             ) {
                 if (blurPossible()) {
                     Box(
-                        modifier = Modifier
-                            .fillMaxSize()
-                            .blur(
-                                radius = 10.dp,
-                                edgeTreatment = BlurredEdgeTreatment.Unbounded
-                            )
-                    ) { content() }
+                        modifier =
+                            Modifier.fillMaxSize()
+                                .blur(
+                                    radius = 10.dp,
+                                    edgeTreatment = BlurredEdgeTreatment.Unbounded,
+                                )
+                    ) {
+                        content()
+                    }
                 }
 
-                Button(
-                    onClick = onPlusClick
-                ) { Text(text = stringResource(Res.string.unlock_plus)) }
+                Button(onClick = onPlusClick) {
+                    Text(text = stringResource(Res.string.unlock_plus))
+                }
             }
         } else {
             content()

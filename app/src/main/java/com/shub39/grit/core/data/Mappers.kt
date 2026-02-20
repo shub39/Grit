@@ -1,3 +1,19 @@
+/*
+ * Copyright (C) 2026  Shubham Gorai
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <https://www.gnu.org/licenses/>.
+ */
 package com.shub39.grit.core.data
 
 import com.shub39.grit.core.habits.domain.Habit
@@ -17,16 +33,12 @@ fun HabitEntity.toHabit(): Habit {
         time = time,
         days = days,
         index = index,
-        reminder = reminder
+        reminder = reminder,
     )
 }
 
 fun HabitStatusEntity.toHabitStatus(): HabitStatus {
-    return HabitStatus(
-        id = id,
-        habitId = habitId,
-        date = date
-    )
+    return HabitStatus(id = id, habitId = habitId, date = date)
 }
 
 fun Habit.toHabitEntity(): HabitEntity {
@@ -37,16 +49,12 @@ fun Habit.toHabitEntity(): HabitEntity {
         time = time,
         index = index,
         days = days,
-        reminder = reminder
+        reminder = reminder,
     )
 }
 
 fun HabitStatus.toHabitStatusEntity(): HabitStatusEntity {
-    return HabitStatusEntity(
-        id = id,
-        habitId = habitId,
-        date = date
-    )
+    return HabitStatusEntity(id = id, habitId = habitId, date = date)
 }
 
 fun Task.toTaskEntity(): TaskEntity {
@@ -56,7 +64,7 @@ fun Task.toTaskEntity(): TaskEntity {
         title = title,
         index = index,
         status = status,
-        reminder = reminder
+        reminder = reminder,
     )
 }
 
@@ -67,24 +75,14 @@ fun TaskEntity.toTask(): Task {
         title = title,
         index = index,
         status = status,
-        reminder = reminder
+        reminder = reminder,
     )
 }
 
 fun CategoryEntity.toCategory(): Category {
-    return Category(
-        id = id,
-        name = name,
-        index = index,
-        color = color
-    )
+    return Category(id = id, name = name, index = index, color = color)
 }
 
 fun Category.toCategoryEntity(): CategoryEntity {
-    return CategoryEntity(
-        id = id,
-        name = name,
-        color = color,
-        index = index
-    )
+    return CategoryEntity(id = id, name = name, color = color, index = index)
 }

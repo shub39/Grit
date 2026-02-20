@@ -1,3 +1,19 @@
+/*
+ * Copyright (C) 2026  Shubham Gorai
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <https://www.gnu.org/licenses/>.
+ */
 package com.shub39.grit.core.presentation.settings.ui.component
 
 import androidx.compose.foundation.layout.Arrangement
@@ -39,31 +55,30 @@ fun AboutApp() {
     val uriHandler = LocalUriHandler.current
 
     Card(
-        modifier = Modifier
-            .fillMaxWidth(),
-        colors = CardDefaults.cardColors(
-            containerColor = MaterialTheme.colorScheme.primaryContainer,
-            contentColor = MaterialTheme.colorScheme.onPrimaryContainer
-        ),
-        shape = MaterialTheme.shapes.extraLarge
+        modifier = Modifier.fillMaxWidth(),
+        colors =
+            CardDefaults.cardColors(
+                containerColor = MaterialTheme.colorScheme.primaryContainer,
+                contentColor = MaterialTheme.colorScheme.onPrimaryContainer,
+            ),
+        shape = MaterialTheme.shapes.extraLarge,
     ) {
-        val buttonColors = ButtonDefaults.buttonColors(
-            containerColor = MaterialTheme.colorScheme.onPrimaryContainer,
-            contentColor = MaterialTheme.colorScheme.primaryContainer
-        )
+        val buttonColors =
+            ButtonDefaults.buttonColors(
+                containerColor = MaterialTheme.colorScheme.onPrimaryContainer,
+                contentColor = MaterialTheme.colorScheme.primaryContainer,
+            )
 
         Row(
-            modifier = Modifier
-                .padding(16.dp)
-                .fillMaxWidth(),
+            modifier = Modifier.padding(16.dp).fillMaxWidth(),
             verticalAlignment = Alignment.CenterVertically,
-            horizontalArrangement = Arrangement.spacedBy(8.dp)
+            horizontalArrangement = Arrangement.spacedBy(8.dp),
         ) {
             Column {
                 Text(
                     text = "Grit",
                     style = MaterialTheme.typography.titleLarge,
-                    fontWeight = FontWeight.Bold
+                    fontWeight = FontWeight.Bold,
                 )
                 Text(text = "${BuildConfig.VERSION_NAME} (${BuildConfig.VERSION_CODE})")
             }
@@ -71,23 +86,19 @@ fun AboutApp() {
             Spacer(modifier = Modifier.weight(1f))
 
             Row {
-                IconButton(
-                    onClick = { uriHandler.openUri("https://discord.gg/nxA2hgtEKf") }
-                ) {
+                IconButton(onClick = { uriHandler.openUri("https://discord.gg/nxA2hgtEKf") }) {
                     Icon(
                         imageVector = vectorResource(Res.drawable.discord),
                         contentDescription = "Discord",
-                        modifier = Modifier.size(24.dp)
+                        modifier = Modifier.size(24.dp),
                     )
                 }
 
-                IconButton(
-                    onClick = { uriHandler.openUri("https://github.com/shub39/Grit") }
-                ) {
+                IconButton(onClick = { uriHandler.openUri("https://github.com/shub39/Grit") }) {
                     Icon(
                         imageVector = vectorResource(Res.drawable.github),
                         contentDescription = "Github",
-                        modifier = Modifier.size(24.dp)
+                        modifier = Modifier.size(24.dp),
                     )
                 }
             }
@@ -95,20 +106,20 @@ fun AboutApp() {
 
         FlowRow(
             modifier = Modifier.padding(start = 16.dp, end = 16.dp, bottom = 16.dp),
-            horizontalArrangement = Arrangement.spacedBy(8.dp)
+            horizontalArrangement = Arrangement.spacedBy(8.dp),
         ) {
             Button(
                 colors = buttonColors,
-                onClick = { uriHandler.openUri("https://buymeacoffee.com/shub39") }
+                onClick = { uriHandler.openUri("https://buymeacoffee.com/shub39") },
             ) {
                 Row(
                     horizontalArrangement = Arrangement.spacedBy(8.dp),
-                    verticalAlignment = Alignment.CenterVertically
+                    verticalAlignment = Alignment.CenterVertically,
                 ) {
                     Icon(
                         imageVector = vectorResource(Res.drawable.buymeacoffee),
                         contentDescription = "Buy me a coffee",
-                        modifier = Modifier.size(24.dp)
+                        modifier = Modifier.size(24.dp),
                     )
 
                     Text(text = stringResource(Res.string.bmc))
@@ -117,16 +128,16 @@ fun AboutApp() {
 
             Button(
                 onClick = { uriHandler.openUri("https://hosted.weblate.org/engage/grit/") },
-                colors = buttonColors
+                colors = buttonColors,
             ) {
                 Row(
                     horizontalArrangement = Arrangement.spacedBy(8.dp),
-                    verticalAlignment = Alignment.CenterVertically
+                    verticalAlignment = Alignment.CenterVertically,
                 ) {
                     Icon(
                         imageVector = vectorResource(Res.drawable.translate),
                         contentDescription = "Translate",
-                        modifier = Modifier.size(24.dp)
+                        modifier = Modifier.size(24.dp),
                     )
 
                     Text(text = stringResource(Res.string.translate))
@@ -135,16 +146,20 @@ fun AboutApp() {
 
             Button(
                 colors = buttonColors,
-                onClick = { uriHandler.openUri("https://play.google.com/store/apps/details?id=com.shub39.grit") }
+                onClick = {
+                    uriHandler.openUri(
+                        "https://play.google.com/store/apps/details?id=com.shub39.grit"
+                    )
+                },
             ) {
                 Row(
                     horizontalArrangement = Arrangement.spacedBy(8.dp),
-                    verticalAlignment = Alignment.CenterVertically
+                    verticalAlignment = Alignment.CenterVertically,
                 ) {
                     Icon(
                         imageVector = vectorResource(Res.drawable.playstore),
                         contentDescription = "Rate On Google Play",
-                        modifier = Modifier.size(20.dp)
+                        modifier = Modifier.size(20.dp),
                     )
 
                     Text(text = stringResource(Res.string.rate_on_play))

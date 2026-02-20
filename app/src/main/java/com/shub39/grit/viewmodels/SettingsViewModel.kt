@@ -1,3 +1,19 @@
+/*
+ * Copyright (C) 2026  Shubham Gorai
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <https://www.gnu.org/licenses/>.
+ */
 package com.shub39.grit.viewmodels
 
 import androidx.compose.ui.graphics.Color
@@ -33,250 +49,185 @@ class SettingsViewModel(
     private val exportRepo: ExportRepo,
     private val restoreRepo: RestoreRepo,
     private val datastore: GritDatastore,
-    private val changelogManager: ChangelogManager
+    private val changelogManager: ChangelogManager,
 ) : ViewModel() {
     private var observeJob: Job? = null
 
     private val _state = MutableStateFlow(SettingsState())
 
-    val state = _state.asStateFlow()
-        .onStart {
-            observeJob()
-            getChangeLogs()
+    val state =
+        _state
+            .asStateFlow()
+            .onStart {
+                observeJob()
+                getChangeLogs()
+            }
+            .stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000), SettingsState())
+
+    fun onAction(action: SettingsAction) =
+        viewModelScope.launch {
+            when (action) {
+                is SettingsAction.ChangeAmoled -> datastore.setAmoledPref(action.pref)
+
+                is SettingsAction.ChangeAppTheme -> datastore.setAppTheme(action.appTheme)
+
+                is SettingsAction.ChangeIs24Hr -> datastore.setIs24Hr(action.pref)
+
+                is SettingsAction.ChangeMaterialYou -> datastore.setMaterialYou(action.pref)
+
+                is SettingsAction.ChangePaletteStyle -> datastore.setPaletteStyle(action.style)
+
+                is SettingsAction.ChangeSeedColor -> datastore.setSeedColor(action.color.toArgb())
+
+                is SettingsAction.ChangeStartOfTheWeek -> datastore.setStartOfWeek(action.pref)
+
+                is SettingsAction.ChangeStartingPage -> datastore.setStartingPage(action.page)
+
+                SettingsAction.OnResetBackupState -> {
+                    _state.update { it.copy(backupState = BackupState()) }
+                }
+
+                SettingsAction.OnExport -> {
+                    _state.update {
+                        it.copy(
+                            backupState = it.backupState.copy(exportState = ExportState.EXPORTING)
+                        )
+                    }
+
+                    exportRepo.exportToJson()
+
+                    _state.update {
+                        it.copy(
+                            backupState = it.backupState.copy(exportState = ExportState.EXPORTED)
+                        )
+                    }
+                }
+
+                is SettingsAction.OnRestore -> {
+                    _state.update {
+                        it.copy(
+                            backupState = it.backupState.copy(restoreState = RestoreState.RESTORING)
+                        )
+                    }
+
+                    val result = restoreRepo.restoreData(action.uri)
+
+                    _state.update {
+                        it.copy(
+                            backupState =
+                                it.backupState.copy(
+                                    restoreState =
+                                        when (result) {
+                                            is RestoreResult.Failure -> RestoreState.FAILURE
+                                            RestoreResult.Success -> RestoreState.RESTORED
+                                        }
+                                )
+                        )
+                    }
+                }
+
+                is SettingsAction.ChangePauseNotifications ->
+                    datastore.setNotifications(action.pref)
+
+                is SettingsAction.ChangeFontPref -> datastore.setFontPref(action.font)
+
+                is SettingsAction.ChangeBiometricLock -> datastore.setBiometricPref(action.pref)
+
+                is SettingsAction.OnCheckBiometric -> {
+                    _state.update {
+                        it.copy(
+                            isBiometricLockAvailable = Utils.authenticationAvailable(action.context)
+                        )
+                    }
+                }
+
+                SettingsAction.OnResetTheme -> datastore.resetAppTheme()
+
+                is SettingsAction.ChangeReorderTasks -> datastore.setTaskReorderPref(action.pref)
+            }
         }
-        .stateIn(
-            viewModelScope,
-            SharingStarted.WhileSubscribed(5000),
-            SettingsState()
-        )
-
-    fun onAction(action: SettingsAction) = viewModelScope.launch {
-        when (action) {
-            is SettingsAction.ChangeAmoled -> datastore.setAmoledPref(action.pref)
-
-            is SettingsAction.ChangeAppTheme -> datastore.setAppTheme(action.appTheme)
-
-            is SettingsAction.ChangeIs24Hr -> datastore.setIs24Hr(action.pref)
-
-            is SettingsAction.ChangeMaterialYou -> datastore.setMaterialYou(action.pref)
-
-            is SettingsAction.ChangePaletteStyle -> datastore.setPaletteStyle(action.style)
-
-            is SettingsAction.ChangeSeedColor -> datastore.setSeedColor(action.color.toArgb())
-
-            is SettingsAction.ChangeStartOfTheWeek -> datastore.setStartOfWeek(action.pref)
-
-            is SettingsAction.ChangeStartingPage -> datastore.setStartingPage(action.page)
-
-            SettingsAction.OnResetBackupState -> {
-                _state.update { it.copy(backupState = BackupState()) }
-            }
-
-            SettingsAction.OnExport -> {
-                _state.update {
-                    it.copy(
-                        backupState = it.backupState.copy(
-                            exportState = ExportState.EXPORTING
-                        )
-                    )
-                }
-
-                exportRepo.exportToJson()
-
-                _state.update {
-                    it.copy(
-                        backupState = it.backupState.copy(
-                            exportState = ExportState.EXPORTED
-                        )
-                    )
-                }
-            }
-
-            is SettingsAction.OnRestore -> {
-                _state.update {
-                    it.copy(
-                        backupState = it.backupState.copy(
-                            restoreState = RestoreState.RESTORING
-                        )
-                    )
-                }
-
-                val result = restoreRepo.restoreData(action.uri)
-
-                _state.update {
-                    it.copy(
-                        backupState = it.backupState.copy(
-                            restoreState = when (result) {
-                                is RestoreResult.Failure -> RestoreState.FAILURE
-                                RestoreResult.Success -> RestoreState.RESTORED
-                            }
-                        )
-                    )
-                }
-            }
-
-            is SettingsAction.ChangePauseNotifications -> datastore.setNotifications(action.pref)
-
-            is SettingsAction.ChangeFontPref -> datastore.setFontPref(action.font)
-
-            is SettingsAction.ChangeBiometricLock -> datastore.setBiometricPref(action.pref)
-
-            is SettingsAction.OnCheckBiometric -> {
-                _state.update {
-                    it.copy(
-                        isBiometricLockAvailable = Utils.authenticationAvailable(action.context)
-                    )
-                }
-            }
-
-            SettingsAction.OnResetTheme -> datastore.resetAppTheme()
-
-            is SettingsAction.ChangeReorderTasks -> datastore.setTaskReorderPref(action.pref)
-        }
-    }
 
     private fun getChangeLogs() {
         viewModelScope.launch {
-            _state.update {
-                it.copy(
-                    changelog = changelogManager.changelogs.first()
-                )
+            _state.update { it.copy(changelog = changelogManager.changelogs.first()) }
+        }
+    }
+
+    private fun observeJob() =
+        viewModelScope.launch {
+            observeJob?.cancel()
+            observeJob = launch {
+                datastore
+                    .getTaskReorderPref()
+                    .onEach { pref -> _state.update { it.copy(reorderTasks = pref) } }
+                    .launchIn(this)
+
+                datastore
+                    .getNotificationsFlow()
+                    .onEach { pref -> _state.update { it.copy(pauseNotifications = pref) } }
+                    .launchIn(this)
+
+                datastore
+                    .getAppThemeFlow()
+                    .onEach { flow ->
+                        _state.update { it.copy(theme = it.theme.copy(appTheme = flow)) }
+                    }
+                    .launchIn(this)
+
+                datastore
+                    .getFontPrefFlow()
+                    .onEach { flow ->
+                        _state.update { it.copy(theme = it.theme.copy(font = flow)) }
+                    }
+                    .launchIn(this)
+
+                datastore
+                    .getSeedColorFlow()
+                    .onEach { flow ->
+                        _state.update { it.copy(theme = it.theme.copy(seedColor = Color(flow))) }
+                    }
+                    .launchIn(this)
+
+                datastore
+                    .getAmoledPref()
+                    .onEach { flow ->
+                        _state.update { it.copy(theme = it.theme.copy(isAmoled = flow)) }
+                    }
+                    .launchIn(this)
+
+                datastore
+                    .getMaterialYouFlow()
+                    .onEach { flow ->
+                        _state.update { it.copy(theme = it.theme.copy(isMaterialYou = flow)) }
+                    }
+                    .launchIn(this)
+
+                datastore
+                    .getPaletteStyle()
+                    .onEach { flow ->
+                        _state.update { it.copy(theme = it.theme.copy(paletteStyle = flow)) }
+                    }
+                    .launchIn(this)
+
+                datastore
+                    .getIs24Hr()
+                    .onEach { flow -> _state.update { it.copy(is24Hr = flow) } }
+                    .launchIn(this)
+
+                datastore
+                    .getStartingSectionPref()
+                    .onEach { flow -> _state.update { it.copy(startingPage = flow) } }
+                    .launchIn(this)
+
+                datastore
+                    .getStartOfTheWeekPref()
+                    .onEach { flow -> _state.update { it.copy(startOfTheWeek = flow) } }
+                    .launchIn(this)
+
+                datastore
+                    .getBiometricLockPref()
+                    .onEach { flow -> _state.update { it.copy(isBiometricLockOn = flow) } }
+                    .launchIn(this)
             }
         }
-    }
-
-    private fun observeJob() = viewModelScope.launch {
-        observeJob?.cancel()
-        observeJob = launch {
-            datastore.getTaskReorderPref()
-                .onEach { pref ->
-                    _state.update {
-                        it.copy(
-                            reorderTasks = pref
-                        )
-                    }
-                }
-                .launchIn(this)
-
-            datastore.getNotificationsFlow()
-                .onEach { pref ->
-                    _state.update {
-                        it.copy(
-                            pauseNotifications = pref
-                        )
-                    }
-                }
-                .launchIn(this)
-
-            datastore.getAppThemeFlow()
-                .onEach { flow ->
-                    _state.update {
-                        it.copy(
-                            theme = it.theme.copy(
-                                appTheme = flow
-                            )
-                        )
-                    }
-                }
-                .launchIn(this)
-
-            datastore.getFontPrefFlow()
-                .onEach { flow ->
-                    _state.update {
-                        it.copy(
-                            theme = it.theme.copy(
-                                font = flow
-                            )
-                        )
-                    }
-                }
-                .launchIn(this)
-
-            datastore.getSeedColorFlow()
-                .onEach { flow ->
-                    _state.update {
-                        it.copy(
-                            theme = it.theme.copy(
-                                seedColor = Color(flow)
-                            )
-                        )
-                    }
-                }
-                .launchIn(this)
-
-            datastore.getAmoledPref()
-                .onEach { flow ->
-                    _state.update {
-                        it.copy(
-                            theme = it.theme.copy(
-                                isAmoled = flow
-                            )
-                        )
-                    }
-                }
-                .launchIn(this)
-
-            datastore.getMaterialYouFlow()
-                .onEach { flow ->
-                    _state.update {
-                        it.copy(
-                            theme = it.theme.copy(
-                                isMaterialYou = flow
-                            )
-                        )
-                    }
-                }
-                .launchIn(this)
-
-            datastore.getPaletteStyle()
-                .onEach { flow ->
-                    _state.update {
-                        it.copy(
-                            theme = it.theme.copy(
-                                paletteStyle = flow
-                            )
-                        )
-                    }
-                }
-                .launchIn(this)
-
-            datastore.getIs24Hr()
-                .onEach { flow ->
-                    _state.update {
-                        it.copy(is24Hr = flow)
-                    }
-                }
-                .launchIn(this)
-
-            datastore.getStartingSectionPref()
-                .onEach { flow ->
-                    _state.update {
-                        it.copy(
-                            startingPage = flow
-                        )
-                    }
-                }
-                .launchIn(this)
-
-            datastore.getStartOfTheWeekPref()
-                .onEach { flow ->
-                    _state.update {
-                        it.copy(
-                            startOfTheWeek = flow
-                        )
-                    }
-                }
-                .launchIn(this)
-
-            datastore.getBiometricLockPref()
-                .onEach { flow ->
-                    _state.update {
-                        it.copy(
-                            isBiometricLockOn = flow
-                        )
-                    }
-                }
-                .launchIn(this)
-        }
-    }
 }

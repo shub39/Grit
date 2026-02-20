@@ -1,3 +1,19 @@
+/*
+ * Copyright (C) 2026  Shubham Gorai
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <https://www.gnu.org/licenses/>.
+ */
 package com.shub39.grit.core.habits.presentation.ui.sections
 
 import androidx.compose.animation.core.animateDpAsState
@@ -29,17 +45,17 @@ import com.shub39.grit.core.utils.LocalWindowSizeClass
 import com.shub39.grit.core.utils.now
 import grit.shared.core.generated.resources.Res
 import grit.shared.core.generated.resources.drag_indicator
+import kotlin.time.ExperimentalTime
 import kotlinx.datetime.DayOfWeek
 import kotlinx.datetime.LocalDateTime
 import org.jetbrains.compose.resources.vectorResource
 import sh.calvin.reorderable.ReorderableItem
 import sh.calvin.reorderable.rememberReorderableLazyListState
-import kotlin.time.ExperimentalTime
 
 @OptIn(
     ExperimentalMaterial3Api::class,
     ExperimentalMaterial3ExpressiveApi::class,
-    ExperimentalTime::class
+    ExperimentalTime::class,
 )
 @Composable
 fun HabitsList(
@@ -47,7 +63,7 @@ fun HabitsList(
     lazyListState: LazyListState,
     onAction: (HabitsAction) -> Unit,
     onNavigateToAnalytics: () -> Unit,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
 ) {
     val windowSizeClass = LocalWindowSizeClass.current
     val reorderableListState =
@@ -60,14 +76,12 @@ fun HabitsList(
             state = lazyListState,
             contentPadding = PaddingValues(start = 16.dp, end = 16.dp, top = 16.dp, bottom = 60.dp),
             verticalArrangement = Arrangement.spacedBy(8.dp),
-            modifier = Modifier.fillMaxHeight()
+            modifier = Modifier.fillMaxHeight(),
         ) {
             // habits
             items(state.habitsWithAnalytics, key = { it.habit.id }) { habitWithAnalytics ->
                 ReorderableItem(reorderableListState, key = habitWithAnalytics.habit.id) {
-                    val cardCorners by animateDpAsState(
-                        targetValue = if (!it) 32.dp else 16.dp
-                    )
+                    val cardCorners by animateDpAsState(targetValue = if (!it) 32.dp else 16.dp)
 
                     HabitCard(
                         habitWithAnalytics = habitWithAnalytics,
@@ -81,14 +95,17 @@ fun HabitsList(
                             Icon(
                                 imageVector = vectorResource(Res.drawable.drag_indicator),
                                 contentDescription = "Drag Indicator",
-                                modifier = Modifier.draggableHandle(
-                                    onDragStopped = { onAction(HabitsAction.ReorderHabits) }
-                                )
+                                modifier =
+                                    Modifier.draggableHandle(
+                                        onDragStopped = { onAction(HabitsAction.ReorderHabits) }
+                                    ),
                             )
                         },
                         shape = RoundedCornerShape(cardCorners),
                         compactView = state.compactHabitView,
-                        analyticsEnabled = state.analyticsHabitId != habitWithAnalytics.habit.id || windowSizeClass.widthSizeClass != WindowWidthSizeClass.Expanded
+                        analyticsEnabled =
+                            state.analyticsHabitId != habitWithAnalytics.habit.id ||
+                                windowSizeClass.widthSizeClass != WindowWidthSizeClass.Expanded,
                     )
                 }
             }
@@ -98,7 +115,7 @@ fun HabitsList(
                 item {
                     Empty(
                         modifier = Modifier.padding(top = 150.dp),
-                        color = MaterialTheme.colorScheme.onSurface
+                        color = MaterialTheme.colorScheme.onSurface,
                     )
                 }
             }
@@ -108,14 +125,15 @@ fun HabitsList(
     // add dialog
     if (state.showHabitAddSheet) {
         HabitUpsertSheet(
-            habit = Habit(
-                title = "",
-                description = "",
-                time = LocalDateTime.now(),
-                days = DayOfWeek.entries.toSet(),
-                index = state.habitsWithAnalytics.size,
-                reminder = false
-            ),
+            habit =
+                Habit(
+                    title = "",
+                    description = "",
+                    time = LocalDateTime.now(),
+                    days = DayOfWeek.entries.toSet(),
+                    index = state.habitsWithAnalytics.size,
+                    reminder = false,
+                ),
             onDismissRequest = { onAction(HabitsAction.DismissAddHabitDialog) },
             onUpsertHabit = { onAction(HabitsAction.AddHabit(it)) },
             is24Hr = state.is24Hr,

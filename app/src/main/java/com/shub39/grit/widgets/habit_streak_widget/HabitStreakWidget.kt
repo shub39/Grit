@@ -1,3 +1,19 @@
+/*
+ * Copyright (C) 2026  Shubham Gorai
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <https://www.gnu.org/licenses/>.
+ */
 package com.shub39.grit.widgets.habit_streak_widget
 
 import android.content.Context
@@ -66,10 +82,7 @@ class HabitStreakWidget : GlanceAppWidget(), KoinComponent {
 
     override val sizeMode: SizeMode = SizeMode.Exact
 
-    override suspend fun provideGlance(
-        context: Context,
-        id: GlanceId
-    ) {
+    override suspend fun provideGlance(context: Context, id: GlanceId) {
         val repo = get<HabitRepo>()
 
         provideContent {
@@ -90,21 +103,18 @@ class HabitStreakWidget : GlanceAppWidget(), KoinComponent {
                     Content(
                         habitWithAnalytics = currentData,
                         onUpdateWidget = {
-                            scope.launch {
-                                this@HabitStreakWidget.update(context, id)
-                            }
+                            scope.launch { this@HabitStreakWidget.update(context, id) }
                         },
                         onChangeHabit = {
-                            val nextId = if (currentIndex == sortedData.size - 1) {
-                                sortedData.first().habit.id
-                            } else {
-                                sortedData[currentIndex + 1].habit.id
-                            }
+                            val nextId =
+                                if (currentIndex == sortedData.size - 1) {
+                                    sortedData.first().habit.id
+                                } else {
+                                    sortedData[currentIndex + 1].habit.id
+                                }
 
-                            scope.launch {
-                                updateHabitId(context, id, nextId)
-                            }
-                        }
+                            scope.launch { updateHabitId(context, id, nextId) }
+                        },
                     )
                 }
             }
@@ -116,35 +126,31 @@ class HabitStreakWidget : GlanceAppWidget(), KoinComponent {
             Content(
                 onUpdateWidget = {},
                 onChangeHabit = {},
-                habitWithAnalytics = HabitWithAnalytics(
-                    habit = Habit(
-                        id = 1,
-                        title = "Exercise",
-                        description = "40 mins daily",
-                        time = LocalDateTime.now(),
-                        days = setOf(),
-                        index = 1,
-                        reminder = false
+                habitWithAnalytics =
+                    HabitWithAnalytics(
+                        habit =
+                            Habit(
+                                id = 1,
+                                title = "Exercise",
+                                description = "40 mins daily",
+                                time = LocalDateTime.now(),
+                                days = setOf(),
+                                index = 1,
+                                reminder = false,
+                            ),
+                        statuses = listOf(),
+                        weeklyComparisonData = listOf(),
+                        weekDayFrequencyData = mapOf(),
+                        currentStreak = 12,
+                        bestStreak = 20,
+                        startedDaysAgo = 100,
                     ),
-                    statuses = listOf(),
-                    weeklyComparisonData = listOf(),
-                    weekDayFrequencyData = mapOf(),
-                    currentStreak = 12,
-                    bestStreak = 20,
-                    startedDaysAgo = 100
-                )
             )
         }
     }
 
-    suspend fun updateHabitId(
-        context: Context,
-        glanceId: GlanceId,
-        newHabitId: Long
-    ) {
-        updateAppWidgetState(context, glanceId) {
-            it[habitIdKey] = newHabitId
-        }
+    suspend fun updateHabitId(context: Context, glanceId: GlanceId, newHabitId: Long) {
+        updateAppWidgetState(context, glanceId) { it[habitIdKey] = newHabitId }
         update(context, glanceId)
     }
 }
@@ -155,28 +161,28 @@ private fun Content(
     modifier: GlanceModifier = GlanceModifier,
     habitWithAnalytics: HabitWithAnalytics?,
     onUpdateWidget: () -> Unit,
-    onChangeHabit: () -> Unit
+    onChangeHabit: () -> Unit,
 ) {
     val context = LocalContext.current
     val size = LocalSize.current
     val roundedCornerSupported = Build.VERSION.SDK_INT >= Build.VERSION_CODES.S
 
     Column(
-        modifier = modifier
-            .fillMaxSize()
-            .then(
-                if (roundedCornerSupported) {
-                    GlanceModifier
-                        .background(GlanceTheme.colors.widgetBackground)
-                        .cornerRadius(24.dp)
-                } else {
-                    GlanceModifier.background(
-                        imageProvider = ImageProvider(R.drawable.rounded_4dp),
-                        colorFilter = ColorFilter.tint(GlanceTheme.colors.widgetBackground)
-                    )
-                }
-            )
-            .clickable(actionStartActivity<MainActivity>())
+        modifier =
+            modifier
+                .fillMaxSize()
+                .then(
+                    if (roundedCornerSupported) {
+                        GlanceModifier.background(GlanceTheme.colors.widgetBackground)
+                            .cornerRadius(24.dp)
+                    } else {
+                        GlanceModifier.background(
+                            imageProvider = ImageProvider(R.drawable.rounded_4dp),
+                            colorFilter = ColorFilter.tint(GlanceTheme.colors.widgetBackground),
+                        )
+                    }
+                )
+                .clickable(actionStartActivity<MainActivity>())
     ) {
         if (habitWithAnalytics != null) {
             TitleBar(
@@ -189,7 +195,7 @@ private fun Content(
                                 provider = ImageProvider(R.drawable.refresh),
                                 contentDescription = null,
                                 colorFilter = ColorFilter.tint(GlanceTheme.colors.onSurface),
-                                modifier = GlanceModifier.clickable { onUpdateWidget() }
+                                modifier = GlanceModifier.clickable { onUpdateWidget() },
                             )
                         }
                         Spacer(modifier = GlanceModifier.width(4.dp))
@@ -198,53 +204,49 @@ private fun Content(
                                 provider = ImageProvider(R.drawable.arrow_forward),
                                 contentDescription = null,
                                 colorFilter = ColorFilter.tint(GlanceTheme.colors.onSurface),
-                                modifier = GlanceModifier.clickable {
-                                    onChangeHabit()
-                                    onUpdateWidget()
-                                }
+                                modifier =
+                                    GlanceModifier.clickable {
+                                        onChangeHabit()
+                                        onUpdateWidget()
+                                    },
                             )
                         }
                     } else {
                         Spacer(modifier = GlanceModifier.width(16.dp))
                     }
-                }
+                },
             )
 
             Column(
-                modifier = GlanceModifier
-                    .fillMaxSize()
-                    .padding(start = 8.dp, end = 8.dp, bottom = 8.dp),
+                modifier =
+                    GlanceModifier.fillMaxSize().padding(start = 8.dp, end = 8.dp, bottom = 8.dp),
                 horizontalAlignment = Alignment.Start,
             ) {
                 // current streak stat
                 Column(
-                    modifier = GlanceModifier
-                        .defaultWeight()
-                        .then(
-                            if (roundedCornerSupported) {
-                                GlanceModifier
-                                    .cornerRadius(16.dp)
-                                    .background(GlanceTheme.colors.primary)
-                            } else {
-                                GlanceModifier
-                                    .background(
+                    modifier =
+                        GlanceModifier.defaultWeight()
+                            .then(
+                                if (roundedCornerSupported) {
+                                    GlanceModifier.cornerRadius(16.dp)
+                                        .background(GlanceTheme.colors.primary)
+                                } else {
+                                    GlanceModifier.background(
                                         imageProvider = ImageProvider(R.drawable.rounded_16dp),
-                                        colorFilter = ColorFilter.tint(GlanceTheme.colors.primary)
+                                        colorFilter = ColorFilter.tint(GlanceTheme.colors.primary),
                                     )
-                            }
-                        )
+                                }
+                            )
                 ) {
                     Row(
                         verticalAlignment = Alignment.CenterVertically,
-                        modifier = GlanceModifier
-                            .padding(8.dp)
-                            .fillMaxSize()
+                        modifier = GlanceModifier.padding(8.dp).fillMaxSize(),
                     ) {
                         Image(
                             provider = ImageProvider(R.drawable.heat),
                             contentDescription = null,
                             colorFilter = ColorFilter.tint(GlanceTheme.colors.onPrimary),
-                            modifier = GlanceModifier.size(28.dp)
+                            modifier = GlanceModifier.size(28.dp),
                         )
 
                         if (size.width >= WidgetSize.Width4) {
@@ -252,22 +254,27 @@ private fun Content(
 
                             Row {
                                 Text(
-                                    text = "${habitWithAnalytics.currentStreak} " + context.getString(R.string.day) + " ",
+                                    text =
+                                        "${habitWithAnalytics.currentStreak} " +
+                                            context.getString(R.string.day) +
+                                            " ",
                                     maxLines = 1,
-                                    style = TextStyle(
-                                        fontWeight = FontWeight.Bold,
-                                        fontSize = 24.sp,
-                                        color = GlanceTheme.colors.onPrimary
-                                    )
+                                    style =
+                                        TextStyle(
+                                            fontWeight = FontWeight.Bold,
+                                            fontSize = 24.sp,
+                                            color = GlanceTheme.colors.onPrimary,
+                                        ),
                                 )
 
                                 Text(
                                     text = context.getString(R.string.current_streak),
                                     maxLines = 1,
-                                    style = TextStyle(
-                                        fontStyle = FontStyle.Italic,
-                                        color = GlanceTheme.colors.onPrimary
-                                    )
+                                    style =
+                                        TextStyle(
+                                            fontStyle = FontStyle.Italic,
+                                            color = GlanceTheme.colors.onPrimary,
+                                        ),
                                 )
                             }
                         } else {
@@ -275,22 +282,27 @@ private fun Content(
 
                             Column {
                                 Text(
-                                    text = "${habitWithAnalytics.currentStreak} " + context.getString(R.string.day) + " ",
+                                    text =
+                                        "${habitWithAnalytics.currentStreak} " +
+                                            context.getString(R.string.day) +
+                                            " ",
                                     maxLines = 1,
-                                    style = TextStyle(
-                                        fontWeight = FontWeight.Bold,
-                                        fontSize = 20.sp,
-                                        color = GlanceTheme.colors.onPrimary
-                                    )
+                                    style =
+                                        TextStyle(
+                                            fontWeight = FontWeight.Bold,
+                                            fontSize = 20.sp,
+                                            color = GlanceTheme.colors.onPrimary,
+                                        ),
                                 )
 
                                 Text(
                                     text = context.getString(R.string.current_streak),
                                     maxLines = 1,
-                                    style = TextStyle(
-                                        fontStyle = FontStyle.Italic,
-                                        color = GlanceTheme.colors.onPrimary
-                                    )
+                                    style =
+                                        TextStyle(
+                                            fontStyle = FontStyle.Italic,
+                                            color = GlanceTheme.colors.onPrimary,
+                                        ),
                                 )
                             }
                         }
@@ -302,33 +314,29 @@ private fun Content(
 
                 // best streak stat
                 Column(
-                    modifier = GlanceModifier
-                        .defaultWeight()
-                        .then(
-                            if (roundedCornerSupported) {
-                                GlanceModifier
-                                    .cornerRadius(16.dp)
-                                    .background(GlanceTheme.colors.secondary)
-                            } else {
-                                GlanceModifier
-                                    .background(
+                    modifier =
+                        GlanceModifier.defaultWeight()
+                            .then(
+                                if (roundedCornerSupported) {
+                                    GlanceModifier.cornerRadius(16.dp)
+                                        .background(GlanceTheme.colors.secondary)
+                                } else {
+                                    GlanceModifier.background(
                                         imageProvider = ImageProvider(R.drawable.rounded_16dp),
-                                        colorFilter = ColorFilter.tint(GlanceTheme.colors.secondary)
+                                        colorFilter = ColorFilter.tint(GlanceTheme.colors.secondary),
                                     )
-                            }
-                        )
+                                }
+                            )
                 ) {
                     Row(
                         verticalAlignment = Alignment.CenterVertically,
-                        modifier = GlanceModifier
-                            .padding(8.dp)
-                            .fillMaxSize()
+                        modifier = GlanceModifier.padding(8.dp).fillMaxSize(),
                     ) {
                         Image(
                             provider = ImageProvider(R.drawable.heat_outlined),
                             contentDescription = null,
                             colorFilter = ColorFilter.tint(GlanceTheme.colors.onSecondary),
-                            modifier = GlanceModifier.size(28.dp)
+                            modifier = GlanceModifier.size(28.dp),
                         )
 
                         if (size.width >= WidgetSize.Width4) {
@@ -336,22 +344,27 @@ private fun Content(
 
                             Row {
                                 Text(
-                                    text = "${habitWithAnalytics.bestStreak} " + context.getString(R.string.day) + " ",
+                                    text =
+                                        "${habitWithAnalytics.bestStreak} " +
+                                            context.getString(R.string.day) +
+                                            " ",
                                     maxLines = 1,
-                                    style = TextStyle(
-                                        fontWeight = FontWeight.Bold,
-                                        fontSize = 24.sp,
-                                        color = GlanceTheme.colors.onSecondary
-                                    )
+                                    style =
+                                        TextStyle(
+                                            fontWeight = FontWeight.Bold,
+                                            fontSize = 24.sp,
+                                            color = GlanceTheme.colors.onSecondary,
+                                        ),
                                 )
 
                                 Text(
                                     text = context.getString(R.string.best_streak),
                                     maxLines = 1,
-                                    style = TextStyle(
-                                        fontStyle = FontStyle.Italic,
-                                        color = GlanceTheme.colors.onSecondary
-                                    )
+                                    style =
+                                        TextStyle(
+                                            fontStyle = FontStyle.Italic,
+                                            color = GlanceTheme.colors.onSecondary,
+                                        ),
                                 )
                             }
                         } else {
@@ -359,22 +372,27 @@ private fun Content(
 
                             Column {
                                 Text(
-                                    text = "${habitWithAnalytics.bestStreak} " + context.getString(R.string.day) + " ",
+                                    text =
+                                        "${habitWithAnalytics.bestStreak} " +
+                                            context.getString(R.string.day) +
+                                            " ",
                                     maxLines = 1,
-                                    style = TextStyle(
-                                        fontWeight = FontWeight.Bold,
-                                        fontSize = 20.sp,
-                                        color = GlanceTheme.colors.onSecondary
-                                    )
+                                    style =
+                                        TextStyle(
+                                            fontWeight = FontWeight.Bold,
+                                            fontSize = 20.sp,
+                                            color = GlanceTheme.colors.onSecondary,
+                                        ),
                                 )
 
                                 Text(
                                     text = context.getString(R.string.best_streak),
                                     maxLines = 1,
-                                    style = TextStyle(
-                                        fontStyle = FontStyle.Italic,
-                                        color = GlanceTheme.colors.onSecondary
-                                    )
+                                    style =
+                                        TextStyle(
+                                            fontStyle = FontStyle.Italic,
+                                            color = GlanceTheme.colors.onSecondary,
+                                        ),
                                 )
                             }
                         }
@@ -383,15 +401,10 @@ private fun Content(
                 }
             }
         } else {
-            Box(
-                modifier = GlanceModifier.fillMaxSize(),
-                contentAlignment = Alignment.Center
-            ) {
+            Box(modifier = GlanceModifier.fillMaxSize(), contentAlignment = Alignment.Center) {
                 Text(
                     text = context.getString(R.string.nothing_to_show),
-                    style = TextStyle(
-                        color = GlanceTheme.colors.onSurface,
-                    ),
+                    style = TextStyle(color = GlanceTheme.colors.onSurface),
                 )
             }
         }
@@ -406,22 +419,24 @@ private fun GlancePreview() {
     Content(
         onUpdateWidget = {},
         onChangeHabit = {},
-        habitWithAnalytics = HabitWithAnalytics(
-            habit = Habit(
-                id = 1,
-                title = "Test Habit",
-                description = "A Test Habit",
-                time = LocalDateTime.now(),
-                days = setOf(),
-                index = 1,
-                reminder = false
+        habitWithAnalytics =
+            HabitWithAnalytics(
+                habit =
+                    Habit(
+                        id = 1,
+                        title = "Test Habit",
+                        description = "A Test Habit",
+                        time = LocalDateTime.now(),
+                        days = setOf(),
+                        index = 1,
+                        reminder = false,
+                    ),
+                statuses = listOf(),
+                weeklyComparisonData = listOf(),
+                weekDayFrequencyData = mapOf(),
+                currentStreak = 12,
+                bestStreak = 20,
+                startedDaysAgo = 100,
             ),
-            statuses = listOf(),
-            weeklyComparisonData = listOf(),
-            weekDayFrequencyData = mapOf(),
-            currentStreak = 12,
-            bestStreak = 20,
-            startedDaysAgo = 100
-        ),
     )
 }

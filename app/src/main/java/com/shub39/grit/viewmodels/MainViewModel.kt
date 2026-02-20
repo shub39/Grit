@@ -1,3 +1,19 @@
+/*
+ * Copyright (C) 2026  Shubham Gorai
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <https://www.gnu.org/licenses/>.
+ */
 package com.shub39.grit.viewmodels
 
 import androidx.compose.ui.graphics.Color
@@ -27,91 +43,81 @@ import org.koin.android.annotation.KoinViewModel
 class MainViewModel(
     private val datastore: GritDatastore,
     private val billingHandler: BillingHandler,
-    private val changelogManager: ChangelogManager
+    private val changelogManager: ChangelogManager,
 ) : ViewModel() {
     var observerJob: Job? = null
 
     private val _state = MutableStateFlow(MainAppState())
 
-    val state = _state.asStateFlow()
-        .onStart {
-            checkSubscription()
-            checkChangelog()
-            observeDatastore()
-        }
-        .stateIn(
-            scope = viewModelScope,
-            started = SharingStarted.Eagerly,
-            initialValue = MainAppState()
-        )
+    val state =
+        _state
+            .asStateFlow()
+            .onStart {
+                checkSubscription()
+                checkChangelog()
+                observeDatastore()
+            }
+            .stateIn(
+                scope = viewModelScope,
+                started = SharingStarted.Eagerly,
+                initialValue = MainAppState(),
+            )
 
     fun setAppUnlocked(value: Boolean) {
-        _state.update {
-            it.copy(isAppUnlocked = value)
-        }
+        _state.update { it.copy(isAppUnlocked = value) }
     }
+
     fun setBiometricLock(value: Boolean) {
-        viewModelScope.launch {
-            datastore.setBiometricPref(value)
-        }
+        viewModelScope.launch { datastore.setBiometricPref(value) }
     }
+
     fun updateSubscription() {
-        viewModelScope.launch {
-            checkSubscription()
-        }
+        viewModelScope.launch { checkSubscription() }
     }
 
     private fun observeDatastore() {
         observerJob?.cancel()
-        observerJob = viewModelScope.launch {
-            combine(
-                datastore.getPaletteStyle(),
-                datastore.getSeedColorFlow(),
-                datastore.getFontPrefFlow(),
-                datastore.getMaterialYouFlow(),
-                datastore.getAppThemeFlow()
-            ) { palette, seedColor, font, materialYou, appTheme ->
-                _state.update {
-                    it.copy(
-                        theme = it.theme.copy(
-                            paletteStyle = palette,
-                            seedColor = Color(seedColor),
-                            font = font,
-                            isMaterialYou = materialYou,
-                            appTheme = appTheme
-                        )
-                    )
-                }
-            }.launchIn(this)
-
-            datastore.getAmoledPref()
-                .onEach { pref ->
-                    _state.update {
-                        it.copy(
-                            theme = it.theme.copy(isAmoled = pref)
-                        )
+        observerJob =
+            viewModelScope.launch {
+                combine(
+                        datastore.getPaletteStyle(),
+                        datastore.getSeedColorFlow(),
+                        datastore.getFontPrefFlow(),
+                        datastore.getMaterialYouFlow(),
+                        datastore.getAppThemeFlow(),
+                    ) { palette, seedColor, font, materialYou, appTheme ->
+                        _state.update {
+                            it.copy(
+                                theme =
+                                    it.theme.copy(
+                                        paletteStyle = palette,
+                                        seedColor = Color(seedColor),
+                                        font = font,
+                                        isMaterialYou = materialYou,
+                                        appTheme = appTheme,
+                                    )
+                            )
+                        }
                     }
-                }
-                .launchIn(this)
+                    .launchIn(this)
 
-            datastore.getStartingSectionPref()
-                .onEach { pref ->
-                    _state.update {
-                        it.copy(
-                            startingSection = pref
-                        )
+                datastore
+                    .getAmoledPref()
+                    .onEach { pref ->
+                        _state.update { it.copy(theme = it.theme.copy(isAmoled = pref)) }
                     }
-                }
-                .launchIn(this)
+                    .launchIn(this)
 
-            datastore.getBiometricLockPref()
-                .onEach { pref ->
-                    _state.update {
-                        it.copy(isBiometricLockOn = pref)
-                    }
-                }
-                .launchIn(this)
-        }
+                datastore
+                    .getStartingSectionPref()
+                    .onEach { pref -> _state.update { it.copy(startingSection = pref) } }
+                    .launchIn(this)
+
+                datastore
+                    .getBiometricLockPref()
+                    .onEach { pref -> _state.update { it.copy(isBiometricLockOn = pref) } }
+                    .launchIn(this)
+            }
     }
 
     private fun checkChangelog() {
@@ -120,9 +126,7 @@ class MainViewModel(
             val lastShownChangelog = datastore.getLastChangelogShown().first()
 
             if (BuildConfig.DEBUG || lastShownChangelog != BuildConfig.VERSION_NAME) {
-                _state.update {
-                    it.copy(currentChangelog = changeLogs.firstOrNull())
-                }
+                _state.update { it.copy(currentChangelog = changeLogs.firstOrNull()) }
             }
         }
     }
@@ -140,8 +144,6 @@ class MainViewModel(
 
     fun dismissChangelog() {
         _state.update { it.copy(currentChangelog = null) }
-        viewModelScope.launch {
-            datastore.updateLastChangelogShown(BuildConfig.VERSION_NAME)
-        }
+        viewModelScope.launch { datastore.updateLastChangelogShown(BuildConfig.VERSION_NAME) }
     }
 }

@@ -1,3 +1,19 @@
+/*
+ * Copyright (C) 2026  Shubham Gorai
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <https://www.gnu.org/licenses/>.
+ */
 package com.shub39.grit.core.habits.presentation.ui.component
 
 import androidx.compose.foundation.layout.Arrangement
@@ -66,7 +82,7 @@ expect fun HabitUpsertSheet(
     onUpsertHabit: (Habit) -> Unit,
     is24Hr: Boolean,
     modifier: Modifier = Modifier,
-    isEditSheet: Boolean = false
+    isEditSheet: Boolean = false,
 )
 
 @OptIn(ExperimentalMaterial3ExpressiveApi::class, ExperimentalMaterial3Api::class)
@@ -87,21 +103,21 @@ fun HabitUpsertSheetContent(
     GritBottomSheet(
         onDismissRequest = onDismissRequest,
         padding = 0.dp,
-        modifier = modifier.imePadding()
+        modifier = modifier.imePadding(),
     ) {
         Column(
             horizontalAlignment = Alignment.CenterHorizontally,
-            verticalArrangement = Arrangement.spacedBy(8.dp)
+            verticalArrangement = Arrangement.spacedBy(8.dp),
         ) {
-            Icon(
-                imageVector = vectorResource(Res.drawable.edit),
-                contentDescription = "Edit Habit"
-            )
+            Icon(imageVector = vectorResource(Res.drawable.edit), contentDescription = "Edit Habit")
 
             Text(
-                text = stringResource(if (isEditSheet) Res.string.edit_habit else Res.string.add_habit),
+                text =
+                    stringResource(
+                        if (isEditSheet) Res.string.edit_habit else Res.string.add_habit
+                    ),
                 style = MaterialTheme.typography.headlineSmall,
-                textAlign = TextAlign.Center
+                textAlign = TextAlign.Center,
             )
 
             HorizontalDivider()
@@ -111,27 +127,34 @@ fun HabitUpsertSheetContent(
             modifier = Modifier.fillMaxWidth(),
             verticalArrangement = Arrangement.spacedBy(8.dp),
             horizontalAlignment = Alignment.CenterHorizontally,
-            contentPadding = PaddingValues(16.dp)
+            contentPadding = PaddingValues(16.dp),
         ) {
             item {
                 OutlinedTextField(
                     value = newHabit.title,
                     singleLine = true,
                     shape = MaterialTheme.shapes.medium,
-                    keyboardOptions = KeyboardOptions.Default.copy(
-                        capitalization = KeyboardCapitalization.Sentences,
-                        imeAction = ImeAction.Done
-                    ),
+                    keyboardOptions =
+                        KeyboardOptions.Default.copy(
+                            capitalization = KeyboardCapitalization.Sentences,
+                            imeAction = ImeAction.Done,
+                        ),
                     onValueChange = { updateHabit(newHabit.copy(title = it)) },
                     modifier = Modifier.fillMaxWidth(),
                     label = {
                         if (newHabit.title.length <= 20) {
-                            Text(text = stringResource(if (isEditSheet) Res.string.update_title else Res.string.title))
+                            Text(
+                                text =
+                                    stringResource(
+                                        if (isEditSheet) Res.string.update_title
+                                        else Res.string.title
+                                    )
+                            )
                         } else {
                             Text(text = stringResource(Res.string.too_long))
                         }
                     },
-                    isError = newHabit.title.length > 20
+                    isError = newHabit.title.length > 20,
                 )
             }
 
@@ -140,34 +163,39 @@ fun HabitUpsertSheetContent(
                     value = newHabit.description,
                     singleLine = true,
                     shape = MaterialTheme.shapes.medium,
-                    keyboardOptions = KeyboardOptions.Default.copy(
-                        capitalization = KeyboardCapitalization.Sentences,
-                        imeAction = ImeAction.Done
-                    ),
+                    keyboardOptions =
+                        KeyboardOptions.Default.copy(
+                            capitalization = KeyboardCapitalization.Sentences,
+                            imeAction = ImeAction.Done,
+                        ),
                     modifier = Modifier.fillMaxWidth(),
                     onValueChange = { updateHabit(newHabit.copy(description = it)) },
                     label = {
                         if (newHabit.description.length <= 50) {
-                            Text(text = stringResource(if (isEditSheet) Res.string.update_description else Res.string.description))
+                            Text(
+                                text =
+                                    stringResource(
+                                        if (isEditSheet) Res.string.update_description
+                                        else Res.string.description
+                                    )
+                            )
                         } else {
                             Text(text = stringResource(Res.string.too_long))
                         }
                     },
-                    isError = newHabit.description.length > 50
+                    isError = newHabit.description.length > 50,
                 )
             }
 
             item {
                 Row(
-                    modifier = Modifier
-                        .padding(vertical = 8.dp)
-                        .fillMaxWidth(),
-                    verticalAlignment = Alignment.CenterVertically
+                    modifier = Modifier.padding(vertical = 8.dp).fillMaxWidth(),
+                    verticalAlignment = Alignment.CenterVertically,
                 ) {
                     Text(
                         text = stringResource(Res.string.add_reminder),
                         style = MaterialTheme.typography.titleLarge,
-                        modifier = Modifier.weight(1f)
+                        modifier = Modifier.weight(1f),
                     )
 
                     Switch(
@@ -182,7 +210,7 @@ fun HabitUpsertSheetContent(
                             } else {
                                 updateHabit(newHabit.copy(reminder = false))
                             }
-                        }
+                        },
                     )
                 }
             }
@@ -196,31 +224,30 @@ fun HabitUpsertSheetContent(
                         Row(
                             horizontalArrangement = Arrangement.spacedBy(8.dp),
                             verticalAlignment = Alignment.CenterVertically,
-                            modifier = Modifier.weight(1f)
+                            modifier = Modifier.weight(1f),
                         ) {
                             Icon(
                                 imageVector = vectorResource(Res.drawable.alarm),
-                                contentDescription = "Alarm Icon"
+                                contentDescription = "Alarm Icon",
                             )
 
                             Text(
                                 text = newHabit.time.time.toFormattedString(is24Hr = is24Hr),
-                                style = MaterialTheme.typography.titleLarge
+                                style = MaterialTheme.typography.titleLarge,
                             )
                         }
 
-                        FilledTonalIconButton(
-                            onClick = { timePickerDialog = true }
-                        ) {
+                        FilledTonalIconButton(onClick = { timePickerDialog = true }) {
                             Icon(
                                 imageVector = vectorResource(Res.drawable.edit),
-                                contentDescription = "Pick Time"
+                                contentDescription = "Pick Time",
                             )
                         }
                     }
 
                     Row(
-                        horizontalArrangement = Arrangement.spacedBy(ButtonGroupDefaults.ConnectedSpaceBetween)
+                        horizontalArrangement =
+                            Arrangement.spacedBy(ButtonGroupDefaults.ConnectedSpaceBetween)
                     ) {
                         DayOfWeek.entries.forEach { dayOfWeek ->
                             ToggleButton(
@@ -228,24 +255,26 @@ fun HabitUpsertSheetContent(
                                 onCheckedChange = {
                                     updateHabit(
                                         newHabit.copy(
-                                            days = if (it) {
-                                                newHabit.days + dayOfWeek
-                                            } else {
-                                                newHabit.days - dayOfWeek
-                                            }
+                                            days =
+                                                if (it) {
+                                                    newHabit.days + dayOfWeek
+                                                } else {
+                                                    newHabit.days - dayOfWeek
+                                                }
                                         )
                                     )
                                 },
                                 modifier = Modifier.weight(1f),
                                 colors = ToggleButtonDefaults.tonalToggleButtonColors(),
-                                shapes = when (dayOfWeek) {
-                                    DayOfWeek.MONDAY -> ButtonGroupDefaults.connectedLeadingButtonShapes()
-                                    DayOfWeek.SUNDAY -> ButtonGroupDefaults.connectedTrailingButtonShapes()
-                                    else -> ButtonGroupDefaults.connectedMiddleButtonShapes()
-                                },
-                                content = {
-                                    Text(text = dayOfWeek.name.take(1))
-                                }
+                                shapes =
+                                    when (dayOfWeek) {
+                                        DayOfWeek.MONDAY ->
+                                            ButtonGroupDefaults.connectedLeadingButtonShapes()
+                                        DayOfWeek.SUNDAY ->
+                                            ButtonGroupDefaults.connectedTrailingButtonShapes()
+                                        else -> ButtonGroupDefaults.connectedMiddleButtonShapes()
+                                    },
+                                content = { Text(text = dayOfWeek.name.take(1)) },
                             )
                         }
                     }
@@ -255,7 +284,7 @@ fun HabitUpsertSheetContent(
 
         Column(
             horizontalAlignment = Alignment.CenterHorizontally,
-            verticalArrangement = Arrangement.spacedBy(8.dp)
+            verticalArrangement = Arrangement.spacedBy(8.dp),
         ) {
             HorizontalDivider()
 
@@ -264,23 +293,26 @@ fun HabitUpsertSheetContent(
                     onUpsertHabit(newHabit)
                     onDismissRequest()
                 },
-                modifier = Modifier
-                    .padding(16.dp)
-                    .fillMaxWidth(),
-                enabled = newHabit.description.length <= 50 &&
+                modifier = Modifier.padding(16.dp).fillMaxWidth(),
+                enabled =
+                    newHabit.description.length <= 50 &&
                         newHabit.title.length <= 20 &&
                         newHabit.title.isNotBlank(),
             ) {
-                Text(text = stringResource(if (isEditSheet) Res.string.save else Res.string.add_habit))
+                Text(
+                    text =
+                        stringResource(if (isEditSheet) Res.string.save else Res.string.add_habit)
+                )
             }
         }
 
         if (timePickerDialog) {
-            val timePickerState = rememberTimePickerState(
-                initialHour = newHabit.time.hour,
-                initialMinute = newHabit.time.minute,
-                is24Hour = is24Hr
-            )
+            val timePickerState =
+                rememberTimePickerState(
+                    initialHour = newHabit.time.hour,
+                    initialMinute = newHabit.time.minute,
+                    is24Hour = is24Hr,
+                )
 
             GritTimePicker(
                 onDismissRequest = { timePickerDialog = false },
@@ -288,17 +320,19 @@ fun HabitUpsertSheetContent(
                 onConfirm = {
                     updateHabit(
                         newHabit.copy(
-                            time = LocalDateTime(
-                                date = newHabit.time.date,
-                                time = LocalTime(
-                                    minute = timePickerState.minute,
-                                    hour = timePickerState.hour
+                            time =
+                                LocalDateTime(
+                                    date = newHabit.time.date,
+                                    time =
+                                        LocalTime(
+                                            minute = timePickerState.minute,
+                                            hour = timePickerState.hour,
+                                        ),
                                 )
-                            )
                         )
                     )
                     timePickerDialog = false
-                }
+                },
             )
         }
     }
@@ -309,19 +343,20 @@ fun HabitUpsertSheetContent(
 private fun Preview() {
     GritTheme {
         HabitUpsertSheet(
-            habit = Habit(
-                id = 1,
-                title = "New Habit",
-                description = "A new Habit",
-                time = LocalDateTime.now(),
-                days = DayOfWeek.entries.toSet(),
-                index = 1,
-                reminder = false
-            ),
-            onDismissRequest = { },
-            onUpsertHabit = { },
+            habit =
+                Habit(
+                    id = 1,
+                    title = "New Habit",
+                    description = "A new Habit",
+                    time = LocalDateTime.now(),
+                    days = DayOfWeek.entries.toSet(),
+                    index = 1,
+                    reminder = false,
+                ),
+            onDismissRequest = {},
+            onUpsertHabit = {},
             is24Hr = true,
-            isEditSheet = true
+            isEditSheet = true,
         )
     }
 }

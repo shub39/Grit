@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2026  Shubham Gorai
+ * Copyright (C) $YEAR  Shubham Gorai
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -14,21 +14,3 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
-package com.shub39.grit.billing
-
-import android.content.Context
-import com.revenuecat.purchases.LogLevel
-import com.revenuecat.purchases.Purchases
-import com.revenuecat.purchases.PurchasesConfiguration
-import com.shub39.grit.BuildConfig
-
-class BillingInitializer {
-    fun initialize(context: Context) {
-        Purchases.logLevel = if (BuildConfig.DEBUG) LogLevel.DEBUG else LogLevel.WARN
-        Purchases.configure(PurchasesConfiguration.Builder(context, PURCHASES_KEY).build())
-    }
-
-    companion object {
-        private const val PURCHASES_KEY = "goog_KDirsiVgqVxGhxxgNyxkKZWmLZH"
-    }
-}

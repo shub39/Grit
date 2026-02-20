@@ -1,3 +1,19 @@
+/*
+ * Copyright (C) 2026  Shubham Gorai
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <https://www.gnu.org/licenses/>.
+ */
 package com.shub39.grit.core.presentation.settings.ui.section
 
 import android.net.Uri
@@ -64,162 +80,139 @@ import org.jetbrains.compose.resources.vectorResource
 fun BackupPage(
     state: SettingsState,
     onAction: (SettingsAction) -> Unit,
-    onNavigateBack: () -> Unit
+    onNavigateBack: () -> Unit,
 ) {
-    LaunchedEffect(Unit) {
-        onAction(SettingsAction.OnResetBackupState)
-    }
+    LaunchedEffect(Unit) { onAction(SettingsAction.OnResetBackupState) }
 
     var uri by remember { mutableStateOf<Uri?>(null) }
-    val launcher = rememberLauncherForActivityResult(
-        contract = ActivityResultContracts.OpenDocument()
-    ) { uri = it }
+    val launcher =
+        rememberLauncherForActivityResult(contract = ActivityResultContracts.OpenDocument()) {
+            uri = it
+        }
 
-    Column(
-        modifier = Modifier.fillMaxSize()
-    ) {
+    Column(modifier = Modifier.fillMaxSize()) {
         TopAppBar(
-            title = {
-                Text(
-                    text = stringResource(Res.string.backup)
-                )
-            },
+            title = { Text(text = stringResource(Res.string.backup)) },
             navigationIcon = {
-                IconButton(
-                    onClick = onNavigateBack
-                ) {
+                IconButton(onClick = onNavigateBack) {
                     Icon(
                         imageVector = vectorResource(Res.drawable.arrow_back),
-                        contentDescription = "Navigate Back"
+                        contentDescription = "Navigate Back",
                     )
                 }
-            }
+            },
         )
 
         LazyColumn(
             modifier = Modifier.fillMaxWidth(),
-            contentPadding = PaddingValues(start = 12.dp, end = 12.dp, top = 16.dp, bottom = 60.dp)
+            contentPadding = PaddingValues(start = 12.dp, end = 12.dp, top = 16.dp, bottom = 60.dp),
         ) {
             item {
-                Column(
-                    verticalArrangement = Arrangement.spacedBy(2.dp)
-                ) {
-                    Column(
-                        modifier = Modifier.clip(leadingItemShape())
-                    ) {
+                Column(verticalArrangement = Arrangement.spacedBy(2.dp)) {
+                    Column(modifier = Modifier.clip(leadingItemShape())) {
                         ListItem(
-                            headlineContent = {
-                                Text(
-                                    text = stringResource(Res.string.export)
-                                )
-                            },
+                            headlineContent = { Text(text = stringResource(Res.string.export)) },
                             leadingContent = {
                                 Icon(
                                     imageVector = vectorResource(Res.drawable.drive_folder_upload),
-                                    contentDescription = null
+                                    contentDescription = null,
                                 )
                             },
                             colors = listItemColors(),
                             supportingContent = {
-                                Text(
-                                    text = stringResource(Res.string.export_desc)
-                                )
-                            }
+                                Text(text = stringResource(Res.string.export_desc))
+                            },
                         )
 
                         Row(
-                            modifier = Modifier
-                                .fillParentMaxWidth()
-                                .background(listItemColors().containerColor)
-                                .padding(start = 52.dp, end = 16.dp, bottom = 8.dp)
+                            modifier =
+                                Modifier.fillParentMaxWidth()
+                                    .background(listItemColors().containerColor)
+                                    .padding(start = 52.dp, end = 16.dp, bottom = 8.dp)
                         ) {
                             Button(
                                 onClick = { onAction(SettingsAction.OnExport) },
                                 enabled = state.backupState.exportState == ExportState.IDLE,
-                                modifier = Modifier.weight(1f)
+                                modifier = Modifier.weight(1f),
                             ) {
                                 when (state.backupState.exportState) {
-                                    ExportState.IDLE -> Icon(
-                                        painter = painterResource(Res.drawable.play_arrow),
-                                        contentDescription = "Start"
-                                    )
+                                    ExportState.IDLE ->
+                                        Icon(
+                                            painter = painterResource(Res.drawable.play_arrow),
+                                            contentDescription = "Start",
+                                        )
 
-                                    ExportState.EXPORTING -> CircularProgressIndicator(
-                                        modifier = Modifier.size(24.dp)
-                                    )
+                                    ExportState.EXPORTING ->
+                                        CircularProgressIndicator(modifier = Modifier.size(24.dp))
 
-                                    ExportState.EXPORTED -> Icon(
-                                        imageVector = vectorResource(Res.drawable.check_circle),
-                                        contentDescription = "Done"
-                                    )
+                                    ExportState.EXPORTED ->
+                                        Icon(
+                                            imageVector = vectorResource(Res.drawable.check_circle),
+                                            contentDescription = "Done",
+                                        )
                                 }
                             }
                         }
                     }
 
-                    Column(
-                        modifier = Modifier.clip(endItemShape())
-                    ) {
+                    Column(modifier = Modifier.clip(endItemShape())) {
                         ListItem(
                             colors = listItemColors(),
                             leadingContent = {
                                 Icon(
                                     imageVector = vectorResource(Res.drawable.download),
-                                    contentDescription = null
+                                    contentDescription = null,
                                 )
                             },
-                            headlineContent = {
-                                Text(
-                                    text = stringResource(Res.string.restore)
-                                )
-                            },
+                            headlineContent = { Text(text = stringResource(Res.string.restore)) },
                             supportingContent = {
-                                Text(
-                                    text = stringResource(Res.string.restore_desc)
-                                )
-                            }
+                                Text(text = stringResource(Res.string.restore_desc))
+                            },
                         )
 
                         Row(
-                            modifier = Modifier
-                                .fillParentMaxWidth()
-                                .background(listItemColors().containerColor)
-                                .padding(start = 52.dp, end = 16.dp, bottom = 8.dp)
+                            modifier =
+                                Modifier.fillParentMaxWidth()
+                                    .background(listItemColors().containerColor)
+                                    .padding(start = 52.dp, end = 16.dp, bottom = 8.dp)
                         ) {
                             if (uri == null) {
                                 Button(
                                     onClick = { launcher.launch(arrayOf("application/json")) },
-                                    modifier = Modifier.weight(1f)
+                                    modifier = Modifier.weight(1f),
                                 ) {
-                                    Text(
-                                        text = stringResource(Res.string.choose_file)
-                                    )
+                                    Text(text = stringResource(Res.string.choose_file))
                                 }
                             } else {
                                 Button(
                                     onClick = { onAction(SettingsAction.OnRestore(uri!!)) },
                                     enabled = state.backupState.restoreState == RestoreState.IDLE,
-                                    modifier = Modifier.weight(1f)
+                                    modifier = Modifier.weight(1f),
                                 ) {
                                     when (state.backupState.restoreState) {
-                                        RestoreState.IDLE -> Icon(
-                                            painter = painterResource(Res.drawable.play_arrow),
-                                            contentDescription = "Start"
-                                        )
+                                        RestoreState.IDLE ->
+                                            Icon(
+                                                painter = painterResource(Res.drawable.play_arrow),
+                                                contentDescription = "Start",
+                                            )
 
-                                        RestoreState.RESTORING -> CircularProgressIndicator(
-                                            modifier = Modifier.size(24.dp)
-                                        )
+                                        RestoreState.RESTORING ->
+                                            CircularProgressIndicator(
+                                                modifier = Modifier.size(24.dp)
+                                            )
 
-                                        RestoreState.RESTORED -> Icon(
-                                            imageVector = vectorResource(Res.drawable.check_circle),
-                                            contentDescription = "Done"
-                                        )
+                                        RestoreState.RESTORED ->
+                                            Icon(
+                                                imageVector =
+                                                    vectorResource(Res.drawable.check_circle),
+                                                contentDescription = "Done",
+                                            )
 
-                                        RestoreState.FAILURE -> Icon(
-                                            imageVector = vectorResource(Res.drawable.warning),
-                                            contentDescription = "Fail"
-                                        )
+                                        RestoreState.FAILURE ->
+                                            Icon(
+                                                imageVector = vectorResource(Res.drawable.warning),
+                                                contentDescription = "Fail",
+                                            )
                                     }
                                 }
                             }
@@ -234,17 +227,7 @@ fun BackupPage(
 @Preview
 @Composable
 private fun Preview() {
-    GritTheme(
-        theme = Theme(
-            appTheme = AppTheme.DARK
-        )
-    ) {
-        Surface {
-            BackupPage(
-                state = SettingsState(),
-                onAction = {},
-                onNavigateBack = {}
-            )
-        }
+    GritTheme(theme = Theme(appTheme = AppTheme.DARK)) {
+        Surface { BackupPage(state = SettingsState(), onAction = {}, onNavigateBack = {}) }
     }
 }
