@@ -7,4 +7,4 @@ assignees: ''
 
 ---
 
-If you are looking to make a feature request, please put them [here](https://github.com/shub39/Grit/discussions/66)
+[//]: # (If you are looking to make a feature request, please put them here : https://github.com/shub39/Grit/discussions/66)
