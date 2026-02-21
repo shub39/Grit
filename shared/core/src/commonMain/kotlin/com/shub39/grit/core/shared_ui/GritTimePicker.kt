@@ -1,3 +1,19 @@
+/*
+ * Copyright (C) 2026  Shubham Gorai
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <https://www.gnu.org/licenses/>.
+ */
 package com.shub39.grit.core.shared_ui
 
 import androidx.compose.animation.animateContentSize
@@ -39,28 +55,21 @@ fun GritTimePicker(
     TimePickerDialog(
         modifier = modifier.animateContentSize(animationSpec = tween(0)),
         onDismissRequest = onDismissRequest,
-        title = {
-            Text(text = stringResource(Res.string.select_time))
-        },
+        title = { Text(text = stringResource(Res.string.select_time)) },
         confirmButton = {
-            TextButton(
-                onClick = onConfirm
-            ) {
-                Text(stringResource(Res.string.done))
-            }
+            TextButton(onClick = onConfirm) { Text(stringResource(Res.string.done)) }
         },
         modeToggleButton = {
-            IconButton(
-                onClick = { timeInput = !timeInput }
-            ) {
+            IconButton(onClick = { timeInput = !timeInput }) {
                 Icon(
-                    imageVector = vectorResource(
-                        if (!timeInput) Res.drawable.keyboard else Res.drawable.clock
-                    ),
-                    contentDescription = null
+                    imageVector =
+                        vectorResource(
+                            if (!timeInput) Res.drawable.keyboard else Res.drawable.clock
+                        ),
+                    contentDescription = null,
                 )
             }
-        }
+        },
     ) {
         if (timeInput) {
             TimeInput(state = state)

@@ -1,3 +1,19 @@
+/*
+ * Copyright (C) 2026  Shubham Gorai
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <https://www.gnu.org/licenses/>.
+ */
 package com.shub39.grit.viewmodels
 
 import androidx.lifecycle.ViewModel
@@ -26,25 +42,23 @@ import org.koin.android.annotation.KoinViewModel
 class TasksViewModel(
     private val repo: TaskRepo,
     private val scheduler: AlarmScheduler,
-    private val datastore: GritDatastore
+    private val datastore: GritDatastore,
 ) : ViewModel() {
     private var savedJob: Job? = null
     private var observerJob: Job? = null
 
     private val _state = MutableStateFlow(TaskState())
 
-    val state = _state.asStateFlow()
-        .onStart {
-            observeTasks()
-            observeDatastore()
+    val state =
+        _state
+            .asStateFlow()
+            .onStart {
+                observeTasks()
+                observeDatastore()
 
-            rescheduleAllTasks()
-        }
-        .stateIn(
-            viewModelScope,
-            SharingStarted.WhileSubscribed(5000),
-            TaskState()
-        )
+                rescheduleAllTasks()
+            }
+            .stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000), TaskState())
 
     fun onAction(action: TaskAction) {
         viewModelScope.launch {
@@ -60,21 +74,13 @@ class TasksViewModel(
                 }
 
                 is TaskAction.ChangeCategory -> {
-                    _state.update {
-                        it.copy(
-                            currentCategory = action.category
-                        )
-                    }
+                    _state.update { it.copy(currentCategory = action.category) }
                 }
 
                 is TaskAction.AddCategory -> {
                     upsertCategory(action.category)
 
-                    _state.update {
-                        it.copy(
-                            currentCategory = it.tasks.keys.firstOrNull()
-                        )
-                    }
+                    _state.update { it.copy(currentCategory = it.tasks.keys.firstOrNull()) }
                 }
 
                 is TaskAction.ReorderTasks -> {
@@ -90,11 +96,7 @@ class TasksViewModel(
 
                     delay(200)
 
-                    _state.update {
-                        it.copy(
-                            currentCategory = it.tasks.keys.firstOrNull()
-                        )
-                    }
+                    _state.update { it.copy(currentCategory = it.tasks.keys.firstOrNull()) }
                 }
 
                 is TaskAction.DeleteCategory -> {
@@ -102,11 +104,7 @@ class TasksViewModel(
 
                     delay(200)
 
-                    _state.update {
-                        it.copy(
-                            currentCategory = it.tasks.keys.firstOrNull()
-                        )
-                    }
+                    _state.update { it.copy(currentCategory = it.tasks.keys.firstOrNull()) }
                 }
 
                 is TaskAction.DeleteTask -> repo.deleteTask(action.task)
@@ -116,52 +114,37 @@ class TasksViewModel(
 
     private fun observeDatastore() {
         observerJob?.cancel()
-        observerJob = viewModelScope.launch {
-            combine(
-                datastore.getIs24Hr(),
-                datastore.getTaskReorderPref()
-            ) { is24Hr, reorderTasks ->
-                _state.update {
-                    it.copy(
-                        is24Hour = is24Hr,
-                        reorderTasks = reorderTasks
-                    )
-                }
-            }.launchIn(this)
-        }
+        observerJob =
+            viewModelScope.launch {
+                combine(datastore.getIs24Hr(), datastore.getTaskReorderPref()) {
+                        is24Hr,
+                        reorderTasks ->
+                        _state.update { it.copy(is24Hour = is24Hr, reorderTasks = reorderTasks) }
+                    }
+                    .launchIn(this)
+            }
     }
 
     private fun observeTasks() {
         savedJob?.cancel()
-        savedJob = viewModelScope.launch {
-            combine(
-                repo.getTasksFlow(),
-                repo.getCompletedTasksFlow()
-            ) { tasks, completedTasks ->
-                _state.update {
-                    it.copy(
-                        tasks = tasks,
-                        completedTasks = completedTasks
-                    )
-                }
+        savedJob =
+            viewModelScope.launch {
+                combine(repo.getTasksFlow(), repo.getCompletedTasksFlow()) { tasks, completedTasks
+                        ->
+                        _state.update { it.copy(tasks = tasks, completedTasks = completedTasks) }
 
-                if (_state.value.currentCategory == null) {
-                    _state.update {
-                        it.copy(
-                            currentCategory = tasks.keys.firstOrNull()
-                        )
+                        if (_state.value.currentCategory == null) {
+                            _state.update { it.copy(currentCategory = tasks.keys.firstOrNull()) }
+                        }
+
+                        if (tasks.isEmpty()) addDefault()
                     }
-                }
-
-                if (tasks.isEmpty()) addDefault()
-            }.launchIn(this)
-        }
+                    .launchIn(this)
+            }
     }
 
     private suspend fun rescheduleAllTasks() {
-        repo.getTasks().forEach { task ->
-            scheduler.schedule(task)
-        }
+        repo.getTasks().forEach { task -> scheduler.schedule(task) }
     }
 
     private suspend fun addDefault() {
@@ -180,11 +163,7 @@ class TasksViewModel(
 
     private suspend fun deleteCategory(category: Category) {
         if (_state.value.currentCategory == category) {
-            _state.update {
-                it.copy(
-                    currentCategory = it.tasks.keys.first()
-                )
-            }
+            _state.update { it.copy(currentCategory = it.tasks.keys.first()) }
         }
 
         repo.deleteCategory(category)

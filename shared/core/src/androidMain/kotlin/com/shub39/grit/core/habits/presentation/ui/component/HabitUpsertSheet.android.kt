@@ -1,3 +1,19 @@
+/*
+ * Copyright (C) 2026  Shubham Gorai
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <https://www.gnu.org/licenses/>.
+ */
 package com.shub39.grit.core.habits.presentation.ui.component
 
 import android.Manifest
@@ -23,7 +39,7 @@ actual fun HabitUpsertSheet(
     onUpsertHabit: (Habit) -> Unit,
     is24Hr: Boolean,
     modifier: Modifier,
-    isEditSheet: Boolean
+    isEditSheet: Boolean,
 ) {
     val context = LocalContext.current
 
@@ -31,22 +47,23 @@ actual fun HabitUpsertSheet(
     var notificationPermission by remember {
         mutableStateOf(
             (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU &&
-                    ContextCompat.checkSelfPermission(
-                        context,
-                        Manifest.permission.POST_NOTIFICATIONS
-                    ) == PackageManager.PERMISSION_GRANTED) ||
-                    Build.VERSION.SDK_INT < Build.VERSION_CODES.TIRAMISU
+                ContextCompat.checkSelfPermission(
+                    context,
+                    Manifest.permission.POST_NOTIFICATIONS,
+                ) == PackageManager.PERMISSION_GRANTED) ||
+                Build.VERSION.SDK_INT < Build.VERSION_CODES.TIRAMISU
         )
     }
 
-    val launcher = rememberLauncherForActivityResult(
-        contract = ActivityResultContracts.RequestPermission()
-    ) { granted ->
-        if (granted) {
-            notificationPermission = true
-            newHabit = newHabit.copy(reminder = true)
-        } else Toast.makeText(context, "Notification permission denied", Toast.LENGTH_SHORT).show()
-    }
+    val launcher =
+        rememberLauncherForActivityResult(contract = ActivityResultContracts.RequestPermission()) {
+            granted ->
+            if (granted) {
+                notificationPermission = true
+                newHabit = newHabit.copy(reminder = true)
+            } else
+                Toast.makeText(context, "Notification permission denied", Toast.LENGTH_SHORT).show()
+        }
 
     HabitUpsertSheetContent(
         newHabit = newHabit,
@@ -61,6 +78,6 @@ actual fun HabitUpsertSheet(
                 launcher.launch(Manifest.permission.POST_NOTIFICATIONS)
             }
         },
-        modifier = modifier
+        modifier = modifier,
     )
 }

@@ -104,6 +104,6 @@ jobs:
         env:
           WEBHOOK: ${{ secrets.DISCORD_WEBHOOK }}
         run: |
-          message=$(echo "**New Grit Release** **${{ env.VERSION_NAME }}** \n https://github.com/shub39/Grit/releases")
+          message=$(echo "**New Grit Release** **${{ env.VERSION_NAME }}** \nhttps://github.com/shub39/Grit/releases")
           curl -F "payload_json={\"content\":\"${message}\"}" \
           ${{ env.WEBHOOK }}

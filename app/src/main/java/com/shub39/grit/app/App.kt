@@ -1,3 +1,19 @@
+/*
+ * Copyright (C) 2026  Shubham Gorai
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <https://www.gnu.org/licenses/>.
+ */
 package com.shub39.grit.app
 
 import androidx.compose.animation.core.tween
@@ -62,23 +78,18 @@ import org.koin.compose.viewmodel.koinViewModel
 
 @Serializable
 private sealed interface GlobalRoutes {
-    @Serializable
-    data object PaywallPage : GlobalRoutes
-    
-    @Serializable
-    data object App : GlobalRoutes
+    @Serializable data object PaywallPage : GlobalRoutes
+
+    @Serializable data object App : GlobalRoutes
 }
 
 @Serializable
 private sealed interface AppSections {
-    @Serializable
-    data object HabitsPages : AppSections
+    @Serializable data object HabitsPages : AppSections
 
-    @Serializable
-    data object TaskPages : AppSections
+    @Serializable data object TaskPages : AppSections
 
-    @Serializable
-    data object SettingsPages : AppSections
+    @Serializable data object SettingsPages : AppSections
 
     companion object {
         val mainRoutes = listOf(TaskPages, HabitsPages, SettingsPages)
@@ -103,38 +114,26 @@ private sealed interface AppSections {
 
 @OptIn(ExperimentalMaterial3Api::class, ExperimentalMaterial3ExpressiveApi::class)
 @Composable
-fun App(
-    state: MainAppState,
-    onRefreshSub: () -> Unit,
-    onDismissChangelog: () -> Unit
-) {
+fun App(state: MainAppState, onRefreshSub: () -> Unit, onDismissChangelog: () -> Unit) {
     val mainNavController = rememberNavController()
 
     if (state.currentChangelog != null) {
-        ChangelogDialog(
-            currentLog = state.currentChangelog,
-            onDismissRequest = onDismissChangelog
-        )
+        ChangelogDialog(currentLog = state.currentChangelog, onDismissRequest = onDismissChangelog)
     }
 
-    NavHost(
-        navController = mainNavController,
-        startDestination = GlobalRoutes.App,
-    ) {
+    NavHost(navController = mainNavController, startDestination = GlobalRoutes.App) {
         composable<GlobalRoutes.PaywallPage> {
-            DisposableEffect(Unit) {
-                onDispose { onRefreshSub() }
-            }
+            DisposableEffect(Unit) { onDispose { onRefreshSub() } }
 
             PaywallPage(
                 isPlusUser = state.isUserSubscribed,
-                onDismissRequest = { mainNavController.navigateUp() }
-            ) 
+                onDismissRequest = { mainNavController.navigateUp() },
+            )
         }
-        
+
         composable<GlobalRoutes.App> {
             val windowSizeClass = LocalWindowSizeClass.current
-            
+
             var currentRoute: AppSections by remember { mutableStateOf(AppSections.TaskPages) }
             val navController = rememberNavController()
 
@@ -148,45 +147,50 @@ fun App(
                                     navController.navigate(route) {
                                         launchSingleTop = true
                                         popUpTo(
-                                            route = when (state.startingSection) {
-                                                Sections.Habits -> AppSections.HabitsPages
-                                                Sections.Tasks -> AppSections.TaskPages
-                                            },
-                                            popUpToBuilder = { saveState = true }
+                                            route =
+                                                when (state.startingSection) {
+                                                    Sections.Habits -> AppSections.HabitsPages
+                                                    Sections.Tasks -> AppSections.TaskPages
+                                                },
+                                            popUpToBuilder = { saveState = true },
                                         )
                                         restoreState = true
                                     }
-                                }
+                                },
                             )
                         }
                     ) { padding ->
                         NavHost(
                             navController = navController,
-                            startDestination = when (state.startingSection) {
-                                Sections.Tasks -> AppSections.TaskPages
-                                Sections.Habits -> AppSections.HabitsPages
-                            },
-                            modifier = Modifier
-                                .padding(
-                                    start = padding.calculateStartPadding(LocalLayoutDirection.current),
-                                    end = padding.calculateEndPadding(LocalLayoutDirection.current),
-                                    bottom = padding.calculateBottomPadding()
-                                )
-                                .background(MaterialTheme.colorScheme.background),
+                            startDestination =
+                                when (state.startingSection) {
+                                    Sections.Tasks -> AppSections.TaskPages
+                                    Sections.Habits -> AppSections.HabitsPages
+                                },
+                            modifier =
+                                Modifier.padding(
+                                        start =
+                                            padding.calculateStartPadding(
+                                                LocalLayoutDirection.current
+                                            ),
+                                        end =
+                                            padding.calculateEndPadding(
+                                                LocalLayoutDirection.current
+                                            ),
+                                        bottom = padding.calculateBottomPadding(),
+                                    )
+                                    .background(MaterialTheme.colorScheme.background),
                             enterTransition = { fadeIn(animationSpec = tween(300)) },
                             exitTransition = { fadeOut(animationSpec = tween(300)) },
                             popEnterTransition = { fadeIn(animationSpec = tween(300)) },
-                            popExitTransition = { fadeOut(animationSpec = tween(300)) }
+                            popExitTransition = { fadeOut(animationSpec = tween(300)) },
                         ) {
                             composable<AppSections.TaskPages> {
                                 currentRoute = AppSections.TaskPages
                                 val tvm: TasksViewModel = koinViewModel()
                                 val taskPageState by tvm.state.collectAsStateWithLifecycle()
 
-                                TasksPage(
-                                    state = taskPageState,
-                                    onAction = tvm::onAction
-                                )
+                                TasksPage(state = taskPageState, onAction = tvm::onAction)
                             }
 
                             composable<AppSections.SettingsPages> {
@@ -200,7 +204,7 @@ fun App(
                                     isUserSubscribed = state.isUserSubscribed,
                                     onNavigateToPaywall = {
                                         mainNavController.navigate(GlobalRoutes.PaywallPage)
-                                    }
+                                    },
                                 )
                             }
 
@@ -215,7 +219,7 @@ fun App(
                                     isUserSubscribed = state.isUserSubscribed,
                                     onNavigateToPaywall = {
                                         mainNavController.navigate(GlobalRoutes.PaywallPage)
-                                    }
+                                    },
                                 )
                             }
                         }
@@ -223,50 +227,47 @@ fun App(
                 }
 
                 else -> {
-                    Row(
-                        modifier = Modifier.background(MaterialTheme.colorScheme.surface)
-                    ) {
+                    Row(modifier = Modifier.background(MaterialTheme.colorScheme.surface)) {
                         AppNavRail(
                             currentRoute = currentRoute,
                             onNavigate = { route ->
                                 navController.navigate(route) {
                                     launchSingleTop = true
                                     popUpTo(
-                                        route = when (state.startingSection) {
-                                            Sections.Habits -> AppSections.HabitsPages
-                                            Sections.Tasks -> AppSections.TaskPages
-                                        },
-                                        popUpToBuilder = { saveState = true }
+                                        route =
+                                            when (state.startingSection) {
+                                                Sections.Habits -> AppSections.HabitsPages
+                                                Sections.Tasks -> AppSections.TaskPages
+                                            },
+                                        popUpToBuilder = { saveState = true },
                                     )
                                     restoreState = true
                                 }
-                            }
+                            },
                         )
 
                         NavHost(
                             navController = navController,
-                            startDestination = when (state.startingSection) {
-                                Sections.Tasks -> AppSections.TaskPages
-                                Sections.Habits -> AppSections.HabitsPages
-                            },
+                            startDestination =
+                                when (state.startingSection) {
+                                    Sections.Tasks -> AppSections.TaskPages
+                                    Sections.Habits -> AppSections.HabitsPages
+                                },
                             contentAlignment = Alignment.Center,
-                            modifier = Modifier
-                                .fillMaxWidth()
-                                .background(MaterialTheme.colorScheme.background),
+                            modifier =
+                                Modifier.fillMaxWidth()
+                                    .background(MaterialTheme.colorScheme.background),
                             enterTransition = { fadeIn(animationSpec = tween(300)) },
                             exitTransition = { fadeOut(animationSpec = tween(300)) },
                             popEnterTransition = { fadeIn(animationSpec = tween(300)) },
-                            popExitTransition = { fadeOut(animationSpec = tween(300)) }
+                            popExitTransition = { fadeOut(animationSpec = tween(300)) },
                         ) {
                             composable<AppSections.TaskPages> {
                                 currentRoute = AppSections.TaskPages
                                 val tvm: TasksViewModel = koinViewModel()
                                 val taskPageState by tvm.state.collectAsStateWithLifecycle()
 
-                                TasksPage(
-                                    state = taskPageState,
-                                    onAction = tvm::onAction
-                                )
+                                TasksPage(state = taskPageState, onAction = tvm::onAction)
                             }
 
                             composable<AppSections.SettingsPages> {
@@ -280,7 +281,7 @@ fun App(
                                     isUserSubscribed = state.isUserSubscribed,
                                     onNavigateToPaywall = {
                                         mainNavController.navigate(GlobalRoutes.PaywallPage)
-                                    }
+                                    },
                                 )
                             }
 
@@ -295,13 +296,13 @@ fun App(
                                     isUserSubscribed = state.isUserSubscribed,
                                     onNavigateToPaywall = {
                                         mainNavController.navigate(GlobalRoutes.PaywallPage)
-                                    }
+                                    },
                                 )
                             }
                         }
                     }
                 }
-            } 
+            }
         }
     }
 }
@@ -310,11 +311,11 @@ fun App(
 private fun AppNavRail(
     currentRoute: AppSections,
     onNavigate: (AppSections) -> Unit,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
 ) {
     NavigationRail(
         modifier = modifier,
-        containerColor = MaterialTheme.colorScheme.surfaceContainer
+        containerColor = MaterialTheme.colorScheme.surfaceContainer,
     ) {
         AppSections.mainRoutes.forEach { route ->
             NavigationRailItem(
@@ -325,13 +326,10 @@ private fun AppNavRail(
                     }
                 },
                 icon = {
-                    Icon(
-                        painter = painterResource(route.toIconRes()),
-                        contentDescription = null,
-                    )
+                    Icon(painter = painterResource(route.toIconRes()), contentDescription = null)
                 },
                 label = { Text(text = stringResource(route.toStringRes())) },
-                alwaysShowLabel = false
+                alwaysShowLabel = false,
             )
         }
     }
@@ -341,11 +339,9 @@ private fun AppNavRail(
 private fun AppNavBar(
     currentRoute: AppSections,
     onNavigate: (AppSections) -> Unit,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
 ) {
-    NavigationBar(
-        modifier = modifier
-    ) {
+    NavigationBar(modifier = modifier) {
         AppSections.mainRoutes.forEach { route ->
             NavigationBarItem(
                 selected = currentRoute == route,
@@ -355,13 +351,10 @@ private fun AppNavBar(
                     }
                 },
                 icon = {
-                    Icon(
-                        painter = painterResource(route.toIconRes()),
-                        contentDescription = null,
-                    )
+                    Icon(painter = painterResource(route.toIconRes()), contentDescription = null)
                 },
                 label = { Text(text = stringResource(route.toStringRes())) },
-                alwaysShowLabel = false
+                alwaysShowLabel = false,
             )
         }
     }

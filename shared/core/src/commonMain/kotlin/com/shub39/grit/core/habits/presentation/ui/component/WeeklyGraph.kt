@@ -1,3 +1,19 @@
+/*
+ * Copyright (C) 2026  Shubham Gorai
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <https://www.gnu.org/licenses/>.
+ */
 package com.shub39.grit.core.habits.presentation.ui.component
 
 import androidx.compose.foundation.layout.Arrangement
@@ -44,7 +60,7 @@ fun WeeklyGraph(
     primary: Color,
     weeklyGraphData: List<Line>,
     onNavigateToPaywall: () -> Unit,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
 ) {
     var selectedTimePeriod by rememberSaveable { mutableStateOf(WeeklyTimePeriod.WEEKS_8) }
 
@@ -53,27 +69,29 @@ fun WeeklyGraph(
         icon = Res.drawable.chart_data,
         canSeeContent = canSeeContent,
         modifier = modifier.heightIn(max = 400.dp),
-        onPlusClick = onNavigateToPaywall
+        onPlusClick = onNavigateToPaywall,
     ) {
         LazyRow(
-            contentPadding = PaddingValues(
-                horizontal = 16.dp,
-                vertical = 8.dp
-            ),
-            horizontalArrangement = Arrangement.spacedBy(ButtonGroupDefaults.ConnectedSpaceBetween)
+            contentPadding = PaddingValues(horizontal = 16.dp, vertical = 8.dp),
+            horizontalArrangement = Arrangement.spacedBy(ButtonGroupDefaults.ConnectedSpaceBetween),
         ) {
             items(WeeklyTimePeriod.entries) { period ->
                 ToggleButton(
                     checked = period == selectedTimePeriod,
                     onCheckedChange = { selectedTimePeriod = period },
-                    shapes = when (period) {
-                        WeeklyTimePeriod.WEEKS_16 -> ButtonGroupDefaults.connectedLeadingButtonShapes()
-                        WeeklyTimePeriod.WEEKS_8 -> ButtonGroupDefaults.connectedMiddleButtonShapes()
-                        WeeklyTimePeriod.WEEKS_4 -> ButtonGroupDefaults.connectedTrailingButtonShapes()
-                    },
-                    colors = ToggleButtonDefaults.toggleButtonColors(
-                        containerColor = MaterialTheme.colorScheme.surfaceContainerHigh
-                    )
+                    shapes =
+                        when (period) {
+                            WeeklyTimePeriod.WEEKS_16 ->
+                                ButtonGroupDefaults.connectedLeadingButtonShapes()
+                            WeeklyTimePeriod.WEEKS_8 ->
+                                ButtonGroupDefaults.connectedMiddleButtonShapes()
+                            WeeklyTimePeriod.WEEKS_4 ->
+                                ButtonGroupDefaults.connectedTrailingButtonShapes()
+                        },
+                    colors =
+                        ToggleButtonDefaults.toggleButtonColors(
+                            containerColor = MaterialTheme.colorScheme.surfaceContainerHigh
+                        ),
                 ) {
                     Text(text = "${period.toWeeks()} ${stringResource(Res.string.weeks)}")
                 }
@@ -81,37 +99,32 @@ fun WeeklyGraph(
         }
 
         LineChart(
-            labelHelperProperties = LabelHelperProperties(
-                textStyle = MaterialTheme.typography.bodyMedium.copy(color = primary)
-            ),
-            indicatorProperties = HorizontalIndicatorProperties(
-                textStyle = MaterialTheme.typography.bodyMedium.copy(color = primary)
-            ),
-            dividerProperties = DividerProperties(
-                xAxisProperties = LineProperties(color = SolidColor(primary)),
-                yAxisProperties = LineProperties(color = SolidColor(primary))
-            ),
-            gridProperties = GridProperties(
-                xAxisProperties = GridProperties.AxisProperties(
-                    lineCount = 10,
-                    color = SolidColor(primary)
+            labelHelperProperties =
+                LabelHelperProperties(
+                    textStyle = MaterialTheme.typography.bodyMedium.copy(color = primary)
                 ),
-                yAxisProperties = GridProperties.AxisProperties(
-                    lineCount = 7,
-                    color = SolidColor(primary)
-                )
-            ),
-            data = weeklyGraphData.map { line ->
-                line.copy(
-                    values = line.values.takeLast(selectedTimePeriod.toWeeks())
-                )
-            },
-            modifier = Modifier.padding(
-                start = 16.dp,
-                end = 16.dp,
-                bottom = 16.dp
-            ),
-            animationMode = AnimationMode.Together(delayBuilder = { it * 500L })
+            indicatorProperties =
+                HorizontalIndicatorProperties(
+                    textStyle = MaterialTheme.typography.bodyMedium.copy(color = primary)
+                ),
+            dividerProperties =
+                DividerProperties(
+                    xAxisProperties = LineProperties(color = SolidColor(primary)),
+                    yAxisProperties = LineProperties(color = SolidColor(primary)),
+                ),
+            gridProperties =
+                GridProperties(
+                    xAxisProperties =
+                        GridProperties.AxisProperties(lineCount = 10, color = SolidColor(primary)),
+                    yAxisProperties =
+                        GridProperties.AxisProperties(lineCount = 7, color = SolidColor(primary)),
+                ),
+            data =
+                weeklyGraphData.map { line ->
+                    line.copy(values = line.values.takeLast(selectedTimePeriod.toWeeks()))
+                },
+            modifier = Modifier.padding(start = 16.dp, end = 16.dp, bottom = 16.dp),
+            animationMode = AnimationMode.Together(delayBuilder = { it * 500L }),
         )
     }
 }

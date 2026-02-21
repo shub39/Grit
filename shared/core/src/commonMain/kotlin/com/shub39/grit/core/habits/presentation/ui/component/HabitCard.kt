@@ -1,3 +1,19 @@
+/*
+ * Copyright (C) 2026  Shubham Gorai
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <https://www.gnu.org/licenses/>.
+ */
 package com.shub39.grit.core.habits.presentation.ui.component
 
 import androidx.compose.animation.AnimatedContent
@@ -47,16 +63,14 @@ import grit.shared.core.generated.resources.analytics
 import grit.shared.core.generated.resources.check_circle
 import grit.shared.core.generated.resources.circle_border
 import grit.shared.core.generated.resources.heat
+import kotlin.time.ExperimentalTime
 import kotlinx.datetime.DateTimeUnit
 import kotlinx.datetime.DayOfWeek
 import kotlinx.datetime.LocalDate
 import kotlinx.datetime.minus
 import org.jetbrains.compose.resources.vectorResource
-import kotlin.time.ExperimentalTime
 
-/**
- * Habit Card for list
- */
+/** Habit Card for list */
 @OptIn(ExperimentalMaterial3Api::class, ExperimentalTime::class)
 @Composable
 fun HabitCard(
@@ -71,68 +85,76 @@ fun HabitCard(
     reorderHandle: @Composable () -> Unit,
     is24Hr: Boolean,
     shape: Shape,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
 ) {
     val today = LocalDate.now()
     val canCompleteToday = today.dayOfWeek in habitWithAnalytics.habit.days
 
     // animated colors
-    val cardContent by animateColorAsState(
-        targetValue = when (completed) {
-            true -> MaterialTheme.colorScheme.onPrimaryContainer
-            else -> MaterialTheme.colorScheme.onSurface.copy(
-                alpha = if (canCompleteToday) 1f else 0.7f
-            )
-        },
-        label = "cardBackground"
-    )
-    val cardBackground by animateColorAsState(
-        targetValue = when (completed) {
-            true -> MaterialTheme.colorScheme.primaryContainer
-            else -> MaterialTheme.colorScheme.surfaceContainer.copy(
-                alpha = if (canCompleteToday) 1f else 0.7f
-            )
-        },
-        label = "cardBackground"
-    )
+    val cardContent by
+        animateColorAsState(
+            targetValue =
+                when (completed) {
+                    true -> MaterialTheme.colorScheme.onPrimaryContainer
+                    else ->
+                        MaterialTheme.colorScheme.onSurface.copy(
+                            alpha = if (canCompleteToday) 1f else 0.7f
+                        )
+                },
+            label = "cardBackground",
+        )
+    val cardBackground by
+        animateColorAsState(
+            targetValue =
+                when (completed) {
+                    true -> MaterialTheme.colorScheme.primaryContainer
+                    else ->
+                        MaterialTheme.colorScheme.surfaceContainer.copy(
+                            alpha = if (canCompleteToday) 1f else 0.7f
+                        )
+                },
+            label = "cardBackground",
+        )
 
-    val weekState = rememberWeekCalendarState(
-        startDate = habitWithAnalytics.habit.time.date.minus(1, DateTimeUnit.YEAR),
-        endDate = today,
-        firstVisibleWeekDate = today,
-        firstDayOfWeek = startingDay
-    )
+    val weekState =
+        rememberWeekCalendarState(
+            startDate = habitWithAnalytics.habit.time.date.minus(1, DateTimeUnit.YEAR),
+            endDate = today,
+            firstVisibleWeekDate = today,
+            firstDayOfWeek = startingDay,
+        )
 
     Card(
-        colors = CardDefaults.outlinedCardColors(
-            containerColor = cardBackground,
-            contentColor = cardContent
-        ),
+        colors =
+            CardDefaults.outlinedCardColors(
+                containerColor = cardBackground,
+                contentColor = cardContent,
+            ),
         onClick = {
             if (canCompleteToday) {
                 action(HabitsAction.InsertStatus(habitWithAnalytics.habit, today))
             }
         },
         shape = shape,
-        modifier = modifier.animateContentSize()
+        modifier = modifier.animateContentSize(),
     ) {
         ListItem(
-            modifier = Modifier
-                .fillMaxWidth()
-                .clip(MaterialTheme.shapes.large),
-            colors = ListItemDefaults.colors(
-                containerColor = cardBackground,
-                headlineColor = cardContent,
-                supportingColor = cardContent,
-                trailingIconColor = cardContent,
-                leadingIconColor = cardContent
-            ),
+            modifier = Modifier.fillMaxWidth().clip(MaterialTheme.shapes.large),
+            colors =
+                ListItemDefaults.colors(
+                    containerColor = cardBackground,
+                    headlineColor = cardContent,
+                    supportingColor = cardContent,
+                    trailingIconColor = cardContent,
+                    leadingIconColor = cardContent,
+                ),
             leadingContent = {
-                AnimatedContent(
-                    targetState = completed
-                ) {
+                AnimatedContent(targetState = completed) {
                     Icon(
-                        imageVector = vectorResource(if (!it) Res.drawable.circle_border else Res.drawable.check_circle),
+                        imageVector =
+                            vectorResource(
+                                if (!it) Res.drawable.circle_border else Res.drawable.check_circle
+                            ),
                         contentDescription = null,
                     )
                 }
@@ -140,40 +162,36 @@ fun HabitCard(
             headlineContent = {
                 Row(
                     verticalAlignment = Alignment.CenterVertically,
-                    horizontalArrangement = Arrangement.SpaceBetween
+                    horizontalArrangement = Arrangement.SpaceBetween,
                 ) {
                     Text(
                         text = habitWithAnalytics.habit.title,
                         maxLines = 1,
                         fontWeight = FontWeight.Bold,
-                        modifier = Modifier.basicMarquee()
+                        modifier = Modifier.basicMarquee(),
                     )
                 }
             },
             supportingContent = {
                 if (habitWithAnalytics.habit.reminder) {
-                    Text(
-                        text = habitWithAnalytics.habit.time.time.toFormattedString(is24Hr)
-                    )
+                    Text(text = habitWithAnalytics.habit.time.time.toFormattedString(is24Hr))
                 }
             },
             trailingContent = {
                 Row(
                     verticalAlignment = Alignment.CenterVertically,
-                    horizontalArrangement = Arrangement.spacedBy(4.dp)
+                    horizontalArrangement = Arrangement.spacedBy(4.dp),
                 ) {
                     Row(
                         verticalAlignment = Alignment.CenterVertically,
-                        horizontalArrangement = Arrangement.spacedBy(4.dp)
+                        horizontalArrangement = Arrangement.spacedBy(4.dp),
                     ) {
                         Icon(
                             imageVector = vectorResource(Res.drawable.heat),
-                            contentDescription = null
+                            contentDescription = null,
                         )
 
-                        Text(
-                            text = habitWithAnalytics.currentStreak.toString()
-                        )
+                        Text(text = habitWithAnalytics.currentStreak.toString())
                     }
 
                     IconButton(
@@ -181,21 +199,17 @@ fun HabitCard(
                             action(HabitsAction.PrepareAnalytics(habitWithAnalytics.habit))
                             onNavigateToAnalytics()
                         },
-                        enabled = analyticsEnabled
+                        enabled = analyticsEnabled,
                     ) {
                         Icon(
                             imageVector = vectorResource(Res.drawable.analytics),
-                            contentDescription = "Analytics"
+                            contentDescription = "Analytics",
                         )
                     }
 
-                    AnimatedVisibility(
-                        visible = editState
-                    ) {
-                        reorderHandle()
-                    }
+                    AnimatedVisibility(visible = editState) { reorderHandle() }
                 }
-            }
+            },
         )
 
         if (!compactView) {
@@ -205,52 +219,57 @@ fun HabitCard(
                 dayContent = { weekDay ->
                     val done = habitWithAnalytics.statuses.any { it.date == weekDay.date }
                     val validDay =
-                        weekDay.date <= today && weekDay.date.dayOfWeek in habitWithAnalytics.habit.days
+                        weekDay.date <= today &&
+                            weekDay.date.dayOfWeek in habitWithAnalytics.habit.days
 
                     Box(
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .clickable(
-                                role = Role.Button,
-                                enabled = validDay,
-                                onClick = {
-                                    action(
-                                        HabitsAction.InsertStatus(
-                                            habit = habitWithAnalytics.habit,
-                                            date = weekDay.date
+                        modifier =
+                            Modifier.fillMaxWidth()
+                                .clickable(
+                                    role = Role.Button,
+                                    enabled = validDay,
+                                    onClick = {
+                                        action(
+                                            HabitsAction.InsertStatus(
+                                                habit = habitWithAnalytics.habit,
+                                                date = weekDay.date,
+                                            )
                                         )
-                                    )
-                                }
-                            )
-                            .then(
-                                if (done) {
-                                    val donePrevious =
-                                        habitWithAnalytics.statuses.any {
-                                            it.date == weekDay.date.minusDays(1)
-                                        }
-                                    val doneAfter =
-                                        habitWithAnalytics.statuses.any {
-                                            it.date == weekDay.date.plusDays(1)
-                                        }
+                                    },
+                                )
+                                .then(
+                                    if (done) {
+                                        val donePrevious =
+                                            habitWithAnalytics.statuses.any {
+                                                it.date == weekDay.date.minusDays(1)
+                                            }
+                                        val doneAfter =
+                                            habitWithAnalytics.statuses.any {
+                                                it.date == weekDay.date.plusDays(1)
+                                            }
 
-                                    Modifier.background(
-                                        color = MaterialTheme.colorScheme.primary,
-                                        shape =  when {
-                                            donePrevious && doneAfter -> RoundedCornerShape(0.dp)
-                                            donePrevious -> RoundedCornerShape(
-                                                topEnd = 1000.dp,
-                                                bottomEnd = 1000.dp
-                                            )
-                                            doneAfter -> RoundedCornerShape(
-                                                topStart = 1000.dp,
-                                                bottomStart = 1000.dp,
-                                            )
-                                            else -> CircleShape
-                                        }
-                                    )
-                                } else Modifier
-                            ),
-                        contentAlignment = Alignment.Center
+                                        Modifier.background(
+                                            color = MaterialTheme.colorScheme.primary,
+                                            shape =
+                                                when {
+                                                    donePrevious && doneAfter ->
+                                                        RoundedCornerShape(0.dp)
+                                                    donePrevious ->
+                                                        RoundedCornerShape(
+                                                            topEnd = 1000.dp,
+                                                            bottomEnd = 1000.dp,
+                                                        )
+                                                    doneAfter ->
+                                                        RoundedCornerShape(
+                                                            topStart = 1000.dp,
+                                                            bottomStart = 1000.dp,
+                                                        )
+                                                    else -> CircleShape
+                                                },
+                                        )
+                                    } else Modifier
+                                ),
+                        contentAlignment = Alignment.Center,
                     ) {
                         Column(
                             modifier = Modifier.padding(6.dp),
@@ -262,9 +281,10 @@ fun HabitCard(
                                 fontWeight = FontWeight.Bold,
                                 maxLines = 1,
                                 modifier = Modifier.basicMarquee(),
-                                color = if (done) MaterialTheme.colorScheme.onPrimary
-                                else if (!validDay) cardContent.copy(alpha = 0.5f)
-                                else cardContent
+                                color =
+                                    if (done) MaterialTheme.colorScheme.onPrimary
+                                    else if (!validDay) cardContent.copy(alpha = 0.5f)
+                                    else cardContent,
                             )
 
                             Text(
@@ -272,13 +292,14 @@ fun HabitCard(
                                 style = MaterialTheme.typography.bodySmall,
                                 maxLines = 1,
                                 modifier = Modifier.basicMarquee(),
-                                color = if (done) MaterialTheme.colorScheme.onPrimary
-                                else if (!validDay) cardContent.copy(alpha = 0.5f)
-                                else cardContent
+                                color =
+                                    if (done) MaterialTheme.colorScheme.onPrimary
+                                    else if (!validDay) cardContent.copy(alpha = 0.5f)
+                                    else cardContent,
                             )
                         }
                     }
-                }
+                },
             )
         }
     }

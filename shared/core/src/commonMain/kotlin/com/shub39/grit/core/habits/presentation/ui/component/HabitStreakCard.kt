@@ -1,3 +1,19 @@
+/*
+ * Copyright (C) 2026  Shubham Gorai
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <https://www.gnu.org/licenses/>.
+ */
 package com.shub39.grit.core.habits.presentation.ui.component
 
 import androidx.compose.animation.core.LinearEasing
@@ -46,108 +62,93 @@ import org.jetbrains.compose.resources.vectorResource
 
 @OptIn(ExperimentalMaterial3ExpressiveApi::class)
 @Composable
-fun HabitStreakCard(
-    currentStreak: Int,
-    bestStreak: Int,
-    modifier: Modifier = Modifier
-) {
-    val daysLeft by animateFloatAsState(
-        targetValue = if (bestStreak > 0) {
-            currentStreak.toFloat() / bestStreak.toFloat()
-        } else {
-            0f
-        }
-    )
+fun HabitStreakCard(currentStreak: Int, bestStreak: Int, modifier: Modifier = Modifier) {
+    val daysLeft by
+        animateFloatAsState(
+            targetValue =
+                if (bestStreak > 0) {
+                    currentStreak.toFloat() / bestStreak.toFloat()
+                } else {
+                    0f
+                }
+        )
 
-    val infiniteTransition =
-        rememberInfiniteTransition(label = "rotation")
-    val rotation by infiniteTransition.animateFloat(
-        initialValue = 0f,
-        targetValue = 360f,
-        animationSpec = infiniteRepeatable(
-            animation = tween(
-                durationMillis = 2000,
-                easing = LinearEasing
-            ),
-            repeatMode = RepeatMode.Restart
-        ),
-        label = "infinite rotation"
-    )
+    val infiniteTransition = rememberInfiniteTransition(label = "rotation")
+    val rotation by
+        infiniteTransition.animateFloat(
+            initialValue = 0f,
+            targetValue = 360f,
+            animationSpec =
+                infiniteRepeatable(
+                    animation = tween(durationMillis = 2000, easing = LinearEasing),
+                    repeatMode = RepeatMode.Restart,
+                ),
+            label = "infinite rotation",
+        )
 
     Card(
         modifier = modifier,
-        colors = CardDefaults.cardColors(
-            containerColor = MaterialTheme.colorScheme.tertiaryContainer.copy(alpha = 0.8f),
-            contentColor = MaterialTheme.colorScheme.onTertiaryContainer
-        ),
-        shape = CircleShape
+        colors =
+            CardDefaults.cardColors(
+                containerColor = MaterialTheme.colorScheme.tertiaryContainer.copy(alpha = 0.8f),
+                contentColor = MaterialTheme.colorScheme.onTertiaryContainer,
+            ),
+        shape = CircleShape,
     ) {
         Box {
             Box(
-                modifier = Modifier
-                    .matchParentSize()
-                    .drawWithContent {
-                        val width = size.width * daysLeft
+                modifier =
+                    Modifier.matchParentSize()
+                        .drawWithContent {
+                            val width = size.width * daysLeft
 
-                        clipRect(
-                            right = width,
-                        ) {
-                            this@drawWithContent.drawContent()
+                            clipRect(right = width) { this@drawWithContent.drawContent() }
                         }
-                    }
-                    .background(MaterialTheme.colorScheme.tertiaryContainer)
+                        .background(MaterialTheme.colorScheme.tertiaryContainer)
             )
 
             Row(
-                modifier = Modifier
-                    .padding(16.dp)
-                    .fillMaxWidth(),
-                verticalAlignment = Alignment.CenterVertically
+                modifier = Modifier.padding(16.dp).fillMaxWidth(),
+                verticalAlignment = Alignment.CenterVertically,
             ) {
-                Box(
-                    modifier = Modifier.wrapContentSize(),
-                    contentAlignment = Alignment.Center
-                ) {
+                Box(modifier = Modifier.wrapContentSize(), contentAlignment = Alignment.Center) {
                     Box(
-                        modifier = Modifier
-                            .size(64.dp)
-                            .then(
-                                if (daysLeft >= 1) {
-                                    Modifier.graphicsLayer {
-                                        rotationZ = rotation
-                                    }
-                                } else Modifier
-                            )
-                            .background(
-                                color = MaterialTheme.colorScheme.tertiary,
-                                shape = VerySunny.toShape()
-                            )
+                        modifier =
+                            Modifier.size(64.dp)
+                                .then(
+                                    if (daysLeft >= 1) {
+                                        Modifier.graphicsLayer { rotationZ = rotation }
+                                    } else Modifier
+                                )
+                                .background(
+                                    color = MaterialTheme.colorScheme.tertiary,
+                                    shape = VerySunny.toShape(),
+                                )
                     )
 
                     Icon(
                         imageVector = vectorResource(Res.drawable.heat),
                         contentDescription = "Flag",
                         tint = MaterialTheme.colorScheme.onTertiary,
-                        modifier = Modifier.size(36.dp)
+                        modifier = Modifier.size(36.dp),
                     )
                 }
 
                 Spacer(modifier = Modifier.width(12.dp))
 
-                Column(
-                    modifier = Modifier.weight(1f),
-                ) {
+                Column(modifier = Modifier.weight(1f)) {
                     Text(
                         text = stringResource(Res.string.streak),
-                        style = MaterialTheme.typography.labelMedium
+                        style = MaterialTheme.typography.labelMedium,
                     )
                     Text(
                         text = currentStreak.toString(),
-                        style = MaterialTheme.typography.titleLarge.copy(fontWeight = FontWeight.Bold)
+                        style =
+                            MaterialTheme.typography.titleLarge.copy(fontWeight = FontWeight.Bold),
                     )
                     Text(
                         text = stringResource(Res.string.best_streak, bestStreak),
-                        style = MaterialTheme.typography.bodyMedium
+                        style = MaterialTheme.typography.bodyMedium,
                     )
                 }
             }
@@ -158,10 +159,5 @@ fun HabitStreakCard(
 @AllPreviews
 @Composable
 private fun Preview() {
-    GritTheme {
-        HabitStreakCard(
-            currentStreak = 20,
-            bestStreak = 20,
-        )
-    }
+    GritTheme { HabitStreakCard(currentStreak = 20, bestStreak = 20) }
 }

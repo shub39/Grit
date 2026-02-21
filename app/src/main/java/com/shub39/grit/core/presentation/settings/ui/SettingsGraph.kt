@@ -1,3 +1,19 @@
+/*
+ * Copyright (C) 2026  Shubham Gorai
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <https://www.gnu.org/licenses/>.
+ */
 package com.shub39.grit.core.presentation.settings.ui
 
 import androidx.compose.animation.fadeIn
@@ -28,17 +44,13 @@ import com.shub39.grit.core.theme.Theme
 import kotlinx.serialization.Serializable
 
 private sealed interface SettingsRoutes {
-    @Serializable
-    data object Root: SettingsRoutes
+    @Serializable data object Root : SettingsRoutes
 
-    @Serializable
-    data object LookAndFeel: SettingsRoutes
+    @Serializable data object LookAndFeel : SettingsRoutes
 
-    @Serializable
-    data object Backup: SettingsRoutes
+    @Serializable data object Backup : SettingsRoutes
 
-    @Serializable
-    data object Changelog: SettingsRoutes
+    @Serializable data object Changelog : SettingsRoutes
 }
 
 @Composable
@@ -47,81 +59,72 @@ fun SettingsGraph(
     onAction: (SettingsAction) -> Unit,
     isUserSubscribed: Boolean,
     onNavigateToPaywall: () -> Unit,
-    modifier: Modifier = Modifier
-) = PageFill(modifier = modifier) {
-    val navController = rememberNavController()
+    modifier: Modifier = Modifier,
+) =
+    PageFill(modifier = modifier) {
+        val navController = rememberNavController()
 
-    NavHost(
-        navController = navController,
-        startDestination = SettingsRoutes.Root,
-        modifier = Modifier
-            .background(MaterialTheme.colorScheme.background)
-            .widthIn(max = 600.dp)
-            .fillMaxSize(),
-        enterTransition = {
-            slideInHorizontally(initialOffsetX = { it }) + fadeIn()
-        },
-        exitTransition = {
-            slideOutHorizontally(targetOffsetX = { -it }) + fadeOut()
-        },
-        popEnterTransition = {
-            slideInHorizontally(initialOffsetX = { -it }) + fadeIn()
-        },
-        popExitTransition = {
-            slideOutHorizontally(targetOffsetX = { it }) + fadeOut()
-        }
-    ) {
-        composable<SettingsRoutes.Root> {
-            RootPage(
-                state = state,
-                onAction = onAction,
-                onNavigateToLookAndFeel = { navController.navigate(SettingsRoutes.LookAndFeel) },
-                onNavigateToBackup = { navController.navigate(SettingsRoutes.Backup) },
-                onNavigateToPaywall = onNavigateToPaywall,
-                onNavigateToChangelog = { navController.navigate(SettingsRoutes.Changelog) }
-            )
-        }
+        NavHost(
+            navController = navController,
+            startDestination = SettingsRoutes.Root,
+            modifier =
+                Modifier.background(MaterialTheme.colorScheme.background)
+                    .widthIn(max = 600.dp)
+                    .fillMaxSize(),
+            enterTransition = { slideInHorizontally(initialOffsetX = { it }) + fadeIn() },
+            exitTransition = { slideOutHorizontally(targetOffsetX = { -it }) + fadeOut() },
+            popEnterTransition = { slideInHorizontally(initialOffsetX = { -it }) + fadeIn() },
+            popExitTransition = { slideOutHorizontally(targetOffsetX = { it }) + fadeOut() },
+        ) {
+            composable<SettingsRoutes.Root> {
+                RootPage(
+                    state = state,
+                    onAction = onAction,
+                    onNavigateToLookAndFeel = {
+                        navController.navigate(SettingsRoutes.LookAndFeel)
+                    },
+                    onNavigateToBackup = { navController.navigate(SettingsRoutes.Backup) },
+                    onNavigateToPaywall = onNavigateToPaywall,
+                    onNavigateToChangelog = { navController.navigate(SettingsRoutes.Changelog) },
+                )
+            }
 
-        composable<SettingsRoutes.LookAndFeel> {
-            LookAndFeelPage(
-                state = state,
-                onAction = onAction,
-                isUserSubscribed = isUserSubscribed,
-                onNavigateToPaywall = onNavigateToPaywall,
-                onNavigateBack = { navController.navigateUp() }
-            )
-        }
+            composable<SettingsRoutes.LookAndFeel> {
+                LookAndFeelPage(
+                    state = state,
+                    onAction = onAction,
+                    isUserSubscribed = isUserSubscribed,
+                    onNavigateToPaywall = onNavigateToPaywall,
+                    onNavigateBack = { navController.navigateUp() },
+                )
+            }
 
-        composable<SettingsRoutes.Backup> {
-            BackupPage(
-                state = state,
-                onAction = onAction,
-                onNavigateBack = { navController.navigateUp() }
-            )
-        }
+            composable<SettingsRoutes.Backup> {
+                BackupPage(
+                    state = state,
+                    onAction = onAction,
+                    onNavigateBack = { navController.navigateUp() },
+                )
+            }
 
-        composable<SettingsRoutes.Changelog> {
-            Changelog(
-                changelog = state.changelog,
-                onNavigateBack = { navController.navigateUp() }
-            )
+            composable<SettingsRoutes.Changelog> {
+                Changelog(
+                    changelog = state.changelog,
+                    onNavigateBack = { navController.navigateUp() },
+                )
+            }
         }
     }
-}
 
 @Preview
 @Composable
 private fun Preview() {
-    GritTheme(
-        theme = Theme(
-            appTheme = AppTheme.DARK
-        )
-    ) {
+    GritTheme(theme = Theme(appTheme = AppTheme.DARK)) {
         SettingsGraph(
             state = SettingsState(),
             onAction = {},
             onNavigateToPaywall = {},
-            isUserSubscribed = true
+            isUserSubscribed = true,
         )
     }
 }

@@ -1,3 +1,19 @@
+/*
+ * Copyright (C) 2026  Shubham Gorai
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <https://www.gnu.org/licenses/>.
+ */
 package com.shub39.grit.core.habits.presentation.ui.component
 
 import androidx.compose.foundation.background
@@ -39,61 +55,51 @@ import org.jetbrains.compose.resources.vectorResource
 
 @OptIn(ExperimentalMaterial3ExpressiveApi::class)
 @Composable
-fun HabitStartCard(
-    date: LocalDate,
-    startedDaysAgo: Long,
-    modifier: Modifier = Modifier
-) {
+fun HabitStartCard(date: LocalDate, startedDaysAgo: Long, modifier: Modifier = Modifier) {
     Card(
         modifier = modifier,
-        colors = CardDefaults.cardColors(
-            containerColor = MaterialTheme.colorScheme.secondaryContainer,
-            contentColor = MaterialTheme.colorScheme.onSecondaryContainer
-        ),
-        shape = CircleShape
+        colors =
+            CardDefaults.cardColors(
+                containerColor = MaterialTheme.colorScheme.secondaryContainer,
+                contentColor = MaterialTheme.colorScheme.onSecondaryContainer,
+            ),
+        shape = CircleShape,
     ) {
         Row(
-            modifier = Modifier
-                .padding(16.dp)
-                .fillMaxWidth(),
-            verticalAlignment = Alignment.CenterVertically
+            modifier = Modifier.padding(16.dp).fillMaxWidth(),
+            verticalAlignment = Alignment.CenterVertically,
         ) {
             Box(
-                modifier = Modifier
-                    .size(64.dp)
-                    .background(
-                        color = MaterialTheme.colorScheme.secondary,
-                        shape = Sunny.toShape()
-                    ),
-                contentAlignment = Alignment.Center
+                modifier =
+                    Modifier.size(64.dp)
+                        .background(
+                            color = MaterialTheme.colorScheme.secondary,
+                            shape = Sunny.toShape(),
+                        ),
+                contentAlignment = Alignment.Center,
             ) {
                 Icon(
                     imageVector = vectorResource(Res.drawable.flag_circle),
                     contentDescription = "Flag",
                     tint = MaterialTheme.colorScheme.onSecondary,
-                    modifier = Modifier.size(36.dp)
+                    modifier = Modifier.size(36.dp),
                 )
             }
 
             Spacer(modifier = Modifier.width(12.dp))
 
-            Column(
-                modifier = Modifier.weight(1f),
-            ) {
+            Column(modifier = Modifier.weight(1f)) {
                 Text(
                     text = stringResource(Res.string.started_on),
-                    style = MaterialTheme.typography.labelMedium
+                    style = MaterialTheme.typography.labelMedium,
                 )
                 Text(
                     text = formatDateWithOrdinal(date),
-                    style = MaterialTheme.typography.titleLarge.copy(fontWeight = FontWeight.Bold)
+                    style = MaterialTheme.typography.titleLarge.copy(fontWeight = FontWeight.Bold),
                 )
                 Text(
-                    text = stringResource(
-                        Res.string.days_ago_format,
-                        startedDaysAgo
-                    ),
-                    style = MaterialTheme.typography.bodyMedium
+                    text = stringResource(Res.string.days_ago_format, startedDaysAgo),
+                    style = MaterialTheme.typography.bodyMedium,
                 )
             }
         }
@@ -104,9 +110,6 @@ fun HabitStartCard(
 @Composable
 private fun Preview() {
     GritTheme {
-        HabitStartCard(
-            date = LocalDate.now().minus(10, DateTimeUnit.DAY),
-            startedDaysAgo = 10
-        )
+        HabitStartCard(date = LocalDate.now().minus(10, DateTimeUnit.DAY), startedDaysAgo = 10)
     }
 }

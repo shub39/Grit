@@ -1,3 +1,19 @@
+/*
+ * Copyright (C) 2026  Shubham Gorai
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <https://www.gnu.org/licenses/>.
+ */
 package com.shub39.grit.core.habits.presentation.ui.component
 
 import androidx.compose.animation.animateContentSize
@@ -41,6 +57,7 @@ import grit.shared.core.generated.resources.arrow_back
 import grit.shared.core.generated.resources.arrow_forward
 import grit.shared.core.generated.resources.calendar_month
 import grit.shared.core.generated.resources.monthly_progress
+import kotlin.time.ExperimentalTime
 import kotlinx.coroutines.launch
 import kotlinx.datetime.DateTimeUnit
 import kotlinx.datetime.DayOfWeek
@@ -54,11 +71,8 @@ import kotlinx.datetime.minus
 import kotlinx.datetime.plus
 import org.jetbrains.compose.resources.painterResource
 import org.jetbrains.compose.resources.stringResource
-import kotlin.time.ExperimentalTime
 
-/**
- * Boolean Calendar map highlighting days
- */
+/** Boolean Calendar map highlighting days */
 @OptIn(ExperimentalTime::class)
 @Composable
 fun CalendarMap(
@@ -68,7 +82,7 @@ fun CalendarMap(
     currentHabit: HabitWithAnalytics,
     primary: Color,
     onNavigateToPaywall: () -> Unit,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
 ) {
     val today = LocalDate.now()
     val scope = rememberCoroutineScope()
@@ -84,8 +98,10 @@ fun CalendarMap(
                     onClick = {
                         scope.launch {
                             calendarState.animateScrollToMonth(
-                                calendarState.firstVisibleMonth.yearMonth
-                                    .minus(1, DateTimeUnit.MONTH)
+                                calendarState.firstVisibleMonth.yearMonth.minus(
+                                    1,
+                                    DateTimeUnit.MONTH,
+                                )
                             )
                         }
                     }
@@ -93,15 +109,17 @@ fun CalendarMap(
                     Icon(
                         painter = painterResource(Res.drawable.arrow_back),
                         contentDescription = null,
-                        tint = primary
+                        tint = primary,
                     )
                 }
                 IconButton(
                     onClick = {
                         scope.launch {
                             calendarState.animateScrollToMonth(
-                                calendarState.firstVisibleMonth.yearMonth
-                                    .plus(1, DateTimeUnit.MONTH)
+                                calendarState.firstVisibleMonth.yearMonth.plus(
+                                    1,
+                                    DateTimeUnit.MONTH,
+                                )
                             )
                         }
                     }
@@ -109,35 +127,32 @@ fun CalendarMap(
                     Icon(
                         painter = painterResource(Res.drawable.arrow_forward),
                         contentDescription = null,
-                        tint = primary
+                        tint = primary,
                     )
                 }
             }
         },
-        modifier = modifier
+        modifier = modifier,
     ) {
         HorizontalCalendar(
             state = calendarState,
-            modifier = Modifier
-                .animateContentSize()
-                .padding(bottom = 16.dp),
+            modifier = Modifier.animateContentSize().padding(bottom = 16.dp),
             contentPadding = PaddingValues(horizontal = 16.dp),
             userScrollEnabled = canSeeContent,
             monthHeader = {
-                Box(
-                    modifier = Modifier.padding(4.dp)
-                ) {
+                Box(modifier = Modifier.padding(4.dp)) {
                     Text(
-                        text = it.yearMonth.format(
-                            YearMonth.Format {
-                                monthName(MonthNames.ENGLISH_FULL)
-                                char(' ')
-                                year()
-                            }
-                        ),
+                        text =
+                            it.yearMonth.format(
+                                YearMonth.Format {
+                                    monthName(MonthNames.ENGLISH_FULL)
+                                    char(' ')
+                                    year()
+                                }
+                            ),
                         color = MaterialTheme.colorScheme.secondary,
                         style = MaterialTheme.typography.titleMedium,
-                        modifier = Modifier.align(Alignment.Center)
+                        modifier = Modifier.align(Alignment.Center),
                     )
                 }
             },
@@ -145,62 +160,71 @@ fun CalendarMap(
                 if (day.position.name == "MonthDate") {
                     val done = currentHabit.statuses.any { it.date == day.date }
                     val validDate =
-                        day.date <= today && canSeeContent && day.date.dayOfWeek in currentHabit.habit.days
+                        day.date <= today &&
+                            canSeeContent &&
+                            day.date.dayOfWeek in currentHabit.habit.days
 
                     Box(
-                        modifier = Modifier
-                            .padding(1.dp)
-                            .fillMaxWidth()
-                            .height(40.dp)
-                            .clickable(enabled = validDate) {
-                                onAction(
-                                    HabitsAction.InsertStatus(
-                                        currentHabit.habit,
-                                        day.date
+                        modifier =
+                            Modifier.padding(1.dp)
+                                .fillMaxWidth()
+                                .height(40.dp)
+                                .clickable(enabled = validDate) {
+                                    onAction(
+                                        HabitsAction.InsertStatus(currentHabit.habit, day.date)
                                     )
-                                )
-                            }
-                            .then(
-                                if (done) {
-                                    val donePrevious =
-                                        currentHabit.statuses.any { it.date == day.date.minusDays(1) }
-                                    val doneAfter =
-                                        currentHabit.statuses.any { it.date == day.date.plusDays(1) }
+                                }
+                                .then(
+                                    if (done) {
+                                        val donePrevious =
+                                            currentHabit.statuses.any {
+                                                it.date == day.date.minusDays(1)
+                                            }
+                                        val doneAfter =
+                                            currentHabit.statuses.any {
+                                                it.date == day.date.plusDays(1)
+                                            }
 
-                                    Modifier.background(
-                                        color = primary.copy(alpha = 0.2f),
-                                        shape = when {
-                                            donePrevious && doneAfter -> RoundedCornerShape(4.dp)
-                                            donePrevious -> RoundedCornerShape(
-                                                topEnd = 1000.dp,
-                                                bottomEnd = 1000.dp,
-                                                topStart = 4.dp,
-                                                bottomStart = 4.dp
-                                            )
-                                            doneAfter -> RoundedCornerShape(
-                                                topStart = 1000.dp,
-                                                bottomStart = 1000.dp,
-                                                topEnd = 4.dp,
-                                                bottomEnd = 4.dp
-                                            )
-                                            else -> CircleShape
-                                        }
-                                    )
-                                } else Modifier
-                            ),
-                        contentAlignment = Alignment.Center
+                                        Modifier.background(
+                                            color = primary.copy(alpha = 0.2f),
+                                            shape =
+                                                when {
+                                                    donePrevious && doneAfter ->
+                                                        RoundedCornerShape(4.dp)
+                                                    donePrevious ->
+                                                        RoundedCornerShape(
+                                                            topEnd = 1000.dp,
+                                                            bottomEnd = 1000.dp,
+                                                            topStart = 4.dp,
+                                                            bottomStart = 4.dp,
+                                                        )
+                                                    doneAfter ->
+                                                        RoundedCornerShape(
+                                                            topStart = 1000.dp,
+                                                            bottomStart = 1000.dp,
+                                                            topEnd = 4.dp,
+                                                            bottomEnd = 4.dp,
+                                                        )
+                                                    else -> CircleShape
+                                                },
+                                        )
+                                    } else Modifier
+                                ),
+                        contentAlignment = Alignment.Center,
                     ) {
                         Text(
                             text = day.date.day.toString(),
                             style = MaterialTheme.typography.bodyLarge,
                             fontWeight = if (done) FontWeight.Bold else FontWeight.Normal,
-                            color = if (done) primary
-                            else if (!validDate) MaterialTheme.colorScheme.onSurface.copy(alpha = 0.5f)
-                            else MaterialTheme.colorScheme.onSurface
+                            color =
+                                if (done) primary
+                                else if (!validDate)
+                                    MaterialTheme.colorScheme.onSurface.copy(alpha = 0.5f)
+                                else MaterialTheme.colorScheme.onSurface,
                         )
                     }
                 }
-            }
+            },
         )
     }
 }
@@ -212,35 +236,39 @@ private fun Preview() {
         CalendarMap(
             canSeeContent = true,
             onAction = {},
-            calendarState = rememberCalendarState(
-                startMonth = YearMonth.now().minusYears(1),
-                endMonth = YearMonth.now(),
-                firstVisibleMonth = YearMonth.now()
-            ),
-            currentHabit = HabitWithAnalytics(
-                habit = Habit(
-                    id = 1,
-                    title = "Test Habit",
-                    description = "Just a test Habit",
-                    time = LocalDateTime.now(),
-                    days = DayOfWeek.entries.toSet(),
-                    index = 1,
-                    reminder = false
+            calendarState =
+                rememberCalendarState(
+                    startMonth = YearMonth.now().minusYears(1),
+                    endMonth = YearMonth.now(),
+                    firstVisibleMonth = YearMonth.now(),
                 ),
-                statuses = (0..40).map {
-                    HabitStatus(
-                        habitId = 1,
-                        date = LocalDate.now().minus(it, DateTimeUnit.DAY)
-                    )
-                },
-                weeklyComparisonData = listOf(),
-                weekDayFrequencyData = mapOf(),
-                currentStreak = 0,
-                bestStreak = 0,
-                startedDaysAgo = 0
-            ),
+            currentHabit =
+                HabitWithAnalytics(
+                    habit =
+                        Habit(
+                            id = 1,
+                            title = "Test Habit",
+                            description = "Just a test Habit",
+                            time = LocalDateTime.now(),
+                            days = DayOfWeek.entries.toSet(),
+                            index = 1,
+                            reminder = false,
+                        ),
+                    statuses =
+                        (0..40).map {
+                            HabitStatus(
+                                habitId = 1,
+                                date = LocalDate.now().minus(it, DateTimeUnit.DAY),
+                            )
+                        },
+                    weeklyComparisonData = listOf(),
+                    weekDayFrequencyData = mapOf(),
+                    currentStreak = 0,
+                    bestStreak = 0,
+                    startedDaysAgo = 0,
+                ),
             primary = MaterialTheme.colorScheme.primary,
-            onNavigateToPaywall = { },
+            onNavigateToPaywall = {},
         )
     }
 }

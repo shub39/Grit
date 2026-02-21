@@ -1,3 +1,19 @@
+/*
+ * Copyright (C) 2026  Shubham Gorai
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <https://www.gnu.org/licenses/>.
+ */
 package com.shub39.grit.habits.data.repository
 
 import com.shub39.grit.core.data.GritNotificationManager
@@ -14,6 +30,7 @@ import com.shub39.grit.core.habits.domain.OverallAnalytics
 import com.shub39.grit.core.utils.now
 import com.shub39.grit.habits.data.database.HabitStatusDao
 import com.shub39.grit.habits.data.database.HabitsDao
+import kotlin.time.ExperimentalTime
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
@@ -29,7 +46,6 @@ import kotlinx.datetime.DayOfWeek
 import kotlinx.datetime.LocalDate
 import kotlinx.datetime.daysUntil
 import org.koin.core.annotation.Single
-import kotlin.time.ExperimentalTime
 
 @Single(binds = [HabitRepo::class])
 @OptIn(ExperimentalTime::class)
@@ -37,30 +53,26 @@ class HabitRepository(
     private val habitDao: HabitsDao,
     private val habitStatusDao: HabitStatusDao,
     private val datastore: GritDatastore,
-    private val notificationManager: GritNotificationManager
+    private val notificationManager: GritNotificationManager,
 ) : HabitRepo {
 
-    private val habits = habitDao
-        .getAllHabitsFlow()
-        .map { habits ->
-            habits.map { it.toHabit() }.sortedBy { it.index }
-        }
-        .flowOn(Dispatchers.IO)
+    private val habits =
+        habitDao
+            .getAllHabitsFlow()
+            .map { habits -> habits.map { it.toHabit() }.sortedBy { it.index } }
+            .flowOn(Dispatchers.IO)
 
-    private val habitStatuses = habitStatusDao
-        .getAllHabitStatuses()
-        .map { habitStatuses ->
-            habitStatuses.map { it.toHabitStatus() }
-        }
-        .flowOn(Dispatchers.IO)
+    private val habitStatuses =
+        habitStatusDao
+            .getAllHabitStatuses()
+            .map { habitStatuses -> habitStatuses.map { it.toHabitStatus() } }
+            .flowOn(Dispatchers.IO)
 
     private val firstDayOfWeek = MutableStateFlow(DayOfWeek.MONDAY)
 
     init {
         CoroutineScope(Dispatchers.IO).launch {
-            datastore.getStartOfTheWeekPref()
-                .onEach { firstDayOfWeek.update { it } }
-                .launchIn(this)
+            datastore.getStartOfTheWeekPref().onEach { firstDayOfWeek.update { it } }.launchIn(this)
         }
     }
 
@@ -85,62 +97,65 @@ class HabitRepository(
     }
 
     override fun getHabitsWithAnalytics(): Flow<List<HabitWithAnalytics>> {
-        return habits.combine(habitStatuses) { habitsFlow, habitStatusesFlow ->
-            habitsFlow.map { habit ->
-                val habitStatusesForHabit = habitStatusesFlow.filter { it.habitId == habit.id }
-                val dates = habitStatusesForHabit.map { it.date }
+        return habits
+            .combine(habitStatuses) { habitsFlow, habitStatusesFlow ->
+                habitsFlow.map { habit ->
+                    val habitStatusesForHabit = habitStatusesFlow.filter { it.habitId == habit.id }
+                    val dates = habitStatusesForHabit.map { it.date }
 
-                HabitWithAnalytics(
-                    habit = habit,
-                    statuses = habitStatusesForHabit,
-                    currentStreak = countCurrentStreak(
-                        dates = dates,
-                        eligibleWeekdays = habit.days
-                    ),
-                    bestStreak = countBestStreak(dates = dates, eligibleWeekdays = habit.days),
-                    weeklyComparisonData = prepareLineChartData(
-                        firstDay = firstDayOfWeek.value,
-                        habitStatuses = habitStatusesForHabit
-                    ),
-                    weekDayFrequencyData = prepareWeekDayFrequencyData(dates = dates),
-                    startedDaysAgo = habit.time.date.daysUntil(LocalDate.now()).toLong()
-                )
+                    HabitWithAnalytics(
+                        habit = habit,
+                        statuses = habitStatusesForHabit,
+                        currentStreak =
+                            countCurrentStreak(dates = dates, eligibleWeekdays = habit.days),
+                        bestStreak = countBestStreak(dates = dates, eligibleWeekdays = habit.days),
+                        weeklyComparisonData =
+                            prepareLineChartData(
+                                firstDay = firstDayOfWeek.value,
+                                habitStatuses = habitStatusesForHabit,
+                            ),
+                        weekDayFrequencyData = prepareWeekDayFrequencyData(dates = dates),
+                        startedDaysAgo = habit.time.date.daysUntil(LocalDate.now()).toLong(),
+                    )
+                }
             }
-        }.flowOn(Dispatchers.Default)
+            .flowOn(Dispatchers.Default)
     }
 
     override fun getCompletedHabitIds(): Flow<List<Long>> {
         return habitStatuses
             .map { habitStatuses ->
-                habitStatuses
-                    .filter { it.date == LocalDate.now() }
-                    .map { it.habitId }
-            }.flowOn(Dispatchers.Default)
+                habitStatuses.filter { it.date == LocalDate.now() }.map { it.habitId }
+            }
+            .flowOn(Dispatchers.Default)
     }
 
     override fun getOverallAnalytics(): Flow<OverallAnalytics> {
-        return habits.combine(habitStatuses) { habitsFlow, habitStatusesFlow ->
-            OverallAnalytics(
-                heatMapData = prepareHeatMapData(habitStatusesFlow),
-                weekDayFrequencyData = prepareWeekDayFrequencyData(habitStatusesFlow.map { it.date }),
-                weeklyGraphData = habitsFlow.associateWith { habit ->
-                    val habitStatusesForHabit = habitStatusesFlow.filter { it.habitId == habit.id }
+        return habits
+            .combine(habitStatuses) { habitsFlow, habitStatusesFlow ->
+                OverallAnalytics(
+                    heatMapData = prepareHeatMapData(habitStatusesFlow),
+                    weekDayFrequencyData =
+                        prepareWeekDayFrequencyData(habitStatusesFlow.map { it.date }),
+                    weeklyGraphData =
+                        habitsFlow.associateWith { habit ->
+                            val habitStatusesForHabit =
+                                habitStatusesFlow.filter { it.habitId == habit.id }
 
-                    prepareLineChartData(
-                        firstDay = firstDayOfWeek.value,
-                        habitStatuses = habitStatusesForHabit
-                    )
-                }
-            )
-        }.flowOn(Dispatchers.Default)
+                            prepareLineChartData(
+                                firstDay = firstDayOfWeek.value,
+                                habitStatuses = habitStatusesForHabit,
+                            )
+                        },
+                )
+            }
+            .flowOn(Dispatchers.Default)
     }
 
     override fun getHabitsWithStatus(): Flow<List<Pair<Habit, Boolean>>> {
         return habits.combine(habitStatuses) { habitsFlow, statusFlow ->
             habitsFlow.map { habit ->
-                val dates = statusFlow
-                    .filter { it.habitId == habit.id }
-                    .map { it.date }
+                val dates = statusFlow.filter { it.habitId == habit.id }.map { it.date }
 
                 habit to dates.any { it == LocalDate.now() }
             }

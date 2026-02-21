@@ -1,3 +1,19 @@
+/*
+ * Copyright (C) 2026  Shubham Gorai
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <https://www.gnu.org/licenses/>.
+ */
 package com.shub39.grit.core.habits.presentation.ui
 
 import androidx.compose.animation.AnimatedContent
@@ -56,14 +72,11 @@ import org.jetbrains.compose.resources.stringResource
 
 @Serializable
 private sealed interface HabitRoutes {
-    @Serializable
-    data object HabitList : HabitRoutes
+    @Serializable data object HabitList : HabitRoutes
 
-    @Serializable
-    data object HabitAnalytics : HabitRoutes
+    @Serializable data object HabitAnalytics : HabitRoutes
 
-    @Serializable
-    data object OverallAnalytics : HabitRoutes
+    @Serializable data object OverallAnalytics : HabitRoutes
 }
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -73,7 +86,7 @@ fun HabitsGraph(
     onAction: (HabitsAction) -> Unit,
     onNavigateToPaywall: () -> Unit,
     isUserSubscribed: Boolean,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
 ) {
     val windowSizeClass = LocalWindowSizeClass.current
 
@@ -90,41 +103,43 @@ fun HabitsGraph(
             popEnterTransition = { slideInVertically(tween(300), initialOffsetY = { it / 2 }) },
             popExitTransition = { fadeOut(tween(300)) },
             contentAlignment = Alignment.Center,
-            modifier = modifier
+            modifier = modifier,
         ) {
             composable<HabitRoutes.HabitList> {
                 Column {
                     HabitsTopAppBar(
                         state = state,
                         onAction = onAction,
-                        scrollBehavior = scrollBehavior
+                        scrollBehavior = scrollBehavior,
                     )
 
                     PageFill {
                         val lazyListState = rememberLazyListState()
                         val fabVisible by remember {
-                            derivedStateOf {
-                                lazyListState.firstVisibleItemIndex == 0
-                            }
+                            derivedStateOf { lazyListState.firstVisibleItemIndex == 0 }
                         }
 
                         HabitsList(
                             state = state,
                             onAction = onAction,
                             lazyListState = lazyListState,
-                            onNavigateToAnalytics = { navController.navigate(HabitRoutes.HabitAnalytics) },
-                            modifier = Modifier
-                                .fillMaxHeight()
-                                .nestedScroll(scrollBehavior.nestedScrollConnection)
+                            onNavigateToAnalytics = {
+                                navController.navigate(HabitRoutes.HabitAnalytics)
+                            },
+                            modifier =
+                                Modifier.fillMaxHeight()
+                                    .nestedScroll(scrollBehavior.nestedScrollConnection),
                         )
 
                         HabitListFABs(
-                            onNavigateToOverallAnalytics = { navController.navigate(HabitRoutes.OverallAnalytics) },
+                            onNavigateToOverallAnalytics = {
+                                navController.navigate(HabitRoutes.OverallAnalytics)
+                            },
                             state = state,
                             fabVisible = fabVisible,
                             onAction = onAction,
                             onNavigateToPaywall = onNavigateToPaywall,
-                            isUserSubscribed = isUserSubscribed
+                            isUserSubscribed = isUserSubscribed,
                         )
                     }
                 }
@@ -136,7 +151,7 @@ fun HabitsGraph(
                     onAction = onAction,
                     onNavigateBack = { navController.navigateUp() },
                     onNavigateToPaywall = onNavigateToPaywall,
-                    isUserSubscribed = isUserSubscribed
+                    isUserSubscribed = isUserSubscribed,
                 )
             }
 
@@ -145,29 +160,19 @@ fun HabitsGraph(
                     state = state,
                     onNavigateBack = { navController.navigateUp() },
                     onNavigateToPaywall = onNavigateToPaywall,
-                    isUserSubscribed = isUserSubscribed
+                    isUserSubscribed = isUserSubscribed,
                 )
             }
         }
     } else {
-        Column(
-            modifier = modifier
-        ) {
-            HabitsTopAppBar(
-                state = state,
-                onAction = onAction,
-                scrollBehavior = scrollBehavior
-            )
+        Column(modifier = modifier) {
+            HabitsTopAppBar(state = state, onAction = onAction, scrollBehavior = scrollBehavior)
 
-            Row(
-                modifier = Modifier.weight(1f)
-            ) {
+            Row(modifier = Modifier.weight(1f)) {
                 Box {
                     val lazyListState = rememberLazyListState()
                     val fabVisible by remember {
-                        derivedStateOf {
-                            lazyListState.firstVisibleItemIndex == 0
-                        }
+                        derivedStateOf { lazyListState.firstVisibleItemIndex == 0 }
                     }
 
                     HabitsList(
@@ -175,37 +180,37 @@ fun HabitsGraph(
                         onAction = onAction,
                         onNavigateToAnalytics = {},
                         lazyListState = lazyListState,
-                        modifier = Modifier
-                            .fillMaxHeight()
-                            .widthIn(max = 400.dp)
-                            .nestedScroll(scrollBehavior.nestedScrollConnection)
+                        modifier =
+                            Modifier.fillMaxHeight()
+                                .widthIn(max = 400.dp)
+                                .nestedScroll(scrollBehavior.nestedScrollConnection),
                     )
 
                     HabitListFABs(
-                        onNavigateToOverallAnalytics = { onAction(HabitsAction.PrepareAnalytics(null)) },
+                        onNavigateToOverallAnalytics = {
+                            onAction(HabitsAction.PrepareAnalytics(null))
+                        },
                         state = state,
                         fabVisible = fabVisible,
                         onAction = onAction,
                         onNavigateToPaywall = onNavigateToPaywall,
-                        isUserSubscribed = isUserSubscribed
+                        isUserSubscribed = isUserSubscribed,
                     )
                 }
 
                 Surface(
                     color = MaterialTheme.colorScheme.surfaceContainerHigh,
                     shape = RoundedCornerShape(topStart = 28.dp),
-                    modifier = Modifier.weight(1f)
+                    modifier = Modifier.weight(1f),
                 ) {
-                    AnimatedContent(
-                        targetState = state.analyticsHabitId
-                    ) {
+                    AnimatedContent(targetState = state.analyticsHabitId) {
                         if (it != null) {
                             AnalyticsPage(
                                 state = state,
                                 onAction = onAction,
                                 onNavigateBack = { onAction(HabitsAction.PrepareAnalytics(null)) },
                                 onNavigateToPaywall = onNavigateToPaywall,
-                                isUserSubscribed = isUserSubscribed
+                                isUserSubscribed = isUserSubscribed,
                             )
                         } else {
                             OverallAnalytics(
@@ -213,7 +218,7 @@ fun HabitsGraph(
                                 onNavigateBack = {},
                                 showNavigateBack = false,
                                 onNavigateToPaywall = onNavigateToPaywall,
-                                isUserSubscribed = isUserSubscribed
+                                isUserSubscribed = isUserSubscribed,
                             )
                         }
                     }
@@ -234,68 +239,64 @@ private fun HabitsTopAppBar(
     LargeFlexibleTopAppBar(
         modifier = modifier,
         scrollBehavior = scrollBehavior,
-        colors = TopAppBarDefaults.topAppBarColors(
-            scrolledContainerColor = MaterialTheme.colorScheme.surface
-        ),
-        title = {
-            Text(text = stringResource(Res.string.habits))
-        },
+        colors =
+            TopAppBarDefaults.topAppBarColors(
+                scrolledContainerColor = MaterialTheme.colorScheme.surface
+            ),
+        title = { Text(text = stringResource(Res.string.habits)) },
         subtitle = {
             Column {
                 Text(
-                    text = "${state.completedHabitIds.size}/${state.habitsWithAnalytics.size} " + stringResource(
-                        Res.string.completed
-                    )
+                    text =
+                        "${state.completedHabitIds.size}/${state.habitsWithAnalytics.size} " +
+                            stringResource(Res.string.completed)
                 )
             }
         },
         actions = {
-            AnimatedVisibility(
-                visible = state.habitsWithAnalytics.isNotEmpty()
-            ) {
+            AnimatedVisibility(visible = state.habitsWithAnalytics.isNotEmpty()) {
                 Row {
                     FilledTonalIconToggleButton(
                         checked = state.compactHabitView,
-                        shapes = IconToggleButtonShapes(
-                            shape = CircleShape,
-                            checkedShape = MaterialTheme.shapes.small,
-                            pressedShape = MaterialTheme.shapes.extraSmall,
-                        ),
-                        onCheckedChange = {
-                            onAction(
-                                HabitsAction.OnToggleCompactView(it)
-                            )
-                        }
+                        shapes =
+                            IconToggleButtonShapes(
+                                shape = CircleShape,
+                                checkedShape = MaterialTheme.shapes.small,
+                                pressedShape = MaterialTheme.shapes.extraSmall,
+                            ),
+                        onCheckedChange = { onAction(HabitsAction.OnToggleCompactView(it)) },
                     ) {
                         Icon(
-                            painter = painterResource(
-                                if (state.compactHabitView) {
-                                    Res.drawable.expand
-                                } else {
-                                    Res.drawable.collapse
-                                }
-                            ),
-                            contentDescription = "Compact View"
+                            painter =
+                                painterResource(
+                                    if (state.compactHabitView) {
+                                        Res.drawable.expand
+                                    } else {
+                                        Res.drawable.collapse
+                                    }
+                                ),
+                            contentDescription = "Compact View",
                         )
                     }
 
                     FilledTonalIconToggleButton(
                         checked = state.editState,
-                        shapes = IconToggleButtonShapes(
-                            shape = CircleShape,
-                            checkedShape = MaterialTheme.shapes.small,
-                            pressedShape = MaterialTheme.shapes.extraSmall,
-                        ),
+                        shapes =
+                            IconToggleButtonShapes(
+                                shape = CircleShape,
+                                checkedShape = MaterialTheme.shapes.small,
+                                pressedShape = MaterialTheme.shapes.extraSmall,
+                            ),
                         onCheckedChange = { onAction(HabitsAction.OnToggleEditState(it)) },
-                        enabled = state.habitsWithAnalytics.isNotEmpty()
+                        enabled = state.habitsWithAnalytics.isNotEmpty(),
                     ) {
                         Icon(
                             painter = painterResource(Res.drawable.reorder),
-                            contentDescription = null
+                            contentDescription = null,
                         )
                     }
                 }
             }
-        }
+        },
     )
 }

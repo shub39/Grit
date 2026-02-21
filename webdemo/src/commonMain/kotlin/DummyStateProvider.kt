@@ -1,3 +1,19 @@
+/*
+ * Copyright (C) 2026  Shubham Gorai
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <https://www.gnu.org/licenses/>.
+ */
 import com.shub39.grit.core.habits.domain.Habit
 import com.shub39.grit.core.habits.domain.HabitStatus
 import com.shub39.grit.core.habits.domain.HabitWithAnalytics
@@ -10,6 +26,8 @@ import com.shub39.grit.core.tasks.domain.Task
 import com.shub39.grit.core.tasks.presentation.TaskAction
 import com.shub39.grit.core.tasks.presentation.TaskState
 import com.shub39.grit.core.utils.now
+import kotlin.random.Random
+import kotlin.time.ExperimentalTime
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -24,65 +42,69 @@ import kotlinx.datetime.format.DayOfWeekNames
 import kotlinx.datetime.isoDayNumber
 import kotlinx.datetime.minus
 import kotlinx.datetime.plus
-import kotlin.random.Random
-import kotlin.time.ExperimentalTime
 
 @OptIn(ExperimentalTime::class)
 object DummyStateProvider {
-    private val _habitState = MutableStateFlow(
-        HabitState(
-            habitsWithAnalytics = listOf(
-                HabitWithAnalytics(
-                    habit = Habit(
-                        id = 1,
-                        title = "Morning Walk",
-                        description = "A 30-minute walk every morning",
-                        time = LocalDateTime.now(),
-                        days = DayOfWeek.entries.toSet(),
-                        index = 0,
-                        reminder = true
-                    ),
-                    statuses = emptyList(),
-                    weeklyComparisonData = emptyList(),
-                    weekDayFrequencyData = emptyMap(),
-                    currentStreak = 5,
-                    bestStreak = 10,
-                    startedDaysAgo = 30
-                ),
-                HabitWithAnalytics(
-                    habit = Habit(
-                        id = 2,
-                        title = "Read a book",
-                        description = "Read 20 pages of a book",
-                        time = LocalDateTime.now(),
-                        days = DayOfWeek.entries.toSet(),
-                        index = 1,
-                        reminder = false
-                    ),
-                    statuses = emptyList(),
-                    weeklyComparisonData = emptyList(),
-                    weekDayFrequencyData = emptyMap(),
-                    currentStreak = 3,
-                    bestStreak = 8,
-                    startedDaysAgo = 25
-                )
+    private val _habitState =
+        MutableStateFlow(
+            HabitState(
+                habitsWithAnalytics =
+                    listOf(
+                        HabitWithAnalytics(
+                            habit =
+                                Habit(
+                                    id = 1,
+                                    title = "Morning Walk",
+                                    description = "A 30-minute walk every morning",
+                                    time = LocalDateTime.now(),
+                                    days = DayOfWeek.entries.toSet(),
+                                    index = 0,
+                                    reminder = true,
+                                ),
+                            statuses = emptyList(),
+                            weeklyComparisonData = emptyList(),
+                            weekDayFrequencyData = emptyMap(),
+                            currentStreak = 5,
+                            bestStreak = 10,
+                            startedDaysAgo = 30,
+                        ),
+                        HabitWithAnalytics(
+                            habit =
+                                Habit(
+                                    id = 2,
+                                    title = "Read a book",
+                                    description = "Read 20 pages of a book",
+                                    time = LocalDateTime.now(),
+                                    days = DayOfWeek.entries.toSet(),
+                                    index = 1,
+                                    reminder = false,
+                                ),
+                            statuses = emptyList(),
+                            weeklyComparisonData = emptyList(),
+                            weekDayFrequencyData = emptyMap(),
+                            currentStreak = 3,
+                            bestStreak = 8,
+                            startedDaysAgo = 25,
+                        ),
+                    )
             )
         )
-    )
-    private val _taskState = MutableStateFlow(
-        TaskState(
-            tasks = mapOf(
-                Category(id = 1, name = "Work", color = "#FF0000") to listOf(
-                    Task(id = 1, categoryId = 1, title = "Finish the report"),
-                    Task(id = 2, categoryId = 1, title = "Prepare for the meeting")
-                ),
-                Category(id = 2, name = "Personal", color = "#00FF00") to listOf(
-                    Task(id = 3, categoryId = 2, title = "Buy groceries")
-                )
-            ),
-            currentCategory = Category(id = 1, name = "Work", color = "#FF0000")
+    private val _taskState =
+        MutableStateFlow(
+            TaskState(
+                tasks =
+                    mapOf(
+                        Category(id = 1, name = "Work", color = "#FF0000") to
+                            listOf(
+                                Task(id = 1, categoryId = 1, title = "Finish the report"),
+                                Task(id = 2, categoryId = 1, title = "Prepare for the meeting"),
+                            ),
+                        Category(id = 2, name = "Personal", color = "#00FF00") to
+                            listOf(Task(id = 3, categoryId = 2, title = "Buy groceries")),
+                    ),
+                currentCategory = Category(id = 1, name = "Work", color = "#FF0000"),
+            )
         )
-    )
 
     val habitState: StateFlow<HabitState> = _habitState.asStateFlow()
     val taskState: StateFlow<TaskState> = _taskState.asStateFlow()
@@ -91,25 +113,29 @@ object DummyStateProvider {
         when (action) {
             is HabitsAction.AddHabit -> {
                 _habitState.update {
-                    val newHabitWithAnalytics = HabitWithAnalytics(
-                        habit = action.habit,
-                        statuses = emptyList(),
-                        weeklyComparisonData = emptyList(),
-                        weekDayFrequencyData = emptyMap(),
-                        currentStreak = 0,
-                        bestStreak = 0,
-                        startedDaysAgo = 0
-                    )
+                    val newHabitWithAnalytics =
+                        HabitWithAnalytics(
+                            habit = action.habit,
+                            statuses = emptyList(),
+                            weeklyComparisonData = emptyList(),
+                            weekDayFrequencyData = emptyMap(),
+                            currentStreak = 0,
+                            bestStreak = 0,
+                            startedDaysAgo = 0,
+                        )
                     it.copy(
                         habitsWithAnalytics = it.habitsWithAnalytics + newHabitWithAnalytics,
-                        showHabitAddSheet = false
+                        showHabitAddSheet = false,
                     )
                 }
             }
 
             is HabitsAction.DeleteHabit -> {
                 _habitState.update { state ->
-                    state.copy(habitsWithAnalytics = state.habitsWithAnalytics.filter { it.habit.id != action.habit.id })
+                    state.copy(
+                        habitsWithAnalytics =
+                            state.habitsWithAnalytics.filter { it.habit.id != action.habit.id }
+                    )
                 }
             }
 
@@ -125,45 +151,47 @@ object DummyStateProvider {
                     val newStatus = HabitStatus(habitId = action.habit.id, date = action.date)
                     val isCompleted = habitWithAnalytics.statuses.any { it.date == action.date }
 
-                    val updatedStatuses = if (isCompleted) {
-                        habitWithAnalytics.statuses.filter { it.date != action.date }
-                    } else {
-                        habitWithAnalytics.statuses + newStatus
-                    }
+                    val updatedStatuses =
+                        if (isCompleted) {
+                            habitWithAnalytics.statuses.filter { it.date != action.date }
+                        } else {
+                            habitWithAnalytics.statuses + newStatus
+                        }
 
                     val today = LocalDate.now()
-                    val updatedCompletedHabitIds = if (action.date == today) {
-                        if (isCompleted) {
-                            state.completedHabitIds - action.habit.id
+                    val updatedCompletedHabitIds =
+                        if (action.date == today) {
+                            if (isCompleted) {
+                                state.completedHabitIds - action.habit.id
+                            } else {
+                                state.completedHabitIds + action.habit.id
+                            }
                         } else {
-                            state.completedHabitIds + action.habit.id
+                            state.completedHabitIds
                         }
-                    } else {
-                        state.completedHabitIds
-                    }
                     val dates = updatedStatuses.map { it.date }
 
-                    val updatedHabitWithAnalytics = habitWithAnalytics.copy(
-                        statuses = updatedStatuses,
-                        weeklyComparisonData = prepareLineChartData(
-                            state.startingDay,
-                            updatedStatuses
-                        ),
-                        weekDayFrequencyData = prepareWeekDayFrequencyData(dates),
-                        currentStreak = countCurrentStreak(dates, action.habit.days),
-                        bestStreak = countBestStreak(dates, action.habit.days)
-                    )
+                    val updatedHabitWithAnalytics =
+                        habitWithAnalytics.copy(
+                            statuses = updatedStatuses,
+                            weeklyComparisonData =
+                                prepareLineChartData(state.startingDay, updatedStatuses),
+                            weekDayFrequencyData = prepareWeekDayFrequencyData(dates),
+                            currentStreak = countCurrentStreak(dates, action.habit.days),
+                            bestStreak = countBestStreak(dates, action.habit.days),
+                        )
 
-                    val updatedHabits = state.habitsWithAnalytics.map {
-                        if (it.habit.id == action.habit.id) {
-                            updatedHabitWithAnalytics
-                        } else {
-                            it
+                    val updatedHabits =
+                        state.habitsWithAnalytics.map {
+                            if (it.habit.id == action.habit.id) {
+                                updatedHabitWithAnalytics
+                            } else {
+                                it
+                            }
                         }
-                    }
                     state.copy(
                         habitsWithAnalytics = updatedHabits,
-                        completedHabitIds = updatedCompletedHabitIds
+                        completedHabitIds = updatedCompletedHabitIds,
                     )
                 }
             }
@@ -190,18 +218,20 @@ object DummyStateProvider {
 
             is HabitsAction.UpdateHabit -> {
                 _habitState.update { state ->
-                    val updatedHabits = state.habitsWithAnalytics.map {
-                        if (it.habit.id == action.habit.id) {
-                            it.copy(habit = action.habit)
-                        } else {
-                            it
+                    val updatedHabits =
+                        state.habitsWithAnalytics.map {
+                            if (it.habit.id == action.habit.id) {
+                                it.copy(habit = action.habit)
+                            } else {
+                                it
+                            }
                         }
-                    }
                     state.copy(habitsWithAnalytics = updatedHabits)
                 }
             }
 
-            is HabitsAction.OnToggleEditState -> _habitState.update { it.copy(editState = action.pref) }
+            is HabitsAction.OnToggleEditState ->
+                _habitState.update { it.copy(editState = action.pref) }
         }
     }
 
@@ -209,9 +239,12 @@ object DummyStateProvider {
         when (action) {
             is TaskAction.DeleteTask -> {
                 _taskState.update { state ->
-                    val updatedTasks = state.tasks.mapValues { (_, taskList) ->
-                        taskList.filter { it.id == action.task.id }
-                    }.toMutableMap()
+                    val updatedTasks =
+                        state.tasks
+                            .mapValues { (_, taskList) ->
+                                taskList.filter { it.id == action.task.id }
+                            }
+                            .toMutableMap()
                     state.copy(tasks = updatedTasks)
                 }
             }
@@ -227,10 +260,7 @@ object DummyStateProvider {
                     } else {
                         newTasks[action.category.copy(id = Random.nextLong())] = emptyList()
                     }
-                    state.copy(
-                        tasks = newTasks,
-                        currentCategory = newTasks.keys.firstOrNull()
-                    )
+                    state.copy(tasks = newTasks, currentCategory = newTasks.keys.firstOrNull())
                 }
             }
 
@@ -244,23 +274,26 @@ object DummyStateProvider {
 
             TaskAction.DeleteTasks -> {
                 _taskState.update { state ->
-                    val updatedTasks = state.tasks.mapValues { (_, taskList) ->
-                        taskList.filter { !it.status }
-                    }.toMutableMap()
+                    val updatedTasks =
+                        state.tasks
+                            .mapValues { (_, taskList) -> taskList.filter { !it.status } }
+                            .toMutableMap()
                     state.copy(tasks = updatedTasks)
                 }
             }
 
             is TaskAction.ReorderCategories -> {
                 _taskState.update { state ->
-                    val reorderedCategories = action.mapping.map {
-                        it.second.copy(index = it.first)
-                    }.associateWith { category ->
-                        state.tasks[state.tasks.keys.find { it.id == category.id }] ?: emptyList()
-                    }
+                    val reorderedCategories =
+                        action.mapping
+                            .map { it.second.copy(index = it.first) }
+                            .associateWith { category ->
+                                state.tasks[state.tasks.keys.find { it.id == category.id }]
+                                    ?: emptyList()
+                            }
                     state.copy(
                         tasks = reorderedCategories,
-                        currentCategory = reorderedCategories.keys.firstOrNull()
+                        currentCategory = reorderedCategories.keys.firstOrNull(),
                     )
                 }
             }
@@ -288,17 +321,19 @@ object DummyStateProvider {
                     val category =
                         state.tasks.keys.find { it.id == newTask.categoryId } ?: return@update state
                     val taskList = state.tasks[category] ?: emptyList()
-                    val updatedTaskList = if (taskList.any { it.id == newTask.id }) {
-                        taskList.map { if (it.id == newTask.id) newTask else it }
-                    } else {
-                        taskList + newTask
-                    }
+                    val updatedTaskList =
+                        if (taskList.any { it.id == newTask.id }) {
+                            taskList.map { if (it.id == newTask.id) newTask else it }
+                        } else {
+                            taskList + newTask
+                        }
                     val newTasks = state.tasks.toMutableMap()
-                    val completedTasks = if (newTask.status) {
-                        state.completedTasks + newTask
-                    } else {
-                        state.completedTasks.filter { it.id != newTask.id }
-                    }
+                    val completedTasks =
+                        if (newTask.status) {
+                            state.completedTasks + newTask
+                        } else {
+                            state.completedTasks.filter { it.id != newTask.id }
+                        }
                     newTasks[category] = updatedTaskList
                     state.copy(tasks = newTasks, completedTasks = completedTasks)
                 }
@@ -308,7 +343,7 @@ object DummyStateProvider {
 
     private fun countCurrentStreak(
         dates: List<LocalDate>,
-        eligibleWeekdays: Set<DayOfWeek> = DayOfWeek.entries.toSet()
+        eligibleWeekdays: Set<DayOfWeek> = DayOfWeek.entries.toSet(),
     ): Int {
         if (dates.isEmpty()) return 0
 
@@ -352,7 +387,7 @@ object DummyStateProvider {
 
     private fun countBestStreak(
         dates: List<LocalDate>,
-        eligibleWeekdays: Set<DayOfWeek> = DayOfWeek.entries.toSet()
+        eligibleWeekdays: Set<DayOfWeek> = DayOfWeek.entries.toSet(),
     ): Int {
         if (dates.isEmpty()) return 0
 
@@ -379,39 +414,35 @@ object DummyStateProvider {
 
     private fun prepareLineChartData(
         firstDay: DayOfWeek,
-        habitStatuses: List<HabitStatus>
+        habitStatuses: List<HabitStatus>,
     ): WeeklyComparisonData {
         val today = LocalDate.now()
         val totalWeeks = 15
 
-        val startDateOfTodayWeek = today.minus(
-            today.dayOfWeek.isoDayNumber - firstDay.isoDayNumber,
-            DateTimeUnit.DAY
-        )
+        val startDateOfTodayWeek =
+            today.minus(today.dayOfWeek.isoDayNumber - firstDay.isoDayNumber, DateTimeUnit.DAY)
         val startDateOfPeriod = startDateOfTodayWeek.minus(totalWeeks, DateTimeUnit.WEEK)
 
-        val habitCompletionByWeek = habitStatuses
-            .filter { it.date in startDateOfPeriod..today }
-            .groupBy {
-                val daysFromFirstDay =
-                    (it.date.dayOfWeek.isoDayNumber - firstDay.isoDayNumber + 7) % 7
-                it.date.minus(daysFromFirstDay, DateTimeUnit.DAY)
-            }
-            .mapValues { (_, habitStatuses) -> habitStatuses.size }
+        val habitCompletionByWeek =
+            habitStatuses
+                .filter { it.date in startDateOfPeriod..today }
+                .groupBy {
+                    val daysFromFirstDay =
+                        (it.date.dayOfWeek.isoDayNumber - firstDay.isoDayNumber + 7) % 7
+                    it.date.minus(daysFromFirstDay, DateTimeUnit.DAY)
+                }
+                .mapValues { (_, habitStatuses) -> habitStatuses.size }
 
-        val values = (0..totalWeeks).map { i ->
-            val currentWeekStart = startDateOfPeriod.plus(i, DateTimeUnit.WEEK)
-            (habitCompletionByWeek[currentWeekStart]?.toDouble() ?: 0.0).coerceIn(0.0, 7.0)
-        }
+        val values =
+            (0..totalWeeks).map { i ->
+                val currentWeekStart = startDateOfPeriod.plus(i, DateTimeUnit.WEEK)
+                (habitCompletionByWeek[currentWeekStart]?.toDouble() ?: 0.0).coerceIn(0.0, 7.0)
+            }
         return values
     }
 
-    private fun prepareWeekDayFrequencyData(
-        dates: List<LocalDate>
-    ): WeekDayFrequencyData {
-        val dayFrequency = dates
-            .groupingBy { it.dayOfWeek }
-            .eachCount()
+    private fun prepareWeekDayFrequencyData(dates: List<LocalDate>): WeekDayFrequencyData {
+        val dayFrequency = dates.groupingBy { it.dayOfWeek }.eachCount()
 
         return DayOfWeek.entries.associate {
             val weekName = DayOfWeekNames.ENGLISH_ABBREVIATED.names[it.isoDayNumber - 1]
@@ -423,7 +454,7 @@ object DummyStateProvider {
     private fun areConsecutiveEligibleDays(
         date1: LocalDate,
         date2: LocalDate,
-        eligibleWeekdays: Set<DayOfWeek>
+        eligibleWeekdays: Set<DayOfWeek>,
     ): Boolean {
         var checkDate = date1.plus(1, DateTimeUnit.DAY)
         while (checkDate < date2) {

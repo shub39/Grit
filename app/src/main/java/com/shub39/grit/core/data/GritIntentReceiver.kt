@@ -1,3 +1,19 @@
+/*
+ * Copyright (C) 2026  Shubham Gorai
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <https://www.gnu.org/licenses/>.
+ */
 package com.shub39.grit.core.data
 
 import android.content.BroadcastReceiver
@@ -11,6 +27,7 @@ import com.shub39.grit.core.habits.domain.HabitRepo
 import com.shub39.grit.core.habits.domain.HabitStatus
 import com.shub39.grit.core.tasks.domain.TaskRepo
 import com.shub39.grit.core.utils.now
+import kotlin.time.ExperimentalTime
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.SupervisorJob
@@ -19,7 +36,6 @@ import kotlinx.coroutines.launch
 import kotlinx.datetime.LocalDate
 import org.koin.core.component.KoinComponent
 import org.koin.core.component.get
-import kotlin.time.ExperimentalTime
 
 class GritIntentReceiver : BroadcastReceiver(), KoinComponent {
 
@@ -71,10 +87,7 @@ class GritIntentReceiver : BroadcastReceiver(), KoinComponent {
                             val habitRepo = get<HabitRepo>()
 
                             habitRepo.insertHabitStatus(
-                                HabitStatus(
-                                    habitId = habitId,
-                                    date = LocalDate.now()
-                                )
+                                HabitStatus(habitId = habitId, date = LocalDate.now())
                             )
 
                             Log.d(TAG, "Habit status added successfully")
@@ -121,5 +134,4 @@ class GritIntentReceiver : BroadcastReceiver(), KoinComponent {
             }
         }
     }
-
 }

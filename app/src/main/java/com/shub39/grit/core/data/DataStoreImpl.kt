@@ -1,3 +1,19 @@
+/*
+ * Copyright (C) 2026  Shubham Gorai
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <https://www.gnu.org/licenses/>.
+ */
 package com.shub39.grit.core.data
 
 import androidx.compose.ui.graphics.Color
@@ -19,9 +35,7 @@ import kotlinx.datetime.DayOfWeek
 import org.koin.core.annotation.Single
 
 @Single(binds = [GritDatastore::class])
-class DataStoreImpl(
-    private val datastore: DataStore<Preferences>
-) : GritDatastore {
+class DataStoreImpl(private val datastore: DataStore<Preferences>) : GritDatastore {
 
     companion object {
         private val appThemeKey = stringPreferencesKey("app_theme")
@@ -50,148 +64,116 @@ class DataStoreImpl(
         }
     }
 
-    override fun getAppThemeFlow(): Flow<AppTheme> = datastore.data.map { prefs ->
-        val appTheme = prefs[appThemeKey] ?: AppTheme.SYSTEM.name
-        AppTheme.valueOf(appTheme)
-    }
+    override fun getAppThemeFlow(): Flow<AppTheme> =
+        datastore.data.map { prefs ->
+            val appTheme = prefs[appThemeKey] ?: AppTheme.SYSTEM.name
+            AppTheme.valueOf(appTheme)
+        }
 
     override suspend fun setAppTheme(theme: AppTheme) {
-        datastore.edit { prefs ->
-            prefs[appThemeKey] = theme.name
-        }
+        datastore.edit { prefs -> prefs[appThemeKey] = theme.name }
     }
 
-    override fun getSeedColorFlow(): Flow<Int> = datastore.data.map { prefs ->
-        prefs[seedColorKey] ?: Color.White.toArgb()
-    }
+    override fun getSeedColorFlow(): Flow<Int> =
+        datastore.data.map { prefs -> prefs[seedColorKey] ?: Color.White.toArgb() }
 
     override suspend fun setSeedColor(color: Int) {
-        datastore.edit { prefs ->
-            prefs[seedColorKey] = color
-        }
+        datastore.edit { prefs -> prefs[seedColorKey] = color }
     }
 
-    override fun getAmoledPref(): Flow<Boolean> = datastore.data.map { prefs ->
-        prefs[amoledKey] == true
-    }
+    override fun getAmoledPref(): Flow<Boolean> =
+        datastore.data.map { prefs -> prefs[amoledKey] == true }
 
     override suspend fun setAmoledPref(pref: Boolean) {
-        datastore.edit { prefs ->
-            prefs[amoledKey] = pref
-        }
+        datastore.edit { prefs -> prefs[amoledKey] = pref }
     }
 
-    override fun getPaletteStyle(): Flow<PaletteStyle> = datastore.data.map { prefs ->
-        val style = prefs[paletteKey] ?: PaletteStyle.TonalSpot.name
-        return@map PaletteStyle.valueOf(style)
-    }
+    override fun getPaletteStyle(): Flow<PaletteStyle> =
+        datastore.data.map { prefs ->
+            val style = prefs[paletteKey] ?: PaletteStyle.TonalSpot.name
+            return@map PaletteStyle.valueOf(style)
+        }
 
     override suspend fun setPaletteStyle(style: PaletteStyle) {
-        datastore.edit { prefs ->
-            prefs[paletteKey] = style.name
-        }
+        datastore.edit { prefs -> prefs[paletteKey] = style.name }
     }
 
-    override fun getStartOfTheWeekPref(): Flow<DayOfWeek> = datastore.data.map { prefs ->
-        val dayOfWeek = prefs[startOfWeekKey] ?: DayOfWeek.MONDAY.name
-        return@map DayOfWeek.valueOf(dayOfWeek)
-    }
+    override fun getStartOfTheWeekPref(): Flow<DayOfWeek> =
+        datastore.data.map { prefs ->
+            val dayOfWeek = prefs[startOfWeekKey] ?: DayOfWeek.MONDAY.name
+            return@map DayOfWeek.valueOf(dayOfWeek)
+        }
 
     override suspend fun setStartOfWeek(day: DayOfWeek) {
-        datastore.edit { prefs ->
-            prefs[startOfWeekKey] = day.name
-        }
+        datastore.edit { prefs -> prefs[startOfWeekKey] = day.name }
     }
 
-    override fun getStartingSectionPref(): Flow<Sections> = datastore.data.map { pref ->
-        val page = pref[startingSectionKey] ?: Sections.Tasks.name
-        return@map Sections.valueOf(page)
-    }
+    override fun getStartingSectionPref(): Flow<Sections> =
+        datastore.data.map { pref ->
+            val page = pref[startingSectionKey] ?: Sections.Tasks.name
+            return@map Sections.valueOf(page)
+        }
 
     override suspend fun setStartingPage(page: Sections) {
-        datastore.edit { prefs ->
-            prefs[startingSectionKey] = page.name
-        }
+        datastore.edit { prefs -> prefs[startingSectionKey] = page.name }
     }
 
-    override fun getIs24Hr(): Flow<Boolean> = datastore.data.map { prefs ->
-        prefs[is24HrKey] == true
-    }
+    override fun getIs24Hr(): Flow<Boolean> =
+        datastore.data.map { prefs -> prefs[is24HrKey] == true }
 
     override suspend fun setIs24Hr(pref: Boolean) {
-        datastore.edit { prefs ->
-            prefs[is24HrKey] = pref
-        }
+        datastore.edit { prefs -> prefs[is24HrKey] = pref }
     }
 
-    override fun getMaterialYouFlow(): Flow<Boolean> = datastore.data.map { prefs ->
-        prefs[materialYouKey] == true
-    }
+    override fun getMaterialYouFlow(): Flow<Boolean> =
+        datastore.data.map { prefs -> prefs[materialYouKey] == true }
 
     override suspend fun setMaterialYou(pref: Boolean) {
-        datastore.edit { prefs ->
-            prefs[materialYouKey] = pref
-        }
+        datastore.edit { prefs -> prefs[materialYouKey] = pref }
     }
 
-    override fun getNotificationsFlow(): Flow<Boolean> = datastore.data.map { prefs ->
-        prefs[notificationsKey] == true
-    }
+    override fun getNotificationsFlow(): Flow<Boolean> =
+        datastore.data.map { prefs -> prefs[notificationsKey] == true }
 
     override suspend fun setNotifications(pref: Boolean) {
-        datastore.edit { prefs ->
-            prefs[notificationsKey] = pref
-        }
+        datastore.edit { prefs -> prefs[notificationsKey] = pref }
     }
 
-    override fun getFontPrefFlow(): Flow<Fonts> = datastore.data.map { prefs ->
-        val font = prefs[fontPrefKey] ?: Fonts.FIGTREE.name
-        Fonts.valueOf(font)
-    }
+    override fun getFontPrefFlow(): Flow<Fonts> =
+        datastore.data.map { prefs ->
+            val font = prefs[fontPrefKey] ?: Fonts.FIGTREE.name
+            Fonts.valueOf(font)
+        }
 
     override suspend fun setFontPref(font: Fonts) {
-        datastore.edit { prefs ->
-            prefs[fontPrefKey] = font.name
-        }
+        datastore.edit { prefs -> prefs[fontPrefKey] = font.name }
     }
 
-    override fun getBiometricLockPref(): Flow<Boolean> = datastore.data.map { prefs ->
-        prefs[biometricLockKey] == true
-    }
+    override fun getBiometricLockPref(): Flow<Boolean> =
+        datastore.data.map { prefs -> prefs[biometricLockKey] == true }
 
     override suspend fun setBiometricPref(pref: Boolean) {
-        datastore.edit { prefs ->
-            prefs[biometricLockKey] = pref
-        }
+        datastore.edit { prefs -> prefs[biometricLockKey] = pref }
     }
 
-    override fun getTaskReorderPref(): Flow<Boolean> = datastore.data.map { prefs ->
-        prefs[taskReorderKey] ?: true
-    }
+    override fun getTaskReorderPref(): Flow<Boolean> =
+        datastore.data.map { prefs -> prefs[taskReorderKey] ?: true }
 
     override suspend fun setTaskReorderPref(pref: Boolean) {
-        datastore.edit { prefs ->
-            prefs[taskReorderKey] = pref
-        }
+        datastore.edit { prefs -> prefs[taskReorderKey] = pref }
     }
 
-    override fun getCompactViewPref(): Flow<Boolean> = datastore.data.map { pref ->
-        pref[compactHabitView] ?: false
-    }
+    override fun getCompactViewPref(): Flow<Boolean> =
+        datastore.data.map { pref -> pref[compactHabitView] ?: false }
 
     override suspend fun setCompactView(pref: Boolean) {
-        datastore.edit { prefs ->
-            prefs[compactHabitView] = pref
-        }
+        datastore.edit { prefs -> prefs[compactHabitView] = pref }
     }
 
-    override fun getLastChangelogShown(): Flow<String> = datastore.data
-        .map { prefs -> prefs[lastChangelogShownKey] ?: "" }
+    override fun getLastChangelogShown(): Flow<String> =
+        datastore.data.map { prefs -> prefs[lastChangelogShownKey] ?: "" }
 
     override suspend fun updateLastChangelogShown(version: String) {
-        datastore.edit { settings ->
-            settings[lastChangelogShownKey] = version
-        }
+        datastore.edit { settings -> settings[lastChangelogShownKey] = version }
     }
-
 }

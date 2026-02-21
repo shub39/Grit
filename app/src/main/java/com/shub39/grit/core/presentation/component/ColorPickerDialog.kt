@@ -1,3 +1,19 @@
+/*
+ * Copyright (C) 2026  Shubham Gorai
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <https://www.gnu.org/licenses/>.
+ */
 package com.shub39.grit.core.presentation.component
 
 import androidx.compose.foundation.layout.Arrangement
@@ -29,46 +45,31 @@ import org.jetbrains.compose.resources.stringResource
 
 // Color picker used app wide
 @Composable
-fun ColorPickerDialog(
-    initialColor: Color,
-    onSelect: (Color) -> Unit,
-    onDismiss: () -> Unit
-) {
+fun ColorPickerDialog(initialColor: Color, onSelect: (Color) -> Unit, onDismiss: () -> Unit) {
     val controller = rememberColorPickerController()
 
-    GritDialog(
-        onDismissRequest = onDismiss
-    ) {
+    GritDialog(onDismissRequest = onDismiss) {
         Column(
-            modifier = Modifier
-                .wrapContentSize()
-                .padding(16.dp),
+            modifier = Modifier.wrapContentSize().padding(16.dp),
             horizontalAlignment = Alignment.CenterHorizontally,
-            verticalArrangement = Arrangement.Center
+            verticalArrangement = Arrangement.Center,
         ) {
             HsvColorPicker(
-                modifier = Modifier
-                    .width(350.dp)
-                    .height(300.dp)
-                    .padding(top = 10.dp),
+                modifier = Modifier.width(350.dp).height(300.dp).padding(top = 10.dp),
                 initialColor = initialColor,
-                controller = controller
+                controller = controller,
             )
 
             BrightnessSlider(
-                modifier = Modifier
-                    .padding(top = 10.dp)
-                    .height(35.dp),
+                modifier = Modifier.padding(top = 10.dp).height(35.dp),
                 initialColor = initialColor,
-                controller = controller
+                controller = controller,
             )
 
             AlphaTile(
-                modifier = Modifier
-                    .size(80.dp)
-                    .padding(vertical = 10.dp)
-                    .clip(RoundedCornerShape(6.dp)),
-                controller = controller
+                modifier =
+                    Modifier.size(80.dp).padding(vertical = 10.dp).clip(RoundedCornerShape(6.dp)),
+                controller = controller,
             )
 
             Button(
@@ -80,7 +81,7 @@ fun ColorPickerDialog(
                 Text(
                     text = stringResource(Res.string.done),
                     modifier = Modifier.fillMaxWidth(),
-                    textAlign = TextAlign.Center
+                    textAlign = TextAlign.Center,
                 )
             }
         }

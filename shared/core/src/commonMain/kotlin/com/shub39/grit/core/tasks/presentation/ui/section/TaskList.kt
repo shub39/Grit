@@ -1,3 +1,19 @@
+/*
+ * Copyright (C) 2026  Shubham Gorai
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <https://www.gnu.org/licenses/>.
+ */
 package com.shub39.grit.core.tasks.presentation.ui.section
 
 import androidx.compose.animation.AnimatedContent
@@ -98,150 +114,145 @@ import sh.calvin.reorderable.rememberReorderableLazyListState
 
 @OptIn(ExperimentalMaterial3ExpressiveApi::class, ExperimentalMaterial3Api::class)
 @Composable
-fun TaskList(
-    state: TaskState,
-    onAction: (TaskAction) -> Unit,
-    onEditCategories: () -> Unit
-) = PageFill {
-    val windowSizeClass = LocalWindowSizeClass.current
+fun TaskList(state: TaskState, onAction: (TaskAction) -> Unit, onEditCategories: () -> Unit) =
+    PageFill {
+        val windowSizeClass = LocalWindowSizeClass.current
 
-    var showTaskAddSheet by remember { mutableStateOf(false) }
-    var showCategoryAddSheet by remember { mutableStateOf(false) }
-    var showDeleteDialog by remember { mutableStateOf(false) }
-    var editState by remember { mutableStateOf(false) }
-    var editTask: Task? by remember { mutableStateOf(null) }
+        var showTaskAddSheet by remember { mutableStateOf(false) }
+        var showCategoryAddSheet by remember { mutableStateOf(false) }
+        var showDeleteDialog by remember { mutableStateOf(false) }
+        var editState by remember { mutableStateOf(false) }
+        var editTask: Task? by remember { mutableStateOf(null) }
 
-    val scrollBehavior = TopAppBarDefaults.enterAlwaysScrollBehavior()
+        val scrollBehavior = TopAppBarDefaults.enterAlwaysScrollBehavior()
 
-    Column(
-        modifier = Modifier
-            .nestedScroll(scrollBehavior.nestedScrollConnection)
-            .fillMaxSize()
-    ) {
-        TaskListTopBar(
-            state = state,
-            scrollBehavior = scrollBehavior,
-            isReorderMode = editState,
-            onReorderToggle = { editState = it },
-            onDeleteClick = { showDeleteDialog = true },
-            isExpanded = windowSizeClass.widthSizeClass == WindowWidthSizeClass.Expanded
-        )
+        Column(
+            modifier = Modifier.nestedScroll(scrollBehavior.nestedScrollConnection).fillMaxSize()
+        ) {
+            TaskListTopBar(
+                state = state,
+                scrollBehavior = scrollBehavior,
+                isReorderMode = editState,
+                onReorderToggle = { editState = it },
+                onDeleteClick = { showDeleteDialog = true },
+                isExpanded = windowSizeClass.widthSizeClass == WindowWidthSizeClass.Expanded,
+            )
 
-        CategorySelector(
-            state = state,
-            isReorderMode = editState,
-            onAction = onAction,
-            onAddCategoryClick = { showCategoryAddSheet = true },
-            onEditCategoriesClick = onEditCategories,
-            isExpanded = windowSizeClass.widthSizeClass == WindowWidthSizeClass.Expanded,
-            onReorderModeChange = { editState = it }
-        )
-
-        if (windowSizeClass.widthSizeClass != WindowWidthSizeClass.Expanded) {
-            CompactTasksView(
+            CategorySelector(
                 state = state,
                 isReorderMode = editState,
                 onAction = onAction,
-                onEditTask = { editTask = it },
-                isCompact = windowSizeClass.widthSizeClass == WindowWidthSizeClass.Compact
+                onAddCategoryClick = { showCategoryAddSheet = true },
+                onEditCategoriesClick = onEditCategories,
+                isExpanded = windowSizeClass.widthSizeClass == WindowWidthSizeClass.Expanded,
+                onReorderModeChange = { editState = it },
             )
-        } else {
-            ExpandedTasksView(
-                state = state,
-                onAction = onAction,
-                onEditTask = { editTask = it }
-            )
-        }
-    }
 
-    MediumFloatingActionButton(
-        onClick = { showTaskAddSheet = true },
-        containerColor = MaterialTheme.colorScheme.tertiaryContainer,
-        contentColor = MaterialTheme.colorScheme.onTertiaryContainer,
-        modifier = Modifier
-            .align(Alignment.BottomEnd)
-            .padding(16.dp)
-            .animateFloatingActionButton(
-                visible = state.currentCategory != null,
-                alignment = Alignment.BottomEnd,
-            )
-    ) {
-        Row(
-            modifier = Modifier.padding(16.dp),
-            verticalAlignment = Alignment.CenterVertically,
-        ) {
-            Icon(
-                imageVector = vectorResource(Res.drawable.add),
-                contentDescription = null,
-                modifier = Modifier.size(FloatingActionButtonDefaults.MediumIconSize)
-            )
-            AnimatedVisibility(
-                visible = state.tasks[state.currentCategory].isNullOrEmpty() || windowSizeClass.widthSizeClass == WindowWidthSizeClass.Expanded
-            ) {
-                Text(
-                    text = stringResource(Res.string.add_task),
-                    modifier = Modifier.padding(start = 8.dp)
+            if (windowSizeClass.widthSizeClass != WindowWidthSizeClass.Expanded) {
+                CompactTasksView(
+                    state = state,
+                    isReorderMode = editState,
+                    onAction = onAction,
+                    onEditTask = { editTask = it },
+                    isCompact = windowSizeClass.widthSizeClass == WindowWidthSizeClass.Compact,
+                )
+            } else {
+                ExpandedTasksView(
+                    state = state,
+                    onAction = onAction,
+                    onEditTask = { editTask = it },
                 )
             }
         }
-    }
 
-    if (showDeleteDialog) {
-        DeleteTasksDialog(
-            onDismiss = { showDeleteDialog = false },
-            onConfirm = {
-                onAction(TaskAction.DeleteTasks)
-                showDeleteDialog = false
+        MediumFloatingActionButton(
+            onClick = { showTaskAddSheet = true },
+            containerColor = MaterialTheme.colorScheme.tertiaryContainer,
+            contentColor = MaterialTheme.colorScheme.onTertiaryContainer,
+            modifier =
+                Modifier.align(Alignment.BottomEnd)
+                    .padding(16.dp)
+                    .animateFloatingActionButton(
+                        visible = state.currentCategory != null,
+                        alignment = Alignment.BottomEnd,
+                    ),
+        ) {
+            Row(
+                modifier = Modifier.padding(16.dp),
+                verticalAlignment = Alignment.CenterVertically,
+            ) {
+                Icon(
+                    imageVector = vectorResource(Res.drawable.add),
+                    contentDescription = null,
+                    modifier = Modifier.size(FloatingActionButtonDefaults.MediumIconSize),
+                )
+                AnimatedVisibility(
+                    visible =
+                        state.tasks[state.currentCategory].isNullOrEmpty() ||
+                            windowSizeClass.widthSizeClass == WindowWidthSizeClass.Expanded
+                ) {
+                    Text(
+                        text = stringResource(Res.string.add_task),
+                        modifier = Modifier.padding(start = 8.dp),
+                    )
+                }
             }
-        )
-    }
+        }
 
-    if (showCategoryAddSheet) {
-        CategoryUpsertSheet(
-            onDismiss = { showCategoryAddSheet = false },
-            category = Category(
-                name = "",
-                color = CategoryColors.GRAY.color
-            ),
-            onUpsertCategory = {
-                onAction(TaskAction.AddCategory(it))
-                showCategoryAddSheet = false
-            }
-        )
-    }
+        if (showDeleteDialog) {
+            DeleteTasksDialog(
+                onDismiss = { showDeleteDialog = false },
+                onConfirm = {
+                    onAction(TaskAction.DeleteTasks)
+                    showDeleteDialog = false
+                },
+            )
+        }
 
-    if (editTask != null) {
-        TaskUpsertSheet(
-            task = editTask!!,
-            categories = state.tasks.keys.toList(),
-            onDismissRequest = { editTask = null },
-            isEditSheet = true,
-            is24Hr = state.is24Hour,
-            onUpsert = { onAction(TaskAction.UpsertTask(it)) },
-            onDelete = {
-                editTask?.let { onAction(TaskAction.DeleteTask(it)) }
-                editTask = null
-            }
-        )
-    }
+        if (showCategoryAddSheet) {
+            CategoryUpsertSheet(
+                onDismiss = { showCategoryAddSheet = false },
+                category = Category(name = "", color = CategoryColors.GRAY.color),
+                onUpsertCategory = {
+                    onAction(TaskAction.AddCategory(it))
+                    showCategoryAddSheet = false
+                },
+            )
+        }
 
-    if (showTaskAddSheet && state.currentCategory != null) {
-        TaskUpsertSheet(
-            task = Task(
-                categoryId = state.currentCategory.id,
-                title = "",
-                index = state.tasks[state.currentCategory]?.size ?: 0,
-                status = false,
-                reminder = null
-            ),
-            is24Hr = state.is24Hour,
-            categories = state.tasks.keys.toList(),
-            onDismissRequest = { showTaskAddSheet = false },
-            onUpsert = { onAction(TaskAction.UpsertTask(it)) },
-            onDelete = {}
-        )
+        if (editTask != null) {
+            TaskUpsertSheet(
+                task = editTask!!,
+                categories = state.tasks.keys.toList(),
+                onDismissRequest = { editTask = null },
+                isEditSheet = true,
+                is24Hr = state.is24Hour,
+                onUpsert = { onAction(TaskAction.UpsertTask(it)) },
+                onDelete = {
+                    editTask?.let { onAction(TaskAction.DeleteTask(it)) }
+                    editTask = null
+                },
+            )
+        }
+
+        if (showTaskAddSheet && state.currentCategory != null) {
+            TaskUpsertSheet(
+                task =
+                    Task(
+                        categoryId = state.currentCategory.id,
+                        title = "",
+                        index = state.tasks[state.currentCategory]?.size ?: 0,
+                        status = false,
+                        reminder = null,
+                    ),
+                is24Hr = state.is24Hour,
+                categories = state.tasks.keys.toList(),
+                onDismissRequest = { showTaskAddSheet = false },
+                onUpsert = { onAction(TaskAction.UpsertTask(it)) },
+                onDelete = {},
+            )
+        }
     }
-}
 
 @OptIn(ExperimentalMaterial3Api::class, ExperimentalMaterial3ExpressiveApi::class)
 @Composable
@@ -251,12 +262,13 @@ private fun TaskListTopBar(
     isReorderMode: Boolean,
     onReorderToggle: (Boolean) -> Unit,
     onDeleteClick: () -> Unit,
-    isExpanded: Boolean
+    isExpanded: Boolean,
 ) {
     LargeFlexibleTopAppBar(
-        colors = TopAppBarDefaults.topAppBarColors(
-            scrolledContainerColor = MaterialTheme.colorScheme.surface
-        ),
+        colors =
+            TopAppBarDefaults.topAppBarColors(
+                scrolledContainerColor = MaterialTheme.colorScheme.surface
+            ),
         scrollBehavior = scrollBehavior,
         title = { Text(text = stringResource(Res.string.tasks)) },
         subtitle = {
@@ -268,30 +280,38 @@ private fun TaskListTopBar(
             AnimatedVisibility(visible = state.completedTasks.isNotEmpty()) {
                 OutlinedIconButton(
                     onClick = onDeleteClick,
-                    shapes = IconButtonShapes(
-                        shape = CircleShape,
-                        pressedShape = MaterialTheme.shapes.small
-                    )
+                    shapes =
+                        IconButtonShapes(
+                            shape = CircleShape,
+                            pressedShape = MaterialTheme.shapes.small,
+                        ),
                 ) {
-                    Icon(imageVector = vectorResource(Res.drawable.delete), contentDescription = null)
+                    Icon(
+                        imageVector = vectorResource(Res.drawable.delete),
+                        contentDescription = null,
+                    )
                 }
             }
 
             AnimatedVisibility(visible = state.tasks.values.isNotEmpty() && !isExpanded) {
                 FilledTonalIconToggleButton(
                     checked = isReorderMode,
-                    shapes = IconToggleButtonShapes(
-                        shape = CircleShape,
-                        checkedShape = MaterialTheme.shapes.small,
-                        pressedShape = MaterialTheme.shapes.extraSmall,
-                    ),
+                    shapes =
+                        IconToggleButtonShapes(
+                            shape = CircleShape,
+                            checkedShape = MaterialTheme.shapes.small,
+                            pressedShape = MaterialTheme.shapes.extraSmall,
+                        ),
                     onCheckedChange = onReorderToggle,
-                    enabled = !state.tasks[state.currentCategory].isNullOrEmpty()
+                    enabled = !state.tasks[state.currentCategory].isNullOrEmpty(),
                 ) {
-                    Icon(imageVector = vectorResource(Res.drawable.reorder), contentDescription = null)
+                    Icon(
+                        imageVector = vectorResource(Res.drawable.reorder),
+                        contentDescription = null,
+                    )
                 }
             }
-        }
+        },
     )
 }
 
@@ -304,12 +324,12 @@ private fun CategorySelector(
     onAddCategoryClick: () -> Unit,
     onEditCategoriesClick: () -> Unit,
     isExpanded: Boolean,
-    onReorderModeChange: (Boolean) -> Unit
+    onReorderModeChange: (Boolean) -> Unit,
 ) {
     LazyRow(
         modifier = Modifier.fillMaxWidth(),
         horizontalArrangement = Arrangement.spacedBy(8.dp),
-        contentPadding = PaddingValues(vertical = 8.dp, horizontal = 16.dp)
+        contentPadding = PaddingValues(vertical = 8.dp, horizontal = 16.dp),
     ) {
         if (!isExpanded) {
             items(state.tasks.keys.toList(), key = { it.id }) { category ->
@@ -318,29 +338,41 @@ private fun CategorySelector(
                     onCheckedChange = {
                         onAction(TaskAction.ChangeCategory(category))
                         onReorderModeChange(false)
-                    }
+                    },
                 ) {
                     Text(text = category.name)
                 }
             }
             item {
                 FilledTonalIconButton(onClick = onAddCategoryClick, enabled = !isReorderMode) {
-                    Icon(imageVector = vectorResource(Res.drawable.add), contentDescription = "Add Category")
+                    Icon(
+                        imageVector = vectorResource(Res.drawable.add),
+                        contentDescription = "Add Category",
+                    )
                 }
                 FilledTonalIconButton(onClick = onEditCategoriesClick, enabled = !isReorderMode) {
-                    Icon(imageVector = vectorResource(Res.drawable.edit), contentDescription = "Edit Categories")
+                    Icon(
+                        imageVector = vectorResource(Res.drawable.edit),
+                        contentDescription = "Edit Categories",
+                    )
                 }
             }
         } else {
             item {
                 FilledTonalButton(onClick = onAddCategoryClick, enabled = !isReorderMode) {
-                    Icon(imageVector = vectorResource(Res.drawable.add), contentDescription = "Add Category")
+                    Icon(
+                        imageVector = vectorResource(Res.drawable.add),
+                        contentDescription = "Add Category",
+                    )
                     Spacer(Modifier.width(ButtonDefaults.IconSpacing))
                     Text(text = stringResource(Res.string.add_category))
                 }
                 Spacer(Modifier.width(8.dp))
                 FilledTonalButton(onClick = onEditCategoriesClick, enabled = !isReorderMode) {
-                    Icon(imageVector = vectorResource(Res.drawable.edit), contentDescription = "Edit Categories")
+                    Icon(
+                        imageVector = vectorResource(Res.drawable.edit),
+                        contentDescription = "Edit Categories",
+                    )
                     Spacer(Modifier.width(ButtonDefaults.IconSpacing))
                     Text(text = stringResource(Res.string.edit_categories))
                 }
@@ -356,44 +388,44 @@ private fun CompactTasksView(
     isReorderMode: Boolean,
     onAction: (TaskAction) -> Unit,
     onEditTask: (Task) -> Unit,
-    isCompact: Boolean
+    isCompact: Boolean,
 ) {
     Surface(
         color = MaterialTheme.colorScheme.surfaceContainer,
         shape = RoundedCornerShape(topStart = 28.dp, topEnd = 28.dp),
-        modifier = Modifier.padding(horizontal = if (isCompact) 0.dp else 16.dp)
+        modifier = Modifier.padding(horizontal = if (isCompact) 0.dp else 16.dp),
     ) {
         AnimatedContent(targetState = state.currentCategory?.id) { categoryId ->
             val category = state.tasks.keys.firstOrNull { it.id == categoryId }
             if (category != null) {
                 val lazyListState = rememberLazyListState()
-                var reorderableTasks by remember(state.tasks.values) {
-                    mutableStateOf(
-                        (state.tasks[category] ?: emptyList()).run {
-                            if (state.reorderTasks) {
-                                filter { !it.status }
-                            } else this
-                        }
-                    )
-                }
+                var reorderableTasks by
+                    remember(state.tasks.values) {
+                        mutableStateOf(
+                            (state.tasks[category] ?: emptyList()).run {
+                                if (state.reorderTasks) {
+                                    filter { !it.status }
+                                } else this
+                            }
+                        )
+                    }
                 val reorderableListState =
                     rememberReorderableLazyListState(lazyListState) { from, to ->
-                        reorderableTasks = reorderableTasks.toMutableList().apply {
-                            add(to.index, removeAt(from.index))
-                        }
+                        reorderableTasks =
+                            reorderableTasks.toMutableList().apply {
+                                add(to.index, removeAt(from.index))
+                            }
                     }
                 LazyColumn(
                     modifier = Modifier.fillMaxSize(),
                     state = lazyListState,
                     contentPadding = PaddingValues(8.dp),
-                    verticalArrangement = Arrangement.spacedBy(8.dp)
+                    verticalArrangement = Arrangement.spacedBy(8.dp),
                 ) {
-                    itemsIndexed(
-                        items = reorderableTasks,
-                        key = { _, it -> it.id }
-                    ) { _, task ->
+                    itemsIndexed(items = reorderableTasks, key = { _, it -> it.id }) { _, task ->
                         ReorderableItem(reorderableListState, key = task.id) {
-                            val cardCorners by animateDpAsState(targetValue = if (it) 28.dp else 20.dp)
+                            val cardCorners by
+                                animateDpAsState(targetValue = if (it) 28.dp else 20.dp)
                             TaskCard(
                                 task = task,
                                 dragState = isReorderMode,
@@ -401,31 +433,39 @@ private fun CompactTasksView(
                                     Icon(
                                         imageVector = vectorResource(Res.drawable.drag_indicator),
                                         contentDescription = "Drag",
-                                        modifier = Modifier.draggableHandle(onDragStopped = {
-                                            onAction(TaskAction.ReorderTasks(reorderableTasks.mapIndexed { i, t -> i to t }))
-                                        })
+                                        modifier =
+                                            Modifier.draggableHandle(
+                                                onDragStopped = {
+                                                    onAction(
+                                                        TaskAction.ReorderTasks(
+                                                            reorderableTasks.mapIndexed { i, t ->
+                                                                i to t
+                                                            }
+                                                        )
+                                                    )
+                                                }
+                                            ),
                                     )
                                 },
                                 is24Hr = state.is24Hour,
-                                modifier = Modifier
-                                    .fillMaxWidth()
-                                    .clip(RoundedCornerShape(cardCorners))
-                                    .combinedClickable(
-                                        onClick = {
-                                            if (!isReorderMode) {
-                                                val updatedTask =
-                                                    task.copy(status = !task.status)
+                                modifier =
+                                    Modifier.fillMaxWidth()
+                                        .clip(RoundedCornerShape(cardCorners))
+                                        .combinedClickable(
+                                            onClick = {
+                                                if (!isReorderMode) {
+                                                    val updatedTask =
+                                                        task.copy(status = !task.status)
 
-                                                onAction(TaskAction.UpsertTask(updatedTask))
-                                            }
-                                        },
-                                        onLongClick = {
-                                            if (!isReorderMode && !task.status) {
-                                                onEditTask(task)
-                                            }
-                                        },
-
-                                    )
+                                                    onAction(TaskAction.UpsertTask(updatedTask))
+                                                }
+                                            },
+                                            onLongClick = {
+                                                if (!isReorderMode && !task.status) {
+                                                    onEditTask(task)
+                                                }
+                                            },
+                                        ),
                             )
                         }
                     }
@@ -433,27 +473,27 @@ private fun CompactTasksView(
                     if (state.reorderTasks) {
                         itemsIndexed(
                             items = (state.tasks[category] ?: emptyList()).filter { it.status },
-                            key = { _, it -> "completed_task_${it.id}" }
+                            key = { _, it -> "completed_task_${it.id}" },
                         ) { _, task ->
                             TaskCard(
                                 task = task,
                                 dragState = false,
                                 reorderIcon = {},
                                 is24Hr = state.is24Hour,
-                                modifier = Modifier
-                                    .fillMaxWidth()
-                                    .clip(RoundedCornerShape(28))
-                                    .combinedClickable(
-                                        onClick = {
-                                            if (!isReorderMode) {
-                                                val updatedTask =
-                                                    task.copy(status = !task.status)
+                                modifier =
+                                    Modifier.fillMaxWidth()
+                                        .clip(RoundedCornerShape(28))
+                                        .combinedClickable(
+                                            onClick = {
+                                                if (!isReorderMode) {
+                                                    val updatedTask =
+                                                        task.copy(status = !task.status)
 
-                                                onAction(TaskAction.UpsertTask(updatedTask))
-                                            }
-                                        },
-                                        onLongClick = {}
-                                    )
+                                                    onAction(TaskAction.UpsertTask(updatedTask))
+                                                }
+                                            },
+                                            onLongClick = {},
+                                        ),
                             )
                         }
                     }
@@ -472,7 +512,7 @@ private fun CompactTasksView(
 private fun ExpandedTasksView(
     state: TaskState,
     onAction: (TaskAction) -> Unit,
-    onEditTask: (Task) -> Unit
+    onEditTask: (Task) -> Unit,
 ) {
     val tasksAndCategories = state.tasks.toList()
 
@@ -481,7 +521,7 @@ private fun ExpandedTasksView(
         contentPadding = PaddingValues(start = 16.dp, end = 16.dp, bottom = 60.dp),
         verticalItemSpacing = 8.dp,
         horizontalArrangement = Arrangement.spacedBy(8.dp),
-        modifier = Modifier.fillMaxSize()
+        modifier = Modifier.fillMaxSize(),
     ) {
         items(tasksAndCategories, key = { it.first.id }) { (category, tasks) ->
             var showReorderDialog by remember { mutableStateOf(false) }
@@ -489,86 +529,80 @@ private fun ExpandedTasksView(
             Surface(
                 color = MaterialTheme.colorScheme.surfaceContainer,
                 shape = RoundedCornerShape(28.dp),
-                modifier = Modifier
-                    .widthIn(max = 350.dp)
-                    .heightIn(max = 1000.dp)
-                    .animateContentSize()
+                modifier =
+                    Modifier.widthIn(max = 350.dp).heightIn(max = 1000.dp).animateContentSize(),
             ) {
                 LazyColumn(
                     modifier = Modifier.fillMaxWidth(),
                     contentPadding = PaddingValues(8.dp),
-                    verticalArrangement = Arrangement.spacedBy(8.dp)
+                    verticalArrangement = Arrangement.spacedBy(8.dp),
                 ) {
                     item {
                         Row(
-                            modifier = Modifier
-                                .fillMaxWidth()
-                                .padding(start = 8.dp),
-                            verticalAlignment = Alignment.CenterVertically
+                            modifier = Modifier.fillMaxWidth().padding(start = 8.dp),
+                            verticalAlignment = Alignment.CenterVertically,
                         ) {
                             Text(
                                 text = category.name,
                                 style = MaterialTheme.typography.titleLarge,
-                                modifier = Modifier.padding(end = 8.dp).weight(1f)
+                                modifier = Modifier.padding(end = 8.dp).weight(1f),
                             )
 
                             FilledTonalIconToggleButton(
                                 checked = showReorderDialog,
                                 onCheckedChange = { showReorderDialog = it },
-                                enabled = tasks.size > 1
+                                enabled = tasks.size > 1,
                             ) {
                                 Icon(
                                     imageVector = vectorResource(Res.drawable.reorder),
-                                    contentDescription = null
+                                    contentDescription = null,
                                 )
                             }
                         }
                     }
                     items(
-                        items = tasks.run {
-                            if (state.reorderTasks) {
-                                filter { !it.status }
-                            } else this
-                        },
-                        key = { it.id }
+                        items =
+                            tasks.run {
+                                if (state.reorderTasks) {
+                                    filter { !it.status }
+                                } else this
+                            },
+                        key = { it.id },
                     ) { task ->
                         TaskCard(
                             task = task,
                             dragState = false,
                             reorderIcon = {},
                             is24Hr = state.is24Hour,
-                            modifier = Modifier
-                                .fillMaxWidth()
-                                .clip(RoundedCornerShape(20.dp))
-                                .combinedClickable(
-                                    onClick = {
-                                        val updatedTask = task.copy(status = !task.status)
-                                        onAction(TaskAction.UpsertTask(updatedTask))
-                                    },
-                                    onLongClick = { if (!task.status) onEditTask(task) }
-                                )
-                        )
-                    }
-                    if (state.reorderTasks) {
-                        items(
-                            items = tasks.filter { it.status },
-                            key = { it.id }
-                        ) { task ->
-                            TaskCard(
-                                task = task,
-                                dragState = false,
-                                reorderIcon = {},
-                                is24Hr = state.is24Hour,
-                                modifier = Modifier
-                                    .fillMaxWidth()
+                            modifier =
+                                Modifier.fillMaxWidth()
                                     .clip(RoundedCornerShape(20.dp))
                                     .combinedClickable(
                                         onClick = {
                                             val updatedTask = task.copy(status = !task.status)
                                             onAction(TaskAction.UpsertTask(updatedTask))
                                         },
-                                        onLongClick = { if (!task.status) onEditTask(task) }
-                                    )
+                                        onLongClick = { if (!task.status) onEditTask(task) },
+                                    ),
+                        )
+                    }
+                    if (state.reorderTasks) {
+                        items(items = tasks.filter { it.status }, key = { it.id }) { task ->
+                            TaskCard(
+                                task = task,
+                                dragState = false,
+                                reorderIcon = {},
+                                is24Hr = state.is24Hour,
+                                modifier =
+                                    Modifier.fillMaxWidth()
+                                        .clip(RoundedCornerShape(20.dp))
+                                        .combinedClickable(
+                                            onClick = {
+                                                val updatedTask = task.copy(status = !task.status)
+                                                onAction(TaskAction.UpsertTask(updatedTask))
+                                            },
+                                            onLongClick = { if (!task.status) onEditTask(task) },
+                                        ),
                             )
                         }
                     }
@@ -579,44 +613,42 @@ private fun ExpandedTasksView(
             }
 
             if (showReorderDialog) {
-                GritDialog(
-                    onDismissRequest = { showReorderDialog = false },
-                    padding = 0.dp
-                ) {
+                GritDialog(onDismissRequest = { showReorderDialog = false }, padding = 0.dp) {
                     var reorderableTasks = remember { tasks }
 
                     val listState = rememberLazyListState()
                     val reorderableListState =
                         rememberReorderableLazyListState(listState) { from, to ->
-                            reorderableTasks = reorderableTasks.toMutableList().apply {
-                                add(to.index, removeAt(from.index))
-                            }
+                            reorderableTasks =
+                                reorderableTasks.toMutableList().apply {
+                                    add(to.index, removeAt(from.index))
+                                }
 
-                            onAction(TaskAction.ReorderTasks(reorderableTasks.mapIndexed { index, task -> index to task }))
+                            onAction(
+                                TaskAction.ReorderTasks(
+                                    reorderableTasks.mapIndexed { index, task -> index to task }
+                                )
+                            )
                         }
 
                     Column(
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .heightIn(max = 600.dp)
-                            .padding(
-                                top = 16.dp,
-                                start = 16.dp,
-                                end = 16.dp
-                            ),
+                        modifier =
+                            Modifier.fillMaxWidth()
+                                .heightIn(max = 600.dp)
+                                .padding(top = 16.dp, start = 16.dp, end = 16.dp),
                         horizontalAlignment = Alignment.CenterHorizontally,
-                        verticalArrangement = Arrangement.spacedBy(8.dp)
+                        verticalArrangement = Arrangement.spacedBy(8.dp),
                     ) {
                         Icon(
                             imageVector = vectorResource(Res.drawable.reorder),
                             contentDescription = null,
-                            modifier = Modifier.size(48.dp)
+                            modifier = Modifier.size(48.dp),
                         )
 
                         Text(
                             text = stringResource(Res.string.reorder_tasks),
                             style = MaterialTheme.typography.titleLarge,
-                            textAlign = TextAlign.Center
+                            textAlign = TextAlign.Center,
                         )
 
                         LazyColumn(
@@ -624,38 +656,42 @@ private fun ExpandedTasksView(
                             state = listState,
                             horizontalAlignment = Alignment.CenterHorizontally,
                             verticalArrangement = Arrangement.spacedBy(8.dp),
-                            contentPadding = PaddingValues(vertical = 16.dp)
+                            contentPadding = PaddingValues(vertical = 16.dp),
                         ) {
                             items(
-                                items = reorderableTasks.run {
-                                    if (state.reorderTasks) {
-                                        filter { !it.status }
-                                    } else this
-                                },
-                                key = { it.id }
+                                items =
+                                    reorderableTasks.run {
+                                        if (state.reorderTasks) {
+                                            filter { !it.status }
+                                        } else this
+                                    },
+                                key = { it.id },
                             ) { task ->
                                 ReorderableItem(reorderableListState, key = task.id) {
                                     ListItem(
                                         modifier = Modifier.clip(MaterialTheme.shapes.medium),
-                                        colors = ListItemDefaults.colors(
-                                            containerColor = MaterialTheme.colorScheme.surfaceContainerHigh
-                                        ),
+                                        colors =
+                                            ListItemDefaults.colors(
+                                                containerColor =
+                                                    MaterialTheme.colorScheme.surfaceContainerHigh
+                                            ),
                                         headlineContent = {
                                             Text(
                                                 text = task.title,
                                                 maxLines = 1,
-                                                overflow = TextOverflow.Ellipsis
+                                                overflow = TextOverflow.Ellipsis,
                                             )
                                         },
                                         trailingContent = {
                                             Icon(
-                                                imageVector = vectorResource(Res.drawable.drag_indicator),
+                                                imageVector =
+                                                    vectorResource(Res.drawable.drag_indicator),
                                                 contentDescription = null,
-                                                modifier = Modifier
-                                                    .padding(horizontal = 8.dp)
-                                                    .draggableHandle(),
+                                                modifier =
+                                                    Modifier.padding(horizontal = 8.dp)
+                                                        .draggableHandle(),
                                             )
-                                        }
+                                        },
                                     )
                                 }
                             }
@@ -671,39 +707,32 @@ private fun ExpandedTasksView(
 @Composable
 private fun DeleteTasksDialog(onDismiss: () -> Unit, onConfirm: () -> Unit) {
     GritDialog(onDismissRequest = onDismiss) {
-        Icon(
-            imageVector = vectorResource(Res.drawable.warning),
-            contentDescription = "Warning",
-        )
+        Icon(imageVector = vectorResource(Res.drawable.warning), contentDescription = "Warning")
         Text(
             text = stringResource(Res.string.delete),
             textAlign = TextAlign.Center,
             style = MaterialTheme.typography.titleMedium,
         )
-        Text(
-            text = stringResource(Res.string.delete_tasks),
-            textAlign = TextAlign.Center
-        )
-        Row(
-            modifier = Modifier.fillMaxWidth(),
-            horizontalArrangement = Arrangement.End
-        ) {
+        Text(text = stringResource(Res.string.delete_tasks), textAlign = TextAlign.Center)
+        Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.End) {
             TextButton(
                 onClick = onDismiss,
-                shapes = ButtonShapes(
-                    shape = MaterialTheme.shapes.extraLarge,
-                    pressedShape = MaterialTheme.shapes.small
-                )
+                shapes =
+                    ButtonShapes(
+                        shape = MaterialTheme.shapes.extraLarge,
+                        pressedShape = MaterialTheme.shapes.small,
+                    ),
             ) {
                 Text(stringResource(Res.string.cancel))
             }
 
             TextButton(
                 onClick = onConfirm,
-                shapes = ButtonShapes(
-                    shape = MaterialTheme.shapes.extraLarge,
-                    pressedShape = MaterialTheme.shapes.small
-                )
+                shapes =
+                    ButtonShapes(
+                        shape = MaterialTheme.shapes.extraLarge,
+                        pressedShape = MaterialTheme.shapes.small,
+                    ),
             ) {
                 Text(stringResource(Res.string.delete))
             }

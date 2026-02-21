@@ -1,3 +1,19 @@
+/*
+ * Copyright (C) 2026  Shubham Gorai
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <https://www.gnu.org/licenses/>.
+ */
 package com.shub39.grit.core.habits.presentation.ui.sections
 
 import androidx.compose.foundation.layout.Arrangement
@@ -43,16 +59,16 @@ import ir.ehsannarmani.compose_charts.models.DrawStyle
 import ir.ehsannarmani.compose_charts.models.Line
 import ir.ehsannarmani.compose_charts.models.PopupProperties
 import ir.ehsannarmani.compose_charts.models.StrokeStyle
+import kotlin.random.Random
+import kotlin.time.ExperimentalTime
 import kotlinx.datetime.YearMonth
 import org.jetbrains.compose.resources.stringResource
 import org.jetbrains.compose.resources.vectorResource
-import kotlin.random.Random
-import kotlin.time.ExperimentalTime
 
 @OptIn(
     ExperimentalMaterial3Api::class,
     ExperimentalMaterial3ExpressiveApi::class,
-    ExperimentalTime::class
+    ExperimentalTime::class,
 )
 @Composable
 fun OverallAnalytics(
@@ -61,7 +77,7 @@ fun OverallAnalytics(
     onNavigateToPaywall: () -> Unit,
     showNavigateBack: Boolean = true,
     isUserSubscribed: Boolean,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
 ) {
     val windowSizeClass = LocalWindowSizeClass.current
 
@@ -69,80 +85,77 @@ fun OverallAnalytics(
     val currentMonth = remember { YearMonth.now() }
 
     val heatMapData = state.overallAnalytics.heatMapData
-    val weeklyBreakdownData = remember(state.overallAnalytics.weekDayFrequencyData) {
-        prepareWeekDayDataToBars(data = state.overallAnalytics.weekDayFrequencyData, lineColor = primary)
-    }
-    val weeklyGraphData = state.overallAnalytics.weeklyGraphData.map { entry ->
-        val habit = entry.key
-        val color = Color(
-            red = Random.nextFloat(),
-            green = Random.nextFloat(),
-            blue = Random.nextFloat()
-        ).harmonize(primary, true).fixIfDisliked()
-
-        Line(
-            label = habit.title,
-            values = entry.value,
-            color = SolidColor(color),
-            dotProperties = DotProperties(
-                enabled = false,
-                color = SolidColor(color),
-                strokeWidth = 4.dp,
-                radius = 7.dp
-            ),
-            firstGradientFillColor = color.copy(alpha = 0.8f),
-            secondGradientFillColor = Color.Transparent,
-            popupProperties = PopupProperties(
-                enabled = false
-            ),
-            drawStyle = DrawStyle.Stroke(
-                width = 3.dp,
-                strokeStyle = StrokeStyle.Normal
+    val weeklyBreakdownData =
+        remember(state.overallAnalytics.weekDayFrequencyData) {
+            prepareWeekDayDataToBars(
+                data = state.overallAnalytics.weekDayFrequencyData,
+                lineColor = primary,
             )
-        )
-    }
+        }
+    val weeklyGraphData =
+        state.overallAnalytics.weeklyGraphData.map { entry ->
+            val habit = entry.key
+            val color =
+                Color(
+                        red = Random.nextFloat(),
+                        green = Random.nextFloat(),
+                        blue = Random.nextFloat(),
+                    )
+                    .harmonize(primary, true)
+                    .fixIfDisliked()
 
-    val heatMapState = rememberHeatMapCalendarState(
-        startMonth = currentMonth.minusMonths(12),
-        endMonth = currentMonth,
-        firstVisibleMonth = currentMonth,
-        firstDayOfWeek = state.startingDay
-    )
+            Line(
+                label = habit.title,
+                values = entry.value,
+                color = SolidColor(color),
+                dotProperties =
+                    DotProperties(
+                        enabled = false,
+                        color = SolidColor(color),
+                        strokeWidth = 4.dp,
+                        radius = 7.dp,
+                    ),
+                firstGradientFillColor = color.copy(alpha = 0.8f),
+                secondGradientFillColor = Color.Transparent,
+                popupProperties = PopupProperties(enabled = false),
+                drawStyle = DrawStyle.Stroke(width = 3.dp, strokeStyle = StrokeStyle.Normal),
+            )
+        }
+
+    val heatMapState =
+        rememberHeatMapCalendarState(
+            startMonth = currentMonth.minusMonths(12),
+            endMonth = currentMonth,
+            firstVisibleMonth = currentMonth,
+            firstDayOfWeek = state.startingDay,
+        )
 
     val scrollBehavior = TopAppBarDefaults.enterAlwaysScrollBehavior()
-    Column(
-        modifier = modifier
-            .nestedScroll(scrollBehavior.nestedScrollConnection)
-            .fillMaxSize()
-    ) {
+    Column(modifier = modifier.nestedScroll(scrollBehavior.nestedScrollConnection).fillMaxSize()) {
         TopAppBar(
             scrollBehavior = scrollBehavior,
-            colors = TopAppBarDefaults.topAppBarColors(
-                scrolledContainerColor = Color.Transparent,
-                containerColor = Color.Transparent
-            ),
-            title = {
-                Text(
-                    text = stringResource(Res.string.overall_analytics),
-                )
-            },
-            windowInsets = if (windowSizeClass.widthSizeClass == WindowWidthSizeClass.Expanded) {
-                WindowInsets(0)
-            } else {
-                TopAppBarDefaults.windowInsets
-            },
+            colors =
+                TopAppBarDefaults.topAppBarColors(
+                    scrolledContainerColor = Color.Transparent,
+                    containerColor = Color.Transparent,
+                ),
+            title = { Text(text = stringResource(Res.string.overall_analytics)) },
+            windowInsets =
+                if (windowSizeClass.widthSizeClass == WindowWidthSizeClass.Expanded) {
+                    WindowInsets(0)
+                } else {
+                    TopAppBarDefaults.windowInsets
+                },
             navigationIcon = {
                 if (showNavigateBack) {
-                    IconButton(
-                        onClick = onNavigateBack
-                    ) {
+                    IconButton(onClick = onNavigateBack) {
                         Icon(
                             imageVector = vectorResource(Res.drawable.arrow_back),
-                            contentDescription = "Navigate Back"
+                            contentDescription = "Navigate Back",
                         )
                     }
                 }
-            }
+            },
         )
 
         val maxWidth = 400.dp
@@ -151,14 +164,14 @@ fun OverallAnalytics(
             columns = StaggeredGridCells.Adaptive(minSize = 400.dp),
             contentPadding = PaddingValues(start = 16.dp, end = 16.dp, top = 16.dp, bottom = 60.dp),
             horizontalArrangement = Arrangement.spacedBy(8.dp),
-            verticalItemSpacing = 8.dp
+            verticalItemSpacing = 8.dp,
         ) {
             item {
                 HabitHeatMap(
                     heatMapState = heatMapState,
                     heatMapData = heatMapData,
                     modifier = Modifier.widthIn(max = maxWidth),
-                    totalHabits = state.habitsWithAnalytics.size
+                    totalHabits = state.habitsWithAnalytics.size,
                 )
             }
 
@@ -167,7 +180,7 @@ fun OverallAnalytics(
                     canSeeContent = isUserSubscribed,
                     weekDayData = weeklyBreakdownData,
                     onNavigateToPaywall = onNavigateToPaywall,
-                    modifier = Modifier.widthIn(max = maxWidth)
+                    modifier = Modifier.widthIn(max = maxWidth),
                 )
             }
 
@@ -177,10 +190,9 @@ fun OverallAnalytics(
                     primary = primary,
                     weeklyGraphData = weeklyGraphData,
                     onNavigateToPaywall = onNavigateToPaywall,
-                    modifier = Modifier.widthIn(max = maxWidth)
+                    modifier = Modifier.widthIn(max = maxWidth),
                 )
             }
-
         }
     }
 }
