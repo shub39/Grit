@@ -16,31 +16,10 @@
  */
 package com.shub39.grit.core.domain
 
-import com.materialkolor.PaletteStyle
-import com.shub39.grit.core.theme.AppTheme
-import com.shub39.grit.core.theme.Fonts
 import kotlinx.coroutines.flow.Flow
 import kotlinx.datetime.DayOfWeek
 
-interface GritDatastore {
-    suspend fun resetAppTheme()
-
-    fun getAppThemeFlow(): Flow<AppTheme>
-
-    suspend fun setAppTheme(theme: AppTheme)
-
-    fun getSeedColorFlow(): Flow<Int>
-
-    suspend fun setSeedColor(color: Int)
-
-    fun getAmoledPref(): Flow<Boolean>
-
-    suspend fun setAmoledPref(pref: Boolean)
-
-    fun getPaletteStyle(): Flow<PaletteStyle>
-
-    suspend fun setPaletteStyle(style: PaletteStyle)
-
+interface SettingsDatastore {
     fun getStartOfTheWeekPref(): Flow<DayOfWeek>
 
     suspend fun setStartOfWeek(day: DayOfWeek)
@@ -53,17 +32,9 @@ interface GritDatastore {
 
     suspend fun setIs24Hr(pref: Boolean)
 
-    fun getMaterialYouFlow(): Flow<Boolean>
-
-    suspend fun setMaterialYou(pref: Boolean)
-
     fun getNotificationsFlow(): Flow<Boolean>
 
     suspend fun setNotifications(pref: Boolean)
-
-    fun getFontPrefFlow(): Flow<Fonts>
-
-    suspend fun setFontPref(font: Fonts)
 
     fun getBiometricLockPref(): Flow<Boolean>
 

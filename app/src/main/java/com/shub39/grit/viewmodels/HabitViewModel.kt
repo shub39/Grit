@@ -19,13 +19,12 @@ package com.shub39.grit.viewmodels
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.shub39.grit.core.domain.AlarmScheduler
-import com.shub39.grit.core.domain.GritDatastore
+import com.shub39.grit.core.domain.SettingsDatastore
 import com.shub39.grit.core.habits.domain.Habit
 import com.shub39.grit.core.habits.domain.HabitRepo
 import com.shub39.grit.core.habits.domain.HabitStatus
 import com.shub39.grit.core.habits.presentation.HabitState
 import com.shub39.grit.core.habits.presentation.HabitsAction
-import kotlin.time.ExperimentalTime
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
@@ -39,12 +38,13 @@ import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import kotlinx.datetime.LocalDate
 import org.koin.android.annotation.KoinViewModel
+import kotlin.time.ExperimentalTime
 
 @KoinViewModel
 class HabitViewModel(
     private val scheduler: AlarmScheduler,
     private val repo: HabitRepo,
-    private val datastore: GritDatastore,
+    private val datastore: SettingsDatastore,
 ) : ViewModel() {
     private var habitStatusJob: Job? = null
     private var overallAnalyticsJob: Job? = null

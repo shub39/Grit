@@ -18,6 +18,7 @@ package com.shub39.grit.core.data.backup.restore
 
 import android.content.Context
 import android.net.Uri
+import android.util.Log
 import com.shub39.grit.core.data.backup.ExportSchema
 import com.shub39.grit.core.data.backup.toCategory
 import com.shub39.grit.core.data.backup.toHabit
@@ -27,12 +28,11 @@ import com.shub39.grit.core.domain.AlarmScheduler
 import com.shub39.grit.core.domain.backup.RestoreFailedException
 import com.shub39.grit.core.domain.backup.RestoreRepo
 import com.shub39.grit.core.domain.backup.RestoreResult
+import com.shub39.grit.core.domain.backup.SchemaMismatchException
 import com.shub39.grit.core.habits.domain.HabitRepo
 import com.shub39.grit.core.tasks.domain.TaskRepo
 import com.shub39.grit.habits.data.database.HabitDatabase
 import com.shub39.grit.tasks.data.database.TaskDatabase
-import kotlin.io.path.outputStream
-import kotlin.io.path.readText
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.async
 import kotlinx.coroutines.awaitAll
@@ -40,6 +40,8 @@ import kotlinx.coroutines.withContext
 import kotlinx.serialization.SerializationException
 import kotlinx.serialization.json.Json
 import org.koin.core.annotation.Single
+import kotlin.io.path.outputStream
+import kotlin.io.path.readText
 
 @Single(binds = [RestoreRepo::class])
 class RestoreImpl(
@@ -64,7 +66,7 @@ class RestoreImpl(
                 jsonDeserialized.tasksSchemaVersion != TaskDatabase.SCHEMA_VERSION ||
                     jsonDeserialized.habitsSchemaVersion != HabitDatabase.SCHEMA_VERSION
             ) {
-                throw IllegalArgumentException()
+                throw SchemaMismatchException()
             }
 
             withContext(Dispatchers.IO) {
@@ -97,12 +99,12 @@ class RestoreImpl(
             }
 
             RestoreResult.Success
-        } catch (e: IllegalArgumentException) {
-            e.printStackTrace()
-            RestoreResult.Failure(RestoreFailedException.InvalidFile)
-        } catch (e: SerializationException) {
-            e.printStackTrace()
+        } catch (e: SchemaMismatchException) {
+            Log.e("RestoreRepo", "Failed to restore data, old schema: ", e)
             RestoreResult.Failure(RestoreFailedException.OldSchema)
+        } catch (e: SerializationException) {
+            Log.e("RestoreRepo", "Failed to deserialize, invalid file: ", e)
+            RestoreResult.Failure(RestoreFailedException.InvalidFile)
         }
     }
 }

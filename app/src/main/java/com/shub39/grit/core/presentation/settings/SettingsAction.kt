@@ -44,8 +44,6 @@ sealed interface SettingsAction {
 
     data class ChangeReorderTasks(val pref: Boolean) : SettingsAction
 
-    data object OnResetTheme : SettingsAction
-
     data class ChangeAppTheme(val appTheme: AppTheme) : SettingsAction
 
     data class ChangeFontPref(val font: Fonts) : SettingsAction

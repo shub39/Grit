@@ -3,11 +3,10 @@
 Thank you for your interest in contributing to Grit! We appreciate your support.
 
 ## How to Contribute
-1.  **Open an Issue:** Before starting any work, please open an issue on GitHub. This allows us to discuss the proposed changes, ensure they align with the project's goals, and avoid duplicate work.
-2.  **Fork the Repository:** Fork the repository to your own GitHub account.
-3.  **Create a Branch:** Create a new branch for your feature or bug fix from `dev`. Use a descriptive name, such as `feat/add-new-feature` or `fix/resolve-issue-123`.
-4.  **Make Your Changes:** Make your changes to the codebase.
-5.  **Submit a Pull Request:** Once you're ready, submit a pull request from your branch to the `dev` branch of the main repository. Please reference the issue you created in your pull request description.
+1. **Fork the Repository:** Fork the repository to your own GitHub account.
+2. **Create a Branch:** Create a new branch for your feature or bug fix from `dev`. Use a descriptive name, such as `feat/add-new-feature` or `fix/resolve-issue-123`.
+3. **Make Your Changes:** Make your changes to the codebase.
+4. **Submit a Pull Request:** Once you're ready, submit a pull request from your branch to the `dev` branch of the main repository. Please reference the issue you created in your pull request description.
 
 ## Pull Request Guidelines
 *   Ensure your code follows the existing style and conventions.
@@ -27,3 +26,4 @@ I'll review your pull request as soon as possible. Thank you for your contributi
 ## Compose Guidelines
 * Expose a `Modifier` for each composable
 * Write Previews for significant composables (components, etc.), Make it a private function in the same file as the composable
+* Run spotless `./gradlew spotlessApply` before making a commit

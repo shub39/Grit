@@ -51,7 +51,7 @@ class BootReceiver : BroadcastReceiver(), KoinComponent {
                         scheduler.schedule(it)
                         Log.d("BootReceiver", "Scheduled task: ${it.id}")
                     }
-                } catch (t: Throwable) {
+                } catch (t: Exception) {
                     Log.e("BootReceiver", "Failed to initiate alarms", t)
                 } finally {
                     pendingResult.finish()
