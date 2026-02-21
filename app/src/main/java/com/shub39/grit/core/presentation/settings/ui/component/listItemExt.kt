@@ -24,8 +24,8 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.graphics.Shape
 import androidx.compose.ui.unit.dp
 
-private const val connectedCornerRadius = 4
-private const val endCornerRadius = 16
+private const val CONNECTED_CORNER_RADIUS = 4
+private const val END_CORNER_RADIUS = 16
 
 @Composable
 fun listItemColors(): ListItemColors {
@@ -34,26 +34,26 @@ fun listItemColors(): ListItemColors {
 
 fun leadingItemShape(): Shape =
     RoundedCornerShape(
-        topStart = endCornerRadius.dp,
-        topEnd = endCornerRadius.dp,
-        bottomEnd = connectedCornerRadius.dp,
-        bottomStart = connectedCornerRadius.dp,
+        topStart = END_CORNER_RADIUS.dp,
+        topEnd = END_CORNER_RADIUS.dp,
+        bottomEnd = CONNECTED_CORNER_RADIUS.dp,
+        bottomStart = CONNECTED_CORNER_RADIUS.dp,
     )
 
 fun middleItemShape(): Shape =
     RoundedCornerShape(
-        topStart = connectedCornerRadius.dp,
-        topEnd = connectedCornerRadius.dp,
-        bottomStart = connectedCornerRadius.dp,
-        bottomEnd = connectedCornerRadius.dp,
+        topStart = CONNECTED_CORNER_RADIUS.dp,
+        topEnd = CONNECTED_CORNER_RADIUS.dp,
+        bottomStart = CONNECTED_CORNER_RADIUS.dp,
+        bottomEnd = CONNECTED_CORNER_RADIUS.dp,
     )
 
 fun endItemShape(): Shape =
     RoundedCornerShape(
-        topStart = connectedCornerRadius.dp,
-        topEnd = connectedCornerRadius.dp,
-        bottomEnd = endCornerRadius.dp,
-        bottomStart = endCornerRadius.dp,
+        topStart = CONNECTED_CORNER_RADIUS.dp,
+        topEnd = CONNECTED_CORNER_RADIUS.dp,
+        bottomEnd = END_CORNER_RADIUS.dp,
+        bottomStart = END_CORNER_RADIUS.dp,
     )
 
-fun detachedItemShape(): Shape = RoundedCornerShape(endCornerRadius.dp)
+fun detachedItemShape(): Shape = RoundedCornerShape(END_CORNER_RADIUS.dp)

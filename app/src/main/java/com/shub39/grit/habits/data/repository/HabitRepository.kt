@@ -21,7 +21,7 @@ import com.shub39.grit.core.data.toHabit
 import com.shub39.grit.core.data.toHabitEntity
 import com.shub39.grit.core.data.toHabitStatus
 import com.shub39.grit.core.data.toHabitStatusEntity
-import com.shub39.grit.core.domain.GritDatastore
+import com.shub39.grit.core.domain.SettingsDatastore
 import com.shub39.grit.core.habits.domain.Habit
 import com.shub39.grit.core.habits.domain.HabitRepo
 import com.shub39.grit.core.habits.domain.HabitStatus
@@ -30,7 +30,6 @@ import com.shub39.grit.core.habits.domain.OverallAnalytics
 import com.shub39.grit.core.utils.now
 import com.shub39.grit.habits.data.database.HabitStatusDao
 import com.shub39.grit.habits.data.database.HabitsDao
-import kotlin.time.ExperimentalTime
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
@@ -46,13 +45,14 @@ import kotlinx.datetime.DayOfWeek
 import kotlinx.datetime.LocalDate
 import kotlinx.datetime.daysUntil
 import org.koin.core.annotation.Single
+import kotlin.time.ExperimentalTime
 
 @Single(binds = [HabitRepo::class])
 @OptIn(ExperimentalTime::class)
 class HabitRepository(
     private val habitDao: HabitsDao,
     private val habitStatusDao: HabitStatusDao,
-    private val datastore: GritDatastore,
+    private val datastore: SettingsDatastore,
     private val notificationManager: GritNotificationManager,
 ) : HabitRepo {
 

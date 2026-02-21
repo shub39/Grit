@@ -22,10 +22,10 @@ import android.os.Build
 import androidx.glance.appwidget.GlanceAppWidgetManager
 import com.shub39.grit.billing.BillingInitializer
 import com.shub39.grit.di.GritModules
-import com.shub39.grit.widgets.all_tasks_widget.AllTasksWidgetReceiver
-import com.shub39.grit.widgets.habit_overview_widget.HabitOverviewWidgetReceiver
-import com.shub39.grit.widgets.habit_streak_widget.HabitStreakWidgetReceiver
-import com.shub39.grit.widgets.habit_weekchart_widget.HabitWeekChartWidgetReceiver
+import com.shub39.grit.widgets.alltaskswidget.AllTasksWidgetReceiver
+import com.shub39.grit.widgets.habitoverviewwidget.HabitOverviewWidgetReceiver
+import com.shub39.grit.widgets.habitstreakwidget.HabitStreakWidgetReceiver
+import com.shub39.grit.widgets.habitweekchartwidget.HabitWeekChartWidgetReceiver
 import kotlinx.coroutines.MainScope
 import kotlinx.coroutines.launch
 import org.koin.android.ext.koin.androidContext

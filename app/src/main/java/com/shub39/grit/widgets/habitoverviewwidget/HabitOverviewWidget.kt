@@ -14,7 +14,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
-package com.shub39.grit.widgets.habit_overview_widget
+package com.shub39.grit.widgets.habitoverviewwidget
 
 import android.content.Context
 import android.os.Build
@@ -67,12 +67,12 @@ import com.shub39.grit.core.habits.domain.HabitRepo
 import com.shub39.grit.core.habits.domain.HabitStatus
 import com.shub39.grit.core.utils.now
 import com.shub39.grit.widgets.WidgetSize
-import kotlin.time.ExperimentalTime
 import kotlinx.coroutines.launch
 import kotlinx.datetime.LocalDate
 import kotlinx.datetime.LocalDateTime
 import org.koin.core.component.KoinComponent
 import org.koin.core.component.get
+import kotlin.time.ExperimentalTime
 
 @OptIn(ExperimentalTime::class)
 class HabitOverviewWidget : GlanceAppWidget(), KoinComponent {
