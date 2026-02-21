@@ -40,3 +40,5 @@ sealed interface RestoreFailedException {
 
     data object OldSchema : RestoreFailedException
 }
+
+class SchemaMismatchException : Exception()

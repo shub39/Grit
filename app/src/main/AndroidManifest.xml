@@ -43,7 +43,7 @@
             </intent-filter>
         </receiver>
 
-        <receiver android:name=".widgets.habit_overview_widget.HabitOverviewWidgetReceiver"
+        <receiver android:name=".widgets.habitoverviewwidget.HabitOverviewWidgetReceiver"
             android:exported="true"
             android:label="@string/habit_overview_widget">
             <intent-filter>
@@ -54,7 +54,7 @@
                 android:resource="@xml/habit_overview_widget"/>
         </receiver>
 
-        <receiver android:name=".widgets.all_tasks_widget.AllTasksWidgetReceiver"
+        <receiver android:name=".widgets.alltaskswidget.AllTasksWidgetReceiver"
             android:exported="true"
             android:label="@string/all_tasks">
             <intent-filter>
@@ -65,7 +65,7 @@
                 android:resource="@xml/all_tasks_widget"/>
         </receiver>
 
-        <receiver android:name=".widgets.habit_streak_widget.HabitStreakWidgetReceiver"
+        <receiver android:name=".widgets.habitstreakwidget.HabitStreakWidgetReceiver"
             android:exported="true"
             android:label="@string/habit_streak_widget">
             <intent-filter>
@@ -76,7 +76,7 @@
                 android:resource="@xml/habit_streak_widget"/>
         </receiver>
 
-        <receiver android:name=".widgets.habit_weekchart_widget.HabitWeekChartWidgetReceiver"
+        <receiver android:name=".widgets.habitweekchartwidget.HabitWeekChartWidgetReceiver"
             android:exported="true"
             android:label="@string/habit_week_chart_widget">
             <intent-filter>

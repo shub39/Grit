@@ -14,7 +14,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
-package com.shub39.grit.widgets.all_tasks_widget
+package com.shub39.grit.widgets.alltaskswidget
 
 import android.content.Context
 import android.os.Build

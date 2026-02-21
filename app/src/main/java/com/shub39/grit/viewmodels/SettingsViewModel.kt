@@ -22,7 +22,8 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.shub39.grit.core.data.ChangelogManager
 import com.shub39.grit.core.data.Utils
-import com.shub39.grit.core.domain.GritDatastore
+import com.shub39.grit.core.domain.SettingsDatastore
+import com.shub39.grit.core.domain.ThemeDatastore
 import com.shub39.grit.core.domain.backup.ExportRepo
 import com.shub39.grit.core.domain.backup.ExportState
 import com.shub39.grit.core.domain.backup.RestoreRepo
@@ -48,7 +49,8 @@ import org.koin.android.annotation.KoinViewModel
 class SettingsViewModel(
     private val exportRepo: ExportRepo,
     private val restoreRepo: RestoreRepo,
-    private val datastore: GritDatastore,
+    private val themeDatastore: ThemeDatastore,
+    private val settingsDatastore: SettingsDatastore,
     private val changelogManager: ChangelogManager,
 ) : ViewModel() {
     private var observeJob: Job? = null
@@ -67,21 +69,24 @@ class SettingsViewModel(
     fun onAction(action: SettingsAction) =
         viewModelScope.launch {
             when (action) {
-                is SettingsAction.ChangeAmoled -> datastore.setAmoledPref(action.pref)
+                is SettingsAction.ChangeAmoled -> themeDatastore.setAmoledPref(action.pref)
 
-                is SettingsAction.ChangeAppTheme -> datastore.setAppTheme(action.appTheme)
+                is SettingsAction.ChangeAppTheme -> themeDatastore.setAppTheme(action.appTheme)
 
-                is SettingsAction.ChangeIs24Hr -> datastore.setIs24Hr(action.pref)
+                is SettingsAction.ChangeIs24Hr -> settingsDatastore.setIs24Hr(action.pref)
 
-                is SettingsAction.ChangeMaterialYou -> datastore.setMaterialYou(action.pref)
+                is SettingsAction.ChangeMaterialYou -> themeDatastore.setMaterialYou(action.pref)
 
-                is SettingsAction.ChangePaletteStyle -> datastore.setPaletteStyle(action.style)
+                is SettingsAction.ChangePaletteStyle -> themeDatastore.setPaletteStyle(action.style)
 
-                is SettingsAction.ChangeSeedColor -> datastore.setSeedColor(action.color.toArgb())
+                is SettingsAction.ChangeSeedColor ->
+                    themeDatastore.setSeedColor(action.color.toArgb())
 
-                is SettingsAction.ChangeStartOfTheWeek -> datastore.setStartOfWeek(action.pref)
+                is SettingsAction.ChangeStartOfTheWeek ->
+                    settingsDatastore.setStartOfWeek(action.pref)
 
-                is SettingsAction.ChangeStartingPage -> datastore.setStartingPage(action.page)
+                is SettingsAction.ChangeStartingPage ->
+                    settingsDatastore.setStartingPage(action.page)
 
                 SettingsAction.OnResetBackupState -> {
                     _state.update { it.copy(backupState = BackupState()) }
@@ -127,11 +132,12 @@ class SettingsViewModel(
                 }
 
                 is SettingsAction.ChangePauseNotifications ->
-                    datastore.setNotifications(action.pref)
+                    settingsDatastore.setNotifications(action.pref)
 
-                is SettingsAction.ChangeFontPref -> datastore.setFontPref(action.font)
+                is SettingsAction.ChangeFontPref -> themeDatastore.setFontPref(action.font)
 
-                is SettingsAction.ChangeBiometricLock -> datastore.setBiometricPref(action.pref)
+                is SettingsAction.ChangeBiometricLock ->
+                    settingsDatastore.setBiometricPref(action.pref)
 
                 is SettingsAction.OnCheckBiometric -> {
                     _state.update {
@@ -141,9 +147,8 @@ class SettingsViewModel(
                     }
                 }
 
-                SettingsAction.OnResetTheme -> datastore.resetAppTheme()
-
-                is SettingsAction.ChangeReorderTasks -> datastore.setTaskReorderPref(action.pref)
+                is SettingsAction.ChangeReorderTasks ->
+                    settingsDatastore.setTaskReorderPref(action.pref)
             }
         }
 
@@ -157,74 +162,74 @@ class SettingsViewModel(
         viewModelScope.launch {
             observeJob?.cancel()
             observeJob = launch {
-                datastore
+                settingsDatastore
                     .getTaskReorderPref()
                     .onEach { pref -> _state.update { it.copy(reorderTasks = pref) } }
                     .launchIn(this)
 
-                datastore
+                settingsDatastore
                     .getNotificationsFlow()
                     .onEach { pref -> _state.update { it.copy(pauseNotifications = pref) } }
                     .launchIn(this)
 
-                datastore
+                themeDatastore
                     .getAppThemeFlow()
                     .onEach { flow ->
                         _state.update { it.copy(theme = it.theme.copy(appTheme = flow)) }
                     }
                     .launchIn(this)
 
-                datastore
+                themeDatastore
                     .getFontPrefFlow()
                     .onEach { flow ->
                         _state.update { it.copy(theme = it.theme.copy(font = flow)) }
                     }
                     .launchIn(this)
 
-                datastore
+                themeDatastore
                     .getSeedColorFlow()
                     .onEach { flow ->
                         _state.update { it.copy(theme = it.theme.copy(seedColor = Color(flow))) }
                     }
                     .launchIn(this)
 
-                datastore
+                themeDatastore
                     .getAmoledPref()
                     .onEach { flow ->
                         _state.update { it.copy(theme = it.theme.copy(isAmoled = flow)) }
                     }
                     .launchIn(this)
 
-                datastore
+                themeDatastore
                     .getMaterialYouFlow()
                     .onEach { flow ->
                         _state.update { it.copy(theme = it.theme.copy(isMaterialYou = flow)) }
                     }
                     .launchIn(this)
 
-                datastore
+                themeDatastore
                     .getPaletteStyle()
                     .onEach { flow ->
                         _state.update { it.copy(theme = it.theme.copy(paletteStyle = flow)) }
                     }
                     .launchIn(this)
 
-                datastore
+                settingsDatastore
                     .getIs24Hr()
                     .onEach { flow -> _state.update { it.copy(is24Hr = flow) } }
                     .launchIn(this)
 
-                datastore
+                settingsDatastore
                     .getStartingSectionPref()
                     .onEach { flow -> _state.update { it.copy(startingPage = flow) } }
                     .launchIn(this)
 
-                datastore
+                settingsDatastore
                     .getStartOfTheWeekPref()
                     .onEach { flow -> _state.update { it.copy(startOfTheWeek = flow) } }
                     .launchIn(this)
 
-                datastore
+                settingsDatastore
                     .getBiometricLockPref()
                     .onEach { flow -> _state.update { it.copy(isBiometricLockOn = flow) } }
                     .launchIn(this)

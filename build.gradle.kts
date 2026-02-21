@@ -24,17 +24,6 @@ plugins {
     alias(libs.plugins.kotlin.multiplatform) apply false
     alias(libs.plugins.compose.multiplatform) apply false
     alias(libs.plugins.spotless) apply false
-    id("io.gitlab.arturbosch.detekt") version "1.23.8" apply false
-}
-
-subprojects {
-    apply(plugin = "io.gitlab.arturbosch.detekt")
-
-    configure<io.gitlab.arturbosch.detekt.extensions.DetektExtension> {
-        buildUponDefaultConfig = true
-        allRules = false
-        config.setFrom(files("$rootDir/detekt.yml"))
-    }
 }
 
 allprojects {

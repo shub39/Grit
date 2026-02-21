@@ -19,7 +19,7 @@ package com.shub39.grit.viewmodels
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.shub39.grit.core.domain.AlarmScheduler
-import com.shub39.grit.core.domain.GritDatastore
+import com.shub39.grit.core.domain.SettingsDatastore
 import com.shub39.grit.core.tasks.domain.Category
 import com.shub39.grit.core.tasks.domain.CategoryColors
 import com.shub39.grit.core.tasks.domain.TaskRepo
@@ -42,8 +42,13 @@ import org.koin.android.annotation.KoinViewModel
 class TasksViewModel(
     private val repo: TaskRepo,
     private val scheduler: AlarmScheduler,
-    private val datastore: GritDatastore,
+    private val datastore: SettingsDatastore,
 ) : ViewModel() {
+
+    companion object {
+        private const val REORDER_DELAY = 200L
+    }
+
     private var savedJob: Job? = null
     private var observerJob: Job? = null
 
@@ -94,7 +99,7 @@ class TasksViewModel(
                         upsertCategory(category.second.copy(index = category.first))
                     }
 
-                    delay(200)
+                    delay(REORDER_DELAY)
 
                     _state.update { it.copy(currentCategory = it.tasks.keys.firstOrNull()) }
                 }
@@ -102,7 +107,7 @@ class TasksViewModel(
                 is TaskAction.DeleteCategory -> {
                     deleteCategory(action.category)
 
-                    delay(200)
+                    delay(REORDER_DELAY)
 
                     _state.update { it.copy(currentCategory = it.tasks.keys.firstOrNull()) }
                 }

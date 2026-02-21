@@ -23,8 +23,9 @@ import com.shub39.grit.BuildConfig
 import com.shub39.grit.billing.BillingHandler
 import com.shub39.grit.billing.SubscriptionResult
 import com.shub39.grit.core.data.ChangelogManager
-import com.shub39.grit.core.domain.GritDatastore
 import com.shub39.grit.core.domain.MainAppState
+import com.shub39.grit.core.domain.SettingsDatastore
+import com.shub39.grit.core.domain.ThemeDatastore
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
@@ -41,7 +42,8 @@ import org.koin.android.annotation.KoinViewModel
 
 @KoinViewModel
 class MainViewModel(
-    private val datastore: GritDatastore,
+    private val themeDatastore: ThemeDatastore,
+    private val settingsDatastore: SettingsDatastore,
     private val billingHandler: BillingHandler,
     private val changelogManager: ChangelogManager,
 ) : ViewModel() {
@@ -68,7 +70,7 @@ class MainViewModel(
     }
 
     fun setBiometricLock(value: Boolean) {
-        viewModelScope.launch { datastore.setBiometricPref(value) }
+        viewModelScope.launch { settingsDatastore.setBiometricPref(value) }
     }
 
     fun updateSubscription() {
@@ -80,11 +82,11 @@ class MainViewModel(
         observerJob =
             viewModelScope.launch {
                 combine(
-                        datastore.getPaletteStyle(),
-                        datastore.getSeedColorFlow(),
-                        datastore.getFontPrefFlow(),
-                        datastore.getMaterialYouFlow(),
-                        datastore.getAppThemeFlow(),
+                        themeDatastore.getPaletteStyle(),
+                        themeDatastore.getSeedColorFlow(),
+                        themeDatastore.getFontPrefFlow(),
+                        themeDatastore.getMaterialYouFlow(),
+                        themeDatastore.getAppThemeFlow(),
                     ) { palette, seedColor, font, materialYou, appTheme ->
                         _state.update {
                             it.copy(
@@ -101,19 +103,19 @@ class MainViewModel(
                     }
                     .launchIn(this)
 
-                datastore
+                themeDatastore
                     .getAmoledPref()
                     .onEach { pref ->
                         _state.update { it.copy(theme = it.theme.copy(isAmoled = pref)) }
                     }
                     .launchIn(this)
 
-                datastore
+                settingsDatastore
                     .getStartingSectionPref()
                     .onEach { pref -> _state.update { it.copy(startingSection = pref) } }
                     .launchIn(this)
 
-                datastore
+                settingsDatastore
                     .getBiometricLockPref()
                     .onEach { pref -> _state.update { it.copy(isBiometricLockOn = pref) } }
                     .launchIn(this)
@@ -123,7 +125,7 @@ class MainViewModel(
     private fun checkChangelog() {
         viewModelScope.launch {
             val changeLogs = changelogManager.changelogs.first()
-            val lastShownChangelog = datastore.getLastChangelogShown().first()
+            val lastShownChangelog = settingsDatastore.getLastChangelogShown().first()
 
             if (BuildConfig.DEBUG || lastShownChangelog != BuildConfig.VERSION_NAME) {
                 _state.update { it.copy(currentChangelog = changeLogs.firstOrNull()) }
@@ -144,6 +146,8 @@ class MainViewModel(
 
     fun dismissChangelog() {
         _state.update { it.copy(currentChangelog = null) }
-        viewModelScope.launch { datastore.updateLastChangelogShown(BuildConfig.VERSION_NAME) }
+        viewModelScope.launch {
+            settingsDatastore.updateLastChangelogShown(BuildConfig.VERSION_NAME)
+        }
     }
 }
