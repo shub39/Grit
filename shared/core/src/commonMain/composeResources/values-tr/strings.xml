@@ -1,3 +1,4 @@
+<?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="made_by">Hazırlayan</string>
     <string name="tasks">Görevler</string>
@@ -115,4 +116,22 @@
     <string name="foss">Uygulamanın açık kaynaklı (FOSS) sürümünü kullanıyorsunuz</string>
     <string name="download_from_playstore">Play Store\'dan İndir</string>
     <string name="foss_desc">Tüm özelliklerin kilidi açık. Uygulamanın bu sürümü uygulama içi satın alımları desteklememektedir. Bu uygulama hayatınıza bir değer kattıysa, bana bağış yaparak destek olabilirsiniz.</string>
+    <string name="save">Kaydet</string>
+    <string name="add_reminder">Hatırlatıcı Ekle</string>
+    <string name="weeks">Haftalar</string>
+    <string name="open_app">Uygulamayı Aç</string>
+    <string name="all_tasks">Tüm Görevler</string>
+    <string name="server_channel_name">Sunucu bildirim kanalı</string>
+    <string name="server_running">Grit Sunucusu Çalışıyor</string>
+    <string name="local_server_starting">Sunucu Başlatılıyor</string>
+    <string name="stop">Durdur</string>
+    <string name="server">Sunucu</string>
+    <string name="server_desc">Masaüstü uygulamasına bağlan</string>
+    <string name="start_server">Sunucuyu başlat</string>
+    <string name="grit_desktop">Masaüstünde Grit</string>
+    <string name="download">İndir</string>
+    <string name="translate">Çevir</string>
+    <string name="changelog">Değişim Günlüğü</string>
+    <string name="no_habit_for_today">Bugünlük Alışkanlık Yok</string>
+    <string name="reorder_tasks">Görevleri yeniden yap</string>
 </resources>
