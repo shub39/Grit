@@ -42,7 +42,6 @@ import androidx.glance.appwidget.cornerRadius
 import androidx.glance.appwidget.lazy.LazyColumn
 import androidx.glance.appwidget.lazy.items
 import androidx.glance.appwidget.provideContent
-import androidx.glance.appwidget.updateAll
 import androidx.glance.background
 import androidx.glance.layout.Alignment
 import androidx.glance.layout.Box
@@ -87,7 +86,7 @@ class AllTasksWidget : GlanceAppWidget(), KoinComponent {
                         onUpdateTaskStatus = {
                             scope.launch { repo.upsertTask(it.copy(status = !it.status)) }
                         },
-                        onUpdateWidget = { scope.launch { this@AllTasksWidget.updateAll(context) } },
+                        onUpdateWidget = { scope.launch { this@AllTasksWidget.update(context, id) } },
                     )
                 }
             }
