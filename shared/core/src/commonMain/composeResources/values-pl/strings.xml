@@ -1,3 +1,27 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <string name="made_by">Stworzone przez</string>
+    <string name="tasks">Zadania</string>
+    <string name="input">Wprowadź</string>
+    <string name="tasks_title">Dzienne zadania</string>
+    <string name="material_theme">Twój motyw</string>
+    <string name="clear_preference">Wyczyść Zadania</string>
+    <string name="done">Zrobione</string>
+    <string name="empty">Przesuń w dół aby dodać nowe</string>
+    <string name="urgent">Pilne</string>
+    <string name="add_task">Dodaj Zadanie</string>
+    <string name="add_urgent_task">Dodaj Pilne</string>
+    <string name="add_habit">Dodaj Nową Rutynę</string>
+    <string name="update_description">Edytuj Opis</string>
+    <string name="delete">Usuń</string>
+    <string name="task_deleted">Zadanie Usunięte</string>
+    <string name="delete_warning">Czy na pewno chcesz usunąć tą Rutynę? Stracisz cały progres na zawsze</string>
+    <string name="cancel">Anuluj</string>
+    <string name="add_description">Dodaj Opis</string>
+    <string name="select_time">Wybierz czas</string>
+    <string name="habits">Rutyny</string>
+    <string name="analytics">Statystyki</string>
+    <string name="mark_done">Oznacz Wykonanie</string>
+    <string name="days_completed">Dni Ukończone</string>
+    <string name="streak">Aktualna Ciągłość</string>
 </resources>
