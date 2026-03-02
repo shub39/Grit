@@ -1,7 +1,7 @@
 # Changelog
 
 ## 5.7.3
-- Fixed widgets changing into other randomly
+- Fixed widgets changing into other randomly #256
 - Fixed current streak calculation
 
 ## 5.7.2
