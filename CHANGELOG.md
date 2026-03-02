@@ -1,5 +1,9 @@
 # Changelog
 
+## 5.7.3
+- Fixed widgets randomly changing into other widgets #256
+- Fixed current streak calculation
+
 ## 5.7.2
 - Habits overview widget now only displays set habits for the day #253
 

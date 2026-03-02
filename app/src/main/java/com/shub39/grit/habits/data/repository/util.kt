@@ -58,11 +58,6 @@ fun countCurrentStreak(
             }
         }
         if (hasEligibleDayMissed) return 0
-
-        // If today is not eligible, check if we missed any eligible days
-        if (!eligibleWeekdays.contains(today.dayOfWeek) && daysBetween > 1) {
-            return 0
-        }
     }
 
     var streak = 1

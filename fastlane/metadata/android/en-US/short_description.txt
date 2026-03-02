@@ -1,1 +1,1 @@
-A Simple ToDo List and Daily Habit Tracker
+A Simple ToDo List and Habit Tracker

@@ -1,5 +1,18 @@
 [
   {
+    "version": "5.7.3",
+    "changes": [
+      "Fixed widgets changing into other randomly #256",
+      "Fixed current streak calculation"
+    ]
+  },
+  {
+    "version": "5.7.2",
+    "changes": [
+      "Habits overview widget now only displays set habits for the day #253"
+    ]
+  },
+  {
     "version": "5.7.1",
     "changes": [
       "Isolated flex typography to uses, Fixing overflow wrapping #250"
