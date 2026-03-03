@@ -21,7 +21,25 @@
     <string name="select_time">Wybierz czas</string>
     <string name="habits">Rutyny</string>
     <string name="analytics">Statystyki</string>
-    <string name="mark_done">Oznacz Wykonanie</string>
+    <string name="mark_done">Oznacz Jako Wykonane</string>
     <string name="days_completed">Dni Ukończone</string>
     <string name="streak">Aktualna Ciągłość</string>
+    <string name="best_streak">Twoj Rekord Ciągłości</string>
+    <string name="since">Od</string>
+    <string name="goals">Cele</string>
+    <string name="settings">Ustawienia</string>
+    <string name="mark_undone">Oznacz Jako Niezrobione</string>
+    <string name="new_habit">Nowa Rutyna</string>
+    <string name="at">Przypomnij mi o</string>
+    <string name="habit_exists">Ta rutyna już istnieje</string>
+    <string name="days_ago_format">%1$d dni temu…</string>
+    <string name="too_long">Zbyt Długie</string>
+    <string name="save">Zapisz</string>
+    <string name="edit_task">Edytuj Zadanie</string>
+    <string name="tasks_guide_1">Dotknij by oznaczyć jako zrobione</string>
+    <string name="tasks_guide_2">Dotknij i przytrzymaj by edytować</string>
+    <string name="habits_guide_1">Dotknij by oznaczyć jako zrobione</string>
+    <string name="habits_guide_2">Dotknij dwa razy by zobaczyc statystyki</string>
+    <string name="habits_guide_3">Dotknij i przytrzymaj by edytować</string>
+    <string name="delete_tasks">Czy na pewno chcesz usunąć wszystkie ukończone zadania?</string>
 </resources>
