@@ -80,4 +80,6 @@
     <string name="completed">Heute abgeschlossen</string>
     <string name="title">Titel</string>
     <string name="description">Beschreibung</string>
+    <string name="clear_preference_exp">Aufgaben regelmäßig löschen</string>
+    <string name="edit_categories">Aufgabenkategorie bearbeiten</string>
 </resources>
