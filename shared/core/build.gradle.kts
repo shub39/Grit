@@ -37,7 +37,7 @@ kotlin {
 
     jvm()
 
-    androidLibrary {
+    android {
         namespace = "com.shub39.grit.core"
         compileSdk = libs.versions.compileSdk.get().toInt()
         androidResources.enable = true
