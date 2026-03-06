@@ -1,3 +1,4 @@
+<?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="made_by">Hecho por</string>
     <string name="tasks">Tareas</string>
@@ -98,4 +99,43 @@
     <string name="font">Fuente</string>
     <string name="font_desc">Seleccionar Fuente de la App</string>
     <string name="habit_overview_widget">Widget de Resumen de Hábitos</string>
+    <string name="biometric_lock">Bloqueo biométrico</string>
+    <string name="biometric_lock_desc">Usar autenticación biométrica para desbloquear la aplicación</string>
+    <string name="biometric_failed">Se requiere autenticación para usar la aplicación</string>
+    <string name="biometric_not_available">La autenticación biométrica no está disponible. Desactivando el bloqueo biométrico.</string>
+    <string name="bmc">Invítame a un café</string>
+    <string name="rate_on_play">Calificar en Google Play</string>
+    <string name="weekly_progress">Progreso semanal</string>
+    <string name="overall_analytics">Estadísticas generales</string>
+    <string name="progress">Progreso</string>
+    <string name="unlock_more_plus">Desbloquea más con Plus</string>
+    <string name="unlock_plus">Desbloquear con Plus</string>
+    <string name="grit_plus">Grit Plus</string>
+    <string name="monthly_progress">Progreso mensual</string>
+    <string name="week_breakdown">Desglose por día de la semana</string>
+    <string name="foss">Estás usando la variante FOSS</string>
+    <string name="download_from_playstore">Descargar desde Play Store</string>
+    <string name="foss_desc">Todas las funciones están desbloqueadas. Esta variante de la aplicación no admite compras integradas. Si esta aplicación ha aportado valor a tu vida, apóyame donando en</string>
+    <string name="no_habit_for_today">No hay hábitos para hoy</string>
+    <string name="add_reminder">Agregar recordatorio</string>
+    <string name="invalid_date_time">La hora seleccionada es en el pasado :\\')</string>
+    <string name="reorder_tasks">Reordenar tareas</string>
+    <string name="reorder_tasks_desc">Reordenar tareas cuando se marquen como completadas</string>
+    <string name="weeks">Semanas</string>
+    <string name="open_app">Abrir aplicación</string>
+    <string name="all_tasks">Todas las tareas</string>
+    <string name="server_channel_name">Canal de notificaciones del servidor</string>
+    <string name="server_channel_description">Canal para enviar actualizaciones de estado del servidor</string>
+    <string name="server_running">El servidor Grit se está ejecutando</string>
+    <string name="local_server_notification_text">URL del servidor: %s</string>
+    <string name="local_server_starting">iniciando servidor</string>
+    <string name="stop">Detener</string>
+    <string name="server">Servidor</string>
+    <string name="server_desc">Conectar a la aplicación de escritorio</string>
+    <string name="start_server">Iniciar servidor</string>
+    <string name="grit_desktop">Grit para escritorio</string>
+    <string name="grit_desktop_desc">Accede a tus tareas y hábitos en tu PC directamente desde tu teléfono, sin nube</string>
+    <string name="download">Descargar</string>
+    <string name="translate">Traducir</string>
+    <string name="changelog">Registro de cambios</string>
 </resources>
