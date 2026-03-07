@@ -104,7 +104,7 @@ class HabitOverviewWidget : GlanceAppWidget(), KoinComponent {
                                         habitStatus =
                                             HabitStatus(
                                                 habitId = habitWithStatus.first.id,
-                                                date = LocalDate.now(),
+                                                date = LocalDateTime.now(),
                                             )
                                     )
                                 }
@@ -220,7 +220,8 @@ private fun Content(
                                             )
                                     } else {
                                         GlanceModifier.background(
-                                            imageProvider = ImageProvider(R.drawable.rounded_list_top),
+                                            imageProvider =
+                                                ImageProvider(R.drawable.rounded_list_top),
                                             colorFilter =
                                                 ColorFilter.tint(
                                                     if (!habitWithStatus.second)

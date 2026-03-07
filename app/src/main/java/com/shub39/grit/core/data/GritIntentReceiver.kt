@@ -34,6 +34,7 @@ import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
 import kotlinx.datetime.LocalDate
+import kotlinx.datetime.LocalDateTime
 import org.koin.core.component.KoinComponent
 import org.koin.core.component.get
 
@@ -83,7 +84,7 @@ class GritIntentReceiver : BroadcastReceiver(), KoinComponent {
 
         val habitRepo = get<HabitRepo>()
 
-        habitRepo.insertHabitStatus(HabitStatus(habitId = habitId, date = LocalDate.now()))
+        habitRepo.insertHabitStatus(HabitStatus(habitId = habitId, date = LocalDateTime.now()))
 
         Log.d(TAG, "Habit status added successfully")
 
@@ -97,7 +98,7 @@ class GritIntentReceiver : BroadcastReceiver(), KoinComponent {
 
         val habitRepo = get<HabitRepo>()
 
-        habitRepo.insertHabitStatus(HabitStatus(habitId = habitId, date = LocalDate.now()))
+        habitRepo.insertHabitStatus(HabitStatus(habitId = habitId, date = LocalDateTime.now()))
 
         Log.d(TAG, "Habit status added successfully")
 
@@ -131,7 +132,7 @@ class GritIntentReceiver : BroadcastReceiver(), KoinComponent {
 
         // check if habit is completed today, if not then show notification
         val habitStatus = habitRepo.getStatusForHabit(habitId)
-        if (habitStatus.any { it.date == LocalDate.now() }) {
+        if (habitStatus.any { it.date.date == LocalDate.now() }) {
             Log.d(TAG, "Habit already completed today")
         } else {
             get<GritNotificationManager>().habitNotification(habit)

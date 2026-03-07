@@ -68,6 +68,7 @@ import kotlinx.datetime.DayOfWeek
 import kotlinx.datetime.LocalDate
 import kotlinx.datetime.LocalDateTime
 import kotlinx.datetime.YearMonth
+import kotlinx.datetime.atTime
 import kotlinx.datetime.format
 import kotlinx.datetime.format.MonthNames
 import kotlinx.datetime.format.char
@@ -92,7 +93,7 @@ fun CalendarMap(
     val scope = rememberCoroutineScope()
 
     val doneDates =
-        remember(currentHabit.statuses) { currentHabit.statuses.map { it.date }.toSet() }
+        remember(currentHabit.statuses) { currentHabit.statuses.map { it.date.date }.toSet() }
     val edgeWeeks =
         listOf(calendarState.firstDayOfWeek, daysStartingFrom(calendarState.firstDayOfWeek).last())
 
@@ -293,7 +294,7 @@ private fun Preview() {
                         (0..40).map {
                             HabitStatus(
                                 habitId = 1,
-                                date = LocalDate.now().minus(it, DateTimeUnit.DAY),
+                                date = LocalDate.now().minus(it, DateTimeUnit.DAY).atTime(0, 0),
                             )
                         },
                     weeklyComparisonData = listOf(),

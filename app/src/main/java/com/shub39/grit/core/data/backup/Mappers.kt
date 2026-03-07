@@ -54,11 +54,11 @@ fun HabitSchema.toHabit(): Habit {
 }
 
 fun HabitStatus.toHabitStatusSchema(): HabitStatusSchema {
-    return HabitStatusSchema(id = id, habitId = habitId, date = Converters.dayToTimestamp(date))
+    return HabitStatusSchema(id = id, habitId = habitId, date = Converters.dateToTimestamp(date)!!)
 }
 
 fun HabitStatusSchema.toHabitStatus(): HabitStatus {
-    return HabitStatus(id = id, habitId = habitId, date = Converters.dayFromTimestamp(date))
+    return HabitStatus(id = id, habitId = habitId, date = Converters.dateFromTimestamp(date)!!)
 }
 
 fun TaskSchema.toTask(): Task {

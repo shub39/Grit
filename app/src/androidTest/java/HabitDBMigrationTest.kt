@@ -26,7 +26,9 @@ import kotlin.time.ExperimentalTime
 import kotlinx.datetime.DateTimeUnit
 import kotlinx.datetime.LocalDate
 import kotlinx.datetime.LocalDateTime
+import kotlinx.datetime.TimeZone
 import kotlinx.datetime.minus
+import kotlinx.datetime.toInstant
 import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith
@@ -51,7 +53,8 @@ class HabitDBMigrationTest {
             .createDatabase(DB_NAME, 4)
             .apply {
                 (1..5).forEach { habit ->
-                    val timeEpoch = LocalDateTime.now()
+                    val timeEpoch =
+                        LocalDateTime.now().toInstant(TimeZone.currentSystemDefault()).epochSeconds
 
                     execSQL(
                         """
@@ -152,6 +155,43 @@ class HabitDBMigrationTest {
     }
 
     @Test
+    fun migration5to6_containsCorrectData() {
+        helper
+            .createDatabase(DB_NAME, 5)
+            .apply {
+                (1..5).forEach { habitId ->
+                    val dateEpoch = LocalDate.now().minus(habitId, DateTimeUnit.DAY).toEpochDays()
+
+                    execSQL(
+                        """
+                    INSERT INTO habit_status (habitId, date)
+                    VALUES ($habitId, $dateEpoch)
+                """
+                            .trimIndent()
+                    )
+                }
+            }
+            .close()
+
+        val db = helper.runMigrationsAndValidate(DB_NAME, 6, true, HabitDatabase.migrate_5_6)
+
+        db.query("SELECT habitId, date FROM habit_status ORDER BY habitId").use { cursor ->
+            assertThat(cursor.count).isEqualTo(5)
+            cursor.moveToFirst()
+            do {
+                val habitId = cursor.getLong(0)
+                val dateEpochSeconds = cursor.getLong(1)
+
+                val expectedDateEpochDays =
+                    LocalDate.now().minus(habitId.toInt(), DateTimeUnit.DAY).toEpochDays()
+                val expectedDateEpochSeconds = expectedDateEpochDays * 86400
+
+                assertThat(dateEpochSeconds).isEqualTo(expectedDateEpochSeconds)
+            } while (cursor.moveToNext())
+        }
+    }
+
+    @Test
     fun testAllMigrations() {
         helper.createDatabase(DB_NAME, 4).apply { close() }
 
@@ -160,6 +200,7 @@ class HabitDBMigrationTest {
                 HabitDatabase::class.java,
                 DB_NAME,
             )
+            .addMigrations(HabitDatabase.migrate_5_6)
             .build()
             .apply { openHelper.writableDatabase.close() }
     }

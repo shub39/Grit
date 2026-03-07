@@ -67,6 +67,7 @@ import kotlinx.datetime.DayOfWeek
 import kotlinx.datetime.LocalDate
 import kotlinx.datetime.LocalDateTime
 import kotlinx.datetime.YearMonth
+import kotlinx.datetime.atTime
 import kotlinx.datetime.format
 import kotlinx.datetime.format.FormatStringsInDatetimeFormats
 import kotlinx.datetime.format.MonthNames
@@ -91,7 +92,7 @@ fun WeeklyBooleanHeatMap(
     val today = LocalDate.now()
     val scope = rememberCoroutineScope()
 
-    val doneDates = remember(statuses) { statuses.map { it.date }.toSet() }
+    val doneDates = remember(statuses) { statuses.map { it.date.date }.toSet() }
     val edgeWeeks =
         listOf(heatMapState.firstDayOfWeek, daysStartingFrom(heatMapState.firstDayOfWeek).last())
 
@@ -279,7 +280,10 @@ private fun Preview() {
                 ),
             statuses =
                 (0..40).map {
-                    HabitStatus(habitId = 1, date = LocalDate.now().minus(it, DateTimeUnit.DAY))
+                    HabitStatus(
+                        habitId = 1,
+                        date = LocalDate.now().minus(it, DateTimeUnit.DAY).atTime(0, 0),
+                    )
                 },
         )
     }

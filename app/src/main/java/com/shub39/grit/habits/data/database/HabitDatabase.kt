@@ -37,15 +37,13 @@ abstract class HabitDatabase : RoomDatabase() {
     abstract fun habitStatusDao(): HabitStatusDao
 
     companion object {
-        const val SCHEMA_VERSION = 5
+        const val SCHEMA_VERSION = 6
         const val DB_NAME = "habit_database"
 
-        val migrate_3_4 =
-            object : Migration(3, 4) {
+        val migrate_5_6 =
+            object : Migration(5, 6) {
                 override fun migrate(db: SupportSQLiteDatabase) {
-                    db.execSQL(
-                        "ALTER TABLE habit_index ADD COLUMN days TEXT NOT NULL DEFAULT '${Converters.allDays}'"
-                    )
+                    db.execSQL("UPDATE habit_status SET date = date * 86400")
                 }
             }
     }

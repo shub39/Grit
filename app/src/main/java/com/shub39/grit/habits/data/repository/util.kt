@@ -117,12 +117,12 @@ fun prepareLineChartData(
 
     val habitCompletionByWeek =
         habitStatuses
-            .filter { it.date in startDateOfPeriod..today }
+            .filter { it.date.date in startDateOfPeriod..today }
             .groupBy {
                 // Calculate the start date of the week for the given habit date
                 val daysFromFirstDay =
-                    (it.date.dayOfWeek.isoDayNumber - firstDay.isoDayNumber + 7) % 7
-                it.date.minus(daysFromFirstDay, DateTimeUnit.DAY)
+                    (it.date.date.dayOfWeek.isoDayNumber - firstDay.isoDayNumber + 7) % 7
+                it.date.date.minus(daysFromFirstDay, DateTimeUnit.DAY)
             }
             .mapValues { (_, habitStatuses) -> habitStatuses.size }
 
@@ -150,7 +150,7 @@ fun prepareWeekDayFrequencyData(dates: List<LocalDate>): WeekDayFrequencyData {
 }
 
 fun prepareHeatMapData(habitData: List<HabitStatus>): Map<LocalDate, Int> {
-    val allDates = habitData.map { it.date }
+    val allDates = habitData.map { it.date.date }
     val dateFrequency = allDates.groupingBy { it }.eachCount()
 
     return dateFrequency

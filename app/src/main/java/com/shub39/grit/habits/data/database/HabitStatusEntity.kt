@@ -20,7 +20,7 @@ import androidx.room.Entity
 import androidx.room.ForeignKey
 import androidx.room.Index
 import androidx.room.PrimaryKey
-import kotlinx.datetime.LocalDate
+import kotlinx.datetime.LocalDateTime
 
 @Entity(
     tableName = "habit_status",
@@ -38,5 +38,5 @@ import kotlinx.datetime.LocalDate
 data class HabitStatusEntity(
     @PrimaryKey(autoGenerate = true) val id: Long = 0,
     val habitId: Long,
-    val date: LocalDate,
+    val date: LocalDateTime,
 )

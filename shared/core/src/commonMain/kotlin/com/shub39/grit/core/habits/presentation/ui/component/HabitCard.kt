@@ -222,7 +222,7 @@ fun HabitCard(
                 contentPadding = PaddingValues(8.dp),
                 state = weekState,
                 dayContent = { weekDay ->
-                    val done = habitWithAnalytics.statuses.any { it.date == weekDay.date }
+                    val done = habitWithAnalytics.statuses.any { it.date.date == weekDay.date }
                     val validDay =
                         weekDay.date <= today &&
                             weekDay.date.dayOfWeek in habitWithAnalytics.habit.days
@@ -246,11 +246,11 @@ fun HabitCard(
                                     if (done) {
                                         val donePrevious =
                                             habitWithAnalytics.statuses.any {
-                                                it.date == weekDay.date.minusDays(1)
+                                                it.date.date == weekDay.date.minusDays(1)
                                             }
                                         val doneAfter =
                                             habitWithAnalytics.statuses.any {
-                                                it.date == weekDay.date.plusDays(1)
+                                                it.date.date == weekDay.date.plusDays(1)
                                             }
 
                                         Modifier.background(

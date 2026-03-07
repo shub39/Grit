@@ -101,7 +101,7 @@ class HabitRepository(
             .combine(habitStatuses) { habitsFlow, habitStatusesFlow ->
                 habitsFlow.map { habit ->
                     val habitStatusesForHabit = habitStatusesFlow.filter { it.habitId == habit.id }
-                    val dates = habitStatusesForHabit.map { it.date }
+                    val dates = habitStatusesForHabit.map { it.date.date }
 
                     HabitWithAnalytics(
                         habit = habit,
@@ -125,7 +125,7 @@ class HabitRepository(
     override fun getCompletedHabitIds(): Flow<List<Long>> {
         return habitStatuses
             .map { habitStatuses ->
-                habitStatuses.filter { it.date == LocalDate.now() }.map { it.habitId }
+                habitStatuses.filter { it.date.date == LocalDate.now() }.map { it.habitId }
             }
             .flowOn(Dispatchers.Default)
     }
@@ -136,7 +136,7 @@ class HabitRepository(
                 OverallAnalytics(
                     heatMapData = prepareHeatMapData(habitStatusesFlow),
                     weekDayFrequencyData =
-                        prepareWeekDayFrequencyData(habitStatusesFlow.map { it.date }),
+                        prepareWeekDayFrequencyData(habitStatusesFlow.map { it.date.date }),
                 )
             }
             .flowOn(Dispatchers.Default)
@@ -145,7 +145,7 @@ class HabitRepository(
     override fun getHabitsWithStatus(): Flow<List<Pair<Habit, Boolean>>> {
         return habits.combine(habitStatuses) { habitsFlow, statusFlow ->
             habitsFlow.map { habit ->
-                val dates = statusFlow.filter { it.habitId == habit.id }.map { it.date }
+                val dates = statusFlow.filter { it.habitId == habit.id }.map { it.date.date }
 
                 habit to dates.any { it == LocalDate.now() }
             }
@@ -159,12 +159,15 @@ class HabitRepository(
     override suspend fun insertHabitStatus(habitStatus: HabitStatus) {
         habitStatusDao.insertHabitStatus(habitStatus.toHabitStatusEntity())
 
-        if (habitStatus.date == LocalDate.now()) {
+        if (habitStatus.date.date == LocalDate.now()) {
             notificationManager.cancelNotification(habitId = habitStatus.habitId.toInt())
         }
     }
 
     override suspend fun deleteHabitStatus(habitId: Long, date: LocalDate) {
-        habitStatusDao.deleteStatus(habitId, date)
+        val status = habitStatusDao.getStatusForHabit(habitId).find { it.date.date == date }
+        if (status != null) {
+            habitStatusDao.deleteStatus(habitId, status.date)
+        }
     }
 }

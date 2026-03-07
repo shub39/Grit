@@ -25,6 +25,7 @@ import com.shub39.grit.core.habits.domain.HabitRepo
 import com.shub39.grit.core.habits.domain.HabitStatus
 import com.shub39.grit.core.habits.presentation.HabitState
 import com.shub39.grit.core.habits.presentation.HabitsAction
+import com.shub39.grit.core.utils.now
 import kotlin.time.ExperimentalTime
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -38,6 +39,8 @@ import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import kotlinx.datetime.LocalDate
+import kotlinx.datetime.LocalDateTime
+import kotlinx.datetime.atTime
 import org.koin.android.annotation.KoinViewModel
 
 @KoinViewModel
@@ -176,16 +179,17 @@ class HabitViewModel(
     }
 
     private suspend fun insertHabitStatus(habit: Habit, date: LocalDate) {
-        val isHabitCompleted =
+        val statusForDay =
             _state.value.habitsWithAnalytics
-                .find { it.habit == habit }
+                .find { it.habit.id == habit.id }
                 ?.statuses
-                ?.any { it.date == date } ?: false
+                ?.find { it.date.date == date }
 
-        if (isHabitCompleted) {
+        if (statusForDay != null) {
             repo.deleteHabitStatus(habit.id, date)
         } else {
-            repo.insertHabitStatus(HabitStatus(habitId = habit.id, date = date))
+            val dateTime = if (date == LocalDate.now()) LocalDateTime.now() else date.atTime(0, 0)
+            repo.insertHabitStatus(HabitStatus(habitId = habit.id, date = dateTime))
         }
     }
 }
