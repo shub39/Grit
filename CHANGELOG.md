@@ -1,5 +1,8 @@
 # Changelog
 
+## 5.7.4
+- Fixed Habit streak widget text clipping on small dimensions #259
+
 ## 5.7.3
 - Fixed widgets randomly changing into other widgets #256
 - Fixed current streak calculation
