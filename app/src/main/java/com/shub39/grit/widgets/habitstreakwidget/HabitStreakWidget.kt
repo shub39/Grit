@@ -42,6 +42,7 @@ import androidx.glance.appwidget.GlanceAppWidget
 import androidx.glance.appwidget.SizeMode
 import androidx.glance.appwidget.components.TitleBar
 import androidx.glance.appwidget.cornerRadius
+import androidx.glance.appwidget.lazy.LazyColumn
 import androidx.glance.appwidget.provideContent
 import androidx.glance.appwidget.state.updateAppWidgetState
 import androidx.glance.background
@@ -55,7 +56,6 @@ import androidx.glance.layout.fillMaxHeight
 import androidx.glance.layout.fillMaxSize
 import androidx.glance.layout.height
 import androidx.glance.layout.padding
-import androidx.glance.layout.size
 import androidx.glance.layout.width
 import androidx.glance.preview.ExperimentalGlancePreviewApi
 import androidx.glance.preview.Preview
@@ -219,190 +219,264 @@ private fun Content(
                 },
             )
 
-            Column(
+            LazyColumn(
                 modifier =
-                    GlanceModifier.fillMaxSize().padding(start = 8.dp, end = 8.dp, bottom = 8.dp),
+                    GlanceModifier.fillMaxSize().padding(start = 8.dp, end = 8.dp),
                 horizontalAlignment = Alignment.Start,
             ) {
                 // current streak stat
-                Column(
-                    modifier =
-                        GlanceModifier.defaultWeight()
-                            .then(
-                                if (roundedCornerSupported) {
-                                    GlanceModifier.cornerRadius(16.dp)
-                                        .background(GlanceTheme.colors.primary)
-                                } else {
-                                    GlanceModifier.background(
-                                        imageProvider = ImageProvider(R.drawable.rounded_16dp),
-                                        colorFilter = ColorFilter.tint(GlanceTheme.colors.primary),
+                item {
+                    Column(
+                        modifier =
+                            GlanceModifier
+                                .background(
+                                    imageProvider = ImageProvider(R.drawable.rounded_list_top),
+                                    colorFilter = ColorFilter.tint(GlanceTheme.colors.primary),
+                                )
+                    ) {
+                        Row(
+                            verticalAlignment = Alignment.CenterVertically,
+                            modifier = GlanceModifier.padding(8.dp).fillMaxSize(),
+                        ) {
+                            Image(
+                                provider = ImageProvider(R.drawable.heat),
+                                contentDescription = null,
+                                colorFilter = ColorFilter.tint(GlanceTheme.colors.onPrimary),
+                                modifier = GlanceModifier.fillMaxHeight(),
+                            )
+
+                            if (size.width >= WidgetSize.Width4) {
+                                Spacer(modifier = GlanceModifier.width(4.dp))
+
+                                Row {
+                                    Text(
+                                        text =
+                                            "${habitWithAnalytics.currentStreak} " +
+                                                    context.getString(R.string.day) +
+                                                    " ",
+                                        maxLines = 1,
+                                        style =
+                                            TextStyle(
+                                                fontWeight = FontWeight.Bold,
+                                                fontSize = 24.sp,
+                                                color = GlanceTheme.colors.onPrimary,
+                                            ),
+                                    )
+
+                                    Text(
+                                        text = context.getString(R.string.current_streak),
+                                        maxLines = 1,
+                                        style =
+                                            TextStyle(
+                                                fontStyle = FontStyle.Italic,
+                                                color = GlanceTheme.colors.onPrimary,
+                                            ),
                                     )
                                 }
-                            )
-                ) {
-                    Row(
-                        verticalAlignment = Alignment.CenterVertically,
-                        modifier = GlanceModifier.padding(8.dp).fillMaxSize(),
-                    ) {
-                        Image(
-                            provider = ImageProvider(R.drawable.heat),
-                            contentDescription = null,
-                            colorFilter = ColorFilter.tint(GlanceTheme.colors.onPrimary),
-                            modifier = GlanceModifier.fillMaxHeight(),
-                        )
+                            } else {
+                                Spacer(modifier = GlanceModifier.width(4.dp))
 
-                        if (size.width >= WidgetSize.Width4) {
-                            Spacer(modifier = GlanceModifier.width(4.dp))
+                                Column {
+                                    Text(
+                                        text =
+                                            "${habitWithAnalytics.currentStreak} " +
+                                                    context.getString(R.string.day) +
+                                                    " ",
+                                        maxLines = 1,
+                                        style =
+                                            TextStyle(
+                                                fontWeight = FontWeight.Bold,
+                                                fontSize = 14.sp,
+                                                color = GlanceTheme.colors.onPrimary,
+                                            ),
+                                    )
 
-                            Row {
-                                Text(
-                                    text =
-                                        "${habitWithAnalytics.currentStreak} " +
-                                            context.getString(R.string.day) +
-                                            " ",
-                                    maxLines = 1,
-                                    style =
-                                        TextStyle(
-                                            fontWeight = FontWeight.Bold,
-                                            fontSize = 24.sp,
-                                            color = GlanceTheme.colors.onPrimary,
-                                        ),
-                                )
-
-                                Text(
-                                    text = context.getString(R.string.current_streak),
-                                    maxLines = 1,
-                                    style =
-                                        TextStyle(
-                                            fontStyle = FontStyle.Italic,
-                                            color = GlanceTheme.colors.onPrimary,
-                                        ),
-                                )
-                            }
-                        } else {
-                            Spacer(modifier = GlanceModifier.width(4.dp))
-
-                            Column {
-                                Text(
-                                    text =
-                                        "${habitWithAnalytics.currentStreak} " +
-                                            context.getString(R.string.day) +
-                                            " ",
-                                    maxLines = 1,
-                                    style =
-                                        TextStyle(
-                                            fontWeight = FontWeight.Bold,
-                                            fontSize = 14.sp,
-                                            color = GlanceTheme.colors.onPrimary,
-                                        ),
-                                )
-
-                                Text(
-                                    text = context.getString(R.string.current_streak),
-                                    maxLines = 1,
-                                    style =
-                                        TextStyle(
-                                            fontStyle = FontStyle.Italic,
-                                            fontSize = 10.sp,
-                                            color = GlanceTheme.colors.onPrimary,
-                                        ),
-                                )
+                                    Text(
+                                        text = context.getString(R.string.current_streak),
+                                        maxLines = 1,
+                                        style =
+                                            TextStyle(
+                                                fontStyle = FontStyle.Italic,
+                                                fontSize = 10.sp,
+                                                color = GlanceTheme.colors.onPrimary,
+                                            ),
+                                    )
+                                }
                             }
                         }
+                        Spacer(modifier = GlanceModifier.height(4.dp))
                     }
-                    Spacer(modifier = GlanceModifier.height(4.dp))
                 }
 
-                Spacer(modifier = GlanceModifier.height(4.dp))
+                item { Spacer(modifier = GlanceModifier.height(2.dp)) }
 
                 // best streak stat
-                Column(
-                    modifier =
-                        GlanceModifier.defaultWeight()
-                            .then(
-                                if (roundedCornerSupported) {
-                                    GlanceModifier.cornerRadius(16.dp)
-                                        .background(GlanceTheme.colors.secondary)
-                                } else {
-                                    GlanceModifier.background(
-                                        imageProvider = ImageProvider(R.drawable.rounded_16dp),
-                                        colorFilter = ColorFilter.tint(GlanceTheme.colors.secondary),
+                item {
+                    Column(
+                        modifier =
+                            GlanceModifier
+                                .background(
+                                    imageProvider = ImageProvider(R.drawable.widget_list_middle),
+                                    colorFilter = ColorFilter.tint(GlanceTheme.colors.primary),
+                                )
+                    ) {
+                        Row(
+                            verticalAlignment = Alignment.CenterVertically,
+                            modifier = GlanceModifier.padding(8.dp).fillMaxSize(),
+                        ) {
+                            Image(
+                                provider = ImageProvider(R.drawable.heat_outlined),
+                                contentDescription = null,
+                                colorFilter = ColorFilter.tint(GlanceTheme.colors.onPrimary),
+                                modifier = GlanceModifier.fillMaxHeight(),
+                            )
+
+                            if (size.width >= WidgetSize.Width4) {
+                                Spacer(modifier = GlanceModifier.width(4.dp))
+
+                                Row {
+                                    Text(
+                                        text =
+                                            "${habitWithAnalytics.bestStreak} " +
+                                                    context.getString(R.string.day) +
+                                                    " ",
+                                        maxLines = 1,
+                                        style =
+                                            TextStyle(
+                                                fontWeight = FontWeight.Bold,
+                                                fontSize = 24.sp,
+                                                color = GlanceTheme.colors.onPrimary,
+                                            ),
+                                    )
+
+                                    Text(
+                                        text = context.getString(R.string.best_streak),
+                                        maxLines = 1,
+                                        style =
+                                            TextStyle(
+                                                fontStyle = FontStyle.Italic,
+                                                color = GlanceTheme.colors.onPrimary,
+                                            ),
                                     )
                                 }
-                            )
-                ) {
-                    Row(
-                        verticalAlignment = Alignment.CenterVertically,
-                        modifier = GlanceModifier.padding(8.dp).fillMaxSize(),
-                    ) {
-                        Image(
-                            provider = ImageProvider(R.drawable.heat_outlined),
-                            contentDescription = null,
-                            colorFilter = ColorFilter.tint(GlanceTheme.colors.onSecondary),
-                            modifier = GlanceModifier.fillMaxHeight(),
-                        )
+                            } else {
+                                Spacer(modifier = GlanceModifier.width(4.dp))
 
-                        if (size.width >= WidgetSize.Width4) {
-                            Spacer(modifier = GlanceModifier.width(4.dp))
+                                Column {
+                                    Text(
+                                        text =
+                                            "${habitWithAnalytics.bestStreak} " +
+                                                    context.getString(R.string.day) +
+                                                    " ",
+                                        maxLines = 1,
+                                        style =
+                                            TextStyle(
+                                                fontWeight = FontWeight.Bold,
+                                                fontSize = 14.sp,
+                                                color = GlanceTheme.colors.onPrimary,
+                                            ),
+                                    )
 
-                            Row {
-                                Text(
-                                    text =
-                                        "${habitWithAnalytics.bestStreak} " +
-                                            context.getString(R.string.day) +
-                                            " ",
-                                    maxLines = 1,
-                                    style =
-                                        TextStyle(
-                                            fontWeight = FontWeight.Bold,
-                                            fontSize = 24.sp,
-                                            color = GlanceTheme.colors.onSecondary,
-                                        ),
-                                )
-
-                                Text(
-                                    text = context.getString(R.string.best_streak),
-                                    maxLines = 1,
-                                    style =
-                                        TextStyle(
-                                            fontStyle = FontStyle.Italic,
-                                            color = GlanceTheme.colors.onSecondary,
-                                        ),
-                                )
-                            }
-                        } else {
-                            Spacer(modifier = GlanceModifier.width(4.dp))
-
-                            Column {
-                                Text(
-                                    text =
-                                        "${habitWithAnalytics.bestStreak} " +
-                                            context.getString(R.string.day) +
-                                            " ",
-                                    maxLines = 1,
-                                    style =
-                                        TextStyle(
-                                            fontWeight = FontWeight.Bold,
-                                            fontSize = 14.sp,
-                                            color = GlanceTheme.colors.onSecondary,
-                                        ),
-                                )
-
-                                Text(
-                                    text = context.getString(R.string.best_streak),
-                                    maxLines = 1,
-                                    style =
-                                        TextStyle(
-                                            fontStyle = FontStyle.Italic,
-                                            fontSize = 10.sp,
-                                            color = GlanceTheme.colors.onSecondary,
-                                        ),
-                                )
+                                    Text(
+                                        text = context.getString(R.string.best_streak),
+                                        maxLines = 1,
+                                        style =
+                                            TextStyle(
+                                                fontStyle = FontStyle.Italic,
+                                                fontSize = 10.sp,
+                                                color = GlanceTheme.colors.onPrimary,
+                                            ),
+                                    )
+                                }
                             }
                         }
+                        Spacer(modifier = GlanceModifier.height(4.dp))
                     }
-                    Spacer(modifier = GlanceModifier.height(4.dp))
                 }
+
+                item { Spacer(modifier = GlanceModifier.height(2.dp)) }
+
+                // started days ago
+                item {
+                    Column(
+                        modifier =
+                            GlanceModifier
+                                .background(
+                                    imageProvider = ImageProvider(R.drawable.widget_list_bottom),
+                                    colorFilter = ColorFilter.tint(GlanceTheme.colors.primary),
+                                )
+                    ) {
+                        Row(
+                            verticalAlignment = Alignment.CenterVertically,
+                            modifier = GlanceModifier.padding(8.dp).fillMaxSize(),
+                        ) {
+                            Image(
+                                provider = ImageProvider(R.drawable.flag_circle),
+                                contentDescription = null,
+                                colorFilter = ColorFilter.tint(GlanceTheme.colors.onPrimary),
+                                modifier = GlanceModifier.fillMaxHeight(),
+                            )
+
+                            if (size.width >= WidgetSize.Width4) {
+                                Spacer(modifier = GlanceModifier.width(4.dp))
+
+                                Row {
+                                    Text(
+                                        text =
+                                            "${habitWithAnalytics.startedDaysAgo} ",
+                                        maxLines = 1,
+                                        style =
+                                            TextStyle(
+                                                fontWeight = FontWeight.Bold,
+                                                fontSize = 24.sp,
+                                                color = GlanceTheme.colors.onPrimary,
+                                            ),
+                                    )
+
+                                    Text(
+                                        text = context.getString(R.string.days_ago_format),
+                                        maxLines = 1,
+                                        style =
+                                            TextStyle(
+                                                fontStyle = FontStyle.Italic,
+                                                color = GlanceTheme.colors.onPrimary,
+                                            ),
+                                    )
+                                }
+                            } else {
+                                Spacer(modifier = GlanceModifier.width(4.dp))
+
+                                Column {
+                                    Text(
+                                        text =
+                                            "${habitWithAnalytics.startedDaysAgo} ",
+                                        maxLines = 1,
+                                        style =
+                                            TextStyle(
+                                                fontWeight = FontWeight.Bold,
+                                                fontSize = 14.sp,
+                                                color = GlanceTheme.colors.onPrimary,
+                                            ),
+                                    )
+
+                                    Text(
+                                        text = context.getString(R.string.days_ago_format),
+                                        maxLines = 1,
+                                        style =
+                                            TextStyle(
+                                                fontStyle = FontStyle.Italic,
+                                                fontSize = 10.sp,
+                                                color = GlanceTheme.colors.onPrimary,
+                                            ),
+                                    )
+                                }
+                            }
+                        }
+                        Spacer(modifier = GlanceModifier.height(4.dp))
+                    }
+                }
+
+                item { Spacer(modifier = GlanceModifier.height(8.dp)) }
             }
         } else {
             Box(modifier = GlanceModifier.fillMaxSize(), contentAlignment = Alignment.Center) {

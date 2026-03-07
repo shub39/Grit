@@ -213,7 +213,7 @@ private fun Content(
                                             } else {
                                                 GlanceModifier.background(
                                                     imageProvider =
-                                                        ImageProvider(R.drawable.rounded_16dp),
+                                                        ImageProvider(R.drawable.rounded_list_top),
                                                     colorFilter =
                                                         ColorFilter.tint(
                                                             if (!status)

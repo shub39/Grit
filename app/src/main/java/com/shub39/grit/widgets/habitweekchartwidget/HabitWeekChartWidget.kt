@@ -250,7 +250,7 @@ private fun Content(
                                                         .cornerRadius(16.dp)
                                                 } else {
                                                     GlanceModifier.background(
-                                                        ImageProvider(R.drawable.rounded_16dp),
+                                                        ImageProvider(R.drawable.rounded_list_top),
                                                         colorFilter =
                                                             ColorFilter.tint(
                                                                 GlanceTheme.colors.primary
