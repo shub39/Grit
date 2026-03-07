@@ -18,6 +18,7 @@ package com.shub39.grit.core.tasks.domain
 
 import kotlinx.coroutines.flow.Flow
 
+/** Interface for tasks repository */
 interface TaskRepo {
     fun getTasksFlow(): Flow<Map<Category, List<Task>>>
 

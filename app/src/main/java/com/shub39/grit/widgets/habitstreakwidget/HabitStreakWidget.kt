@@ -51,6 +51,7 @@ import androidx.glance.layout.Box
 import androidx.glance.layout.Column
 import androidx.glance.layout.Row
 import androidx.glance.layout.Spacer
+import androidx.glance.layout.fillMaxHeight
 import androidx.glance.layout.fillMaxSize
 import androidx.glance.layout.height
 import androidx.glance.layout.padding
@@ -74,6 +75,7 @@ import kotlinx.datetime.LocalDateTime
 import org.koin.core.component.KoinComponent
 import org.koin.core.component.get
 
+/** Habit streak widget, shows current and best streak of a habit */
 class HabitStreakWidget : GlanceAppWidget(), KoinComponent {
 
     companion object {
@@ -246,7 +248,7 @@ private fun Content(
                             provider = ImageProvider(R.drawable.heat),
                             contentDescription = null,
                             colorFilter = ColorFilter.tint(GlanceTheme.colors.onPrimary),
-                            modifier = GlanceModifier.size(28.dp),
+                            modifier = GlanceModifier.fillMaxHeight(),
                         )
 
                         if (size.width >= WidgetSize.Width4) {
@@ -290,7 +292,7 @@ private fun Content(
                                     style =
                                         TextStyle(
                                             fontWeight = FontWeight.Bold,
-                                            fontSize = 20.sp,
+                                            fontSize = 14.sp,
                                             color = GlanceTheme.colors.onPrimary,
                                         ),
                                 )
@@ -301,6 +303,7 @@ private fun Content(
                                     style =
                                         TextStyle(
                                             fontStyle = FontStyle.Italic,
+                                            fontSize = 10.sp,
                                             color = GlanceTheme.colors.onPrimary,
                                         ),
                                 )
@@ -336,7 +339,7 @@ private fun Content(
                             provider = ImageProvider(R.drawable.heat_outlined),
                             contentDescription = null,
                             colorFilter = ColorFilter.tint(GlanceTheme.colors.onSecondary),
-                            modifier = GlanceModifier.size(28.dp),
+                            modifier = GlanceModifier.fillMaxHeight(),
                         )
 
                         if (size.width >= WidgetSize.Width4) {
@@ -380,7 +383,7 @@ private fun Content(
                                     style =
                                         TextStyle(
                                             fontWeight = FontWeight.Bold,
-                                            fontSize = 20.sp,
+                                            fontSize = 14.sp,
                                             color = GlanceTheme.colors.onSecondary,
                                         ),
                                 )
@@ -391,6 +394,7 @@ private fun Content(
                                     style =
                                         TextStyle(
                                             fontStyle = FontStyle.Italic,
+                                            fontSize = 10.sp,
                                             color = GlanceTheme.colors.onSecondary,
                                         ),
                                 )

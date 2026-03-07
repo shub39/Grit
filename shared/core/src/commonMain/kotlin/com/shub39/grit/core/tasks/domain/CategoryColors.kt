@@ -16,6 +16,7 @@
  */
 package com.shub39.grit.core.tasks.domain
 
+/** Unused default colors */
 enum class CategoryColors(val color: String) {
     GRAY("gray"),
     BLUE("blue"),
