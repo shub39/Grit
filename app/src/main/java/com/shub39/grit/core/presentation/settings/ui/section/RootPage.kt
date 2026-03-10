@@ -52,11 +52,11 @@ import com.shub39.grit.core.presentation.getRandomLine
 import com.shub39.grit.core.presentation.settings.SettingsAction
 import com.shub39.grit.core.presentation.settings.SettingsState
 import com.shub39.grit.core.presentation.settings.ui.component.AboutApp
-import com.shub39.grit.core.presentation.settings.ui.component.detachedItemShape
-import com.shub39.grit.core.presentation.settings.ui.component.endItemShape
-import com.shub39.grit.core.presentation.settings.ui.component.leadingItemShape
-import com.shub39.grit.core.presentation.settings.ui.component.listItemColors
-import com.shub39.grit.core.presentation.settings.ui.component.middleItemShape
+import com.shub39.grit.core.shared_ui.detachedItemShape
+import com.shub39.grit.core.shared_ui.endItemShape
+import com.shub39.grit.core.shared_ui.leadingItemShape
+import com.shub39.grit.core.shared_ui.listItemColors
+import com.shub39.grit.core.shared_ui.middleItemShape
 import com.shub39.grit.core.theme.flexFontBold
 import com.shub39.grit.core.theme.flexFontEmphasis
 import com.shub39.grit.core.theme.flexFontRounded
