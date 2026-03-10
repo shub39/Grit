@@ -128,7 +128,7 @@
     <string name="foss_desc">Все улучшения разблокированы. Эта версия приложения не поддерживает встроенные покупки. Если это приложение сделало вашу жизнь лучше, поддержите меня, сделав пожертвование</string>
     <string name="no_habit_for_today">Нет привычек на сегодня</string>
     <string name="add_reminder">Добавить напоминание</string>
-    <string name="invalid_date_time">Выбранное время уже прошло :\')</string>
+    <string name="invalid_date_time">Выбранное время уже прошло :\\')</string>
     <string name="reorder_tasks">Изменить порядок задач</string>
     <string name="reorder_tasks_desc">Изменить порядок задач отмеченных выполненными</string>
     <string name="weeks">Неделя</string>
