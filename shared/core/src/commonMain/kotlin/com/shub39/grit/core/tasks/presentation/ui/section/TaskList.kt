@@ -19,7 +19,6 @@ package com.shub39.grit.core.tasks.presentation.ui.section
 import androidx.compose.animation.AnimatedContent
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.animateContentSize
-import androidx.compose.animation.core.animateDpAsState
 import androidx.compose.foundation.combinedClickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -28,6 +27,7 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
@@ -91,7 +91,6 @@ import com.shub39.grit.core.tasks.presentation.TaskState
 import com.shub39.grit.core.tasks.presentation.ui.component.CategoryUpsertSheet
 import com.shub39.grit.core.tasks.presentation.ui.component.TaskCard
 import com.shub39.grit.core.tasks.presentation.ui.component.TaskUpsertSheet
-import com.shub39.grit.core.theme.flexFontBold
 import com.shub39.grit.core.theme.flexFontEmphasis
 import com.shub39.grit.core.theme.flexFontRounded
 import com.shub39.grit.core.utils.LocalWindowSizeClass
@@ -332,7 +331,7 @@ private fun CategorySelector(
 ) {
     LazyRow(
         modifier = Modifier.fillMaxWidth(),
-        horizontalArrangement = Arrangement.spacedBy(8.dp),
+        horizontalArrangement = Arrangement.spacedBy(2.dp),
         contentPadding = PaddingValues(vertical = 8.dp, horizontal = 16.dp),
     ) {
         if (!isExpanded) {
@@ -348,6 +347,7 @@ private fun CategorySelector(
                 }
             }
             item {
+                Spacer(modifier = Modifier.width(4.dp))
                 FilledTonalIconButton(onClick = onAddCategoryClick, enabled = !isReorderMode) {
                     Icon(
                         imageVector = vectorResource(Res.drawable.add),
@@ -424,12 +424,31 @@ private fun CompactTasksView(
                     modifier = Modifier.fillMaxSize(),
                     state = lazyListState,
                     contentPadding = PaddingValues(8.dp),
-                    verticalArrangement = Arrangement.spacedBy(8.dp),
+                    verticalArrangement = Arrangement.spacedBy(2.dp),
                 ) {
-                    itemsIndexed(items = reorderableTasks, key = { _, it -> it.id }) { _, task ->
+                    itemsIndexed(items = reorderableTasks, key = { _, it -> it.id }) { index, task
+                        ->
                         ReorderableItem(reorderableListState, key = task.id) {
-                            val cardCorners by
-                                animateDpAsState(targetValue = if (it) 28.dp else 20.dp)
+                            val cardShape =
+                                when {
+                                    reorderableTasks.size == 1 -> RoundedCornerShape(20.dp)
+                                    index == 0 ->
+                                        RoundedCornerShape(
+                                            topStart = 20.dp,
+                                            topEnd = 20.dp,
+                                            bottomStart = 4.dp,
+                                            bottomEnd = 4.dp,
+                                        )
+                                    index == reorderableTasks.size - 1 ->
+                                        RoundedCornerShape(
+                                            topStart = 4.dp,
+                                            topEnd = 4.dp,
+                                            bottomStart = 20.dp,
+                                            bottomEnd = 20.dp,
+                                        )
+                                    else -> RoundedCornerShape(4.dp)
+                                }
+
                             TaskCard(
                                 task = task,
                                 dragState = isReorderMode,
@@ -452,9 +471,9 @@ private fun CompactTasksView(
                                     )
                                 },
                                 is24Hr = state.is24Hour,
+                                shape = cardShape,
                                 modifier =
                                     Modifier.fillMaxWidth()
-                                        .clip(RoundedCornerShape(cardCorners))
                                         .combinedClickable(
                                             onClick = {
                                                 if (!isReorderMode) {
@@ -475,18 +494,42 @@ private fun CompactTasksView(
                     }
 
                     if (state.reorderTasks) {
+                        val completedTasks =
+                            (state.tasks[category] ?: emptyList()).filter { it.status }
+
+                        item { Spacer(modifier = Modifier.height(16.dp)) }
                         itemsIndexed(
-                            items = (state.tasks[category] ?: emptyList()).filter { it.status },
+                            items = completedTasks,
                             key = { _, it -> "completed_task_${it.id}" },
-                        ) { _, task ->
+                        ) { index, task ->
+                            val cardShape =
+                                when {
+                                    completedTasks.size == 1 -> RoundedCornerShape(20.dp)
+                                    index == 0 ->
+                                        RoundedCornerShape(
+                                            topStart = 20.dp,
+                                            topEnd = 20.dp,
+                                            bottomStart = 4.dp,
+                                            bottomEnd = 4.dp,
+                                        )
+                                    index == completedTasks.size - 1 ->
+                                        RoundedCornerShape(
+                                            topStart = 4.dp,
+                                            topEnd = 4.dp,
+                                            bottomStart = 20.dp,
+                                            bottomEnd = 20.dp,
+                                        )
+                                    else -> RoundedCornerShape(4.dp)
+                                }
+
                             TaskCard(
                                 task = task,
                                 dragState = false,
                                 reorderIcon = {},
                                 is24Hr = state.is24Hour,
+                                shape = cardShape,
                                 modifier =
                                     Modifier.fillMaxWidth()
-                                        .clip(RoundedCornerShape(28))
                                         .combinedClickable(
                                             onClick = {
                                                 if (!isReorderMode) {
@@ -539,7 +582,7 @@ private fun ExpandedTasksView(
                 LazyColumn(
                     modifier = Modifier.fillMaxWidth(),
                     contentPadding = PaddingValues(8.dp),
-                    verticalArrangement = Arrangement.spacedBy(8.dp),
+                    verticalArrangement = Arrangement.spacedBy(2.dp),
                 ) {
                     item {
                         Row(
@@ -548,10 +591,7 @@ private fun ExpandedTasksView(
                         ) {
                             Text(
                                 text = category.name,
-                                style =
-                                    MaterialTheme.typography.headlineSmall.copy(
-                                        fontFamily = flexFontBold()
-                                    ),
+                                style = MaterialTheme.typography.headlineSmall,
                                 modifier = Modifier.padding(end = 8.dp).weight(1f),
                             )
 
@@ -567,23 +607,38 @@ private fun ExpandedTasksView(
                             }
                         }
                     }
-                    items(
-                        items =
-                            tasks.run {
-                                if (state.reorderTasks) {
-                                    filter { !it.status }
-                                } else this
-                            },
-                        key = { it.id },
-                    ) { task ->
+
+                    val displayTasks =
+                        if (state.reorderTasks) tasks.filter { !it.status } else tasks
+                    itemsIndexed(items = displayTasks, key = { _, it -> it.id }) { index, task ->
+                        val cardShape =
+                            when {
+                                displayTasks.size == 1 -> RoundedCornerShape(20.dp)
+                                index == 0 ->
+                                    RoundedCornerShape(
+                                        topStart = 20.dp,
+                                        topEnd = 20.dp,
+                                        bottomStart = 4.dp,
+                                        bottomEnd = 4.dp,
+                                    )
+                                index == displayTasks.size - 1 ->
+                                    RoundedCornerShape(
+                                        topStart = 4.dp,
+                                        topEnd = 4.dp,
+                                        bottomStart = 20.dp,
+                                        bottomEnd = 20.dp,
+                                    )
+                                else -> RoundedCornerShape(4.dp)
+                            }
+
                         TaskCard(
                             task = task,
                             dragState = false,
                             reorderIcon = {},
                             is24Hr = state.is24Hour,
+                            shape = cardShape,
                             modifier =
                                 Modifier.fillMaxWidth()
-                                    .clip(RoundedCornerShape(20.dp))
                                     .combinedClickable(
                                         onClick = {
                                             val updatedTask = task.copy(status = !task.status)
@@ -593,16 +648,43 @@ private fun ExpandedTasksView(
                                     ),
                         )
                     }
+
                     if (state.reorderTasks) {
-                        items(items = tasks.filter { it.status }, key = { it.id }) { task ->
+                        val completedTasks = tasks.filter { it.status }
+
+                        if (completedTasks.isNotEmpty()) {
+                            item { Spacer(modifier = Modifier.height(16.dp)) }
+                        }
+                        itemsIndexed(items = completedTasks, key = { _, it -> it.id }) { index, task
+                            ->
+                            val cardShape =
+                                when {
+                                    completedTasks.size == 1 -> RoundedCornerShape(20.dp)
+                                    index == 0 ->
+                                        RoundedCornerShape(
+                                            topStart = 20.dp,
+                                            topEnd = 20.dp,
+                                            bottomStart = 4.dp,
+                                            bottomEnd = 4.dp,
+                                        )
+                                    index == completedTasks.size - 1 ->
+                                        RoundedCornerShape(
+                                            topStart = 4.dp,
+                                            topEnd = 4.dp,
+                                            bottomStart = 20.dp,
+                                            bottomEnd = 20.dp,
+                                        )
+                                    else -> RoundedCornerShape(4.dp)
+                                }
+
                             TaskCard(
                                 task = task,
                                 dragState = false,
                                 reorderIcon = {},
                                 is24Hr = state.is24Hour,
+                                shape = cardShape,
                                 modifier =
                                     Modifier.fillMaxWidth()
-                                        .clip(RoundedCornerShape(20.dp))
                                         .combinedClickable(
                                             onClick = {
                                                 val updatedTask = task.copy(status = !task.status)

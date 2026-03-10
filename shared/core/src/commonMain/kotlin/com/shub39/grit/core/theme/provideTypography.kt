@@ -32,7 +32,7 @@ import org.jetbrains.compose.resources.FontResource
 val TYPOGRAPHY = Typography()
 
 @Composable
-fun flexFontEmphasis(slant: Float = -6f): FontFamily =
+fun flexFontEmphasis(slant: Float = 0f): FontFamily =
     FontFamily(
         Font(
             resource = Res.font.google_sans_flex,
@@ -46,7 +46,7 @@ fun flexFontEmphasis(slant: Float = -6f): FontFamily =
     )
 
 @Composable
-fun flexFontBold(slant: Float = -6f): FontFamily =
+fun flexFontBold(slant: Float = 0f): FontFamily =
     FontFamily(
         Font(
             resource = Res.font.google_sans_flex,
@@ -66,7 +66,7 @@ fun flexFontRounded(): FontFamily =
             resource = Res.font.google_sans_flex,
             variationSettings =
                 FontVariation.Settings(
-                    FontVariation.weight(800),
+                    FontVariation.weight(700),
                     FontVariation.Setting("ROND", 100f),
                 ),
         )
