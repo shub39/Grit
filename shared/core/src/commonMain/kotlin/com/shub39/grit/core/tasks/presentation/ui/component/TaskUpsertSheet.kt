@@ -72,7 +72,7 @@ import com.shub39.grit.core.shared_ui.detachedItemShape
 import com.shub39.grit.core.shared_ui.listItemColors
 import com.shub39.grit.core.tasks.domain.Category
 import com.shub39.grit.core.tasks.domain.Task
-import com.shub39.grit.core.theme.flexFontBold
+import com.shub39.grit.core.theme.flexFontEmphasis
 import com.shub39.grit.core.utils.now
 import com.shub39.grit.core.utils.toFormattedString
 import grit.shared.core.generated.resources.Res
@@ -167,14 +167,14 @@ fun TaskUpsertSheetContent(
             Text(
                 text =
                     stringResource(if (isEditSheet) Res.string.edit_task else Res.string.add_task),
-                style = MaterialTheme.typography.headlineSmall.copy(fontFamily = flexFontBold()),
+                style = MaterialTheme.typography.headlineSmall.copy(fontFamily = flexFontEmphasis()),
             )
         }
 
         LazyColumn(
             modifier = Modifier.fillMaxWidth(),
             verticalArrangement = Arrangement.spacedBy(8.dp),
-            contentPadding = PaddingValues(16.dp),
+            contentPadding = PaddingValues(horizontal = 16.dp),
         ) {
             item {
                 FlowRow(horizontalArrangement = Arrangement.spacedBy(2.dp)) {
