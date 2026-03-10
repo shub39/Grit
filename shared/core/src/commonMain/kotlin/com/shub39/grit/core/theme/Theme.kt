@@ -19,6 +19,7 @@ package com.shub39.grit.core.theme
 import androidx.compose.ui.graphics.Color
 import com.materialkolor.PaletteStyle
 
+/** data class representing the current theme of the app */
 data class Theme(
     val appTheme: AppTheme = AppTheme.SYSTEM,
     val isAmoled: Boolean = false,

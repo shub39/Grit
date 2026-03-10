@@ -86,7 +86,9 @@ class AllTasksWidget : GlanceAppWidget(), KoinComponent {
                         onUpdateTaskStatus = {
                             scope.launch { repo.upsertTask(it.copy(status = !it.status)) }
                         },
-                        onUpdateWidget = { scope.launch { this@AllTasksWidget.update(context, id) } },
+                        onUpdateWidget = {
+                            scope.launch { this@AllTasksWidget.update(context, id) }
+                        },
                     )
                 }
             }
@@ -211,7 +213,7 @@ private fun Content(
                                             } else {
                                                 GlanceModifier.background(
                                                     imageProvider =
-                                                        ImageProvider(R.drawable.rounded_16dp),
+                                                        ImageProvider(R.drawable.rounded_list_top),
                                                     colorFilter =
                                                         ColorFilter.tint(
                                                             if (!status)

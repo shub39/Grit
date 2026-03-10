@@ -18,4 +18,5 @@ package com.shub39.grit.core.theme
 
 import androidx.compose.runtime.Composable
 
+/** Wrapper to apply theme from [Theme] to all composables */
 @Composable expect fun GritTheme(theme: Theme = Theme(), content: @Composable () -> Unit)

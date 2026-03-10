@@ -26,6 +26,7 @@ import grit.shared.core.generated.resources.outfit
 import grit.shared.core.generated.resources.poppins_regular
 import org.jetbrains.compose.resources.FontResource
 
+/** All the font options available in-app */
 enum class Fonts {
     POPPINS,
     INTER,
@@ -37,6 +38,7 @@ enum class Fonts {
     SYSTEM_DEFAULT;
 
     companion object {
+        /** Used in UI Buttons */
         fun Fonts.toDisplayString(): String {
             return when (this) {
                 POPPINS -> "Poppins"
@@ -50,6 +52,7 @@ enum class Fonts {
             }
         }
 
+        /** Enum to [FontResource] used internally */
         fun Fonts.toFontRes(): FontResource? {
             return when (this) {
                 POPPINS -> Res.font.poppins_regular

@@ -22,6 +22,7 @@ import kotlinx.datetime.format
 import kotlinx.datetime.format.MonthNames
 import kotlinx.datetime.format.char
 
+/** [LocalDateTime] to `16 Aug 2005 @ 16:00` or `16 Aug 2005 @ 4:00 PM` */
 fun LocalDateTime.toFormattedString(is24Hr: Boolean): String {
     return this.format(
         LocalDateTime.Format {
@@ -40,6 +41,7 @@ fun LocalDateTime.toFormattedString(is24Hr: Boolean): String {
     )
 }
 
+/** [LocalTime] to `16:00` or `4:00 PM` */
 fun LocalTime.toFormattedString(is24Hr: Boolean): String {
     return this.format(
         LocalTime.Format {

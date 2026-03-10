@@ -25,5 +25,6 @@
     <string name="habit_week_chart_widget">Habit Week Chart</string>
     <string name="current_streak">Current Streak</string>
     <string name="day">Day</string>
+    <string name="days_ago_format">Days ago…</string>
     <string name="best_streak">Best Streak</string>
 </resources>

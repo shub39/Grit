@@ -22,12 +22,14 @@ import grit.shared.core.generated.resources.light
 import grit.shared.core.generated.resources.system
 import org.jetbrains.compose.resources.StringResource
 
+/** All the theme options available in-app */
 enum class AppTheme {
     SYSTEM,
     DARK,
     LIGHT;
 
     companion object {
+        /** Used in UI Buttons */
         fun AppTheme.toDisplayString(): StringResource {
             return when (this) {
                 SYSTEM -> Res.string.system
