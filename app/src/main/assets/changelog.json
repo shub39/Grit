@@ -2,7 +2,7 @@
   {
     "version": "5.7.4",
     "changes": [
-      "Fixed Habit streak widget text clipping on small dimensions #259"
+      "Fixed Habit streak widget text clipping on large display size #259"
     ]
   },
   {
