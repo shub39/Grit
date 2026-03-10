@@ -1,7 +1,7 @@
 # Changelog
 
 ## 5.7.4
-- Fixed Habit streak widget text clipping on small dimensions #259
+- Fixed Habit streak widget text clipping on large display size #259
 
 ## 5.7.3
 - Fixed widgets randomly changing into other widgets #256
