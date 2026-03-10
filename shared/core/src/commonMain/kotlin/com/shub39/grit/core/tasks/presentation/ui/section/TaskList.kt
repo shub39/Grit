@@ -19,8 +19,10 @@ package com.shub39.grit.core.tasks.presentation.ui.section
 import androidx.compose.animation.AnimatedContent
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.animateContentSize
+import androidx.compose.foundation.background
 import androidx.compose.foundation.combinedClickable
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
@@ -57,6 +59,7 @@ import androidx.compose.material3.IconToggleButtonShapes
 import androidx.compose.material3.LargeFlexibleTopAppBar
 import androidx.compose.material3.ListItem
 import androidx.compose.material3.ListItemDefaults
+import androidx.compose.material3.MaterialShapes
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.MediumFloatingActionButton
 import androidx.compose.material3.OutlinedIconButton
@@ -67,6 +70,7 @@ import androidx.compose.material3.ToggleButton
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.material3.TopAppBarScrollBehavior
 import androidx.compose.material3.animateFloatingActionButton
+import androidx.compose.material3.toShape
 import androidx.compose.material3.windowsizeclass.WindowWidthSizeClass
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -77,12 +81,15 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.input.nestedscroll.nestedScroll
-import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import com.shub39.grit.core.shared_ui.Empty
 import com.shub39.grit.core.shared_ui.GritDialog
 import com.shub39.grit.core.shared_ui.PageFill
+import com.shub39.grit.core.shared_ui.detachedItemShape
+import com.shub39.grit.core.shared_ui.endItemShape
+import com.shub39.grit.core.shared_ui.leadingItemShape
+import com.shub39.grit.core.shared_ui.middleItemShape
 import com.shub39.grit.core.tasks.domain.Category
 import com.shub39.grit.core.tasks.domain.CategoryColors
 import com.shub39.grit.core.tasks.domain.Task
@@ -439,6 +446,7 @@ private fun CompactTasksView(
                                             bottomStart = 4.dp,
                                             bottomEnd = 4.dp,
                                         )
+
                                     index == reorderableTasks.size - 1 ->
                                         RoundedCornerShape(
                                             topStart = 4.dp,
@@ -446,6 +454,7 @@ private fun CompactTasksView(
                                             bottomStart = 20.dp,
                                             bottomEnd = 20.dp,
                                         )
+
                                     else -> RoundedCornerShape(4.dp)
                                 }
 
@@ -515,6 +524,7 @@ private fun CompactTasksView(
                                             bottomStart = 4.dp,
                                             bottomEnd = 4.dp,
                                         )
+
                                     index == completedTasks.size - 1 ->
                                         RoundedCornerShape(
                                             topStart = 4.dp,
@@ -522,6 +532,7 @@ private fun CompactTasksView(
                                             bottomStart = 20.dp,
                                             bottomEnd = 20.dp,
                                         )
+
                                     else -> RoundedCornerShape(4.dp)
                                 }
 
@@ -575,6 +586,7 @@ private fun ExpandedTasksView(
         modifier = Modifier.fillMaxSize(),
     ) {
         items(tasksAndCategories, key = { it.first.id }) { (category, tasks) ->
+            val displayTasks = if (state.reorderTasks) tasks.filter { !it.status } else tasks
             var showReorderDialog by remember { mutableStateOf(false) }
 
             Surface(
@@ -602,7 +614,7 @@ private fun ExpandedTasksView(
                             FilledTonalIconToggleButton(
                                 checked = showReorderDialog,
                                 onCheckedChange = { showReorderDialog = it },
-                                enabled = tasks.size > 1,
+                                enabled = displayTasks.size > 1,
                             ) {
                                 Icon(
                                     imageVector = vectorResource(Res.drawable.reorder),
@@ -612,8 +624,6 @@ private fun ExpandedTasksView(
                         }
                     }
 
-                    val displayTasks =
-                        if (state.reorderTasks) tasks.filter { !it.status } else tasks
                     itemsIndexed(items = displayTasks, key = { _, it -> it.id }) { index, task ->
                         val cardShape =
                             when {
@@ -625,6 +635,7 @@ private fun ExpandedTasksView(
                                         bottomStart = 4.dp,
                                         bottomEnd = 4.dp,
                                     )
+
                                 index == displayTasks.size - 1 ->
                                     RoundedCornerShape(
                                         topStart = 4.dp,
@@ -632,6 +643,7 @@ private fun ExpandedTasksView(
                                         bottomStart = 20.dp,
                                         bottomEnd = 20.dp,
                                     )
+
                                 else -> RoundedCornerShape(4.dp)
                             }
 
@@ -672,6 +684,7 @@ private fun ExpandedTasksView(
                                             bottomStart = 4.dp,
                                             bottomEnd = 4.dp,
                                         )
+
                                     index == completedTasks.size - 1 ->
                                         RoundedCornerShape(
                                             topStart = 4.dp,
@@ -679,6 +692,7 @@ private fun ExpandedTasksView(
                                             bottomStart = 20.dp,
                                             bottomEnd = 20.dp,
                                         )
+
                                     else -> RoundedCornerShape(4.dp)
                                 }
 
@@ -709,7 +723,7 @@ private fun ExpandedTasksView(
 
             if (showReorderDialog) {
                 GritDialog(onDismissRequest = { showReorderDialog = false }, padding = 0.dp) {
-                    var reorderableTasks = remember { tasks }
+                    var reorderableTasks = remember { displayTasks }
 
                     val listState = rememberLazyListState()
                     val reorderableListState =
@@ -731,40 +745,55 @@ private fun ExpandedTasksView(
                             Modifier.fillMaxWidth()
                                 .heightIn(max = 600.dp)
                                 .padding(top = 16.dp, start = 16.dp, end = 16.dp),
-                        horizontalAlignment = Alignment.CenterHorizontally,
                         verticalArrangement = Arrangement.spacedBy(8.dp),
                     ) {
-                        Icon(
-                            imageVector = vectorResource(Res.drawable.reorder),
-                            contentDescription = null,
-                            modifier = Modifier.size(48.dp),
-                        )
+                        Box(
+                            contentAlignment = Alignment.Center,
+                            modifier =
+                                Modifier.size(48.dp)
+                                    .background(
+                                        color = MaterialTheme.colorScheme.primaryContainer,
+                                        shape = MaterialShapes.Pill.toShape(),
+                                    ),
+                        ) {
+                            Icon(
+                                imageVector = vectorResource(Res.drawable.reorder),
+                                contentDescription = null,
+                                tint = MaterialTheme.colorScheme.onPrimaryContainer,
+                            )
+                        }
 
                         Text(
                             text = stringResource(Res.string.reorder_tasks),
-                            style = MaterialTheme.typography.titleLarge,
-                            textAlign = TextAlign.Center,
+                            style =
+                                MaterialTheme.typography.headlineSmall.copy(
+                                    fontFamily = flexFontEmphasis()
+                                ),
                         )
 
                         LazyColumn(
-                            modifier = Modifier.fillMaxWidth(),
+                            modifier =
+                                Modifier.fillMaxWidth()
+                                    .clip(RoundedCornerShape(topStart = 16.dp, topEnd = 16.dp)),
                             state = listState,
                             horizontalAlignment = Alignment.CenterHorizontally,
-                            verticalArrangement = Arrangement.spacedBy(8.dp),
-                            contentPadding = PaddingValues(vertical = 16.dp),
+                            verticalArrangement = Arrangement.spacedBy(2.dp),
+                            contentPadding = PaddingValues(bottom = 16.dp),
                         ) {
-                            items(
-                                items =
-                                    reorderableTasks.run {
-                                        if (state.reorderTasks) {
-                                            filter { !it.status }
-                                        } else this
-                                    },
-                                key = { it.id },
-                            ) { task ->
+                            itemsIndexed(items = reorderableTasks, key = { _, it -> it.id }) {
+                                index,
+                                task ->
                                 ReorderableItem(reorderableListState, key = task.id) {
+                                    val shape =
+                                        when {
+                                            reorderableTasks.size == 1 -> detachedItemShape()
+                                            index == 0 -> leadingItemShape()
+                                            index == reorderableTasks.size - 1 -> endItemShape()
+                                            else -> middleItemShape()
+                                        }
+
                                     ListItem(
-                                        modifier = Modifier.clip(MaterialTheme.shapes.medium),
+                                        modifier = Modifier.clip(shape),
                                         colors =
                                             ListItemDefaults.colors(
                                                 containerColor =
@@ -802,34 +831,53 @@ private fun ExpandedTasksView(
 @Composable
 private fun DeleteTasksDialog(onDismiss: () -> Unit, onConfirm: () -> Unit) {
     GritDialog(onDismissRequest = onDismiss) {
-        Icon(imageVector = vectorResource(Res.drawable.warning), contentDescription = "Warning")
-        Text(
-            text = stringResource(Res.string.delete),
-            textAlign = TextAlign.Center,
-            style = MaterialTheme.typography.titleMedium,
-        )
-        Text(text = stringResource(Res.string.delete_tasks), textAlign = TextAlign.Center)
-        Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.End) {
-            TextButton(
-                onClick = onDismiss,
-                shapes =
-                    ButtonShapes(
-                        shape = MaterialTheme.shapes.extraLarge,
-                        pressedShape = MaterialTheme.shapes.small,
-                    ),
+        Column {
+            Box(
+                contentAlignment = Alignment.Center,
+                modifier =
+                    Modifier.size(48.dp)
+                        .background(
+                            color = MaterialTheme.colorScheme.primaryContainer,
+                            shape = MaterialShapes.Pill.toShape(),
+                        ),
             ) {
-                Text(stringResource(Res.string.cancel))
+                Icon(
+                    imageVector = vectorResource(Res.drawable.warning),
+                    contentDescription = "Warning",
+                    tint = MaterialTheme.colorScheme.onPrimaryContainer,
+                )
             }
+            Spacer(modifier = Modifier.height(4.dp))
+            Text(
+                text = stringResource(Res.string.delete),
+                style = MaterialTheme.typography.headlineSmall.copy(fontFamily = flexFontEmphasis()),
+            )
+            Text(
+                text = stringResource(Res.string.delete_tasks),
+                style = MaterialTheme.typography.bodyLarge,
+            )
+            Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.End) {
+                TextButton(
+                    onClick = onDismiss,
+                    shapes =
+                        ButtonShapes(
+                            shape = MaterialTheme.shapes.extraLarge,
+                            pressedShape = MaterialTheme.shapes.small,
+                        ),
+                ) {
+                    Text(stringResource(Res.string.cancel))
+                }
 
-            TextButton(
-                onClick = onConfirm,
-                shapes =
-                    ButtonShapes(
-                        shape = MaterialTheme.shapes.extraLarge,
-                        pressedShape = MaterialTheme.shapes.small,
-                    ),
-            ) {
-                Text(stringResource(Res.string.delete))
+                TextButton(
+                    onClick = onConfirm,
+                    shapes =
+                        ButtonShapes(
+                            shape = MaterialTheme.shapes.extraLarge,
+                            pressedShape = MaterialTheme.shapes.small,
+                        ),
+                ) {
+                    Text(stringResource(Res.string.delete))
+                }
             }
         }
     }
