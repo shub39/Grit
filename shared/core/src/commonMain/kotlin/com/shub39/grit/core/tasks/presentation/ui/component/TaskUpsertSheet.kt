@@ -65,7 +65,6 @@ import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardCapitalization
-import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import com.shub39.grit.core.shared_ui.GritBottomSheet
 import com.shub39.grit.core.shared_ui.GritTimePicker
@@ -160,7 +159,7 @@ fun TaskUpsertSheetContent(
                 Icon(
                     imageVector =
                         vectorResource(if (isEditSheet) Res.drawable.edit else Res.drawable.add),
-                    contentDescription = "Upsert",
+                    contentDescription = null,
                     tint = MaterialTheme.colorScheme.onPrimaryContainer,
                 )
             }
@@ -168,11 +167,7 @@ fun TaskUpsertSheetContent(
             Text(
                 text =
                     stringResource(if (isEditSheet) Res.string.edit_task else Res.string.add_task),
-                style =
-                    MaterialTheme.typography.headlineSmall.copy(
-                        textAlign = TextAlign.Center,
-                        fontFamily = flexFontBold(),
-                    ),
+                style = MaterialTheme.typography.headlineSmall.copy(fontFamily = flexFontBold()),
             )
         }
 

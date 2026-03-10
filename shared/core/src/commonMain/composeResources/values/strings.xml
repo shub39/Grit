@@ -19,7 +19,7 @@
     <string name="edit_task">Edit Task</string>
     <string name="delete_tasks">Are you sure you want to delete all completed tasks?</string>
     <string name="update_title">Edit Title</string>
-    <string name="edit_categories">Edit Task categories</string>
+    <string name="edit_categories">Edit Categories</string>
     <string name="delete_category">Are you sure? All tasks in this category will be deleted</string>
     <string name="add_category">Add Category</string>
     <string name="add">Add Something</string>

@@ -474,6 +474,7 @@ private fun CompactTasksView(
                                 shape = cardShape,
                                 modifier =
                                     Modifier.fillMaxWidth()
+                                        .clip(cardShape)
                                         .combinedClickable(
                                             onClick = {
                                                 if (!isReorderMode) {
@@ -497,7 +498,9 @@ private fun CompactTasksView(
                         val completedTasks =
                             (state.tasks[category] ?: emptyList()).filter { it.status }
 
-                        item { Spacer(modifier = Modifier.height(16.dp)) }
+                        if (reorderableTasks.isNotEmpty()) {
+                            item { Spacer(modifier = Modifier.height(16.dp)) }
+                        }
                         itemsIndexed(
                             items = completedTasks,
                             key = { _, it -> "completed_task_${it.id}" },
@@ -530,6 +533,7 @@ private fun CompactTasksView(
                                 shape = cardShape,
                                 modifier =
                                     Modifier.fillMaxWidth()
+                                        .clip(cardShape)
                                         .combinedClickable(
                                             onClick = {
                                                 if (!isReorderMode) {
@@ -639,6 +643,7 @@ private fun ExpandedTasksView(
                             shape = cardShape,
                             modifier =
                                 Modifier.fillMaxWidth()
+                                    .clip(cardShape)
                                     .combinedClickable(
                                         onClick = {
                                             val updatedTask = task.copy(status = !task.status)
@@ -685,6 +690,7 @@ private fun ExpandedTasksView(
                                 shape = cardShape,
                                 modifier =
                                     Modifier.fillMaxWidth()
+                                        .clip(cardShape)
                                         .combinedClickable(
                                             onClick = {
                                                 val updatedTask = task.copy(status = !task.status)
