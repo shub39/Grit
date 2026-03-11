@@ -85,18 +85,19 @@ fun HabitsList(
                 index,
                 habitWithAnalytics ->
                 ReorderableItem(reorderableListState, key = habitWithAnalytics.habit.id) {
+                    val completed = state.completedHabitIds.contains(habitWithAnalytics.habit.id)
                     val shape =
                         when {
-                            state.habitsWithAnalytics.size == 1 -> detachedItemShape(radius = 28)
-                            index == 0 -> leadingItemShape(topRadius = 28)
+                            state.habitsWithAnalytics.size == 1 || !completed -> detachedItemShape(radius = 28)
+                            index == 0 -> leadingItemShape(topRadius = 28, bottomRadius = 8)
                             index == state.habitsWithAnalytics.size - 1 ->
-                                endItemShape(bottomRadius = 28)
-                            else -> middleItemShape()
+                                endItemShape(bottomRadius = 28, topRadius = 8)
+                            else -> middleItemShape(radius = 8)
                         }
 
                     HabitCard(
                         habitWithAnalytics = habitWithAnalytics,
-                        completed = state.completedHabitIds.contains(habitWithAnalytics.habit.id),
+                        completed = completed,
                         action = onAction,
                         startingDay = state.startingDay,
                         editState = state.editState,
