@@ -282,7 +282,8 @@ fun AnalyticsPage(
                 Spacer(modifier = Modifier.height(4.dp))
                 Text(
                     text = stringResource(Res.string.delete),
-                    style = MaterialTheme.typography.headlineSmall.copy(fontFamily = flexFontEmphasis()),
+                    style =
+                        MaterialTheme.typography.headlineSmall.copy(fontFamily = flexFontEmphasis()),
                 )
                 Text(
                     text = stringResource(Res.string.delete_warning),

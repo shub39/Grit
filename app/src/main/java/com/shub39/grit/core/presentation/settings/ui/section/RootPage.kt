@@ -57,7 +57,6 @@ import com.shub39.grit.core.shared_ui.endItemShape
 import com.shub39.grit.core.shared_ui.leadingItemShape
 import com.shub39.grit.core.shared_ui.listItemColors
 import com.shub39.grit.core.shared_ui.middleItemShape
-import com.shub39.grit.core.theme.flexFontBold
 import com.shub39.grit.core.theme.flexFontEmphasis
 import com.shub39.grit.core.theme.flexFontRounded
 import grit.shared.core.generated.resources.Res
@@ -147,9 +146,7 @@ fun RootPage(
                         Text(
                             text = stringResource(Res.string.grit_plus),
                             style =
-                                MaterialTheme.typography.headlineSmall.copy(
-                                    fontFamily = flexFontBold()
-                                ),
+                                MaterialTheme.typography.headlineSmall,
                         )
 
                         Spacer(modifier = Modifier.weight(1f))
