@@ -37,8 +37,10 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.BlurredEdgeTreatment
 import androidx.compose.ui.draw.blur
+import androidx.compose.ui.graphics.Shape
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import com.shub39.grit.core.theme.flexFontRounded
 import com.shub39.grit.core.utils.blurPossible
 import grit.shared.core.generated.resources.Res
@@ -53,15 +55,18 @@ import org.jetbrains.compose.resources.stringResource
 fun AnalyticsCard(
     title: String,
     icon: DrawableResource,
+    shape: Shape = MaterialTheme.shapes.extraLarge,
     modifier: Modifier = Modifier,
     canSeeContent: Boolean = true,
     onPlusClick: () -> Unit = {},
     header: @Composable (RowScope.() -> Unit) = {},
     content: @Composable () -> Unit,
 ) {
-    Card(modifier = modifier, shape = MaterialTheme.shapes.extraLarge) {
+    Card(modifier = modifier, shape = shape) {
         Row(
-            modifier = Modifier.padding(start = 16.dp, end = 8.dp, top = 8.dp, bottom = 8.dp),
+            modifier =
+                Modifier.padding(start = 16.dp, end = 8.dp, top = 8.dp, bottom = 8.dp)
+                    .heightIn(min = 40.dp),
             verticalAlignment = Alignment.CenterVertically,
         ) {
             Icon(
@@ -74,7 +79,8 @@ fun AnalyticsCard(
 
             Text(
                 text = title,
-                style = MaterialTheme.typography.titleLarge.copy(fontFamily = flexFontRounded()),
+                fontFamily = flexFontRounded(),
+                fontSize = 20.sp,
                 maxLines = 1,
                 overflow = TextOverflow.Ellipsis,
                 modifier = Modifier.weight(1f).basicMarquee(),
