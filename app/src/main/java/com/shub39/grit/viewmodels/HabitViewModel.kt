@@ -106,6 +106,18 @@ class HabitViewModel(
                     currentList.add(action.to, currentList.removeAt(action.from))
                     _state.update { it.copy(habitsWithAnalytics = currentList) }
                 }
+
+                is HabitsAction.FetchCompletedHabitsForDate -> {
+                    _state.update { habitState ->
+                        habitState.copy(
+                            overallAnalytics =
+                                habitState.overallAnalytics.copy(
+                                    completedHabits =
+                                        repo.getCompletedHabitsForDate(action.date).map { it.title }
+                                )
+                        )
+                    }
+                }
             }
         }
     }

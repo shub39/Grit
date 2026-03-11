@@ -57,6 +57,7 @@ import grit.shared.core.generated.resources.alarm
 import grit.shared.core.generated.resources.check_list
 import grit.shared.core.generated.resources.dark_mode
 import grit.shared.core.generated.resources.light_mode
+import kotlin.random.Random
 import kotlinx.serialization.Serializable
 import org.jetbrains.compose.resources.DrawableResource
 import org.jetbrains.compose.resources.vectorResource
@@ -93,12 +94,16 @@ fun App() {
     var currentRoute: Routes by remember { mutableStateOf(Routes.Tasks) }
     val windowSizeClass = LocalWindowSizeClass.current
 
+    val color = remember {
+        Color(red = Random.nextFloat(), green = Random.nextFloat(), blue = Random.nextFloat())
+    }
+
     GritTheme(
         theme =
             Theme(
                 appTheme = if (isDark) AppTheme.DARK else AppTheme.LIGHT,
                 paletteStyle = PaletteStyle.FruitSalad,
-                seedColor = Color(0x002A66),
+                seedColor = color,
                 font = Fonts.FIGTREE,
             )
     ) {

@@ -16,6 +16,7 @@
  */
 package com.shub39.grit.core.utils
 
+import kotlinx.datetime.LocalDate
 import kotlinx.datetime.LocalDateTime
 import kotlinx.datetime.LocalTime
 import kotlinx.datetime.format
@@ -37,6 +38,18 @@ fun LocalDateTime.toFormattedString(is24Hr: Boolean): String {
             minute()
             char(' ')
             if (!is24Hr) amPmMarker(am = "AM", pm = "PM")
+        }
+    )
+}
+
+fun LocalDate.toFormattedString(): String {
+    return this.format(
+        LocalDate.Format {
+            day()
+            char(' ')
+            monthName(MonthNames.ENGLISH_ABBREVIATED)
+            char(' ')
+            year()
         }
     )
 }

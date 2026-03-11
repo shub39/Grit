@@ -42,6 +42,7 @@ import com.kizitonwose.calendar.compose.heatmapcalendar.rememberHeatMapCalendarS
 import com.kizitonwose.calendar.core.minusMonths
 import com.kizitonwose.calendar.core.now
 import com.shub39.grit.core.habits.presentation.HabitState
+import com.shub39.grit.core.habits.presentation.HabitsAction
 import com.shub39.grit.core.habits.presentation.ui.component.HabitHeatMap
 import com.shub39.grit.core.habits.presentation.ui.component.WeekDayBreakdown
 import com.shub39.grit.core.theme.flexFontEmphasis
@@ -62,6 +63,7 @@ import org.jetbrains.compose.resources.vectorResource
 @Composable
 fun OverallAnalytics(
     state: HabitState,
+    onAction: (HabitsAction) -> Unit,
     onNavigateBack: () -> Unit,
     onNavigateToPaywall: () -> Unit,
     showNavigateBack: Boolean = true,
@@ -126,6 +128,10 @@ fun OverallAnalytics(
                     heatMapData = state.overallAnalytics.heatMapData,
                     modifier = Modifier.widthIn(max = maxWidth),
                     totalHabits = state.habitsWithAnalytics.size,
+                    completedHabits = state.overallAnalytics.completedHabits,
+                    updateCompletedHabits = {
+                        onAction(HabitsAction.FetchCompletedHabitsForDate(it))
+                    },
                 )
             }
 
