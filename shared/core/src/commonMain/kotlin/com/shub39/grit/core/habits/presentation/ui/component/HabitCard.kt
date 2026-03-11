@@ -175,14 +175,18 @@ fun HabitCard(
                     Text(
                         text = habitWithAnalytics.habit.title,
                         maxLines = 1,
-                        style = MaterialTheme.typography.titleLarge,
+                        style =
+                            MaterialTheme.typography.bodyLarge.copy(fontWeight = FontWeight.Bold),
                         modifier = Modifier.basicMarquee(),
                     )
                 }
             },
             supportingContent = {
                 if (habitWithAnalytics.habit.reminder) {
-                    Text(text = habitWithAnalytics.habit.time.time.toFormattedString(is24Hr))
+                    Text(
+                        text = habitWithAnalytics.habit.time.time.toFormattedString(is24Hr),
+                        style = MaterialTheme.typography.labelMedium,
+                    )
                 }
             },
             trailingContent = {

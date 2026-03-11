@@ -90,7 +90,7 @@ fun TaskCard(
             Column(modifier = Modifier.weight(1f)) {
                 Text(
                     text = task.title,
-                    style = MaterialTheme.typography.titleLarge,
+                    style = MaterialTheme.typography.bodyLarge.copy(fontWeight = FontWeight.Bold),
                     textDecoration =
                         if (task.status) {
                             TextDecoration.LineThrough
