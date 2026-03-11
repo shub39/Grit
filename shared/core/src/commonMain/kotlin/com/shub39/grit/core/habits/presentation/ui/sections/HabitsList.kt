@@ -16,7 +16,6 @@
  */
 package com.shub39.grit.core.habits.presentation.ui.sections
 
-import androidx.compose.animation.core.animateDpAsState
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
@@ -24,8 +23,7 @@ import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyListState
-import androidx.compose.foundation.lazy.items
-import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.ExperimentalMaterial3ExpressiveApi
 import androidx.compose.material3.Icon
@@ -41,6 +39,10 @@ import com.shub39.grit.core.habits.presentation.HabitsAction
 import com.shub39.grit.core.habits.presentation.ui.component.HabitCard
 import com.shub39.grit.core.habits.presentation.ui.component.HabitUpsertSheet
 import com.shub39.grit.core.shared_ui.Empty
+import com.shub39.grit.core.shared_ui.detachedItemShape
+import com.shub39.grit.core.shared_ui.endItemShape
+import com.shub39.grit.core.shared_ui.leadingItemShape
+import com.shub39.grit.core.shared_ui.middleItemShape
 import com.shub39.grit.core.utils.LocalWindowSizeClass
 import com.shub39.grit.core.utils.now
 import grit.shared.core.generated.resources.Res
@@ -75,13 +77,22 @@ fun HabitsList(
         LazyColumn(
             state = lazyListState,
             contentPadding = PaddingValues(start = 16.dp, end = 16.dp, top = 16.dp, bottom = 60.dp),
-            verticalArrangement = Arrangement.spacedBy(8.dp),
+            verticalArrangement = Arrangement.spacedBy(2.dp),
             modifier = Modifier.fillMaxHeight(),
         ) {
             // habits
-            items(state.habitsWithAnalytics, key = { it.habit.id }) { habitWithAnalytics ->
+            itemsIndexed(state.habitsWithAnalytics, key = { _, it -> it.habit.id }) {
+                index,
+                habitWithAnalytics ->
                 ReorderableItem(reorderableListState, key = habitWithAnalytics.habit.id) {
-                    val cardCorners by animateDpAsState(targetValue = if (!it) 32.dp else 16.dp)
+                    val shape =
+                        when {
+                            state.habitsWithAnalytics.size == 1 -> detachedItemShape(radius = 28)
+                            index == 0 -> leadingItemShape(topRadius = 28)
+                            index == state.habitsWithAnalytics.size - 1 ->
+                                endItemShape(bottomRadius = 28)
+                            else -> middleItemShape()
+                        }
 
                     HabitCard(
                         habitWithAnalytics = habitWithAnalytics,
@@ -101,7 +112,7 @@ fun HabitsList(
                                     ),
                             )
                         },
-                        shape = RoundedCornerShape(cardCorners),
+                        shape = shape,
                         compactView = state.compactHabitView,
                         analyticsEnabled =
                             state.analyticsHabitId != habitWithAnalytics.habit.id ||
