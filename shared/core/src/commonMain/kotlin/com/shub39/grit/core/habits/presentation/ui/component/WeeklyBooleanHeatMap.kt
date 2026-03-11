@@ -165,8 +165,10 @@ fun WeeklyBooleanHeatMap(
                         }
                     },
                     dayContent = { day, _ ->
+                        if (day.date > today) return@HeatMapCalendar
+
                         val done = day.date in doneDates
-                        val validDay = day.date <= today && day.date.dayOfWeek in habit.days
+                        val validDay = day.date.dayOfWeek in habit.days
 
                         Box(
                             modifier =

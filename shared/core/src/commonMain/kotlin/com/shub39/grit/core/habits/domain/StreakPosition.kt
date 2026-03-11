@@ -41,20 +41,28 @@ fun calendarMapStreakShape(
 
         StreakPosition.MIDDLE ->
             if (isFirstDayOfWeek) {
-                RoundedCornerShape(topStart = 20.dp, bottomStart = 20.dp)
+                RoundedCornerShape(topStart = 4.dp, bottomStart = 4.dp)
             } else if (isLastDayOfWeek) {
-                RoundedCornerShape(bottomEnd = 20.dp, topEnd = 20.dp)
+                RoundedCornerShape(bottomEnd = 4.dp, topEnd = 4.dp)
             } else RoundedCornerShape(0.dp)
 
         StreakPosition.START ->
-            if (isLastDayOfWeek) CircleShape
+            if (isLastDayOfWeek) RoundedCornerShape(topStart = 20.dp, bottomStart = 20.dp, topEnd = 4.dp, bottomEnd = 4.dp)
             else RoundedCornerShape(topStart = 20.dp, bottomStart = 20.dp)
 
         StreakPosition.END ->
-            if (isFirstDayOfWeek) CircleShape
+            if (isFirstDayOfWeek) RoundedCornerShape(topEnd = 20.dp, bottomEnd = 20.dp, topStart = 4.dp, bottomStart = 4.dp)
             else RoundedCornerShape(topEnd = 20.dp, bottomEnd = 20.dp)
     }.let {
-        if (isFirstDayOfMonth) {
+        if (streakPosition == StreakPosition.MIDDLE && isFirstDayOfMonth) {
+            it.copy(topStart = CornerSize(4.dp), bottomStart = CornerSize(4.dp))
+        } else if (streakPosition == StreakPosition.MIDDLE && isLastDayOfMonth) {
+            it.copy(topEnd = CornerSize(4.dp), bottomEnd = CornerSize(4.dp))
+        } else if (streakPosition == StreakPosition.START && isLastDayOfMonth) {
+            it.copy(topEnd = CornerSize(4.dp), bottomEnd = CornerSize(4.dp))
+        } else if (streakPosition == StreakPosition.END && isFirstDayOfMonth) {
+            it.copy(topStart = CornerSize(4.dp), bottomStart = CornerSize(4.dp))
+        } else if (isFirstDayOfMonth) {
             it.copy(topStart = CornerSize(20.dp), bottomStart = CornerSize(20.dp))
         } else if (isLastDayOfMonth) {
             it.copy(topEnd = CornerSize(20.dp), bottomEnd = CornerSize(20.dp))
