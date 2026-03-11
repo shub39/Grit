@@ -17,7 +17,6 @@
 package com.shub39.grit.core.habits.domain
 
 import androidx.compose.foundation.shape.CircleShape
-import androidx.compose.foundation.shape.CornerSize
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.ui.graphics.Shape
 import androidx.compose.ui.unit.dp
@@ -36,38 +35,28 @@ fun calendarMapStreakShape(
     isFirstDayOfMonth: Boolean,
     isLastDayOfMonth: Boolean,
 ): Shape {
-    return when (streakPosition) {
-        StreakPosition.ISOLATED -> CircleShape
+    if (streakPosition == StreakPosition.ISOLATED) return CircleShape
 
-        StreakPosition.MIDDLE ->
-            if (isFirstDayOfWeek) {
-                RoundedCornerShape(topStart = 4.dp, bottomStart = 4.dp)
-            } else if (isLastDayOfWeek) {
-                RoundedCornerShape(bottomEnd = 4.dp, topEnd = 4.dp)
-            } else RoundedCornerShape(0.dp)
-
-        StreakPosition.START ->
-            if (isLastDayOfWeek) RoundedCornerShape(topStart = 20.dp, bottomStart = 20.dp, topEnd = 4.dp, bottomEnd = 4.dp)
-            else RoundedCornerShape(topStart = 20.dp, bottomStart = 20.dp)
-
-        StreakPosition.END ->
-            if (isFirstDayOfWeek) RoundedCornerShape(topEnd = 20.dp, bottomEnd = 20.dp, topStart = 4.dp, bottomStart = 4.dp)
-            else RoundedCornerShape(topEnd = 20.dp, bottomEnd = 20.dp)
-    }.let {
-        if (streakPosition == StreakPosition.MIDDLE && isFirstDayOfMonth) {
-            it.copy(topStart = CornerSize(4.dp), bottomStart = CornerSize(4.dp))
-        } else if (streakPosition == StreakPosition.MIDDLE && isLastDayOfMonth) {
-            it.copy(topEnd = CornerSize(4.dp), bottomEnd = CornerSize(4.dp))
-        } else if (streakPosition == StreakPosition.START && isLastDayOfMonth) {
-            it.copy(topEnd = CornerSize(4.dp), bottomEnd = CornerSize(4.dp))
-        } else if (streakPosition == StreakPosition.END && isFirstDayOfMonth) {
-            it.copy(topStart = CornerSize(4.dp), bottomStart = CornerSize(4.dp))
-        } else if (isFirstDayOfMonth) {
-            it.copy(topStart = CornerSize(20.dp), bottomStart = CornerSize(20.dp))
-        } else if (isLastDayOfMonth) {
-            it.copy(topEnd = CornerSize(20.dp), bottomEnd = CornerSize(20.dp))
-        } else it
+    // Calculate left-side corners (topStart, bottomStart)
+    val leftRadius = when {
+        streakPosition == StreakPosition.START -> 20.dp
+        isFirstDayOfWeek || isFirstDayOfMonth -> 4.dp
+        else -> 0.dp
     }
+
+    // Calculate right-side corners (topEnd, bottomEnd)
+    val rightRadius = when {
+        streakPosition == StreakPosition.END -> 20.dp
+        isLastDayOfWeek || isLastDayOfMonth -> 4.dp
+        else -> 0.dp
+    }
+
+    return RoundedCornerShape(
+        topStart = leftRadius,
+        bottomStart = leftRadius,
+        topEnd = rightRadius,
+        bottomEnd = rightRadius
+    )
 }
 
 fun heatMapStreakShape(
@@ -75,22 +64,26 @@ fun heatMapStreakShape(
     isFirstDayOfWeek: Boolean,
     isLastDayOfWeek: Boolean,
 ): Shape {
-    return when (streakPosition) {
-        StreakPosition.ISOLATED -> CircleShape
+    if (streakPosition == StreakPosition.ISOLATED) return CircleShape
 
-        StreakPosition.MIDDLE ->
-            if (isFirstDayOfWeek) {
-                RoundedCornerShape(topStart = 4.dp, topEnd = 4.dp)
-            } else if (isLastDayOfWeek) {
-                RoundedCornerShape(bottomStart = 4.dp, bottomEnd = 4.dp)
-            } else RoundedCornerShape(0.dp)
-
-        StreakPosition.START ->
-            if (isLastDayOfWeek) RoundedCornerShape(bottomStart = 4.dp, bottomEnd = 4.dp, topStart = 20.dp, topEnd = 20.dp)
-            else RoundedCornerShape(topStart = 20.dp, topEnd = 20.dp)
-
-        StreakPosition.END ->
-            if (isFirstDayOfWeek)  RoundedCornerShape(topStart = 4.dp, topEnd = 4.dp, bottomStart = 20.dp, bottomEnd = 20.dp)
-            else RoundedCornerShape(bottomStart = 20.dp, bottomEnd = 20.dp)
+    // Calculate top-side corners (topStart, topEnd)
+    val topRadius = when {
+        streakPosition == StreakPosition.START -> 20.dp
+        isFirstDayOfWeek -> 4.dp
+        else -> 0.dp
     }
+
+    // Calculate bottom-side corners (bottomStart, bottomEnd)
+    val bottomRadius = when {
+        streakPosition == StreakPosition.END -> 20.dp
+        isLastDayOfWeek -> 4.dp
+        else -> 0.dp
+    }
+
+    return RoundedCornerShape(
+        topStart = topRadius,
+        topEnd = topRadius,
+        bottomStart = bottomRadius,
+        bottomEnd = bottomRadius
+    )
 }
