@@ -52,7 +52,7 @@ import androidx.compose.ui.graphics.drawscope.clipRect
 import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.unit.dp
 import com.shub39.grit.core.theme.GritTheme
-import com.shub39.grit.core.theme.flexFontBold
+import com.shub39.grit.core.theme.flexFontRounded
 import com.shub39.grit.core.utils.AllPreviews
 import grit.shared.core.generated.resources.Res
 import grit.shared.core.generated.resources.best_streak
@@ -151,7 +151,7 @@ fun HabitStreakCard(
                         text = currentStreak.toString(),
                         style =
                             MaterialTheme.typography.headlineMedium.copy(
-                                fontFamily = flexFontBold()
+                                fontFamily = flexFontRounded()
                             ),
                         maxLines = 1,
                     )

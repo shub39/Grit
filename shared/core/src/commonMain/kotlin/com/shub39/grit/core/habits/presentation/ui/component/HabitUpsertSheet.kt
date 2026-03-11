@@ -16,13 +16,17 @@
  */
 package com.shub39.grit.core.habits.presentation.ui.component
 
+import androidx.compose.animation.animateContentSize
 import androidx.compose.foundation.background
+import androidx.compose.foundation.basicMarquee
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.imePadding
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
@@ -30,11 +34,13 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonGroupDefaults
+import androidx.compose.material3.Card
+import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.ExperimentalMaterial3ExpressiveApi
 import androidx.compose.material3.FilledTonalIconButton
-import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
+import androidx.compose.material3.ListItem
 import androidx.compose.material3.MaterialShapes
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
@@ -51,26 +57,35 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardCapitalization
-import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.shub39.grit.core.habits.domain.Habit
 import com.shub39.grit.core.shared_ui.GritBottomSheet
 import com.shub39.grit.core.shared_ui.GritTimePicker
+import com.shub39.grit.core.shared_ui.detachedItemShape
+import com.shub39.grit.core.shared_ui.endItemShape
+import com.shub39.grit.core.shared_ui.leadingItemShape
+import com.shub39.grit.core.shared_ui.listItemColors
+import com.shub39.grit.core.shared_ui.middleItemShape
 import com.shub39.grit.core.theme.GritTheme
-import com.shub39.grit.core.theme.flexFontBold
+import com.shub39.grit.core.theme.flexFontEmphasis
+import com.shub39.grit.core.theme.flexFontRounded
 import com.shub39.grit.core.utils.now
 import com.shub39.grit.core.utils.toFormattedString
 import grit.shared.core.generated.resources.Res
+import grit.shared.core.generated.resources.add
 import grit.shared.core.generated.resources.add_habit
 import grit.shared.core.generated.resources.add_reminder
+import grit.shared.core.generated.resources.add_reminder_desc
 import grit.shared.core.generated.resources.alarm
 import grit.shared.core.generated.resources.description
 import grit.shared.core.generated.resources.edit
 import grit.shared.core.generated.resources.edit_habit
 import grit.shared.core.generated.resources.save
+import grit.shared.core.generated.resources.select_days
 import grit.shared.core.generated.resources.title
 import grit.shared.core.generated.resources.too_long
 import grit.shared.core.generated.resources.update_description
@@ -112,8 +127,8 @@ fun HabitUpsertSheetContent(
         modifier = modifier.imePadding(),
     ) {
         Column(
-            horizontalAlignment = Alignment.CenterHorizontally,
             verticalArrangement = Arrangement.spacedBy(8.dp),
+            modifier = Modifier.fillMaxWidth().padding(horizontal = 16.dp),
         ) {
             Box(
                 contentAlignment = Alignment.Center,
@@ -121,11 +136,12 @@ fun HabitUpsertSheetContent(
                     Modifier.size(50.dp)
                         .background(
                             color = MaterialTheme.colorScheme.primaryContainer,
-                            shape = MaterialShapes.VerySunny.toShape(),
+                            shape = MaterialShapes.Pill.toShape(),
                         ),
             ) {
                 Icon(
-                    imageVector = vectorResource(Res.drawable.edit),
+                    imageVector =
+                        vectorResource(if (isEditSheet) Res.drawable.edit else Res.drawable.add),
                     contentDescription = "Edit Habit",
                     tint = MaterialTheme.colorScheme.onPrimaryContainer,
                 )
@@ -136,18 +152,12 @@ fun HabitUpsertSheetContent(
                     stringResource(
                         if (isEditSheet) Res.string.edit_habit else Res.string.add_habit
                     ),
-                style =
-                    MaterialTheme.typography.headlineSmall.copy(
-                        textAlign = TextAlign.Center,
-                        fontFamily = flexFontBold(),
-                    ),
+                style = MaterialTheme.typography.headlineSmall.copy(fontFamily = flexFontEmphasis()),
             )
-
-            HorizontalDivider()
         }
 
         LazyColumn(
-            modifier = Modifier.fillMaxWidth(),
+            modifier = Modifier.fillMaxWidth().clip(MaterialTheme.shapes.large),
             verticalArrangement = Arrangement.spacedBy(8.dp),
             horizontalAlignment = Alignment.CenterHorizontally,
             contentPadding = PaddingValues(16.dp),
@@ -211,94 +221,115 @@ fun HabitUpsertSheetContent(
             }
 
             item {
-                Row(
-                    horizontalArrangement =
-                        Arrangement.spacedBy(ButtonGroupDefaults.ConnectedSpaceBetween)
-                ) {
-                    DayOfWeek.entries.forEach { dayOfWeek ->
-                        ToggleButton(
-                            checked = newHabit.days.contains(dayOfWeek),
-                            onCheckedChange = {
-                                updateHabit(
-                                    newHabit.copy(
-                                        days =
-                                            if (it) {
-                                                newHabit.days + dayOfWeek
-                                            } else {
-                                                newHabit.days - dayOfWeek
-                                            }
+                Spacer(modifier = Modifier.height(4.dp))
+                Column(verticalArrangement = Arrangement.spacedBy(2.dp)) {
+                    Card(
+                        shape =
+                            if (newHabit.days.isEmpty()) detachedItemShape()
+                            else leadingItemShape(),
+                        modifier = Modifier.animateContentSize(),
+                        colors =
+                            CardDefaults.cardColors(
+                                containerColor = MaterialTheme.colorScheme.surfaceContainerHigh
+                            ),
+                    ) {
+                        Column(
+                            modifier = Modifier.padding(16.dp),
+                            verticalArrangement = Arrangement.spacedBy(4.dp),
+                        ) {
+                            Text(text = stringResource(Res.string.select_days))
+
+                            Row(
+                                horizontalArrangement =
+                                    Arrangement.spacedBy(ButtonGroupDefaults.ConnectedSpaceBetween)
+                            ) {
+                                DayOfWeek.entries.forEach { dayOfWeek ->
+                                    ToggleButton(
+                                        checked = newHabit.days.contains(dayOfWeek),
+                                        onCheckedChange = {
+                                            updateHabit(
+                                                newHabit.copy(
+                                                    days =
+                                                        if (it) {
+                                                            newHabit.days + dayOfWeek
+                                                        } else {
+                                                            newHabit.days - dayOfWeek
+                                                        }
+                                                )
+                                            )
+                                        },
+                                        modifier = Modifier.weight(1f),
+                                        colors = ToggleButtonDefaults.tonalToggleButtonColors(),
+                                        content = { Text(text = dayOfWeek.name.take(1)) },
                                     )
+                                }
+                            }
+                        }
+                    }
+
+                    if (newHabit.days.isNotEmpty()) {
+                        ListItem(
+                            colors = listItemColors(),
+                            modifier =
+                                Modifier.clip(
+                                    if (newHabit.reminder) middleItemShape() else endItemShape()
+                                ),
+                            headlineContent = {
+                                Text(text = stringResource(Res.string.add_reminder))
+                            },
+                            supportingContent = {
+                                Text(
+                                    text = stringResource(Res.string.add_reminder_desc),
+                                    maxLines = 1,
+                                    modifier = Modifier.basicMarquee(),
                                 )
                             },
-                            modifier = Modifier.weight(1f),
-                            colors = ToggleButtonDefaults.tonalToggleButtonColors(),
-                            shapes =
-                                when (dayOfWeek) {
-                                    DayOfWeek.MONDAY ->
-                                        ButtonGroupDefaults.connectedLeadingButtonShapes()
-                                    DayOfWeek.SUNDAY ->
-                                        ButtonGroupDefaults.connectedTrailingButtonShapes()
-                                    else -> ButtonGroupDefaults.connectedMiddleButtonShapes()
-                                },
-                            content = { Text(text = dayOfWeek.name.take(1)) },
+                            leadingContent = {
+                                Icon(
+                                    imageVector = vectorResource(Res.drawable.alarm),
+                                    contentDescription = "Alarm Icon",
+                                )
+                            },
+                            trailingContent = {
+                                Switch(
+                                    checked = newHabit.reminder,
+                                    onCheckedChange = { checked ->
+                                        if (checked) {
+                                            if (notificationPermission) {
+                                                updateHabit(newHabit.copy(reminder = true))
+                                            } else {
+                                                onRequestPermission()
+                                            }
+                                        } else {
+                                            updateHabit(newHabit.copy(reminder = false))
+                                        }
+                                    },
+                                )
+                            },
                         )
-                    }
-                }
-            }
 
-            item {
-                Row(
-                    modifier = Modifier.padding(vertical = 8.dp).fillMaxWidth(),
-                    verticalAlignment = Alignment.CenterVertically,
-                ) {
-                    Text(
-                        text = stringResource(Res.string.add_reminder),
-                        style =
-                            MaterialTheme.typography.titleLarge.copy(fontFamily = flexFontBold(0f)),
-                        modifier = Modifier.weight(1f),
-                    )
-
-                    Switch(
-                        checked = newHabit.reminder,
-                        onCheckedChange = { checked ->
-                            if (checked) {
-                                if (notificationPermission) {
-                                    updateHabit(newHabit.copy(reminder = true))
-                                } else {
-                                    onRequestPermission()
-                                }
-                            } else {
-                                updateHabit(newHabit.copy(reminder = false))
-                            }
-                        },
-                    )
-                }
-
-                if (newHabit.reminder) {
-                    Row(
-                        modifier = Modifier.fillMaxWidth(),
-                        verticalAlignment = Alignment.CenterVertically,
-                    ) {
-                        Row(
-                            horizontalArrangement = Arrangement.spacedBy(8.dp),
-                            verticalAlignment = Alignment.CenterVertically,
-                            modifier = Modifier.weight(1f),
-                        ) {
-                            Icon(
-                                imageVector = vectorResource(Res.drawable.alarm),
-                                contentDescription = "Alarm Icon",
-                            )
-
-                            Text(
-                                text = newHabit.time.time.toFormattedString(is24Hr = is24Hr),
-                                style = MaterialTheme.typography.titleMedium,
-                            )
-                        }
-
-                        FilledTonalIconButton(onClick = { timePickerDialog = true }) {
-                            Icon(
-                                imageVector = vectorResource(Res.drawable.edit),
-                                contentDescription = "Pick Time",
+                        if (newHabit.reminder) {
+                            ListItem(
+                                colors = listItemColors(),
+                                modifier = Modifier.clip(endItemShape()),
+                                headlineContent = {
+                                    Text(
+                                        text =
+                                            newHabit.time.time.toFormattedString(is24Hr = is24Hr),
+                                        style =
+                                            MaterialTheme.typography.titleLarge.copy(
+                                                fontFamily = flexFontRounded()
+                                            ),
+                                    )
+                                },
+                                trailingContent = {
+                                    FilledTonalIconButton(onClick = { timePickerDialog = true }) {
+                                        Icon(
+                                            imageVector = vectorResource(Res.drawable.edit),
+                                            contentDescription = "Pick Time",
+                                        )
+                                    }
+                                },
                             )
                         }
                     }
@@ -306,28 +337,18 @@ fun HabitUpsertSheetContent(
             }
         }
 
-        Column(
-            horizontalAlignment = Alignment.CenterHorizontally,
-            verticalArrangement = Arrangement.spacedBy(8.dp),
+        Button(
+            onClick = {
+                onUpsertHabit(newHabit)
+                onDismissRequest()
+            },
+            modifier = Modifier.padding(start = 16.dp, end = 16.dp, bottom = 32.dp).fillMaxWidth(),
+            enabled =
+                newHabit.description.length <= 50 &&
+                    newHabit.title.length <= 20 &&
+                    newHabit.title.isNotBlank(),
         ) {
-            HorizontalDivider()
-
-            Button(
-                onClick = {
-                    onUpsertHabit(newHabit)
-                    onDismissRequest()
-                },
-                modifier = Modifier.padding(16.dp).fillMaxWidth(),
-                enabled =
-                    newHabit.description.length <= 50 &&
-                        newHabit.title.length <= 20 &&
-                        newHabit.title.isNotBlank(),
-            ) {
-                Text(
-                    text =
-                        stringResource(if (isEditSheet) Res.string.save else Res.string.add_habit)
-                )
-            }
+            Text(text = stringResource(if (isEditSheet) Res.string.save else Res.string.add_habit))
         }
 
         if (timePickerDialog) {
