@@ -30,7 +30,6 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.windowsizeclass.WindowWidthSizeClass
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import com.shub39.grit.core.habits.domain.Habit
@@ -88,7 +87,8 @@ fun HabitsList(
                     val completed = state.completedHabitIds.contains(habitWithAnalytics.habit.id)
                     val shape =
                         when {
-                            state.habitsWithAnalytics.size == 1 || !completed -> detachedItemShape(radius = 28)
+                            state.habitsWithAnalytics.size == 1 || !completed ->
+                                detachedItemShape(radius = 28)
                             index == 0 -> leadingItemShape(topRadius = 28, bottomRadius = 8)
                             index == state.habitsWithAnalytics.size - 1 ->
                                 endItemShape(bottomRadius = 28, topRadius = 8)

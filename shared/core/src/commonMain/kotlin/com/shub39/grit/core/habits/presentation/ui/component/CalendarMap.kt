@@ -21,15 +21,12 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.PaddingValues
-import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material3.ExperimentalMaterial3ExpressiveApi
-import androidx.compose.material3.Icon
-import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -53,12 +50,11 @@ import com.shub39.grit.core.habits.domain.StreakPosition
 import com.shub39.grit.core.habits.domain.calendarMapStreakShape
 import com.shub39.grit.core.habits.presentation.HabitsAction
 import com.shub39.grit.core.habits.presentation.daysStartingFrom
+import com.shub39.grit.core.shared_ui.endItemShape
 import com.shub39.grit.core.theme.GritTheme
 import com.shub39.grit.core.utils.AllPreviews
 import com.shub39.grit.core.utils.now
 import grit.shared.core.generated.resources.Res
-import grit.shared.core.generated.resources.arrow_back
-import grit.shared.core.generated.resources.arrow_forward
 import grit.shared.core.generated.resources.calendar_month
 import grit.shared.core.generated.resources.monthly_progress
 import kotlin.time.ExperimentalTime
@@ -73,7 +69,6 @@ import kotlinx.datetime.format.MonthNames
 import kotlinx.datetime.format.char
 import kotlinx.datetime.minus
 import kotlinx.datetime.plus
-import org.jetbrains.compose.resources.painterResource
 import org.jetbrains.compose.resources.stringResource
 
 /** Boolean Calendar map highlighting days */
@@ -99,47 +94,26 @@ fun CalendarMap(
     AnalyticsCard(
         title = stringResource(Res.string.monthly_progress),
         icon = Res.drawable.calendar_month,
+        shape = endItemShape(topRadius = 8, bottomRadius = 28),
         canSeeContent = canSeeContent,
         onPlusClick = onNavigateToPaywall,
         header = {
-            Row {
-                IconButton(
-                    onClick = {
-                        scope.launch {
-                            calendarState.animateScrollToMonth(
-                                calendarState.firstVisibleMonth.yearMonth.minus(
-                                    1,
-                                    DateTimeUnit.MONTH,
-                                )
-                            )
-                        }
+            CardArrows(
+                onBackAction = {
+                    scope.launch {
+                        calendarState.animateScrollToMonth(
+                            calendarState.firstVisibleMonth.yearMonth.minus(1, DateTimeUnit.MONTH)
+                        )
                     }
-                ) {
-                    Icon(
-                        painter = painterResource(Res.drawable.arrow_back),
-                        contentDescription = null,
-                        tint = primary,
-                    )
-                }
-                IconButton(
-                    onClick = {
-                        scope.launch {
-                            calendarState.animateScrollToMonth(
-                                calendarState.firstVisibleMonth.yearMonth.plus(
-                                    1,
-                                    DateTimeUnit.MONTH,
-                                )
-                            )
-                        }
+                },
+                onForwardAction = {
+                    scope.launch {
+                        calendarState.animateScrollToMonth(
+                            calendarState.firstVisibleMonth.yearMonth.plus(1, DateTimeUnit.MONTH)
+                        )
                     }
-                ) {
-                    Icon(
-                        painter = painterResource(Res.drawable.arrow_forward),
-                        contentDescription = null,
-                        tint = primary,
-                    )
-                }
-            }
+                },
+            )
         },
         modifier = modifier,
     ) {

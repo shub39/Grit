@@ -26,7 +26,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
-import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.ExperimentalMaterial3ExpressiveApi
@@ -38,10 +38,11 @@ import androidx.compose.material3.toShape
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Shape
 import androidx.compose.ui.unit.dp
 import com.shub39.grit.core.habits.presentation.formatDateWithOrdinal
 import com.shub39.grit.core.theme.GritTheme
-import com.shub39.grit.core.theme.flexFontBold
+import com.shub39.grit.core.theme.flexFontRounded
 import com.shub39.grit.core.utils.AllPreviews
 import com.shub39.grit.core.utils.now
 import grit.shared.core.generated.resources.Res
@@ -56,25 +57,27 @@ import org.jetbrains.compose.resources.vectorResource
 
 @OptIn(ExperimentalMaterial3ExpressiveApi::class)
 @Composable
-fun HabitStartCard(date: LocalDate, startedDaysAgo: Long, modifier: Modifier = Modifier) {
+fun HabitStartCard(
+    date: LocalDate,
+    startedDaysAgo: Long,
+    modifier: Modifier = Modifier,
+    shape: Shape = RoundedCornerShape(28.dp),
+) {
     Card(
-        modifier = modifier,
+        modifier = modifier.fillMaxWidth(),
         colors =
             CardDefaults.cardColors(
-                containerColor = MaterialTheme.colorScheme.secondaryContainer,
-                contentColor = MaterialTheme.colorScheme.onSecondaryContainer,
+                containerColor = MaterialTheme.colorScheme.primaryContainer,
+                contentColor = MaterialTheme.colorScheme.onPrimaryContainer,
             ),
-        shape = CircleShape,
+        shape = shape,
     ) {
-        Row(
-            modifier = Modifier.padding(16.dp).fillMaxWidth(),
-            verticalAlignment = Alignment.CenterVertically,
-        ) {
+        Row(modifier = Modifier.padding(16.dp), verticalAlignment = Alignment.CenterVertically) {
             Box(
                 modifier =
                     Modifier.size(64.dp)
                         .background(
-                            color = MaterialTheme.colorScheme.secondary,
+                            color = MaterialTheme.colorScheme.primary,
                             shape = Sunny.toShape(),
                         ),
                 contentAlignment = Alignment.Center,
@@ -82,7 +85,7 @@ fun HabitStartCard(date: LocalDate, startedDaysAgo: Long, modifier: Modifier = M
                 Icon(
                     imageVector = vectorResource(Res.drawable.flag_circle),
                     contentDescription = "Flag",
-                    tint = MaterialTheme.colorScheme.onSecondary,
+                    tint = MaterialTheme.colorScheme.onPrimary,
                     modifier = Modifier.size(36.dp),
                 )
             }
@@ -97,13 +100,15 @@ fun HabitStartCard(date: LocalDate, startedDaysAgo: Long, modifier: Modifier = M
                 Text(
                     text = formatDateWithOrdinal(date),
                     style =
-                        MaterialTheme.typography.headlineMedium.copy(fontFamily = flexFontBold()),
+                        MaterialTheme.typography.headlineMedium.copy(
+                            fontFamily = flexFontRounded()
+                        ),
                     maxLines = 1,
                     modifier = Modifier.basicMarquee(),
                 )
                 Text(
                     text = stringResource(Res.string.days_ago_format, startedDaysAgo),
-                    style = MaterialTheme.typography.bodyMedium,
+                    style = MaterialTheme.typography.labelMedium,
                 )
             }
         }

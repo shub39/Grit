@@ -66,6 +66,8 @@ import com.shub39.grit.core.habits.presentation.ui.component.WeekDayBreakdown
 import com.shub39.grit.core.habits.presentation.ui.component.WeeklyActivity
 import com.shub39.grit.core.habits.presentation.ui.component.WeeklyBooleanHeatMap
 import com.shub39.grit.core.shared_ui.GritDialog
+import com.shub39.grit.core.shared_ui.endItemShape
+import com.shub39.grit.core.shared_ui.leadingItemShape
 import com.shub39.grit.core.theme.flexFontEmphasis
 import com.shub39.grit.core.theme.flexFontRounded
 import com.shub39.grit.core.utils.LocalWindowSizeClass
@@ -194,47 +196,49 @@ fun AnalyticsPage(
             verticalItemSpacing = 8.dp,
         ) {
             item {
-                HabitStartCard(
-                    date = currentHabit.habit.time.date,
-                    startedDaysAgo = currentHabit.startedDaysAgo,
-                    modifier = Modifier.widthIn(max = maxWidth),
-                )
+                Column(
+                    modifier = Modifier.fillMaxWidth().widthIn(max = maxWidth),
+                    verticalArrangement = Arrangement.spacedBy(2.dp),
+                ) {
+                    HabitStartCard(
+                        date = currentHabit.habit.time.date,
+                        startedDaysAgo = currentHabit.startedDaysAgo,
+                        shape = leadingItemShape(topRadius = 28, bottomRadius = 8),
+                    )
+                    HabitStreakCard(
+                        currentStreak = currentHabit.currentStreak,
+                        bestStreak = currentHabit.bestStreak,
+                        shape = endItemShape(topRadius = 8, bottomRadius = 28),
+                    )
+                }
             }
 
             item {
-                HabitStreakCard(
-                    currentStreak = currentHabit.currentStreak,
-                    bestStreak = currentHabit.bestStreak,
-                    modifier = Modifier.widthIn(max = maxWidth),
-                )
-            }
-
-            item {
-                WeeklyBooleanHeatMap(
-                    heatMapState = heatMapState,
-                    onAction = onAction,
-                    modifier = Modifier.widthIn(max = maxWidth),
-                    habit = currentHabit.habit,
-                    statuses = currentHabit.statuses,
-                )
+                Column(
+                    modifier = Modifier.fillMaxWidth().widthIn(max = maxWidth),
+                    verticalArrangement = Arrangement.spacedBy(2.dp),
+                ) {
+                    WeeklyBooleanHeatMap(
+                        heatMapState = heatMapState,
+                        onAction = onAction,
+                        habit = currentHabit.habit,
+                        statuses = currentHabit.statuses,
+                    )
+                    CalendarMap(
+                        canSeeContent = isUserSubscribed,
+                        onAction = onAction,
+                        calendarState = calendarState,
+                        currentHabit = currentHabit,
+                        primary = primary,
+                        onNavigateToPaywall = onNavigateToPaywall,
+                    )
+                }
             }
 
             item {
                 WeeklyActivity(
                     lineChartData = currentHabit.weeklyComparisonData,
                     modifier = Modifier.widthIn(max = maxWidth),
-                )
-            }
-
-            item {
-                CalendarMap(
-                    canSeeContent = isUserSubscribed,
-                    onAction = onAction,
-                    calendarState = calendarState,
-                    currentHabit = currentHabit,
-                    primary = primary,
-                    modifier = Modifier.widthIn(max = maxWidth),
-                    onNavigateToPaywall = onNavigateToPaywall,
                 )
             }
 

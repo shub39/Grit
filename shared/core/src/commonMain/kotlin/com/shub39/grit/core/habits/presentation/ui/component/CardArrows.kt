@@ -23,7 +23,6 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material3.ButtonGroupDefaults
 import androidx.compose.material3.ExperimentalMaterial3ExpressiveApi
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
@@ -45,20 +44,21 @@ fun CardArrows(
     modifier: Modifier = Modifier,
 ) {
     Row(modifier = modifier, horizontalArrangement = Arrangement.spacedBy(2.dp)) {
+        val leadingShape =
+            RoundedCornerShape(
+                topStart = 20.dp,
+                bottomStart = 20.dp,
+                topEnd = 4.dp,
+                bottomEnd = 4.dp,
+            )
         Box(
             modifier =
                 Modifier.size(42.dp)
                     .background(
                         color = MaterialTheme.colorScheme.secondaryContainer,
-                        shape =
-                            RoundedCornerShape(
-                                topStart = 20.dp,
-                                bottomStart = 20.dp,
-                                topEnd = 4.dp,
-                                bottomEnd = 4.dp,
-                            ),
+                        shape = leadingShape,
                     )
-                    .clip(ButtonGroupDefaults.connectedLeadingButtonShape)
+                    .clip(leadingShape)
                     .clickable { onBackAction() },
             contentAlignment = Alignment.Center,
         ) {
@@ -69,20 +69,21 @@ fun CardArrows(
             )
         }
 
+        val trailingShape =
+            RoundedCornerShape(
+                topStart = 4.dp,
+                bottomStart = 4.dp,
+                topEnd = 20.dp,
+                bottomEnd = 20.dp,
+            )
         Box(
             modifier =
                 Modifier.size(42.dp)
                     .background(
                         color = MaterialTheme.colorScheme.secondaryContainer,
-                        shape =
-                            RoundedCornerShape(
-                                topStart = 4.dp,
-                                bottomStart = 4.dp,
-                                topEnd = 20.dp,
-                                bottomEnd = 20.dp,
-                            ),
+                        shape = trailingShape,
                     )
-                    .clip(ButtonGroupDefaults.connectedTrailingButtonShape)
+                    .clip(trailingShape)
                     .clickable { onForwardAction() },
             contentAlignment = Alignment.Center,
         ) {
