@@ -72,17 +72,17 @@ fun heatMapStreakShape(
 
         StreakPosition.MIDDLE ->
             if (isFirstDayOfWeek) {
-                RoundedCornerShape(topStart = 20.dp, topEnd = 20.dp)
+                RoundedCornerShape(topStart = 4.dp, topEnd = 4.dp)
             } else if (isLastDayOfWeek) {
-                RoundedCornerShape(bottomStart = 20.dp, bottomEnd = 20.dp)
+                RoundedCornerShape(bottomStart = 4.dp, bottomEnd = 4.dp)
             } else RoundedCornerShape(0.dp)
 
         StreakPosition.START ->
-            if (isLastDayOfWeek) CircleShape
+            if (isLastDayOfWeek) RoundedCornerShape(bottomStart = 4.dp, bottomEnd = 4.dp, topStart = 20.dp, topEnd = 20.dp)
             else RoundedCornerShape(topStart = 20.dp, topEnd = 20.dp)
 
         StreakPosition.END ->
-            if (isFirstDayOfWeek) CircleShape
+            if (isFirstDayOfWeek)  RoundedCornerShape(topStart = 4.dp, topEnd = 4.dp, bottomStart = 20.dp, bottomEnd = 20.dp)
             else RoundedCornerShape(bottomStart = 20.dp, bottomEnd = 20.dp)
     }
 }
