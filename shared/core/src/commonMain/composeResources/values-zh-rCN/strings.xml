@@ -122,4 +122,8 @@
     <string name="changelog">更新日志</string>
     <string name="add_reminder">添加提醒</string>
     <string name="save">保存</string>
+    <string name="add_reminder_desc">在选定的日期内通过通知提醒</string>
+    <string name="invalid_date_time">选择的是过去的时间 :')</string>
+    <string name="select_days">选择日期</string>
+    <string name="whats_changed">更新内容</string>
 </resources>
