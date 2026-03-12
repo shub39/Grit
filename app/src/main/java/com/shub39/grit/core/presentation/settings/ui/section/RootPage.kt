@@ -154,7 +154,7 @@ fun RootPage(
                             Icon(
                                 imageVector = vectorResource(Res.drawable.add),
                                 contentDescription = "Grit Plus",
-                                tint = MaterialTheme.colorScheme.onTertiaryContainer,
+                                tint = MaterialTheme.colorScheme.tertiary,
                             )
                         }
 

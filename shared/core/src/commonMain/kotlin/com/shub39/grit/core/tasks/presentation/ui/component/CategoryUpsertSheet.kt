@@ -118,7 +118,7 @@ fun CategoryUpsertSheet(
 
             OutlinedTextField(
                 value = newCategory.name,
-                onValueChange = { newCategory = category.copy(name = it) },
+                onValueChange = { newCategory = newCategory.copy(name = it) },
                 shape = MaterialTheme.shapes.medium,
                 keyboardOptions =
                     Default.copy(
