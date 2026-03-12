@@ -20,9 +20,7 @@ typealias WeeklyComparisonData = List<Double>
 
 typealias WeekDayFrequencyData = Map<String, Int>
 
-/**
- * Grouped model for [habit] and its constituent analytics calculated from [statuses]
- */
+/** Grouped model for [habit] and its constituent analytics calculated from [statuses] */
 data class HabitWithAnalytics(
     val habit: Habit,
     val statuses: List<HabitStatus>,

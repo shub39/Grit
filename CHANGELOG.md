@@ -1,5 +1,9 @@
 # Changelog
 
+## 5.8.0
+- Revamped UI to be more expressive
+- Added ability to view tasks completed in each day in Habit Heat Map
+
 ## 5.7.4
 - Fixed Habit streak widget text clipping on large display size #259
 

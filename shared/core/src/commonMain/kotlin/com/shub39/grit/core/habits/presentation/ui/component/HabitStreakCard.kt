@@ -33,7 +33,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.wrapContentSize
-import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.ExperimentalMaterial3ExpressiveApi
@@ -47,11 +47,12 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.drawWithContent
+import androidx.compose.ui.graphics.Shape
 import androidx.compose.ui.graphics.drawscope.clipRect
 import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.unit.dp
 import com.shub39.grit.core.theme.GritTheme
-import com.shub39.grit.core.theme.flexFontBold
+import com.shub39.grit.core.theme.flexFontRounded
 import com.shub39.grit.core.utils.AllPreviews
 import grit.shared.core.generated.resources.Res
 import grit.shared.core.generated.resources.best_streak
@@ -62,7 +63,12 @@ import org.jetbrains.compose.resources.vectorResource
 
 @OptIn(ExperimentalMaterial3ExpressiveApi::class)
 @Composable
-fun HabitStreakCard(currentStreak: Int, bestStreak: Int, modifier: Modifier = Modifier) {
+fun HabitStreakCard(
+    currentStreak: Int,
+    bestStreak: Int,
+    shape: Shape = RoundedCornerShape(28.dp),
+    modifier: Modifier = Modifier,
+) {
     val daysLeft by
         animateFloatAsState(
             targetValue =
@@ -90,10 +96,10 @@ fun HabitStreakCard(currentStreak: Int, bestStreak: Int, modifier: Modifier = Mo
         modifier = modifier,
         colors =
             CardDefaults.cardColors(
-                containerColor = MaterialTheme.colorScheme.tertiaryContainer.copy(alpha = 0.8f),
-                contentColor = MaterialTheme.colorScheme.onTertiaryContainer,
+                containerColor = MaterialTheme.colorScheme.primaryContainer.copy(alpha = 0.8f),
+                contentColor = MaterialTheme.colorScheme.onPrimaryContainer,
             ),
-        shape = CircleShape,
+        shape = shape,
     ) {
         Box {
             Box(
@@ -104,7 +110,7 @@ fun HabitStreakCard(currentStreak: Int, bestStreak: Int, modifier: Modifier = Mo
 
                             clipRect(right = width) { this@drawWithContent.drawContent() }
                         }
-                        .background(MaterialTheme.colorScheme.tertiaryContainer)
+                        .background(MaterialTheme.colorScheme.primaryContainer)
             )
 
             Row(
@@ -121,7 +127,7 @@ fun HabitStreakCard(currentStreak: Int, bestStreak: Int, modifier: Modifier = Mo
                                     } else Modifier
                                 )
                                 .background(
-                                    color = MaterialTheme.colorScheme.tertiary,
+                                    color = MaterialTheme.colorScheme.primary,
                                     shape = VerySunny.toShape(),
                                 )
                     )
@@ -129,7 +135,7 @@ fun HabitStreakCard(currentStreak: Int, bestStreak: Int, modifier: Modifier = Mo
                     Icon(
                         imageVector = vectorResource(Res.drawable.heat),
                         contentDescription = "Flag",
-                        tint = MaterialTheme.colorScheme.onTertiary,
+                        tint = MaterialTheme.colorScheme.onPrimary,
                         modifier = Modifier.size(36.dp),
                     )
                 }
@@ -145,7 +151,7 @@ fun HabitStreakCard(currentStreak: Int, bestStreak: Int, modifier: Modifier = Mo
                         text = currentStreak.toString(),
                         style =
                             MaterialTheme.typography.headlineMedium.copy(
-                                fontFamily = flexFontBold()
+                                fontFamily = flexFontRounded()
                             ),
                         maxLines = 1,
                     )

@@ -16,8 +16,10 @@
  */
 package com.shub39.grit.core.presentation.settings.ui.section
 
+import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
@@ -26,8 +28,10 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -35,10 +39,12 @@ import androidx.compose.material3.ExperimentalMaterial3ExpressiveApi
 import androidx.compose.material3.Icon
 import androidx.compose.material3.LargeFlexibleTopAppBar
 import androidx.compose.material3.ListItem
+import androidx.compose.material3.MaterialShapes
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Switch
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBarDefaults
+import androidx.compose.material3.toShape
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Alignment
@@ -52,12 +58,11 @@ import com.shub39.grit.core.presentation.getRandomLine
 import com.shub39.grit.core.presentation.settings.SettingsAction
 import com.shub39.grit.core.presentation.settings.SettingsState
 import com.shub39.grit.core.presentation.settings.ui.component.AboutApp
-import com.shub39.grit.core.presentation.settings.ui.component.detachedItemShape
-import com.shub39.grit.core.presentation.settings.ui.component.endItemShape
-import com.shub39.grit.core.presentation.settings.ui.component.leadingItemShape
-import com.shub39.grit.core.presentation.settings.ui.component.listItemColors
-import com.shub39.grit.core.presentation.settings.ui.component.middleItemShape
-import com.shub39.grit.core.theme.flexFontBold
+import com.shub39.grit.core.shared_ui.detachedItemShape
+import com.shub39.grit.core.shared_ui.endItemShape
+import com.shub39.grit.core.shared_ui.leadingItemShape
+import com.shub39.grit.core.shared_ui.listItemColors
+import com.shub39.grit.core.shared_ui.middleItemShape
 import com.shub39.grit.core.theme.flexFontEmphasis
 import com.shub39.grit.core.theme.flexFontRounded
 import grit.shared.core.generated.resources.Res
@@ -126,7 +131,7 @@ fun RootPage(
                 Card(
                     onClick = onNavigateToPaywall,
                     modifier = Modifier.padding(top = 16.dp),
-                    shape = MaterialTheme.shapes.extraLarge,
+                    shape = RoundedCornerShape(1000.dp),
                     colors =
                         CardDefaults.cardColors(
                             containerColor = MaterialTheme.colorScheme.tertiary,
@@ -134,13 +139,24 @@ fun RootPage(
                         ),
                 ) {
                     Row(
-                        modifier = Modifier.padding(16.dp).fillMaxWidth(),
+                        modifier = Modifier.padding(12.dp).fillMaxWidth(),
                         verticalAlignment = Alignment.CenterVertically,
                     ) {
-                        Icon(
-                            imageVector = vectorResource(Res.drawable.add),
-                            contentDescription = "Grit Plus",
-                        )
+                        Box(
+                            contentAlignment = Alignment.Center,
+                            modifier =
+                                Modifier.size(48.dp)
+                                    .background(
+                                        color = MaterialTheme.colorScheme.onTertiary,
+                                        shape = MaterialShapes.Sunny.toShape(),
+                                    ),
+                        ) {
+                            Icon(
+                                imageVector = vectorResource(Res.drawable.add),
+                                contentDescription = "Grit Plus",
+                                tint = MaterialTheme.colorScheme.tertiary,
+                            )
+                        }
 
                         Spacer(modifier = Modifier.width(8.dp))
 
@@ -148,7 +164,7 @@ fun RootPage(
                             text = stringResource(Res.string.grit_plus),
                             style =
                                 MaterialTheme.typography.headlineSmall.copy(
-                                    fontFamily = flexFontBold()
+                                    fontFamily = flexFontEmphasis()
                                 ),
                         )
 

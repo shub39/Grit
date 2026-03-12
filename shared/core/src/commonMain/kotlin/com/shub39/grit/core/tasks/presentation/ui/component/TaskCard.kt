@@ -28,6 +28,7 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.ExperimentalMaterial3ExpressiveApi
@@ -38,12 +39,12 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Shape
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.shub39.grit.core.tasks.domain.Task
-import com.shub39.grit.core.theme.flexFontRounded
 import com.shub39.grit.core.utils.toFormattedString
 import grit.shared.core.generated.resources.Res
 import grit.shared.core.generated.resources.alarm
@@ -56,7 +57,8 @@ fun TaskCard(
     dragState: Boolean = false,
     reorderIcon: @Composable () -> Unit,
     is24Hr: Boolean,
-    modifier: Modifier,
+    modifier: Modifier = Modifier,
+    shape: Shape = RoundedCornerShape(4.dp),
 ) {
     val cardContent by
         animateColorAsState(
@@ -79,7 +81,7 @@ fun TaskCard(
     val cardColors =
         CardDefaults.cardColors(containerColor = cardContainer, contentColor = cardContent)
 
-    Card(modifier = modifier.animateContentSize(), colors = cardColors) {
+    Card(modifier = modifier.animateContentSize(), colors = cardColors, shape = shape) {
         Row(
             verticalAlignment = Alignment.CenterVertically,
             modifier = Modifier.fillMaxWidth().padding(16.dp),
@@ -99,7 +101,6 @@ fun TaskCard(
 
                 if (task.reminder != null) {
                     Row(
-                        modifier = Modifier.padding(vertical = 4.dp),
                         verticalAlignment = Alignment.CenterVertically,
                         horizontalArrangement = Arrangement.spacedBy(4.dp),
                     ) {
@@ -113,8 +114,8 @@ fun TaskCard(
                             text = task.reminder.toFormattedString(is24Hr),
                             style =
                                 MaterialTheme.typography.labelSmall.copy(
-                                    fontSize = 11.sp,
-                                    fontFamily = flexFontRounded(),
+                                    fontSize = 12.sp,
+                                    fontWeight = FontWeight.Light,
                                 ),
                         )
                     }

@@ -16,16 +16,16 @@
  */
 package com.shub39.grit.core.presentation.settings.ui.component
 
+import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.FlowRow
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.material3.Button
-import androidx.compose.material3.ButtonDefaults
+import androidx.compose.foundation.layout.width
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.Icon
@@ -35,10 +35,15 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.platform.LocalUriHandler
 import androidx.compose.ui.unit.dp
 import com.shub39.grit.BuildConfig
+import com.shub39.grit.core.shared_ui.endItemShape
+import com.shub39.grit.core.shared_ui.leadingItemShape
+import com.shub39.grit.core.shared_ui.middleItemShape
 import com.shub39.grit.core.theme.flexFontEmphasis
+import com.shub39.grit.core.theme.flexFontRounded
 import grit.shared.core.generated.resources.Res
 import grit.shared.core.generated.resources.bmc
 import grit.shared.core.generated.resources.buymeacoffee
@@ -63,12 +68,6 @@ fun AboutApp() {
             ),
         shape = MaterialTheme.shapes.extraLarge,
     ) {
-        val buttonColors =
-            ButtonDefaults.buttonColors(
-                containerColor = MaterialTheme.colorScheme.onPrimaryContainer,
-                contentColor = MaterialTheme.colorScheme.primaryContainer,
-            )
-
         Row(
             modifier = Modifier.padding(16.dp).fillMaxWidth(),
             verticalAlignment = Alignment.CenterVertically,
@@ -80,7 +79,10 @@ fun AboutApp() {
                     style =
                         MaterialTheme.typography.headlineLarge.copy(fontFamily = flexFontEmphasis()),
                 )
-                Text(text = "${BuildConfig.VERSION_NAME} (${BuildConfig.VERSION_CODE})")
+                Text(
+                    text = "${BuildConfig.VERSION_NAME} (${BuildConfig.VERSION_CODE})",
+                    fontFamily = flexFontRounded(),
+                )
             }
 
             Spacer(modifier = Modifier.weight(1f))
@@ -104,65 +106,98 @@ fun AboutApp() {
             }
         }
 
-        FlowRow(
+        Column(
             modifier = Modifier.padding(start = 16.dp, end = 16.dp, bottom = 16.dp),
-            horizontalArrangement = Arrangement.spacedBy(8.dp),
+            verticalArrangement = Arrangement.spacedBy(2.dp),
         ) {
-            Button(
-                colors = buttonColors,
-                onClick = { uriHandler.openUri("https://buymeacoffee.com/shub39") },
+            Row(
+                modifier =
+                    Modifier.background(
+                            color = MaterialTheme.colorScheme.primary,
+                            shape = leadingItemShape(),
+                        )
+                        .clip(leadingItemShape())
+                        .clickable { uriHandler.openUri("https://buymeacoffee.com/shub39") }
             ) {
                 Row(
-                    horizontalArrangement = Arrangement.spacedBy(8.dp),
+                    modifier = Modifier.fillMaxWidth().padding(16.dp),
+                    horizontalArrangement = Arrangement.Center,
                     verticalAlignment = Alignment.CenterVertically,
                 ) {
                     Icon(
                         imageVector = vectorResource(Res.drawable.buymeacoffee),
                         contentDescription = "Buy me a coffee",
                         modifier = Modifier.size(24.dp),
+                        tint = MaterialTheme.colorScheme.onPrimary,
                     )
-
-                    Text(text = stringResource(Res.string.bmc))
+                    Spacer(modifier = Modifier.width(8.dp))
+                    Text(
+                        text = stringResource(Res.string.bmc),
+                        color = MaterialTheme.colorScheme.onPrimary,
+                        fontFamily = flexFontRounded(),
+                    )
                 }
             }
 
-            Button(
-                onClick = { uriHandler.openUri("https://hosted.weblate.org/engage/grit/") },
-                colors = buttonColors,
+            Row(
+                modifier =
+                    Modifier.background(
+                            color = MaterialTheme.colorScheme.primary,
+                            shape = middleItemShape(),
+                        )
+                        .clip(middleItemShape())
+                        .clickable { uriHandler.openUri("https://hosted.weblate.org/engage/grit/") }
             ) {
                 Row(
-                    horizontalArrangement = Arrangement.spacedBy(8.dp),
+                    modifier = Modifier.fillMaxWidth().padding(16.dp),
+                    horizontalArrangement = Arrangement.Center,
                     verticalAlignment = Alignment.CenterVertically,
                 ) {
                     Icon(
                         imageVector = vectorResource(Res.drawable.translate),
                         contentDescription = "Translate",
                         modifier = Modifier.size(24.dp),
+                        tint = MaterialTheme.colorScheme.onPrimary,
                     )
-
-                    Text(text = stringResource(Res.string.translate))
+                    Spacer(modifier = Modifier.width(8.dp))
+                    Text(
+                        text = stringResource(Res.string.translate),
+                        color = MaterialTheme.colorScheme.onPrimary,
+                        fontFamily = flexFontRounded(),
+                    )
                 }
             }
 
-            Button(
-                colors = buttonColors,
-                onClick = {
-                    uriHandler.openUri(
-                        "https://play.google.com/store/apps/details?id=com.shub39.grit"
-                    )
-                },
+            Row(
+                modifier =
+                    Modifier.background(
+                            color = MaterialTheme.colorScheme.primary,
+                            shape = endItemShape(),
+                        )
+                        .clip(endItemShape())
+                        .clickable {
+                            uriHandler.openUri(
+                                "https://play.google.com/store/apps/details?id=com.shub39.grit"
+                            )
+                        }
             ) {
                 Row(
-                    horizontalArrangement = Arrangement.spacedBy(8.dp),
+                    modifier = Modifier.fillMaxWidth().padding(16.dp),
+                    horizontalArrangement = Arrangement.Center,
                     verticalAlignment = Alignment.CenterVertically,
                 ) {
                     Icon(
                         imageVector = vectorResource(Res.drawable.playstore),
                         contentDescription = "Rate On Google Play",
-                        modifier = Modifier.size(20.dp),
+                        modifier = Modifier.size(24.dp),
+                        tint = MaterialTheme.colorScheme.onPrimary,
                     )
-
-                    Text(text = stringResource(Res.string.rate_on_play))
+                    Spacer(modifier = Modifier.width(8.dp))
+                    Text(
+                        text = stringResource(Res.string.rate_on_play),
+                        color = MaterialTheme.colorScheme.onPrimary,
+                        fontFamily = flexFontRounded(),
+                    )
                 }
             }
         }

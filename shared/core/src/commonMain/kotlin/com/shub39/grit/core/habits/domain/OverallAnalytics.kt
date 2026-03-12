@@ -25,4 +25,5 @@ typealias HeatMapData = Map<LocalDate, Int>
 data class OverallAnalytics(
     val heatMapData: HeatMapData = emptyMap(),
     val weekDayFrequencyData: WeekDayFrequencyData = emptyMap(),
+    val completedHabits: List<String> = emptyList(),
 )

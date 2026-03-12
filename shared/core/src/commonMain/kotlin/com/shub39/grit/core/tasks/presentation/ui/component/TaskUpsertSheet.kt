@@ -23,12 +23,10 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.FlowRow
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.imePadding
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
@@ -38,9 +36,9 @@ import androidx.compose.material3.DatePicker
 import androidx.compose.material3.DatePickerDialog
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.ExperimentalMaterial3ExpressiveApi
-import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
+import androidx.compose.material3.ListItem
 import androidx.compose.material3.MaterialShapes
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedButton
@@ -61,19 +59,20 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardCapitalization
-import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import com.shub39.grit.core.shared_ui.GritBottomSheet
 import com.shub39.grit.core.shared_ui.GritTimePicker
+import com.shub39.grit.core.shared_ui.detachedItemShape
+import com.shub39.grit.core.shared_ui.listItemColors
 import com.shub39.grit.core.tasks.domain.Category
 import com.shub39.grit.core.tasks.domain.Task
-import com.shub39.grit.core.theme.flexFontBold
-import com.shub39.grit.core.theme.flexFontRounded
+import com.shub39.grit.core.theme.flexFontEmphasis
 import com.shub39.grit.core.utils.now
 import com.shub39.grit.core.utils.toFormattedString
 import grit.shared.core.generated.resources.Res
@@ -145,22 +144,22 @@ fun TaskUpsertSheetContent(
         onDismissRequest = onDismissRequest,
     ) {
         Column(
-            horizontalAlignment = Alignment.CenterHorizontally,
             verticalArrangement = Arrangement.spacedBy(8.dp),
+            modifier = Modifier.fillMaxWidth().padding(horizontal = 16.dp),
         ) {
             Box(
                 contentAlignment = Alignment.Center,
                 modifier =
-                    Modifier.size(50.dp)
+                    Modifier.size(48.dp)
                         .background(
                             color = MaterialTheme.colorScheme.primaryContainer,
-                            shape = MaterialShapes.VerySunny.toShape(),
+                            shape = MaterialShapes.Pill.toShape(),
                         ),
             ) {
                 Icon(
                     imageVector =
                         vectorResource(if (isEditSheet) Res.drawable.edit else Res.drawable.add),
-                    contentDescription = "Upsert",
+                    contentDescription = null,
                     tint = MaterialTheme.colorScheme.onPrimaryContainer,
                 )
             }
@@ -168,35 +167,22 @@ fun TaskUpsertSheetContent(
             Text(
                 text =
                     stringResource(if (isEditSheet) Res.string.edit_task else Res.string.add_task),
-                style =
-                    MaterialTheme.typography.headlineSmall.copy(
-                        textAlign = TextAlign.Center,
-                        fontFamily = flexFontBold(),
-                    ),
-                modifier = Modifier.padding(horizontal = 16.dp),
+                style = MaterialTheme.typography.headlineSmall.copy(fontFamily = flexFontEmphasis()),
             )
-
-            HorizontalDivider()
         }
 
         LazyColumn(
-            modifier = Modifier.fillMaxWidth(),
+            modifier = Modifier.fillMaxWidth().clip(MaterialTheme.shapes.large),
             verticalArrangement = Arrangement.spacedBy(8.dp),
-            horizontalAlignment = Alignment.CenterHorizontally,
-            contentPadding = PaddingValues(16.dp),
+            contentPadding = PaddingValues(horizontal = 16.dp),
         ) {
             item {
-                FlowRow(
-                    horizontalArrangement = Arrangement.Center,
-                    verticalArrangement = Arrangement.Center,
-                    itemVerticalAlignment = Alignment.CenterVertically,
-                ) {
+                FlowRow(horizontalArrangement = Arrangement.spacedBy(2.dp)) {
                     categories.forEach { category ->
                         ToggleButton(
                             checked = category.id == newTask.categoryId,
                             onCheckedChange = { newTask = newTask.copy(categoryId = category.id) },
                             colors = ToggleButtonDefaults.tonalToggleButtonColors(),
-                            modifier = Modifier.padding(horizontal = 4.dp),
                             content = { Text(category.name) },
                         )
                     }
@@ -217,6 +203,7 @@ fun TaskUpsertSheetContent(
                     value = newTask.title,
                     onValueChange = { newTask = newTask.copy(title = it) },
                     shape = MaterialTheme.shapes.medium,
+                    placeholder = { Text(text = stringResource(Res.string.add_task)) },
                     keyboardOptions =
                         KeyboardOptions.Default.copy(
                             capitalization = KeyboardCapitalization.Sentences,
@@ -231,62 +218,44 @@ fun TaskUpsertSheetContent(
             }
 
             item {
-                Row(
-                    modifier = Modifier.fillMaxWidth(),
-                    verticalAlignment = Alignment.CenterVertically,
-                ) {
-                    Icon(
-                        imageVector = vectorResource(Res.drawable.alarm),
-                        contentDescription = null,
-                    )
-                    Spacer(modifier = Modifier.width(8.dp))
-
-                    Column(modifier = Modifier.weight(1f)) {
-                        Text(
-                            text = stringResource(Res.string.add_reminder),
-                            style =
-                                MaterialTheme.typography.titleLarge.copy(
-                                    fontFamily = flexFontBold(0f)
-                                ),
+                ListItem(
+                    modifier = Modifier.clip(detachedItemShape()),
+                    colors = listItemColors(),
+                    leadingContent = {
+                        Icon(
+                            imageVector = vectorResource(Res.drawable.alarm),
+                            contentDescription = null,
                         )
-
-                        if (newTask.reminder != null) {
-                            Text(
-                                text = newTask.reminder!!.toFormattedString(is24Hr = is24Hr),
-                                style =
-                                    MaterialTheme.typography.bodySmall.copy(
-                                        fontFamily = flexFontRounded()
-                                    ),
-                            )
+                    },
+                    headlineContent = { Text(text = stringResource(Res.string.add_reminder)) },
+                    supportingContent = {
+                        Column {
+                            if (newTask.reminder != null)
+                                Text(text = newTask.reminder!!.toFormattedString(is24Hr = is24Hr))
+                            if (!isValidDateTime)
+                                Text(
+                                    text = stringResource(Res.string.invalid_date_time),
+                                    color = MaterialTheme.colorScheme.error,
+                                )
                         }
-
-                        if (!isValidDateTime) {
-                            Text(
-                                text = stringResource(Res.string.invalid_date_time),
-                                style =
-                                    MaterialTheme.typography.bodySmall.copy(
-                                        fontFamily = flexFontRounded(),
-                                        color = MaterialTheme.colorScheme.error,
-                                    ),
-                            )
-                        }
-                    }
-
-                    Switch(
-                        checked = newTask.reminder != null,
-                        onCheckedChange = { checked ->
-                            if (checked) {
-                                if (notificationPermission) {
-                                    updateDateTimePickerVisibility(true)
+                    },
+                    trailingContent = {
+                        Switch(
+                            checked = newTask.reminder != null,
+                            onCheckedChange = { checked ->
+                                if (checked) {
+                                    if (notificationPermission) {
+                                        updateDateTimePickerVisibility(true)
+                                    } else {
+                                        onPermissionRequest()
+                                    }
                                 } else {
-                                    onPermissionRequest()
+                                    newTask = newTask.copy(reminder = null)
                                 }
-                            } else {
-                                newTask = newTask.copy(reminder = null)
-                            }
-                        },
-                    )
-                }
+                            },
+                        )
+                    },
+                )
             }
         }
 
@@ -294,8 +263,6 @@ fun TaskUpsertSheetContent(
             horizontalAlignment = Alignment.CenterHorizontally,
             verticalArrangement = Arrangement.spacedBy(8.dp),
         ) {
-            HorizontalDivider()
-
             Row(
                 modifier = Modifier.padding(start = 16.dp, end = 16.dp, bottom = 32.dp),
                 horizontalArrangement = Arrangement.spacedBy(8.dp),

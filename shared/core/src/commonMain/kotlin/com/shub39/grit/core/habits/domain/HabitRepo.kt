@@ -43,4 +43,6 @@ interface HabitRepo {
     suspend fun insertHabitStatus(habitStatus: HabitStatus)
 
     suspend fun deleteHabitStatus(habitId: Long, date: LocalDate)
+
+    suspend fun getCompletedHabitsForDate(date: LocalDate): List<Habit>
 }

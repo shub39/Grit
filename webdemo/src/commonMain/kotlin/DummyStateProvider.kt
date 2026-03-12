@@ -232,6 +232,8 @@ object DummyStateProvider {
 
             is HabitsAction.OnToggleEditState ->
                 _habitState.update { it.copy(editState = action.pref) }
+
+            else -> {}
         }
     }
 

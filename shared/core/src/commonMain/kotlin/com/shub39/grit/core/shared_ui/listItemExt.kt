@@ -14,7 +14,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
-package com.shub39.grit.core.presentation.settings.ui.component
+package com.shub39.grit.core.shared_ui
 
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.ListItemColors
@@ -32,28 +32,34 @@ fun listItemColors(): ListItemColors {
     return ListItemDefaults.colors(containerColor = MaterialTheme.colorScheme.surfaceContainerHigh)
 }
 
-fun leadingItemShape(): Shape =
+fun leadingItemShape(
+    topRadius: Int = END_CORNER_RADIUS,
+    bottomRadius: Int = CONNECTED_CORNER_RADIUS,
+): Shape =
     RoundedCornerShape(
-        topStart = END_CORNER_RADIUS.dp,
-        topEnd = END_CORNER_RADIUS.dp,
-        bottomEnd = CONNECTED_CORNER_RADIUS.dp,
-        bottomStart = CONNECTED_CORNER_RADIUS.dp,
+        topStart = topRadius.dp,
+        topEnd = topRadius.dp,
+        bottomEnd = bottomRadius.dp,
+        bottomStart = bottomRadius.dp,
     )
 
-fun middleItemShape(): Shape =
+fun middleItemShape(radius: Int = CONNECTED_CORNER_RADIUS): Shape =
     RoundedCornerShape(
-        topStart = CONNECTED_CORNER_RADIUS.dp,
-        topEnd = CONNECTED_CORNER_RADIUS.dp,
-        bottomStart = CONNECTED_CORNER_RADIUS.dp,
-        bottomEnd = CONNECTED_CORNER_RADIUS.dp,
+        topStart = radius.dp,
+        topEnd = radius.dp,
+        bottomStart = radius.dp,
+        bottomEnd = radius.dp,
     )
 
-fun endItemShape(): Shape =
+fun endItemShape(
+    topRadius: Int = CONNECTED_CORNER_RADIUS,
+    bottomRadius: Int = END_CORNER_RADIUS,
+): Shape =
     RoundedCornerShape(
-        topStart = CONNECTED_CORNER_RADIUS.dp,
-        topEnd = CONNECTED_CORNER_RADIUS.dp,
-        bottomEnd = END_CORNER_RADIUS.dp,
-        bottomStart = END_CORNER_RADIUS.dp,
+        topStart = topRadius.dp,
+        topEnd = topRadius.dp,
+        bottomEnd = bottomRadius.dp,
+        bottomStart = bottomRadius.dp,
     )
 
-fun detachedItemShape(): Shape = RoundedCornerShape(END_CORNER_RADIUS.dp)
+fun detachedItemShape(radius: Int = END_CORNER_RADIUS): Shape = RoundedCornerShape(radius.dp)

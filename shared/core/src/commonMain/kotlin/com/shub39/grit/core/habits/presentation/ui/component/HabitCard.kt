@@ -28,9 +28,11 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
@@ -38,6 +40,7 @@ import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.ExperimentalMaterial3ExpressiveApi
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
+import androidx.compose.material3.IconButtonDefaults
 import androidx.compose.material3.ListItem
 import androidx.compose.material3.ListItemDefaults
 import androidx.compose.material3.MaterialTheme
@@ -172,21 +175,22 @@ fun HabitCard(
                     Text(
                         text = habitWithAnalytics.habit.title,
                         maxLines = 1,
-                        style = MaterialTheme.typography.bodyLargeEmphasized,
+                        style =
+                            MaterialTheme.typography.bodyLarge.copy(fontWeight = FontWeight.Bold),
                         modifier = Modifier.basicMarquee(),
                     )
                 }
             },
             supportingContent = {
                 if (habitWithAnalytics.habit.reminder) {
-                    Text(text = habitWithAnalytics.habit.time.time.toFormattedString(is24Hr))
+                    Text(
+                        text = habitWithAnalytics.habit.time.time.toFormattedString(is24Hr),
+                        style = MaterialTheme.typography.labelMedium,
+                    )
                 }
             },
             trailingContent = {
-                Row(
-                    verticalAlignment = Alignment.CenterVertically,
-                    horizontalArrangement = Arrangement.spacedBy(4.dp),
-                ) {
+                Row(verticalAlignment = Alignment.CenterVertically) {
                     Row(
                         verticalAlignment = Alignment.CenterVertically,
                         horizontalArrangement = Arrangement.spacedBy(4.dp),
@@ -199,11 +203,24 @@ fun HabitCard(
                         Text(text = habitWithAnalytics.currentStreak.toString())
                     }
 
+                    Spacer(modifier = Modifier.width(8.dp))
+
                     IconButton(
                         onClick = {
                             action(HabitsAction.PrepareAnalytics(habitWithAnalytics.habit))
                             onNavigateToAnalytics()
                         },
+                        modifier =
+                            Modifier.size(
+                                IconButtonDefaults.smallContainerSize(
+                                    IconButtonDefaults.IconButtonWidthOption.Wide
+                                )
+                            ),
+                        colors =
+                            IconButtonDefaults.iconButtonColors(
+                                containerColor = MaterialTheme.colorScheme.primary,
+                                contentColor = MaterialTheme.colorScheme.onPrimary,
+                            ),
                         enabled = analyticsEnabled,
                     ) {
                         Icon(
@@ -212,7 +229,12 @@ fun HabitCard(
                         )
                     }
 
-                    AnimatedVisibility(visible = editState) { reorderHandle() }
+                    AnimatedVisibility(visible = editState) {
+                        Row {
+                            Spacer(modifier = Modifier.width(8.dp))
+                            reorderHandle()
+                        }
+                    }
                 }
             },
         )
@@ -252,25 +274,29 @@ fun HabitCard(
                                             habitWithAnalytics.statuses.any {
                                                 it.date == weekDay.date.plusDays(1)
                                             }
+                                        val shape =
+                                            when {
+                                                donePrevious && doneAfter ->
+                                                    RoundedCornerShape(0.dp)
+
+                                                donePrevious ->
+                                                    RoundedCornerShape(
+                                                        topEnd = 20.dp,
+                                                        bottomEnd = 20.dp,
+                                                    )
+
+                                                doneAfter ->
+                                                    RoundedCornerShape(
+                                                        topStart = 20.dp,
+                                                        bottomStart = 20.dp,
+                                                    )
+
+                                                else -> RoundedCornerShape(20.dp)
+                                            }
 
                                         Modifier.background(
                                             color = MaterialTheme.colorScheme.primary,
-                                            shape =
-                                                when {
-                                                    donePrevious && doneAfter ->
-                                                        RoundedCornerShape(0.dp)
-                                                    donePrevious ->
-                                                        RoundedCornerShape(
-                                                            topEnd = 1000.dp,
-                                                            bottomEnd = 1000.dp,
-                                                        )
-                                                    doneAfter ->
-                                                        RoundedCornerShape(
-                                                            topStart = 1000.dp,
-                                                            bottomStart = 1000.dp,
-                                                        )
-                                                    else -> CircleShape
-                                                },
+                                            shape = shape,
                                         )
                                     } else Modifier
                                 ),

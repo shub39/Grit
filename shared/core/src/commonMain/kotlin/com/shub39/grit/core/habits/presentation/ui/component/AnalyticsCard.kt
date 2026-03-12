@@ -16,32 +16,31 @@
  */
 package com.shub39.grit.core.habits.presentation.ui.component
 
-import androidx.compose.foundation.background
 import androidx.compose.foundation.basicMarquee
-import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.RowScope
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
 import androidx.compose.material3.Button
 import androidx.compose.material3.Card
 import androidx.compose.material3.ExperimentalMaterial3ExpressiveApi
 import androidx.compose.material3.Icon
-import androidx.compose.material3.MaterialShapes
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
-import androidx.compose.material3.toShape
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.BlurredEdgeTreatment
 import androidx.compose.ui.draw.blur
+import androidx.compose.ui.graphics.Shape
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import com.shub39.grit.core.theme.flexFontRounded
 import com.shub39.grit.core.utils.blurPossible
 import grit.shared.core.generated.resources.Res
@@ -56,41 +55,32 @@ import org.jetbrains.compose.resources.stringResource
 fun AnalyticsCard(
     title: String,
     icon: DrawableResource,
+    shape: Shape = MaterialTheme.shapes.extraLarge,
     modifier: Modifier = Modifier,
     canSeeContent: Boolean = true,
     onPlusClick: () -> Unit = {},
     header: @Composable (RowScope.() -> Unit) = {},
     content: @Composable () -> Unit,
 ) {
-    Card(modifier = modifier, shape = MaterialTheme.shapes.large) {
+    Card(modifier = modifier, shape = shape) {
         Row(
-            modifier = Modifier.padding(start = 16.dp, top = 16.dp, bottom = 8.dp),
-            horizontalArrangement = Arrangement.spacedBy(8.dp),
+            modifier =
+                Modifier.padding(start = 16.dp, end = 8.dp, top = 8.dp, bottom = 8.dp)
+                    .heightIn(min = 40.dp),
             verticalAlignment = Alignment.CenterVertically,
         ) {
-            Box(
-                modifier =
-                    Modifier.size(50.dp)
-                        .background(
-                            color = MaterialTheme.colorScheme.primary,
-                            shape = MaterialShapes.Pill.toShape(),
-                        ),
-                contentAlignment = Alignment.Center,
-            ) {
-                Icon(
-                    painter = painterResource(icon),
-                    contentDescription = null,
-                    tint = MaterialTheme.colorScheme.onPrimary,
-                )
-            }
+            Icon(
+                painter = painterResource(icon),
+                contentDescription = null,
+                tint = MaterialTheme.colorScheme.onSurface,
+            )
+
+            Spacer(modifier = Modifier.width(8.dp))
 
             Text(
                 text = title,
-                style =
-                    MaterialTheme.typography.titleLarge.copy(
-                        fontFamily = flexFontRounded(),
-                        color = MaterialTheme.colorScheme.primary,
-                    ),
+                fontFamily = flexFontRounded(),
+                fontSize = 20.sp,
                 maxLines = 1,
                 overflow = TextOverflow.Ellipsis,
                 modifier = Modifier.weight(1f).basicMarquee(),

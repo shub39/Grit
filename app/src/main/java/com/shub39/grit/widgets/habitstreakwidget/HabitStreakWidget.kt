@@ -220,19 +220,17 @@ private fun Content(
             )
 
             LazyColumn(
-                modifier =
-                    GlanceModifier.fillMaxSize().padding(start = 8.dp, end = 8.dp),
+                modifier = GlanceModifier.fillMaxSize().padding(start = 8.dp, end = 8.dp),
                 horizontalAlignment = Alignment.Start,
             ) {
                 // current streak stat
                 item {
                     Column(
                         modifier =
-                            GlanceModifier
-                                .background(
-                                    imageProvider = ImageProvider(R.drawable.rounded_list_top),
-                                    colorFilter = ColorFilter.tint(GlanceTheme.colors.primary),
-                                )
+                            GlanceModifier.background(
+                                imageProvider = ImageProvider(R.drawable.rounded_list_top),
+                                colorFilter = ColorFilter.tint(GlanceTheme.colors.primary),
+                            )
                     ) {
                         Row(
                             verticalAlignment = Alignment.CenterVertically,
@@ -252,8 +250,8 @@ private fun Content(
                                     Text(
                                         text =
                                             "${habitWithAnalytics.currentStreak} " +
-                                                    context.getString(R.string.day) +
-                                                    " ",
+                                                context.getString(R.string.day) +
+                                                " ",
                                         maxLines = 1,
                                         style =
                                             TextStyle(
@@ -280,8 +278,8 @@ private fun Content(
                                     Text(
                                         text =
                                             "${habitWithAnalytics.currentStreak} " +
-                                                    context.getString(R.string.day) +
-                                                    " ",
+                                                context.getString(R.string.day) +
+                                                " ",
                                         maxLines = 1,
                                         style =
                                             TextStyle(
@@ -314,11 +312,10 @@ private fun Content(
                 item {
                     Column(
                         modifier =
-                            GlanceModifier
-                                .background(
-                                    imageProvider = ImageProvider(R.drawable.widget_list_middle),
-                                    colorFilter = ColorFilter.tint(GlanceTheme.colors.primary),
-                                )
+                            GlanceModifier.background(
+                                imageProvider = ImageProvider(R.drawable.widget_list_middle),
+                                colorFilter = ColorFilter.tint(GlanceTheme.colors.primary),
+                            )
                     ) {
                         Row(
                             verticalAlignment = Alignment.CenterVertically,
@@ -338,8 +335,8 @@ private fun Content(
                                     Text(
                                         text =
                                             "${habitWithAnalytics.bestStreak} " +
-                                                    context.getString(R.string.day) +
-                                                    " ",
+                                                context.getString(R.string.day) +
+                                                " ",
                                         maxLines = 1,
                                         style =
                                             TextStyle(
@@ -366,8 +363,8 @@ private fun Content(
                                     Text(
                                         text =
                                             "${habitWithAnalytics.bestStreak} " +
-                                                    context.getString(R.string.day) +
-                                                    " ",
+                                                context.getString(R.string.day) +
+                                                " ",
                                         maxLines = 1,
                                         style =
                                             TextStyle(
@@ -400,11 +397,10 @@ private fun Content(
                 item {
                     Column(
                         modifier =
-                            GlanceModifier
-                                .background(
-                                    imageProvider = ImageProvider(R.drawable.widget_list_bottom),
-                                    colorFilter = ColorFilter.tint(GlanceTheme.colors.primary),
-                                )
+                            GlanceModifier.background(
+                                imageProvider = ImageProvider(R.drawable.widget_list_bottom),
+                                colorFilter = ColorFilter.tint(GlanceTheme.colors.primary),
+                            )
                     ) {
                         Row(
                             verticalAlignment = Alignment.CenterVertically,
@@ -422,8 +418,7 @@ private fun Content(
 
                                 Row {
                                     Text(
-                                        text =
-                                            "${habitWithAnalytics.startedDaysAgo} ",
+                                        text = "${habitWithAnalytics.startedDaysAgo} ",
                                         maxLines = 1,
                                         style =
                                             TextStyle(
@@ -448,8 +443,7 @@ private fun Content(
 
                                 Column {
                                     Text(
-                                        text =
-                                            "${habitWithAnalytics.startedDaysAgo} ",
+                                        text = "${habitWithAnalytics.startedDaysAgo} ",
                                         maxLines = 1,
                                         style =
                                             TextStyle(

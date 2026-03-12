@@ -55,9 +55,9 @@ import com.shub39.grit.core.domain.backup.ExportState
 import com.shub39.grit.core.domain.backup.RestoreState
 import com.shub39.grit.core.presentation.settings.SettingsAction
 import com.shub39.grit.core.presentation.settings.SettingsState
-import com.shub39.grit.core.presentation.settings.ui.component.endItemShape
-import com.shub39.grit.core.presentation.settings.ui.component.leadingItemShape
-import com.shub39.grit.core.presentation.settings.ui.component.listItemColors
+import com.shub39.grit.core.shared_ui.endItemShape
+import com.shub39.grit.core.shared_ui.leadingItemShape
+import com.shub39.grit.core.shared_ui.listItemColors
 import com.shub39.grit.core.theme.AppTheme
 import com.shub39.grit.core.theme.GritTheme
 import com.shub39.grit.core.theme.Theme

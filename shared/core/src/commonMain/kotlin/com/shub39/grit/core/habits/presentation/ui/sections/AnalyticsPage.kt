@@ -16,14 +16,19 @@
  */
 package com.shub39.grit.core.habits.presentation.ui.sections
 
+import androidx.compose.foundation.background
 import androidx.compose.foundation.basicMarquee
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.widthIn
 import androidx.compose.foundation.lazy.staggeredgrid.LazyVerticalStaggeredGrid
 import androidx.compose.foundation.lazy.staggeredgrid.StaggeredGridCells
@@ -35,22 +40,24 @@ import androidx.compose.material3.FilledIconButton
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.IconButtonShapes
+import androidx.compose.material3.MaterialShapes
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.MediumFlexibleTopAppBar
 import androidx.compose.material3.OutlinedIconButton
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.material3.TopAppBarDefaults
+import androidx.compose.material3.toShape
 import androidx.compose.material3.windowsizeclass.WindowWidthSizeClass
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.input.nestedscroll.nestedScroll
-import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import com.kizitonwose.calendar.compose.heatmapcalendar.rememberHeatMapCalendarState
 import com.kizitonwose.calendar.compose.rememberCalendarState
@@ -66,6 +73,8 @@ import com.shub39.grit.core.habits.presentation.ui.component.WeekDayBreakdown
 import com.shub39.grit.core.habits.presentation.ui.component.WeeklyActivity
 import com.shub39.grit.core.habits.presentation.ui.component.WeeklyBooleanHeatMap
 import com.shub39.grit.core.shared_ui.GritDialog
+import com.shub39.grit.core.shared_ui.endItemShape
+import com.shub39.grit.core.shared_ui.leadingItemShape
 import com.shub39.grit.core.theme.flexFontEmphasis
 import com.shub39.grit.core.theme.flexFontRounded
 import com.shub39.grit.core.utils.LocalWindowSizeClass
@@ -194,47 +203,49 @@ fun AnalyticsPage(
             verticalItemSpacing = 8.dp,
         ) {
             item {
-                HabitStartCard(
-                    date = currentHabit.habit.time.date,
-                    startedDaysAgo = currentHabit.startedDaysAgo,
-                    modifier = Modifier.widthIn(max = maxWidth),
-                )
+                Column(
+                    modifier = Modifier.fillMaxWidth().widthIn(max = maxWidth),
+                    verticalArrangement = Arrangement.spacedBy(2.dp),
+                ) {
+                    HabitStartCard(
+                        date = currentHabit.habit.time.date,
+                        startedDaysAgo = currentHabit.startedDaysAgo,
+                        shape = leadingItemShape(topRadius = 28, bottomRadius = 8),
+                    )
+                    HabitStreakCard(
+                        currentStreak = currentHabit.currentStreak,
+                        bestStreak = currentHabit.bestStreak,
+                        shape = endItemShape(topRadius = 8, bottomRadius = 28),
+                    )
+                }
             }
 
             item {
-                HabitStreakCard(
-                    currentStreak = currentHabit.currentStreak,
-                    bestStreak = currentHabit.bestStreak,
-                    modifier = Modifier.widthIn(max = maxWidth),
-                )
-            }
-
-            item {
-                WeeklyBooleanHeatMap(
-                    heatMapState = heatMapState,
-                    onAction = onAction,
-                    modifier = Modifier.widthIn(max = maxWidth),
-                    habit = currentHabit.habit,
-                    statuses = currentHabit.statuses,
-                )
+                Column(
+                    modifier = Modifier.fillMaxWidth().widthIn(max = maxWidth),
+                    verticalArrangement = Arrangement.spacedBy(2.dp),
+                ) {
+                    WeeklyBooleanHeatMap(
+                        heatMapState = heatMapState,
+                        onAction = onAction,
+                        habit = currentHabit.habit,
+                        statuses = currentHabit.statuses,
+                    )
+                    CalendarMap(
+                        canSeeContent = isUserSubscribed,
+                        onAction = onAction,
+                        calendarState = calendarState,
+                        currentHabit = currentHabit,
+                        primary = primary,
+                        onNavigateToPaywall = onNavigateToPaywall,
+                    )
+                }
             }
 
             item {
                 WeeklyActivity(
                     lineChartData = currentHabit.weeklyComparisonData,
                     modifier = Modifier.widthIn(max = maxWidth),
-                )
-            }
-
-            item {
-                CalendarMap(
-                    canSeeContent = isUserSubscribed,
-                    onAction = onAction,
-                    calendarState = calendarState,
-                    currentHabit = currentHabit,
-                    primary = primary,
-                    modifier = Modifier.widthIn(max = maxWidth),
-                    onNavigateToPaywall = onNavigateToPaywall,
                 )
             }
 
@@ -252,42 +263,60 @@ fun AnalyticsPage(
     // delete dialog
     if (deleteDialog) {
         GritDialog(onDismissRequest = { deleteDialog = false }) {
-            Icon(imageVector = vectorResource(Res.drawable.warning), contentDescription = "Warning")
-
-            Text(
-                text = stringResource(Res.string.delete),
-                textAlign = TextAlign.Center,
-                style = MaterialTheme.typography.titleMedium,
-            )
-
-            Text(text = stringResource(Res.string.delete_warning), textAlign = TextAlign.Center)
-
-            Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.End) {
-                TextButton(
-                    onClick = { deleteDialog = false },
-                    shapes =
-                        ButtonShapes(
-                            shape = MaterialTheme.shapes.extraLarge,
-                            pressedShape = MaterialTheme.shapes.small,
-                        ),
+            Column {
+                Box(
+                    contentAlignment = Alignment.Center,
+                    modifier =
+                        Modifier.size(48.dp)
+                            .background(
+                                color = MaterialTheme.colorScheme.primaryContainer,
+                                shape = MaterialShapes.Pill.toShape(),
+                            ),
                 ) {
-                    Text(stringResource(Res.string.cancel))
+                    Icon(
+                        imageVector = vectorResource(Res.drawable.warning),
+                        contentDescription = "Warning",
+                        tint = MaterialTheme.colorScheme.onPrimaryContainer,
+                    )
                 }
+                Spacer(modifier = Modifier.height(4.dp))
+                Text(
+                    text = stringResource(Res.string.delete),
+                    style =
+                        MaterialTheme.typography.headlineSmall.copy(fontFamily = flexFontEmphasis()),
+                )
+                Text(
+                    text = stringResource(Res.string.delete_warning),
+                    style = MaterialTheme.typography.bodyLarge,
+                )
 
-                TextButton(
-                    onClick = {
-                        onAction(HabitsAction.DeleteHabit(currentHabit.habit))
-                        onAction(HabitsAction.PrepareAnalytics(null))
-                        deleteDialog = false
-                        onNavigateBack()
-                    },
-                    shapes =
-                        ButtonShapes(
-                            shape = MaterialTheme.shapes.extraLarge,
-                            pressedShape = MaterialTheme.shapes.small,
-                        ),
-                ) {
-                    Text(stringResource(Res.string.delete))
+                Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.End) {
+                    TextButton(
+                        onClick = { deleteDialog = false },
+                        shapes =
+                            ButtonShapes(
+                                shape = MaterialTheme.shapes.extraLarge,
+                                pressedShape = MaterialTheme.shapes.small,
+                            ),
+                    ) {
+                        Text(stringResource(Res.string.cancel))
+                    }
+
+                    TextButton(
+                        onClick = {
+                            onAction(HabitsAction.DeleteHabit(currentHabit.habit))
+                            onAction(HabitsAction.PrepareAnalytics(null))
+                            deleteDialog = false
+                            onNavigateBack()
+                        },
+                        shapes =
+                            ButtonShapes(
+                                shape = MaterialTheme.shapes.extraLarge,
+                                pressedShape = MaterialTheme.shapes.small,
+                            ),
+                    ) {
+                        Text(stringResource(Res.string.delete))
+                    }
                 }
             }
         }

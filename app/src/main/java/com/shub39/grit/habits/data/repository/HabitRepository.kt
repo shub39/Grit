@@ -167,4 +167,9 @@ class HabitRepository(
     override suspend fun deleteHabitStatus(habitId: Long, date: LocalDate) {
         habitStatusDao.deleteStatus(habitId, date)
     }
+
+    override suspend fun getCompletedHabitsForDate(date: LocalDate): List<Habit> {
+        val completedStatuses = habitStatusDao.getCompletedStatuses(date)
+        return completedStatuses.mapNotNull { habitDao.getHabitById(it.habitId)?.toHabit() }
+    }
 }

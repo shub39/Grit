@@ -49,7 +49,7 @@ fun NotEnoughData(modifier: Modifier = Modifier) {
                     Modifier.size(50.dp)
                         .background(
                             color = MaterialTheme.colorScheme.secondary,
-                            shape = MaterialShapes.Cookie6Sided.toShape(),
+                            shape = MaterialShapes.SoftBurst.toShape(),
                         ),
                 contentAlignment = Alignment.Center,
             ) {

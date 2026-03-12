@@ -17,7 +17,9 @@
 package com.shub39.grit.core.tasks.presentation.ui
 
 import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
@@ -28,15 +30,17 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.lazy.rememberLazyListState
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.ButtonShapes
 import androidx.compose.material3.ExperimentalMaterial3ExpressiveApi
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.ListItem
-import androidx.compose.material3.ListItemDefaults
+import androidx.compose.material3.MaterialShapes
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
+import androidx.compose.material3.toShape
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -48,10 +52,16 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import com.shub39.grit.core.shared_ui.GritDialog
+import com.shub39.grit.core.shared_ui.detachedItemShape
+import com.shub39.grit.core.shared_ui.endItemShape
+import com.shub39.grit.core.shared_ui.leadingItemShape
+import com.shub39.grit.core.shared_ui.listItemColors
+import com.shub39.grit.core.shared_ui.middleItemShape
 import com.shub39.grit.core.tasks.presentation.TaskAction
 import com.shub39.grit.core.tasks.presentation.TaskState
 import com.shub39.grit.core.tasks.presentation.ui.component.CategoryUpsertSheet
 import com.shub39.grit.core.tasks.presentation.ui.section.TaskList
+import com.shub39.grit.core.theme.flexFontEmphasis
 import grit.shared.core.generated.resources.Res
 import grit.shared.core.generated.resources.cancel
 import grit.shared.core.generated.resources.delete
@@ -109,60 +119,74 @@ private fun CategoryEditDialog(
                 Modifier.fillMaxWidth()
                     .heightIn(max = 600.dp)
                     .padding(start = 16.dp, end = 16.dp, top = 16.dp),
-            horizontalAlignment = Alignment.CenterHorizontally,
             verticalArrangement = Arrangement.spacedBy(8.dp),
         ) {
-            Icon(
-                imageVector = vectorResource(Res.drawable.edit),
-                contentDescription = null,
-                modifier = Modifier.size(48.dp),
-            )
+            Box(
+                contentAlignment = Alignment.Center,
+                modifier =
+                    Modifier.size(48.dp)
+                        .background(
+                            color = MaterialTheme.colorScheme.primaryContainer,
+                            shape = MaterialShapes.Pill.toShape(),
+                        ),
+            ) {
+                Icon(
+                    imageVector = vectorResource(Res.drawable.edit),
+                    contentDescription = null,
+                    tint = MaterialTheme.colorScheme.onPrimaryContainer,
+                )
+            }
 
             Text(
                 text = stringResource(Res.string.edit_categories),
-                style = MaterialTheme.typography.titleLarge,
-                textAlign = TextAlign.Center,
+                style = MaterialTheme.typography.headlineSmall.copy(fontFamily = flexFontEmphasis()),
             )
 
             LazyColumn(
-                modifier = Modifier.fillMaxWidth(),
+                modifier =
+                    Modifier.fillMaxWidth()
+                        .clip(RoundedCornerShape(topStart = 16.dp, topEnd = 16.dp)),
                 state = listState,
                 horizontalAlignment = Alignment.CenterHorizontally,
-                verticalArrangement = Arrangement.spacedBy(8.dp),
-                contentPadding = PaddingValues(vertical = 16.dp),
+                verticalArrangement = Arrangement.spacedBy(2.dp),
+                contentPadding = PaddingValues(bottom = 16.dp),
             ) {
-                itemsIndexed(categories, key = { _, it -> it.id }) { _, category ->
+                itemsIndexed(categories, key = { _, it -> it.id }) { index, category ->
                     var showEditSheet by remember { mutableStateOf(false) }
                     var showDeleteDialog by remember { mutableStateOf(false) }
 
                     ReorderableItem(reorderableListState, key = category.id) {
+                        val shape =
+                            when {
+                                categories.size == 1 -> detachedItemShape()
+                                index == 0 -> leadingItemShape()
+                                index == categories.size - 1 -> endItemShape()
+                                else -> middleItemShape()
+                            }
+
                         ListItem(
-                            modifier = Modifier.clip(MaterialTheme.shapes.medium),
-                            colors =
-                                ListItemDefaults.colors(
-                                    containerColor = MaterialTheme.colorScheme.surfaceContainerHigh
-                                ),
+                            modifier = Modifier.clip(shape),
+                            colors = listItemColors(),
                             headlineContent = { Text(text = category.name, maxLines = 1) },
                             supportingContent = {
                                 Text(
                                     text =
                                         "${state.tasks[category]?.size ?: "0"} ${
-                                        stringResource(
-                                            Res.string.tasks
-                                        )
-                                    }"
+                                            stringResource(
+                                                Res.string.tasks
+                                            )
+                                        }"
                                 )
-                            },
-                            leadingContent = {
-                                IconButton(onClick = { showEditSheet = true }) {
-                                    Icon(
-                                        imageVector = vectorResource(Res.drawable.edit),
-                                        contentDescription = "Edit",
-                                    )
-                                }
                             },
                             trailingContent = {
                                 Row(verticalAlignment = Alignment.CenterVertically) {
+                                    IconButton(onClick = { showEditSheet = true }) {
+                                        Icon(
+                                            imageVector = vectorResource(Res.drawable.edit),
+                                            contentDescription = "Edit",
+                                        )
+                                    }
+
                                     IconButton(
                                         onClick = { showDeleteDialog = true },
                                         enabled = categories.size > 1,

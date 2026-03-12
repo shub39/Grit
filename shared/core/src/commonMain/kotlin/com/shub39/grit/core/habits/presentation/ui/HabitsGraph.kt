@@ -163,6 +163,7 @@ fun HabitsGraph(
                     onNavigateBack = { navController.navigateUp() },
                     onNavigateToPaywall = onNavigateToPaywall,
                     isUserSubscribed = isUserSubscribed,
+                    onAction = onAction,
                 )
             }
         }
@@ -221,6 +222,7 @@ fun HabitsGraph(
                                 showNavigateBack = false,
                                 onNavigateToPaywall = onNavigateToPaywall,
                                 isUserSubscribed = isUserSubscribed,
+                                onAction = onAction,
                             )
                         }
                     }
