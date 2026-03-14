@@ -77,17 +77,18 @@ class GritIntentReceiver : BroadcastReceiver(), KoinComponent {
     }
 
     private suspend fun markTaskDone(intent: Intent) {
-        Log.d(TAG, "Add habit status intent received")
-        val habitId = intent.getLongExtra("habit_id", -1)
-        if (habitId < 0) return
+        Log.d(TAG, "Mark task done intent received")
+        val taskId = intent.getLongExtra("task_id", -1)
+        if (taskId < 0) return
 
-        val habitRepo = get<HabitRepo>()
+        val taskRepo = get<TaskRepo>()
+        val task = taskRepo.getTaskById(taskId) ?: return
 
-        habitRepo.insertHabitStatus(HabitStatus(habitId = habitId, date = LocalDate.now()))
+        taskRepo.upsertTask(task.copy(status = true, reminder = null))
 
-        Log.d(TAG, "Habit status added successfully")
+        Log.d(TAG, "Task marked as complete successfully")
 
-        get<GritNotificationManager>().cancelNotification(habitId.toInt())
+        get<GritNotificationManager>().cancelNotification(taskId.toInt())
     }
 
     private suspend fun addHabitStatus(intent: Intent) {

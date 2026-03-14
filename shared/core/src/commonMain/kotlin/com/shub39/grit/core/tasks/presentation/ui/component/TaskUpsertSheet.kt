@@ -229,14 +229,16 @@ fun TaskUpsertSheetContent(
                     },
                     headlineContent = { Text(text = stringResource(Res.string.add_reminder)) },
                     supportingContent = {
-                        Column {
-                            if (newTask.reminder != null)
+                        if (newTask.reminder != null) {
+                            Column {
                                 Text(text = newTask.reminder!!.toFormattedString(is24Hr = is24Hr))
-                            if (!isValidDateTime)
-                                Text(
-                                    text = stringResource(Res.string.invalid_date_time),
-                                    color = MaterialTheme.colorScheme.error,
-                                )
+                                if (!isValidDateTime) {
+                                    Text(
+                                        text = stringResource(Res.string.invalid_date_time),
+                                        color = MaterialTheme.colorScheme.error,
+                                    )
+                                }
+                            }
                         }
                     },
                     trailingContent = {

@@ -69,9 +69,13 @@ class TasksViewModel(
         viewModelScope.launch {
             when (action) {
                 is TaskAction.UpsertTask -> {
-                    repo.upsertTask(action.task)
+                    if (action.task.status) {
+                        repo.upsertTask(action.task.copy(reminder = null))
+                    } else {
+                        repo.upsertTask(action.task)
 
-                    scheduler.schedule(action.task)
+                        scheduler.schedule(action.task)
+                    }
                 }
 
                 TaskAction.DeleteTasks -> {
