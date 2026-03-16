@@ -1,5 +1,11 @@
 [
   {
+    "version": "5.8.1",
+    "changes": [
+      "Fixed tasks notification action not working"
+    ]
+  },
+  {
     "version": "5.8.0",
     "changes": [
       "Revamped UI to be more expressive",
