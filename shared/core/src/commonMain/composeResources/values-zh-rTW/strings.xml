@@ -1,3 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <string name="tasks">任務</string>
+    <string name="material_theme">Material You 主題</string>
+    <string name="done">完成</string>
+    <string name="add_task">新增任務</string>
+    <string name="add_habit">新增習慣</string>
+    <string name="update_description">編輯說明</string>
+    <string name="delete">刪除</string>
+    <string name="cancel">取消</string>
+    <string name="select_time">選擇時間</string>
+    <string name="habits">習慣</string>
 </resources>
