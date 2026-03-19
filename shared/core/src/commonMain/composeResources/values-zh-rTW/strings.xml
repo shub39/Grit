@@ -10,4 +10,11 @@
     <string name="cancel">取消</string>
     <string name="select_time">選擇時間</string>
     <string name="habits">習慣</string>
+    <string name="save">儲存</string>
+    <string name="edit_task">編輯任務</string>
+    <string name="update_title">編輯標題</string>
+    <string name="edit_categories">編輯類別</string>
+    <string name="settings">設定</string>
+    <string name="days_ago_format">%1$d 天前…</string>
+    <string name="add_category">新增類別</string>
 </resources>
