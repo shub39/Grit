@@ -138,4 +138,7 @@
     <string name="download">Télécharger</string>
     <string name="translate">Traduire</string>
     <string name="changelog">Journaux des modifications</string>
+    <string name="add_reminder_desc">Recevoir une notification de rappel les jours sélectionnés</string>
+    <string name="whats_changed">Nouveautés</string>
+    <string name="select_days">Sélectionner des jours</string>
 </resources>
