@@ -21,11 +21,12 @@ plugins {
     alias(libs.plugins.kotlin.serialization)
     alias(libs.plugins.room)
     alias(libs.plugins.compose.multiplatform)
+    alias(libs.plugins.koin.compiler)
 }
 
 val appName = "Grit"
-val appVersionCode = 5810
-val appVersionName = "5.8.1"
+val appVersionCode = 5820
+val appVersionName = "5.8.2"
 
 val gitHash = execute("git", "rev-parse", "HEAD").take(7)
 
@@ -151,8 +152,7 @@ dependencies {
     implementation(libs.koin.compose)
     implementation(libs.koin.compose.viewmodel)
     implementation(libs.koin.compose.viewmodel.navigation)
-    ksp(libs.koin.ksp.compiler)
-    api(libs.koin.annotations)
+    implementation(libs.koin.annotations)
 }
 
 room { schemaDirectory("$projectDir/schemas") }

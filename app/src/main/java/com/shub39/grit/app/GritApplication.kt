@@ -30,18 +30,16 @@ import kotlinx.coroutines.MainScope
 import kotlinx.coroutines.launch
 import org.koin.android.ext.koin.androidContext
 import org.koin.android.ext.koin.androidLogger
-import org.koin.core.context.GlobalContext.startKoin
-import org.koin.ksp.generated.module
+import org.koin.plugin.module.dsl.startKoin
 
 class GritApplication : Application() {
 
     override fun onCreate() {
         super.onCreate()
 
-        startKoin {
+        startKoin<GritModules> {
             androidLogger()
             androidContext(this@GritApplication)
-            modules(GritModules().module)
         }
 
         BillingInitializer().initialize(this)

@@ -1,5 +1,8 @@
 # Changelog
 
+## 5.8.2
+- Updated Translations
+                                                            
 ## 5.8.1
 - Fixed tasks notification action not working
 

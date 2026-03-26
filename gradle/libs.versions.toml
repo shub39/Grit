@@ -8,27 +8,27 @@ espresso-core = "3.7.0"
 junit = "4.13.2"
 junit-version = "1.3.0"
 kotlinx-datetime = "0.7.1"
-purchases = "9.23.1"
+purchases = "9.27.0"
 splashscreen = "1.2.0"
 datastore = "1.2.1"
 colorpicker = "1.1.3"
 glance = "1.2.0-rc01"
-koin = "4.1.1"
-koin-annotations = "2.3.1"
-kotlin = "2.3.10"
-ksp = "2.3.5"
+koin = "4.2.0"
+koin-plugin = "0.4.1"
+kotlin = "2.3.20"
+ksp = "2.3.6"
 material3 = "1.10.0-alpha05"
 reorderable = "3.0.0"
 room = "2.8.4"
 navigation = "2.9.2"
 materialkolor = "4.1.1"
-compose-junit = "1.10.5"
+compose-junit = "1.10.6"
 biometric = "1.4.0-alpha02"
 truth = "1.4.5"
 compose-multiplatform = "1.11.0-alpha04"
 kotlinx-coroutines = "1.10.2"
 kotlinx-serialization-json = "1.10.0"
-spotless = "8.3.0"
+spotless = "8.4.0"
 ktfmt = "0.61"
 
 [libraries]
@@ -63,8 +63,7 @@ koin-core = { module = "io.insert-koin:koin-core", version.ref = "koin" }
 koin-compose = { module = "io.insert-koin:koin-compose", version.ref = "koin" }
 koin-compose-viewmodel = { module = "io.insert-koin:koin-compose-viewmodel", version.ref = "koin" }
 koin-compose-viewmodel-navigation = { module = "io.insert-koin:koin-compose-viewmodel-navigation", version.ref = "koin" }
-koin-annotations = { module = "io.insert-koin:koin-annotations", version.ref = "koin-annotations" }
-koin-ksp-compiler = { module = "io.insert-koin:koin-ksp-compiler", version.ref = "koin-annotations" }
+koin-annotations = { module = "io.insert-koin:koin-annotations", version.ref = "koin" }
 
 # Others
 kotlinx-datetime = { module = "org.jetbrains.kotlinx:kotlinx-datetime", version.ref = "kotlinx-datetime" }
@@ -89,3 +88,4 @@ kotlin-serialization = { id = "org.jetbrains.kotlin.plugin.serialization", versi
 compose-multiplatform = { id = "org.jetbrains.compose", version.ref = "compose-multiplatform" }
 kotlin-multiplatform = { id = "org.jetbrains.kotlin.multiplatform", version.ref = "kotlin" }
 spotless = { id = "com.diffplug.spotless", version.ref = "spotless" }
+koin-compiler = { id = "io.insert-koin.compiler.plugin", version.ref = "koin-plugin" }
