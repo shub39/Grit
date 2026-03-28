@@ -24,7 +24,7 @@
     <string name="delete_tasks">確定要刪除所有已完成的任務嗎？</string>
     <string name="delete_category">確定嗎？此類別中的所有任務都將被刪除</string>
     <string name="add">新增一些東西吧</string>
-    <string name="look_and_feel">習慣熱力圖</string>
+    <string name="look_and_feel">外觀與風格</string>
     <string name="use_amoled">Amoled 調色盤</string>
     <string name="use_amoled_desc">最適合在 AMOLED 螢幕上使用</string>
     <string name="select_seed">選擇種子顏色</string>
@@ -68,7 +68,7 @@
     <string name="unlock_plus">升級 Plus 以解鎖</string>
     <string name="grit_plus">Grit Plus</string>
     <string name="monthly_progress">每月進度</string>
-    <string name="week_breakdown">各星期詳細分析</string>
+    <string name="week_breakdown">每日明細</string>
     <string name="foss">您正在使用 FOSS 版本</string>
     <string name="foss_desc">所有功能已解鎖。此版本不支援應用程式內購買。若此應用程式對您有所幫助，歡迎透過以下方式贊助我</string>
     <string name="add_reminder">新增提醒</string>
