@@ -38,7 +38,7 @@
     <string name="new_habit">Новая привычка </string>
     <string name="at">Напоминать в </string>
     <string name="habit_exists">Привычка уже существует</string>
-    <string name="days_ago_format">%1$d дней</string>
+    <string name="days_ago_format">%1$d дней назад…</string>
     <!-- <plurals name="days_ago_format">
         <item quantity="one">%1$d день назад</item>
         <item quantity="few">%1$d дня назад</item>
@@ -57,10 +57,10 @@
     <string name="update_title">Изменить название</string>
     <string name="clear_preference_exp">периодически очищать задачи</string>
     <string name="categories">Категории</string>
-    <string name="edit_categories">Изменить категории задач</string>
+    <string name="edit_categories">Изменить категории</string>
     <string name="delete_category">Вы уверены? Все задачи в этой категории будут удалены</string>
     <string name="add_category">Добавить категорию</string>
-    <string name="add">Добавить что-то</string>
+    <string name="add">Добавьте что‑нибудь</string>
     <string name="about">О приложении</string>
     <string name="select_habit">Выбрать привычку</string>
     <string name="habit_map">Карта выполнения привычек</string>
@@ -128,7 +128,7 @@
     <string name="foss_desc">Все улучшения разблокированы. Эта версия приложения не поддерживает встроенные покупки. Если это приложение сделало вашу жизнь лучше, поддержите меня, сделав пожертвование</string>
     <string name="no_habit_for_today">Нет привычек на сегодня</string>
     <string name="add_reminder">Добавить напоминание</string>
-    <string name="invalid_date_time">Выбранное время уже прошло :\\')</string>
+    <string name="invalid_date_time">Выбранное время уже прошло :')</string>
     <string name="reorder_tasks">Изменить порядок задач</string>
     <string name="reorder_tasks_desc">Изменить порядок задач отмеченных выполненными</string>
     <string name="weeks">Неделя</string>
@@ -137,4 +137,9 @@
     <string name="all_tasks">Все задачи</string>
     <string name="server_channel_name">Канал уведомлений сервера</string>
     <string name="server_channel_description">канал для отправки серверу статуса обновлений</string>
+    <string name="add_reminder_desc">Получать уведомления‑напоминания в выбранные дни</string>
+    <string name="translate">Перевести</string>
+    <string name="changelog">Журнал изменений</string>
+    <string name="whats_changed">Что изменилось</string>
+    <string name="select_days">Выбрать дни</string>
 </resources>
