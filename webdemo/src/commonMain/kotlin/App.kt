@@ -128,7 +128,12 @@ fun App() {
                             Routes.allRoutes.forEach { route: Routes ->
                                 NavigationBarItem(
                                     selected = backStack.last() == route,
-                                    onClick = { backStack.add(route) },
+                                    onClick = {
+                                        if (backStack.last() != route) {
+                                            backStack.removeAll { it == route }
+                                            backStack.add(route)
+                                        }
+                                    },
                                     icon = {
                                         Icon(
                                             imageVector = vectorResource(route.toDrawableRes()),
@@ -199,7 +204,12 @@ fun App() {
                         Routes.allRoutes.forEach { route: Routes ->
                             NavigationRailItem(
                                 selected = backStack.last() == route,
-                                onClick = { backStack.add(route) },
+                                onClick = {
+                                    if (backStack.last() != route) {
+                                        backStack.removeAll { it == route }
+                                        backStack.add(route)
+                                    }
+                                },
                                 icon = {
                                     Icon(
                                         imageVector = vectorResource(route.toDrawableRes()),
