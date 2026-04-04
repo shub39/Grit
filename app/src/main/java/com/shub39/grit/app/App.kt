@@ -16,9 +16,6 @@
  */
 package com.shub39.grit.app
 
-import androidx.compose.animation.core.tween
-import androidx.compose.animation.fadeIn
-import androidx.compose.animation.fadeOut
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.calculateEndPadding
@@ -39,22 +36,22 @@ import androidx.compose.material3.windowsizeclass.WindowWidthSizeClass
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalLayoutDirection
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import androidx.navigation.compose.NavHost
-import androidx.navigation.compose.composable
-import androidx.navigation.compose.rememberNavController
+import androidx.navigation3.runtime.NavKey
+import androidx.navigation3.runtime.entryProvider
+import androidx.navigation3.runtime.rememberNavBackStack
+import androidx.navigation3.ui.NavDisplay
 import com.shub39.grit.app.AppSections.Companion.toIconRes
 import com.shub39.grit.app.AppSections.Companion.toStringRes
 import com.shub39.grit.billing.PaywallPage
 import com.shub39.grit.core.domain.MainAppState
 import com.shub39.grit.core.domain.Sections
 import com.shub39.grit.core.habits.presentation.ui.HabitsGraph
+import com.shub39.grit.core.navigation.horizontalTransitionMetadata
+import com.shub39.grit.core.navigation.verticalTransitionMetadata
 import com.shub39.grit.core.presentation.ChangelogSheet
 import com.shub39.grit.core.presentation.settings.ui.SettingsGraph
 import com.shub39.grit.core.tasks.presentation.ui.TasksPage
@@ -76,15 +73,14 @@ import org.jetbrains.compose.resources.stringResource
 import org.koin.compose.koinInject
 import org.koin.compose.viewmodel.koinViewModel
 
-@Serializable
-private sealed interface GlobalRoutes {
+private sealed interface GlobalRoutes : NavKey {
     @Serializable data object PaywallPage : GlobalRoutes
 
     @Serializable data object App : GlobalRoutes
 }
 
 @Serializable
-private sealed interface AppSections {
+private sealed interface AppSections : NavKey {
     @Serializable data object HabitsPages : AppSections
 
     @Serializable data object TaskPages : AppSections
@@ -115,201 +111,194 @@ private sealed interface AppSections {
 @OptIn(ExperimentalMaterial3Api::class, ExperimentalMaterial3ExpressiveApi::class)
 @Composable
 fun App(state: MainAppState, onRefreshSub: () -> Unit, onDismissChangelog: () -> Unit) {
-    val mainNavController = rememberNavController()
+    val mainBackStack = rememberNavBackStack(GlobalRoutes.App)
 
     if (state.currentChangelog != null) {
         ChangelogSheet(currentLog = state.currentChangelog, onDismissRequest = onDismissChangelog)
     }
 
-    NavHost(navController = mainNavController, startDestination = GlobalRoutes.App) {
-        composable<GlobalRoutes.PaywallPage> {
-            DisposableEffect(Unit) { onDispose { onRefreshSub() } }
+    NavDisplay(
+        backStack = mainBackStack,
+        entryProvider =
+            entryProvider {
+                entry<GlobalRoutes.PaywallPage>(metadata = verticalTransitionMetadata()) {
+                    DisposableEffect(Unit) { onDispose { onRefreshSub() } }
 
-            PaywallPage(
-                isPlusUser = state.isUserSubscribed,
-                onDismissRequest = { mainNavController.navigateUp() },
-            )
-        }
-
-        composable<GlobalRoutes.App> {
-            val windowSizeClass = LocalWindowSizeClass.current
-
-            var currentRoute: AppSections by remember { mutableStateOf(AppSections.TaskPages) }
-            val navController = rememberNavController()
-
-            when (windowSizeClass.widthSizeClass) {
-                WindowWidthSizeClass.Compact -> {
-                    Scaffold(
-                        bottomBar = {
-                            AppNavBar(
-                                currentRoute = currentRoute,
-                                onNavigate = { route ->
-                                    navController.navigate(route) {
-                                        launchSingleTop = true
-                                        popUpTo(
-                                            route =
-                                                when (state.startingSection) {
-                                                    Sections.Habits -> AppSections.HabitsPages
-                                                    Sections.Tasks -> AppSections.TaskPages
-                                                },
-                                            popUpToBuilder = { saveState = true },
-                                        )
-                                        restoreState = true
-                                    }
-                                },
-                            )
-                        }
-                    ) { padding ->
-                        NavHost(
-                            navController = navController,
-                            startDestination =
-                                when (state.startingSection) {
-                                    Sections.Tasks -> AppSections.TaskPages
-                                    Sections.Habits -> AppSections.HabitsPages
-                                },
-                            modifier =
-                                Modifier.padding(
-                                        start =
-                                            padding.calculateStartPadding(
-                                                LocalLayoutDirection.current
-                                            ),
-                                        end =
-                                            padding.calculateEndPadding(
-                                                LocalLayoutDirection.current
-                                            ),
-                                        bottom = padding.calculateBottomPadding(),
-                                    )
-                                    .background(MaterialTheme.colorScheme.background),
-                            enterTransition = { fadeIn(animationSpec = tween(300)) },
-                            exitTransition = { fadeOut(animationSpec = tween(300)) },
-                            popEnterTransition = { fadeIn(animationSpec = tween(300)) },
-                            popExitTransition = { fadeOut(animationSpec = tween(300)) },
-                        ) {
-                            composable<AppSections.TaskPages> {
-                                currentRoute = AppSections.TaskPages
-                                val tvm: TasksViewModel = koinViewModel()
-                                val taskPageState by tvm.state.collectAsStateWithLifecycle()
-
-                                TasksPage(state = taskPageState, onAction = tvm::onAction)
-                            }
-
-                            composable<AppSections.SettingsPages> {
-                                currentRoute = AppSections.SettingsPages
-                                val svm: SettingsViewModel = koinInject()
-                                val settingsState by svm.state.collectAsStateWithLifecycle()
-
-                                SettingsGraph(
-                                    state = settingsState,
-                                    onAction = svm::onAction,
-                                    isUserSubscribed = state.isUserSubscribed,
-                                    onNavigateToPaywall = {
-                                        mainNavController.navigate(GlobalRoutes.PaywallPage)
-                                    },
-                                )
-                            }
-
-                            composable<AppSections.HabitsPages> {
-                                currentRoute = AppSections.HabitsPages
-                                val hvm: HabitViewModel = koinViewModel()
-                                val habitsPageState by hvm.state.collectAsStateWithLifecycle()
-
-                                HabitsGraph(
-                                    state = habitsPageState,
-                                    onAction = hvm::onAction,
-                                    isUserSubscribed = state.isUserSubscribed,
-                                    onNavigateToPaywall = {
-                                        mainNavController.navigate(GlobalRoutes.PaywallPage)
-                                    },
-                                )
-                            }
-                        }
-                    }
+                    PaywallPage(
+                        isPlusUser = state.isUserSubscribed,
+                        onDismissRequest = {
+                            if (mainBackStack.size != 1) mainBackStack.removeLastOrNull()
+                        },
+                    )
                 }
 
-                else -> {
-                    Row(modifier = Modifier.background(MaterialTheme.colorScheme.surface)) {
-                        AppNavRail(
-                            currentRoute = currentRoute,
-                            onNavigate = { route ->
-                                navController.navigate(route) {
-                                    launchSingleTop = true
-                                    popUpTo(
-                                        route =
-                                            when (state.startingSection) {
-                                                Sections.Habits -> AppSections.HabitsPages
-                                                Sections.Tasks -> AppSections.TaskPages
-                                            },
-                                        popUpToBuilder = { saveState = true },
-                                    )
-                                    restoreState = true
-                                }
-                            },
+                entry<GlobalRoutes.App> {
+                    val windowSizeClass = LocalWindowSizeClass.current
+
+                    val appBackStack =
+                        rememberNavBackStack(
+                            when (state.startingSection) {
+                                Sections.Tasks -> AppSections.TaskPages
+                                Sections.Habits -> AppSections.HabitsPages
+                            }
                         )
 
-                        NavHost(
-                            navController = navController,
-                            startDestination =
-                                when (state.startingSection) {
-                                    Sections.Tasks -> AppSections.TaskPages
-                                    Sections.Habits -> AppSections.HabitsPages
-                                },
-                            contentAlignment = Alignment.Center,
-                            modifier =
-                                Modifier.fillMaxWidth()
-                                    .background(MaterialTheme.colorScheme.background),
-                            enterTransition = { fadeIn(animationSpec = tween(300)) },
-                            exitTransition = { fadeOut(animationSpec = tween(300)) },
-                            popEnterTransition = { fadeIn(animationSpec = tween(300)) },
-                            popExitTransition = { fadeOut(animationSpec = tween(300)) },
-                        ) {
-                            composable<AppSections.TaskPages> {
-                                currentRoute = AppSections.TaskPages
-                                val tvm: TasksViewModel = koinViewModel()
-                                val taskPageState by tvm.state.collectAsStateWithLifecycle()
+                    when (windowSizeClass.widthSizeClass) {
+                        WindowWidthSizeClass.Compact -> {
+                            Scaffold(
+                                bottomBar = {
+                                    AppNavBar(
+                                        currentRoute = appBackStack.last(),
+                                        onNavigate = { route ->
+                                            appBackStack.removeAll { it == route }
+                                            appBackStack.add(route)
+                                        },
+                                    )
+                                }
+                            ) { padding ->
+                                NavDisplay(
+                                    modifier =
+                                        Modifier.padding(
+                                                start =
+                                                    padding.calculateStartPadding(
+                                                        LocalLayoutDirection.current
+                                                    ),
+                                                end =
+                                                    padding.calculateEndPadding(
+                                                        LocalLayoutDirection.current
+                                                    ),
+                                                bottom = padding.calculateBottomPadding(),
+                                            )
+                                            .background(MaterialTheme.colorScheme.background),
+                                    backStack = appBackStack,
+                                    entryProvider =
+                                        entryProvider {
+                                            entry<AppSections.TaskPages>(
+                                                metadata = verticalTransitionMetadata()
+                                            ) {
+                                                val tvm: TasksViewModel = koinViewModel()
+                                                val taskPageState by
+                                                    tvm.state.collectAsStateWithLifecycle()
 
-                                TasksPage(state = taskPageState, onAction = tvm::onAction)
-                            }
+                                                TasksPage(
+                                                    state = taskPageState,
+                                                    onAction = tvm::onAction,
+                                                )
+                                            }
 
-                            composable<AppSections.SettingsPages> {
-                                currentRoute = AppSections.SettingsPages
-                                val svm: SettingsViewModel = koinInject()
-                                val settingsState by svm.state.collectAsStateWithLifecycle()
+                                            entry<AppSections.SettingsPages>(
+                                                metadata = verticalTransitionMetadata()
+                                            ) {
+                                                val svm: SettingsViewModel = koinInject()
+                                                val settingsState by
+                                                    svm.state.collectAsStateWithLifecycle()
 
-                                SettingsGraph(
-                                    state = settingsState,
-                                    onAction = svm::onAction,
-                                    isUserSubscribed = state.isUserSubscribed,
-                                    onNavigateToPaywall = {
-                                        mainNavController.navigate(GlobalRoutes.PaywallPage)
-                                    },
+                                                SettingsGraph(
+                                                    state = settingsState,
+                                                    onAction = svm::onAction,
+                                                    isUserSubscribed = state.isUserSubscribed,
+                                                    onNavigateToPaywall = {
+                                                        mainBackStack.add(GlobalRoutes.PaywallPage)
+                                                    },
+                                                )
+                                            }
+
+                                            entry<AppSections.HabitsPages>(
+                                                metadata = verticalTransitionMetadata()
+                                            ) {
+                                                val hvm: HabitViewModel = koinViewModel()
+                                                val habitsPageState by
+                                                    hvm.state.collectAsStateWithLifecycle()
+
+                                                HabitsGraph(
+                                                    state = habitsPageState,
+                                                    onAction = hvm::onAction,
+                                                    isUserSubscribed = state.isUserSubscribed,
+                                                    onNavigateToPaywall = {
+                                                        mainBackStack.add(GlobalRoutes.PaywallPage)
+                                                    },
+                                                )
+                                            }
+                                        },
                                 )
                             }
+                        }
 
-                            composable<AppSections.HabitsPages> {
-                                currentRoute = AppSections.HabitsPages
-                                val hvm: HabitViewModel = koinViewModel()
-                                val habitsPageState by hvm.state.collectAsStateWithLifecycle()
-
-                                HabitsGraph(
-                                    state = habitsPageState,
-                                    onAction = hvm::onAction,
-                                    isUserSubscribed = state.isUserSubscribed,
-                                    onNavigateToPaywall = {
-                                        mainNavController.navigate(GlobalRoutes.PaywallPage)
+                        else -> {
+                            Row(modifier = Modifier.background(MaterialTheme.colorScheme.surface)) {
+                                AppNavRail(
+                                    currentRoute = appBackStack.last(),
+                                    onNavigate = { route ->
+                                        appBackStack.removeAll { it == route }
+                                        appBackStack.add(route)
                                     },
+                                )
+
+                                NavDisplay(
+                                    modifier =
+                                        Modifier.fillMaxWidth()
+                                            .background(MaterialTheme.colorScheme.background),
+                                    backStack = appBackStack,
+                                    contentAlignment = Alignment.Center,
+                                    entryProvider =
+                                        entryProvider {
+                                            entry<AppSections.TaskPages>(
+                                                metadata = horizontalTransitionMetadata()
+                                            ) {
+                                                val tvm: TasksViewModel = koinViewModel()
+                                                val taskPageState by
+                                                    tvm.state.collectAsStateWithLifecycle()
+
+                                                TasksPage(
+                                                    state = taskPageState,
+                                                    onAction = tvm::onAction,
+                                                )
+                                            }
+
+                                            entry<AppSections.SettingsPages> {
+                                                val svm: SettingsViewModel = koinInject()
+                                                val settingsState by
+                                                    svm.state.collectAsStateWithLifecycle()
+
+                                                SettingsGraph(
+                                                    state = settingsState,
+                                                    onAction = svm::onAction,
+                                                    isUserSubscribed = state.isUserSubscribed,
+                                                    onNavigateToPaywall = {
+                                                        mainBackStack.add(GlobalRoutes.PaywallPage)
+                                                    },
+                                                )
+                                            }
+
+                                            entry<AppSections.HabitsPages>(
+                                                metadata = horizontalTransitionMetadata()
+                                            ) {
+                                                val hvm: HabitViewModel = koinViewModel()
+                                                val habitsPageState by
+                                                    hvm.state.collectAsStateWithLifecycle()
+
+                                                HabitsGraph(
+                                                    state = habitsPageState,
+                                                    onAction = hvm::onAction,
+                                                    isUserSubscribed = state.isUserSubscribed,
+                                                    onNavigateToPaywall = {
+                                                        mainBackStack.add(GlobalRoutes.PaywallPage)
+                                                    },
+                                                )
+                                            }
+                                        },
                                 )
                             }
                         }
                     }
                 }
-            }
-        }
-    }
+            },
+    )
 }
 
 @Composable
 private fun AppNavRail(
-    currentRoute: AppSections,
+    currentRoute: NavKey,
     onNavigate: (AppSections) -> Unit,
     modifier: Modifier = Modifier,
 ) {
@@ -337,7 +326,7 @@ private fun AppNavRail(
 
 @Composable
 private fun AppNavBar(
-    currentRoute: AppSections,
+    currentRoute: NavKey,
     onNavigate: (AppSections) -> Unit,
     modifier: Modifier = Modifier,
 ) {

@@ -20,7 +20,7 @@ ksp = "2.3.6"
 material3 = "1.10.0-alpha05"
 reorderable = "3.0.0"
 room = "2.8.4"
-navigation = "2.9.2"
+navigation = "1.1.0-beta01"
 materialkolor = "4.1.1"
 compose-junit = "1.10.6"
 biometric = "1.4.0-alpha02"
@@ -46,7 +46,7 @@ androidx-room-compiler = { module = "androidx.room:room-compiler", version.ref =
 androidx-room-runtime = { module = "androidx.room:room-runtime", version.ref = "room" }
 androidx-room-testing = { module = "androidx.room:room-testing", version.ref = "room" }
 androidx-ui-test-junit4 = { module = "androidx.compose.ui:ui-test-junit4", version.ref = "compose-junit" }
-navigation-compose = { group = "org.jetbrains.androidx.navigation", name = "navigation-compose", version.ref = "navigation" }
+jetbrains-navigation3-ui = { module = "org.jetbrains.androidx.navigation3:navigation3-ui", version.ref = "navigation" }
 androidx-biometric = { group = "androidx.biometric", name = "biometric-ktx", version.ref = "biometric" }
 
 # CMP

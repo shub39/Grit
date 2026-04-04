@@ -136,7 +136,10 @@ fun TaskList(state: TaskState, onAction: (TaskAction) -> Unit, onEditCategories:
         val scrollBehavior = TopAppBarDefaults.enterAlwaysScrollBehavior()
 
         Column(
-            modifier = Modifier.nestedScroll(scrollBehavior.nestedScrollConnection).fillMaxSize()
+            modifier =
+                Modifier.nestedScroll(scrollBehavior.nestedScrollConnection)
+                    .fillMaxSize()
+                    .background(MaterialTheme.colorScheme.background)
         ) {
             TaskListTopBar(
                 state = state,

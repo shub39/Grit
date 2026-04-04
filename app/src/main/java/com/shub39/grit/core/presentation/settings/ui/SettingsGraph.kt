@@ -16,10 +16,6 @@
  */
 package com.shub39.grit.core.presentation.settings.ui
 
-import androidx.compose.animation.fadeIn
-import androidx.compose.animation.fadeOut
-import androidx.compose.animation.slideInHorizontally
-import androidx.compose.animation.slideOutHorizontally
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.widthIn
@@ -28,9 +24,11 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.navigation.compose.NavHost
-import androidx.navigation.compose.composable
-import androidx.navigation.compose.rememberNavController
+import androidx.navigation3.runtime.NavKey
+import androidx.navigation3.runtime.entryProvider
+import androidx.navigation3.runtime.rememberNavBackStack
+import androidx.navigation3.ui.NavDisplay
+import com.shub39.grit.core.navigation.horizontalTransitionMetadata
 import com.shub39.grit.core.presentation.settings.SettingsAction
 import com.shub39.grit.core.presentation.settings.SettingsState
 import com.shub39.grit.core.presentation.settings.ui.section.BackupPage
@@ -43,15 +41,13 @@ import com.shub39.grit.core.theme.GritTheme
 import com.shub39.grit.core.theme.Theme
 import kotlinx.serialization.Serializable
 
-private sealed interface SettingsRoutes {
-    @Serializable data object Root : SettingsRoutes
+@Serializable data object Root : NavKey
 
-    @Serializable data object LookAndFeel : SettingsRoutes
+@Serializable data object LookAndFeel : NavKey
 
-    @Serializable data object Backup : SettingsRoutes
+@Serializable data object Backup : NavKey
 
-    @Serializable data object Changelog : SettingsRoutes
-}
+@Serializable data object Changelog : NavKey
 
 @Composable
 fun SettingsGraph(
@@ -62,58 +58,59 @@ fun SettingsGraph(
     modifier: Modifier = Modifier,
 ) =
     PageFill(modifier = modifier) {
-        val navController = rememberNavController()
+        val backStack = rememberNavBackStack(Root)
 
-        NavHost(
-            navController = navController,
-            startDestination = SettingsRoutes.Root,
+        NavDisplay(
             modifier =
                 Modifier.background(MaterialTheme.colorScheme.background)
                     .widthIn(max = 600.dp)
                     .fillMaxSize(),
-            enterTransition = { slideInHorizontally(initialOffsetX = { it }) + fadeIn() },
-            exitTransition = { slideOutHorizontally(targetOffsetX = { -it }) + fadeOut() },
-            popEnterTransition = { slideInHorizontally(initialOffsetX = { -it }) + fadeIn() },
-            popExitTransition = { slideOutHorizontally(targetOffsetX = { it }) + fadeOut() },
-        ) {
-            composable<SettingsRoutes.Root> {
-                RootPage(
-                    state = state,
-                    onAction = onAction,
-                    onNavigateToLookAndFeel = {
-                        navController.navigate(SettingsRoutes.LookAndFeel)
-                    },
-                    onNavigateToBackup = { navController.navigate(SettingsRoutes.Backup) },
-                    onNavigateToPaywall = onNavigateToPaywall,
-                    onNavigateToChangelog = { navController.navigate(SettingsRoutes.Changelog) },
-                )
-            }
+            backStack = backStack,
+            entryProvider =
+                entryProvider {
+                    entry<Root> {
+                        RootPage(
+                            state = state,
+                            onAction = onAction,
+                            onNavigateToLookAndFeel = { backStack.add(LookAndFeel) },
+                            onNavigateToBackup = { backStack.add(Backup) },
+                            onNavigateToPaywall = onNavigateToPaywall,
+                            onNavigateToChangelog = { backStack.add(Changelog) },
+                        )
+                    }
 
-            composable<SettingsRoutes.LookAndFeel> {
-                LookAndFeelPage(
-                    state = state,
-                    onAction = onAction,
-                    isUserSubscribed = isUserSubscribed,
-                    onNavigateToPaywall = onNavigateToPaywall,
-                    onNavigateBack = { navController.navigateUp() },
-                )
-            }
+                    entry<LookAndFeel>(metadata = horizontalTransitionMetadata()) {
+                        LookAndFeelPage(
+                            state = state,
+                            onAction = onAction,
+                            isUserSubscribed = isUserSubscribed,
+                            onNavigateToPaywall = onNavigateToPaywall,
+                            onNavigateBack = {
+                                if (backStack.size != 1) backStack.removeLastOrNull()
+                            },
+                        )
+                    }
 
-            composable<SettingsRoutes.Backup> {
-                BackupPage(
-                    state = state,
-                    onAction = onAction,
-                    onNavigateBack = { navController.navigateUp() },
-                )
-            }
+                    entry<Backup>(metadata = horizontalTransitionMetadata()) {
+                        BackupPage(
+                            state = state,
+                            onAction = onAction,
+                            onNavigateBack = {
+                                if (backStack.size != 1) backStack.removeLastOrNull()
+                            },
+                        )
+                    }
 
-            composable<SettingsRoutes.Changelog> {
-                Changelog(
-                    changelog = state.changelog,
-                    onNavigateBack = { navController.navigateUp() },
-                )
-            }
-        }
+                    entry<Changelog>(metadata = horizontalTransitionMetadata()) {
+                        Changelog(
+                            changelog = state.changelog,
+                            onNavigateBack = {
+                                if (backStack.size != 1) backStack.removeLastOrNull()
+                            },
+                        )
+                    }
+                },
+        )
     }
 
 @Preview

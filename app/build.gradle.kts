@@ -124,7 +124,7 @@ dependencies {
     implementation(libs.compose.ui.tooling.preview)
     debugImplementation(libs.compose.ui.tooling.preview)
 
-    implementation(libs.navigation.compose)
+    implementation(libs.jetbrains.navigation3.ui)
     implementation(libs.compose.windowsizeclass)
     implementation(libs.androidx.core.splashscreen)
     implementation(libs.androidx.room.runtime)
