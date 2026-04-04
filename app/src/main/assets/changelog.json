@@ -1,5 +1,12 @@
 [
   {
+    "version": "5.8.4",
+    "changes": [
+      "Changed Navigation Animation",
+      "Misc UI fixes"
+    ]
+  },
+  {
     "version": "5.8.3",
     "changes": [
       "Improved Navigation Experience",

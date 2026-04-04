@@ -47,8 +47,7 @@ import androidx.navigation3.ui.NavDisplay
 import androidx.savedstate.serialization.SavedStateConfiguration
 import com.materialkolor.PaletteStyle
 import com.shub39.grit.core.habits.presentation.ui.HabitsGraph
-import com.shub39.grit.core.navigation.horizontalTransitionMetadata
-import com.shub39.grit.core.navigation.verticalTransitionMetadata
+import com.shub39.grit.core.navigation.fadeTransitionMetadata
 import com.shub39.grit.core.tasks.presentation.ui.TasksPage
 import com.shub39.grit.core.theme.AppTheme
 import com.shub39.grit.core.theme.Fonts
@@ -152,7 +151,7 @@ fun App() {
                         backStack = backStack,
                         entryProvider =
                             entryProvider {
-                                entry<Routes.Tasks>(metadata = verticalTransitionMetadata()) {
+                                entry<Routes.Tasks>(metadata = fadeTransitionMetadata()) {
                                     val state by DummyStateProvider.taskState.collectAsState()
 
                                     TasksPage(
@@ -161,7 +160,7 @@ fun App() {
                                     )
                                 }
 
-                                entry<Routes.Habits>(metadata = verticalTransitionMetadata()) {
+                                entry<Routes.Habits>(metadata = fadeTransitionMetadata()) {
                                     val state by DummyStateProvider.habitState.collectAsState()
 
                                     HabitsGraph(
@@ -226,7 +225,7 @@ fun App() {
                         backStack = backStack,
                         entryProvider =
                             entryProvider {
-                                entry<Routes.Tasks>(metadata = horizontalTransitionMetadata()) {
+                                entry<Routes.Tasks>(metadata = fadeTransitionMetadata()) {
                                     val state by DummyStateProvider.taskState.collectAsState()
 
                                     TasksPage(
@@ -235,7 +234,7 @@ fun App() {
                                     )
                                 }
 
-                                entry<Routes.Habits>(metadata = horizontalTransitionMetadata()) {
+                                entry<Routes.Habits>(metadata = fadeTransitionMetadata()) {
                                     val state by DummyStateProvider.habitState.collectAsState()
 
                                     HabitsGraph(

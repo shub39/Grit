@@ -50,7 +50,7 @@ import com.shub39.grit.billing.PaywallPage
 import com.shub39.grit.core.domain.MainAppState
 import com.shub39.grit.core.domain.Sections
 import com.shub39.grit.core.habits.presentation.ui.HabitsGraph
-import com.shub39.grit.core.navigation.horizontalTransitionMetadata
+import com.shub39.grit.core.navigation.fadeTransitionMetadata
 import com.shub39.grit.core.navigation.verticalTransitionMetadata
 import com.shub39.grit.core.presentation.ChangelogSheet
 import com.shub39.grit.core.presentation.settings.ui.SettingsGraph
@@ -174,7 +174,7 @@ fun App(state: MainAppState, onRefreshSub: () -> Unit, onDismissChangelog: () ->
                                     entryProvider =
                                         entryProvider {
                                             entry<AppSections.TaskPages>(
-                                                metadata = verticalTransitionMetadata()
+                                                metadata = fadeTransitionMetadata()
                                             ) {
                                                 val tvm: TasksViewModel = koinViewModel()
                                                 val taskPageState by
@@ -187,7 +187,7 @@ fun App(state: MainAppState, onRefreshSub: () -> Unit, onDismissChangelog: () ->
                                             }
 
                                             entry<AppSections.SettingsPages>(
-                                                metadata = verticalTransitionMetadata()
+                                                metadata = fadeTransitionMetadata()
                                             ) {
                                                 val svm: SettingsViewModel = koinInject()
                                                 val settingsState by
@@ -204,7 +204,7 @@ fun App(state: MainAppState, onRefreshSub: () -> Unit, onDismissChangelog: () ->
                                             }
 
                                             entry<AppSections.HabitsPages>(
-                                                metadata = verticalTransitionMetadata()
+                                                metadata = fadeTransitionMetadata()
                                             ) {
                                                 val hvm: HabitViewModel = koinViewModel()
                                                 val habitsPageState by
@@ -243,7 +243,7 @@ fun App(state: MainAppState, onRefreshSub: () -> Unit, onDismissChangelog: () ->
                                     entryProvider =
                                         entryProvider {
                                             entry<AppSections.TaskPages>(
-                                                metadata = horizontalTransitionMetadata()
+                                                metadata = fadeTransitionMetadata()
                                             ) {
                                                 val tvm: TasksViewModel = koinViewModel()
                                                 val taskPageState by
@@ -255,7 +255,9 @@ fun App(state: MainAppState, onRefreshSub: () -> Unit, onDismissChangelog: () ->
                                                 )
                                             }
 
-                                            entry<AppSections.SettingsPages> {
+                                            entry<AppSections.SettingsPages>(
+                                                metadata = fadeTransitionMetadata()
+                                            ) {
                                                 val svm: SettingsViewModel = koinInject()
                                                 val settingsState by
                                                     svm.state.collectAsStateWithLifecycle()
@@ -271,7 +273,7 @@ fun App(state: MainAppState, onRefreshSub: () -> Unit, onDismissChangelog: () ->
                                             }
 
                                             entry<AppSections.HabitsPages>(
-                                                metadata = horizontalTransitionMetadata()
+                                                metadata = fadeTransitionMetadata()
                                             ) {
                                                 val hvm: HabitViewModel = koinViewModel()
                                                 val habitsPageState by
