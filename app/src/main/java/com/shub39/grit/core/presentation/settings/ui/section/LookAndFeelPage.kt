@@ -385,12 +385,38 @@ fun LookAndFeelPage(
                                                     if (selected) MaterialShapes.VerySunny.toShape()
                                                     else CircleShape
                                             )
-                                            .background(color = scheme.tertiary)
                                             .clickable {
                                                 onAction(SettingsAction.ChangePaletteStyle(style))
                                             },
                                     contentAlignment = Alignment.Center,
                                 ) {
+                                    Column(modifier = Modifier.matchParentSize()) {
+                                        Row {
+                                            Box(
+                                                modifier =
+                                                    Modifier.size(25.dp)
+                                                        .background(color = scheme.primary)
+                                            )
+                                            Box(
+                                                modifier =
+                                                    Modifier.size(25.dp)
+                                                        .background(color = scheme.tertiary)
+                                            )
+                                        }
+                                        Row {
+                                            Box(
+                                                modifier =
+                                                    Modifier.size(25.dp)
+                                                        .background(color = scheme.secondary)
+                                            )
+                                            Box(
+                                                modifier =
+                                                    Modifier.size(25.dp)
+                                                        .background(color = scheme.onSurface)
+                                            )
+                                        }
+                                    }
+
                                     if (selected) {
                                         Icon(
                                             imageVector = vectorResource(Res.drawable.check_circle),
