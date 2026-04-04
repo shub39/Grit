@@ -37,12 +37,13 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.platform.LocalUriHandler
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import com.shub39.grit.BuildConfig
+import com.shub39.grit.R
 import com.shub39.grit.core.shared_ui.endItemShape
 import com.shub39.grit.core.shared_ui.leadingItemShape
 import com.shub39.grit.core.shared_ui.middleItemShape
-import com.shub39.grit.core.theme.flexFontEmphasis
 import com.shub39.grit.core.theme.flexFontRounded
 import grit.shared.core.generated.resources.Res
 import grit.shared.core.generated.resources.bmc
@@ -75,14 +76,11 @@ fun AboutApp() {
         ) {
             Column {
                 Text(
-                    text = "Grit",
+                    text = stringResource(R.string.app_name),
                     style =
-                        MaterialTheme.typography.headlineLarge.copy(fontFamily = flexFontEmphasis()),
+                        MaterialTheme.typography.headlineLarge.copy(fontFamily = flexFontRounded()),
                 )
-                Text(
-                    text = "${BuildConfig.VERSION_NAME} (${BuildConfig.VERSION_CODE})",
-                    fontFamily = flexFontRounded(),
-                )
+                Text(text = "${BuildConfig.VERSION_NAME} (${BuildConfig.VERSION_CODE})")
             }
 
             Spacer(modifier = Modifier.weight(1f))

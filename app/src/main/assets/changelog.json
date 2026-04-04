@@ -1,5 +1,12 @@
 [
   {
+    "version": "5.8.3",
+    "changes": [
+      "Improved Navigation Experience",
+      "Updated Translations"
+    ]
+  },
+  {
     "version": "5.8.2",
     "changes": [
       "Updated Translations"

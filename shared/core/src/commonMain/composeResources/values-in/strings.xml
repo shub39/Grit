@@ -2,7 +2,7 @@
 <resources>
     <string name="tasks">Tugas</string>
     <string name="material_theme">Tema You Material</string>
-    <string name="done">Selesai</string>
+    <string name="done">Beres</string>
     <string name="add_task">Tambahin tugas</string>
     <string name="add_habit">Tambahin kebiasaan baru</string>
     <string name="update_description">Edit deskripsi</string>
@@ -32,11 +32,11 @@
     <string name="select_seed_desc">Tentukan palet warna tema</string>
     <string name="palette_style">Gaya Palet</string>
     <string name="look_and_feel_desc">Sesuaikan tampilan aplikasi sesukamu</string>
-    <string name="backup">Cadangkan</string>
-    <string name="backup_desc">Ekspor atau Pulihkan tugas dan kebiasaan mu</string>
+    <string name="backup">Cadangkan data</string>
+    <string name="backup_desc">Ekspor atau balikin data tugas dan kebiasaanmu</string>
     <string name="export">Expor Data</string>
     <string name="export_desc">Semua data diekspor ke dalam folder Downloads/Grit</string>
-    <string name="restore">Pulihkan</string>
+    <string name="restore">Balikin data</string>
     <string name="restore_desc">Pulihkan tugas dan kebiasaan dari file yang dipilih</string>
     <string name="choose_file">Pilih file</string>
     <string name="material_theme_desc">Ikuti warna walpaper</string>
@@ -53,17 +53,17 @@
     <string name="pause_notifications_desc">Jeda semua notifikasi aplikasi</string>
     <string name="started_on">Dimulai Pada</string>
     <string name="weekly_graph">Perbandingan Mingguan</string>
-    <string name="not_enough_data">Data enggak mencukupi</string>
+    <string name="not_enough_data">Belum ada data yang bisa dipamerin</string>
     <string name="items_completed">Beres</string>
     <string name="completed">Beres buat hari ini</string>
     <string name="title">Judul</string>
     <string name="description">Deskripsi</string>
     <string name="edit_habit">Edit kebiasaan</string>
     <string name="font">Font</string>
-    <string name="biometric_lock">Kunci Buometrick</string>
+    <string name="biometric_lock">Kunci Biometrick</string>
     <string name="biometric_lock_desc">Pakai otentikasi biometrik buat buka aplikasi</string>
     <string name="bmc">Traktir aku kopi</string>
-    <string name="rate_on_play">Rating di Playstore</string>
+    <string name="rate_on_play">Mampir ke Play Store bentar yuk, kasih bintang 5</string>
     <string name="weekly_progress">Progres mingguan</string>
     <string name="overall_analytics">Ringkasan progress</string>
     <string name="unlock_more_plus">Dapatkan fitur lebih dengan pkus</string>
@@ -72,7 +72,7 @@
     <string name="monthly_progress">Progres bulanan</string>
     <string name="week_breakdown">Rincian progres harian</string>
     <string name="foss">Kamu pakai versi Open Source</string>
-    <string name="foss_desc">Semua fitur sudah terbuka! Versi ini tanpa transaksi dalam aplikasi. Kalau Grit bermanfaat buat harimu, yuk dukung saya lewat donasi di</string>
+    <string name="foss_desc">Udah kebuka semua ya fiturnya! Versi ini bebas biaya alias gak ada in-app purchase. Kalau ngerasa Grit bikin hidupmu lebih tertata, yuk traktir kopi aku di</string>
     <string name="add_reminder">Tambahin Pengingat</string>
     <string name="add_reminder_desc">Terima pengingat notifikasi pada hari-hari tertentu</string>
     <string name="invalid_date_time">Waduh, masa lalu jangan diungkit lagi :')</string>

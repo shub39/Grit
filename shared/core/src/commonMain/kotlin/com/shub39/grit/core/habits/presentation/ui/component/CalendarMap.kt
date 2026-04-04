@@ -34,6 +34,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import com.kizitonwose.calendar.compose.CalendarState
@@ -145,6 +146,16 @@ fun CalendarMap(
                     val validDate =
                         day.date <= today && day.date.dayOfWeek in currentHabit.habit.days
 
+                    val donePrevious = day.date.minusDays(1) in doneDates
+                    val doneAfter = day.date.plusDays(1) in doneDates
+                    val streakPosition =
+                        when {
+                            donePrevious && doneAfter -> StreakPosition.MIDDLE
+                            donePrevious -> StreakPosition.END
+                            doneAfter -> StreakPosition.START
+                            else -> StreakPosition.ISOLATED
+                        }
+
                     Box(
                         modifier =
                             Modifier.padding(
@@ -156,6 +167,15 @@ fun CalendarMap(
                                 )
                                 .fillMaxWidth()
                                 .height(40.dp)
+                                .clip(
+                                    calendarMapStreakShape(
+                                        streakPosition = streakPosition,
+                                        isFirstDayOfWeek = day.date.dayOfWeek == edgeWeeks.first(),
+                                        isLastDayOfWeek = day.date.dayOfWeek == edgeWeeks.last(),
+                                        isFirstDayOfMonth = day.date.day == 1,
+                                        isLastDayOfMonth = day.date.plusDays(1).day == 1,
+                                    )
+                                )
                                 .clickable(enabled = validDate) {
                                     onAction(
                                         HabitsAction.InsertStatus(currentHabit.habit, day.date)
@@ -164,32 +184,10 @@ fun CalendarMap(
                         contentAlignment = Alignment.Center,
                     ) {
                         if (done) {
-                            val donePrevious = day.date.minusDays(1) in doneDates
-                            val doneAfter = day.date.plusDays(1) in doneDates
-                            val streakPosition =
-                                when {
-                                    donePrevious && doneAfter -> StreakPosition.MIDDLE
-                                    donePrevious -> StreakPosition.END
-                                    doneAfter -> StreakPosition.START
-                                    else -> StreakPosition.ISOLATED
-                                }
-
                             Box(
                                 modifier =
                                     Modifier.fillMaxSize()
-                                        .background(
-                                            color = MaterialTheme.colorScheme.primary,
-                                            shape =
-                                                calendarMapStreakShape(
-                                                    streakPosition = streakPosition,
-                                                    isFirstDayOfWeek =
-                                                        day.date.dayOfWeek == edgeWeeks.first(),
-                                                    isLastDayOfWeek =
-                                                        day.date.dayOfWeek == edgeWeeks.last(),
-                                                    isFirstDayOfMonth = day.date.day == 1,
-                                                    isLastDayOfMonth = day.date.plusDays(1).day == 1,
-                                                ),
-                                        ),
+                                        .background(color = MaterialTheme.colorScheme.primary),
                                 contentAlignment = Alignment.Center,
                             ) {
                                 val isStreakEnd =

@@ -25,8 +25,8 @@ plugins {
 }
 
 val appName = "Grit"
-val appVersionCode = 5820
-val appVersionName = "5.8.2"
+val appVersionCode = 5830
+val appVersionName = "5.8.3"
 
 val gitHash = execute("git", "rev-parse", "HEAD").take(7)
 
@@ -124,7 +124,7 @@ dependencies {
     implementation(libs.compose.ui.tooling.preview)
     debugImplementation(libs.compose.ui.tooling.preview)
 
-    implementation(libs.navigation.compose)
+    implementation(libs.jetbrains.navigation3.ui)
     implementation(libs.compose.windowsizeclass)
     implementation(libs.androidx.core.splashscreen)
     implementation(libs.androidx.room.runtime)

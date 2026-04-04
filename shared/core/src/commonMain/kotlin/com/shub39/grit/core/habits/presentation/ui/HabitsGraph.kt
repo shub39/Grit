@@ -18,9 +18,7 @@ package com.shub39.grit.core.habits.presentation.ui
 
 import androidx.compose.animation.AnimatedContent
 import androidx.compose.animation.AnimatedVisibility
-import androidx.compose.animation.core.tween
-import androidx.compose.animation.fadeOut
-import androidx.compose.animation.slideInVertically
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -45,19 +43,22 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.unit.dp
-import androidx.navigation.compose.NavHost
-import androidx.navigation.compose.composable
-import androidx.navigation.compose.rememberNavController
+import androidx.navigation3.runtime.NavKey
+import androidx.navigation3.runtime.entryProvider
+import androidx.navigation3.runtime.rememberNavBackStack
+import androidx.navigation3.ui.NavDisplay
+import androidx.savedstate.serialization.SavedStateConfiguration
 import com.shub39.grit.core.habits.presentation.HabitState
 import com.shub39.grit.core.habits.presentation.HabitsAction
 import com.shub39.grit.core.habits.presentation.ui.component.HabitListFABs
 import com.shub39.grit.core.habits.presentation.ui.sections.AnalyticsPage
 import com.shub39.grit.core.habits.presentation.ui.sections.HabitsList
 import com.shub39.grit.core.habits.presentation.ui.sections.OverallAnalytics
+import com.shub39.grit.core.navigation.horizontalTransitionMetadata
+import com.shub39.grit.core.navigation.verticalTransitionMetadata
 import com.shub39.grit.core.shared_ui.PageFill
 import com.shub39.grit.core.theme.flexFontEmphasis
 import com.shub39.grit.core.theme.flexFontRounded
@@ -69,16 +70,25 @@ import grit.shared.core.generated.resources.expand
 import grit.shared.core.generated.resources.habits
 import grit.shared.core.generated.resources.reorder
 import kotlinx.serialization.Serializable
+import kotlinx.serialization.modules.SerializersModule
+import kotlinx.serialization.modules.polymorphic
 import org.jetbrains.compose.resources.painterResource
 import org.jetbrains.compose.resources.stringResource
 
-@Serializable
-private sealed interface HabitRoutes {
-    @Serializable data object HabitList : HabitRoutes
+@Serializable data object HabitList : NavKey
 
-    @Serializable data object HabitAnalytics : HabitRoutes
+@Serializable data object HabitAnalytics : NavKey
 
-    @Serializable data object OverallAnalytics : HabitRoutes
+@Serializable data object OverallAnalytics : NavKey
+
+private val config = SavedStateConfiguration {
+    serializersModule = SerializersModule {
+        polymorphic(NavKey::class) {
+            subclass(HabitList::class, HabitList.serializer())
+            subclass(HabitAnalytics::class, HabitAnalytics.serializer())
+            subclass(OverallAnalytics::class, OverallAnalytics.serializer())
+        }
+    }
 }
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -95,80 +105,82 @@ fun HabitsGraph(
     val scrollBehavior = TopAppBarDefaults.enterAlwaysScrollBehavior()
 
     if (windowSizeClass.widthSizeClass != WindowWidthSizeClass.Expanded) {
-        val navController = rememberNavController()
+        val backstack = rememberNavBackStack(config, HabitList)
 
-        NavHost(
-            navController = navController,
-            startDestination = HabitRoutes.HabitList,
-            enterTransition = { slideInVertically(tween(300), initialOffsetY = { it / 2 }) },
-            exitTransition = { fadeOut(tween(300)) },
-            popEnterTransition = { slideInVertically(tween(300), initialOffsetY = { it / 2 }) },
-            popExitTransition = { fadeOut(tween(300)) },
-            contentAlignment = Alignment.Center,
+        NavDisplay(
             modifier = modifier,
-        ) {
-            composable<HabitRoutes.HabitList> {
-                Column {
-                    HabitsTopAppBar(
-                        state = state,
-                        onAction = onAction,
-                        scrollBehavior = scrollBehavior,
-                    )
+            backStack = backstack,
+            entryProvider =
+                entryProvider {
+                    entry<HabitList> {
+                        Column(
+                            modifier = Modifier.background(MaterialTheme.colorScheme.background)
+                        ) {
+                            HabitsTopAppBar(
+                                state = state,
+                                onAction = onAction,
+                                scrollBehavior = scrollBehavior,
+                            )
 
-                    PageFill {
-                        val lazyListState = rememberLazyListState()
-                        val fabVisible by remember {
-                            derivedStateOf { lazyListState.firstVisibleItemIndex == 0 }
+                            PageFill {
+                                val lazyListState = rememberLazyListState()
+                                val fabVisible by remember {
+                                    derivedStateOf { lazyListState.firstVisibleItemIndex == 0 }
+                                }
+
+                                HabitsList(
+                                    state = state,
+                                    onAction = onAction,
+                                    lazyListState = lazyListState,
+                                    onNavigateToAnalytics = { backstack.add(HabitAnalytics) },
+                                    modifier =
+                                        Modifier.fillMaxHeight()
+                                            .nestedScroll(scrollBehavior.nestedScrollConnection),
+                                )
+
+                                HabitListFABs(
+                                    onNavigateToOverallAnalytics = {
+                                        backstack.add(OverallAnalytics)
+                                    },
+                                    state = state,
+                                    fabVisible = fabVisible,
+                                    onAction = onAction,
+                                    onNavigateToPaywall = onNavigateToPaywall,
+                                    isUserSubscribed = isUserSubscribed,
+                                )
+                            }
                         }
+                    }
 
-                        HabitsList(
+                    entry<HabitAnalytics>(metadata = horizontalTransitionMetadata()) {
+                        AnalyticsPage(
                             state = state,
                             onAction = onAction,
-                            lazyListState = lazyListState,
-                            onNavigateToAnalytics = {
-                                navController.navigate(HabitRoutes.HabitAnalytics)
+                            onNavigateBack = {
+                                if (backstack.size != 1) backstack.removeLastOrNull()
                             },
-                            modifier =
-                                Modifier.fillMaxHeight()
-                                    .nestedScroll(scrollBehavior.nestedScrollConnection),
-                        )
-
-                        HabitListFABs(
-                            onNavigateToOverallAnalytics = {
-                                navController.navigate(HabitRoutes.OverallAnalytics)
-                            },
-                            state = state,
-                            fabVisible = fabVisible,
-                            onAction = onAction,
                             onNavigateToPaywall = onNavigateToPaywall,
                             isUserSubscribed = isUserSubscribed,
+                            modifier = Modifier.background(MaterialTheme.colorScheme.background),
                         )
                     }
-                }
-            }
 
-            composable<HabitRoutes.HabitAnalytics> {
-                AnalyticsPage(
-                    state = state,
-                    onAction = onAction,
-                    onNavigateBack = { navController.navigateUp() },
-                    onNavigateToPaywall = onNavigateToPaywall,
-                    isUserSubscribed = isUserSubscribed,
-                )
-            }
-
-            composable<HabitRoutes.OverallAnalytics> {
-                OverallAnalytics(
-                    state = state,
-                    onNavigateBack = { navController.navigateUp() },
-                    onNavigateToPaywall = onNavigateToPaywall,
-                    isUserSubscribed = isUserSubscribed,
-                    onAction = onAction,
-                )
-            }
-        }
+                    entry<OverallAnalytics>(metadata = verticalTransitionMetadata()) {
+                        OverallAnalytics(
+                            state = state,
+                            onNavigateBack = {
+                                if (backstack.size != 1) backstack.removeLastOrNull()
+                            },
+                            onNavigateToPaywall = onNavigateToPaywall,
+                            isUserSubscribed = isUserSubscribed,
+                            onAction = onAction,
+                            modifier = Modifier.background(MaterialTheme.colorScheme.background),
+                        )
+                    }
+                },
+        )
     } else {
-        Column(modifier = modifier) {
+        Column(modifier = modifier.background(MaterialTheme.colorScheme.background)) {
             HabitsTopAppBar(state = state, onAction = onAction, scrollBehavior = scrollBehavior)
 
             Row(modifier = Modifier.weight(1f)) {
@@ -214,6 +226,7 @@ fun HabitsGraph(
                                 onNavigateBack = { onAction(HabitsAction.PrepareAnalytics(null)) },
                                 onNavigateToPaywall = onNavigateToPaywall,
                                 isUserSubscribed = isUserSubscribed,
+                                modifier = Modifier.background(MaterialTheme.colorScheme.background),
                             )
                         } else {
                             OverallAnalytics(
@@ -223,6 +236,7 @@ fun HabitsGraph(
                                 onNavigateToPaywall = onNavigateToPaywall,
                                 isUserSubscribed = isUserSubscribed,
                                 onAction = onAction,
+                                modifier = Modifier.background(MaterialTheme.colorScheme.background),
                             )
                         }
                     }

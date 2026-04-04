@@ -117,7 +117,12 @@ fun LookAndFeelPage(
     var colorPickerDialog by remember { mutableStateOf(false) }
 
     val scrollBehavior = TopAppBarDefaults.enterAlwaysScrollBehavior()
-    Column(modifier = Modifier.fillMaxSize().nestedScroll(scrollBehavior.nestedScrollConnection)) {
+    Column(
+        modifier =
+            Modifier.fillMaxSize()
+                .nestedScroll(scrollBehavior.nestedScrollConnection)
+                .background(MaterialTheme.colorScheme.background)
+    ) {
         MediumFlexibleTopAppBar(
             scrollBehavior = scrollBehavior,
             title = {
@@ -375,12 +380,12 @@ fun LookAndFeelPage(
                                 Box(
                                     modifier =
                                         Modifier.size(50.dp)
-                                            .background(
-                                                color = scheme.tertiary,
+                                            .clip(
                                                 shape =
                                                     if (selected) MaterialShapes.VerySunny.toShape()
-                                                    else CircleShape,
+                                                    else CircleShape
                                             )
+                                            .background(color = scheme.tertiary)
                                             .clickable {
                                                 onAction(SettingsAction.ChangePaletteStyle(style))
                                             },

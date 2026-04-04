@@ -42,7 +42,7 @@ kotlin {
             implementation(libs.compose.foundation)
             implementation(libs.compose.ui)
             implementation(libs.compose.components.resources)
-            implementation(libs.navigation.compose)
+            implementation(libs.jetbrains.navigation3.ui)
             implementation(libs.kotlinx.datetime)
             implementation(libs.compose.windowsizeclass)
 

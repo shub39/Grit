@@ -40,12 +40,15 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
-import androidx.navigation.NavHostController
-import androidx.navigation.compose.NavHost
-import androidx.navigation.compose.composable
-import androidx.navigation.compose.rememberNavController
+import androidx.navigation3.runtime.NavKey
+import androidx.navigation3.runtime.entryProvider
+import androidx.navigation3.runtime.rememberNavBackStack
+import androidx.navigation3.ui.NavDisplay
+import androidx.savedstate.serialization.SavedStateConfiguration
 import com.materialkolor.PaletteStyle
 import com.shub39.grit.core.habits.presentation.ui.HabitsGraph
+import com.shub39.grit.core.navigation.horizontalTransitionMetadata
+import com.shub39.grit.core.navigation.verticalTransitionMetadata
 import com.shub39.grit.core.tasks.presentation.ui.TasksPage
 import com.shub39.grit.core.theme.AppTheme
 import com.shub39.grit.core.theme.Fonts
@@ -59,16 +62,27 @@ import grit.shared.core.generated.resources.dark_mode
 import grit.shared.core.generated.resources.light_mode
 import kotlin.random.Random
 import kotlinx.serialization.Serializable
+import kotlinx.serialization.modules.SerializersModule
+import kotlinx.serialization.modules.polymorphic
 import org.jetbrains.compose.resources.DrawableResource
 import org.jetbrains.compose.resources.vectorResource
 
 @Serializable
-private sealed interface Routes {
+private sealed interface Routes : NavKey {
     @Serializable data object Tasks : Routes
 
     @Serializable data object Habits : Routes
 
     companion object {
+        val config = SavedStateConfiguration {
+            serializersModule = SerializersModule {
+                polymorphic(NavKey::class) {
+                    subclass(Tasks::class, Tasks.serializer())
+                    subclass(Habits::class, Habits.serializer())
+                }
+            }
+        }
+
         val allRoutes = listOf<Routes>(Tasks, Habits)
 
         fun Routes.toDrawableRes(): DrawableResource {
@@ -89,9 +103,8 @@ private sealed interface Routes {
 
 @Composable
 fun App() {
-    val navController = rememberNavController()
+    val backStack = rememberNavBackStack(Routes.config, Routes.Tasks)
     var isDark by remember { mutableStateOf(true) }
-    var currentRoute: Routes by remember { mutableStateOf(Routes.Tasks) }
     val windowSizeClass = LocalWindowSizeClass.current
 
     val color = remember {
@@ -114,10 +127,12 @@ fun App() {
                         NavigationBar {
                             Routes.allRoutes.forEach { route: Routes ->
                                 NavigationBarItem(
-                                    selected = currentRoute == route,
+                                    selected = backStack.last() == route,
                                     onClick = {
-                                        currentRoute = route
-                                        navController.navigate(currentRoute)
+                                        if (backStack.last() != route) {
+                                            backStack.removeAll { it == route }
+                                            backStack.add(route)
+                                        }
                                     },
                                     icon = {
                                         Icon(
@@ -131,8 +146,33 @@ fun App() {
                             }
                         }
                     }
-                ) {
-                    AppContent(navController = navController, modifier = Modifier.padding(it))
+                ) { paddingValues ->
+                    NavDisplay(
+                        modifier = Modifier.padding(paddingValues),
+                        backStack = backStack,
+                        entryProvider =
+                            entryProvider {
+                                entry<Routes.Tasks>(metadata = verticalTransitionMetadata()) {
+                                    val state by DummyStateProvider.taskState.collectAsState()
+
+                                    TasksPage(
+                                        state = state,
+                                        onAction = DummyStateProvider::onTaskAction,
+                                    )
+                                }
+
+                                entry<Routes.Habits>(metadata = verticalTransitionMetadata()) {
+                                    val state by DummyStateProvider.habitState.collectAsState()
+
+                                    HabitsGraph(
+                                        state = state,
+                                        onAction = DummyStateProvider::onHabitAction,
+                                        isUserSubscribed = true,
+                                        onNavigateToPaywall = {},
+                                    )
+                                }
+                            },
+                    )
                 }
             }
 
@@ -163,10 +203,12 @@ fun App() {
                     ) {
                         Routes.allRoutes.forEach { route: Routes ->
                             NavigationRailItem(
-                                selected = currentRoute == route,
+                                selected = backStack.last() == route,
                                 onClick = {
-                                    currentRoute = route
-                                    navController.navigate(currentRoute)
+                                    if (backStack.last() != route) {
+                                        backStack.removeAll { it == route }
+                                        backStack.add(route)
+                                    }
                                 },
                                 icon = {
                                     Icon(
@@ -180,31 +222,33 @@ fun App() {
                         }
                     }
 
-                    AppContent(navController = navController)
+                    NavDisplay(
+                        backStack = backStack,
+                        entryProvider =
+                            entryProvider {
+                                entry<Routes.Tasks>(metadata = horizontalTransitionMetadata()) {
+                                    val state by DummyStateProvider.taskState.collectAsState()
+
+                                    TasksPage(
+                                        state = state,
+                                        onAction = DummyStateProvider::onTaskAction,
+                                    )
+                                }
+
+                                entry<Routes.Habits>(metadata = horizontalTransitionMetadata()) {
+                                    val state by DummyStateProvider.habitState.collectAsState()
+
+                                    HabitsGraph(
+                                        state = state,
+                                        onAction = DummyStateProvider::onHabitAction,
+                                        isUserSubscribed = true,
+                                        onNavigateToPaywall = {},
+                                    )
+                                }
+                            },
+                    )
                 }
             }
-        }
-    }
-}
-
-@Composable
-private fun AppContent(navController: NavHostController, modifier: Modifier = Modifier) {
-    NavHost(navController = navController, startDestination = Routes.Tasks, modifier = modifier) {
-        composable<Routes.Tasks> {
-            val state by DummyStateProvider.taskState.collectAsState()
-
-            TasksPage(state = state, onAction = DummyStateProvider::onTaskAction)
-        }
-
-        composable<Routes.Habits> {
-            val state by DummyStateProvider.habitState.collectAsState()
-
-            HabitsGraph(
-                state = state,
-                onAction = DummyStateProvider::onHabitAction,
-                isUserSubscribed = true,
-                onNavigateToPaywall = {},
-            )
         }
     }
 }

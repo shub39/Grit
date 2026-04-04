@@ -1,5 +1,9 @@
 # Changelog
 
+## 5.8.3
+- Improved Navigation Experience
+- Updated Translations
+
 ## 5.8.2
 - Updated Translations
                                                             

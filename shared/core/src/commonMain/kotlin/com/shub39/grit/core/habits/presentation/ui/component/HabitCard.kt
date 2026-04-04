@@ -252,18 +252,6 @@ fun HabitCard(
                     Box(
                         modifier =
                             Modifier.fillMaxWidth()
-                                .clickable(
-                                    role = Role.Button,
-                                    enabled = validDay,
-                                    onClick = {
-                                        action(
-                                            HabitsAction.InsertStatus(
-                                                habit = habitWithAnalytics.habit,
-                                                date = weekDay.date,
-                                            )
-                                        )
-                                    },
-                                )
                                 .then(
                                     if (done) {
                                         val donePrevious =
@@ -299,6 +287,19 @@ fun HabitCard(
                                             shape = shape,
                                         )
                                     } else Modifier
+                                )
+                                .clip(shape = RoundedCornerShape(20.dp))
+                                .clickable(
+                                    role = Role.Button,
+                                    enabled = validDay,
+                                    onClick = {
+                                        action(
+                                            HabitsAction.InsertStatus(
+                                                habit = habitWithAnalytics.habit,
+                                                date = weekDay.date,
+                                            )
+                                        )
+                                    },
                                 ),
                         contentAlignment = Alignment.Center,
                     ) {
