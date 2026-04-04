@@ -375,12 +375,12 @@ fun LookAndFeelPage(
                                 Box(
                                     modifier =
                                         Modifier.size(50.dp)
-                                            .background(
-                                                color = scheme.tertiary,
+                                            .clip(
                                                 shape =
                                                     if (selected) MaterialShapes.VerySunny.toShape()
-                                                    else CircleShape,
+                                                    else CircleShape
                                             )
+                                            .background(color = scheme.tertiary)
                                             .clickable {
                                                 onAction(SettingsAction.ChangePaletteStyle(style))
                                             },

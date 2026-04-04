@@ -37,6 +37,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.unit.dp
 import com.kizitonwose.calendar.compose.HeatMapCalendar
 import com.kizitonwose.calendar.compose.heatmapcalendar.HeatMapCalendarState
@@ -170,40 +171,38 @@ fun WeeklyBooleanHeatMap(
                         val done = day.date in doneDates
                         val validDay = day.date.dayOfWeek in habit.days
 
+                        val donePrevious = day.date.minusDays(1) in doneDates
+                        val doneAfter = day.date.plusDays(1) in doneDates
+                        val streakPosition =
+                            when {
+                                donePrevious && doneAfter -> StreakPosition.MIDDLE
+                                donePrevious -> StreakPosition.END
+                                doneAfter -> StreakPosition.START
+                                else -> StreakPosition.ISOLATED
+                            }
+
+                        val shape =
+                            heatMapStreakShape(
+                                streakPosition = streakPosition,
+                                isFirstDayOfWeek = day.date.dayOfWeek == edgeWeeks.first(),
+                                isLastDayOfWeek = day.date.dayOfWeek == edgeWeeks.last(),
+                            )
+
                         Box(
                             modifier =
-                                Modifier.padding(horizontal = 1.dp).size(35.dp).clickable(
-                                    enabled = validDay
-                                ) {
-                                    onAction(HabitsAction.InsertStatus(habit, day.date))
-                                },
+                                Modifier.padding(horizontal = 1.dp)
+                                    .size(35.dp)
+                                    .clip(shape)
+                                    .clickable(enabled = validDay) {
+                                        onAction(HabitsAction.InsertStatus(habit, day.date))
+                                    },
                             contentAlignment = Alignment.Center,
                         ) {
                             if (done) {
-                                val donePrevious = day.date.minusDays(1) in doneDates
-                                val doneAfter = day.date.plusDays(1) in doneDates
-                                val streakPosition =
-                                    when {
-                                        donePrevious && doneAfter -> StreakPosition.MIDDLE
-                                        donePrevious -> StreakPosition.END
-                                        doneAfter -> StreakPosition.START
-                                        else -> StreakPosition.ISOLATED
-                                    }
-
                                 Box(
                                     modifier =
                                         Modifier.fillMaxSize()
-                                            .background(
-                                                color = MaterialTheme.colorScheme.primary,
-                                                shape =
-                                                    heatMapStreakShape(
-                                                        streakPosition = streakPosition,
-                                                        isFirstDayOfWeek =
-                                                            day.date.dayOfWeek == edgeWeeks.first(),
-                                                        isLastDayOfWeek =
-                                                            day.date.dayOfWeek == edgeWeeks.last(),
-                                                    ),
-                                            ),
+                                            .background(color = MaterialTheme.colorScheme.primary),
                                     contentAlignment = Alignment.Center,
                                 ) {
                                     val isStreakEnd =
