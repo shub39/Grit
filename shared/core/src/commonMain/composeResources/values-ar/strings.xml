@@ -47,7 +47,7 @@
     <string name="update_title">تعديل العنوان</string>
     <string name="clear_preference_exp">مسح المهام دوريا</string>
     <string name="categories">تصنيفات</string>
-    <string name="edit_categories">تعديل تصنيفات المهام</string>
+    <string name="edit_categories">تعديل التصنيفات</string>
     <string name="delete_category">هل انت متاكد؟ سيتم حذف كل المهام في هذا التصنيف</string>
     <string name="add_category">اضافة تصنيف</string>
     <string name="add">اضافة شيئ</string>
@@ -137,4 +137,5 @@
     <string name="download">تحميل</string>
     <string name="translate">ترجم</string>
     <string name="changelog">سجل التغييرات</string>
+    <string name="whats_changed">التغييرات</string>
 </resources>
