@@ -131,7 +131,7 @@
     <string name="invalid_date_time">Выбранное время уже прошло :')</string>
     <string name="reorder_tasks">Изменить порядок задач</string>
     <string name="reorder_tasks_desc">Изменить порядок задач отмеченных выполненными</string>
-    <string name="weeks">Неделя</string>
+    <string name="weeks">Недели</string>
     <string name="save">Сохранить</string>
     <string name="open_app">Открыть приложение</string>
     <string name="all_tasks">Все задачи</string>
