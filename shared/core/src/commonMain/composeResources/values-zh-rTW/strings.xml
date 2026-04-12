@@ -26,7 +26,7 @@
     <string name="add">新增一些東西吧</string>
     <string name="look_and_feel">外觀與風格</string>
     <string name="use_amoled">Amoled 調色盤</string>
-    <string name="use_amoled_desc">最適合在 AMOLED 螢幕上使用</string>
+    <string name="use_amoled_desc">在 AMOLED 螢幕上提供最佳體驗</string>
     <string name="select_seed">選擇種子顏色</string>
     <string name="palette_style">調色盤風格</string>
     <string name="look_and_feel_desc">以多種方式自訂應用程式</string>
@@ -37,7 +37,7 @@
     <string name="restore">還原</string>
     <string name="restore_desc">從所選檔案還原任務與習慣</string>
     <string name="choose_file">選擇檔案</string>
-    <string name="material_theme_desc">依桌布使用對應顏色</string>
+    <string name="material_theme_desc">以桌布顏色為基礎</string>
     <string name="show_habits">優先顯示習慣</string>
     <string name="show_habits_desc">啟動應用程式時優先顯示習慣頁面</string>
     <string name="use_24Hr">使用 24 小時制</string>

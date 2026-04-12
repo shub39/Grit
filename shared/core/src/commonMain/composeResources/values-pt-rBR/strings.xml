@@ -43,7 +43,7 @@
     <string name="update_title">Editar Título</string>
     <string name="clear_preference_exp">Limpar tarefas periodicamente</string>
     <string name="categories">Categorias</string>
-    <string name="edit_categories">Editar categorias de Tarefas</string>
+    <string name="edit_categories">Editar Categorias</string>
     <string name="delete_category">Você tem certeza? Todas as tarefas nesta categoria serão deletadas</string>
     <string name="add_category">Adicionar Categoria</string>
     <string name="add">Adicione um Item</string>
@@ -115,7 +115,7 @@
     <string name="foss_desc">Todos os recursos são desbloqueados. Esta variante do aplicativo não suporta compras no aplicativo. Se este aplicativo adicionou valor à sua vida, apoie-me ao doar em</string>
     <string name="no_habit_for_today">Sem Habits para hoje</string>
     <string name="add_reminder">Adicionar lembrete</string>
-    <string name="invalid_date_time">O tempo selecionado está passado :\\')</string>
+    <string name="invalid_date_time">O tempo selecionado está no passado :')</string>
     <string name="reorder_tasks">Reordenar tarefas</string>
     <string name="reorder_tasks_desc">Reordenar tarefas quando marcadas como concluídas</string>
     <string name="weeks">Semanas</string>
@@ -137,4 +137,7 @@
     <string name="changelog">Mudanças</string>
     <string name="input">Inserir</string>
     <string name="done">Concluído</string>
+    <string name="add_reminder_desc">Receber uma notificação de lembrete em dias selecionados</string>
+    <string name="whats_changed">O que mudou</string>
+    <string name="select_days">Dias Selecionados</string>
 </resources>
