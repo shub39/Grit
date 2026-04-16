@@ -1,5 +1,10 @@
 # Changelog
 
+## 5.9.0
+- Fixed Floating action button position on large displays
+- Added Expressive Motion scheme to animations
+- Updated Translations
+
 ## 5.8.4
 - Changed Navigation Animation
 - Misc UI fixes
