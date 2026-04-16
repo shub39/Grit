@@ -19,6 +19,9 @@ package com.shub39.grit.core.tasks.presentation.ui.section
 import androidx.compose.animation.AnimatedContent
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.animateContentSize
+import androidx.compose.animation.fadeIn
+import androidx.compose.animation.fadeOut
+import androidx.compose.animation.togetherWith
 import androidx.compose.foundation.background
 import androidx.compose.foundation.combinedClickable
 import androidx.compose.foundation.layout.Arrangement
@@ -121,7 +124,6 @@ import org.jetbrains.compose.resources.vectorResource
 import sh.calvin.reorderable.ReorderableItem
 import sh.calvin.reorderable.rememberReorderableLazyListState
 
-@OptIn(ExperimentalMaterial3ExpressiveApi::class, ExperimentalMaterial3Api::class)
 @Composable
 fun TaskList(state: TaskState, onAction: (TaskAction) -> Unit, onEditCategories: () -> Unit) =
     PageFill {
@@ -187,6 +189,8 @@ fun TaskList(state: TaskState, onAction: (TaskAction) -> Unit, onEditCategories:
                     .animateFloatingActionButton(
                         visible = state.currentCategory != null,
                         alignment = Alignment.BottomEnd,
+                        scaleAnimationSpec = MaterialTheme.motionScheme.fastSpatialSpec(),
+                        alphaAnimationSpec = MaterialTheme.motionScheme.fastEffectsSpec(),
                     ),
         ) {
             Row(
@@ -201,7 +205,9 @@ fun TaskList(state: TaskState, onAction: (TaskAction) -> Unit, onEditCategories:
                 AnimatedVisibility(
                     visible =
                         state.tasks[state.currentCategory].isNullOrEmpty() ||
-                            windowSizeClass.widthSizeClass == WindowWidthSizeClass.Expanded
+                            windowSizeClass.widthSizeClass == WindowWidthSizeClass.Expanded,
+                    enter = fadeIn(MaterialTheme.motionScheme.fastEffectsSpec()),
+                    exit = fadeOut(MaterialTheme.motionScheme.fastEffectsSpec()),
                 ) {
                     Text(
                         text = stringResource(Res.string.add_task),
@@ -290,7 +296,12 @@ private fun TaskListTopBar(
             )
         },
         actions = {
-            AnimatedVisibility(visible = state.completedTasks.isNotEmpty()) {
+            val motionScheme = MaterialTheme.motionScheme
+            AnimatedVisibility(
+                visible = state.completedTasks.isNotEmpty(),
+                enter = fadeIn(motionScheme.fastEffectsSpec()),
+                exit = fadeOut(motionScheme.fastEffectsSpec()),
+            ) {
                 OutlinedIconButton(
                     onClick = onDeleteClick,
                     shapes =
@@ -306,7 +317,11 @@ private fun TaskListTopBar(
                 }
             }
 
-            AnimatedVisibility(visible = state.tasks.values.isNotEmpty() && !isExpanded) {
+            AnimatedVisibility(
+                visible = state.tasks.values.isNotEmpty() && !isExpanded,
+                enter = fadeIn(motionScheme.fastEffectsSpec()),
+                exit = fadeOut(motionScheme.fastEffectsSpec()),
+            ) {
                 FilledTonalIconToggleButton(
                     checked = isReorderMode,
                     shapes =
@@ -395,7 +410,7 @@ private fun CategorySelector(
     }
 }
 
-@OptIn(ExperimentalMaterial3Api::class)
+@OptIn(ExperimentalMaterial3Api::class, ExperimentalMaterial3ExpressiveApi::class)
 @Composable
 private fun CompactTasksView(
     state: TaskState,
@@ -409,7 +424,14 @@ private fun CompactTasksView(
         shape = RoundedCornerShape(topStart = 28.dp, topEnd = 28.dp),
         modifier = Modifier.padding(horizontal = if (isCompact) 0.dp else 16.dp),
     ) {
-        AnimatedContent(targetState = state.currentCategory?.id) { categoryId ->
+        val motionScheme = MaterialTheme.motionScheme
+        AnimatedContent(
+            targetState = state.currentCategory?.id,
+            transitionSpec = {
+                fadeIn(motionScheme.fastEffectsSpec()) togetherWith
+                    fadeOut(motionScheme.fastEffectsSpec())
+            },
+        ) { categoryId ->
             val category = state.tasks.keys.firstOrNull { it.id == categoryId }
             if (category != null) {
                 val lazyListState = rememberLazyListState()
@@ -596,7 +618,11 @@ private fun ExpandedTasksView(
                 color = MaterialTheme.colorScheme.surfaceContainer,
                 shape = RoundedCornerShape(28.dp),
                 modifier =
-                    Modifier.widthIn(max = 350.dp).heightIn(max = 1000.dp).animateContentSize(),
+                    Modifier.widthIn(max = 350.dp)
+                        .heightIn(max = 1000.dp)
+                        .animateContentSize(
+                            animationSpec = MaterialTheme.motionScheme.fastSpatialSpec()
+                        ),
             ) {
                 LazyColumn(
                     modifier = Modifier.fillMaxWidth(),
