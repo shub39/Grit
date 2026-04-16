@@ -22,6 +22,7 @@ import androidx.compose.animation.fadeOut
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.BoxScope
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.material3.ExperimentalMaterial3ExpressiveApi
@@ -64,6 +65,10 @@ fun BoxScope.HabitListFABs(
         modifier =
             modifier
                 .padding(16.dp)
+                .then(
+                    if (windowSizeClass.widthSizeClass != WindowWidthSizeClass.Expanded) Modifier
+                    else Modifier.navigationBarsPadding()
+                )
                 .align(
                     if (windowSizeClass.widthSizeClass == WindowWidthSizeClass.Expanded) {
                         Alignment.BottomStart
