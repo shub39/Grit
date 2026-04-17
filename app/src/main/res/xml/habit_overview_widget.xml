@@ -6,6 +6,7 @@
     android:minWidth="109dp"
     android:minHeight="132dp"
     android:minResizeWidth="109dp"
+    android:previewImage="@drawable/habits_overview_widget"
     android:minResizeHeight="132dp"
     android:updatePeriodMillis="1800000"
     android:targetCellWidth="4"

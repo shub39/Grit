@@ -9,6 +9,7 @@
     android:minResizeHeight="132dp"
     android:updatePeriodMillis="1800000"
     android:targetCellWidth="3"
+    android:previewImage="@drawable/habit_weekly_breakdown_widget"
     android:targetCellHeight="2"
     android:resizeMode="horizontal|vertical"
     android:widgetCategory="home_screen|keyguard"

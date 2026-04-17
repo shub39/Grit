@@ -2,6 +2,8 @@
 
 ## 5.9.0
 - Fixed Floating action button position on large displays
+- Fixed Icons for RTL languages (#272)
+- Added Preview images for widgets in widget picker (#273)
 - Added Expressive Motion scheme to animations
 - Updated Translations
 
