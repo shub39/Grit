@@ -18,6 +18,9 @@ package com.shub39.grit.core.habits.presentation.ui
 
 import androidx.compose.animation.AnimatedContent
 import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.fadeIn
+import androidx.compose.animation.fadeOut
+import androidx.compose.animation.togetherWith
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -218,7 +221,14 @@ fun HabitsGraph(
                     shape = RoundedCornerShape(topStart = 28.dp),
                     modifier = Modifier.weight(1f),
                 ) {
-                    AnimatedContent(targetState = state.analyticsHabitId) {
+                    val motionScheme = MaterialTheme.motionScheme
+                    AnimatedContent(
+                        targetState = state.analyticsHabitId,
+                        transitionSpec = {
+                            fadeIn(motionScheme.fastEffectsSpec()) togetherWith
+                                fadeOut(motionScheme.fastEffectsSpec())
+                        },
+                    ) {
                         if (it != null) {
                             AnalyticsPage(
                                 state = state,
@@ -273,7 +283,11 @@ private fun HabitsTopAppBar(
             }
         },
         actions = {
-            AnimatedVisibility(visible = state.habitsWithAnalytics.isNotEmpty()) {
+            AnimatedVisibility(
+                visible = state.habitsWithAnalytics.isNotEmpty(),
+                enter = fadeIn(MaterialTheme.motionScheme.fastEffectsSpec()),
+                exit = fadeOut(MaterialTheme.motionScheme.fastEffectsSpec()),
+            ) {
                 Row {
                     FilledTonalIconToggleButton(
                         checked = state.compactHabitView,

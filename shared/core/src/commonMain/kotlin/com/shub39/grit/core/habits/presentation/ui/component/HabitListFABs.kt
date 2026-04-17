@@ -17,9 +17,12 @@
 package com.shub39.grit.core.habits.presentation.ui.component
 
 import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.fadeIn
+import androidx.compose.animation.fadeOut
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.BoxScope
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.material3.ExperimentalMaterial3ExpressiveApi
@@ -62,6 +65,10 @@ fun BoxScope.HabitListFABs(
         modifier =
             modifier
                 .padding(16.dp)
+                .then(
+                    if (windowSizeClass.widthSizeClass != WindowWidthSizeClass.Expanded) Modifier
+                    else Modifier.navigationBarsPadding()
+                )
                 .align(
                     if (windowSizeClass.widthSizeClass == WindowWidthSizeClass.Expanded) {
                         Alignment.BottomStart
@@ -110,7 +117,11 @@ fun BoxScope.HabitListFABs(
                         modifier = Modifier.size(FloatingActionButtonDefaults.MediumIconSize),
                     )
 
-                    AnimatedVisibility(visible = state.habitsWithAnalytics.isEmpty()) {
+                    AnimatedVisibility(
+                        visible = state.habitsWithAnalytics.isEmpty(),
+                        enter = fadeIn(MaterialTheme.motionScheme.fastEffectsSpec()),
+                        exit = fadeOut(MaterialTheme.motionScheme.fastEffectsSpec()),
+                    ) {
                         Text(text = stringResource(Res.string.add_habit))
                     }
                 }
@@ -143,13 +154,21 @@ fun BoxScope.HabitListFABs(
                         modifier = Modifier.size(FloatingActionButtonDefaults.MediumIconSize),
                     )
 
-                    AnimatedVisibility(visible = state.habitsWithAnalytics.isEmpty()) {
+                    AnimatedVisibility(
+                        visible = state.habitsWithAnalytics.isEmpty(),
+                        enter = fadeIn(MaterialTheme.motionScheme.fastEffectsSpec()),
+                        exit = fadeOut(MaterialTheme.motionScheme.fastEffectsSpec()),
+                    ) {
                         Text(text = stringResource(Res.string.add_habit))
                     }
                 }
             }
 
-            AnimatedVisibility(visible = state.analyticsHabitId != null) {
+            AnimatedVisibility(
+                visible = state.analyticsHabitId != null,
+                enter = fadeIn(MaterialTheme.motionScheme.fastEffectsSpec()),
+                exit = fadeOut(MaterialTheme.motionScheme.fastEffectsSpec()),
+            ) {
                 FloatingActionButton(
                     onClick = onNavigateToOverallAnalytics,
                     containerColor = MaterialTheme.colorScheme.secondaryContainer,

@@ -109,6 +109,7 @@ fun HabitCard(
                             alpha = if (canCompleteToday) 1f else 0.7f
                         )
                 },
+            animationSpec = MaterialTheme.motionScheme.fastEffectsSpec(),
             label = "cardBackground",
         )
     val cardBackground by
@@ -121,6 +122,7 @@ fun HabitCard(
                             alpha = if (canCompleteToday) 1f else 0.7f
                         )
                 },
+            animationSpec = MaterialTheme.motionScheme.fastEffectsSpec(),
             label = "cardBackground",
         )
 
@@ -144,7 +146,10 @@ fun HabitCard(
             }
         },
         shape = shape,
-        modifier = modifier.animateContentSize(),
+        modifier =
+            modifier.animateContentSize(
+                animationSpec = MaterialTheme.motionScheme.fastSpatialSpec()
+            ),
     ) {
         ListItem(
             modifier = Modifier.fillMaxWidth().clip(MaterialTheme.shapes.large),

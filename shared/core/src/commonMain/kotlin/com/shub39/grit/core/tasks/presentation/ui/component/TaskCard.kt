@@ -67,6 +67,7 @@ fun TaskCard(
                     true -> MaterialTheme.colorScheme.onSurface
                     else -> MaterialTheme.colorScheme.onSecondaryContainer
                 },
+            animationSpec = MaterialTheme.motionScheme.fastEffectsSpec(),
             label = "cardContent",
         )
     val cardContainer by
@@ -76,12 +77,20 @@ fun TaskCard(
                     true -> MaterialTheme.colorScheme.surfaceContainerHighest
                     else -> MaterialTheme.colorScheme.secondaryContainer
                 },
+            animationSpec = MaterialTheme.motionScheme.fastEffectsSpec(),
             label = "cardContainer",
         )
     val cardColors =
         CardDefaults.cardColors(containerColor = cardContainer, contentColor = cardContent)
 
-    Card(modifier = modifier.animateContentSize(), colors = cardColors, shape = shape) {
+    Card(
+        modifier =
+            modifier.animateContentSize(
+                animationSpec = MaterialTheme.motionScheme.fastSpatialSpec()
+            ),
+        colors = cardColors,
+        shape = shape,
+    ) {
         Row(
             verticalAlignment = Alignment.CenterVertically,
             modifier = Modifier.fillMaxWidth().padding(16.dp),
