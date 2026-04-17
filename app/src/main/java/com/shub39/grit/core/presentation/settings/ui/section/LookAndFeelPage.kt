@@ -18,6 +18,7 @@ package com.shub39.grit.core.presentation.settings.ui.section
 
 import android.os.Build
 import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.isSystemInDarkTheme
@@ -62,6 +63,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.input.nestedscroll.nestedScroll
+import androidx.compose.ui.platform.LocalLocale
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.tooling.preview.Preview
@@ -340,6 +342,16 @@ fun LookAndFeelPage(
                                 Text(text = stringResource(Res.string.palette_style))
                             },
                             colors = listItemColors(),
+                            supportingContent = {
+                                Text(
+                                    text =
+                                        state.theme.paletteStyle.toString().lowercase().replaceFirstChar {
+                                            if (it.isLowerCase())
+                                                it.titlecase(LocalLocale.current.platformLocale)
+                                            else it.toString()
+                                        }
+                                )
+                            },
                             leadingContent = {
                                 Icon(
                                     imageVector = vectorResource(Res.drawable.palette),
@@ -390,32 +402,38 @@ fun LookAndFeelPage(
                                             },
                                     contentAlignment = Alignment.Center,
                                 ) {
-                                    Column(modifier = Modifier.matchParentSize()) {
-                                        Row {
-                                            Box(
-                                                modifier =
-                                                    Modifier.size(25.dp)
-                                                        .background(color = scheme.primary)
+                                    Canvas(modifier = Modifier.matchParentSize()) {
+                                        val colors =
+                                            listOf(
+                                                scheme.primary,
+                                                scheme.primaryContainer,
+                                                scheme.secondary,
+                                                scheme.secondaryContainer,
+                                                scheme.tertiary,
+                                                scheme.tertiaryContainer,
                                             )
-                                            Box(
-                                                modifier =
-                                                    Modifier.size(25.dp)
-                                                        .background(color = scheme.tertiary)
-                                            )
-                                        }
-                                        Row {
-                                            Box(
-                                                modifier =
-                                                    Modifier.size(25.dp)
-                                                        .background(color = scheme.secondary)
-                                            )
-                                            Box(
-                                                modifier =
-                                                    Modifier.size(25.dp)
-                                                        .background(color = scheme.onSurface)
+                                        val sweepAngle = 360f / colors.size
+                                        colors.forEachIndexed { index, color ->
+                                            drawArc(
+                                                color = color,
+                                                startAngle = index * sweepAngle,
+                                                sweepAngle = sweepAngle,
+                                                useCenter = true,
                                             )
                                         }
                                     }
+
+                                    Box(
+                                        modifier =
+                                            Modifier.matchParentSize()
+                                                .background(
+                                                    color =
+                                                        scheme.primary.copy(
+                                                            alpha = if (selected) 0.7f else 0f
+                                                        )
+                                                )
+                                    )
+
 
                                     if (selected) {
                                         Icon(

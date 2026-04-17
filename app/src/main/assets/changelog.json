@@ -1,5 +1,13 @@
 [
   {
+    "version": "5.9.0",
+    "changes": [
+      "Fixed Floating action button position on large displays",
+      "Added Expressive Motion scheme to animations",
+      "Updated Translations"
+    ]
+  },
+  {
     "version": "5.8.4",
     "changes": [
       "Changed Navigation Animation",
