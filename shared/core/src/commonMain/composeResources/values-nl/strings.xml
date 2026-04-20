@@ -19,4 +19,8 @@
     <string name="update_title">Bewerk titel</string>
     <string name="delete_category">Weet je het zeker? Alle taken in deze categorie worden verwijderd</string>
     <string name="add_category">Categorie toevoegen</string>
+    <string name="select_seed">Selecteer basis kleur</string>
+    <string name="select_seed_desc">Selecteer kleur om pallet mee te genereren</string>
+    <string name="palette_style">Pallet stijl</string>
+    <string name="backup">Backup</string>
 </resources>
