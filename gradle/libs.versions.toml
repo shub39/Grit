@@ -8,7 +8,7 @@ espresso-core = "3.7.0"
 junit = "4.13.2"
 junit-version = "1.3.0"
 kotlinx-datetime = "0.7.1"
-purchases = "10.0.2"
+purchases = "10.2.0"
 splashscreen = "1.2.0"
 datastore = "1.2.1"
 colorpicker = "1.1.3"
@@ -19,7 +19,7 @@ kotlin = "2.3.20"
 ksp = "2.3.6"
 material3 = "1.10.0-alpha05"
 reorderable = "3.0.0"
-room = "2.8.4"
+room3 = "3.0.0-alpha03"
 navigation = "1.1.0-rc01"
 materialkolor = "4.1.1"
 compose-junit = "1.10.6"
@@ -42,9 +42,9 @@ androidx-glance-appwidget-preview = { module = "androidx.glance:glance-appwidget
 androidx-glance-material3 = { module = "androidx.glance:glance-material3", version.ref = "glance" }
 androidx-glance-preview = { module = "androidx.glance:glance-preview", version.ref = "glance" }
 androidx-core-splashscreen = { module = "androidx.core:core-splashscreen", version.ref = "splashscreen" }
-androidx-room-compiler = { module = "androidx.room:room-compiler", version.ref = "room" }
-androidx-room-runtime = { module = "androidx.room:room-runtime", version.ref = "room" }
-androidx-room-testing = { module = "androidx.room:room-testing", version.ref = "room" }
+androidx-room-compiler = { module = "androidx.room3:room3-compiler", version.ref = "room3" }
+androidx-room-runtime = { module = "androidx.room3:room3-runtime", version.ref = "room3" }
+androidx-room-testing = { module = "androidx.room3:room3-testing", version.ref = "room3" }
 androidx-ui-test-junit4 = { module = "androidx.compose.ui:ui-test-junit4", version.ref = "compose-junit" }
 jetbrains-navigation3-ui = { module = "org.jetbrains.androidx.navigation3:navigation3-ui", version.ref = "navigation" }
 androidx-biometric = { group = "androidx.biometric", name = "biometric-ktx", version.ref = "biometric" }
@@ -80,7 +80,7 @@ kotlinx-coroutines-swing = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-
 
 [plugins]
 android-kotlin-multiplatform-library = { id = "com.android.kotlin.multiplatform.library", version.ref = "agp" }
-room = { id = "androidx.room", version.ref = "room" }
+room = { id = "androidx.room3", version.ref = "room3" }
 ksp = { id = "com.google.devtools.ksp", version.ref = "ksp" }
 android-application = { id = "com.android.application", version.ref = "agp" }
 compose-compiler = { id = "org.jetbrains.kotlin.plugin.compose", version.ref = "kotlin" }

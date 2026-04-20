@@ -16,7 +16,7 @@
  */
 package com.shub39.grit.core.data
 
-import androidx.room.TypeConverter
+import androidx.room3.TypeConverter
 import kotlin.time.ExperimentalTime
 import kotlin.time.Instant
 import kotlinx.datetime.DayOfWeek
