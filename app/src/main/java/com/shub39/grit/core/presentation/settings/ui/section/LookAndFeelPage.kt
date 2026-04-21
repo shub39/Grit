@@ -273,6 +273,7 @@ fun LookAndFeelPage(
                                     onCheckedChange = {
                                         onAction(SettingsAction.ChangeFontPref(font))
                                     },
+                                    enabled = isUserSubscribed,
                                     colors =
                                         ToggleButtonDefaults.toggleButtonColors(
                                             containerColor =
@@ -397,7 +398,7 @@ fun LookAndFeelPage(
                                                     if (selected) MaterialShapes.VerySunny.toShape()
                                                     else CircleShape
                                             )
-                                            .clickable {
+                                            .clickable(enabled = isUserSubscribed) {
                                                 onAction(SettingsAction.ChangePaletteStyle(style))
                                             },
                                     contentAlignment = Alignment.Center,
@@ -467,7 +468,7 @@ private fun Preview() {
         Surface {
             LookAndFeelPage(
                 state = SettingsState(),
-                isUserSubscribed = true,
+                isUserSubscribed = false,
                 onAction = {},
                 onNavigateBack = {},
                 onNavigateToPaywall = {},
