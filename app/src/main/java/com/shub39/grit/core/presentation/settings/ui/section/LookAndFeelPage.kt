@@ -346,11 +346,14 @@ fun LookAndFeelPage(
                             supportingContent = {
                                 Text(
                                     text =
-                                        state.theme.paletteStyle.toString().lowercase().replaceFirstChar {
-                                            if (it.isLowerCase())
-                                                it.titlecase(LocalLocale.current.platformLocale)
-                                            else it.toString()
-                                        }
+                                        state.theme.paletteStyle
+                                            .toString()
+                                            .lowercase()
+                                            .replaceFirstChar {
+                                                if (it.isLowerCase())
+                                                    it.titlecase(LocalLocale.current.platformLocale)
+                                                else it.toString()
+                                            }
                                 )
                             },
                             leadingContent = {
@@ -434,7 +437,6 @@ fun LookAndFeelPage(
                                                         )
                                                 )
                                     )
-
 
                                     if (selected) {
                                         Icon(
