@@ -273,6 +273,7 @@ fun LookAndFeelPage(
                                     onCheckedChange = {
                                         onAction(SettingsAction.ChangeFontPref(font))
                                     },
+                                    enabled = isUserSubscribed,
                                     colors =
                                         ToggleButtonDefaults.toggleButtonColors(
                                             containerColor =
@@ -345,11 +346,14 @@ fun LookAndFeelPage(
                             supportingContent = {
                                 Text(
                                     text =
-                                        state.theme.paletteStyle.toString().lowercase().replaceFirstChar {
-                                            if (it.isLowerCase())
-                                                it.titlecase(LocalLocale.current.platformLocale)
-                                            else it.toString()
-                                        }
+                                        state.theme.paletteStyle
+                                            .toString()
+                                            .lowercase()
+                                            .replaceFirstChar {
+                                                if (it.isLowerCase())
+                                                    it.titlecase(LocalLocale.current.platformLocale)
+                                                else it.toString()
+                                            }
                                 )
                             },
                             leadingContent = {
@@ -397,7 +401,7 @@ fun LookAndFeelPage(
                                                     if (selected) MaterialShapes.VerySunny.toShape()
                                                     else CircleShape
                                             )
-                                            .clickable {
+                                            .clickable(enabled = isUserSubscribed) {
                                                 onAction(SettingsAction.ChangePaletteStyle(style))
                                             },
                                     contentAlignment = Alignment.Center,
@@ -434,7 +438,6 @@ fun LookAndFeelPage(
                                                 )
                                     )
 
-
                                     if (selected) {
                                         Icon(
                                             imageVector = vectorResource(Res.drawable.check_circle),
@@ -467,7 +470,7 @@ private fun Preview() {
         Surface {
             LookAndFeelPage(
                 state = SettingsState(),
-                isUserSubscribed = true,
+                isUserSubscribed = false,
                 onAction = {},
                 onNavigateBack = {},
                 onNavigateToPaywall = {},

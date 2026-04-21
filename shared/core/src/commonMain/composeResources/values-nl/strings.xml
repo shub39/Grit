@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="tasks">Taken</string>
+    <string name="done">Klaar</string>
+    <string name="add_task">Taak toevoegen</string>
+    <string name="add_habit">Routine toevoegen</string>
+    <string name="update_description">Bewerk beschrijving</string>
+    <string name="delete">Verwijder</string>
+    <string name="cancel">Annuleren</string>
+    <string name="habits">Routines</string>
+    <string name="settings">Instellingen</string>
+    <string name="days_ago_format">%1$d Dagen geleden…</string>
+    <string name="too_long">Te lang</string>
+    <string name="save">Opslaan</string>
+    <string name="edit_task">Taak bewerken</string>
+    <string name="edit_categories">Categorieën bewerken</string>
+    <string name="best_streak">Beste Score: %1$d</string>
+    <string name="delete_tasks">Weet je zeker dat je alle voltooide taken wilt verwijderen?</string>
+    <string name="update_title">Bewerk titel</string>
+    <string name="delete_category">Weet je het zeker? Alle taken in deze categorie worden verwijderd</string>
+    <string name="add_category">Categorie toevoegen</string>
+    <string name="select_seed">Selecteer basis kleur</string>
+    <string name="select_seed_desc">Selecteer kleur om pallet mee te genereren</string>
+    <string name="palette_style">Pallet stijl</string>
+    <string name="backup">Backup</string>
+</resources>

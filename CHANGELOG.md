@@ -1,5 +1,9 @@
 # Changelog
 
+## 5.9.1
+- Miscellaneous fixes and updates
+- Updated Translations
+
 ## 5.9.0
 - Fixed Floating action button position on large displays
 - Fixed Icons for RTL languages (#272)

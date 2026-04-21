@@ -30,7 +30,6 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material3.ExperimentalMaterial3ExpressiveApi
 import androidx.compose.material3.ListItem
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
@@ -69,14 +68,10 @@ import kotlinx.datetime.DateTimeUnit
 import kotlinx.datetime.DayOfWeek
 import kotlinx.datetime.LocalDate
 import kotlinx.datetime.YearMonth
-import kotlinx.datetime.format
-import kotlinx.datetime.format.FormatStringsInDatetimeFormats
-import kotlinx.datetime.format.MonthNames
 import kotlinx.datetime.minus
 import org.jetbrains.compose.resources.stringResource
 
-/** Habit heat map, Github contributions style map showing no of habits completed in a day */
-@OptIn(FormatStringsInDatetimeFormats::class, ExperimentalMaterial3ExpressiveApi::class)
+/** Habit heat map, GitHub contributions style map showing no of habits completed in a day */
 @Composable
 fun HabitHeatMap(
     heatMapState: HeatMapCalendarState,
@@ -112,9 +107,9 @@ fun HabitHeatMap(
 
                 days.forEachIndexed { index, dayOfWeek ->
                     val shape =
-                        when {
-                            index == 0 -> leadingItemShape(topRadius = 20)
-                            index == days.size - 1 -> endItemShape(bottomRadius = 20)
+                        when (index) {
+                            0 -> leadingItemShape(topRadius = 20)
+                            days.size - 1 -> endItemShape(bottomRadius = 20)
                             else -> RoundedCornerShape(4.dp)
                         }
                     Box(
@@ -152,14 +147,7 @@ fun HabitHeatMap(
                     monthHeader = {
                         Box(modifier = Modifier.padding(2.dp)) {
                             Text(
-                                text =
-                                    it.yearMonth.format(
-                                        YearMonth.Format {
-                                            monthName(MonthNames.ENGLISH_ABBREVIATED)
-                                            chars(" ")
-                                            year()
-                                        }
-                                    ),
+                                text = it.yearMonth.toFormattedString(),
                                 style = MaterialTheme.typography.labelSmall,
                                 color = MaterialTheme.colorScheme.onSurface,
                                 modifier = Modifier.align(Alignment.Center),

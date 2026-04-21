@@ -16,12 +16,13 @@
  */
 package com.shub39.grit.habits.data.database
 
-import androidx.room.AutoMigration
-import androidx.room.Database
-import androidx.room.RoomDatabase
-import androidx.room.TypeConverters
-import androidx.room.migration.Migration
-import androidx.sqlite.db.SupportSQLiteDatabase
+import androidx.room3.AutoMigration
+import androidx.room3.Database
+import androidx.room3.RoomDatabase
+import androidx.room3.TypeConverters
+import androidx.room3.migration.Migration
+import androidx.sqlite.SQLiteConnection
+import androidx.sqlite.execSQL
 import com.shub39.grit.core.data.Converters
 
 @Database(
@@ -42,8 +43,8 @@ abstract class HabitDatabase : RoomDatabase() {
 
         val migrate_3_4 =
             object : Migration(3, 4) {
-                override fun migrate(db: SupportSQLiteDatabase) {
-                    db.execSQL(
+                override suspend fun migrate(connection: SQLiteConnection) {
+                    connection.execSQL(
                         "ALTER TABLE habit_index ADD COLUMN days TEXT NOT NULL DEFAULT '${Converters.allDays}'"
                     )
                 }

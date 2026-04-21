@@ -25,8 +25,8 @@ plugins {
 }
 
 val appName = "Grit"
-val appVersionCode = 5900
-val appVersionName = "5.9.0"
+val appVersionCode = 5910
+val appVersionName = "5.9.1"
 
 val gitHash = execute("git", "rev-parse", "HEAD").take(7)
 
@@ -162,7 +162,7 @@ dependencies {
     implementation(libs.koin.annotations)
 }
 
-room { schemaDirectory("$projectDir/schemas") }
+room3 { schemaDirectory("$projectDir/schemas") }
 
 fun execute(vararg command: String): String =
     providers.exec { commandLine(*command) }.standardOutput.asText.get().trim()
