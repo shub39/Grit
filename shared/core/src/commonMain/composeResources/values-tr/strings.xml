@@ -47,7 +47,7 @@
     <string name="update_title">Başlığı Düzenle</string>
     <string name="clear_preference_exp">görevleri periyodik olarak temizle</string>
     <string name="categories">Kategoriler</string>
-    <string name="edit_categories">Görev kategorilerini düzenle</string>
+    <string name="edit_categories">Kategorileri Düzenle</string>
     <string name="delete_category">Emin misiniz? Bu kategorideki tüm görevler silinecek.</string>
     <string name="add_category">Kategori Ekle</string>
     <string name="add">Bir Şey Ekle</string>
@@ -134,4 +134,9 @@
     <string name="changelog">Değişim Günlüğü</string>
     <string name="no_habit_for_today">Bugünlük Alışkanlık Yok</string>
     <string name="reorder_tasks">Görevleri yeniden yap</string>
+    <string name="add_reminder_desc">Seçilmiş günlerde hatırlatma bildirimi al</string>
+    <string name="invalid_date_time">Seçilen zaman geçmişte kaldı :')</string>
+    <string name="reorder_tasks_desc">Görevleri tamamlandıkları zaman yeniden sırala</string>
+    <string name="whats_changed">Neler Değişti</string>
+    <string name="select_days">Günleri Seç</string>
 </resources>
