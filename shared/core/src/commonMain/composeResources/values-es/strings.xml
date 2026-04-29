@@ -138,4 +138,7 @@
     <string name="download">Descargar</string>
     <string name="translate">Traducir</string>
     <string name="changelog">Registro de cambios</string>
+    <string name="save">Guardar</string>
+    <string name="add_reminder_desc">Recibe un recordatorio de notificación en los días seleccionados</string>
+    <string name="select_days">Días Seleccionados</string>
 </resources>

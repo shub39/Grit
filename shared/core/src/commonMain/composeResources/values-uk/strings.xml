@@ -138,4 +138,6 @@
     <string name="reorder_tasks">Змінити порядок завдань</string>
     <string name="reorder_tasks_desc">Змінювати порядок завдань після позначення як виконаних</string>
     <string name="weeks">Тижні</string>
+    <string name="save">Зберегти</string>
+    <string name="add_reminder_desc">Отримувати нагадування сповіщенням у вибрані дні</string>
 </resources>
