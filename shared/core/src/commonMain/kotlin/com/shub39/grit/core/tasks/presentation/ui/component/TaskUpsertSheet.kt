@@ -94,6 +94,7 @@ import kotlinx.datetime.TimeZone
 import kotlinx.datetime.toLocalDateTime
 import org.jetbrains.compose.resources.stringResource
 import org.jetbrains.compose.resources.vectorResource
+import kotlin.time.Duration.Companion.milliseconds
 
 @Composable
 expect fun TaskUpsertSheet(
@@ -193,7 +194,7 @@ fun TaskUpsertSheetContent(
                 val focusRequester = remember { FocusRequester() }
 
                 LaunchedEffect(Unit) {
-                    delay(400)
+                    delay(400.milliseconds)
                     focusRequester.requestFocus()
                     keyboardController?.show()
                 }
@@ -294,10 +295,10 @@ fun TaskUpsertSheetContent(
                     modifier = Modifier.weight(1f),
                     enabled =
                         textFieldState.text.isNotBlank() &&
-                                textFieldState.text.length <= 100 &&
-                                isValidDateTime &&
-                                (newTask.reminder != task.reminder ||
-                                        textFieldState.text.toString() != task.title),
+                            textFieldState.text.length <= 100 &&
+                            isValidDateTime &&
+                            (newTask.reminder != task.reminder ||
+                                textFieldState.text.toString() != task.title),
                 ) {
                     Text(stringResource(if (isEditSheet) Res.string.save else Res.string.add_task))
                 }
@@ -320,8 +321,8 @@ fun TaskUpsertSheetContent(
                                         LocalDateTime(
                                             date =
                                                 Instant.fromEpochMilliseconds(
-                                                    datePickerState.selectedDateMillis!!
-                                                )
+                                                        datePickerState.selectedDateMillis!!
+                                                    )
                                                     .toLocalDateTime(TimeZone.UTC)
                                                     .date,
                                             time =

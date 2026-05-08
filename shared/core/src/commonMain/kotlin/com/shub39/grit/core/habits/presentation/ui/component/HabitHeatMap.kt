@@ -43,7 +43,8 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.tooling.preview.PreviewWrapper
 import androidx.compose.ui.unit.dp
 import com.kizitonwose.calendar.compose.HeatMapCalendar
 import com.kizitonwose.calendar.compose.heatmapcalendar.HeatMapCalendarState
@@ -53,11 +54,8 @@ import com.shub39.grit.core.habits.presentation.daysStartingFrom
 import com.shub39.grit.core.shared_ui.endItemShape
 import com.shub39.grit.core.shared_ui.leadingItemShape
 import com.shub39.grit.core.shared_ui.listItemColors
-import com.shub39.grit.core.theme.AppTheme
-import com.shub39.grit.core.theme.GritTheme
-import com.shub39.grit.core.theme.Theme
 import com.shub39.grit.core.theme.flexFontRounded
-import com.shub39.grit.core.utils.AllPreviews
+import com.shub39.grit.core.utils.GritPreviewWrapper
 import com.shub39.grit.core.utils.toFormattedString
 import grit.shared.core.generated.resources.Res
 import grit.shared.core.generated.resources.habit_map
@@ -227,25 +225,24 @@ fun HabitHeatMap(
     }
 }
 
-@AllPreviews
+@PreviewWrapper(GritPreviewWrapper::class)
+@Preview
 @Composable
 private fun Preview() {
-    GritTheme(theme = Theme(appTheme = AppTheme.SYSTEM, seedColor = Color.Red)) {
-        HabitHeatMap(
-            heatMapState =
-                rememberHeatMapCalendarState(
-                    startMonth = YearMonth.now().minus(1, DateTimeUnit.YEAR),
-                    endMonth = YearMonth.now(),
-                    firstVisibleMonth = YearMonth.now(),
-                    firstDayOfWeek = DayOfWeek.MONDAY,
-                ),
-            heatMapData =
-                (0..100).associate {
-                    LocalDate.now().minus(it, DateTimeUnit.DAY) to Random.nextInt(0, 11)
-                },
-            totalHabits = 10,
-            completedHabits = listOf("Habit 1", "Habit 2", "Habit ${Random.nextInt()}"),
-            updateCompletedHabits = {},
-        )
-    }
+    HabitHeatMap(
+        heatMapState =
+            rememberHeatMapCalendarState(
+                startMonth = YearMonth.now().minus(1, DateTimeUnit.YEAR),
+                endMonth = YearMonth.now(),
+                firstVisibleMonth = YearMonth.now(),
+                firstDayOfWeek = DayOfWeek.MONDAY,
+            ),
+        heatMapData =
+            (0..100).associate {
+                LocalDate.now().minus(it, DateTimeUnit.DAY) to Random.nextInt(0, 11)
+            },
+        totalHabits = 10,
+        completedHabits = listOf("Habit 1", "Habit 2", "Habit ${Random.nextInt()}"),
+        updateCompletedHabits = {},
+    )
 }

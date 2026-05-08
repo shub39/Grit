@@ -16,11 +16,14 @@
  */
 package com.shub39.grit.core.utils
 
-import androidx.compose.ui.tooling.preview.AndroidUiModes.UI_MODE_NIGHT_YES
-import androidx.compose.ui.tooling.preview.AndroidUiModes.UI_MODE_TYPE_NORMAL
-import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.runtime.Composable
+import androidx.compose.ui.tooling.preview.PreviewWrapperProvider
+import com.shub39.grit.core.theme.GritTheme
+import com.shub39.grit.core.theme.Theme
 
-/** All the previews that matter */
-@Preview(name = "Light")
-@Preview(name = "Dark", uiMode = UI_MODE_NIGHT_YES or UI_MODE_TYPE_NORMAL)
-annotation class AllPreviews
+class GritPreviewWrapper : PreviewWrapperProvider {
+    @Composable
+    override fun Wrap(content: @Composable (() -> Unit)) {
+        GritTheme(theme = Theme()) { content() }
+    }
+}
