@@ -49,10 +49,11 @@ import androidx.compose.ui.draw.drawWithContent
 import androidx.compose.ui.graphics.Shape
 import androidx.compose.ui.graphics.drawscope.clipRect
 import androidx.compose.ui.graphics.graphicsLayer
+import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.tooling.preview.PreviewWrapper
 import androidx.compose.ui.unit.dp
-import com.shub39.grit.core.theme.GritTheme
 import com.shub39.grit.core.theme.flexFontRounded
-import com.shub39.grit.core.utils.AllPreviews
+import com.shub39.grit.core.utils.GritPreviewWrapper
 import grit.shared.core.generated.resources.Res
 import grit.shared.core.generated.resources.best_streak
 import grit.shared.core.generated.resources.heat
@@ -163,8 +164,9 @@ fun HabitStreakCard(
     }
 }
 
-@AllPreviews
+@PreviewWrapper(GritPreviewWrapper::class)
+@Preview
 @Composable
 private fun Preview() {
-    GritTheme { HabitStreakCard(currentStreak = 20, bestStreak = 20) }
+    HabitStreakCard(currentStreak = 20, bestStreak = 20)
 }

@@ -42,11 +42,12 @@ import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.tooling.preview.PreviewWrapper
 import androidx.compose.ui.unit.dp
 import com.shub39.grit.core.habits.domain.WeeklyTimePeriod
 import com.shub39.grit.core.habits.domain.WeeklyTimePeriod.Companion.toWeeks
-import com.shub39.grit.core.theme.GritTheme
-import com.shub39.grit.core.utils.AllPreviews
+import com.shub39.grit.core.utils.GritPreviewWrapper
 import grit.shared.core.generated.resources.Res
 import grit.shared.core.generated.resources.chart_data
 import grit.shared.core.generated.resources.weekly_graph
@@ -170,8 +171,9 @@ fun WeeklyActivity(lineChartData: List<Double>, modifier: Modifier = Modifier) {
     }
 }
 
-@AllPreviews
+@PreviewWrapper(GritPreviewWrapper::class)
+@Preview
 @Composable
 private fun Preview() {
-    GritTheme { WeeklyActivity(lineChartData = (0..15).map { Random.nextDouble(0.0, 7.0) }) }
+    WeeklyActivity(lineChartData = (0..15).map { Random.nextDouble(0.0, 7.0) })
 }

@@ -35,10 +35,11 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.tooling.preview.PreviewWrapper
 import androidx.compose.ui.unit.dp
 import com.shub39.grit.core.habits.domain.WeekDayFrequencyData
-import com.shub39.grit.core.theme.GritTheme
-import com.shub39.grit.core.utils.AllPreviews
+import com.shub39.grit.core.utils.GritPreviewWrapper
 import grit.shared.core.generated.resources.Res
 import grit.shared.core.generated.resources.view_day
 import grit.shared.core.generated.resources.week_breakdown
@@ -137,15 +138,14 @@ fun WeekDayBreakdown(
     }
 }
 
-@AllPreviews
+@PreviewWrapper(GritPreviewWrapper::class)
+@Preview
 @Composable
 private fun Preview() {
-    GritTheme {
-        WeekDayBreakdown(
-            canSeeContent = true,
-            weekDayData =
-                DayOfWeekNames.ENGLISH_ABBREVIATED.names.associateWith { Random.nextInt(0..100) },
-            onNavigateToPaywall = {},
-        )
-    }
+    WeekDayBreakdown(
+        canSeeContent = true,
+        weekDayData =
+            DayOfWeekNames.ENGLISH_ABBREVIATED.names.associateWith { Random.nextInt(0..100) },
+        onNavigateToPaywall = {},
+    )
 }

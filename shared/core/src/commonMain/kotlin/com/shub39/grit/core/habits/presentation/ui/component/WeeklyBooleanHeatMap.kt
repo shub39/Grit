@@ -37,6 +37,8 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.tooling.preview.PreviewWrapper
 import androidx.compose.ui.unit.dp
 import com.kizitonwose.calendar.compose.HeatMapCalendar
 import com.kizitonwose.calendar.compose.heatmapcalendar.HeatMapCalendarState
@@ -52,8 +54,7 @@ import com.shub39.grit.core.habits.presentation.HabitsAction
 import com.shub39.grit.core.habits.presentation.daysStartingFrom
 import com.shub39.grit.core.shared_ui.endItemShape
 import com.shub39.grit.core.shared_ui.leadingItemShape
-import com.shub39.grit.core.theme.GritTheme
-import com.shub39.grit.core.utils.AllPreviews
+import com.shub39.grit.core.utils.GritPreviewWrapper
 import com.shub39.grit.core.utils.now
 import grit.shared.core.generated.resources.Res
 import grit.shared.core.generated.resources.view_week
@@ -242,33 +243,32 @@ fun WeeklyBooleanHeatMap(
     }
 }
 
-@AllPreviews
+@PreviewWrapper(GritPreviewWrapper::class)
+@Preview
 @Composable
 private fun Preview() {
-    GritTheme {
-        WeeklyBooleanHeatMap(
-            heatMapState =
-                rememberHeatMapCalendarState(
-                    startMonth = YearMonth.now().minus(1, DateTimeUnit.YEAR),
-                    endMonth = YearMonth.now(),
-                    firstVisibleMonth = YearMonth.now(),
-                    firstDayOfWeek = DayOfWeek.MONDAY,
-                ),
-            onAction = {},
-            habit =
-                Habit(
-                    id = 1,
-                    title = "Test Habit",
-                    description = "A Test Habit",
-                    time = LocalDateTime.now(),
-                    days = DayOfWeek.entries.toSet(),
-                    index = 1,
-                    reminder = false,
-                ),
-            statuses =
-                (0..40).map {
-                    HabitStatus(habitId = 1, date = LocalDate.now().minus(it, DateTimeUnit.DAY))
-                },
-        )
-    }
+    WeeklyBooleanHeatMap(
+        heatMapState =
+            rememberHeatMapCalendarState(
+                startMonth = YearMonth.now().minus(1, DateTimeUnit.YEAR),
+                endMonth = YearMonth.now(),
+                firstVisibleMonth = YearMonth.now(),
+                firstDayOfWeek = DayOfWeek.MONDAY,
+            ),
+        onAction = {},
+        habit =
+            Habit(
+                id = 1,
+                title = "Test Habit",
+                description = "A Test Habit",
+                time = LocalDateTime.now(),
+                days = DayOfWeek.entries.toSet(),
+                index = 1,
+                reminder = false,
+            ),
+        statuses =
+            (0..40).map {
+                HabitStatus(habitId = 1, date = LocalDate.now().minus(it, DateTimeUnit.DAY))
+            },
+    )
 }

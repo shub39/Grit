@@ -23,6 +23,7 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.tooling.preview.PreviewWrapper
 import androidx.compose.ui.unit.dp
 import androidx.navigation3.runtime.NavKey
 import androidx.navigation3.runtime.entryProvider
@@ -36,9 +37,7 @@ import com.shub39.grit.core.presentation.settings.ui.section.Changelog
 import com.shub39.grit.core.presentation.settings.ui.section.LookAndFeelPage
 import com.shub39.grit.core.presentation.settings.ui.section.RootPage
 import com.shub39.grit.core.shared_ui.PageFill
-import com.shub39.grit.core.theme.AppTheme
-import com.shub39.grit.core.theme.GritTheme
-import com.shub39.grit.core.theme.Theme
+import com.shub39.grit.core.utils.GritPreviewWrapper
 import kotlinx.serialization.Serializable
 
 @Serializable data object Root : NavKey
@@ -113,15 +112,14 @@ fun SettingsGraph(
         )
     }
 
+@PreviewWrapper(GritPreviewWrapper::class)
 @Preview
 @Composable
 private fun Preview() {
-    GritTheme(theme = Theme(appTheme = AppTheme.DARK)) {
-        SettingsGraph(
-            state = SettingsState(),
-            onAction = {},
-            onNavigateToPaywall = {},
-            isUserSubscribed = true,
-        )
-    }
+    SettingsGraph(
+        state = SettingsState(),
+        onAction = {},
+        onNavigateToPaywall = {},
+        isUserSubscribed = true,
+    )
 }
