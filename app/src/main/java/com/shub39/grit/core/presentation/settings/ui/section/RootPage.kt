@@ -98,7 +98,9 @@ fun RootPage(
     LaunchedEffect(Unit) { onAction(SettingsAction.OnCheckBiometric(context)) }
 
     val scrollBehavior = TopAppBarDefaults.enterAlwaysScrollBehavior()
-    Column(modifier = Modifier.nestedScroll(scrollBehavior.nestedScrollConnection).fillMaxSize()) {
+    Column(modifier = Modifier
+        .nestedScroll(scrollBehavior.nestedScrollConnection)
+        .fillMaxSize()) {
         LargeFlexibleTopAppBar(
             scrollBehavior = scrollBehavior,
             title = {
@@ -129,7 +131,9 @@ fun RootPage(
                         ),
                 ) {
                     Row(
-                        modifier = Modifier.padding(16.dp).fillMaxWidth(),
+                        modifier = Modifier
+                            .padding(16.dp)
+                            .fillMaxWidth(),
                         verticalAlignment = Alignment.CenterVertically,
                     ) {
                         Text(
@@ -273,9 +277,11 @@ fun RootPage(
                 Column(verticalArrangement = Arrangement.spacedBy(2.dp)) {
                     ListItem(
                         modifier =
-                            Modifier.clip(leadingItemShape()).clickable {
-                                onNavigateToLookAndFeel()
-                            },
+                            Modifier
+                                .clip(leadingItemShape())
+                                .clickable {
+                                    onNavigateToLookAndFeel()
+                                },
                         headlineContent = { Text(text = stringResource(Res.string.look_and_feel)) },
                         supportingContent = {
                             Text(text = stringResource(Res.string.look_and_feel_desc))
@@ -296,7 +302,9 @@ fun RootPage(
                     )
 
                     ListItem(
-                        modifier = Modifier.clip(endItemShape()).clickable { onNavigateToBackup() },
+                        modifier = Modifier
+                            .clip(endItemShape())
+                            .clickable { onNavigateToBackup() },
                         colors = listItemColors(),
                         headlineContent = { Text(text = stringResource(Res.string.backup)) },
                         supportingContent = { Text(text = stringResource(Res.string.backup_desc)) },
@@ -335,9 +343,16 @@ fun RootPage(
                     },
                     headlineContent = { Text(text = stringResource(Res.string.changelog)) },
                     modifier =
-                        Modifier.clip(detachedItemShape()).clickable { onNavigateToChangelog() },
+                        Modifier
+                            .clip(detachedItemShape())
+                            .clickable { onNavigateToChangelog() },
                 )
             }
         }
     }
+}
+
+@Composable
+private fun Preview() {
+
 }

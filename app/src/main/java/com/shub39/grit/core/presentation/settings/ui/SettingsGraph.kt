@@ -22,13 +22,15 @@ import androidx.compose.foundation.layout.widthIn
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.tooling.preview.PreviewLightDark
+import androidx.compose.ui.tooling.preview.PreviewWrapper
 import androidx.compose.ui.unit.dp
 import androidx.navigation3.runtime.NavKey
 import androidx.navigation3.runtime.entryProvider
 import androidx.navigation3.runtime.rememberNavBackStack
 import androidx.navigation3.ui.NavDisplay
 import com.shub39.grit.core.navigation.horizontalTransitionMetadata
+import com.shub39.grit.core.presentation.GritPreviewWrapper
 import com.shub39.grit.core.presentation.settings.SettingsAction
 import com.shub39.grit.core.presentation.settings.SettingsState
 import com.shub39.grit.core.presentation.settings.ui.section.BackupPage
@@ -36,18 +38,19 @@ import com.shub39.grit.core.presentation.settings.ui.section.Changelog
 import com.shub39.grit.core.presentation.settings.ui.section.LookAndFeelPage
 import com.shub39.grit.core.presentation.settings.ui.section.RootPage
 import com.shub39.grit.core.shared_ui.PageFill
-import com.shub39.grit.core.theme.AppTheme
-import com.shub39.grit.core.theme.GritTheme
-import com.shub39.grit.core.theme.Theme
 import kotlinx.serialization.Serializable
 
-@Serializable data object Root : NavKey
+@Serializable
+data object Root : NavKey
 
-@Serializable data object LookAndFeel : NavKey
+@Serializable
+data object LookAndFeel : NavKey
 
-@Serializable data object Backup : NavKey
+@Serializable
+data object Backup : NavKey
 
-@Serializable data object Changelog : NavKey
+@Serializable
+data object Changelog : NavKey
 
 @Composable
 fun SettingsGraph(
@@ -62,7 +65,8 @@ fun SettingsGraph(
 
         NavDisplay(
             modifier =
-                Modifier.background(MaterialTheme.colorScheme.background)
+                Modifier
+                    .background(MaterialTheme.colorScheme.background)
                     .widthIn(max = 600.dp)
                     .fillMaxSize(),
             backStack = backStack,
@@ -113,15 +117,14 @@ fun SettingsGraph(
         )
     }
 
-@Preview
+@PreviewWrapper(GritPreviewWrapper::class)
+@PreviewLightDark
 @Composable
 private fun Preview() {
-    GritTheme(theme = Theme(appTheme = AppTheme.DARK)) {
-        SettingsGraph(
-            state = SettingsState(),
-            onAction = {},
-            onNavigateToPaywall = {},
-            isUserSubscribed = true,
-        )
-    }
+    SettingsGraph(
+        state = SettingsState(),
+        onAction = {},
+        onNavigateToPaywall = {},
+        isUserSubscribed = true,
+    )
 }
