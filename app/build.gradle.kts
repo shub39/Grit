@@ -135,7 +135,6 @@ dependencies {
     implementation(libs.compose.components.resources)
     implementation(libs.compose.ui.tooling)
     implementation(libs.compose.ui.tooling.preview)
-    debugImplementation(libs.compose.ui.tooling.preview)
 
     implementation(libs.jetbrains.navigation3.ui)
     implementation(libs.compose.windowsizeclass)
@@ -158,7 +157,6 @@ dependencies {
     androidTestImplementation(libs.androidx.espresso.core)
     androidTestImplementation(libs.androidx.ui.test.junit4)
     androidTestImplementation(libs.androidx.room.testing)
-    testImplementation(libs.androidx.room.testing)
     androidTestImplementation(libs.truth)
 
     implementation(libs.koin.core)
@@ -175,6 +173,7 @@ fun execute(vararg command: String): String =
 
 val generateChangelogJson by
     tasks.registering {
+        description = "Assembling Changelog"
         val inputFile = rootProject.file("CHANGELOG.md")
         val outputDir = file("$projectDir/src/main/assets/")
         val outputFile = File(outputDir, "changelog.json")
