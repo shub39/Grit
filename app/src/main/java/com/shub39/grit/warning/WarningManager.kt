@@ -42,6 +42,5 @@ object WarningManager {
             .toLocalDateTime(TimeZone.currentSystemDefault())
             .date
             .daysUntil(LocalDate(year = 2026, month = 9, day = 1))
-            .coerceAtLeast(0)
     }
 }
