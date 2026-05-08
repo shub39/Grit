@@ -1,5 +1,8 @@
 # Changelog
 
+## 5.9.21
+- Updated Translations
+
 ## 5.9.2
 - Miscellaneous UI fixes
 - Updated Translations

@@ -24,7 +24,6 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -44,6 +43,8 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.tooling.preview.PreviewWrapper
 import androidx.compose.ui.unit.dp
 import com.shub39.grit.core.domain.Sections
 import com.shub39.grit.core.presentation.getRandomLine
@@ -57,6 +58,9 @@ import com.shub39.grit.core.shared_ui.listItemColors
 import com.shub39.grit.core.shared_ui.middleItemShape
 import com.shub39.grit.core.theme.flexFontEmphasis
 import com.shub39.grit.core.theme.flexFontRounded
+import com.shub39.grit.core.utils.GritPreviewWrapper
+import com.shub39.grit.warning.WarningManager
+import com.shub39.grit.warning.WarningReminder
 import grit.shared.core.generated.resources.Res
 import grit.shared.core.generated.resources.arrow_forward
 import grit.shared.core.generated.resources.backup
@@ -114,13 +118,17 @@ fun RootPage(
         LazyColumn(
             modifier = Modifier.fillMaxSize(),
             contentPadding = PaddingValues(start = 12.dp, end = 12.dp, top = 16.dp, bottom = 60.dp),
+            verticalArrangement = Arrangement.spacedBy(16.dp),
         ) {
+            if (WarningManager.showWarning()) {
+                item { WarningReminder() }
+            }
+
             item { AboutApp() }
 
             item {
                 Card(
                     onClick = onNavigateToPaywall,
-                    modifier = Modifier.padding(top = 16.dp),
                     shape = RoundedCornerShape(1000.dp),
                     colors =
                         CardDefaults.cardColors(
@@ -150,7 +158,7 @@ fun RootPage(
                 }
             }
 
-            item { Spacer(modifier = Modifier.height(16.dp)) }
+            //            item { Spacer(modifier = Modifier.height(16.dp)) }
 
             item {
                 Column(verticalArrangement = Arrangement.spacedBy(2.dp)) {
@@ -267,7 +275,7 @@ fun RootPage(
                 }
             }
 
-            item { Spacer(modifier = Modifier.height(16.dp)) }
+            //            item { Spacer(modifier = Modifier.height(16.dp)) }
 
             item {
                 Column(verticalArrangement = Arrangement.spacedBy(2.dp)) {
@@ -316,7 +324,7 @@ fun RootPage(
                 }
             }
 
-            item { Spacer(modifier = Modifier.height(16.dp)) }
+            //            item { Spacer(modifier = Modifier.height(16.dp)) }
 
             item {
                 ListItem(
@@ -342,4 +350,16 @@ fun RootPage(
     }
 }
 
-@Composable private fun Preview() {}
+@PreviewWrapper(GritPreviewWrapper::class)
+@Preview
+@Composable
+private fun Preview() {
+    RootPage(
+        state = SettingsState(),
+        onAction = {},
+        onNavigateToLookAndFeel = {},
+        onNavigateToBackup = {},
+        onNavigateToPaywall = {},
+        onNavigateToChangelog = {},
+    )
+}
