@@ -50,4 +50,16 @@
     <string name="light">ڕووناك</string>
     <string name="app_theme">ڕووکاری ئەپەکە</string>
     <string name="pause_notifications">ڕاگرتنی کاتیی ئاگادارییەکان</string>
+    <string name="pause_notifications_desc">ڕاگرتنی ئاگادارییەکان</string>
+    <string name="started_on">دەستی پێ کردووە لە</string>
+    <string name="weekly_graph">هەڵسەنگاندنی هەفتانە</string>
+    <string name="not_enough_data">زانیاری پێویست نییە</string>
+    <string name="items_completed">تەواوکرا</string>
+    <string name="completed">ئەمڕۆ تەواو کراوە</string>
+    <string name="title">ناونیشان</string>
+    <string name="description">زانیاری</string>
+    <string name="edit_habit">دەستکاریی خووەکە بکە</string>
+    <string name="font">فۆنت</string>
+    <string name="biometric_lock">قفڵکردن بە پەنجەمۆر/دەموچاو</string>
+    <string name="biometric_lock_desc">ناسینەوەی بایۆمەتری بەکاربهێنە بۆ کردنەوەی بەرنامەکە</string>
 </resources>
