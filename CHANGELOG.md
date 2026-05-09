@@ -1,5 +1,9 @@
 # Changelog
 
+## 5.9.22
+- Updated Translations
+- Fixed Unable to change Task Categories
+
 ## 5.9.21
 - Updated Translations
 

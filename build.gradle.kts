@@ -28,7 +28,9 @@ plugins {
 }
 
 allprojects {
-    apply(plugin = rootProject.libs.plugins.spotless.get().pluginId)
+    apply {
+        plugin(rootProject.libs.plugins.spotless.get().pluginId)
+    }
     configure<SpotlessExtension> {
         kotlin {
             ktfmt(libs.versions.ktfmt.get()).kotlinlangStyle()

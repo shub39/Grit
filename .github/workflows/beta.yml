@@ -1,4 +1,4 @@
-name: beta
+name: Build Beta
 
 on:
   push:
@@ -31,9 +31,6 @@ jobs:
 
       - name: Make gradlew executable
         run: chmod +x ./gradlew
-
-      - name: Remove Foojay
-        run: sed -i -e '/foojay/d' settings.gradle.kts
 
       - name: Build with Gradle
         run: |
