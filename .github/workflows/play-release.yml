@@ -1,4 +1,4 @@
-name: release
+name: play-release
 
 on:
   push:
@@ -8,6 +8,7 @@ on:
 
 permissions:
   contents: write
+  id-token: write
 
 jobs:
   build:
@@ -21,6 +22,12 @@ jobs:
         uses: actions/checkout@v4
         with:
           fetch-depth: 0
+
+      - name: Setup Google auth
+        id: auth
+        uses: google-github-actions/auth@v2
+        with:
+          workload_identity_provider: 'projects/${{ secrets.GCP_PROJECT_NUMBER }}/locations/global/workloadIdentityPools/${{ secrets.WORKLOAD_IDENTITY_POOL }/providers/${{ secrets.WORKLOAD_IDENTITY_PROVIDER }}'
 
       - name: Setup JDK 21
         uses: actions/setup-java@v4
@@ -44,19 +51,17 @@ jobs:
 
       - name: Extract Changelog Notes
         run: |
-          VERSION="${{ env.VERSION_NAME }}"
-          CHANGELOG_FILE="CHANGELOG.md"
-          OUTPUT_FILE="commit.txt"
-          
-          sed -n "/## ${VERSION}/, /## [0-9]/p" ${CHANGELOG_FILE} | \
-          sed '1d;$d' | \
-          grep -v '^# Changelog' > ${OUTPUT_FILE}
-          
-          if [ ! -s "${OUTPUT_FILE}" ]; then
-            echo "::warning file=${CHANGELOG_FILE}::Could not find changelog for version ${VERSION}. commit.txt will be empty."
-          fi
-          
-          echo "Changelog extracted to commit.txt"
+            VERSION="${{ env.VERSION_NAME }}"
+            CHANGELOG_FILE="CHANGELOG.md"
+            # Create a directory for the upload action to find
+            mkdir -p distribution/whatsnew
+            
+            sed -n "/## ${VERSION}/, /## [0-9]/p" ${CHANGELOG_FILE} | \
+            sed '1d;$d' | grep -v '^# Changelog' > distribution/whatsnew/whatsnew-en-US
+            
+            if [ ! -s "distribution/whatsnew/whatsnew-en-US" ]; then
+               echo "Default changelog for ${{ env.VERSION_NAME }}" > distribution/whatsnew/whatsnew-en-US
+            fi
 
       - name: Cook KeyStore
         run: echo "${{ secrets.KEYSTORE_FILE }}" | base64 -d > $GITHUB_WORKSPACE/signing-key.jks
@@ -64,46 +69,28 @@ jobs:
       - name: Make gradlew executable
         run: chmod +x ./gradlew
 
-      - name: Remove Foojay
-        run: sed -i -e '/foojay/d' settings.gradle.kts
-
       - name: Build with Gradle
         run: |
-          ./gradlew assembleFossRelease \
+          ./gradlew bundlePlay \
           -Pandroid.injected.signing.store.file=$GITHUB_WORKSPACE/signing-key.jks \
           -Pandroid.injected.signing.store.password=${{ secrets.KEYSTORE_PASSWORD }} \
           -Pandroid.injected.signing.key.alias=key0 \
           -Pandroid.injected.signing.key.password=${{ secrets.KEY_PASSWORD }}
           
-          APK_PATH=$(find app/build/outputs/ -name "*.apk" -print -quit)
+          AAB_PATH=$(find app/build/outputs/ -name "*.aab" -print -quit)
           
-          if [ -z "$APK_PATH" ]; then
-            echo "::error::Could not find APK file."
+          if [ -z "$AAB_PATH" ]; then
+            echo "::error::Could not find AAB file."
             exit 1
           fi
           
-          echo "APK_PATH=$APK_PATH" >> $GITHUB_ENV
+          echo "AAB_PATH=$AAB_PATH" >> $GITHUB_ENV
 
-      - name: Upload APK
-        uses: actions/upload-artifact@v4
+      - name: Publish Release
+        uses: r0adkll/upload-google-play@v1
         with:
-          name: app-release.apk
-          path: app/build/outputs/**/*.apk
-
-      - name: Create Release
-        uses: softprops/action-gh-release@v2
-        with:
-          make_latest: true
-          tag_name: ${{ env.VERSION_NAME }}
-          name: ${{ env.VERSION_NAME }}
-          body_path: commit.txt
-          files: ${{ env.APK_PATH }}
-
-      - name: Notify on Discord
-        shell: bash
-        env:
-          WEBHOOK: ${{ secrets.DISCORD_WEBHOOK }}
-        run: |
-          message=$(echo "**New Grit Release** **${{ env.VERSION_NAME }}** \nhttps://github.com/shub39/Grit/releases")
-          curl -F "payload_json={\"content\":\"${message}\"}" \
-          ${{ env.WEBHOOK }}
+          serviceAccountJson: ${{ steps.auth.outputs.credentials_file_path }}
+          releaseFiles: ${{ env.AAB_PATH }}
+          packageName: com.shub39.grit
+          track: internal
+          whatsNewDirectory: distribution/whatsnew
