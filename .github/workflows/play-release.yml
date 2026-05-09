@@ -93,5 +93,5 @@ jobs:
           serviceAccountJson: ${{ steps.auth.outputs.credentials_file_path }}
           releaseFiles: ${{ env.AAB_PATH }}
           packageName: com.shub39.grit
-          track: internal
+          tracks: production
           whatsNewDirectory: distribution/whatsnew
