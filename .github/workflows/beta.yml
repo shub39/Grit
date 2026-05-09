@@ -1,4 +1,4 @@
-name: beta
+name: Build Beta
 
 on:
   push:

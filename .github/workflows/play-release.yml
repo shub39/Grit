@@ -1,4 +1,4 @@
-name: play-release
+name: Build and Release on Playstore
 
 on:
   push:

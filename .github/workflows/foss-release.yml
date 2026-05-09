@@ -1,4 +1,4 @@
-name: foss-release
+name: Build and Release on Github
 
 on:
   push:
