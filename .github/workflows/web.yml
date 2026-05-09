@@ -17,6 +17,7 @@ concurrency:
 
 jobs:
   build:
+    if: github.event_name == 'workflow_dispatch' || startsWith(github.event.head_commit.message, '[release]')
     name: Build wasm target
     runs-on: ubuntu-latest
     steps:
