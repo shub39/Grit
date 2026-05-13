@@ -82,8 +82,8 @@ dependencies {
 
 compose.resources { publicResClass = true }
 
-//androidComponents {
-//    onVariants { variant ->
-//        variant.sources.res?.addStaticSourceDirectory("src/commonMain/composeResources")
-//    }
-//}
+androidComponents {
+    onVariants { variant ->
+        variant.sources.res?.addStaticSourceDirectory("src/commonMain/composeResources")
+    }
+}

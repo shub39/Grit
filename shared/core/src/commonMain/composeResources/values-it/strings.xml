@@ -30,7 +30,7 @@
     <string name="select_seed">Seleziona il colore base</string>
     <string name="select_seed_desc">Seleziona il colore da cui generare la palette</string>
     <string name="palette_style">Stile Palette</string>
-    <string name="look_and_feel_desc">Personalizza l'app in molti modi</string>
+    <string name="look_and_feel_desc">Personalizza l\u0027app in molti modi</string>
     <string name="backup">Backup</string>
     <string name="backup_desc">Esporta o Reimposta le tue task e abitudini</string>
     <string name="export">Esporta dati</string>
@@ -46,9 +46,9 @@
     <string name="system">Sistema</string>
     <string name="dark">Scuro</string>
     <string name="light">Chiaro</string>
-    <string name="app_theme">Tema dell'app</string>
+    <string name="app_theme">Tema dell\u0027app</string>
     <string name="pause_notifications">Metti in pausa le Notifiche</string>
-    <string name="pause_notifications_desc">Ferma tutte le notifiche dell'app</string>
+    <string name="pause_notifications_desc">Ferma tutte le notifiche dell\u0027app</string>
     <string name="started_on">Iniziato alle</string>
     <string name="weekly_graph">Confronto Settimanale</string>
     <string name="not_enough_data">Dati insufficienti</string>
@@ -59,7 +59,7 @@
     <string name="edit_habit">Modifica Abitudine</string>
     <string name="font">Carattere</string>
     <string name="biometric_lock">Blocco Biometrico</string>
-    <string name="biometric_lock_desc">Una autenticazione biometrica per sbloccare l'app</string>
+    <string name="biometric_lock_desc">Una autenticazione biometrica per sbloccare l\u0027app</string>
     <string name="bmc">Comprami un caffè</string>
     <string name="rate_on_play">Recensisci su Google Play</string>
     <string name="weekly_progress">Progresso Settimanale</string>
@@ -70,10 +70,10 @@
     <string name="monthly_progress">Progresso Mensile</string>
     <string name="week_breakdown">Ripartizione nella Settimana</string>
     <string name="foss">Stai usando la variante FOSS</string>
-    <string name="foss_desc">Tutte le opzioni sono sbloccate. Questa variante dell'apparato non supporta pagamaneti in App. Se questa app ha un valore per te supportami donando su</string>
+    <string name="foss_desc">Tutte le opzioni sono sbloccate. Questa variante dell\u0027apparato non supporta pagamaneti in App. Se questa app ha un valore per te supportami donando su</string>
     <string name="add_reminder">Aggiungi Promemoria</string>
     <string name="add_reminder_desc">Ricevi un promemoria i giorni selezionati</string>
-    <string name="invalid_date_time">L'ora o il giorno selezionati sono nel passato... :P</string>
+    <string name="invalid_date_time">L\u0027ora o il giorno selezionati sono nel passato... :P</string>
     <string name="reorder_tasks">Riordina task</string>
     <string name="reorder_tasks_desc">Riordina task quando vengono completate</string>
     <string name="weeks">Settimane</string>
@@ -82,5 +82,5 @@
     <string name="whats_changed">Cosa è cambiato</string>
     <string name="select_days">Seleziona Giorni</string>
     <string name="tasks">Task</string>
-    <string name="show_habits_desc">Mostra abitudini quando si apre l'app</string>
+    <string name="show_habits_desc">Mostra abitudini quando si apre l\u0027app</string>
 </resources>

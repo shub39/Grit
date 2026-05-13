@@ -21,7 +21,7 @@
     <string name="delete_tasks">Yakin mau hapus semua jejak perjuanganmu?</string>
     <string name="update_title">Edit judul</string>
     <string name="edit_categories">Edit kategori</string>
-    <string name="delete_category">Yakin? Semua bukti kerja kerasmu di kategori ini bakal musnah lho! :')</string>
+    <string name="delete_category">Yakin? Semua bukti kerja kerasmu di kategori ini bakal musnah lho! :\u0027)</string>
     <string name="add_category">Tambahkan kategori</string>
     <string name="add">Tambahkan sesuatu</string>
     <string name="habit_map">Peta Kebiasaan</string>
@@ -75,7 +75,7 @@
     <string name="foss_desc">Udah kebuka semua ya fiturnya! Versi ini bebas biaya alias gak ada in-app purchase. Kalau ngerasa Grit bikin hidupmu lebih tertata, yuk traktir kopi aku di</string>
     <string name="add_reminder">Tambahin Pengingat</string>
     <string name="add_reminder_desc">Terima pengingat notifikasi pada hari-hari tertentu</string>
-    <string name="invalid_date_time">Waduh, masa lalu jangan diungkit lagi :')</string>
+    <string name="invalid_date_time">Waduh, masa lalu jangan diungkit lagi :\u0027)</string>
     <string name="reorder_tasks">Atur ulang tugas</string>
     <string name="reorder_tasks_desc">Atur ulang tugas saat ditandai udah selesai</string>
     <string name="weeks">Pekan</string>

@@ -74,7 +74,7 @@
     <string name="foss">Һеҙ асыҡ сығанаҡлы вариантты ҡулланаһығыҙ</string>
     <string name="foss_desc">Бөтә мөмкинлектәр асыҡ. Был версияла эске һатып алыуҙар юҡ. Әгәр ҡушымта һеҙгә файҙалы булһа, бында донат ебәреп авторҙы хуплағыҙ</string>
     <string name="add_reminder">Иҫкәртеү өҫтәргә</string>
-    <string name="invalid_date_time">Һайланған ваҡыт бөткән :\\')</string>
+    <string name="invalid_date_time">Һайланған ваҡыт бөткән :\u0027)</string>
     <string name="reorder_tasks">Бурыстар тәртибен үҙгәртеү</string>
     <string name="reorder_tasks_desc">Эшләгән тип билдәләнгән бурыстарҙың тәртибен үҙгәртергә</string>
     <string name="weeks">Аҙна</string>

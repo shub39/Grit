@@ -73,12 +73,6 @@ android {
         debug {
             applicationIdSuffix = ".debug"
             resValue("string", "app_name", "$appName Debug")
-            //            isMinifyEnabled = true
-            //            isShrinkResources = true
-            //            proguardFiles(
-            //                getDefaultProguardFile("proguard-android-optimize.txt"),
-            //                "proguard-rules.pro"
-            //            )
         }
     }
 
@@ -112,6 +106,17 @@ android {
         includeInApk = false
         includeInBundle = false
     }
+
+//    sourceSets {
+//        getByName("main") {
+//            res.directories.addAll(
+//                listOf(
+//                    "src/main/res",
+//                    "${project(":shared:core").projectDir}/src/commonMain/composeResources"
+//                )
+//            )
+//        }
+//    }
 }
 
 kotlin {

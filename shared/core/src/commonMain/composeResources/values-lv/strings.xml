@@ -74,7 +74,7 @@
     <string name="foss">Tiek lietots FOSS variants</string>
     <string name="foss_desc">Visas funkcijas ir atslēgtas. Šis lietotnes variants neatbalsta Iekšlietotnes Pirkumus. Ja šī lietotne pievienoja vērtību Jūsu dzīvei, Atbalstiet mani, ziedojot</string>
     <string name="add_reminder">Pievienot Atgādinājumu</string>
-    <string name="invalid_date_time">Izvēlētais laiks ir pagātnē :\\')</string>
+    <string name="invalid_date_time">Izvēlētais laiks ir pagātnē :\u0027)</string>
     <string name="reorder_tasks">Mainīt uzdevumu secību</string>
     <string name="reorder_tasks_desc">Pārveidot uzdevumu secību, kad tie ir atzīmēti kā pabeigti</string>
     <string name="weeks">Nedēļas</string>

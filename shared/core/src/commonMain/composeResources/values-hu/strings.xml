@@ -73,7 +73,7 @@
     <string name="foss">Ön a FOSS változatot használja</string>
     <string name="foss_desc">Minden funkció feloldva. Az alkalmazás ezen változata nem támogatja az alkalmazáson belűli vásárlásokat. Ha ez az alkalmazás segített Önnek, támogassa munkámat adománnyal itt</string>
     <string name="add_reminder">Emlékeztető hozzáadása</string>
-    <string name="invalid_date_time">Kiválasztott ídő a múltban van :\\')</string>
+    <string name="invalid_date_time">Kiválasztott ídő a múltban van :\u0027)</string>
     <string name="reorder_tasks">Tennivalók átrendezése</string>
     <string name="reorder_tasks_desc">Tennivalók átrendezése ha azok befejezettként vannak jelölve</string>
     <string name="weeks">Hét</string>

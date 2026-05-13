@@ -75,7 +75,7 @@
     <string name="foss_desc">Wszystkie funkcje są dostępne. Ten wariant nie wspiera mikropłatności. Jeśli aplikacja jest dla Ciebie przydatna, możesz wesprzeć moją pracę tutaj</string>
     <string name="add_reminder">Dodaj przypomnienie</string>
     <string name="add_reminder_desc">Otrzymuj przypomnienia w wybrane dni</string>
-    <string name="invalid_date_time">Wybrany czas już minął :')</string>
+    <string name="invalid_date_time">Wybrany czas już minął :\u0027)</string>
     <string name="reorder_tasks">Zmień kolejność zadań</string>
     <string name="reorder_tasks_desc">Zmieniaj kolejność po ukończeniu</string>
     <string name="weeks">Tygodnie</string>

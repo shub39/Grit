@@ -73,7 +73,7 @@
     <string name="foss">Estás usando la variante FOSS</string>
     <string name="foss_desc">Todas las funciones están desbloqueadas. Esta variante de la aplicación no admite compras integradas. Si esta aplicación ha aportado valor a tu vida, apóyame donando en</string>
     <string name="add_reminder">Agregar recordatorio</string>
-    <string name="invalid_date_time">La hora seleccionada es en el pasado :\\')</string>
+    <string name="invalid_date_time">La hora seleccionada es en el pasado :\u0027)</string>
     <string name="reorder_tasks">Reordenar tareas</string>
     <string name="reorder_tasks_desc">Reordenar tareas cuando se marquen como completadas</string>
     <string name="weeks">Semanas</string>

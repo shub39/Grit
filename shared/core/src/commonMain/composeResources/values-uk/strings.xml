@@ -73,7 +73,7 @@
     <string name="foss">Ви використовуєте варіант FOSS</string>
     <string name="foss_desc">Усі функції розблоковані. Цей варіант застосунку не підтримує покупки в застосунку. Якщо цей застосунок покращив ваше життя, підтримайте мене, задонативши на</string>
     <string name="add_reminder">Додати нагадування</string>
-    <string name="invalid_date_time">Обраний час вже у минулому :\\')</string>
+    <string name="invalid_date_time">Обраний час вже у минулому :\u0027)</string>
     <string name="reorder_tasks">Змінити порядок завдань</string>
     <string name="reorder_tasks_desc">Змінювати порядок завдань після позначення як виконаних</string>
     <string name="weeks">Тижні</string>

@@ -74,7 +74,7 @@
     <string name="week_breakdown">Nädalapäevade järgi</string>
     <string name="foss">Kasutad FOSS varianti</string>
     <string name="foss_desc">Kõik funktsioonid on avatud. See rakenduse variant ei toeta rakendusesiseseid oste. Kui see rakendus lisab sinu elule väärtust siis toeta mind annetusega</string>
-    <string name="invalid_date_time">Valitud aeg on minevikus :')</string>
+    <string name="invalid_date_time">Valitud aeg on minevikus :\u0027)</string>
     <string name="add_reminder_desc">Saa teavituste meeldetuletusi valitud päevadel</string>
     <string name="reorder_tasks">Muuda ülesannete järjstust</string>
     <string name="reorder_tasks_desc">Muuda ülesannete järjestus, kui need märgitakse lõpetatuks</string>

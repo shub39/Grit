@@ -75,7 +75,7 @@
     <string name="foss_desc">Alle Funktionen sind freigeschaltet. Diese App-Variante unterstützt keine In-App-Käufe. Wenn dir diese App in irgendeiner Weise geholfen hat, unterstütze mich bitte mit einer Spende auf</string>
     <string name="add_reminder">Erinnerung hinzufügen</string>
     <string name="add_reminder_desc">Erhalte eine Benachrichtigung an ausgewählten Tagen</string>
-    <string name="invalid_date_time">Ausgewählte Zeit liegt in der Vergangenheit :')</string>
+    <string name="invalid_date_time">Ausgewählte Zeit liegt in der Vergangenheit :\u0027)</string>
     <string name="reorder_tasks">Aufgaben anordnen</string>
     <string name="reorder_tasks_desc">Aufgaben neu anordnen, wenn sie abgeschlossen sind</string>
     <string name="weeks">Wochen</string>

@@ -74,7 +74,7 @@
     <string name="foss">انت تستخدم نسخة FOSS</string>
     <string name="foss_desc">جميع المزايا مفتوحة. هذه النسخة لا تدعم الشراء داخل التطبيق. اذا كان Grit اضاف قيمة لحياتك، ادعمني بالتبرع عبر</string>
     <string name="add_reminder">أضف تذكير</string>
-    <string name="invalid_date_time">الوقت المحدد في الماضي :')</string>
+    <string name="invalid_date_time">الوقت المحدد في الماضي :\u0027)</string>
     <string name="reorder_tasks">إعادة ترتيب المهام</string>
     <string name="reorder_tasks_desc">أعد ترتيب المهام عند اكمالها</string>
     <string name="weeks">اسابيع</string>

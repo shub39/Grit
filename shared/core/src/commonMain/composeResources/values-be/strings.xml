@@ -75,7 +75,7 @@
     <string name="foss_desc">Усе функцыі разблакіраваны. Гэта версія праграмы не падтрымлівае пакупкі ўнутры праграмы. Калі гэта праграма зрабіла ваша жыццё лепш, падтрымайце мяне, зрабіўшы ахвяраванне</string>
     <string name="add_reminder">Дадаць напамін</string>
     <string name="add_reminder_desc">Атрымліваць напамін у вызначаныя дні</string>
-    <string name="invalid_date_time">Выбраны час мінуў :')</string>
+    <string name="invalid_date_time">Выбраны час мінуў :\u0027)</string>
     <string name="reorder_tasks">Змяніць парадак задач</string>
     <string name="reorder_tasks_desc">Змяніць парадак скончаных задач</string>
     <string name="weeks">Тыдні</string>
