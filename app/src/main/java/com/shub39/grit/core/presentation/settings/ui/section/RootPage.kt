@@ -16,6 +16,7 @@
  */
 package com.shub39.grit.core.presentation.settings.ui.section
 
+import android.os.Build
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -38,11 +39,16 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.platform.LocalLocale
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.tooling.preview.PreviewWrapper
 import androidx.compose.ui.unit.dp
@@ -51,6 +57,7 @@ import com.shub39.grit.core.presentation.getRandomLine
 import com.shub39.grit.core.presentation.settings.SettingsAction
 import com.shub39.grit.core.presentation.settings.SettingsState
 import com.shub39.grit.core.presentation.settings.ui.component.AboutApp
+import com.shub39.grit.core.presentation.settings.ui.component.LocalePickerSheet
 import com.shub39.grit.core.shared_ui.detachedItemShape
 import com.shub39.grit.core.shared_ui.endItemShape
 import com.shub39.grit.core.shared_ui.leadingItemShape
@@ -71,6 +78,7 @@ import grit.shared.core.generated.resources.changelog
 import grit.shared.core.generated.resources.check_list
 import grit.shared.core.generated.resources.download
 import grit.shared.core.generated.resources.grit_plus
+import grit.shared.core.generated.resources.language
 import grit.shared.core.generated.resources.look_and_feel
 import grit.shared.core.generated.resources.look_and_feel_desc
 import grit.shared.core.generated.resources.palette
@@ -82,12 +90,18 @@ import grit.shared.core.generated.resources.settings
 import grit.shared.core.generated.resources.show_habits
 import grit.shared.core.generated.resources.show_habits_desc
 import grit.shared.core.generated.resources.staring_day
+import grit.shared.core.generated.resources.translate
 import grit.shared.core.generated.resources.use_24Hr
 import grit.shared.core.generated.resources.use_24Hr_desc
 import kotlinx.datetime.DayOfWeek
+import org.jetbrains.compose.resources.painterResource
 import org.jetbrains.compose.resources.stringResource
 import org.jetbrains.compose.resources.vectorResource
 
+/**
+ * Root settings page
+ * all roads start from here
+ */
 @Composable
 fun RootPage(
     state: SettingsState,
@@ -97,6 +111,8 @@ fun RootPage(
     onNavigateToPaywall: () -> Unit,
     onNavigateToChangelog: () -> Unit,
 ) {
+    var showLocalePicker by remember { mutableStateOf(false) }
+
     val context = LocalContext.current
 
     LaunchedEffect(Unit) { onAction(SettingsAction.OnCheckBiometric(context)) }
@@ -124,8 +140,10 @@ fun RootPage(
                 item { WarningReminder() }
             }
 
+            // about app, info, build version, links
             item { AboutApp() }
 
+            // Grit Plus
             item {
                 Card(
                     onClick = onNavigateToPaywall,
@@ -158,8 +176,7 @@ fun RootPage(
                 }
             }
 
-            //            item { Spacer(modifier = Modifier.height(16.dp)) }
-
+            // General settings
             item {
                 Column(verticalArrangement = Arrangement.spacedBy(2.dp)) {
                     ListItem(
@@ -275,8 +292,7 @@ fun RootPage(
                 }
             }
 
-            //            item { Spacer(modifier = Modifier.height(16.dp)) }
-
+            // look and feel customizations
             item {
                 Column(verticalArrangement = Arrangement.spacedBy(2.dp)) {
                     ListItem(
@@ -324,8 +340,42 @@ fun RootPage(
                 }
             }
 
-            //            item { Spacer(modifier = Modifier.height(16.dp)) }
+            // language picker
+            if (Build.VERSION.SDK_INT >= 33) {
+                item {
+                    ListItem(
+                        colors = listItemColors(),
+                        leadingContent = {
+                            Icon(
+                                painter = painterResource(Res.drawable.language),
+                                contentDescription = null
+                            )
+                        },
+                        headlineContent = {
+                            Text(
+                                text = stringResource(Res.string.language)
+                            )
+                        },
+                        supportingContent = {
+                            Text(
+                                text = LocalLocale.current.platformLocale.displayLanguage
+                            )
+                        },
+                        trailingContent = {
+                            Icon(
+                                painter = painterResource(Res.drawable.arrow_forward),
+                                contentDescription = "Navigate",
+                            )
+                        },
+                        modifier =
+                            Modifier.clip(detachedItemShape()).clickable {
+                                showLocalePicker = true
+                            },
+                    )
+                }
+            }
 
+            // Changelogs
             item {
                 ListItem(
                     colors = listItemColors(),
@@ -346,6 +396,12 @@ fun RootPage(
                         Modifier.clip(detachedItemShape()).clickable { onNavigateToChangelog() },
                 )
             }
+        }
+
+        if (showLocalePicker) {
+            LocalePickerSheet(
+                onDismissRequest = { showLocalePicker = false }
+            )
         }
     }
 }
