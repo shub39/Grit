@@ -1,6 +1,6 @@
 # Changelog
 
-# 5.9.23
+## 5.9.23
 - Updated Translations
 - (Android 13+) Added ability to change app language from Settings
 
