@@ -61,7 +61,7 @@
     <string name="foss">נעשה שימוש במהדורת „תוכנה חופשית”</string>
     <string name="add_reminder">הוספת תזכורת</string>
     <string name="add_reminder_desc">קבלת התראת תזכורת בימים הנבחרים</string>
-    <string name="invalid_date_time">השעה שנבחרה כבר חלפה :')</string>
+    <string name="invalid_date_time">השעה שנבחרה כבר חלפה :\u0027)</string>
     <string name="reorder_tasks">סידור מחדש של המשימות</string>
     <string name="weeks">שבועות</string>
     <string name="translate">תרגום</string>

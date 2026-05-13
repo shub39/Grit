@@ -25,8 +25,8 @@ plugins {
 }
 
 val appName = "Grit"
-val appVersionCode = 5922
-val appVersionName = "5.9.22"
+val appVersionCode = 5923
+val appVersionName = "5.9.23"
 
 val gitHash = execute("git", "rev-parse", "HEAD").take(7)
 
@@ -42,7 +42,9 @@ android {
         versionName = appVersionName
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
+
         vectorDrawables { useSupportLibrary = true }
+        androidResources { generateLocaleConfig = true }
     }
 
     buildTypes {
@@ -71,12 +73,6 @@ android {
         debug {
             applicationIdSuffix = ".debug"
             resValue("string", "app_name", "$appName Debug")
-            //            isMinifyEnabled = true
-            //            isShrinkResources = true
-            //            proguardFiles(
-            //                getDefaultProguardFile("proguard-android-optimize.txt"),
-            //                "proguard-rules.pro"
-            //            )
         }
     }
 
@@ -109,6 +105,17 @@ android {
     dependenciesInfo {
         includeInApk = false
         includeInBundle = false
+    }
+
+    sourceSets {
+        getByName("main") {
+            res.directories.addAll(
+                listOf(
+                    "src/main/res",
+                    "${project(":shared:core").projectDir}/src/commonMain/composeResources",
+                )
+            )
+        }
     }
 }
 

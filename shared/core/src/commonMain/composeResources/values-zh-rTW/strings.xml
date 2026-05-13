@@ -73,7 +73,7 @@
     <string name="foss_desc">所有功能已解鎖。此版本不支援應用程式內購買。若此應用程式對您有所幫助，歡迎透過以下方式贊助我</string>
     <string name="add_reminder">新增提醒</string>
     <string name="add_reminder_desc">在所選的日子收到通知提醒</string>
-    <string name="invalid_date_time">所選時間是過去時間 :')</string>
+    <string name="invalid_date_time">所選時間是過去時間 :\u0027)</string>
     <string name="reorder_tasks">重新排序任務</string>
     <string name="reorder_tasks_desc">標記完成時重新排序任務</string>
     <string name="weeks">週數</string>

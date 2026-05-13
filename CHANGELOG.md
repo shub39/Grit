@@ -1,5 +1,9 @@
 # Changelog
 
+# 5.9.23
+- Updated Translations
+- (Android 13+) Added ability to change app language from Settings
+
 ## 5.9.22
 - Updated Translations
 - Fixed Unable to change Task Categories

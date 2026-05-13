@@ -32,7 +32,6 @@ import androidx.core.content.ContextCompat
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import androidx.fragment.app.FragmentActivity
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import com.shub39.grit.R
 import com.shub39.grit.core.data.GritNotificationManager.Companion.createNotificationChannel
 import com.shub39.grit.core.data.Utils
 import com.shub39.grit.core.presentation.component.InitialLoading
@@ -118,7 +117,7 @@ class MainActivity : FragmentActivity() {
 
         val promptInfo =
             BiometricPrompt.PromptInfo.Builder()
-                .setTitle(getString(R.string.biometric_lock))
+                .setTitle("Biometric Lock")
                 .setAllowedAuthenticators(Utils.getAuthenticators())
                 .build()
 
@@ -134,8 +133,7 @@ class MainActivity : FragmentActivity() {
             BiometricPrompt.ERROR_USER_CANCELED,
             BiometricPrompt.ERROR_NEGATIVE_BUTTON,
             BiometricPrompt.ERROR_CANCELED -> {
-                Toast.makeText(this, getString(R.string.biometric_failed), Toast.LENGTH_SHORT)
-                    .show()
+                Toast.makeText(this, "Biometric Authentication Failed", Toast.LENGTH_SHORT).show()
                 finish()
             }
 
@@ -145,8 +143,7 @@ class MainActivity : FragmentActivity() {
                 mainViewModel.setAppUnlocked(true)
                 mainViewModel.setBiometricLock(false)
 
-                Toast.makeText(this, getString(R.string.biometric_not_available), Toast.LENGTH_LONG)
-                    .show()
+                Toast.makeText(this, "Biometric Authentication Failed", Toast.LENGTH_LONG).show()
                 onComplete()
             }
 
