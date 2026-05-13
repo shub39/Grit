@@ -68,7 +68,6 @@ fun LocalePickerSheet(onDismissRequest: () -> Unit, modifier: Modifier = Modifie
     val supportedLocaleList: List<AppLocale>? = remember {
         if (Build.VERSION.SDK_INT >= 33) {
             val supportedLocales = LocaleConfig(context).supportedLocales
-            println(supportedLocales)
             if (supportedLocales != null) {
                 buildList {
                         for (i in 0 until supportedLocales.size()) {
