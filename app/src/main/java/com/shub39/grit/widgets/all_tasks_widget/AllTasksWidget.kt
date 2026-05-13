@@ -31,7 +31,6 @@ import androidx.glance.GlanceModifier
 import androidx.glance.GlanceTheme
 import androidx.glance.Image
 import androidx.glance.ImageProvider
-import androidx.glance.LocalContext
 import androidx.glance.LocalSize
 import androidx.glance.action.actionStartActivity
 import androidx.glance.action.clickable
@@ -143,7 +142,6 @@ private fun Content(
     modifier: GlanceModifier = GlanceModifier,
 ) {
     val size = LocalSize.current
-    val context = LocalContext.current
     val roundedCornerSupported = Build.VERSION.SDK_INT >= Build.VERSION_CODES.S
 
     Column(
@@ -165,7 +163,7 @@ private fun Content(
     ) {
         TitleBar(
             startIcon = ImageProvider(R.drawable.check_list),
-            title = context.getString(R.string.tasks),
+            title = "Tasks",
             actions = {
                 if (size.width >= WidgetSize.Width4) {
                     Box(GlanceModifier.padding(horizontal = 16.dp)) {

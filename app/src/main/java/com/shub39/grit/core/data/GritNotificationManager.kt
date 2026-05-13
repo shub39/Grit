@@ -27,7 +27,6 @@ import android.util.Log
 import androidx.core.app.ActivityCompat
 import androidx.core.app.NotificationCompat
 import androidx.core.app.NotificationManagerCompat
-import androidx.core.content.ContextCompat.getString
 import com.shub39.grit.R
 import com.shub39.grit.core.domain.IntentActions
 import com.shub39.grit.core.habits.domain.Habit
@@ -42,11 +41,11 @@ class GritNotificationManager(private val context: Context) {
         private const val TASK_NOTIF_ID_OFFSET = 1000
 
         fun createNotificationChannel(context: Context) {
-            val name = getString(context, R.string.channel_name)
-            val descriptionText = getString(context, R.string.channel_description)
             val importance = NotificationManager.IMPORTANCE_DEFAULT
             val channel =
-                NotificationChannel("1", name, importance).apply { description = descriptionText }
+                NotificationChannel("1", "Grit Notifications", importance).apply {
+                    description = "Notification Channel for Habits and Tasks"
+                }
             val notificationManager: NotificationManager =
                 context.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
 
@@ -80,11 +79,7 @@ class GritNotificationManager(private val context: Context) {
                 .setContentText(habit.description)
                 .setPriority(NotificationCompat.PRIORITY_DEFAULT)
                 .setAutoCancel(true)
-                .addAction(
-                    R.drawable.notif_icon,
-                    context.getString(R.string.mark_done),
-                    pendingBroadcast,
-                )
+                .addAction(R.drawable.notif_icon, "Mark Done", pendingBroadcast)
 
         if (
             ActivityCompat.checkSelfPermission(context, Manifest.permission.POST_NOTIFICATIONS) ==
@@ -116,11 +111,7 @@ class GritNotificationManager(private val context: Context) {
                 .setContentTitle(task.title)
                 .setPriority(NotificationCompat.PRIORITY_DEFAULT)
                 .setAutoCancel(true)
-                .addAction(
-                    R.drawable.notif_icon,
-                    context.getString(R.string.mark_done),
-                    pendingBroadcast,
-                )
+                .addAction(R.drawable.notif_icon, "Mark Done", pendingBroadcast)
 
         if (
             ActivityCompat.checkSelfPermission(context, Manifest.permission.POST_NOTIFICATIONS) ==

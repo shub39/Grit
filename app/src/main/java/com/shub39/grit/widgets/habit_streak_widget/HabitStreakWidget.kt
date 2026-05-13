@@ -34,7 +34,6 @@ import androidx.glance.GlanceModifier
 import androidx.glance.GlanceTheme
 import androidx.glance.Image
 import androidx.glance.ImageProvider
-import androidx.glance.LocalContext
 import androidx.glance.LocalSize
 import androidx.glance.action.actionStartActivity
 import androidx.glance.action.clickable
@@ -165,7 +164,6 @@ private fun Content(
     onUpdateWidget: () -> Unit,
     onChangeHabit: () -> Unit,
 ) {
-    val context = LocalContext.current
     val size = LocalSize.current
     val roundedCornerSupported = Build.VERSION.SDK_INT >= Build.VERSION_CODES.S
 
@@ -248,10 +246,7 @@ private fun Content(
 
                                 Row {
                                     Text(
-                                        text =
-                                            "${habitWithAnalytics.currentStreak} " +
-                                                context.getString(R.string.day) +
-                                                " ",
+                                        text = "${habitWithAnalytics.currentStreak} Day ",
                                         maxLines = 1,
                                         style =
                                             TextStyle(
@@ -262,7 +257,7 @@ private fun Content(
                                     )
 
                                     Text(
-                                        text = context.getString(R.string.current_streak),
+                                        text = "Current Streak",
                                         maxLines = 1,
                                         style =
                                             TextStyle(
@@ -276,10 +271,7 @@ private fun Content(
 
                                 Column {
                                     Text(
-                                        text =
-                                            "${habitWithAnalytics.currentStreak} " +
-                                                context.getString(R.string.day) +
-                                                " ",
+                                        text = "${habitWithAnalytics.currentStreak} Day ",
                                         maxLines = 1,
                                         style =
                                             TextStyle(
@@ -290,7 +282,7 @@ private fun Content(
                                     )
 
                                     Text(
-                                        text = context.getString(R.string.current_streak),
+                                        text = "Current Streak",
                                         maxLines = 1,
                                         style =
                                             TextStyle(
@@ -333,10 +325,7 @@ private fun Content(
 
                                 Row {
                                     Text(
-                                        text =
-                                            "${habitWithAnalytics.bestStreak} " +
-                                                context.getString(R.string.day) +
-                                                " ",
+                                        text = "${habitWithAnalytics.bestStreak} Day ",
                                         maxLines = 1,
                                         style =
                                             TextStyle(
@@ -347,7 +336,7 @@ private fun Content(
                                     )
 
                                     Text(
-                                        text = context.getString(R.string.best_streak),
+                                        text = "Best Streak",
                                         maxLines = 1,
                                         style =
                                             TextStyle(
@@ -361,10 +350,7 @@ private fun Content(
 
                                 Column {
                                     Text(
-                                        text =
-                                            "${habitWithAnalytics.bestStreak} " +
-                                                context.getString(R.string.day) +
-                                                " ",
+                                        text = "${habitWithAnalytics.bestStreak} Day ",
                                         maxLines = 1,
                                         style =
                                             TextStyle(
@@ -375,7 +361,7 @@ private fun Content(
                                     )
 
                                     Text(
-                                        text = context.getString(R.string.best_streak),
+                                        text = "Best Streak",
                                         maxLines = 1,
                                         style =
                                             TextStyle(
@@ -429,7 +415,7 @@ private fun Content(
                                     )
 
                                     Text(
-                                        text = context.getString(R.string.days_ago_format),
+                                        text = "Days Ago",
                                         maxLines = 1,
                                         style =
                                             TextStyle(
@@ -454,7 +440,7 @@ private fun Content(
                                     )
 
                                     Text(
-                                        text = context.getString(R.string.days_ago_format),
+                                        text = "Days Ago",
                                         maxLines = 1,
                                         style =
                                             TextStyle(
@@ -475,7 +461,7 @@ private fun Content(
         } else {
             Box(modifier = GlanceModifier.fillMaxSize(), contentAlignment = Alignment.Center) {
                 Text(
-                    text = context.getString(R.string.nothing_to_show),
+                    text = "Nothing to show",
                     style = TextStyle(color = GlanceTheme.colors.onSurface),
                 )
             }

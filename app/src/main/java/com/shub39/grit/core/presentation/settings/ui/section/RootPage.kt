@@ -90,7 +90,6 @@ import grit.shared.core.generated.resources.settings
 import grit.shared.core.generated.resources.show_habits
 import grit.shared.core.generated.resources.show_habits_desc
 import grit.shared.core.generated.resources.staring_day
-import grit.shared.core.generated.resources.translate
 import grit.shared.core.generated.resources.use_24Hr
 import grit.shared.core.generated.resources.use_24Hr_desc
 import kotlinx.datetime.DayOfWeek
@@ -98,10 +97,7 @@ import org.jetbrains.compose.resources.painterResource
 import org.jetbrains.compose.resources.stringResource
 import org.jetbrains.compose.resources.vectorResource
 
-/**
- * Root settings page
- * all roads start from here
- */
+/** Root settings page all roads start from here */
 @Composable
 fun RootPage(
     state: SettingsState,
@@ -348,18 +344,12 @@ fun RootPage(
                         leadingContent = {
                             Icon(
                                 painter = painterResource(Res.drawable.language),
-                                contentDescription = null
+                                contentDescription = null,
                             )
                         },
-                        headlineContent = {
-                            Text(
-                                text = stringResource(Res.string.language)
-                            )
-                        },
+                        headlineContent = { Text(text = stringResource(Res.string.language)) },
                         supportingContent = {
-                            Text(
-                                text = LocalLocale.current.platformLocale.displayLanguage
-                            )
+                            Text(text = LocalLocale.current.platformLocale.displayLanguage)
                         },
                         trailingContent = {
                             Icon(
@@ -368,9 +358,7 @@ fun RootPage(
                             )
                         },
                         modifier =
-                            Modifier.clip(detachedItemShape()).clickable {
-                                showLocalePicker = true
-                            },
+                            Modifier.clip(detachedItemShape()).clickable { showLocalePicker = true },
                     )
                 }
             }
@@ -399,9 +387,7 @@ fun RootPage(
         }
 
         if (showLocalePicker) {
-            LocalePickerSheet(
-                onDismissRequest = { showLocalePicker = false }
-            )
+            LocalePickerSheet(onDismissRequest = { showLocalePicker = false })
         }
     }
 }

@@ -31,7 +31,6 @@ import androidx.glance.GlanceModifier
 import androidx.glance.GlanceTheme
 import androidx.glance.Image
 import androidx.glance.ImageProvider
-import androidx.glance.LocalContext
 import androidx.glance.LocalSize
 import androidx.glance.action.actionStartActivity
 import androidx.glance.action.clickable
@@ -156,7 +155,6 @@ private fun Content(
     onUpdateWidget: () -> Unit,
     modifier: GlanceModifier = GlanceModifier,
 ) {
-    val context = LocalContext.current
     val size = LocalSize.current
     val roundedCornerSupported = Build.VERSION.SDK_INT >= Build.VERSION_CODES.S
 
@@ -179,7 +177,7 @@ private fun Content(
     ) {
         TitleBar(
             startIcon = ImageProvider(R.drawable.alarm),
-            title = context.getString(R.string.habits),
+            title = "Habits",
             actions = {
                 Text(
                     text = "${habitsWithStatus.count { it.second }}/${habitsWithStatus.size}",

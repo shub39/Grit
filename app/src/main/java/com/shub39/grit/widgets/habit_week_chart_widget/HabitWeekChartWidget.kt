@@ -34,7 +34,6 @@ import androidx.glance.GlanceModifier
 import androidx.glance.GlanceTheme
 import androidx.glance.Image
 import androidx.glance.ImageProvider
-import androidx.glance.LocalContext
 import androidx.glance.LocalSize
 import androidx.glance.action.actionStartActivity
 import androidx.glance.action.clickable
@@ -164,7 +163,6 @@ private fun Content(
     onUpdateWidget: () -> Unit,
     onChangeHabit: () -> Unit,
 ) {
-    val context = LocalContext.current
     val size = LocalSize.current
     val roundedCornerSupported = Build.VERSION.SDK_INT >= Build.VERSION_CODES.S
 
@@ -277,7 +275,7 @@ private fun Content(
         } else {
             Box(modifier = GlanceModifier.fillMaxSize(), contentAlignment = Alignment.Center) {
                 Text(
-                    text = context.getString(R.string.nothing_to_show),
+                    text = "Nothing to show",
                     style = TextStyle(color = GlanceTheme.colors.onSurface),
                 )
             }
