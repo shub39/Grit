@@ -6,11 +6,8 @@
     <string name="cancel">Отказ</string>
     <string name="habits">Навици</string>
     <string name="settings">Настройки</string>
-    <string name="new_habit">Нов Навик</string>
     <string name="save">Запази</string>
-    <string name="categories">Категории</string>
     <string name="completed">Завършени днес</string>
     <string name="items_completed">завършени</string>
     <string name="add_task">Нова задача</string>
-    <string name="add_description">Добави описание</string>
 </resources>
