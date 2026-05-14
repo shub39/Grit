@@ -65,6 +65,7 @@ import androidx.compose.ui.text.TextRange
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardCapitalization
 import androidx.compose.ui.unit.dp
+import com.shub39.grit.core.now
 import com.shub39.grit.core.shared_ui.GritBottomSheet
 import com.shub39.grit.core.shared_ui.GritTimePicker
 import com.shub39.grit.core.shared_ui.detachedItemShape
@@ -72,8 +73,7 @@ import com.shub39.grit.core.shared_ui.listItemColors
 import com.shub39.grit.core.tasks.domain.Category
 import com.shub39.grit.core.tasks.domain.Task
 import com.shub39.grit.core.theme.flexFontEmphasis
-import com.shub39.grit.core.utils.now
-import com.shub39.grit.core.utils.toFormattedString
+import com.shub39.grit.core.toFormattedString
 import grit.shared.core.generated.resources.Res
 import grit.shared.core.generated.resources.add
 import grit.shared.core.generated.resources.add_reminder

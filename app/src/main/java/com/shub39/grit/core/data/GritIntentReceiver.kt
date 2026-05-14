@@ -25,8 +25,8 @@ import com.shub39.grit.core.domain.IntentActions
 import com.shub39.grit.core.domain.SettingsDatastore
 import com.shub39.grit.core.habits.domain.HabitRepo
 import com.shub39.grit.core.habits.domain.HabitStatus
+import com.shub39.grit.core.now
 import com.shub39.grit.core.tasks.domain.TaskRepo
-import com.shub39.grit.core.utils.now
 import kotlin.time.ExperimentalTime
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers

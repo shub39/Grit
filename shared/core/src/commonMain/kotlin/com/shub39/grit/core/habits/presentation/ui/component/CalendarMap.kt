@@ -45,6 +45,7 @@ import com.kizitonwose.calendar.core.minusDays
 import com.kizitonwose.calendar.core.minusYears
 import com.kizitonwose.calendar.core.now
 import com.kizitonwose.calendar.core.plusDays
+import com.shub39.grit.core.GritPreviewWrapper
 import com.shub39.grit.core.habits.domain.Habit
 import com.shub39.grit.core.habits.domain.HabitStatus
 import com.shub39.grit.core.habits.domain.HabitWithAnalytics
@@ -52,10 +53,9 @@ import com.shub39.grit.core.habits.domain.StreakPosition
 import com.shub39.grit.core.habits.domain.calendarMapStreakShape
 import com.shub39.grit.core.habits.presentation.HabitsAction
 import com.shub39.grit.core.habits.presentation.daysStartingFrom
+import com.shub39.grit.core.now
 import com.shub39.grit.core.shared_ui.endItemShape
 import com.shub39.grit.core.theme.GritTheme
-import com.shub39.grit.core.utils.GritPreviewWrapper
-import com.shub39.grit.core.utils.now
 import grit.shared.core.generated.resources.Res
 import grit.shared.core.generated.resources.calendar_month
 import grit.shared.core.generated.resources.monthly_progress

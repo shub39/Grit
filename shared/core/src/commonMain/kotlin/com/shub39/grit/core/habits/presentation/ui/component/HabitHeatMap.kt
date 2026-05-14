@@ -50,13 +50,13 @@ import com.kizitonwose.calendar.compose.HeatMapCalendar
 import com.kizitonwose.calendar.compose.heatmapcalendar.HeatMapCalendarState
 import com.kizitonwose.calendar.compose.heatmapcalendar.rememberHeatMapCalendarState
 import com.kizitonwose.calendar.core.now
+import com.shub39.grit.core.GritPreviewWrapper
 import com.shub39.grit.core.habits.presentation.daysStartingFrom
 import com.shub39.grit.core.shared_ui.endItemShape
 import com.shub39.grit.core.shared_ui.leadingItemShape
 import com.shub39.grit.core.shared_ui.listItemColors
 import com.shub39.grit.core.theme.flexFontRounded
-import com.shub39.grit.core.utils.GritPreviewWrapper
-import com.shub39.grit.core.utils.toFormattedString
+import com.shub39.grit.core.toFormattedString
 import grit.shared.core.generated.resources.Res
 import grit.shared.core.generated.resources.habit_map
 import grit.shared.core.generated.resources.map

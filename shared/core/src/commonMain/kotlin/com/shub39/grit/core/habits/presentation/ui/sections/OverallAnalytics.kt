@@ -39,12 +39,12 @@ import androidx.compose.ui.unit.dp
 import com.kizitonwose.calendar.compose.heatmapcalendar.rememberHeatMapCalendarState
 import com.kizitonwose.calendar.core.minusMonths
 import com.kizitonwose.calendar.core.now
+import com.shub39.grit.core.LocalWindowSizeClass
 import com.shub39.grit.core.habits.presentation.HabitState
 import com.shub39.grit.core.habits.presentation.HabitsAction
 import com.shub39.grit.core.habits.presentation.ui.component.HabitHeatMap
 import com.shub39.grit.core.habits.presentation.ui.component.WeekDayBreakdown
 import com.shub39.grit.core.theme.flexFontEmphasis
-import com.shub39.grit.core.utils.LocalWindowSizeClass
 import grit.shared.core.generated.resources.Res
 import grit.shared.core.generated.resources.arrow_back
 import grit.shared.core.generated.resources.overall_analytics

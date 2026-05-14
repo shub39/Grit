@@ -46,6 +46,7 @@ import androidx.navigation3.runtime.rememberNavBackStack
 import androidx.navigation3.ui.NavDisplay
 import androidx.savedstate.serialization.SavedStateConfiguration
 import com.materialkolor.PaletteStyle
+import com.shub39.grit.core.LocalWindowSizeClass
 import com.shub39.grit.core.habits.presentation.ui.HabitsGraph
 import com.shub39.grit.core.navigation.fadeTransitionMetadata
 import com.shub39.grit.core.tasks.presentation.ui.TasksPage
@@ -53,7 +54,6 @@ import com.shub39.grit.core.theme.AppTheme
 import com.shub39.grit.core.theme.Fonts
 import com.shub39.grit.core.theme.GritTheme
 import com.shub39.grit.core.theme.Theme
-import com.shub39.grit.core.utils.LocalWindowSizeClass
 import grit.shared.core.generated.resources.Res
 import grit.shared.core.generated.resources.alarm
 import grit.shared.core.generated.resources.check_list

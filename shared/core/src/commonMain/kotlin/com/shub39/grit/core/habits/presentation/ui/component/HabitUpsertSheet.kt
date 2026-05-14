@@ -68,6 +68,7 @@ import androidx.compose.ui.text.input.KeyboardCapitalization
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.shub39.grit.core.habits.domain.Habit
+import com.shub39.grit.core.now
 import com.shub39.grit.core.shared_ui.GritBottomSheet
 import com.shub39.grit.core.shared_ui.GritTimePicker
 import com.shub39.grit.core.shared_ui.detachedItemShape
@@ -78,8 +79,7 @@ import com.shub39.grit.core.shared_ui.middleItemShape
 import com.shub39.grit.core.theme.GritTheme
 import com.shub39.grit.core.theme.flexFontEmphasis
 import com.shub39.grit.core.theme.flexFontRounded
-import com.shub39.grit.core.utils.now
-import com.shub39.grit.core.utils.toFormattedString
+import com.shub39.grit.core.toFormattedString
 import grit.shared.core.generated.resources.Res
 import grit.shared.core.generated.resources.add
 import grit.shared.core.generated.resources.add_habit

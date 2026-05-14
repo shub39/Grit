@@ -37,9 +37,9 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
+import com.shub39.grit.core.LocalWindowSizeClass
 import com.shub39.grit.core.habits.presentation.HabitState
 import com.shub39.grit.core.habits.presentation.HabitsAction
-import com.shub39.grit.core.utils.LocalWindowSizeClass
 import grit.shared.core.generated.resources.Res
 import grit.shared.core.generated.resources.add
 import grit.shared.core.generated.resources.add_habit

@@ -14,8 +14,21 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
-package com.shub39.grit.core.utils
+package com.shub39.grit.core
 
-import android.os.Build
+import kotlin.time.Clock
+import kotlinx.datetime.LocalDate
+import kotlinx.datetime.LocalDateTime
+import kotlinx.datetime.LocalTime
+import kotlinx.datetime.TimeZone
+import kotlinx.datetime.toLocalDateTime
+import kotlinx.datetime.todayIn
 
-actual fun blurPossible(): Boolean = Build.VERSION.SDK_INT >= Build.VERSION_CODES.S
+// Frequently used time utils
+
+fun LocalDateTime.Companion.now(): LocalDateTime =
+    Clock.System.now().toLocalDateTime(TimeZone.currentSystemDefault())
+
+fun LocalDate.Companion.now(): LocalDate = Clock.System.todayIn(TimeZone.currentSystemDefault())
+
+fun LocalTime.Companion.now(): LocalTime = LocalDateTime.now().time

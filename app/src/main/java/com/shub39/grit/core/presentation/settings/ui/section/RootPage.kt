@@ -52,6 +52,7 @@ import androidx.compose.ui.platform.LocalLocale
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.tooling.preview.PreviewWrapper
 import androidx.compose.ui.unit.dp
+import com.shub39.grit.core.GritPreviewWrapper
 import com.shub39.grit.core.domain.Sections
 import com.shub39.grit.core.presentation.getRandomLine
 import com.shub39.grit.core.presentation.settings.SettingsAction
@@ -65,7 +66,6 @@ import com.shub39.grit.core.shared_ui.listItemColors
 import com.shub39.grit.core.shared_ui.middleItemShape
 import com.shub39.grit.core.theme.flexFontEmphasis
 import com.shub39.grit.core.theme.flexFontRounded
-import com.shub39.grit.core.utils.GritPreviewWrapper
 import com.shub39.grit.warning.WarningManager
 import com.shub39.grit.warning.WarningReminder
 import grit.shared.core.generated.resources.Res

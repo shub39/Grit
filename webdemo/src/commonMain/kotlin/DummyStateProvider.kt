@@ -22,11 +22,11 @@ import com.shub39.grit.core.habits.domain.WeekDayFrequencyData
 import com.shub39.grit.core.habits.domain.WeeklyComparisonData
 import com.shub39.grit.core.habits.presentation.HabitState
 import com.shub39.grit.core.habits.presentation.HabitsAction
+import com.shub39.grit.core.now
 import com.shub39.grit.core.tasks.domain.Category
 import com.shub39.grit.core.tasks.domain.Task
 import com.shub39.grit.core.tasks.presentation.TaskAction
 import com.shub39.grit.core.tasks.presentation.TaskState
-import com.shub39.grit.core.utils.now
 import kotlin.random.Random
 import kotlin.time.ExperimentalTime
 import kotlinx.coroutines.flow.MutableStateFlow

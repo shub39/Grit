@@ -14,7 +14,6 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
-package com.shub39.grit.core.utils
+package com.shub39.grit.core
 
-/** is Blur possible on this platform? */
-expect fun blurPossible(): Boolean
+actual fun blurPossible(): Boolean = true

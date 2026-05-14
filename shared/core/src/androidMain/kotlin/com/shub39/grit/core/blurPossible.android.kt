@@ -14,16 +14,8 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
-package com.shub39.grit.core.utils
+package com.shub39.grit.core
 
-import androidx.compose.runtime.Composable
-import androidx.compose.ui.tooling.preview.PreviewWrapperProvider
-import com.shub39.grit.core.theme.GritTheme
-import com.shub39.grit.core.theme.Theme
+import android.os.Build
 
-class GritPreviewWrapper : PreviewWrapperProvider {
-    @Composable
-    override fun Wrap(content: @Composable (() -> Unit)) {
-        GritTheme(theme = Theme()) { content() }
-    }
-}
+actual fun blurPossible(): Boolean = Build.VERSION.SDK_INT >= Build.VERSION_CODES.S

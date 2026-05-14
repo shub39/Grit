@@ -14,6 +14,13 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
-package com.shub39.grit.core.utils
+package com.shub39.grit.core
 
-actual fun blurPossible(): Boolean = true
+import androidx.compose.material3.windowsizeclass.WindowSizeClass
+import androidx.compose.runtime.ProvidableCompositionLocal
+import androidx.compose.runtime.staticCompositionLocalOf
+
+/** CompositionLocal for window size class to make adaptive screens */
+val LocalWindowSizeClass: ProvidableCompositionLocal<WindowSizeClass> = staticCompositionLocalOf {
+    error("No window size class provided")
+}

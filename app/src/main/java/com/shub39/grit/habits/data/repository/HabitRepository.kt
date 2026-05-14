@@ -27,7 +27,7 @@ import com.shub39.grit.core.habits.domain.HabitRepo
 import com.shub39.grit.core.habits.domain.HabitStatus
 import com.shub39.grit.core.habits.domain.HabitWithAnalytics
 import com.shub39.grit.core.habits.domain.OverallAnalytics
-import com.shub39.grit.core.utils.now
+import com.shub39.grit.core.now
 import com.shub39.grit.habits.data.database.HabitStatusDao
 import com.shub39.grit.habits.data.database.HabitsDao
 import kotlin.time.ExperimentalTime

@@ -85,6 +85,7 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
+import com.shub39.grit.core.LocalWindowSizeClass
 import com.shub39.grit.core.shared_ui.Empty
 import com.shub39.grit.core.shared_ui.GritDialog
 import com.shub39.grit.core.shared_ui.PageFill
@@ -102,7 +103,6 @@ import com.shub39.grit.core.tasks.presentation.ui.component.TaskCard
 import com.shub39.grit.core.tasks.presentation.ui.component.TaskUpsertSheet
 import com.shub39.grit.core.theme.flexFontEmphasis
 import com.shub39.grit.core.theme.flexFontRounded
-import com.shub39.grit.core.utils.LocalWindowSizeClass
 import grit.shared.core.generated.resources.Res
 import grit.shared.core.generated.resources.add
 import grit.shared.core.generated.resources.add_category

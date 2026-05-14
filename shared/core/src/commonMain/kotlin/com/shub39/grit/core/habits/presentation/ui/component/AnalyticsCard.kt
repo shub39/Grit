@@ -40,8 +40,8 @@ import androidx.compose.ui.graphics.Shape
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.shub39.grit.core.blurPossible
 import com.shub39.grit.core.theme.flexFontRounded
-import com.shub39.grit.core.utils.blurPossible
 import grit.shared.core.generated.resources.Res
 import grit.shared.core.generated.resources.unlock_plus
 import org.jetbrains.compose.resources.DrawableResource
