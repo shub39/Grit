@@ -18,12 +18,8 @@ package com.shub39.grit.core.domain
 
 import androidx.compose.runtime.Immutable
 import androidx.compose.runtime.Stable
+import com.shub39.grit.core.components.VersionEntry
 import com.shub39.grit.core.theme.Theme
-import kotlinx.serialization.Serializable
-
-@Serializable data class VersionEntry(val version: String, val changes: List<String>)
-
-typealias Changelog = List<VersionEntry>
 
 @Stable
 @Immutable

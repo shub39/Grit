@@ -71,6 +71,7 @@ kotlin {
             implementation(libs.reorderable)
             implementation(libs.calendar)
             implementation(libs.materialkolor)
+            implementation(libs.colorpicker.compose)
         }
     }
 }

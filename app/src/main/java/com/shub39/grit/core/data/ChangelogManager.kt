@@ -18,7 +18,7 @@ package com.shub39.grit.core.data
 
 import android.content.Context
 import android.util.Log
-import com.shub39.grit.core.domain.Changelog
+import com.shub39.grit.core.components.Changelog
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.onStart

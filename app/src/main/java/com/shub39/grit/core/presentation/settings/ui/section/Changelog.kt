@@ -38,8 +38,8 @@ import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.platform.LocalLayoutDirection
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import com.shub39.grit.core.domain.Changelog
-import com.shub39.grit.core.domain.VersionEntry
+import com.shub39.grit.core.components.Changelog
+import com.shub39.grit.core.components.VersionEntry
 import com.shub39.grit.core.shared_ui.detachedItemShape
 import com.shub39.grit.core.shared_ui.endItemShape
 import com.shub39.grit.core.shared_ui.leadingItemShape

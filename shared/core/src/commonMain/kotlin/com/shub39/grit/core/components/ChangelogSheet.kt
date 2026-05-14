@@ -14,7 +14,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
-package com.shub39.grit.core.presentation
+package com.shub39.grit.core.components
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
@@ -41,7 +41,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import com.shub39.grit.core.domain.VersionEntry
 import com.shub39.grit.core.shared_ui.GritBottomSheet
 import com.shub39.grit.core.shared_ui.detachedItemShape
 import com.shub39.grit.core.shared_ui.endItemShape
@@ -57,8 +56,13 @@ import grit.shared.core.generated.resources.Res
 import grit.shared.core.generated.resources.done
 import grit.shared.core.generated.resources.settings
 import grit.shared.core.generated.resources.whats_changed
+import kotlinx.serialization.Serializable
 import org.jetbrains.compose.resources.stringResource
 import org.jetbrains.compose.resources.vectorResource
+
+@Serializable data class VersionEntry(val version: String, val changes: List<String>)
+
+typealias Changelog = List<VersionEntry>
 
 @Composable
 fun ChangelogSheet(

@@ -18,7 +18,7 @@ package com.shub39.grit.core.presentation.settings
 
 import androidx.compose.runtime.Immutable
 import androidx.compose.runtime.Stable
-import com.shub39.grit.core.domain.Changelog
+import com.shub39.grit.core.components.Changelog
 import com.shub39.grit.core.domain.Sections
 import com.shub39.grit.core.domain.backup.ExportState
 import com.shub39.grit.core.domain.backup.RestoreState

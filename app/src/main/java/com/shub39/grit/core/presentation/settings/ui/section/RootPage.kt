@@ -54,7 +54,6 @@ import androidx.compose.ui.tooling.preview.PreviewWrapper
 import androidx.compose.ui.unit.dp
 import com.shub39.grit.core.GritPreviewWrapper
 import com.shub39.grit.core.domain.Sections
-import com.shub39.grit.core.presentation.getRandomLine
 import com.shub39.grit.core.presentation.settings.SettingsAction
 import com.shub39.grit.core.presentation.settings.SettingsState
 import com.shub39.grit.core.presentation.settings.ui.component.AboutApp
@@ -120,7 +119,6 @@ fun RootPage(
             title = {
                 Text(text = stringResource(Res.string.settings), fontFamily = flexFontEmphasis())
             },
-            subtitle = { Text(text = getRandomLine(), fontFamily = flexFontRounded()) },
             colors =
                 TopAppBarDefaults.topAppBarColors(
                     scrolledContainerColor = MaterialTheme.colorScheme.surface
