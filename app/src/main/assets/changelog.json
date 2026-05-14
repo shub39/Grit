@@ -1,5 +1,12 @@
 [
   {
+    "version": "5.9.23",
+    "changes": [
+      "Updated Translations",
+      "(Android 13+) Added ability to change app language from Settings"
+    ]
+  },
+  {
     "version": "5.9.22",
     "changes": [
       "Updated Translations",
@@ -61,13 +68,6 @@
     "version": "5.8.1",
     "changes": [
       "Fixed tasks notification action not working"
-    ]
-  },
-  {
-    "version": "5.8.0",
-    "changes": [
-      "Revamped UI to be more expressive",
-      "Added ability to view tasks completed in each day in Habit Heat Map"
     ]
   }
 ]
