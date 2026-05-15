@@ -17,7 +17,6 @@
 package com.shub39.grit.core.presentation.settings
 
 import android.content.Context
-import android.net.Uri
 import androidx.compose.ui.graphics.Color
 import com.shub39.grit.core.domain.Sections
 import com.shub39.grit.core.theme.AppTheme
@@ -30,7 +29,7 @@ sealed interface SettingsAction {
 
     data object OnExport : SettingsAction
 
-    data class OnRestore(val uri: Uri) : SettingsAction
+    data object OnRestore : SettingsAction
 
     data class OnCheckBiometric(val context: Context) : SettingsAction
 

@@ -108,14 +108,14 @@ class SettingsViewModel(
                     }
                 }
 
-                is SettingsAction.OnRestore -> {
+                SettingsAction.OnRestore -> {
                     _state.update {
                         it.copy(
                             backupState = it.backupState.copy(restoreState = RestoreState.RESTORING)
                         )
                     }
 
-                    val result = restoreRepo.restoreData(action.uri)
+                    val result = restoreRepo.restoreData()
 
                     _state.update {
                         it.copy(

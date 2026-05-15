@@ -16,10 +16,8 @@
  */
 package com.shub39.grit.core.domain.backup
 
-import android.net.Uri
-
 interface RestoreRepo {
-    suspend fun restoreData(uri: Uri): RestoreResult
+    suspend fun restoreData(): RestoreResult
 }
 
 sealed class RestoreResult {

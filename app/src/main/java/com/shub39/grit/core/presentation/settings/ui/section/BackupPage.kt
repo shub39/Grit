@@ -16,9 +16,6 @@
  */
 package com.shub39.grit.core.presentation.settings.ui.section
 
-import android.net.Uri
-import androidx.activity.compose.rememberLauncherForActivityResult
-import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -41,10 +38,6 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.input.nestedscroll.nestedScroll
@@ -65,7 +58,6 @@ import grit.shared.core.generated.resources.Res
 import grit.shared.core.generated.resources.arrow_back
 import grit.shared.core.generated.resources.backup
 import grit.shared.core.generated.resources.check_circle
-import grit.shared.core.generated.resources.choose_file
 import grit.shared.core.generated.resources.download
 import grit.shared.core.generated.resources.drive_folder_upload
 import grit.shared.core.generated.resources.export
@@ -85,12 +77,6 @@ fun BackupPage(
     onNavigateBack: () -> Unit,
 ) {
     LaunchedEffect(Unit) { onAction(SettingsAction.OnResetBackupState) }
-
-    var uri by remember { mutableStateOf<Uri?>(null) }
-    val launcher =
-        rememberLauncherForActivityResult(contract = ActivityResultContracts.OpenDocument()) {
-            uri = it
-        }
 
     val scrollBehavior = TopAppBarDefaults.enterAlwaysScrollBehavior()
     Column(
@@ -187,44 +173,32 @@ fun BackupPage(
                                     .background(listItemColors().containerColor)
                                     .padding(start = 52.dp, end = 16.dp, bottom = 8.dp)
                         ) {
-                            if (uri == null) {
-                                Button(
-                                    onClick = { launcher.launch(arrayOf("application/json")) },
-                                    modifier = Modifier.weight(1f),
-                                ) {
-                                    Text(text = stringResource(Res.string.choose_file))
-                                }
-                            } else {
-                                Button(
-                                    onClick = { onAction(SettingsAction.OnRestore(uri!!)) },
-                                    enabled = state.backupState.restoreState == RestoreState.IDLE,
-                                    modifier = Modifier.weight(1f),
-                                ) {
-                                    when (state.backupState.restoreState) {
-                                        RestoreState.IDLE ->
-                                            Icon(
-                                                painter = painterResource(Res.drawable.play_arrow),
-                                                contentDescription = "Start",
-                                            )
+                            Button(
+                                onClick = { onAction(SettingsAction.OnRestore) },
+                                enabled = state.backupState.restoreState == RestoreState.IDLE,
+                                modifier = Modifier.weight(1f),
+                            ) {
+                                when (state.backupState.restoreState) {
+                                    RestoreState.IDLE ->
+                                        Icon(
+                                            painter = painterResource(Res.drawable.play_arrow),
+                                            contentDescription = "Start",
+                                        )
 
-                                        RestoreState.RESTORING ->
-                                            CircularProgressIndicator(
-                                                modifier = Modifier.size(24.dp)
-                                            )
+                                    RestoreState.RESTORING ->
+                                        CircularProgressIndicator(modifier = Modifier.size(24.dp))
 
-                                        RestoreState.RESTORED ->
-                                            Icon(
-                                                imageVector =
-                                                    vectorResource(Res.drawable.check_circle),
-                                                contentDescription = "Done",
-                                            )
+                                    RestoreState.RESTORED ->
+                                        Icon(
+                                            imageVector = vectorResource(Res.drawable.check_circle),
+                                            contentDescription = "Done",
+                                        )
 
-                                        RestoreState.FAILURE ->
-                                            Icon(
-                                                imageVector = vectorResource(Res.drawable.warning),
-                                                contentDescription = "Fail",
-                                            )
-                                    }
+                                    RestoreState.FAILURE ->
+                                        Icon(
+                                            imageVector = vectorResource(Res.drawable.warning),
+                                            contentDescription = "Fail",
+                                        )
                                 }
                             }
                         }

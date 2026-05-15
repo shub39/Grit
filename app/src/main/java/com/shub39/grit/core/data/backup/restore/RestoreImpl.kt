@@ -16,8 +16,6 @@
  */
 package com.shub39.grit.core.data.backup.restore
 
-import android.content.Context
-import android.net.Uri
 import android.util.Log
 import com.shub39.grit.core.data.backup.ExportSchema
 import com.shub39.grit.core.data.backup.toCategory
@@ -33,8 +31,11 @@ import com.shub39.grit.core.habits.domain.HabitRepo
 import com.shub39.grit.core.tasks.domain.TaskRepo
 import com.shub39.grit.habits.data.database.HabitDatabase
 import com.shub39.grit.tasks.data.database.TaskDatabase
-import kotlin.io.path.outputStream
-import kotlin.io.path.readText
+import io.github.vinceglb.filekit.FileKit
+import io.github.vinceglb.filekit.dialogs.FileKitMode
+import io.github.vinceglb.filekit.dialogs.FileKitType
+import io.github.vinceglb.filekit.dialogs.openFilePicker
+import io.github.vinceglb.filekit.readString
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.async
 import kotlinx.coroutines.awaitAll
@@ -48,19 +49,19 @@ class RestoreImpl(
     private val taskRepo: TaskRepo,
     private val habitRepo: HabitRepo,
     private val alarmScheduler: AlarmScheduler,
-    private val context: Context,
 ) : RestoreRepo {
-    override suspend fun restoreData(uri: Uri): RestoreResult {
+    override suspend fun restoreData(): RestoreResult {
         return try {
-            val file = kotlin.io.path.createTempFile()
+            val file =
+                FileKit.openFilePicker(mode = FileKitMode.Single, type = FileKitType.File("json"))
 
-            context.contentResolver.openInputStream(uri).use { input ->
-                file.outputStream().use { output -> input?.copyTo(output) }
+            if (file == null) {
+                return RestoreResult.Failure(exceptionType = RestoreFailedException.InvalidFile)
             }
 
             val json = Json { ignoreUnknownKeys = true }
 
-            val jsonDeserialized = json.decodeFromString<ExportSchema>(file.readText())
+            val jsonDeserialized = json.decodeFromString<ExportSchema>(file.readString())
 
             if (
                 jsonDeserialized.tasksSchemaVersion != TaskDatabase.SCHEMA_VERSION ||

@@ -16,7 +16,6 @@
  */
 package com.shub39.grit.core.data.backup.export
 
-import android.os.Environment
 import com.shub39.grit.core.data.backup.ExportSchema
 import com.shub39.grit.core.data.backup.toCategorySchema
 import com.shub39.grit.core.data.backup.toHabitSchema
@@ -26,7 +25,9 @@ import com.shub39.grit.core.domain.backup.ExportRepo
 import com.shub39.grit.core.habits.domain.HabitRepo
 import com.shub39.grit.core.now
 import com.shub39.grit.core.tasks.domain.TaskRepo
-import java.io.File
+import io.github.vinceglb.filekit.FileKit
+import io.github.vinceglb.filekit.dialogs.openFileSaver
+import io.github.vinceglb.filekit.writeString
 import kotlin.time.ExperimentalTime
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.async
@@ -39,55 +40,57 @@ import org.koin.core.annotation.Single
 @Single(binds = [ExportRepo::class])
 class ExportImpl(private val taskRepo: TaskRepo, private val habitsRepo: HabitRepo) : ExportRepo {
     @OptIn(ExperimentalTime::class)
-    override suspend fun exportToJson() = coroutineScope {
-        val habitsDef =
-            async {
-                    withContext(Dispatchers.IO) {
-                        habitsRepo.getHabits().map { it.toHabitSchema() }
+    override suspend fun exportToJson() {
+        coroutineScope {
+            val habitsDef =
+                async {
+                        withContext(Dispatchers.IO) {
+                            habitsRepo.getHabits().map { it.toHabitSchema() }
+                        }
                     }
-                }
-                .await()
+                    .await()
 
-        val statusesDef =
-            async {
-                    withContext(Dispatchers.IO) {
-                        habitsRepo.getHabitStatuses().map { it.toHabitStatusSchema() }
+            val statusesDef =
+                async {
+                        withContext(Dispatchers.IO) {
+                            habitsRepo.getHabitStatuses().map { it.toHabitStatusSchema() }
+                        }
                     }
-                }
-                .await()
+                    .await()
 
-        val tasksDef =
-            async { withContext(Dispatchers.IO) { taskRepo.getTasks().map { it.toTaskSchema() } } }
-                .await()
-
-        val categoriesDef =
-            async {
-                    withContext(Dispatchers.IO) {
-                        taskRepo.getCategories().map { it.toCategorySchema() }
+            val tasksDef =
+                async {
+                        withContext(Dispatchers.IO) {
+                            taskRepo.getTasks().map { it.toTaskSchema() }
+                        }
                     }
-                }
-                .await()
+                    .await()
 
-        val exportFolder =
-            File(
-                Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS),
-                "Grit",
-            )
+            val categoriesDef =
+                async {
+                        withContext(Dispatchers.IO) {
+                            taskRepo.getCategories().map { it.toCategorySchema() }
+                        }
+                    }
+                    .await()
 
-        if (!exportFolder.exists() || !exportFolder.isDirectory) exportFolder.mkdirs()
+            val time = LocalDateTime.now().toString().replace(":", "").replace(" ", "")
+            val file =
+                FileKit.openFileSaver(
+                    suggestedName = "Grit-Export-$time",
+                    defaultExtension = "json",
+                )
 
-        val time = LocalDateTime.now().toString().replace(":", "").replace(" ", "")
-        val file = File(exportFolder, "Grit-Export-$time.json")
-
-        file.writeText(
-            Json.encodeToString(
-                ExportSchema(
-                    habits = habitsDef,
-                    habitStatus = statusesDef,
-                    tasks = tasksDef,
-                    categories = categoriesDef,
+            file?.writeString(
+                Json.encodeToString(
+                    ExportSchema(
+                        habits = habitsDef,
+                        habitStatus = statusesDef,
+                        tasks = tasksDef,
+                        categories = categoriesDef,
+                    )
                 )
             )
-        )
+        }
     }
 }

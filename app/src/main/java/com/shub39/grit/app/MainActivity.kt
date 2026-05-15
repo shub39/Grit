@@ -38,6 +38,8 @@ import com.shub39.grit.core.data.GritNotificationManager.Companion.createNotific
 import com.shub39.grit.core.data.Utils
 import com.shub39.grit.core.theme.GritTheme
 import com.shub39.grit.viewmodels.MainViewModel
+import io.github.vinceglb.filekit.FileKit
+import io.github.vinceglb.filekit.dialogs.init
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class MainActivity : FragmentActivity() {
@@ -47,6 +49,7 @@ class MainActivity : FragmentActivity() {
         super.onCreate(savedInstanceState)
         installSplashScreen()
         enableEdgeToEdge()
+        FileKit.init(this)
 
         createNotificationChannel(this)
 
