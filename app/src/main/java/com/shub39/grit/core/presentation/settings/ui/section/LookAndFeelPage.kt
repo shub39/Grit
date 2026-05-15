@@ -65,7 +65,6 @@ import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import com.materialkolor.PaletteStyle
 import com.materialkolor.rememberDynamicColorScheme
 import com.shub39.grit.core.components.ColorPickerDialog
 import com.shub39.grit.core.presentation.settings.SettingsAction
@@ -81,8 +80,10 @@ import com.shub39.grit.core.theme.Fonts
 import com.shub39.grit.core.theme.Fonts.Companion.toDisplayString
 import com.shub39.grit.core.theme.Fonts.Companion.toFontRes
 import com.shub39.grit.core.theme.GritTheme
+import com.shub39.grit.core.theme.PaletteStyle
 import com.shub39.grit.core.theme.Theme
 import com.shub39.grit.core.theme.flexFontEmphasis
+import com.shub39.grit.core.theme.toMPaletteStyle
 import grit.shared.core.generated.resources.Res
 import grit.shared.core.generated.resources.app_theme
 import grit.shared.core.generated.resources.arrow_back
@@ -400,7 +401,7 @@ fun LookAndFeelPage(
                                                     AppTheme.LIGHT -> false
                                                 },
                                             isAmoled = state.theme.isAmoled,
-                                            style = style,
+                                            style = style.toMPaletteStyle(),
                                         )
                                     val selected = state.theme.paletteStyle == style
 

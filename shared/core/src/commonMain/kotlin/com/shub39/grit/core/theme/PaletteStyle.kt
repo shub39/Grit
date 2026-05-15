@@ -16,14 +16,14 @@
  */
 package com.shub39.grit.core.theme
 
-import androidx.compose.ui.graphics.Color
-
-/** data class representing the current theme of the app */
-data class Theme(
-    val appTheme: AppTheme = AppTheme.SYSTEM,
-    val isAmoled: Boolean = false,
-    val isMaterialYou: Boolean = false,
-    val font: Fonts = Fonts.FIGTREE,
-    val paletteStyle: PaletteStyle = PaletteStyle.TONALSPOT,
-    val seedColor: Color = Color.White,
-)
+enum class PaletteStyle {
+    TONALSPOT,
+    NEUTRAL,
+    VIBRANT,
+    EXPRESSIVE,
+    RAINBOW,
+    FRUITSALAD,
+    MONOCHROME,
+    FIDELITY,
+    CONTENT,
+}

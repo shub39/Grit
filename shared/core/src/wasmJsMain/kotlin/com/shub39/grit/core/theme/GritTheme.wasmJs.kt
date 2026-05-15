@@ -32,7 +32,7 @@ actual fun GritTheme(theme: Theme, content: @Composable (() -> Unit)) {
                 AppTheme.LIGHT -> false
             },
         isAmoled = theme.isAmoled,
-        style = theme.paletteStyle,
+        style = theme.paletteStyle.toMPaletteStyle(),
         typography = provideTypography(theme.font.toFontRes()),
         content = content,
     )

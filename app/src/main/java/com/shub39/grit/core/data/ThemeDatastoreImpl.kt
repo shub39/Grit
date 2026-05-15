@@ -24,10 +24,10 @@ import androidx.datastore.preferences.core.booleanPreferencesKey
 import androidx.datastore.preferences.core.edit
 import androidx.datastore.preferences.core.intPreferencesKey
 import androidx.datastore.preferences.core.stringPreferencesKey
-import com.materialkolor.PaletteStyle
 import com.shub39.grit.core.domain.ThemeDatastore
 import com.shub39.grit.core.theme.AppTheme
 import com.shub39.grit.core.theme.Fonts
+import com.shub39.grit.core.theme.PaletteStyle
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
 import org.koin.core.annotation.Single
@@ -47,7 +47,7 @@ class ThemeDatastoreImpl(private val datastore: DataStore<Preferences>) : ThemeD
         datastore.edit { settings ->
             settings[seedColorKey] = Color.White.toArgb()
             settings[amoledKey] = false
-            settings[paletteKey] = PaletteStyle.TonalSpot.name
+            settings[paletteKey] = PaletteStyle.TONALSPOT.name
             settings[materialYouKey] = false
             settings[fontPrefKey] = Fonts.FIGTREE.name
         }
@@ -79,8 +79,12 @@ class ThemeDatastoreImpl(private val datastore: DataStore<Preferences>) : ThemeD
 
     override fun getPaletteStyle(): Flow<PaletteStyle> =
         datastore.data.map { prefs ->
-            val style = prefs[paletteKey] ?: PaletteStyle.TonalSpot.name
-            return@map PaletteStyle.valueOf(style)
+            try {
+                val style = prefs[paletteKey] ?: PaletteStyle.TONALSPOT.name
+                return@map PaletteStyle.valueOf(style)
+            } catch (_: Exception) {
+                return@map PaletteStyle.TONALSPOT
+            }
         }
 
     override suspend fun setPaletteStyle(style: PaletteStyle) {

@@ -135,6 +135,8 @@ dependencies {
     "playImplementation"(libs.purchases)
     "playImplementation"(libs.purchases.ui)
 
+    implementation(libs.materialkolor) // TODO: Remove later
+
     implementation(libs.compose.material3)
     implementation(libs.compose.runtime)
     implementation(libs.compose.foundation)
@@ -148,12 +150,12 @@ dependencies {
     implementation(libs.androidx.core.splashscreen)
     implementation(libs.androidx.room.runtime)
     ksp(libs.androidx.room.compiler)
+
     implementation(libs.androidx.glance.appwidget)
     implementation(libs.androidx.glance.material3)
     implementation(libs.androidx.glance.appwidget.preview)
     implementation(libs.androidx.glance.preview)
-    implementation(libs.materialkolor)
-    implementation(libs.colorpicker.compose)
+
     implementation(libs.androidx.datastore.preferences.core)
     implementation(libs.androidx.biometric)
     implementation(libs.kotlinx.datetime)

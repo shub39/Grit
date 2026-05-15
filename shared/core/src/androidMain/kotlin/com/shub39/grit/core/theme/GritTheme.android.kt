@@ -41,7 +41,7 @@ actual fun GritTheme(theme: Theme, content: @Composable (() -> Unit)) {
             seedColor = theme.seedColor,
             isDark = isDark,
             isAmoled = theme.isAmoled,
-            style = theme.paletteStyle,
+            style = theme.paletteStyle.toMPaletteStyle(),
         )
 
     val colorScheme =
