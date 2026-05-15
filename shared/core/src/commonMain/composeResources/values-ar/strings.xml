@@ -83,4 +83,6 @@
     <string name="whats_changed">التغييرات</string>
     <string name="add_reminder_desc">تلقي تنبيه تذكيري في أيام محدّدة</string>
     <string name="select_days">حدّد الأيام</string>
+    <string name="language">اللغة</string>
+    <string name="system_default">إعدادات النظام الافتراضية</string>
 </resources>
