@@ -23,7 +23,7 @@ import com.shub39.grit.core.domain.BiometricUtils
 import org.koin.core.annotation.Single
 
 @Single
-class BiometricUtilsImpl(private val context: Context): BiometricUtils {
+class BiometricUtilsImpl(private val context: Context) : BiometricUtils {
     override fun getAuthenticators(): Int =
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
             BiometricManager.Authenticators.BIOMETRIC_STRONG or

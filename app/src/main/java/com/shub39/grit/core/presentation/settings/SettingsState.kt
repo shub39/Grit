@@ -19,9 +19,9 @@ package com.shub39.grit.core.presentation.settings
 import androidx.compose.runtime.Immutable
 import androidx.compose.runtime.Stable
 import com.shub39.grit.core.components.Changelog
-import com.shub39.grit.core.domain.Sections
 import com.shub39.grit.core.domain.backup.ExportState
 import com.shub39.grit.core.domain.backup.RestoreState
+import com.shub39.grit.core.settings.domain.Sections
 import com.shub39.grit.core.theme.Theme
 import kotlinx.datetime.DayOfWeek
 

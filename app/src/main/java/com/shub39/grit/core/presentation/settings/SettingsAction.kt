@@ -16,9 +16,8 @@
  */
 package com.shub39.grit.core.presentation.settings
 
-import android.content.Context
 import androidx.compose.ui.graphics.Color
-import com.shub39.grit.core.domain.Sections
+import com.shub39.grit.core.settings.domain.Sections
 import com.shub39.grit.core.theme.AppTheme
 import com.shub39.grit.core.theme.Fonts
 import com.shub39.grit.core.theme.PaletteStyle

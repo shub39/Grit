@@ -20,8 +20,8 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.toArgb
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.shub39.grit.core.data.ChangelogManager
 import com.shub39.grit.core.data.BiometricUtilsImpl
+import com.shub39.grit.core.data.ChangelogManager
 import com.shub39.grit.core.domain.SettingsDatastore
 import com.shub39.grit.core.domain.ThemeDatastore
 import com.shub39.grit.core.domain.backup.ExportRepo
@@ -52,7 +52,7 @@ class SettingsViewModel(
     private val themeDatastore: ThemeDatastore,
     private val settingsDatastore: SettingsDatastore,
     private val changelogManager: ChangelogManager,
-    private val biometricUtilsImpl: BiometricUtilsImpl
+    private val biometricUtilsImpl: BiometricUtilsImpl,
 ) : ViewModel() {
     private var observeJob: Job? = null
 
@@ -148,9 +148,7 @@ class SettingsViewModel(
 
     private fun getBiometricStatus() {
         _state.update {
-            it.copy(
-                isBiometricLockAvailable = biometricUtilsImpl.authenticationAvailable()
-            )
+            it.copy(isBiometricLockAvailable = biometricUtilsImpl.authenticationAvailable())
         }
     }
 
