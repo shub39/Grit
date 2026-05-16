@@ -36,10 +36,12 @@ import com.shub39.grit.core.LocalWindowSizeClass
 import com.shub39.grit.core.components.InitialLoading
 import com.shub39.grit.core.data.GritNotificationManager.Companion.createNotificationChannel
 import com.shub39.grit.core.data.BiometricUtilsImpl
+import com.shub39.grit.core.domain.BiometricUtils
 import com.shub39.grit.core.theme.GritTheme
 import com.shub39.grit.viewmodels.MainViewModel
 import io.github.vinceglb.filekit.FileKit
 import io.github.vinceglb.filekit.dialogs.init
+import org.koin.android.ext.android.inject
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class MainActivity : FragmentActivity() {
@@ -118,10 +120,11 @@ class MainActivity : FragmentActivity() {
                 },
             )
 
+        val biometricUtils by inject<BiometricUtils>()
         val promptInfo =
             BiometricPrompt.PromptInfo.Builder()
                 .setTitle("Biometric Lock")
-                .setAllowedAuthenticators(BiometricUtilsImpl.getAuthenticators())
+                .setAllowedAuthenticators(biometricUtils.getAuthenticators())
                 .build()
 
         biometricPrompt.authenticate(promptInfo)
