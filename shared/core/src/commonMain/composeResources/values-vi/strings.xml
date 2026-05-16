@@ -83,4 +83,6 @@
     <string name="changelog">Nhật kí sửa đổi</string>
     <string name="whats_changed">Điểm mới</string>
     <string name="select_days">Chọn các ngày</string>
+    <string name="system_default">Mặc định của hệ thống</string>
+    <string name="language">Ngôn ngữ</string>
 </resources>
