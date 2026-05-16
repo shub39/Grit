@@ -45,6 +45,7 @@ import androidx.compose.material3.MaterialShapes
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Switch
+import androidx.compose.material3.SwitchDefaults
 import androidx.compose.material3.Text
 import androidx.compose.material3.ToggleButton
 import androidx.compose.material3.ToggleButtonDefaults
@@ -86,6 +87,7 @@ import grit.shared.core.generated.resources.add_habit
 import grit.shared.core.generated.resources.add_reminder
 import grit.shared.core.generated.resources.add_reminder_desc
 import grit.shared.core.generated.resources.alarm
+import grit.shared.core.generated.resources.check
 import grit.shared.core.generated.resources.description
 import grit.shared.core.generated.resources.edit
 import grit.shared.core.generated.resources.edit_habit
@@ -328,6 +330,18 @@ fun HabitUpsertSheetContent(
                                             updateHabit(newHabit.copy(reminder = false))
                                         }
                                     },
+                                    thumbContent =
+                                        if (newHabit.reminder) {
+                                            {
+                                                Icon(
+                                                    imageVector =
+                                                        vectorResource(Res.drawable.check),
+                                                    contentDescription = null,
+                                                    modifier =
+                                                        Modifier.size(SwitchDefaults.IconSize),
+                                                )
+                                            }
+                                        } else null,
                                 )
                             },
                         )

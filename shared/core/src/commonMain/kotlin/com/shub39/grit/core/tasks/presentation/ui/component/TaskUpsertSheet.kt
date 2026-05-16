@@ -42,6 +42,7 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Switch
+import androidx.compose.material3.SwitchDefaults
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.material3.ToggleButton
@@ -79,6 +80,7 @@ import grit.shared.core.generated.resources.add
 import grit.shared.core.generated.resources.add_reminder
 import grit.shared.core.generated.resources.add_task
 import grit.shared.core.generated.resources.alarm
+import grit.shared.core.generated.resources.check
 import grit.shared.core.generated.resources.delete
 import grit.shared.core.generated.resources.done
 import grit.shared.core.generated.resources.edit
@@ -254,6 +256,16 @@ fun TaskUpsertSheetContent(
                                     newTask = newTask.copy(reminder = null)
                                 }
                             },
+                            thumbContent =
+                                if (newTask.reminder != null) {
+                                    {
+                                        Icon(
+                                            imageVector = vectorResource(Res.drawable.check),
+                                            contentDescription = null,
+                                            modifier = Modifier.size(SwitchDefaults.IconSize),
+                                        )
+                                    }
+                                } else null,
                         )
                     },
                 )

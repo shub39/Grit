@@ -23,12 +23,12 @@ import com.shub39.grit.core.habits.domain.WeeklyComparisonData
 import com.shub39.grit.core.habits.presentation.HabitState
 import com.shub39.grit.core.habits.presentation.HabitsAction
 import com.shub39.grit.core.now
+import com.shub39.grit.core.settings.presentation.SettingsAction
+import com.shub39.grit.core.settings.presentation.SettingsState
 import com.shub39.grit.core.tasks.domain.Category
 import com.shub39.grit.core.tasks.domain.Task
 import com.shub39.grit.core.tasks.presentation.TaskAction
 import com.shub39.grit.core.tasks.presentation.TaskState
-import com.shub39.grit.core.settings.presentation.SettingsAction
-import com.shub39.grit.core.settings.presentation.SettingsState
 import kotlin.random.Random
 import kotlin.time.ExperimentalTime
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -157,7 +157,9 @@ object DummyStateProvider {
             }
 
             is SettingsAction.ChangePaletteStyle -> {
-                _settingsState.update { it.copy(theme = it.theme.copy(paletteStyle = action.style)) }
+                _settingsState.update {
+                    it.copy(theme = it.theme.copy(paletteStyle = action.style))
+                }
             }
 
             is SettingsAction.ChangeIs24Hr -> {
@@ -189,7 +191,9 @@ object DummyStateProvider {
             }
 
             is SettingsAction.ChangeMaterialYou -> {
-                _settingsState.update { it.copy(theme = it.theme.copy(isMaterialYou = action.pref)) }
+                _settingsState.update {
+                    it.copy(theme = it.theme.copy(isMaterialYou = action.pref))
+                }
             }
 
             else -> {}

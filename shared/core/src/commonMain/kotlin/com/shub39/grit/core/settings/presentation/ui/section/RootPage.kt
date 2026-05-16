@@ -21,6 +21,7 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyListScope
 import androidx.compose.material3.Icon
@@ -28,6 +29,7 @@ import androidx.compose.material3.LargeFlexibleTopAppBar
 import androidx.compose.material3.ListItem
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Switch
+import androidx.compose.material3.SwitchDefaults
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
@@ -53,12 +55,14 @@ import com.shub39.grit.core.shared_ui.listItemColors
 import com.shub39.grit.core.shared_ui.middleItemShape
 import com.shub39.grit.core.theme.flexFontEmphasis
 import grit.shared.core.generated.resources.Res
+import grit.shared.core.generated.resources.app_icon
 import grit.shared.core.generated.resources.arrow_forward
 import grit.shared.core.generated.resources.backup
 import grit.shared.core.generated.resources.backup_desc
 import grit.shared.core.generated.resources.biometric_lock
 import grit.shared.core.generated.resources.biometric_lock_desc
 import grit.shared.core.generated.resources.changelog
+import grit.shared.core.generated.resources.check
 import grit.shared.core.generated.resources.check_list
 import grit.shared.core.generated.resources.download
 import grit.shared.core.generated.resources.grit_plus
@@ -122,6 +126,13 @@ fun RootPage(
                             contentDescription = "Grit Plus",
                         )
                     },
+                    leadingContent = {
+                        Icon(
+                            imageVector = vectorResource(Res.drawable.app_icon),
+                            contentDescription = null,
+                            modifier = Modifier.size(24.dp),
+                        )
+                    },
                 )
             }
 
@@ -138,6 +149,16 @@ fun RootPage(
                         trailingContent = {
                             Switch(
                                 checked = state.pauseNotifications,
+                                thumbContent =
+                                    if (state.pauseNotifications) {
+                                        {
+                                            Icon(
+                                                imageVector = vectorResource(Res.drawable.check),
+                                                contentDescription = null,
+                                                modifier = Modifier.size(SwitchDefaults.IconSize),
+                                            )
+                                        }
+                                    } else null,
                                 onCheckedChange = {
                                     onAction(SettingsAction.ChangePauseNotifications(it))
                                 },
@@ -158,6 +179,16 @@ fun RootPage(
                                 onCheckedChange = {
                                     onAction(SettingsAction.ChangeReorderTasks(it))
                                 },
+                                thumbContent =
+                                    if (state.reorderTasks) {
+                                        {
+                                            Icon(
+                                                imageVector = vectorResource(Res.drawable.check),
+                                                contentDescription = null,
+                                                modifier = Modifier.size(SwitchDefaults.IconSize),
+                                            )
+                                        }
+                                    } else null,
                             )
                         },
                         colors = listItemColors(),
@@ -179,6 +210,16 @@ fun RootPage(
                                         )
                                     )
                                 },
+                                thumbContent =
+                                    if (state.startingPage == Sections.Habits) {
+                                        {
+                                            Icon(
+                                                imageVector = vectorResource(Res.drawable.check),
+                                                contentDescription = null,
+                                                modifier = Modifier.size(SwitchDefaults.IconSize),
+                                            )
+                                        }
+                                    } else null,
                             )
                         },
                         colors = listItemColors(),
@@ -197,6 +238,16 @@ fun RootPage(
                                         )
                                     )
                                 },
+                                thumbContent =
+                                    if (state.startOfTheWeek == DayOfWeek.SUNDAY) {
+                                        {
+                                            Icon(
+                                                imageVector = vectorResource(Res.drawable.check),
+                                                contentDescription = null,
+                                                modifier = Modifier.size(SwitchDefaults.IconSize),
+                                            )
+                                        }
+                                    } else null,
                             )
                         },
                         colors = listItemColors(),
@@ -217,6 +268,18 @@ fun RootPage(
                                     onCheckedChange = {
                                         onAction(SettingsAction.ChangeBiometricLock(it))
                                     },
+                                    thumbContent =
+                                        if (state.isBiometricLockOn == true) {
+                                            {
+                                                Icon(
+                                                    imageVector =
+                                                        vectorResource(Res.drawable.check),
+                                                    contentDescription = null,
+                                                    modifier =
+                                                        Modifier.size(SwitchDefaults.IconSize),
+                                                )
+                                            }
+                                        } else null,
                                 )
                             },
                             colors = listItemColors(),
@@ -233,6 +296,16 @@ fun RootPage(
                             Switch(
                                 checked = state.is24Hr,
                                 onCheckedChange = { onAction(SettingsAction.ChangeIs24Hr(it)) },
+                                thumbContent =
+                                    if (state.is24Hr) {
+                                        {
+                                            Icon(
+                                                imageVector = vectorResource(Res.drawable.check),
+                                                contentDescription = null,
+                                                modifier = Modifier.size(SwitchDefaults.IconSize),
+                                            )
+                                        }
+                                    } else null,
                             )
                         },
                         colors = listItemColors(),
