@@ -16,6 +16,7 @@
  */
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.FloatingActionButton
@@ -31,12 +32,9 @@ import androidx.compose.material3.windowsizeclass.WindowWidthSizeClass
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import androidx.navigation3.runtime.NavKey
 import androidx.navigation3.runtime.entryProvider
@@ -49,18 +47,14 @@ import com.shub39.grit.core.app.AppSections.Companion.toIconRes
 import com.shub39.grit.core.app.AppSections.Companion.toStringRes
 import com.shub39.grit.core.habits.presentation.ui.HabitsGraph
 import com.shub39.grit.core.navigation.fadeTransitionMetadata
-import com.shub39.grit.core.settings.presentation.SettingsState
+import com.shub39.grit.core.settings.presentation.SettingsAction
 import com.shub39.grit.core.settings.presentation.ui.SettingsGraph
 import com.shub39.grit.core.tasks.presentation.ui.TasksPage
 import com.shub39.grit.core.theme.AppTheme
-import com.shub39.grit.core.theme.Fonts
 import com.shub39.grit.core.theme.GritTheme
-import com.shub39.grit.core.theme.PaletteStyle
-import com.shub39.grit.core.theme.Theme
 import grit.webdemo.generated.resources.Res
 import grit.webdemo.generated.resources.dark_mode
 import grit.webdemo.generated.resources.light_mode
-import kotlin.random.Random
 import kotlinx.serialization.modules.SerializersModule
 import kotlinx.serialization.modules.polymorphic
 import org.jetbrains.compose.resources.stringResource
@@ -79,22 +73,10 @@ private val configuration = SavedStateConfiguration {
 @Composable
 fun App() {
     val backStack = rememberNavBackStack(configuration, AppSections.TaskPages)
-    var isDark by remember { mutableStateOf(true) }
+    val settingsState by DummyStateProvider.settingsState.collectAsState()
     val windowSizeClass = LocalWindowSizeClass.current
 
-    val color = remember {
-        Color(red = Random.nextFloat(), green = Random.nextFloat(), blue = Random.nextFloat())
-    }
-
-    GritTheme(
-        theme =
-            Theme(
-                appTheme = if (isDark) AppTheme.DARK else AppTheme.LIGHT,
-                paletteStyle = PaletteStyle.TONALSPOT,
-                seedColor = color,
-                font = Fonts.FIGTREE,
-            )
-    ) {
+    GritTheme(theme = settingsState.theme) {
         when (windowSizeClass.widthSizeClass) {
             WindowWidthSizeClass.Compact -> {
                 Scaffold(
@@ -148,11 +130,11 @@ fun App() {
                                 }
 
                                 entry<AppSections.SettingsPages> {
-                                    val state by remember { mutableStateOf(SettingsState()) }
+                                    val state by DummyStateProvider.settingsState.collectAsState()
 
                                     SettingsGraph(
                                         state = state,
-                                        onAction = {},
+                                        onAction = DummyStateProvider::onSettingsAction,
                                         isUserSubscribed = true,
                                         onNavigateToPaywall = {},
                                     )
@@ -167,13 +149,23 @@ fun App() {
                     NavigationRail(
                         header = {
                             FloatingActionButton(
-                                onClick = { isDark = !isDark },
+                                onClick = {
+                                    val newTheme =
+                                        if (settingsState.theme.appTheme == AppTheme.DARK) {
+                                            AppTheme.LIGHT
+                                        } else {
+                                            AppTheme.DARK
+                                        }
+                                    DummyStateProvider.onSettingsAction(
+                                        SettingsAction.ChangeAppTheme(newTheme)
+                                    )
+                                },
                                 modifier = Modifier.padding(top = 16.dp),
                             ) {
                                 Icon(
                                     imageVector =
                                         vectorResource(
-                                            if (isDark) {
+                                            if (settingsState.theme.appTheme == AppTheme.DARK) {
                                                 Res.drawable.light_mode
                                             } else {
                                                 Res.drawable.dark_mode
@@ -210,6 +202,8 @@ fun App() {
 
                     NavDisplay(
                         backStack = backStack,
+                        modifier = Modifier.fillMaxWidth(),
+                        contentAlignment = Alignment.Center,
                         entryProvider =
                             entryProvider {
                                 entry<AppSections.TaskPages>(metadata = fadeTransitionMetadata()) {
@@ -233,11 +227,11 @@ fun App() {
                                 }
 
                                 entry<AppSections.SettingsPages> {
-                                    val state by remember { mutableStateOf(SettingsState()) }
+                                    val state by DummyStateProvider.settingsState.collectAsState()
 
                                     SettingsGraph(
                                         state = state,
-                                        onAction = {},
+                                        onAction = DummyStateProvider::onSettingsAction,
                                         isUserSubscribed = true,
                                         onNavigateToPaywall = {},
                                     )

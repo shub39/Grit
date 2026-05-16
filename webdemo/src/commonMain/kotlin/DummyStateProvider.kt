@@ -27,6 +27,8 @@ import com.shub39.grit.core.tasks.domain.Category
 import com.shub39.grit.core.tasks.domain.Task
 import com.shub39.grit.core.tasks.presentation.TaskAction
 import com.shub39.grit.core.tasks.presentation.TaskState
+import com.shub39.grit.core.settings.presentation.SettingsAction
+import com.shub39.grit.core.settings.presentation.SettingsState
 import kotlin.random.Random
 import kotlin.time.ExperimentalTime
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -136,6 +138,63 @@ object DummyStateProvider {
 
     val habitState: StateFlow<HabitState> = _habitState.asStateFlow()
     val taskState: StateFlow<TaskState> = _taskState.asStateFlow()
+
+    private val _settingsState = MutableStateFlow(SettingsState())
+    val settingsState: StateFlow<SettingsState> = _settingsState.asStateFlow()
+
+    fun onSettingsAction(action: SettingsAction) {
+        when (action) {
+            is SettingsAction.ChangeAppTheme -> {
+                _settingsState.update { it.copy(theme = it.theme.copy(appTheme = action.appTheme)) }
+            }
+
+            is SettingsAction.ChangeFontPref -> {
+                _settingsState.update { it.copy(theme = it.theme.copy(font = action.font)) }
+            }
+
+            is SettingsAction.ChangeSeedColor -> {
+                _settingsState.update { it.copy(theme = it.theme.copy(seedColor = action.color)) }
+            }
+
+            is SettingsAction.ChangePaletteStyle -> {
+                _settingsState.update { it.copy(theme = it.theme.copy(paletteStyle = action.style)) }
+            }
+
+            is SettingsAction.ChangeIs24Hr -> {
+                _settingsState.update { it.copy(is24Hr = action.pref) }
+            }
+
+            is SettingsAction.ChangeStartOfTheWeek -> {
+                _settingsState.update { it.copy(startOfTheWeek = action.pref) }
+            }
+
+            is SettingsAction.ChangeStartingPage -> {
+                _settingsState.update { it.copy(startingPage = action.page) }
+            }
+
+            is SettingsAction.ChangePauseNotifications -> {
+                _settingsState.update { it.copy(pauseNotifications = action.pref) }
+            }
+
+            is SettingsAction.ChangeReorderTasks -> {
+                _settingsState.update { it.copy(reorderTasks = action.pref) }
+            }
+
+            is SettingsAction.ChangeBiometricLock -> {
+                _settingsState.update { it.copy(isBiometricLockOn = action.pref) }
+            }
+
+            is SettingsAction.ChangeAmoled -> {
+                _settingsState.update { it.copy(theme = it.theme.copy(isAmoled = action.pref)) }
+            }
+
+            is SettingsAction.ChangeMaterialYou -> {
+                _settingsState.update { it.copy(theme = it.theme.copy(isMaterialYou = action.pref)) }
+            }
+
+            else -> {}
+        }
+    }
 
     fun onHabitAction(action: HabitsAction) {
         when (action) {
