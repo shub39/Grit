@@ -38,6 +38,7 @@ data class SettingsState(
     val isBiometricLockOn: Boolean? = null,
     val isBiometricLockAvailable: Boolean = false,
     val changelog: Changelog = emptyList(),
+    val currentVersion: String? = null,
 )
 
 @Stable

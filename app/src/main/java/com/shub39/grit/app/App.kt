@@ -95,7 +95,7 @@ fun App(state: MainAppState, onRefreshSub: () -> Unit, onDismissChangelog: () ->
                 entry<GlobalRoutes.App> {
                     MainApp(
                         state = state,
-                        onNavigateToPaywall = { mainBackStack.add(GlobalRoutes.PaywallPage) }
+                        onNavigateToPaywall = { mainBackStack.add(GlobalRoutes.PaywallPage) },
                     )
                 }
             },
@@ -103,17 +103,14 @@ fun App(state: MainAppState, onRefreshSub: () -> Unit, onDismissChangelog: () ->
 }
 
 @Composable
-private fun MainApp(
-    state: MainAppState,
-    onNavigateToPaywall: () -> Unit
-) {
+private fun MainApp(state: MainAppState, onNavigateToPaywall: () -> Unit) {
     val windowSizeClass = LocalWindowSizeClass.current
 
     val appBackStack =
         rememberNavBackStack(
             when (state.startingSection) {
                 Sections.Tasks -> AppSections.TaskPages
-                Sections.Habits -> AppSections.HabitsPages
+                Sections.Habits -> AppSections.HabitPages
             }
         )
 
@@ -132,8 +129,7 @@ private fun MainApp(
             ) { padding ->
                 NavDisplay(
                     modifier =
-                        Modifier
-                            .padding(
+                        Modifier.padding(
                                 start = padding.calculateStartPadding(LocalLayoutDirection.current),
                                 end = padding.calculateEndPadding(LocalLayoutDirection.current),
                                 bottom = padding.calculateBottomPadding(),
@@ -144,19 +140,14 @@ private fun MainApp(
                         entryProvider {
                             entry<AppSections.TaskPages>(metadata = fadeTransitionMetadata()) {
                                 val tvm: TasksViewModel = koinViewModel()
-                                val taskPageState by
-                                tvm.state.collectAsStateWithLifecycle()
+                                val taskPageState by tvm.state.collectAsStateWithLifecycle()
 
-                                TasksPage(
-                                    state = taskPageState,
-                                    onAction = tvm::onAction,
-                                )
+                                TasksPage(state = taskPageState, onAction = tvm::onAction)
                             }
 
                             entry<AppSections.SettingsPages>(metadata = fadeTransitionMetadata()) {
                                 val svm: SettingsViewModel = koinInject()
-                                val settingsState by
-                                svm.state.collectAsStateWithLifecycle()
+                                val settingsState by svm.state.collectAsStateWithLifecycle()
 
                                 SettingsGraph(
                                     state = settingsState,
@@ -166,10 +157,9 @@ private fun MainApp(
                                 )
                             }
 
-                            entry<AppSections.HabitsPages>(metadata = fadeTransitionMetadata()) {
+                            entry<AppSections.HabitPages>(metadata = fadeTransitionMetadata()) {
                                 val hvm: HabitViewModel = koinViewModel()
-                                val habitsPageState by
-                                hvm.state.collectAsStateWithLifecycle()
+                                val habitsPageState by hvm.state.collectAsStateWithLifecycle()
 
                                 HabitsGraph(
                                     state = habitsPageState,
@@ -195,28 +185,21 @@ private fun MainApp(
 
                 NavDisplay(
                     modifier =
-                        Modifier
-                            .fillMaxWidth()
-                            .background(MaterialTheme.colorScheme.background),
+                        Modifier.fillMaxWidth().background(MaterialTheme.colorScheme.background),
                     backStack = appBackStack,
                     contentAlignment = Alignment.Center,
                     entryProvider =
                         entryProvider {
                             entry<AppSections.TaskPages>(metadata = fadeTransitionMetadata()) {
                                 val tvm: TasksViewModel = koinViewModel()
-                                val taskPageState by
-                                tvm.state.collectAsStateWithLifecycle()
+                                val taskPageState by tvm.state.collectAsStateWithLifecycle()
 
-                                TasksPage(
-                                    state = taskPageState,
-                                    onAction = tvm::onAction,
-                                )
+                                TasksPage(state = taskPageState, onAction = tvm::onAction)
                             }
 
                             entry<AppSections.SettingsPages>(metadata = fadeTransitionMetadata()) {
                                 val svm: SettingsViewModel = koinInject()
-                                val settingsState by
-                                svm.state.collectAsStateWithLifecycle()
+                                val settingsState by svm.state.collectAsStateWithLifecycle()
 
                                 SettingsGraph(
                                     state = settingsState,
@@ -226,10 +209,9 @@ private fun MainApp(
                                 )
                             }
 
-                            entry<AppSections.HabitsPages>(metadata = fadeTransitionMetadata()) {
+                            entry<AppSections.HabitPages>(metadata = fadeTransitionMetadata()) {
                                 val hvm: HabitViewModel = koinViewModel()
-                                val habitsPageState by
-                                hvm.state.collectAsStateWithLifecycle()
+                                val habitsPageState by hvm.state.collectAsStateWithLifecycle()
 
                                 HabitsGraph(
                                     state = habitsPageState,

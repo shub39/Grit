@@ -29,18 +29,18 @@ import org.jetbrains.compose.resources.StringResource
 
 @Serializable
 sealed interface AppSections : NavKey {
-    @Serializable data object HabitsPages : AppSections
+    @Serializable data object HabitPages : AppSections
 
     @Serializable data object TaskPages : AppSections
 
     @Serializable data object SettingsPages : AppSections
 
     companion object {
-        val mainRoutes = listOf(TaskPages, HabitsPages, SettingsPages)
+        val mainRoutes = listOf(TaskPages, HabitPages, SettingsPages)
 
         fun AppSections.toStringRes(): StringResource {
             return when (this) {
-                HabitsPages -> Res.string.habits
+                HabitPages -> Res.string.habits
                 TaskPages -> Res.string.tasks
                 SettingsPages -> Res.string.settings
             }
@@ -48,7 +48,7 @@ sealed interface AppSections : NavKey {
 
         fun AppSections.toIconRes(): DrawableResource {
             return when (this) {
-                HabitsPages -> Res.drawable.alarm
+                HabitPages -> Res.drawable.alarm
                 TaskPages -> Res.drawable.check_list
                 SettingsPages -> Res.drawable.settings
             }

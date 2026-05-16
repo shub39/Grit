@@ -20,16 +20,9 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
-import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyListScope
-import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material3.Card
-import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.Icon
 import androidx.compose.material3.LargeFlexibleTopAppBar
 import androidx.compose.material3.ListItem
@@ -42,11 +35,10 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.input.nestedscroll.nestedScroll
-import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.tooling.preview.PreviewLightDark
 import androidx.compose.ui.tooling.preview.PreviewWrapper
 import androidx.compose.ui.unit.dp
 import com.shub39.grit.core.GritPreviewWrapper
@@ -60,7 +52,6 @@ import com.shub39.grit.core.shared_ui.leadingItemShape
 import com.shub39.grit.core.shared_ui.listItemColors
 import com.shub39.grit.core.shared_ui.middleItemShape
 import com.shub39.grit.core.theme.flexFontEmphasis
-import com.shub39.grit.core.theme.flexFontRounded
 import grit.shared.core.generated.resources.Res
 import grit.shared.core.generated.resources.arrow_forward
 import grit.shared.core.generated.resources.backup
@@ -120,35 +111,18 @@ fun RootPage(
         ) {
             // Grit Plus
             item {
-                Card(
-                    onClick = onNavigateToPaywall,
-                    shape = RoundedCornerShape(1000.dp),
-                    colors =
-                        CardDefaults.cardColors(
-                            containerColor = MaterialTheme.colorScheme.tertiary,
-                            contentColor = MaterialTheme.colorScheme.onTertiary,
-                        ),
-                ) {
-                    Row(
-                        modifier = Modifier.padding(16.dp).fillMaxWidth(),
-                        verticalAlignment = Alignment.CenterVertically,
-                    ) {
-                        Text(
-                            text = stringResource(Res.string.grit_plus),
-                            style =
-                                MaterialTheme.typography.headlineSmall.copy(
-                                    fontFamily = flexFontRounded()
-                                ),
-                        )
-
-                        Spacer(modifier = Modifier.weight(1f))
-
+                ListItem(
+                    headlineContent = { Text(text = stringResource(Res.string.grit_plus)) },
+                    colors = listItemColors(),
+                    modifier =
+                        Modifier.clip(detachedItemShape()).clickable { onNavigateToPaywall() },
+                    trailingContent = {
                         Icon(
                             imageVector = vectorResource(Res.drawable.arrow_forward),
                             contentDescription = "Grit Plus",
                         )
-                    }
-                }
+                    },
+                )
             }
 
             // General settings
@@ -350,7 +324,7 @@ fun RootPage(
 expect fun LazyListScope.languagePicker(onClick: () -> Unit)
 
 @PreviewWrapper(GritPreviewWrapper::class)
-@Preview
+@PreviewLightDark
 @Composable
 private fun Preview() {
     RootPage(

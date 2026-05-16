@@ -152,9 +152,13 @@ class SettingsViewModel(
         }
     }
 
-    private fun getChangeLogs() {
-        viewModelScope.launch {
-            _state.update { it.copy(changelog = changelogManager.changelogs.first()) }
+    private suspend fun getChangeLogs() {
+        val currentChangelog = changelogManager.changelogs.first()
+        _state.update {
+            it.copy(
+                changelog = currentChangelog,
+                currentVersion = currentChangelog.firstOrNull()?.version,
+            )
         }
     }
 
