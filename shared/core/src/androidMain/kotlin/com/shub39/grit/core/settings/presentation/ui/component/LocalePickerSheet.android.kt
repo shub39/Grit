@@ -14,7 +14,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
-package com.shub39.grit.core.presentation.settings.ui.component
+package com.shub39.grit.core.settings.presentation.ui.component
 
 import android.app.LocaleConfig
 import android.app.LocaleManager
@@ -52,9 +52,9 @@ import org.jetbrains.compose.resources.stringResource
 
 private data class AppLocale(val locale: Locale, val name: String)
 
-// yeeted from nsh04/Tomato
+// yeeted from nsh07/Tomato
 @Composable
-fun LocalePickerSheet(onDismissRequest: () -> Unit, modifier: Modifier = Modifier) {
+actual fun LocalePickerSheet(onDismissRequest: () -> Unit, modifier: Modifier) {
     val context = LocalContext.current
     val scope = rememberCoroutineScope()
     val sheetState = rememberModalBottomSheetState(skipPartiallyExpanded = true)

@@ -14,7 +14,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
-package com.shub39.grit.core.presentation.settings.ui
+package com.shub39.grit.core.settings.presentation.ui
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.fillMaxSize
@@ -29,16 +29,19 @@ import androidx.navigation3.runtime.NavKey
 import androidx.navigation3.runtime.entryProvider
 import androidx.navigation3.runtime.rememberNavBackStack
 import androidx.navigation3.ui.NavDisplay
+import androidx.savedstate.serialization.SavedStateConfiguration
 import com.shub39.grit.core.GritPreviewWrapper
 import com.shub39.grit.core.navigation.horizontalTransitionMetadata
-import com.shub39.grit.core.presentation.settings.ui.section.BackupPage
-import com.shub39.grit.core.presentation.settings.ui.section.Changelog
-import com.shub39.grit.core.presentation.settings.ui.section.LookAndFeelPage
-import com.shub39.grit.core.presentation.settings.ui.section.RootPage
 import com.shub39.grit.core.settings.presentation.SettingsAction
 import com.shub39.grit.core.settings.presentation.SettingsState
+import com.shub39.grit.core.settings.presentation.ui.section.BackupPage
+import com.shub39.grit.core.settings.presentation.ui.section.Changelog
+import com.shub39.grit.core.settings.presentation.ui.section.LookAndFeelPage
+import com.shub39.grit.core.settings.presentation.ui.section.RootPage
 import com.shub39.grit.core.shared_ui.PageFill
 import kotlinx.serialization.Serializable
+import kotlinx.serialization.modules.SerializersModule
+import kotlinx.serialization.modules.polymorphic
 
 @Serializable data object Root : NavKey
 
@@ -47,6 +50,17 @@ import kotlinx.serialization.Serializable
 @Serializable data object Backup : NavKey
 
 @Serializable data object Changelog : NavKey
+
+private val configuration = SavedStateConfiguration {
+    serializersModule = SerializersModule {
+        polymorphic(NavKey::class) {
+            subclass(Root::class, Root.serializer())
+            subclass(LookAndFeel::class, LookAndFeel.serializer())
+            subclass(Backup::class, Backup.serializer())
+            subclass(Changelog::class, Changelog.serializer())
+        }
+    }
+}
 
 @Composable
 fun SettingsGraph(
@@ -57,7 +71,7 @@ fun SettingsGraph(
     modifier: Modifier = Modifier,
 ) =
     PageFill(modifier = modifier) {
-        val backStack = rememberNavBackStack(Root)
+        val backStack = rememberNavBackStack(configuration, Root)
 
         NavDisplay(
             modifier =

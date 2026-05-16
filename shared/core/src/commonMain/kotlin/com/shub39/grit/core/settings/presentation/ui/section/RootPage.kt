@@ -14,9 +14,8 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
-package com.shub39.grit.core.presentation.settings.ui.section
+package com.shub39.grit.core.settings.presentation.ui.section
 
-import android.os.Build
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -27,6 +26,7 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.LazyListScope
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
@@ -46,16 +46,14 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.input.nestedscroll.nestedScroll
-import androidx.compose.ui.platform.LocalLocale
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.tooling.preview.PreviewWrapper
 import androidx.compose.ui.unit.dp
 import com.shub39.grit.core.GritPreviewWrapper
-import com.shub39.grit.core.presentation.settings.ui.component.AboutApp
-import com.shub39.grit.core.presentation.settings.ui.component.LocalePickerSheet
 import com.shub39.grit.core.settings.domain.Sections
 import com.shub39.grit.core.settings.presentation.SettingsAction
 import com.shub39.grit.core.settings.presentation.SettingsState
+import com.shub39.grit.core.settings.presentation.ui.component.LocalePickerSheet
 import com.shub39.grit.core.shared_ui.detachedItemShape
 import com.shub39.grit.core.shared_ui.endItemShape
 import com.shub39.grit.core.shared_ui.leadingItemShape
@@ -63,8 +61,6 @@ import com.shub39.grit.core.shared_ui.listItemColors
 import com.shub39.grit.core.shared_ui.middleItemShape
 import com.shub39.grit.core.theme.flexFontEmphasis
 import com.shub39.grit.core.theme.flexFontRounded
-import com.shub39.grit.warning.WarningManager
-import com.shub39.grit.warning.WarningReminder
 import grit.shared.core.generated.resources.Res
 import grit.shared.core.generated.resources.arrow_forward
 import grit.shared.core.generated.resources.backup
@@ -75,7 +71,6 @@ import grit.shared.core.generated.resources.changelog
 import grit.shared.core.generated.resources.check_list
 import grit.shared.core.generated.resources.download
 import grit.shared.core.generated.resources.grit_plus
-import grit.shared.core.generated.resources.language
 import grit.shared.core.generated.resources.look_and_feel
 import grit.shared.core.generated.resources.look_and_feel_desc
 import grit.shared.core.generated.resources.palette
@@ -90,7 +85,6 @@ import grit.shared.core.generated.resources.staring_day
 import grit.shared.core.generated.resources.use_24Hr
 import grit.shared.core.generated.resources.use_24Hr_desc
 import kotlinx.datetime.DayOfWeek
-import org.jetbrains.compose.resources.painterResource
 import org.jetbrains.compose.resources.stringResource
 import org.jetbrains.compose.resources.vectorResource
 
@@ -124,13 +118,6 @@ fun RootPage(
             contentPadding = PaddingValues(start = 12.dp, end = 12.dp, top = 16.dp, bottom = 60.dp),
             verticalArrangement = Arrangement.spacedBy(16.dp),
         ) {
-            if (WarningManager.showWarning()) {
-                item { WarningReminder() }
-            }
-
-            // about app, info, build version, links
-            item { AboutApp() }
-
             // Grit Plus
             item {
                 Card(
@@ -329,31 +316,7 @@ fun RootPage(
             }
 
             // language picker
-            if (Build.VERSION.SDK_INT >= 33) {
-                item {
-                    ListItem(
-                        colors = listItemColors(),
-                        leadingContent = {
-                            Icon(
-                                painter = painterResource(Res.drawable.language),
-                                contentDescription = null,
-                            )
-                        },
-                        headlineContent = { Text(text = stringResource(Res.string.language)) },
-                        supportingContent = {
-                            Text(text = LocalLocale.current.platformLocale.displayLanguage)
-                        },
-                        trailingContent = {
-                            Icon(
-                                painter = painterResource(Res.drawable.arrow_forward),
-                                contentDescription = "Navigate",
-                            )
-                        },
-                        modifier =
-                            Modifier.clip(detachedItemShape()).clickable { showLocalePicker = true },
-                    )
-                }
-            }
+            languagePicker(onClick = { showLocalePicker = true })
 
             // Changelogs
             item {
@@ -383,6 +346,8 @@ fun RootPage(
         }
     }
 }
+
+expect fun LazyListScope.languagePicker(onClick: () -> Unit)
 
 @PreviewWrapper(GritPreviewWrapper::class)
 @Preview
