@@ -31,12 +31,12 @@ import androidx.navigation3.runtime.rememberNavBackStack
 import androidx.navigation3.ui.NavDisplay
 import com.shub39.grit.core.GritPreviewWrapper
 import com.shub39.grit.core.navigation.horizontalTransitionMetadata
-import com.shub39.grit.core.presentation.settings.SettingsAction
-import com.shub39.grit.core.presentation.settings.SettingsState
 import com.shub39.grit.core.presentation.settings.ui.section.BackupPage
 import com.shub39.grit.core.presentation.settings.ui.section.Changelog
 import com.shub39.grit.core.presentation.settings.ui.section.LookAndFeelPage
 import com.shub39.grit.core.presentation.settings.ui.section.RootPage
+import com.shub39.grit.core.settings.presentation.SettingsAction
+import com.shub39.grit.core.settings.presentation.SettingsState
 import com.shub39.grit.core.shared_ui.PageFill
 import kotlinx.serialization.Serializable
 

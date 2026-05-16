@@ -43,10 +43,10 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import com.shub39.grit.core.domain.backup.ExportState
-import com.shub39.grit.core.domain.backup.RestoreState
-import com.shub39.grit.core.presentation.settings.SettingsAction
-import com.shub39.grit.core.presentation.settings.SettingsState
+import com.shub39.grit.core.settings.domain.backup.ExportState
+import com.shub39.grit.core.settings.domain.backup.RestoreState
+import com.shub39.grit.core.settings.presentation.SettingsAction
+import com.shub39.grit.core.settings.presentation.SettingsState
 import com.shub39.grit.core.shared_ui.endItemShape
 import com.shub39.grit.core.shared_ui.leadingItemShape
 import com.shub39.grit.core.shared_ui.listItemColors

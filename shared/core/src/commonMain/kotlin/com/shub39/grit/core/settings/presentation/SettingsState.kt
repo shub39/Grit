@@ -14,14 +14,14 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
-package com.shub39.grit.core.presentation.settings
+package com.shub39.grit.core.settings.presentation
 
 import androidx.compose.runtime.Immutable
 import androidx.compose.runtime.Stable
 import com.shub39.grit.core.components.Changelog
-import com.shub39.grit.core.domain.backup.ExportState
-import com.shub39.grit.core.domain.backup.RestoreState
 import com.shub39.grit.core.settings.domain.Sections
+import com.shub39.grit.core.settings.domain.backup.ExportState
+import com.shub39.grit.core.settings.domain.backup.RestoreState
 import com.shub39.grit.core.theme.Theme
 import kotlinx.datetime.DayOfWeek
 

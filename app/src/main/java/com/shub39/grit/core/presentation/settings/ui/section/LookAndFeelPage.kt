@@ -67,8 +67,8 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.materialkolor.rememberDynamicColorScheme
 import com.shub39.grit.core.components.ColorPickerDialog
-import com.shub39.grit.core.presentation.settings.SettingsAction
-import com.shub39.grit.core.presentation.settings.SettingsState
+import com.shub39.grit.core.settings.presentation.SettingsAction
+import com.shub39.grit.core.settings.presentation.SettingsState
 import com.shub39.grit.core.shared_ui.detachedItemShape
 import com.shub39.grit.core.shared_ui.endItemShape
 import com.shub39.grit.core.shared_ui.leadingItemShape
