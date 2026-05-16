@@ -42,12 +42,12 @@ import androidx.navigation3.runtime.NavKey
 import androidx.navigation3.runtime.entryProvider
 import androidx.navigation3.runtime.rememberNavBackStack
 import androidx.navigation3.ui.NavDisplay
-import com.shub39.grit.app.AppSections.Companion.toIconRes
-import com.shub39.grit.app.AppSections.Companion.toStringRes
 import com.shub39.grit.billing.PaywallPage
 import com.shub39.grit.core.LocalWindowSizeClass
+import com.shub39.grit.core.app.AppSections
+import com.shub39.grit.core.app.AppSections.Companion.toIconRes
+import com.shub39.grit.core.app.AppSections.Companion.toStringRes
 import com.shub39.grit.core.components.ChangelogSheet
-import com.shub39.grit.core.domain.MainAppState
 import com.shub39.grit.core.habits.presentation.ui.HabitsGraph
 import com.shub39.grit.core.navigation.fadeTransitionMetadata
 import com.shub39.grit.core.navigation.verticalTransitionMetadata
@@ -57,15 +57,7 @@ import com.shub39.grit.core.tasks.presentation.ui.TasksPage
 import com.shub39.grit.viewmodels.HabitViewModel
 import com.shub39.grit.viewmodels.SettingsViewModel
 import com.shub39.grit.viewmodels.TasksViewModel
-import grit.shared.core.generated.resources.Res
-import grit.shared.core.generated.resources.alarm
-import grit.shared.core.generated.resources.check_list
-import grit.shared.core.generated.resources.habits
-import grit.shared.core.generated.resources.settings
-import grit.shared.core.generated.resources.tasks
 import kotlinx.serialization.Serializable
-import org.jetbrains.compose.resources.DrawableResource
-import org.jetbrains.compose.resources.StringResource
 import org.jetbrains.compose.resources.painterResource
 import org.jetbrains.compose.resources.stringResource
 import org.koin.compose.koinInject
@@ -75,35 +67,6 @@ private sealed interface GlobalRoutes : NavKey {
     @Serializable data object PaywallPage : GlobalRoutes
 
     @Serializable data object App : GlobalRoutes
-}
-
-@Serializable
-private sealed interface AppSections : NavKey {
-    @Serializable data object HabitsPages : AppSections
-
-    @Serializable data object TaskPages : AppSections
-
-    @Serializable data object SettingsPages : AppSections
-
-    companion object {
-        val mainRoutes = listOf(TaskPages, HabitsPages, SettingsPages)
-
-        fun AppSections.toStringRes(): StringResource {
-            return when (this) {
-                HabitsPages -> Res.string.habits
-                TaskPages -> Res.string.tasks
-                SettingsPages -> Res.string.settings
-            }
-        }
-
-        fun AppSections.toIconRes(): DrawableResource {
-            return when (this) {
-                HabitsPages -> Res.drawable.alarm
-                TaskPages -> Res.drawable.check_list
-                SettingsPages -> Res.drawable.settings
-            }
-        }
-    }
 }
 
 @Composable

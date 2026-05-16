@@ -83,8 +83,6 @@ dependencies {
     androidRuntimeClasspath(libs.compose.ui.tooling.preview)
 }
 
-compose.resources { publicResClass = true }
-
 androidComponents {
     onVariants { variant ->
         variant.sources.res?.addStaticSourceDirectory("src/commonMain/composeResources")
