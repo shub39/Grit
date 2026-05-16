@@ -34,7 +34,7 @@ import androidx.fragment.app.FragmentActivity
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.shub39.grit.core.LocalWindowSizeClass
 import com.shub39.grit.core.components.InitialLoading
-import com.shub39.grit.core.data.GritNotificationManager.Companion.createNotificationChannel
+import com.shub39.grit.core.data.notification.GritNotificationManager.Companion.createNotificationChannel
 import com.shub39.grit.core.domain.BiometricUtils
 import com.shub39.grit.core.theme.GritTheme
 import com.shub39.grit.viewmodels.MainViewModel

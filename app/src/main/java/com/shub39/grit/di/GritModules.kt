@@ -18,7 +18,7 @@ package com.shub39.grit.di
 
 import androidx.datastore.core.DataStore
 import androidx.datastore.preferences.core.Preferences
-import com.shub39.grit.core.data.DatastoreFactory
+import com.shub39.grit.core.data.datastore.DatastoreFactory
 import com.shub39.grit.habits.data.database.HabitDatabase
 import com.shub39.grit.habits.data.database.HabitDbFactory
 import com.shub39.grit.habits.data.database.HabitStatusDao

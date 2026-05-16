@@ -135,9 +135,8 @@ dependencies {
     "playImplementation"(libs.purchases)
     "playImplementation"(libs.purchases.ui)
 
-    implementation(libs.materialkolor) // TODO: Remove later
-    implementation("io.github.vinceglb:filekit-core:0.14.1")
-    implementation("io.github.vinceglb:filekit-dialogs:0.14.1")
+    implementation(libs.filekit.core)
+    implementation(libs.filekit.dialogs)
 
     implementation(libs.compose.material3)
     implementation(libs.compose.runtime)

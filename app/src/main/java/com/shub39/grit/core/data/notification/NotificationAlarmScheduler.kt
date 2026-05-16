@@ -14,7 +14,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
-package com.shub39.grit.core.data
+package com.shub39.grit.core.data.notification
 
 import android.app.AlarmManager
 import android.app.PendingIntent
@@ -22,6 +22,7 @@ import android.content.Context
 import android.content.Intent
 import android.os.Build
 import android.util.Log
+import com.shub39.grit.core.data.GritIntentReceiver
 import com.shub39.grit.core.domain.AlarmScheduler
 import com.shub39.grit.core.domain.IntentActions
 import com.shub39.grit.core.habits.domain.Habit
@@ -51,11 +52,11 @@ class NotificationAlarmScheduler(private val context: Context) : AlarmScheduler 
         if (!habit.reminder || habit.days.isEmpty()) return
 
         var scheduleTime = habit.time
-        val now = LocalDateTime.now()
+        val now = LocalDateTime.Companion.now()
 
         while ((scheduleTime < now) || !habit.days.contains(scheduleTime.dayOfWeek)) {
             scheduleTime =
-                scheduleTime.date.plus(1, DateTimeUnit.DAY).let {
+                scheduleTime.date.plus(1, DateTimeUnit.Companion.DAY).let {
                     LocalDateTime(date = it, time = scheduleTime.time)
                 }
         }
@@ -76,7 +77,7 @@ class NotificationAlarmScheduler(private val context: Context) : AlarmScheduler 
 
         alarmManager.setExactAndAllowWhileIdle(
             AlarmManager.RTC_WAKEUP,
-            scheduleTime.toInstant(TimeZone.currentSystemDefault()).toEpochMilliseconds(),
+            scheduleTime.toInstant(TimeZone.Companion.currentSystemDefault()).toEpochMilliseconds(),
             pendingIntent,
         )
 
@@ -88,7 +89,7 @@ class NotificationAlarmScheduler(private val context: Context) : AlarmScheduler 
         if (task.reminder == null) return
         val scheduleTime = task.reminder!!
 
-        val now = LocalDateTime.now()
+        val now = LocalDateTime.Companion.now()
 
         if (scheduleTime < now) {
             Log.d(TAG, "Task '${task.title}' reminder time is in the past")
@@ -111,7 +112,7 @@ class NotificationAlarmScheduler(private val context: Context) : AlarmScheduler 
 
         alarmManager.setExactAndAllowWhileIdle(
             AlarmManager.RTC_WAKEUP,
-            scheduleTime.toInstant(TimeZone.currentSystemDefault()).toEpochMilliseconds(),
+            scheduleTime.toInstant(TimeZone.Companion.currentSystemDefault()).toEpochMilliseconds(),
             pendingIntent,
         )
 

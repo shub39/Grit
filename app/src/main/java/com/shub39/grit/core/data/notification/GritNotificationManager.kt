@@ -14,7 +14,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
-package com.shub39.grit.core.data
+package com.shub39.grit.core.data.notification
 
 import android.Manifest
 import android.app.NotificationChannel
@@ -28,6 +28,7 @@ import androidx.core.app.ActivityCompat
 import androidx.core.app.NotificationCompat
 import androidx.core.app.NotificationManagerCompat
 import com.shub39.grit.R
+import com.shub39.grit.core.data.GritIntentReceiver
 import com.shub39.grit.core.domain.IntentActions
 import com.shub39.grit.core.habits.domain.Habit
 import com.shub39.grit.core.tasks.domain.Task

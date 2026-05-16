@@ -29,6 +29,7 @@ compose-multiplatform = "1.11.0-rc01"
 kotlinx-coroutines = "1.11.0"
 kotlinx-serialization-json = "1.11.0"
 spotless = "8.4.0"
+filekit = "0.14.1"
 ktfmt = "0.61"
 
 [libraries]
@@ -46,6 +47,8 @@ androidx-room-compiler = { module = "androidx.room3:room3-compiler", version.ref
 androidx-room-runtime = { module = "androidx.room3:room3-runtime", version.ref = "room3" }
 androidx-room-testing = { module = "androidx.room3:room3-testing", version.ref = "room3" }
 androidx-ui-test-junit4 = { module = "androidx.compose.ui:ui-test-junit4", version.ref = "compose-junit" }
+filekit-core = { module = "io.github.vinceglb:filekit-core", version.ref = "filekit" }
+filekit-dialogs = { module = "io.github.vinceglb:filekit-dialogs", version.ref = "filekit" }
 jetbrains-navigation3-ui = { module = "org.jetbrains.androidx.navigation3:navigation3-ui", version.ref = "navigation" }
 androidx-biometric = { group = "androidx.biometric", name = "biometric-ktx", version.ref = "biometric" }
 
