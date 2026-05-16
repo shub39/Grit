@@ -31,8 +31,6 @@ sealed interface SettingsAction {
 
     data object OnRestore : SettingsAction
 
-    data class OnCheckBiometric(val context: Context) : SettingsAction
-
     data class ChangeStartOfTheWeek(val pref: DayOfWeek) : SettingsAction
 
     data class ChangeIs24Hr(val pref: Boolean) : SettingsAction

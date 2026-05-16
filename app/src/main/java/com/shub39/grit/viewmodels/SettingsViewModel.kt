@@ -21,7 +21,7 @@ import androidx.compose.ui.graphics.toArgb
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.shub39.grit.core.data.ChangelogManager
-import com.shub39.grit.core.data.Utils
+import com.shub39.grit.core.data.BiometricUtilsImpl
 import com.shub39.grit.core.domain.SettingsDatastore
 import com.shub39.grit.core.domain.ThemeDatastore
 import com.shub39.grit.core.domain.backup.ExportRepo
@@ -52,6 +52,7 @@ class SettingsViewModel(
     private val themeDatastore: ThemeDatastore,
     private val settingsDatastore: SettingsDatastore,
     private val changelogManager: ChangelogManager,
+    private val biometricUtilsImpl: BiometricUtilsImpl
 ) : ViewModel() {
     private var observeJob: Job? = null
 
@@ -63,6 +64,7 @@ class SettingsViewModel(
             .onStart {
                 observeJob()
                 getChangeLogs()
+                getBiometricStatus()
             }
             .stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000), SettingsState())
 
@@ -139,18 +141,18 @@ class SettingsViewModel(
                 is SettingsAction.ChangeBiometricLock ->
                     settingsDatastore.setBiometricPref(action.pref)
 
-                is SettingsAction.OnCheckBiometric -> {
-                    _state.update {
-                        it.copy(
-                            isBiometricLockAvailable = Utils.authenticationAvailable(action.context)
-                        )
-                    }
-                }
-
                 is SettingsAction.ChangeReorderTasks ->
                     settingsDatastore.setTaskReorderPref(action.pref)
             }
         }
+
+    private fun getBiometricStatus() {
+        _state.update {
+            it.copy(
+                isBiometricLockAvailable = biometricUtilsImpl.authenticationAvailable()
+            )
+        }
+    }
 
     private fun getChangeLogs() {
         viewModelScope.launch {

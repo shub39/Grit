@@ -35,7 +35,7 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.shub39.grit.core.LocalWindowSizeClass
 import com.shub39.grit.core.components.InitialLoading
 import com.shub39.grit.core.data.GritNotificationManager.Companion.createNotificationChannel
-import com.shub39.grit.core.data.Utils
+import com.shub39.grit.core.data.BiometricUtilsImpl
 import com.shub39.grit.core.theme.GritTheme
 import com.shub39.grit.viewmodels.MainViewModel
 import io.github.vinceglb.filekit.FileKit
@@ -121,7 +121,7 @@ class MainActivity : FragmentActivity() {
         val promptInfo =
             BiometricPrompt.PromptInfo.Builder()
                 .setTitle("Biometric Lock")
-                .setAllowedAuthenticators(Utils.getAuthenticators())
+                .setAllowedAuthenticators(BiometricUtilsImpl.getAuthenticators())
                 .build()
 
         biometricPrompt.authenticate(promptInfo)
