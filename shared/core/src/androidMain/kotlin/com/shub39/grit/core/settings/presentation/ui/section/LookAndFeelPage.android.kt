@@ -31,8 +31,6 @@ import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material3.Icon
 import androidx.compose.material3.ListItem
 import androidx.compose.material3.MaterialShapes
-import androidx.compose.material3.Switch
-import androidx.compose.material3.SwitchDefaults
 import androidx.compose.material3.Text
 import androidx.compose.material3.toShape
 import androidx.compose.runtime.Composable
@@ -43,6 +41,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.unit.dp
 import com.materialkolor.rememberDynamicColorScheme
+import com.shub39.grit.core.shared_ui.ExpressiveSwitch
 import com.shub39.grit.core.shared_ui.endItemShape
 import com.shub39.grit.core.shared_ui.listItemColors
 import com.shub39.grit.core.shared_ui.middleItemShape
@@ -50,7 +49,6 @@ import com.shub39.grit.core.theme.AppTheme
 import com.shub39.grit.core.theme.PaletteStyle
 import com.shub39.grit.core.theme.toMPaletteStyle
 import grit.shared.core.generated.resources.Res
-import grit.shared.core.generated.resources.check
 import grit.shared.core.generated.resources.check_circle
 import grit.shared.core.generated.resources.material_theme
 import grit.shared.core.generated.resources.material_theme_desc
@@ -70,20 +68,7 @@ actual fun MaterialYouToggle(
             headlineContent = { Text(text = stringResource(Res.string.material_theme)) },
             supportingContent = { Text(text = stringResource(Res.string.material_theme_desc)) },
             trailingContent = {
-                Switch(
-                    checked = isMaterialYou,
-                    onCheckedChange = onClick,
-                    thumbContent =
-                        if (isMaterialYou) {
-                            {
-                                Icon(
-                                    imageVector = vectorResource(Res.drawable.check),
-                                    contentDescription = null,
-                                    modifier = Modifier.size(SwitchDefaults.IconSize),
-                                )
-                            }
-                        } else null,
-                )
+                ExpressiveSwitch(checked = isMaterialYou, onCheckedChange = onClick)
             },
             colors = listItemColors(),
             modifier = Modifier.clip(if (isUserSubscribed) middleItemShape() else endItemShape()),

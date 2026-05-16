@@ -85,4 +85,5 @@
     <string name="select_days">Select Days</string>
     <string name="system_default">System Default</string>
     <string name="language">Language</string>
+    <string name="about">About</string>
 </resources>

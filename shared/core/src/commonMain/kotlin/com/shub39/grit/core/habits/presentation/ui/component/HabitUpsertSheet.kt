@@ -44,8 +44,6 @@ import androidx.compose.material3.ListItem
 import androidx.compose.material3.MaterialShapes
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
-import androidx.compose.material3.Switch
-import androidx.compose.material3.SwitchDefaults
 import androidx.compose.material3.Text
 import androidx.compose.material3.ToggleButton
 import androidx.compose.material3.ToggleButtonDefaults
@@ -70,6 +68,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.shub39.grit.core.habits.domain.Habit
 import com.shub39.grit.core.now
+import com.shub39.grit.core.shared_ui.ExpressiveSwitch
 import com.shub39.grit.core.shared_ui.GritBottomSheet
 import com.shub39.grit.core.shared_ui.GritTimePicker
 import com.shub39.grit.core.shared_ui.detachedItemShape
@@ -87,7 +86,6 @@ import grit.shared.core.generated.resources.add_habit
 import grit.shared.core.generated.resources.add_reminder
 import grit.shared.core.generated.resources.add_reminder_desc
 import grit.shared.core.generated.resources.alarm
-import grit.shared.core.generated.resources.check
 import grit.shared.core.generated.resources.description
 import grit.shared.core.generated.resources.edit
 import grit.shared.core.generated.resources.edit_habit
@@ -317,7 +315,7 @@ fun HabitUpsertSheetContent(
                                 )
                             },
                             trailingContent = {
-                                Switch(
+                                ExpressiveSwitch(
                                     checked = newHabit.reminder,
                                     onCheckedChange = { checked ->
                                         if (checked) {
@@ -330,18 +328,6 @@ fun HabitUpsertSheetContent(
                                             updateHabit(newHabit.copy(reminder = false))
                                         }
                                     },
-                                    thumbContent =
-                                        if (newHabit.reminder) {
-                                            {
-                                                Icon(
-                                                    imageVector =
-                                                        vectorResource(Res.drawable.check),
-                                                    contentDescription = null,
-                                                    modifier =
-                                                        Modifier.size(SwitchDefaults.IconSize),
-                                                )
-                                            }
-                                        } else null,
                                 )
                             },
                         )

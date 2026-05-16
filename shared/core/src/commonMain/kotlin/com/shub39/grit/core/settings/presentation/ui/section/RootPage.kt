@@ -28,8 +28,6 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.LargeFlexibleTopAppBar
 import androidx.compose.material3.ListItem
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Switch
-import androidx.compose.material3.SwitchDefaults
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
@@ -48,37 +46,14 @@ import com.shub39.grit.core.settings.domain.Sections
 import com.shub39.grit.core.settings.presentation.SettingsAction
 import com.shub39.grit.core.settings.presentation.SettingsState
 import com.shub39.grit.core.settings.presentation.ui.component.LocalePickerSheet
+import com.shub39.grit.core.shared_ui.ExpressiveSwitch
 import com.shub39.grit.core.shared_ui.detachedItemShape
 import com.shub39.grit.core.shared_ui.endItemShape
 import com.shub39.grit.core.shared_ui.leadingItemShape
 import com.shub39.grit.core.shared_ui.listItemColors
 import com.shub39.grit.core.shared_ui.middleItemShape
 import com.shub39.grit.core.theme.flexFontEmphasis
-import grit.shared.core.generated.resources.Res
-import grit.shared.core.generated.resources.app_icon
-import grit.shared.core.generated.resources.arrow_forward
-import grit.shared.core.generated.resources.backup
-import grit.shared.core.generated.resources.backup_desc
-import grit.shared.core.generated.resources.biometric_lock
-import grit.shared.core.generated.resources.biometric_lock_desc
-import grit.shared.core.generated.resources.changelog
-import grit.shared.core.generated.resources.check
-import grit.shared.core.generated.resources.check_list
-import grit.shared.core.generated.resources.download
-import grit.shared.core.generated.resources.grit_plus
-import grit.shared.core.generated.resources.look_and_feel
-import grit.shared.core.generated.resources.look_and_feel_desc
-import grit.shared.core.generated.resources.palette
-import grit.shared.core.generated.resources.pause_notifications
-import grit.shared.core.generated.resources.pause_notifications_desc
-import grit.shared.core.generated.resources.reorder_tasks
-import grit.shared.core.generated.resources.reorder_tasks_desc
-import grit.shared.core.generated.resources.settings
-import grit.shared.core.generated.resources.show_habits
-import grit.shared.core.generated.resources.show_habits_desc
-import grit.shared.core.generated.resources.staring_day
-import grit.shared.core.generated.resources.use_24Hr
-import grit.shared.core.generated.resources.use_24Hr_desc
+import grit.shared.core.generated.resources.*
 import kotlinx.datetime.DayOfWeek
 import org.jetbrains.compose.resources.stringResource
 import org.jetbrains.compose.resources.vectorResource
@@ -92,6 +67,7 @@ fun RootPage(
     onNavigateToBackup: () -> Unit,
     onNavigateToPaywall: () -> Unit,
     onNavigateToChangelog: () -> Unit,
+    onNavigateToAppInfo: () -> Unit,
 ) {
     var showLocalePicker by remember { mutableStateOf(false) }
 
@@ -147,18 +123,8 @@ fun RootPage(
                             Text(text = stringResource(Res.string.pause_notifications_desc))
                         },
                         trailingContent = {
-                            Switch(
+                            ExpressiveSwitch(
                                 checked = state.pauseNotifications,
-                                thumbContent =
-                                    if (state.pauseNotifications) {
-                                        {
-                                            Icon(
-                                                imageVector = vectorResource(Res.drawable.check),
-                                                contentDescription = null,
-                                                modifier = Modifier.size(SwitchDefaults.IconSize),
-                                            )
-                                        }
-                                    } else null,
                                 onCheckedChange = {
                                     onAction(SettingsAction.ChangePauseNotifications(it))
                                 },
@@ -174,21 +140,11 @@ fun RootPage(
                             Text(text = stringResource(Res.string.reorder_tasks_desc))
                         },
                         trailingContent = {
-                            Switch(
+                            ExpressiveSwitch(
                                 checked = state.reorderTasks,
                                 onCheckedChange = {
                                     onAction(SettingsAction.ChangeReorderTasks(it))
                                 },
-                                thumbContent =
-                                    if (state.reorderTasks) {
-                                        {
-                                            Icon(
-                                                imageVector = vectorResource(Res.drawable.check),
-                                                contentDescription = null,
-                                                modifier = Modifier.size(SwitchDefaults.IconSize),
-                                            )
-                                        }
-                                    } else null,
                             )
                         },
                         colors = listItemColors(),
@@ -201,7 +157,7 @@ fun RootPage(
                             Text(text = stringResource(Res.string.show_habits_desc))
                         },
                         trailingContent = {
-                            Switch(
+                            ExpressiveSwitch(
                                 checked = state.startingPage == Sections.Habits,
                                 onCheckedChange = {
                                     onAction(
@@ -210,16 +166,6 @@ fun RootPage(
                                         )
                                     )
                                 },
-                                thumbContent =
-                                    if (state.startingPage == Sections.Habits) {
-                                        {
-                                            Icon(
-                                                imageVector = vectorResource(Res.drawable.check),
-                                                contentDescription = null,
-                                                modifier = Modifier.size(SwitchDefaults.IconSize),
-                                            )
-                                        }
-                                    } else null,
                             )
                         },
                         colors = listItemColors(),
@@ -229,7 +175,7 @@ fun RootPage(
                     ListItem(
                         headlineContent = { Text(text = stringResource(Res.string.staring_day)) },
                         trailingContent = {
-                            Switch(
+                            ExpressiveSwitch(
                                 checked = state.startOfTheWeek == DayOfWeek.SUNDAY,
                                 onCheckedChange = {
                                     onAction(
@@ -238,16 +184,6 @@ fun RootPage(
                                         )
                                     )
                                 },
-                                thumbContent =
-                                    if (state.startOfTheWeek == DayOfWeek.SUNDAY) {
-                                        {
-                                            Icon(
-                                                imageVector = vectorResource(Res.drawable.check),
-                                                contentDescription = null,
-                                                modifier = Modifier.size(SwitchDefaults.IconSize),
-                                            )
-                                        }
-                                    } else null,
                             )
                         },
                         colors = listItemColors(),
@@ -263,23 +199,11 @@ fun RootPage(
                                 Text(text = stringResource(Res.string.biometric_lock_desc))
                             },
                             trailingContent = {
-                                Switch(
+                                ExpressiveSwitch(
                                     checked = state.isBiometricLockOn == true,
                                     onCheckedChange = {
                                         onAction(SettingsAction.ChangeBiometricLock(it))
                                     },
-                                    thumbContent =
-                                        if (state.isBiometricLockOn == true) {
-                                            {
-                                                Icon(
-                                                    imageVector =
-                                                        vectorResource(Res.drawable.check),
-                                                    contentDescription = null,
-                                                    modifier =
-                                                        Modifier.size(SwitchDefaults.IconSize),
-                                                )
-                                            }
-                                        } else null,
                                 )
                             },
                             colors = listItemColors(),
@@ -293,19 +217,9 @@ fun RootPage(
                             Text(text = stringResource(Res.string.use_24Hr_desc))
                         },
                         trailingContent = {
-                            Switch(
+                            ExpressiveSwitch(
                                 checked = state.is24Hr,
                                 onCheckedChange = { onAction(SettingsAction.ChangeIs24Hr(it)) },
-                                thumbContent =
-                                    if (state.is24Hr) {
-                                        {
-                                            Icon(
-                                                imageVector = vectorResource(Res.drawable.check),
-                                                contentDescription = null,
-                                                modifier = Modifier.size(SwitchDefaults.IconSize),
-                                            )
-                                        }
-                                    } else null,
                             )
                         },
                         colors = listItemColors(),
@@ -362,30 +276,54 @@ fun RootPage(
                 }
             }
 
-            // language picker
-            languagePicker(onClick = { showLocalePicker = true })
-
             // Changelogs
             item {
-                ListItem(
-                    colors = listItemColors(),
-                    leadingContent = {
-                        Icon(
-                            imageVector = vectorResource(Res.drawable.check_list),
-                            contentDescription = null,
-                        )
-                    },
-                    trailingContent = {
-                        Icon(
-                            imageVector = vectorResource(Res.drawable.arrow_forward),
-                            contentDescription = "Navigate",
-                        )
-                    },
-                    headlineContent = { Text(text = stringResource(Res.string.changelog)) },
-                    modifier =
-                        Modifier.clip(detachedItemShape()).clickable { onNavigateToChangelog() },
-                )
+                Column(verticalArrangement = Arrangement.spacedBy(2.dp)) {
+                    ListItem(
+                        colors = listItemColors(),
+                        leadingContent = {
+                            Icon(
+                                imageVector = vectorResource(Res.drawable.info),
+                                contentDescription = null,
+                            )
+                        },
+                        supportingContent = {
+                            Text(text = "Grit ${state.currentVersion ?: "x.x.x"}")
+                        },
+                        trailingContent = {
+                            Icon(
+                                imageVector = vectorResource(Res.drawable.arrow_forward),
+                                contentDescription = "Navigate",
+                            )
+                        },
+                        headlineContent = { Text(text = stringResource(Res.string.about)) },
+                        modifier =
+                            Modifier.clip(leadingItemShape()).clickable { onNavigateToAppInfo() },
+                    )
+
+                    ListItem(
+                        colors = listItemColors(),
+                        leadingContent = {
+                            Icon(
+                                imageVector = vectorResource(Res.drawable.check_list),
+                                contentDescription = null,
+                            )
+                        },
+                        trailingContent = {
+                            Icon(
+                                imageVector = vectorResource(Res.drawable.arrow_forward),
+                                contentDescription = "Navigate",
+                            )
+                        },
+                        headlineContent = { Text(text = stringResource(Res.string.changelog)) },
+                        modifier =
+                            Modifier.clip(endItemShape()).clickable { onNavigateToChangelog() },
+                    )
+                }
             }
+
+            // language picker
+            languagePicker(onClick = { showLocalePicker = true })
         }
 
         if (showLocalePicker) {
@@ -407,5 +345,6 @@ private fun Preview() {
         onNavigateToBackup = {},
         onNavigateToPaywall = {},
         onNavigateToChangelog = {},
+        onNavigateToAppInfo = {},
     )
 }

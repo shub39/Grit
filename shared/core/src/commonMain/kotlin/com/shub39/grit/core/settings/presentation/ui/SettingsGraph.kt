@@ -51,6 +51,8 @@ import kotlinx.serialization.modules.polymorphic
 
 @Serializable data object Changelog : NavKey
 
+@Serializable data object AppInfo : NavKey
+
 private val configuration = SavedStateConfiguration {
     serializersModule = SerializersModule {
         polymorphic(NavKey::class) {
@@ -58,6 +60,7 @@ private val configuration = SavedStateConfiguration {
             subclass(LookAndFeel::class, LookAndFeel.serializer())
             subclass(Backup::class, Backup.serializer())
             subclass(Changelog::class, Changelog.serializer())
+            subclass(AppInfo::class, AppInfo.serializer())
         }
     }
 }
@@ -89,6 +92,7 @@ fun SettingsGraph(
                             onNavigateToBackup = { backStack.add(Backup) },
                             onNavigateToPaywall = onNavigateToPaywall,
                             onNavigateToChangelog = { backStack.add(Changelog) },
+                            onNavigateToAppInfo = {},
                         )
                     }
 
@@ -122,6 +126,8 @@ fun SettingsGraph(
                             },
                         )
                     }
+
+                    entry<AppInfo>(metadata = horizontalTransitionMetadata()) {}
                 },
         )
     }

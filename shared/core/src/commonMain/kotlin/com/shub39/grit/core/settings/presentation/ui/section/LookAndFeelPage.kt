@@ -27,7 +27,6 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonGroupDefaults
@@ -39,8 +38,6 @@ import androidx.compose.material3.ListItem
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.MediumFlexibleTopAppBar
 import androidx.compose.material3.Surface
-import androidx.compose.material3.Switch
-import androidx.compose.material3.SwitchDefaults
 import androidx.compose.material3.Text
 import androidx.compose.material3.ToggleButton
 import androidx.compose.material3.ToggleButtonDefaults
@@ -62,6 +59,7 @@ import androidx.compose.ui.unit.dp
 import com.shub39.grit.core.components.ColorPickerDialog
 import com.shub39.grit.core.settings.presentation.SettingsAction
 import com.shub39.grit.core.settings.presentation.SettingsState
+import com.shub39.grit.core.shared_ui.ExpressiveSwitch
 import com.shub39.grit.core.shared_ui.detachedItemShape
 import com.shub39.grit.core.shared_ui.endItemShape
 import com.shub39.grit.core.shared_ui.leadingItemShape
@@ -79,7 +77,6 @@ import com.shub39.grit.core.theme.flexFontEmphasis
 import grit.shared.core.generated.resources.Res
 import grit.shared.core.generated.resources.app_theme
 import grit.shared.core.generated.resources.arrow_back
-import grit.shared.core.generated.resources.check
 import grit.shared.core.generated.resources.dark_mode
 import grit.shared.core.generated.resources.edit
 import grit.shared.core.generated.resources.font
@@ -275,22 +272,10 @@ fun LookAndFeelPage(
                                 Text(text = stringResource(Res.string.use_amoled_desc))
                             },
                             trailingContent = {
-                                Switch(
+                                ExpressiveSwitch(
                                     checked = state.theme.isAmoled,
                                     enabled = isUserSubscribed,
                                     onCheckedChange = { onAction(SettingsAction.ChangeAmoled(it)) },
-                                    thumbContent =
-                                        if (state.theme.isAmoled) {
-                                            {
-                                                Icon(
-                                                    imageVector =
-                                                        vectorResource(Res.drawable.check),
-                                                    contentDescription = null,
-                                                    modifier =
-                                                        Modifier.size(SwitchDefaults.IconSize),
-                                                )
-                                            }
-                                        } else null,
                                 )
                             },
                             colors = listItemColors(),

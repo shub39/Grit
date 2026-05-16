@@ -41,8 +41,6 @@ import androidx.compose.material3.MaterialShapes
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.OutlinedTextField
-import androidx.compose.material3.Switch
-import androidx.compose.material3.SwitchDefaults
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.material3.ToggleButton
@@ -67,6 +65,7 @@ import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardCapitalization
 import androidx.compose.ui.unit.dp
 import com.shub39.grit.core.now
+import com.shub39.grit.core.shared_ui.ExpressiveSwitch
 import com.shub39.grit.core.shared_ui.GritBottomSheet
 import com.shub39.grit.core.shared_ui.GritTimePicker
 import com.shub39.grit.core.shared_ui.detachedItemShape
@@ -80,7 +79,6 @@ import grit.shared.core.generated.resources.add
 import grit.shared.core.generated.resources.add_reminder
 import grit.shared.core.generated.resources.add_task
 import grit.shared.core.generated.resources.alarm
-import grit.shared.core.generated.resources.check
 import grit.shared.core.generated.resources.delete
 import grit.shared.core.generated.resources.done
 import grit.shared.core.generated.resources.edit
@@ -243,7 +241,7 @@ fun TaskUpsertSheetContent(
                         }
                     },
                     trailingContent = {
-                        Switch(
+                        ExpressiveSwitch(
                             checked = newTask.reminder != null,
                             onCheckedChange = { checked ->
                                 if (checked) {
@@ -256,16 +254,6 @@ fun TaskUpsertSheetContent(
                                     newTask = newTask.copy(reminder = null)
                                 }
                             },
-                            thumbContent =
-                                if (newTask.reminder != null) {
-                                    {
-                                        Icon(
-                                            imageVector = vectorResource(Res.drawable.check),
-                                            contentDescription = null,
-                                            modifier = Modifier.size(SwitchDefaults.IconSize),
-                                        )
-                                    }
-                                } else null,
                         )
                     },
                 )
