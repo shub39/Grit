@@ -74,19 +74,7 @@ import com.shub39.grit.core.theme.GritTheme
 import com.shub39.grit.core.theme.PaletteStyle
 import com.shub39.grit.core.theme.Theme
 import com.shub39.grit.core.theme.flexFontEmphasis
-import grit.shared.core.generated.resources.Res
-import grit.shared.core.generated.resources.app_theme
-import grit.shared.core.generated.resources.arrow_back
-import grit.shared.core.generated.resources.dark_mode
-import grit.shared.core.generated.resources.edit
-import grit.shared.core.generated.resources.font
-import grit.shared.core.generated.resources.light_mode
-import grit.shared.core.generated.resources.look_and_feel
-import grit.shared.core.generated.resources.select_seed
-import grit.shared.core.generated.resources.select_seed_desc
-import grit.shared.core.generated.resources.unlock_more_plus
-import grit.shared.core.generated.resources.use_amoled
-import grit.shared.core.generated.resources.use_amoled_desc
+import grit.shared.core.generated.resources.*
 import org.jetbrains.compose.resources.Font
 import org.jetbrains.compose.resources.stringResource
 import org.jetbrains.compose.resources.vectorResource
@@ -184,6 +172,23 @@ fun LookAndFeelPage(
                         }
                     }
 
+                    ListItem(
+                        headlineContent = { Text(text = stringResource(Res.string.haptic_feedback)) },
+                        supportingContent = {
+                            Text(text = stringResource(Res.string.haptic_feedback_desc))
+                        },
+                        trailingContent = {
+                            ExpressiveSwitch(
+                                checked = state.hapticFeedbackEnabled,
+                                onCheckedChange = {
+                                    onAction(SettingsAction.ChangeHapticFeedback(it))
+                                }
+                            )
+                        },
+                        colors = listItemColors(),
+                        modifier = Modifier.clip(middleItemShape())
+                    )
+
                     MaterialYouToggle(
                         isUserSubscribed = isUserSubscribed,
                         isMaterialYou = state.theme.isMaterialYou,
@@ -214,6 +219,7 @@ fun LookAndFeelPage(
                                 when {
                                     state.theme.isMaterialYou && !isUserSubscribed ->
                                         detachedItemShape()
+
                                     state.theme.isMaterialYou -> endItemShape()
                                     isUserSubscribed -> middleItemShape()
                                     else -> leadingItemShape()

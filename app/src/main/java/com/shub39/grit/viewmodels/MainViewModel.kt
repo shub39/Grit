@@ -110,6 +110,13 @@ class MainViewModel(
                     }
                     .launchIn(this)
 
+                themeDatastore
+                    .getHapticPreference()
+                    .onEach { pref ->
+                        _state.update { it.copy(isHapticFeedbackEnabled = pref) }
+                    }
+                    .launchIn(this)
+
                 settingsDatastore
                     .getStartingSectionPref()
                     .onEach { pref -> _state.update { it.copy(startingSection = pref) } }

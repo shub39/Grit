@@ -143,6 +143,9 @@ class SettingsViewModel(
 
                 is SettingsAction.ChangeReorderTasks ->
                     settingsDatastore.setTaskReorderPref(action.pref)
+
+                is SettingsAction.ChangeHapticFeedback ->
+                    themeDatastore.setHapticPreference(action.pref)
             }
         }
 
@@ -180,6 +183,13 @@ class SettingsViewModel(
                     .getAppThemeFlow()
                     .onEach { flow ->
                         _state.update { it.copy(theme = it.theme.copy(appTheme = flow)) }
+                    }
+                    .launchIn(this)
+
+                themeDatastore
+                    .getHapticPreference()
+                    .onEach { flow ->
+                        _state.update { it.copy(hapticFeedbackEnabled = flow) }
                     }
                     .launchIn(this)
 

@@ -28,6 +28,7 @@ data class MainAppState(
     val isAppUnlocked: Boolean = false,
     val isBiometricLockOn: Boolean? = null,
     val isUserSubscribed: Boolean = false,
+    val isHapticFeedbackEnabled: Boolean = true,
     val startingSection: Sections = Sections.Tasks,
     val theme: Theme = Theme(),
     val currentChangelog: VersionEntry? = null,

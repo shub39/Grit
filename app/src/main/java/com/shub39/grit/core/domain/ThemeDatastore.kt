@@ -32,6 +32,10 @@ interface ThemeDatastore {
 
     suspend fun setSeedColor(color: Int)
 
+    fun getHapticPreference(): Flow<Boolean>
+
+    suspend fun setHapticPreference(pref: Boolean)
+
     fun getAmoledPref(): Flow<Boolean>
 
     suspend fun setAmoledPref(pref: Boolean)

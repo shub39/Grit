@@ -106,7 +106,8 @@ fun RootPage(
                         Icon(
                             imageVector = vectorResource(Res.drawable.grit_icon),
                             contentDescription = null,
-                            modifier = Modifier.size(24.dp),
+                            modifier = Modifier.size(30.dp),
+                            tint = MaterialTheme.colorScheme.primary
                         )
                     },
                 )

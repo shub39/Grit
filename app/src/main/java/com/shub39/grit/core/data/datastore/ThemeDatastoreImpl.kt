@@ -41,6 +41,7 @@ class ThemeDatastoreImpl(private val datastore: DataStore<Preferences>) : ThemeD
         private val paletteKey = stringPreferencesKey("palette")
         private val materialYouKey = booleanPreferencesKey("material_you")
         private val fontPrefKey = stringPreferencesKey("font")
+        private val hapticPrefKey = booleanPreferencesKey("haptic")
     }
 
     override suspend fun resetAppTheme() {
@@ -68,6 +69,13 @@ class ThemeDatastoreImpl(private val datastore: DataStore<Preferences>) : ThemeD
 
     override suspend fun setSeedColor(color: Int) {
         datastore.edit { prefs -> prefs[seedColorKey] = color }
+    }
+
+    override fun getHapticPreference(): Flow<Boolean> =
+        datastore.data.map { prefs -> prefs[hapticPrefKey] ?: true }
+
+    override suspend fun setHapticPreference(pref: Boolean) {
+        datastore.edit { prefs -> prefs[hapticPrefKey] = pref }
     }
 
     override fun getAmoledPref(): Flow<Boolean> =
