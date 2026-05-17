@@ -34,6 +34,7 @@ import com.shub39.grit.core.GritPreviewWrapper
 import com.shub39.grit.core.navigation.horizontalTransitionMetadata
 import com.shub39.grit.core.settings.presentation.SettingsAction
 import com.shub39.grit.core.settings.presentation.SettingsState
+import com.shub39.grit.core.settings.presentation.ui.section.About
 import com.shub39.grit.core.settings.presentation.ui.section.BackupPage
 import com.shub39.grit.core.settings.presentation.ui.section.Changelog
 import com.shub39.grit.core.settings.presentation.ui.section.LookAndFeelPage
@@ -51,7 +52,7 @@ import kotlinx.serialization.modules.polymorphic
 
 @Serializable data object Changelog : NavKey
 
-@Serializable data object AppInfo : NavKey
+@Serializable data object About : NavKey
 
 private val configuration = SavedStateConfiguration {
     serializersModule = SerializersModule {
@@ -60,7 +61,7 @@ private val configuration = SavedStateConfiguration {
             subclass(LookAndFeel::class, LookAndFeel.serializer())
             subclass(Backup::class, Backup.serializer())
             subclass(Changelog::class, Changelog.serializer())
-            subclass(AppInfo::class, AppInfo.serializer())
+            subclass(About::class, About.serializer())
         }
     }
 }
@@ -92,7 +93,7 @@ fun SettingsGraph(
                             onNavigateToBackup = { backStack.add(Backup) },
                             onNavigateToPaywall = onNavigateToPaywall,
                             onNavigateToChangelog = { backStack.add(Changelog) },
-                            onNavigateToAppInfo = {},
+                            onNavigateToAppInfo = { backStack.add(About) },
                         )
                     }
 
@@ -127,7 +128,14 @@ fun SettingsGraph(
                         )
                     }
 
-                    entry<AppInfo>(metadata = horizontalTransitionMetadata()) {}
+                    entry<About>(metadata = horizontalTransitionMetadata()) {
+                        About(
+                            versionName = state.currentVersion ?: "1.0.00-Demo",
+                            onNavigateBack = {
+                                if (backStack.size != 1) backStack.removeLastOrNull()
+                            },
+                        )
+                    }
                 },
         )
     }

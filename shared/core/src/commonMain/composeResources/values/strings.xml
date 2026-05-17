@@ -63,6 +63,7 @@
     <string name="biometric_lock">Biometric Lock</string>
     <string name="biometric_lock_desc">Use biometric authentication to unlock app</string>
     <string name="bmc">Buy me a coffee</string>
+    <string name="bmc_desc">Support me by making a small donation</string>
     <string name="rate_on_play">Rate on Google Play</string>
     <string name="weekly_progress">Weekly Progress</string>
     <string name="overall_analytics">Overall Analytics</string>
@@ -80,6 +81,7 @@
     <string name="reorder_tasks_desc">Reorder tasks when marked as completed</string>
     <string name="weeks">Weeks</string>
     <string name="translate">Translate</string>
+    <string name="translate_desc">Translate Grit in your language</string>
     <string name="changelog">Changelog</string>
     <string name="whats_changed">What\u0027s Changed</string>
     <string name="select_days">Select Days</string>

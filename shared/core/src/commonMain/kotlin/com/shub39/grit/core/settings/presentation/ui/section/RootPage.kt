@@ -104,7 +104,7 @@ fun RootPage(
                     },
                     leadingContent = {
                         Icon(
-                            imageVector = vectorResource(Res.drawable.app_icon),
+                            imageVector = vectorResource(Res.drawable.grit_icon),
                             contentDescription = null,
                             modifier = Modifier.size(24.dp),
                         )
