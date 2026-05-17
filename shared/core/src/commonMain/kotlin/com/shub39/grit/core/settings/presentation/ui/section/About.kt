@@ -302,7 +302,7 @@ private fun LazyListScope.aboutApp(versionName: String, uriHandler: UriHandler) 
                         listOf(
                                 "https://github.com/shub39" to Res.drawable.github,
                                 "https://shub39.github.io/" to Res.drawable.language,
-                                "mailto:cptnshubham39+rush_app@gmail.com" to Res.drawable.email,
+                                "mailto:cptnshubham39+grit_app@gmail.com" to Res.drawable.email,
                             )
                             .forEach { pair ->
                                 FilledTonalIconButton(
