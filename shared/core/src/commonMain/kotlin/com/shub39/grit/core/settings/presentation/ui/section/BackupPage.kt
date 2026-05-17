@@ -175,7 +175,8 @@ fun BackupPage(
                         ) {
                             Button(
                                 onClick = { onAction(SettingsAction.OnRestore) },
-                                enabled = state.backupState.restoreState == RestoreState.IDLE,
+                                enabled = state.backupState.restoreState == RestoreState.IDLE ||
+                                        state.backupState.restoreState == RestoreState.FAILURE,
                                 modifier = Modifier.weight(1f),
                             ) {
                                 when (state.backupState.restoreState) {
