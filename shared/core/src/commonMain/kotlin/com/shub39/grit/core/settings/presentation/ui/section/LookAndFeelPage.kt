@@ -172,23 +172,6 @@ fun LookAndFeelPage(
                         }
                     }
 
-                    ListItem(
-                        headlineContent = { Text(text = stringResource(Res.string.haptic_feedback)) },
-                        supportingContent = {
-                            Text(text = stringResource(Res.string.haptic_feedback_desc))
-                        },
-                        trailingContent = {
-                            ExpressiveSwitch(
-                                checked = state.hapticFeedbackEnabled,
-                                onCheckedChange = {
-                                    onAction(SettingsAction.ChangeHapticFeedback(it))
-                                }
-                            )
-                        },
-                        colors = listItemColors(),
-                        modifier = Modifier.clip(middleItemShape())
-                    )
-
                     MaterialYouToggle(
                         isUserSubscribed = isUserSubscribed,
                         isMaterialYou = state.theme.isMaterialYou,

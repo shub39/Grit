@@ -71,13 +71,6 @@ class ThemeDatastoreImpl(private val datastore: DataStore<Preferences>) : ThemeD
         datastore.edit { prefs -> prefs[seedColorKey] = color }
     }
 
-    override fun getHapticPreference(): Flow<Boolean> =
-        datastore.data.map { prefs -> prefs[hapticPrefKey] ?: true }
-
-    override suspend fun setHapticPreference(pref: Boolean) {
-        datastore.edit { prefs -> prefs[hapticPrefKey] = pref }
-    }
-
     override fun getAmoledPref(): Flow<Boolean> =
         datastore.data.map { prefs -> prefs[amoledKey] == true }
 
