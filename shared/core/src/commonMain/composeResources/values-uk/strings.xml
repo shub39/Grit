@@ -34,7 +34,7 @@
     <string name="backup">Резервна копія</string>
     <string name="backup_desc">Експортуйте або відновіть ваші завдання та звички</string>
     <string name="export">Експорт даних</string>
-    <string name="export_desc">Усі дані експортовано до "Завантаження/Grit"</string>
+    <string name="export_desc">Усі дані експортовано до Завантаження/Grit</string>
     <string name="restore">Відновити</string>
     <string name="restore_desc">Відновити завдання та звички з вибраного файлу</string>
     <string name="material_theme_desc">Використовувати кольори на основі шпалер</string>

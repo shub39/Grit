@@ -1,5 +1,8 @@
 # Changelog
 
+## 5.9.25
+- Fix Hebrew Translations not applied by Language Picker
+
 ## 5.9.24
 - Updated Translations
 - Added ability to choose export locations for backups
