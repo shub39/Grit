@@ -1,5 +1,10 @@
 # Changelog
 
+## 5.9.24
+- Updated Translations
+- Added ability to choose export locations for backups
+- Miscellaneous UI improvements
+
 ## 5.9.23
 - Updated Translations
 - (Android 13+) Added ability to change app language from Settings

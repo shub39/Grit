@@ -1,5 +1,13 @@
 [
   {
+    "version": "5.9.24",
+    "changes": [
+      "Updated Translations",
+      "Added ability to choose export locations for backups",
+      "Miscellaneous UI improvements"
+    ]
+  },
+  {
     "version": "5.9.23",
     "changes": [
       "Updated Translations",
@@ -62,12 +70,6 @@
     "version": "5.8.2",
     "changes": [
       "Updated Translations"
-    ]
-  },
-  {
-    "version": "5.8.1",
-    "changes": [
-      "Fixed tasks notification action not working"
     ]
   }
 ]

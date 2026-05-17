@@ -35,7 +35,7 @@
     <string name="backup">Backup</string>
     <string name="backup_desc">Export or Restore your tasks and habits</string>
     <string name="export">Export data</string>
-    <string name="export_desc">All data exported to Downloads/Grit</string>
+    <string name="export_desc">Choose directory to export data</string>
     <string name="restore">Restore</string>
     <string name="restore_desc">Restore tasks and habits from selected file</string>
     <string name="material_theme_desc">Use colors based on wallpaper</string>
