@@ -36,7 +36,7 @@ sealed interface AppSections : NavKey {
     @Serializable data object SettingsPages : AppSections
 
     companion object {
-        val mainRoutes = listOf(TaskPages, HabitPages, SettingsPages)
+        val mainRoutes: List<AppSections> = listOf(TaskPages, HabitPages, SettingsPages)
 
         fun AppSections.toStringRes(): StringResource {
             return when (this) {
