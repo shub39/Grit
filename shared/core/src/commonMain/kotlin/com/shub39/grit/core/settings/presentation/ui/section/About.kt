@@ -31,6 +31,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.LazyListScope
 import androidx.compose.material3.Card
 import androidx.compose.material3.FilledTonalIconButton
 import androidx.compose.material3.Icon
@@ -45,12 +46,19 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.material3.toShape
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.platform.LocalLayoutDirection
+import androidx.compose.ui.platform.LocalUriHandler
+import androidx.compose.ui.platform.UriHandler
 import androidx.compose.ui.unit.dp
+import com.shub39.grit.core.settings.presentation.ui.component.LicenseBottomSheet
 import com.shub39.grit.core.shared_ui.detachedItemShape
 import com.shub39.grit.core.shared_ui.endItemShape
 import com.shub39.grit.core.shared_ui.leadingItemShape
@@ -66,6 +74,14 @@ import org.jetbrains.compose.resources.vectorResource
 @Composable
 fun About(versionName: String, onNavigateBack: () -> Unit, modifier: Modifier = Modifier) {
     val scrollBehavior = TopAppBarDefaults.enterAlwaysScrollBehavior()
+    val uriHandler = LocalUriHandler.current
+
+    var showLicenseBottomSheet by remember { mutableStateOf(false) }
+
+    if (showLicenseBottomSheet) {
+        LicenseBottomSheet(onDismissRequest = { showLicenseBottomSheet = false })
+    }
+
     Scaffold(
         modifier = modifier.nestedScroll(scrollBehavior.nestedScrollConnection),
         topBar = {
@@ -96,191 +112,8 @@ fun About(versionName: String, onNavigateBack: () -> Unit, modifier: Modifier = 
                     end = padding.calculateRightPadding(LocalLayoutDirection.current) + 16.dp,
                 ),
         ) {
-            item {
-                Column(verticalArrangement = Arrangement.spacedBy(2.dp)) {
-                    // App card
-                    Card(shape = leadingItemShape()) {
-                        Row(
-                            modifier = Modifier.padding(16.dp).fillMaxWidth(),
-                            verticalAlignment = Alignment.CenterVertically,
-                        ) {
-                            Box(
-                                modifier =
-                                    Modifier.size(64.dp)
-                                        .background(
-                                            color = MaterialTheme.colorScheme.primaryContainer,
-                                            shape = MaterialShapes.Cookie12Sided.toShape(),
-                                        ),
-                                contentAlignment = Alignment.Center,
-                            ) {
-                                Icon(
-                                    imageVector = vectorResource(Res.drawable.grit_icon),
-                                    contentDescription = null,
-                                    tint = MaterialTheme.colorScheme.onPrimaryContainer,
-                                    modifier = Modifier.size(32.dp),
-                                )
-                            }
-
-                            Spacer(modifier = Modifier.width(16.dp))
-
-                            Column(modifier = Modifier.weight(1f)) {
-                                Text(
-                                    text = "Grit",
-                                    style =
-                                        MaterialTheme.typography.headlineMedium.copy(
-                                            fontFamily = flexFontRounded()
-                                        ),
-                                )
-                                Text(
-                                    text = versionName,
-                                    style =
-                                        MaterialTheme.typography.titleMedium.copy(
-                                            color = MaterialTheme.colorScheme.primary
-                                        ),
-                                )
-                            }
-
-                            Row {
-                                FilledTonalIconButton(onClick = {}) {
-                                    Icon(
-                                        imageVector = vectorResource(Res.drawable.discord),
-                                        contentDescription = null,
-                                        modifier = Modifier.size(24.dp),
-                                    )
-                                }
-                                FilledTonalIconButton(onClick = {}) {
-                                    Icon(
-                                        imageVector = vectorResource(Res.drawable.github),
-                                        contentDescription = null,
-                                        modifier = Modifier.size(24.dp),
-                                    )
-                                }
-                            }
-                        }
-                    }
-
-                    // dev card
-                    Card(shape = endItemShape()) {
-                        Column(modifier = Modifier.fillMaxWidth().padding(16.dp)) {
-                            Row(verticalAlignment = Alignment.CenterVertically) {
-                                Box(
-                                    modifier =
-                                        Modifier.size(64.dp)
-                                            .background(
-                                                color = MaterialTheme.colorScheme.tertiaryContainer,
-                                                shape = MaterialShapes.Square.toShape(),
-                                            ),
-                                    contentAlignment = Alignment.Center,
-                                ) {
-                                    Icon(
-                                        painter = painterResource(Res.drawable.dev_icon),
-                                        contentDescription = null,
-                                        tint = MaterialTheme.colorScheme.onTertiaryContainer,
-                                        modifier = Modifier.size(48.dp),
-                                    )
-                                }
-
-                                Spacer(modifier = Modifier.width(16.dp))
-
-                                Column {
-                                    Text(
-                                        text = "Shubham Gorai",
-                                        style =
-                                            MaterialTheme.typography.headlineSmall.copy(
-                                                fontFamily = flexFontRounded()
-                                            ),
-                                    )
-                                    Text(
-                                        text = "Building stuff",
-                                        style =
-                                            MaterialTheme.typography.titleSmall.copy(
-                                                color = MaterialTheme.colorScheme.tertiary
-                                            ),
-                                    )
-                                }
-                            }
-
-                            FlowRow(
-                                modifier = Modifier.padding(start = 80.dp, top = 4.dp),
-                                horizontalArrangement = Arrangement.spacedBy(8.dp),
-                            ) {
-                                listOf(
-                                        "https://github.com/shub39" to Res.drawable.github,
-                                        "https://shub39.github.io/" to Res.drawable.language,
-                                        "mailto:cptnshubham39+rush_app@gmail.com" to
-                                            Res.drawable.email,
-                                    )
-                                    .forEach { pair ->
-                                        FilledTonalIconButton(
-                                            onClick = {},
-                                            modifier =
-                                                Modifier.size(
-                                                    IconButtonDefaults.smallContainerSize(
-                                                        widthOption =
-                                                            IconButtonDefaults.IconButtonWidthOption
-                                                                .Wide
-                                                    )
-                                                ),
-                                        ) {
-                                            Icon(
-                                                imageVector = vectorResource(pair.second),
-                                                contentDescription = null,
-                                                modifier =
-                                                    Modifier.size(IconButtonDefaults.smallIconSize),
-                                            )
-                                        }
-                                    }
-                            }
-                        }
-                    }
-                }
-            }
-
-            item {
-                Column(verticalArrangement = Arrangement.spacedBy(2.dp)) {
-                    ListItem(
-                        colors = listItemColors(),
-                        leadingContent = {
-                            Icon(
-                                imageVector = vectorResource(Res.drawable.buymeacoffee),
-                                contentDescription = null,
-                                modifier = Modifier.size(24.dp),
-                            )
-                        },
-                        trailingContent = {
-                            Icon(
-                                imageVector = vectorResource(Res.drawable.open_link),
-                                contentDescription = null,
-                            )
-                        },
-                        headlineContent = { Text(text = stringResource(Res.string.bmc)) },
-                        supportingContent = { Text(text = stringResource(Res.string.bmc_desc)) },
-                        modifier = Modifier.clip(leadingItemShape()).clickable {},
-                    )
-                    ListItem(
-                        colors = listItemColors(),
-                        leadingContent = {
-                            Icon(
-                                imageVector = vectorResource(Res.drawable.translate),
-                                contentDescription = null,
-                                modifier = Modifier.size(24.dp),
-                            )
-                        },
-                        trailingContent = {
-                            Icon(
-                                imageVector = vectorResource(Res.drawable.open_link),
-                                contentDescription = null,
-                            )
-                        },
-                        headlineContent = { Text(text = stringResource(Res.string.translate)) },
-                        supportingContent = {
-                            Text(text = stringResource(Res.string.translate_desc))
-                        },
-                        modifier = Modifier.clip(endItemShape()).clickable {},
-                    )
-                }
-            }
-
+            aboutApp(versionName = versionName, uriHandler = uriHandler)
+            engagementLinks(uriHandler)
             item {
                 ListItem(
                     colors = listItemColors(),
@@ -292,8 +125,205 @@ fun About(versionName: String, onNavigateBack: () -> Unit, modifier: Modifier = 
                     },
                     headlineContent = { Text(text = "License") },
                     supportingContent = { Text(text = "GPL-3.0 License") },
-                    modifier = Modifier.clip(detachedItemShape()).clickable {},
+                    modifier =
+                        Modifier.clip(detachedItemShape()).clickable {
+                            showLicenseBottomSheet = true
+                        },
                 )
+            }
+        }
+    }
+}
+
+private fun LazyListScope.engagementLinks(uriHandler: UriHandler) {
+    item {
+        Column(verticalArrangement = Arrangement.spacedBy(2.dp)) {
+            ListItem(
+                colors = listItemColors(),
+                leadingContent = {
+                    Icon(
+                        imageVector = vectorResource(Res.drawable.buymeacoffee),
+                        contentDescription = null,
+                        modifier = Modifier.size(24.dp),
+                    )
+                },
+                trailingContent = {
+                    Icon(
+                        imageVector = vectorResource(Res.drawable.open_link),
+                        contentDescription = null,
+                    )
+                },
+                headlineContent = { Text(text = stringResource(Res.string.bmc)) },
+                supportingContent = { Text(text = stringResource(Res.string.bmc_desc)) },
+                modifier =
+                    Modifier.clip(leadingItemShape()).clickable {
+                        uriHandler.openUri("https://buymeacoffee.com/shub39")
+                    },
+            )
+            ListItem(
+                colors = listItemColors(),
+                leadingContent = {
+                    Icon(
+                        imageVector = vectorResource(Res.drawable.translate),
+                        contentDescription = null,
+                        modifier = Modifier.size(24.dp),
+                    )
+                },
+                trailingContent = {
+                    Icon(
+                        imageVector = vectorResource(Res.drawable.open_link),
+                        contentDescription = null,
+                    )
+                },
+                headlineContent = { Text(text = stringResource(Res.string.translate)) },
+                supportingContent = { Text(text = stringResource(Res.string.translate_desc)) },
+                modifier =
+                    Modifier.clip(endItemShape()).clickable {
+                        uriHandler.openUri("https://hosted.weblate.org/engage/grit/")
+                    },
+            )
+        }
+    }
+}
+
+private fun LazyListScope.aboutApp(versionName: String, uriHandler: UriHandler) {
+    item {
+        Column(verticalArrangement = Arrangement.spacedBy(2.dp)) {
+            // App card
+            Card(shape = leadingItemShape()) {
+                Row(
+                    modifier = Modifier.padding(16.dp).fillMaxWidth(),
+                    verticalAlignment = Alignment.CenterVertically,
+                ) {
+                    Box(
+                        modifier =
+                            Modifier.size(64.dp)
+                                .background(
+                                    color = MaterialTheme.colorScheme.primaryContainer,
+                                    shape = MaterialShapes.Cookie12Sided.toShape(),
+                                ),
+                        contentAlignment = Alignment.Center,
+                    ) {
+                        Icon(
+                            imageVector = vectorResource(Res.drawable.grit_icon),
+                            contentDescription = null,
+                            tint = MaterialTheme.colorScheme.onPrimaryContainer,
+                            modifier = Modifier.size(32.dp),
+                        )
+                    }
+
+                    Spacer(modifier = Modifier.width(16.dp))
+
+                    Column(modifier = Modifier.weight(1f)) {
+                        Text(
+                            text = "Grit",
+                            style =
+                                MaterialTheme.typography.headlineMedium.copy(
+                                    fontFamily = flexFontRounded()
+                                ),
+                        )
+                        Text(
+                            text = versionName,
+                            style =
+                                MaterialTheme.typography.titleMedium.copy(
+                                    color = MaterialTheme.colorScheme.primary
+                                ),
+                        )
+                    }
+
+                    Row {
+                        FilledTonalIconButton(
+                            onClick = { uriHandler.openUri("https://discord.gg/nxA2hgtEKf") }
+                        ) {
+                            Icon(
+                                imageVector = vectorResource(Res.drawable.discord),
+                                contentDescription = null,
+                                modifier = Modifier.size(24.dp),
+                            )
+                        }
+                        FilledTonalIconButton(
+                            onClick = { uriHandler.openUri("https://github.com/shub39/Grit") }
+                        ) {
+                            Icon(
+                                imageVector = vectorResource(Res.drawable.github),
+                                contentDescription = null,
+                                modifier = Modifier.size(24.dp),
+                            )
+                        }
+                    }
+                }
+            }
+
+            // dev card
+            Card(shape = endItemShape()) {
+                Column(modifier = Modifier.fillMaxWidth().padding(16.dp)) {
+                    Row(verticalAlignment = Alignment.CenterVertically) {
+                        Box(
+                            modifier =
+                                Modifier.size(64.dp)
+                                    .background(
+                                        color = MaterialTheme.colorScheme.tertiaryContainer,
+                                        shape = MaterialShapes.Square.toShape(),
+                                    ),
+                            contentAlignment = Alignment.Center,
+                        ) {
+                            Icon(
+                                painter = painterResource(Res.drawable.dev_icon),
+                                contentDescription = null,
+                                tint = MaterialTheme.colorScheme.onTertiaryContainer,
+                                modifier = Modifier.size(48.dp),
+                            )
+                        }
+
+                        Spacer(modifier = Modifier.width(16.dp))
+
+                        Column {
+                            Text(
+                                text = "Shubham Gorai",
+                                style =
+                                    MaterialTheme.typography.headlineSmall.copy(
+                                        fontFamily = flexFontRounded()
+                                    ),
+                            )
+                            Text(
+                                text = "Building privacy-first software",
+                                style =
+                                    MaterialTheme.typography.titleSmall.copy(
+                                        color = MaterialTheme.colorScheme.tertiary
+                                    ),
+                            )
+                        }
+                    }
+
+                    FlowRow(
+                        modifier = Modifier.padding(start = 80.dp, top = 4.dp),
+                        horizontalArrangement = Arrangement.spacedBy(8.dp),
+                    ) {
+                        listOf(
+                                "https://github.com/shub39" to Res.drawable.github,
+                                "https://shub39.github.io/" to Res.drawable.language,
+                                "mailto:cptnshubham39+rush_app@gmail.com" to Res.drawable.email,
+                            )
+                            .forEach { pair ->
+                                FilledTonalIconButton(
+                                    onClick = { uriHandler.openUri(pair.first) },
+                                    modifier =
+                                        Modifier.size(
+                                            IconButtonDefaults.smallContainerSize(
+                                                widthOption =
+                                                    IconButtonDefaults.IconButtonWidthOption.Wide
+                                            )
+                                        ),
+                                ) {
+                                    Icon(
+                                        imageVector = vectorResource(pair.second),
+                                        contentDescription = null,
+                                        modifier = Modifier.size(IconButtonDefaults.smallIconSize),
+                                    )
+                                }
+                            }
+                    }
+                }
             }
         }
     }

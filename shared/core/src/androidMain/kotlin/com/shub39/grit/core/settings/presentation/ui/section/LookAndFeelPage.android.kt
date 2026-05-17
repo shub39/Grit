@@ -25,6 +25,7 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.FlowRow
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.CircleShape
@@ -106,7 +107,8 @@ actual fun PaletteStylePicker(
         FlowRow(
             horizontalArrangement = Arrangement.spacedBy(8.dp),
             modifier =
-                Modifier.background(listItemColors().containerColor)
+                Modifier.fillMaxWidth()
+                    .background(listItemColors().containerColor)
                     .padding(start = 52.dp, end = 16.dp, bottom = 16.dp),
             verticalArrangement = Arrangement.spacedBy(8.dp),
         ) {
