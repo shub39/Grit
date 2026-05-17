@@ -20,18 +20,18 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.toArgb
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.shub39.grit.core.data.ChangelogManager
-import com.shub39.grit.core.data.Utils
+import com.shub39.grit.core.domain.BiometricUtils
+import com.shub39.grit.core.domain.ChangelogManager
 import com.shub39.grit.core.domain.SettingsDatastore
 import com.shub39.grit.core.domain.ThemeDatastore
-import com.shub39.grit.core.domain.backup.ExportRepo
-import com.shub39.grit.core.domain.backup.ExportState
-import com.shub39.grit.core.domain.backup.RestoreRepo
-import com.shub39.grit.core.domain.backup.RestoreResult
-import com.shub39.grit.core.domain.backup.RestoreState
-import com.shub39.grit.core.presentation.settings.BackupState
-import com.shub39.grit.core.presentation.settings.SettingsAction
-import com.shub39.grit.core.presentation.settings.SettingsState
+import com.shub39.grit.core.settings.domain.backup.ExportRepo
+import com.shub39.grit.core.settings.domain.backup.ExportState
+import com.shub39.grit.core.settings.domain.backup.RestoreRepo
+import com.shub39.grit.core.settings.domain.backup.RestoreResult
+import com.shub39.grit.core.settings.domain.backup.RestoreState
+import com.shub39.grit.core.settings.presentation.BackupState
+import com.shub39.grit.core.settings.presentation.SettingsAction
+import com.shub39.grit.core.settings.presentation.SettingsState
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
@@ -52,6 +52,7 @@ class SettingsViewModel(
     private val themeDatastore: ThemeDatastore,
     private val settingsDatastore: SettingsDatastore,
     private val changelogManager: ChangelogManager,
+    private val biometricUtils: BiometricUtils,
 ) : ViewModel() {
     private var observeJob: Job? = null
 
@@ -63,6 +64,7 @@ class SettingsViewModel(
             .onStart {
                 observeJob()
                 getChangeLogs()
+                getBiometricStatus()
             }
             .stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000), SettingsState())
 
@@ -108,14 +110,14 @@ class SettingsViewModel(
                     }
                 }
 
-                is SettingsAction.OnRestore -> {
+                SettingsAction.OnRestore -> {
                     _state.update {
                         it.copy(
                             backupState = it.backupState.copy(restoreState = RestoreState.RESTORING)
                         )
                     }
 
-                    val result = restoreRepo.restoreData(action.uri)
+                    val result = restoreRepo.restoreData()
 
                     _state.update {
                         it.copy(
@@ -139,22 +141,24 @@ class SettingsViewModel(
                 is SettingsAction.ChangeBiometricLock ->
                     settingsDatastore.setBiometricPref(action.pref)
 
-                is SettingsAction.OnCheckBiometric -> {
-                    _state.update {
-                        it.copy(
-                            isBiometricLockAvailable = Utils.authenticationAvailable(action.context)
-                        )
-                    }
-                }
-
                 is SettingsAction.ChangeReorderTasks ->
                     settingsDatastore.setTaskReorderPref(action.pref)
             }
         }
 
-    private fun getChangeLogs() {
-        viewModelScope.launch {
-            _state.update { it.copy(changelog = changelogManager.changelogs.first()) }
+    private fun getBiometricStatus() {
+        _state.update {
+            it.copy(isBiometricLockAvailable = biometricUtils.authenticationAvailable())
+        }
+    }
+
+    private suspend fun getChangeLogs() {
+        val currentChangelog = changelogManager.changelogs.first()
+        _state.update {
+            it.copy(
+                changelog = currentChangelog,
+                currentVersion = currentChangelog.firstOrNull()?.version,
+            )
         }
     }
 

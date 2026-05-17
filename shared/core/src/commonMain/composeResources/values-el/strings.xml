@@ -23,7 +23,6 @@
     <string name="add">Προσθήκη</string>
     <string name="look_and_feel">Εξατομίκευση</string>
     <string name="palette_style">Στύλ παλέτας</string>
-    <string name="choose_file">Επιλογή αρχείου</string>
     <string name="items_completed">ολοκληρώθηκε</string>
     <string name="too_long">Πάρα πολύ</string>
     <string name="use_amoled">Παλέτα Amoled</string>
@@ -51,7 +50,6 @@
     <string name="biometric_lock">Κλείδωμα με βιομετρικά στοιχεία</string>
     <string name="biometric_lock_desc">Χρήση βιομετρικών στοιχείων για το ξεκλείδωμα της εφαρμογής</string>
     <string name="bmc">Αγοράστε μου έναν καφέ</string>
-    <string name="rate_on_play">Αξιολογήστε στο Google Play</string>
     <string name="weekly_progress">Εβδομαδιαία Εξέλιξη</string>
     <string name="overall_analytics">Ενιαία Κατάσταση</string>
     <string name="unlock_more_plus">Ξεκλιδώστε περισσότερα με το Plus</string>

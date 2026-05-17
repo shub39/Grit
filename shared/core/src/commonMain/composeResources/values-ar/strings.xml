@@ -38,7 +38,6 @@
     <string name="export_desc">صدِّرت كافة البيانات الى Downloads/Grit</string>
     <string name="restore">استعادة</string>
     <string name="restore_desc">استعِد المهام والعادات من الملف المختار</string>
-    <string name="choose_file">اختر ملف</string>
     <string name="material_theme_desc">استخدام الوان بناء على خلفية الشاشة</string>
     <string name="show_habits">إظهار العادات أولاً</string>
     <string name="show_habits_desc">أظهر صفحة العادات أولاً عند فتح التطبيق</string>
@@ -63,7 +62,6 @@
     <string name="biometric_lock">قفل البصمة</string>
     <string name="biometric_lock_desc">استخدام البصمة لفتح التطبيق</string>
     <string name="bmc">اشترِ لي قهوة</string>
-    <string name="rate_on_play">قيمنا على Google Play</string>
     <string name="weekly_progress">التقدم الاسبوعي</string>
     <string name="overall_analytics">التحليلات العامة</string>
     <string name="unlock_more_plus">افتح مزايا اكثر مع Plus</string>
@@ -83,4 +81,6 @@
     <string name="whats_changed">التغييرات</string>
     <string name="add_reminder_desc">تلقي تنبيه تذكيري في أيام محدّدة</string>
     <string name="select_days">حدّد الأيام</string>
+    <string name="language">اللغة</string>
+    <string name="system_default">إعدادات النظام الافتراضية</string>
 </resources>

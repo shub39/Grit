@@ -38,7 +38,6 @@
     <string name="export_desc">Minden adat a Letöltések/Grit mappába kerül</string>
     <string name="restore">Adatok visszaállítása</string>
     <string name="restore_desc">Tennivalók és szokások visszaállítása egy fájlból</string>
-    <string name="choose_file">Fájl kiválasztása</string>
     <string name="material_theme_desc">Háttérkép színeinek használata</string>
     <string name="show_habits">Szokások megjelenítése először</string>
     <string name="show_habits_desc">Szokások megjelenítése először az indításkor</string>
@@ -63,7 +62,6 @@
     <string name="biometric_lock">Biometrikus zár</string>
     <string name="biometric_lock_desc">Biometrikus hitelesítés használata az alkalmazás indításakor</string>
     <string name="bmc">Vegyél nekem egy kávét</string>
-    <string name="rate_on_play">Értékelés a Google Playben</string>
     <string name="weekly_progress">Heti haladás</string>
     <string name="overall_analytics">Általános statiszkika</string>
     <string name="unlock_more_plus">Több funkció a plusz csomaggal</string>

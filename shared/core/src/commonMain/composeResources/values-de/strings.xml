@@ -31,7 +31,6 @@
     <string name="export_desc">Alle Daten nach Downloads/Grit exportiert</string>
     <string name="restore">Wiederherstellen</string>
     <string name="restore_desc">Stelle Aufgaben und Gewohnheiten aus ausgewählter Datei wieder her</string>
-    <string name="choose_file">Wähle Datei</string>
     <string name="material_theme_desc">Nutze Farben basierend auf Hintergrund</string>
     <string name="show_habits">Zeige Gewohnheiten zuerst</string>
     <string name="use_24Hr">Nutze 24 Std Uhr</string>
@@ -63,7 +62,6 @@
     <string name="biometric_lock">Biometrische Sperre</string>
     <string name="biometric_lock_desc">Benutze die biometrische Authentifizierung, um die App zu entsperren</string>
     <string name="bmc">Spendiere mir einen Kaffee</string>
-    <string name="rate_on_play">Auf Google Play bewerten</string>
     <string name="weekly_progress">Wöchentlicher Fortschritt</string>
     <string name="overall_analytics">Generelle Analytik</string>
     <string name="unlock_more_plus">Schalte mehr mit plus frei</string>

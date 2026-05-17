@@ -37,7 +37,6 @@
     <string name="export_desc">Dati completamente esportati in Download/Grit</string>
     <string name="restore">Reimposta</string>
     <string name="restore_desc">Reimposta task e abitudini da un file selezionato</string>
-    <string name="choose_file">Scegli un file</string>
     <string name="material_theme_desc">Usa i colori dello sfondo</string>
     <string name="show_habits">Mostra prima le abitudini</string>
     <string name="use_24Hr">Usa formato 24 ore</string>
@@ -61,7 +60,6 @@
     <string name="biometric_lock">Blocco Biometrico</string>
     <string name="biometric_lock_desc">Una autenticazione biometrica per sbloccare l\u0027app</string>
     <string name="bmc">Comprami un caffè</string>
-    <string name="rate_on_play">Recensisci su Google Play</string>
     <string name="weekly_progress">Progresso Settimanale</string>
     <string name="overall_analytics">Statistiche Generali</string>
     <string name="unlock_more_plus">Sblocca di più con Plus</string>

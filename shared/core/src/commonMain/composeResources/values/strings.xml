@@ -35,10 +35,9 @@
     <string name="backup">Backup</string>
     <string name="backup_desc">Export or Restore your tasks and habits</string>
     <string name="export">Export data</string>
-    <string name="export_desc">All data exported to Downloads/Grit</string>
+    <string name="export_desc">Choose directory to export data</string>
     <string name="restore">Restore</string>
     <string name="restore_desc">Restore tasks and habits from selected file</string>
-    <string name="choose_file">Choose file</string>
     <string name="material_theme_desc">Use colors based on wallpaper</string>
     <string name="show_habits">Show habits first</string>
     <string name="show_habits_desc">Show habits page first at app startup</string>
@@ -63,7 +62,7 @@
     <string name="biometric_lock">Biometric Lock</string>
     <string name="biometric_lock_desc">Use biometric authentication to unlock app</string>
     <string name="bmc">Buy me a coffee</string>
-    <string name="rate_on_play">Rate on Google Play</string>
+    <string name="bmc_desc">Support me by making a small donation</string>
     <string name="weekly_progress">Weekly Progress</string>
     <string name="overall_analytics">Overall Analytics</string>
     <string name="unlock_more_plus">Unlock more with plus</string>
@@ -80,9 +79,13 @@
     <string name="reorder_tasks_desc">Reorder tasks when marked as completed</string>
     <string name="weeks">Weeks</string>
     <string name="translate">Translate</string>
+    <string name="translate_desc">Translate Grit in your language</string>
     <string name="changelog">Changelog</string>
     <string name="whats_changed">What\u0027s Changed</string>
     <string name="select_days">Select Days</string>
     <string name="system_default">System Default</string>
     <string name="language">Language</string>
+    <string name="about">About</string>
+    <string name="haptic_feedback">Haptic Feedback</string>
+    <string name="haptic_feedback_desc">Enable app wide haptic feedback</string>
 </resources>

@@ -38,7 +38,6 @@
     <string name="export_desc">データをファイルに書き出し</string>
     <string name="restore">復元</string>
     <string name="restore_desc">バックアップからデータを復元</string>
-    <string name="choose_file">ファイルを選択</string>
     <string name="material_theme_desc">Material You デザインを適用します</string>
     <string name="show_habits">習慣を表示</string>
     <string name="show_habits_desc">ホーム画面に習慣を表示</string>
@@ -63,7 +62,6 @@
     <string name="biometric_lock">生体認証ロック</string>
     <string name="biometric_lock_desc">アプリ起動時に生体認証を要求</string>
     <string name="bmc">Buy Me a Coffee で支援</string>
-    <string name="rate_on_play">Google Play で評価</string>
     <string name="weekly_progress">週間の進捗</string>
     <string name="overall_analytics">全体の統計</string>
     <string name="unlock_more_plus">さらに機能を解放</string>

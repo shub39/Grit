@@ -38,7 +38,6 @@
     <string name="export_desc">Semua data diekspor ke dalam folder Downloads/Grit</string>
     <string name="restore">Balikin data</string>
     <string name="restore_desc">Pulihkan tugas dan kebiasaan dari file yang dipilih</string>
-    <string name="choose_file">Pilih file</string>
     <string name="material_theme_desc">Ikuti warna walpaper</string>
     <string name="show_habits">Tampilkan kebiasaan terlebih dulu</string>
     <string name="show_habits_desc">Buka halaman kebiasaan saat aplikasi dimulai</string>
@@ -63,7 +62,6 @@
     <string name="biometric_lock">Kunci Biometrick</string>
     <string name="biometric_lock_desc">Pakai otentikasi biometrik buat buka aplikasi</string>
     <string name="bmc">Traktir aku kopi</string>
-    <string name="rate_on_play">Mampir ke Play Store bentar yuk, kasih bintang 5</string>
     <string name="weekly_progress">Progres mingguan</string>
     <string name="overall_analytics">Ringkasan progress</string>
     <string name="unlock_more_plus">Dapatkan fitur lebih dengan pkus</string>

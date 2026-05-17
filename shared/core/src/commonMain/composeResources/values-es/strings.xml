@@ -37,7 +37,6 @@
     <string name="export_desc">Todos los datos exportados a Descargas/Grit</string>
     <string name="restore">Restaurar</string>
     <string name="restore_desc">Restaura tareas y hábitos desde el archivo seleccionado</string>
-    <string name="choose_file">Elegir archivo</string>
     <string name="material_theme_desc">Usa colores basados en el fondo de pantalla</string>
     <string name="show_habits">Mostrar hábitos primero</string>
     <string name="show_habits_desc">Mostrar la página de hábitos primero al iniciar la aplicación</string>
@@ -62,7 +61,6 @@
     <string name="biometric_lock">Bloqueo biométrico</string>
     <string name="biometric_lock_desc">Usar autenticación biométrica para desbloquear la aplicación</string>
     <string name="bmc">Invítame a un café</string>
-    <string name="rate_on_play">Calificar en Google Play</string>
     <string name="weekly_progress">Progreso semanal</string>
     <string name="overall_analytics">Estadísticas generales</string>
     <string name="unlock_more_plus">Desbloquea más con Plus</string>

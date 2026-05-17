@@ -32,7 +32,6 @@
     <string name="export">ייצוא נתונים</string>
     <string name="restore">שחזור</string>
     <string name="restore_desc">שחזור המשימות וההרגלים מהקובץ הנבחר</string>
-    <string name="choose_file">בחירת קובץ</string>
     <string name="material_theme_desc">שימוש בצבעים על סמך תמונת הרקע</string>
     <string name="show_habits">קודם להציג הרגלים</string>
     <string name="use_24Hr">שימוש בשעון 24 שעות</string>
@@ -51,7 +50,6 @@
     <string name="font">גופן</string>
     <string name="biometric_lock">נעילה ביומטרית</string>
     <string name="biometric_lock_desc">שימוש בהזדהות ביומטרית לשחרור נעילת היישום</string>
-    <string name="rate_on_play">דירוג ב־Google Play</string>
     <string name="weekly_progress">התקדמות שבועית</string>
     <string name="overall_analytics">ניתוח נתונים כולל</string>
     <string name="unlock_more_plus">מקבלים תכונות חדשות עם מינוי Plus</string>

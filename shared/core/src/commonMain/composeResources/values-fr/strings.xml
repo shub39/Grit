@@ -38,7 +38,6 @@
     <string name="export_desc">Toutes les données ont été exportées vers Téléchargements/Grit</string>
     <string name="restore">Restaurer</string>
     <string name="restore_desc">Restaurer les tâches et routines depuis le fichier sélectionné</string>
-    <string name="choose_file">Choisir le fichier</string>
     <string name="material_theme_desc">Utiliser les couleurs depuis votre fond d\u0027écran</string>
     <string name="show_habits">Montrer les routines d\u0027abord</string>
     <string name="show_habits_desc">Montrer les routines d\u0027abord au démarrage de l\u0027appli</string>
@@ -63,7 +62,6 @@
     <string name="biometric_lock">Verrouillage biométrique</string>
     <string name="biometric_lock_desc">Utiliser l\u0027authentification biométrique pour déverrouiller l\u0027appli</string>
     <string name="bmc">Payer moi un café</string>
-    <string name="rate_on_play">Laisser un avis sur Google Play</string>
     <string name="weekly_progress">Progression hebdomadaire</string>
     <string name="overall_analytics">Analyses globales</string>
     <string name="unlock_more_plus">Déverrouiller plus</string>

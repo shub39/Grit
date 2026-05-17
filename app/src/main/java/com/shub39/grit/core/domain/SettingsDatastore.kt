@@ -16,6 +16,7 @@
  */
 package com.shub39.grit.core.domain
 
+import com.shub39.grit.core.settings.domain.Sections
 import kotlinx.coroutines.flow.Flow
 import kotlinx.datetime.DayOfWeek
 

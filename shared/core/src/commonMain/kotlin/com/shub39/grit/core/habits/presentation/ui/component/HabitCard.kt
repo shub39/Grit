@@ -58,8 +58,8 @@ import com.kizitonwose.calendar.core.minusDays
 import com.kizitonwose.calendar.core.plusDays
 import com.shub39.grit.core.habits.domain.HabitWithAnalytics
 import com.shub39.grit.core.habits.presentation.HabitsAction
-import com.shub39.grit.core.utils.now
-import com.shub39.grit.core.utils.toFormattedString
+import com.shub39.grit.core.now
+import com.shub39.grit.core.toFormattedString
 import grit.shared.core.generated.resources.Res
 import grit.shared.core.generated.resources.analytics
 import grit.shared.core.generated.resources.check_circle

@@ -53,8 +53,6 @@ kotlin {
             implementation(libs.jetbrains.navigation3.ui)
             implementation(libs.kotlinx.datetime)
             implementation(libs.compose.windowsizeclass)
-
-            implementation(libs.materialkolor)
         }
 
         jvmMain.dependencies {
@@ -65,5 +63,3 @@ kotlin {
 }
 
 compose.desktop { application { mainClass = "MainKt" } }
-
-compose.resources { generateResClass = never }

@@ -25,8 +25,8 @@ plugins {
 }
 
 val appName = "Grit"
-val appVersionCode = 5923
-val appVersionName = "5.9.23"
+val appVersionCode = 5924
+val appVersionName = "5.9.24"
 
 val gitHash = execute("git", "rev-parse", "HEAD").take(7)
 
@@ -135,6 +135,9 @@ dependencies {
     "playImplementation"(libs.purchases)
     "playImplementation"(libs.purchases.ui)
 
+    implementation(libs.filekit.core)
+    implementation(libs.filekit.dialogs)
+
     implementation(libs.compose.material3)
     implementation(libs.compose.runtime)
     implementation(libs.compose.foundation)
@@ -148,12 +151,12 @@ dependencies {
     implementation(libs.androidx.core.splashscreen)
     implementation(libs.androidx.room.runtime)
     ksp(libs.androidx.room.compiler)
+
     implementation(libs.androidx.glance.appwidget)
     implementation(libs.androidx.glance.material3)
     implementation(libs.androidx.glance.appwidget.preview)
     implementation(libs.androidx.glance.preview)
-    implementation(libs.materialkolor)
-    implementation(libs.colorpicker.compose)
+
     implementation(libs.androidx.datastore.preferences.core)
     implementation(libs.androidx.biometric)
     implementation(libs.kotlinx.datetime)

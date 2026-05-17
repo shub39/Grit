@@ -16,16 +16,16 @@
  */
 package com.shub39.grit.tasks.data.repository
 
-import com.shub39.grit.core.data.GritNotificationManager
-import com.shub39.grit.core.data.toCategory
-import com.shub39.grit.core.data.toCategoryEntity
-import com.shub39.grit.core.data.toTask
-import com.shub39.grit.core.data.toTaskEntity
+import com.shub39.grit.core.data.notification.GritNotificationManager
 import com.shub39.grit.core.tasks.domain.Category
 import com.shub39.grit.core.tasks.domain.Task
 import com.shub39.grit.core.tasks.domain.TaskRepo
 import com.shub39.grit.tasks.data.database.CategoryDao
 import com.shub39.grit.tasks.data.database.TasksDao
+import com.shub39.grit.tasks.data.toCategory
+import com.shub39.grit.tasks.data.toCategoryEntity
+import com.shub39.grit.tasks.data.toTask
+import com.shub39.grit.tasks.data.toTaskEntity
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.combine

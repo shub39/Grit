@@ -16,9 +16,9 @@
  */
 package com.shub39.grit.core.domain
 
-import com.materialkolor.PaletteStyle
 import com.shub39.grit.core.theme.AppTheme
 import com.shub39.grit.core.theme.Fonts
+import com.shub39.grit.core.theme.PaletteStyle
 import kotlinx.coroutines.flow.Flow
 
 interface ThemeDatastore {

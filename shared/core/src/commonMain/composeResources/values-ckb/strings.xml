@@ -38,7 +38,6 @@
     <string name="export_desc">هەموو زانیارییەکان هەناردە کران بۆ Downloads/Grit</string>
     <string name="restore">گەڕاندنەوە</string>
     <string name="restore_desc">گەڕاندنەوەی کار و خووەکان لەو فایلەی دیاریت کردووە</string>
-    <string name="choose_file">فایلێک هەڵبژێرە</string>
     <string name="material_theme_desc">بەکارهێنانی ڕەنگەکان لەسەر بنەمای وێنەی پاشبنەما</string>
     <string name="show_habits">سەرەتا خووەکان پیشان بدە</string>
     <string name="show_habits_desc">لەکاتی کردنەوەی ئەپەکە، یەکەمجار لاپەڕەی خووەکان پیشان بدە</string>

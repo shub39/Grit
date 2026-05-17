@@ -32,12 +32,15 @@ import androidx.core.content.ContextCompat
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import androidx.fragment.app.FragmentActivity
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import com.shub39.grit.core.data.GritNotificationManager.Companion.createNotificationChannel
-import com.shub39.grit.core.data.Utils
-import com.shub39.grit.core.presentation.component.InitialLoading
+import com.shub39.grit.core.LocalWindowSizeClass
+import com.shub39.grit.core.components.InitialLoading
+import com.shub39.grit.core.data.notification.GritNotificationManager.Companion.createNotificationChannel
+import com.shub39.grit.core.domain.BiometricUtils
 import com.shub39.grit.core.theme.GritTheme
-import com.shub39.grit.core.utils.LocalWindowSizeClass
 import com.shub39.grit.viewmodels.MainViewModel
+import io.github.vinceglb.filekit.FileKit
+import io.github.vinceglb.filekit.dialogs.init
+import org.koin.android.ext.android.inject
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class MainActivity : FragmentActivity() {
@@ -47,6 +50,7 @@ class MainActivity : FragmentActivity() {
         super.onCreate(savedInstanceState)
         installSplashScreen()
         enableEdgeToEdge()
+        FileKit.init(this)
 
         createNotificationChannel(this)
 
@@ -115,10 +119,11 @@ class MainActivity : FragmentActivity() {
                 },
             )
 
+        val biometricUtils by inject<BiometricUtils>()
         val promptInfo =
             BiometricPrompt.PromptInfo.Builder()
                 .setTitle("Biometric Lock")
-                .setAllowedAuthenticators(Utils.getAuthenticators())
+                .setAllowedAuthenticators(biometricUtils.getAuthenticators())
                 .build()
 
         biometricPrompt.authenticate(promptInfo)

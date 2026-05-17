@@ -38,7 +38,6 @@
     <string name="export_desc">Мәғлүмәт Downloads/Grit һаҡланған</string>
     <string name="restore">Тергеҙеү</string>
     <string name="restore_desc">Мәсьәләләрҙе һәм ғәҙәттәрҙе һайланған файлдан тергеҙеү</string>
-    <string name="choose_file">Файлды һайлау</string>
     <string name="material_theme_desc">Обойға ярашлы төҫтәр ҡулланыу</string>
     <string name="show_habits">Иң беренсе ғәҙәттәрҙе күрһәтергә</string>
     <string name="show_habits_desc">Ҡушымтаның эш башында ғәҙәттәр битен күрһәтергә</string>
@@ -63,7 +62,6 @@
     <string name="biometric_lock">Биометрик бикләү</string>
     <string name="biometric_lock_desc">Ҡушымтаны асыу өсөн биометрик аутентификация ҡулланыу</string>
     <string name="bmc">Мине кофе менән һыйлағыҙ</string>
-    <string name="rate_on_play">Google Play-ҙа баһалау</string>
     <string name="weekly_progress">Аҙналыҡ үҫеш</string>
     <string name="overall_analytics">Тулы аналитика</string>
     <string name="unlock_more_plus">Plus менән күберәк мөмкинлектәр асығыҙ</string>

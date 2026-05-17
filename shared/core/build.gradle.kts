@@ -48,7 +48,9 @@ kotlin {
     android {
         namespace = "com.shub39.grit.core"
         compileSdk = libs.versions.compileSdk.get().toInt()
-        androidResources.enable = true
+        minSdk = libs.versions.minSdk.get().toInt()
+
+        androidResources { enable = true }
     }
 
     wasmJs {
@@ -71,6 +73,7 @@ kotlin {
             implementation(libs.reorderable)
             implementation(libs.calendar)
             implementation(libs.materialkolor)
+            implementation(libs.colorpicker.compose)
         }
     }
 }
@@ -79,8 +82,6 @@ dependencies {
     androidRuntimeClasspath(libs.compose.ui.tooling)
     androidRuntimeClasspath(libs.compose.ui.tooling.preview)
 }
-
-compose.resources { publicResClass = true }
 
 androidComponents {
     onVariants { variant ->

@@ -22,7 +22,6 @@
     <string name="export_desc">Tất cả dữ liệu đã được xuất vào thư mục Downloads/Grit</string>
     <string name="restore">Khôi phục</string>
     <string name="restore_desc">Khôi phục các tác vụ và thói quen từ dữ liệu trong tệp tin đã chọn</string>
-    <string name="choose_file">Chọn tệp tin</string>
     <string name="material_theme_desc">Sử dụng các màu sắc dựa trên hình nền</string>
     <string name="show_habits">Hiển thị mục thói quen đầu tiên</string>
     <string name="show_habits_desc">Hiển thị mục thói quen đầu tiên khi ứng dụng khởi động</string>
@@ -45,7 +44,6 @@
     <string name="font">Phông chữ</string>
     <string name="biometric_lock">Khóa bằng vân tay</string>
     <string name="bmc">Mua một cốc cà phê giúp tôi</string>
-    <string name="rate_on_play">Đánh giá trong Cửa Hàng Play</string>
     <string name="tasks">Tác vụ</string>
     <string name="material_theme">Giao diện Material You</string>
     <string name="done">Xong</string>
@@ -83,4 +81,6 @@
     <string name="changelog">Nhật kí sửa đổi</string>
     <string name="whats_changed">Điểm mới</string>
     <string name="select_days">Chọn các ngày</string>
+    <string name="system_default">Mặc định của hệ thống</string>
+    <string name="language">Ngôn ngữ</string>
 </resources>

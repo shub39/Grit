@@ -1,6 +1,6 @@
 # Contributing to Grit
 
-Thank you for your interest in contributing to Grit! We appreciate your support.
+Thank you for your interest in contributing to Grit! appreciate your support.
 
 ## How to Contribute
 1. **Fork the Repository:** Fork the repository to your own GitHub account.
@@ -18,7 +18,7 @@ branch of the main repository. Please reference the issue you created in your pu
 I'll review your pull request as soon as possible. Thank you for your contribution!
 
 ## Overview of modules
-* `:app:` : Builds the android apk, includes additional ui for settings
+* `:app:` : Builds the android apk, contains code for widgets and android specific implementations
 * `:shared:core` : All presentation logic for the app, including habits and tasks ui and shared 
 common components 
 * `:webdemo:` : Builds the web demo which is deployed by CI on push to master. Also can be used as 

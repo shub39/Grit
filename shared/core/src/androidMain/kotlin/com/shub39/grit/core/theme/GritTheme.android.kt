@@ -18,28 +18,45 @@ package com.shub39.grit.core.theme
 
 import android.os.Build
 import androidx.compose.foundation.isSystemInDarkTheme
+import androidx.compose.material3.MaterialExpressiveTheme
+import androidx.compose.material3.MotionScheme
+import androidx.compose.material3.dynamicDarkColorScheme
+import androidx.compose.material3.dynamicLightColorScheme
 import androidx.compose.runtime.Composable
-import androidx.compose.ui.res.colorResource
-import com.materialkolor.DynamicMaterialTheme
+import androidx.compose.ui.platform.LocalContext
+import com.materialkolor.rememberDynamicColorScheme
 import com.shub39.grit.core.theme.Fonts.Companion.toFontRes
 
 @Composable
 actual fun GritTheme(theme: Theme, content: @Composable (() -> Unit)) {
-    DynamicMaterialTheme(
-        seedColor =
-            if (theme.isMaterialYou && Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
-                colorResource(android.R.color.system_accent1_200)
-            } else {
-                theme.seedColor
-            },
-        isDark =
-            when (theme.appTheme) {
-                AppTheme.SYSTEM -> isSystemInDarkTheme()
-                AppTheme.DARK -> true
-                AppTheme.LIGHT -> false
-            },
-        isAmoled = theme.isAmoled,
-        style = theme.paletteStyle,
+    val isDark =
+        when (theme.appTheme) {
+            AppTheme.SYSTEM -> isSystemInDarkTheme()
+            AppTheme.LIGHT -> false
+            AppTheme.DARK -> true
+        }
+
+    val dynamicColorScheme =
+        rememberDynamicColorScheme(
+            seedColor = theme.seedColor,
+            isDark = isDark,
+            isAmoled = theme.isAmoled,
+            style = theme.paletteStyle.toMPaletteStyle(),
+        )
+
+    val colorScheme =
+        when {
+            Build.VERSION.SDK_INT >= Build.VERSION_CODES.S && theme.isMaterialYou -> {
+                val context = LocalContext.current
+                if (isDark) dynamicDarkColorScheme(context) else dynamicLightColorScheme(context)
+            }
+
+            else -> dynamicColorScheme
+        }
+
+    MaterialExpressiveTheme(
+        colorScheme = colorScheme,
+        motionScheme = MotionScheme.expressive(),
         typography = provideTypography(theme.font.toFontRes()),
         content = content,
     )

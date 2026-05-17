@@ -41,10 +41,10 @@ import androidx.compose.ui.graphics.Shape
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.tooling.preview.PreviewWrapper
 import androidx.compose.ui.unit.dp
+import com.shub39.grit.core.GritPreviewWrapper
 import com.shub39.grit.core.habits.presentation.formatDateWithOrdinal
+import com.shub39.grit.core.now
 import com.shub39.grit.core.theme.flexFontRounded
-import com.shub39.grit.core.utils.GritPreviewWrapper
-import com.shub39.grit.core.utils.now
 import grit.shared.core.generated.resources.Res
 import grit.shared.core.generated.resources.days_ago_format
 import grit.shared.core.generated.resources.flag_circle

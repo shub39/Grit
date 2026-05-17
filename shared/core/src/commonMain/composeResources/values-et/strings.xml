@@ -23,7 +23,6 @@
     <string name="use_amoled">Amoled värviskeem</string>
     <string name="backup">Varunda</string>
     <string name="export">Ekspordi andmed</string>
-    <string name="choose_file">Vali fail</string>
     <string name="material_theme_desc">Vali värvid taustapildi järgi</string>
     <string name="system">Süsteem</string>
     <string name="dark">Tume</string>
@@ -39,7 +38,6 @@
     <string name="biometric_lock">Biomeetriline lukk</string>
     <string name="biometric_lock_desc">Kasuta rakenduse avamiseks biomeetria</string>
     <string name="bmc">Osta mulle kohvi</string>
-    <string name="rate_on_play">Hinda Google Plays</string>
     <string name="weekly_progress">Nädala edenemine</string>
     <string name="overall_analytics">Üleüldine analüüs</string>
     <string name="add_reminder">Lisa meeldetuletus</string>

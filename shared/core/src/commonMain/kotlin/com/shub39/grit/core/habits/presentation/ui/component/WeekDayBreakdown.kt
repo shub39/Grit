@@ -38,8 +38,8 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.tooling.preview.PreviewWrapper
 import androidx.compose.ui.unit.dp
+import com.shub39.grit.core.GritPreviewWrapper
 import com.shub39.grit.core.habits.domain.WeekDayFrequencyData
-import com.shub39.grit.core.utils.GritPreviewWrapper
 import grit.shared.core.generated.resources.Res
 import grit.shared.core.generated.resources.view_day
 import grit.shared.core.generated.resources.week_breakdown

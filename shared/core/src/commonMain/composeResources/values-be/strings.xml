@@ -38,7 +38,6 @@
     <string name="export_desc">Усе даныя захаваны ў Downloads/Grit</string>
     <string name="restore">Аднавіць</string>
     <string name="restore_desc">Аднавіць задачы і звычкі з файла</string>
-    <string name="choose_file">Выберыце файл</string>
     <string name="material_theme_desc">Выкарыстоўваць колеры шпалер</string>
     <string name="show_habits">Паказваць звычкі першымі</string>
     <string name="show_habits_desc">Паказваць старонку звычак пры старце праграмы</string>
@@ -63,7 +62,6 @@
     <string name="biometric_lock">Біяметрычная блакіроўка</string>
     <string name="biometric_lock_desc">Выкарыстоўваць біяметрыю для разблакіроўкі праграмы</string>
     <string name="bmc">Пачаставаць аўтара кавай</string>
-    <string name="rate_on_play">Ацаніць у Google Play</string>
     <string name="weekly_progress">Тыднёвы прагрэс</string>
     <string name="overall_analytics">Падрабязная аналітыка</string>
     <string name="unlock_more_plus">Разблакіраваць больш з падпіскай Плюс</string>

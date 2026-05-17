@@ -45,9 +45,9 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.tooling.preview.PreviewWrapper
 import androidx.compose.ui.unit.dp
+import com.shub39.grit.core.GritPreviewWrapper
 import com.shub39.grit.core.habits.domain.WeeklyTimePeriod
 import com.shub39.grit.core.habits.domain.WeeklyTimePeriod.Companion.toWeeks
-import com.shub39.grit.core.utils.GritPreviewWrapper
 import grit.shared.core.generated.resources.Res
 import grit.shared.core.generated.resources.chart_data
 import grit.shared.core.generated.resources.weekly_graph

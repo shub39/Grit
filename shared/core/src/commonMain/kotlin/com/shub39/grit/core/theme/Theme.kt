@@ -17,7 +17,6 @@
 package com.shub39.grit.core.theme
 
 import androidx.compose.ui.graphics.Color
-import com.materialkolor.PaletteStyle
 
 /** data class representing the current theme of the app */
 data class Theme(
@@ -25,6 +24,6 @@ data class Theme(
     val isAmoled: Boolean = false,
     val isMaterialYou: Boolean = false,
     val font: Fonts = Fonts.FIGTREE,
-    val paletteStyle: PaletteStyle = PaletteStyle.TonalSpot,
+    val paletteStyle: PaletteStyle = PaletteStyle.TONALSPOT,
     val seedColor: Color = Color.White,
 )
