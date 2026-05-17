@@ -16,14 +16,11 @@
  */
 package com.shub39.grit.billing
 
-import androidx.activity.compose.BackHandler
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import com.shub39.grit.core.components.FossPaywall
 
 @Composable
 fun PaywallPage(isPlusUser: Boolean, onDismissRequest: () -> Unit, modifier: Modifier = Modifier) {
-    BackHandler { onDismissRequest() }
-
     FossPaywall(modifier = modifier)
 }

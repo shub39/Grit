@@ -16,26 +16,35 @@
  */
 package com.shub39.grit.core.components
 
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.material3.Button
+import androidx.compose.foundation.layout.width
+import androidx.compose.material3.ButtonDefaults
+import androidx.compose.material3.FilledTonalButton
 import androidx.compose.material3.Icon
+import androidx.compose.material3.MaterialShapes
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
+import androidx.compose.material3.toShape
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalUriHandler
-import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.tooling.preview.PreviewWrapper
 import androidx.compose.ui.unit.dp
+import com.shub39.grit.core.GritPreviewWrapper
+import com.shub39.grit.core.theme.flexFontRounded
 import grit.shared.core.generated.resources.Res
 import grit.shared.core.generated.resources.bmc
 import grit.shared.core.generated.resources.buymeacoffee
@@ -57,38 +66,67 @@ fun FossPaywall(modifier: Modifier = Modifier) {
             Column(
                 modifier = Modifier.padding(horizontal = 32.dp).fillMaxWidth(),
                 horizontalAlignment = Alignment.CenterHorizontally,
-                verticalArrangement = Arrangement.spacedBy(8.dp),
+                verticalArrangement = Arrangement.spacedBy(16.dp),
             ) {
-                Icon(
-                    imageVector = vectorResource(Res.drawable.warning),
-                    contentDescription = "Warning",
-                    modifier = Modifier.size(48.dp),
-                )
+                Box(
+                    contentAlignment = Alignment.Center,
+                    modifier =
+                        Modifier.size(100.dp)
+                            .background(
+                                color = MaterialTheme.colorScheme.primaryContainer,
+                                shape = MaterialShapes.VerySunny.toShape(),
+                            ),
+                ) {
+                    Icon(
+                        imageVector = vectorResource(Res.drawable.warning),
+                        contentDescription = "Warning",
+                        modifier = Modifier.size(50.dp),
+                        tint = MaterialTheme.colorScheme.onPrimaryContainer,
+                    )
+                }
 
-                Text(
-                    text = stringResource(Res.string.foss),
-                    textAlign = TextAlign.Center,
-                    fontWeight = FontWeight.Bold,
-                    style = MaterialTheme.typography.titleLarge,
-                )
+                Column(horizontalAlignment = Alignment.CenterHorizontally) {
+                    Text(
+                        text = stringResource(Res.string.foss),
+                        style =
+                            MaterialTheme.typography.titleLarge.copy(
+                                textAlign = TextAlign.Center,
+                                fontFamily = flexFontRounded(),
+                            ),
+                    )
 
-                Text(text = stringResource(Res.string.foss_desc), textAlign = TextAlign.Center)
+                    Text(
+                        text = stringResource(Res.string.foss_desc),
+                        style =
+                            MaterialTheme.typography.bodyLarge.copy(textAlign = TextAlign.Center),
+                    )
+                }
 
-                Button(onClick = { uriHandler.openUri("https://buymeacoffee.com/shub39") }) {
-                    Row(
-                        horizontalArrangement = Arrangement.spacedBy(8.dp),
-                        verticalAlignment = Alignment.CenterVertically,
-                    ) {
-                        Icon(
-                            imageVector = vectorResource(Res.drawable.buymeacoffee),
-                            contentDescription = "Buy me a coffee",
-                            modifier = Modifier.size(24.dp),
-                        )
+                FilledTonalButton(
+                    onClick = { uriHandler.openUri("https://buymeacoffee.com/shub39") },
+                    modifier = Modifier.height(ButtonDefaults.MediumContainerHeight),
+                ) {
+                    Icon(
+                        imageVector = vectorResource(Res.drawable.buymeacoffee),
+                        contentDescription = "Buy me a coffee",
+                        modifier = Modifier.size(ButtonDefaults.MediumIconSize),
+                    )
 
-                        Text(text = stringResource(Res.string.bmc))
-                    }
+                    Spacer(modifier = Modifier.width(ButtonDefaults.IconSpacing))
+
+                    Text(
+                        text = stringResource(Res.string.bmc),
+                        style = ButtonDefaults.textStyleFor(ButtonDefaults.MediumContainerHeight),
+                    )
                 }
             }
         }
     }
+}
+
+@PreviewWrapper(GritPreviewWrapper::class)
+@Preview
+@Composable
+private fun Preview() {
+    FossPaywall()
 }

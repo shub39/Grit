@@ -286,7 +286,7 @@ private fun LazyListScope.aboutApp(versionName: String, uriHandler: UriHandler) 
                                     ),
                             )
                             Text(
-                                text = "Building privacy-first software",
+                                text = "Developer",
                                 style =
                                     MaterialTheme.typography.titleSmall.copy(
                                         color = MaterialTheme.colorScheme.tertiary
