@@ -19,7 +19,7 @@
     <string name="edit_task">编辑任务</string>
     <string name="delete_tasks">确定删除所有已完成任务？</string>
     <string name="update_title">编辑标题</string>
-    <string name="edit_categories">编辑任务分类</string>
+    <string name="edit_categories">编辑分类</string>
     <string name="delete_category">确认删除？该分类下所有任务将被删除</string>
     <string name="add_category">添加分类</string>
     <string name="add">添加内容</string>
@@ -34,7 +34,7 @@
     <string name="backup">数据备份</string>
     <string name="backup_desc">导出或恢复任务和习惯数据</string>
     <string name="export">导出数据</string>
-    <string name="export_desc">所有数据将导出到下载/Grit目录</string>
+    <string name="export_desc">选择数据导出的目录</string>
     <string name="restore">恢复数据</string>
     <string name="restore_desc">从选定文件恢复任务和习惯</string>
     <string name="material_theme_desc">基于壁纸生成配色方案</string>
@@ -80,4 +80,12 @@
     <string name="invalid_date_time">选择的是过去的时间 :\u0027)</string>
     <string name="select_days">选择日期</string>
     <string name="whats_changed">更新内容</string>
+    <string name="bmc_desc">捐助我以示支持</string>
+    <string name="translate_desc">将 Grit 翻译成您的语言</string>
+    <string name="language">语言</string>
+    <string name="about">关于</string>
+    <string name="haptic_feedback">触觉反馈</string>
+    <string name="haptic_feedback_desc">启用触觉反馈</string>
+    <string name="grit_plus">Grit Plus</string>
+    <string name="system_default">系统默认</string>
 </resources>
