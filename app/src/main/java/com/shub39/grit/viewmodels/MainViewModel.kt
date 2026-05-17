@@ -23,7 +23,7 @@ import com.shub39.grit.BuildConfig
 import com.shub39.grit.app.MainAppState
 import com.shub39.grit.billing.BillingHandler
 import com.shub39.grit.billing.SubscriptionResult
-import com.shub39.grit.core.data.ChangelogManager
+import com.shub39.grit.core.domain.ChangelogManager
 import com.shub39.grit.core.domain.SettingsDatastore
 import com.shub39.grit.core.domain.ThemeDatastore
 import kotlinx.coroutines.Job

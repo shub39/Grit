@@ -19,6 +19,7 @@ package com.shub39.grit.core.data
 import android.content.Context
 import android.util.Log
 import com.shub39.grit.core.components.Changelog
+import com.shub39.grit.core.domain.ChangelogManager
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.onStart
@@ -26,10 +27,10 @@ import kotlinx.coroutines.flow.update
 import kotlinx.serialization.json.Json
 import org.koin.core.annotation.Single
 
-@Single
-class ChangelogManager(private val context: Context) {
+@Single(binds = [ChangelogManager::class])
+class ChangelogManagerImpl(private val context: Context) : ChangelogManager {
     private val _changelogs: MutableStateFlow<Changelog> = MutableStateFlow(emptyList())
-    val changelogs = _changelogs.asStateFlow().onStart { getChangelogs() }
+    override val changelogs = _changelogs.asStateFlow().onStart { getChangelogs() }
 
     private fun getChangelogs() {
         try {

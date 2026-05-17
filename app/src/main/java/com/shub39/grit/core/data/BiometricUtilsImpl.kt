@@ -22,7 +22,7 @@ import androidx.biometric.BiometricManager
 import com.shub39.grit.core.domain.BiometricUtils
 import org.koin.core.annotation.Single
 
-@Single
+@Single(binds = [BiometricUtils::class])
 class BiometricUtilsImpl(private val context: Context) : BiometricUtils {
     override fun getAuthenticators(): Int =
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
