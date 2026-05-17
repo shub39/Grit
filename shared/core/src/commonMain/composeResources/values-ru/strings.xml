@@ -37,7 +37,6 @@
     <string name="export_desc">Данные сохранены в Downloads/Grit</string>
     <string name="restore">Восстановить</string>
     <string name="restore_desc">Восстановить задачи и привычки из выбранного файла</string>
-    <string name="choose_file">Выбрать файл</string>
     <string name="material_theme_desc">Использовать цвета обоев</string>
     <string name="show_habits">Показывать сначала привычки</string>
     <string name="show_habits_desc">Показывать страницу привычек при старте приложения</string>
@@ -62,7 +61,6 @@
     <string name="biometric_lock">Блокировка с биометрией</string>
     <string name="biometric_lock_desc">Использовать вход с биометрией для разблокировки приложения</string>
     <string name="bmc">Угостите меня кофе</string>
-    <string name="rate_on_play">Оценить в Google Play</string>
     <string name="weekly_progress">Прогресс за неделю</string>
     <string name="overall_analytics">Подробная аналитика</string>
     <string name="unlock_more_plus">Разблокируйте больше с подпиской Plus</string>

@@ -38,7 +38,6 @@
     <string name="export_desc">All data exported to Downloads/Grit</string>
     <string name="restore">Restore</string>
     <string name="restore_desc">Restore tasks and habits from selected file</string>
-    <string name="choose_file">Choose file</string>
     <string name="material_theme_desc">Use colors based on wallpaper</string>
     <string name="show_habits">Show habits first</string>
     <string name="show_habits_desc">Show habits page first at app startup</string>
@@ -64,7 +63,6 @@
     <string name="biometric_lock_desc">Use biometric authentication to unlock app</string>
     <string name="bmc">Buy me a coffee</string>
     <string name="bmc_desc">Support me by making a small donation</string>
-    <string name="rate_on_play">Rate on Google Play</string>
     <string name="weekly_progress">Weekly Progress</string>
     <string name="overall_analytics">Overall Analytics</string>
     <string name="unlock_more_plus">Unlock more with plus</string>

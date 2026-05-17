@@ -38,7 +38,6 @@
     <string name="export_desc">Visi dati eksportēti Downloads/Grit</string>
     <string name="restore">Atgūt</string>
     <string name="restore_desc">Atgūt uzdevumus un paradumus no izvēlētā faila</string>
-    <string name="choose_file">Izvēlēties failu</string>
     <string name="material_theme_desc">Lietot krāsas pēc fona</string>
     <string name="show_habits">Pirmos rādīt paradumus</string>
     <string name="show_habits_desc">Lietotnei sākot darbību, rādīt paradumu lapu pirmo</string>
@@ -63,7 +62,6 @@
     <string name="biometric_lock">Biometriskā Slēdzene</string>
     <string name="biometric_lock_desc">Lietot biometrisko autentifikāciju, lai atslēgtu lietotni</string>
     <string name="bmc">Nopērc man kafiju</string>
-    <string name="rate_on_play">Novērtēt Google Play</string>
     <string name="weekly_progress">Iknedēļas Progress</string>
     <string name="overall_analytics">Kopējā Analītika</string>
     <string name="unlock_more_plus">Atslēdz vairāk ar plus</string>

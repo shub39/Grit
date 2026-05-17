@@ -36,7 +36,6 @@
     <string name="export_desc">所有資料已匯出至 Downloads/Grit</string>
     <string name="restore">還原</string>
     <string name="restore_desc">從所選檔案還原任務與習慣</string>
-    <string name="choose_file">選擇檔案</string>
     <string name="material_theme_desc">以桌布顏色為基礎</string>
     <string name="show_habits">優先顯示習慣</string>
     <string name="show_habits_desc">啟動應用程式時優先顯示習慣頁面</string>
@@ -61,7 +60,6 @@
     <string name="biometric_lock">生物辨識鎖定</string>
     <string name="biometric_lock_desc">使用生物辨識驗證解鎖應用程式</string>
     <string name="bmc">請我喝杯咖啡</string>
-    <string name="rate_on_play">在 Google Play 評分</string>
     <string name="weekly_progress">每週進度</string>
     <string name="overall_analytics">整體分析</string>
     <string name="unlock_more_plus">升級 Plus 以解鎖更多功能</string>

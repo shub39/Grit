@@ -37,7 +37,6 @@
     <string name="export_desc">所有数据将导出到下载/Grit目录</string>
     <string name="restore">恢复数据</string>
     <string name="restore_desc">从选定文件恢复任务和习惯</string>
-    <string name="choose_file">选择文件</string>
     <string name="material_theme_desc">基于壁纸生成配色方案</string>
     <string name="show_habits">优先显示习惯</string>
     <string name="show_habits_desc">启动时默认显示习惯页面</string>
@@ -62,7 +61,6 @@
     <string name="font">字体</string>
     <string name="biometric_lock_desc">使用生物识别验证解锁应用</string>
     <string name="bmc">给我买杯咖啡</string>
-    <string name="rate_on_play">在 Google Play 上评分</string>
     <string name="weekly_progress">每周进度</string>
     <string name="overall_analytics">总体分析</string>
     <string name="unlock_more_plus">解锁更多 Plus 功能</string>

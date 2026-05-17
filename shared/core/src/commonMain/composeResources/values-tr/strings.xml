@@ -37,7 +37,6 @@
     <string name="export_desc">Tüm veriler İndirilenler/Grit klasörüne aktarılır</string>
     <string name="restore">Geri Yükle</string>
     <string name="restore_desc">Seçilen dosyadan görevleri ve alışkanlıkları geri yükleyin</string>
-    <string name="choose_file">Dosya Seç</string>
     <string name="material_theme_desc">Duvar kağıdına dayalı renkler kullan</string>
     <string name="show_habits">Önce alışkanlıkları göster</string>
     <string name="show_habits_desc">Uygulama başlangıcında önce alışkanlıklar sayfasını göster</string>
@@ -62,7 +61,6 @@
     <string name="biometric_lock">Biyometrik Kilit</string>
     <string name="biometric_lock_desc">Uygulamanın kilidini açmak için biyometrik kimlik doğrulama kullan</string>
     <string name="bmc">Bana bir kahve ısmarla</string>
-    <string name="rate_on_play">Google Play\u0027de oyla</string>
     <string name="weekly_progress">Haftalık İlerleme</string>
     <string name="overall_analytics">Genel Analiz</string>
     <string name="unlock_more_plus">Plus ile daha fazlasının kilidini açın</string>

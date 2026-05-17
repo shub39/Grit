@@ -38,7 +38,6 @@
     <string name="export_desc">Totes les dades exportades a Descàrregues/Grit</string>
     <string name="restore">Restaurar</string>
     <string name="restore_desc">Restaurar tasques i hàbits des d\u0027un fitxer seleccionat</string>
-    <string name="choose_file">Triar fitxer</string>
     <string name="material_theme_desc">Utilitzar colors basats en el fons de pantalla</string>
     <string name="show_habits">Mostrar hàbits primer</string>
     <string name="show_habits_desc">Mostrar la pàgina d\u0027hàbits primer en iniciar l\u0027aplicació</string>
@@ -63,7 +62,6 @@
     <string name="biometric_lock">Bloqueig biomètric</string>
     <string name="biometric_lock_desc">Utilitzar autenticació biomètrica per desbloquejar l\u0027aplicació</string>
     <string name="bmc">Convidar-me a un cafè</string>
-    <string name="rate_on_play">Valorar a Google Play</string>
     <string name="weekly_progress">Progrés setmanal</string>
     <string name="overall_analytics">Estadístiques generals</string>
     <string name="unlock_more_plus">Desbloqueja més amb Plus</string>

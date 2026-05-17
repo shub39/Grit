@@ -38,7 +38,6 @@
     <string name="export_desc">Dane wyeksportowane do Pobrane/Grit</string>
     <string name="restore">Przywróć</string>
     <string name="restore_desc">Przywróć zadania i nawyki z pliku</string>
-    <string name="choose_file">Wybierz plik</string>
     <string name="material_theme_desc">Użyj kolorów z tapety</string>
     <string name="show_habits">Najpierw nawyki</string>
     <string name="show_habits_desc">Uruchamiaj aplikację na karcie nawyków</string>
@@ -63,7 +62,6 @@
     <string name="biometric_lock">Blokada biometryczna</string>
     <string name="biometric_lock_desc">Używaj biometrii do odblokowania aplikacji</string>
     <string name="bmc">Postaw mi kawusię</string>
-    <string name="rate_on_play">Oceń w Google Play</string>
     <string name="weekly_progress">Tygodniowy postęp</string>
     <string name="overall_analytics">Statystyki ogólne</string>
     <string name="unlock_more_plus">Zyskaj więcej z Plus</string>
