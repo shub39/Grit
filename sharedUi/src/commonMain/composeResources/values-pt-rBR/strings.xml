@@ -11,7 +11,7 @@
     <string name="select_time">Selecionar horário</string>
     <string name="habits">Hábitos</string>
     <string name="streak">Sequência Atual</string>
-    <string name="best_streak">Melhor Sequência:­%1$d</string>
+    <string name="best_streak">Melhor sequência: %1$d</string>
     <string name="settings">Configurações</string>
     <string name="days_ago_format">%1$d Dias atrás…</string>
     <string name="too_long">Muito Longo</string>
@@ -22,7 +22,7 @@
     <string name="edit_categories">Editar Categorias</string>
     <string name="delete_category">Você tem certeza? Todas as tarefas nesta categoria serão deletadas</string>
     <string name="add_category">Adicionar Categoria</string>
-    <string name="add">Adicione um Item</string>
+    <string name="add">Adicione uma tarefa</string>
     <string name="habit_map">Mapa de Calor do Hábito</string>
     <string name="look_and_feel">Aparência e estilo</string>
     <string name="use_amoled">Paleta Amoled</string>
@@ -34,7 +34,7 @@
     <string name="backup">Backup</string>
     <string name="backup_desc">Exporte ou restaure suas tarefas e hábitos</string>
     <string name="export">Exportar dados</string>
-    <string name="export_desc">Todos os dados foram exportados para Downloads/Grit</string>
+    <string name="export_desc">Escolha uma pasta para exportar seus dados</string>
     <string name="restore">Restaurar</string>
     <string name="restore_desc">Restaurar tarefas e hábitos do arquivo selecionado</string>
     <string name="material_theme_desc">Use cores com base no papel de parede</string>
@@ -81,4 +81,11 @@
     <string name="add_reminder_desc">Receber uma notificação de lembrete em dias selecionados</string>
     <string name="whats_changed">O que mudou</string>
     <string name="select_days">Dias Selecionados</string>
+    <string name="bmc_desc">Me apoie com uma pequena doação</string>
+    <string name="translate_desc">Traduza o Grit para sua língua</string>
+    <string name="system_default">Padrão do sistema</string>
+    <string name="language">Idioma</string>
+    <string name="about">Sobre</string>
+    <string name="haptic_feedback">Resposta tátil</string>
+    <string name="haptic_feedback_desc">Ativa resposta tátil em todo o aplicativo</string>
 </resources>
