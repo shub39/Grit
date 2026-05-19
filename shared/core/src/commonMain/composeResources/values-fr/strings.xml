@@ -35,7 +35,7 @@
     <string name="backup">Sauvegarde</string>
     <string name="backup_desc">Exporter ou Restaurer vos tâches et routines</string>
     <string name="export">Exporter les données</string>
-    <string name="export_desc">Toutes les données ont été exportées vers Téléchargements/Grit</string>
+    <string name="export_desc">Choisissez un dossier pour exporter les données</string>
     <string name="restore">Restaurer</string>
     <string name="restore_desc">Restaurer les tâches et routines depuis le fichier sélectionné</string>
     <string name="material_theme_desc">Utiliser les couleurs depuis votre fond d\u0027écran</string>
@@ -81,4 +81,11 @@
     <string name="add_reminder_desc">Recevoir une notification de rappel les jours sélectionnés</string>
     <string name="whats_changed">Nouveautés</string>
     <string name="select_days">Sélectionner des jours</string>
+    <string name="translate_desc">Traduire Grit dans votre langue</string>
+    <string name="language">Langue</string>
+    <string name="about">À propos</string>
+    <string name="haptic_feedback">Retour haptique</string>
+    <string name="haptic_feedback_desc">Activer le retour haptique dans l'ensemble de l'application</string>
+    <string name="bmc_desc">Soutenez moi en effectuant un petit don</string>
+    <string name="system_default">Paramètres par défaut</string>
 </resources>
