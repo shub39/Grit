@@ -44,14 +44,14 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: foss-beta.apk
-          path: app/build/outputs/**/*.apk
+          path: androidApp/build/outputs/**/*.apk
 
       - name: Upload APK to Discord
         shell: bash
         env:
           WEBHOOK: ${{ secrets.DISCORD_WEBHOOK }}
         run: |
-          APK_PATH=$(find app/build/outputs -name "*.apk" -print -quit)
+          APK_PATH=$(find androidApp/build/outputs -name "*.apk" -print -quit)
 
           if [ -z "$APK_PATH" ]; then
             echo "Error: No APK file found in the build outputs directory."

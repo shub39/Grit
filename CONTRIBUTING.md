@@ -18,7 +18,7 @@ branch of the main repository. Please reference the issue you created in your pu
 I'll review your pull request as soon as possible. Thank you for your contribution!
 
 ## Overview of modules
-* `:app:` : Builds the android apk, contains code for widgets and android specific implementations
+* `:androidApp:` : Builds the android apk, contains code for widgets and android specific implementations
 * `:sharedUi` : All presentation logic for the app, including habits and tasks ui and shared
 common components 
 * `:webdemo:` : Builds the web demo which is deployed by CI on push to master. Also can be used as 

@@ -31,7 +31,7 @@ jobs:
 
       - name: Extract Version Name from Gradle
         run: |
-          GRADLE_FILE="app/build.gradle.kts" 
+          GRADLE_FILE="androidApp/build.gradle.kts" 
           VERSION_NAME=$(grep -E 'val appVersionName' $GRADLE_FILE | head -n 1 | awk -F'"' '{print $2}')
 
           if [ -z "$VERSION_NAME" ]; then
@@ -72,7 +72,7 @@ jobs:
           -Pandroid.injected.signing.key.alias=key0 \
           -Pandroid.injected.signing.key.password=${{ secrets.KEY_PASSWORD }}
           
-          APK_PATH=$(find app/build/outputs/ -name "*.apk" -print -quit)
+          APK_PATH=$(find androidApp/build/outputs/ -name "*.apk" -print -quit)
           
           if [ -z "$APK_PATH" ]; then
             echo "::error::Could not find APK file."
@@ -85,7 +85,7 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: app-release.apk
-          path: app/build/outputs/**/*.apk
+          path: androidApp/build/outputs/**/*.apk
 
       - name: Create Release
         uses: softprops/action-gh-release@v2
