@@ -19,7 +19,7 @@ I'll review your pull request as soon as possible. Thank you for your contributi
 
 ## Overview of modules
 * `:app:` : Builds the android apk, contains code for widgets and android specific implementations
-* `:shared:core` : All presentation logic for the app, including habits and tasks ui and shared 
+* `:sharedUi` : All presentation logic for the app, including habits and tasks ui and shared
 common components 
 * `:webdemo:` : Builds the web demo which is deployed by CI on push to master. Also can be used as 
 hot reload

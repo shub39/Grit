@@ -49,4 +49,4 @@ include(":app")
 
 include(":webdemo")
 
-include(":shared:core")
+include(":sharedUi")

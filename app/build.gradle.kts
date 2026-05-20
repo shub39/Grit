@@ -112,7 +112,7 @@ android {
             res.directories.addAll(
                 listOf(
                     "src/main/res",
-                    "${project(":shared:core").projectDir}/src/commonMain/composeResources",
+                    "${project(":sharedUi").projectDir}/src/commonMain/composeResources",
                 )
             )
         }
@@ -130,7 +130,7 @@ kotlin {
 }
 
 dependencies {
-    implementation(projects.shared.core)
+    implementation(projects.sharedUi)
 
     "playImplementation"(libs.purchases)
     "playImplementation"(libs.purchases.ui)
