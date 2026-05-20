@@ -16,11 +16,14 @@
  */
 import androidx.room3.Room
 import androidx.room3.testing.MigrationTestHelper
-import androidx.sqlite.db.framework.FrameworkSQLiteOpenHelperFactory
+import androidx.sqlite.driver.AndroidSQLiteDriver
+import androidx.sqlite.execSQL
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import androidx.test.platform.app.InstrumentationRegistry
 import com.google.common.truth.Truth.assertThat
 import com.shub39.grit.tasks.data.database.TaskDatabase
+import kotlinx.coroutines.runBlocking
+import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith
@@ -33,15 +36,20 @@ class TaskDBMigrationTest {
     val helper =
         MigrationTestHelper(
             InstrumentationRegistry.getInstrumentation(),
-            TaskDatabase::class.java,
-            listOf(),
-            FrameworkSQLiteOpenHelperFactory(),
+            InstrumentationRegistry.getInstrumentation().targetContext.getDatabasePath(DB_NAME),
+            AndroidSQLiteDriver(),
+            TaskDatabase::class,
         )
 
+    @Before
+    fun setup() {
+        InstrumentationRegistry.getInstrumentation().targetContext.deleteDatabase(DB_NAME)
+    }
+
     @Test
-    fun migration4to5_containsCorrectData() {
+    fun migration4to5_containsCorrectData() = runBlocking {
         helper
-            .createDatabase(DB_NAME, 4)
+            .createDatabase(4)
             .apply {
                 (0..10).forEach { category ->
                     execSQL(
@@ -65,46 +73,47 @@ class TaskDBMigrationTest {
             }
             .close()
 
-        val db = helper.runMigrationsAndValidate(DB_NAME, 5, true)
+        val db = helper.runMigrationsAndValidate(5, listOf())
 
         // --- Categories assertions ---
-        db.query("SELECT COUNT(*) FROM categories").use { cursor ->
-            assertThat(cursor.moveToFirst()).isTrue()
+        db.prepare("SELECT COUNT(*) FROM categories").use { stmt ->
+            assertThat(stmt.step()).isTrue()
             // 11 categories inserted
-            assertThat(cursor.getInt(0)).isEqualTo(11)
+            assertThat(stmt.getLong(0)).isEqualTo(11L)
         }
 
-        db.query("SELECT id, name, [index], color FROM categories ORDER BY id").use { cursor ->
-            assertThat(cursor.count).isEqualTo(11)
-            cursor.moveToFirst()
-            do {
-                val id = cursor.getLong(0)
-                val name = cursor.getString(1)
-                val index = cursor.getInt(2)
-                val color = cursor.getString(3)
+        db.prepare("SELECT id, name, [index], color FROM categories ORDER BY id").use { stmt ->
+            var count = 0
+            while (stmt.step()) {
+                count++
+                val id = stmt.getLong(0)
+                val name = stmt.getText(1)
+                val index = stmt.getLong(2).toInt()
+                val color = stmt.getText(3)
 
                 assertThat(name).isEqualTo("Category $id")
                 assertThat(index).isEqualTo(id.toInt())
                 assertThat(color).isEqualTo("black")
-            } while (cursor.moveToNext())
+            }
+            assertThat(count).isEqualTo(11)
         }
 
         // --- Tasks assertions ---
-        db.query("SELECT COUNT(*) FROM task").use { cursor ->
-            assertThat(cursor.moveToFirst()).isTrue()
+        db.prepare("SELECT COUNT(*) FROM task").use { stmt ->
+            assertThat(stmt.step()).isTrue()
             // 11 categories * 11 tasks each = 121 tasks
-            assertThat(cursor.getInt(0)).isEqualTo(11 * 11)
+            assertThat(stmt.getLong(0)).isEqualTo(121L)
         }
 
-        db.query("SELECT categoryId, title, status, [index] FROM task ORDER BY categoryId, [index]")
-            .use { cursor ->
-                assertThat(cursor.count).isEqualTo(121)
-                cursor.moveToFirst()
-                do {
-                    val categoryId = cursor.getLong(0)
-                    val title = cursor.getString(1)
-                    val status = cursor.getInt(2)
-                    val index = cursor.getInt(3)
+        db.prepare("SELECT categoryId, title, status, [index] FROM task ORDER BY categoryId, [index]")
+            .use { stmt ->
+                var count = 0
+                while (stmt.step()) {
+                    count++
+                    val categoryId = stmt.getLong(0)
+                    val title = stmt.getText(1)
+                    val status = stmt.getLong(2).toInt()
+                    val index = stmt.getLong(3).toInt()
 
                     // Title pattern
                     assertThat(title).isEqualTo("Task $index")
@@ -116,13 +125,15 @@ class TaskDBMigrationTest {
                     // CategoryId matches existing categories
                     assertThat(categoryId).isAtLeast(0)
                     assertThat(categoryId).isAtMost(10)
-                } while (cursor.moveToNext())
+                }
+                assertThat(count).isEqualTo(121)
             }
+        db.close()
     }
 
     @Test
-    fun testAllMigrations() {
-        helper.createDatabase(DB_NAME, 4).apply { close() }
+    fun testAllMigrations() = runBlocking {
+        helper.createDatabase(4).close()
 
         Room.databaseBuilder(
                 InstrumentationRegistry.getInstrumentation().targetContext,
@@ -130,6 +141,6 @@ class TaskDBMigrationTest {
                 DB_NAME,
             )
             .build()
-            .apply { openHelper.writableDatabase.close() }
+            .close()
     }
 }
