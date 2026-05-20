@@ -21,10 +21,10 @@ I'll review your pull request as soon as possible. Thank you for your contributi
 * `:androidApp:` : Builds the android apk, contains code for widgets and android specific implementations
 * `:sharedUi` : All presentation logic for the app, including habits and tasks ui and shared
 common components 
-* `:webdemo:` : Builds the web demo which is deployed by CI on push to master. Also can be used as 
+* `:webDemo:` : Builds the web demo which is deployed by CI on push to master. Also can be used as 
 hot reload
 ```shell
-./gradlew :webdemo:hotRunJvm --auto
+./gradlew :webDemo:hotRunJvm --auto
 ```
 
 ## Compose Guidelines

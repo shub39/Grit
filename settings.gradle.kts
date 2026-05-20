@@ -47,6 +47,6 @@ dependencyResolutionManagement {
 
 include(":androidApp")
 
-include(":webdemo")
+include(":webDemo")
 
 include(":sharedUi")

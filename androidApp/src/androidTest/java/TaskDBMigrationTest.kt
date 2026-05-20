@@ -105,7 +105,9 @@ class TaskDBMigrationTest {
             assertThat(stmt.getLong(0)).isEqualTo(121L)
         }
 
-        db.prepare("SELECT categoryId, title, status, [index] FROM task ORDER BY categoryId, [index]")
+        db.prepare(
+                "SELECT categoryId, title, status, [index] FROM task ORDER BY categoryId, [index]"
+            )
             .use { stmt ->
                 var count = 0
                 while (stmt.step()) {

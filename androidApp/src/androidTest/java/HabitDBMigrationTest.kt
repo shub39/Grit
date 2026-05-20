@@ -61,7 +61,8 @@ class HabitDBMigrationTest {
             .createDatabase(4)
             .apply {
                 (1..5).forEach { habit ->
-                    val timeEpoch = LocalDateTime.now().toInstant(TimeZone.currentSystemDefault()).epochSeconds
+                    val timeEpoch =
+                        LocalDateTime.now().toInstant(TimeZone.currentSystemDefault()).epochSeconds
 
                     execSQL(
                         """
