@@ -27,9 +27,7 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.platform.LocalLocale
 import com.shub39.grit.core.shared_ui.detachedItemShape
 import com.shub39.grit.core.shared_ui.listItemColors
-import grit.shared.core.generated.resources.Res
-import grit.shared.core.generated.resources.arrow_forward
-import grit.shared.core.generated.resources.language
+import grit.sharedui.generated.resources.*
 import org.jetbrains.compose.resources.painterResource
 import org.jetbrains.compose.resources.stringResource
 

@@ -45,12 +45,7 @@ import androidx.compose.ui.tooling.preview.PreviewWrapper
 import androidx.compose.ui.unit.dp
 import com.shub39.grit.core.GritPreviewWrapper
 import com.shub39.grit.core.theme.flexFontRounded
-import grit.shared.core.generated.resources.Res
-import grit.shared.core.generated.resources.bmc
-import grit.shared.core.generated.resources.buymeacoffee
-import grit.shared.core.generated.resources.foss
-import grit.shared.core.generated.resources.foss_desc
-import grit.shared.core.generated.resources.warning
+import grit.sharedui.generated.resources.*
 import org.jetbrains.compose.resources.stringResource
 import org.jetbrains.compose.resources.vectorResource
 

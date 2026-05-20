@@ -40,10 +40,7 @@ import androidx.compose.ui.unit.dp
 import com.shub39.grit.core.LocalWindowSizeClass
 import com.shub39.grit.core.habits.presentation.HabitState
 import com.shub39.grit.core.habits.presentation.HabitsAction
-import grit.shared.core.generated.resources.Res
-import grit.shared.core.generated.resources.add
-import grit.shared.core.generated.resources.add_habit
-import grit.shared.core.generated.resources.analytics
+import grit.sharedui.generated.resources.*
 import org.jetbrains.compose.resources.stringResource
 import org.jetbrains.compose.resources.vectorResource
 

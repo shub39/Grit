@@ -86,6 +86,4 @@
     <string name="system_default">System Default</string>
     <string name="language">Language</string>
     <string name="about">About</string>
-    <string name="haptic_feedback">Haptic Feedback</string>
-    <string name="haptic_feedback_desc">Enable app wide haptic feedback</string>
 </resources>

@@ -45,10 +45,7 @@ import com.shub39.grit.core.GritPreviewWrapper
 import com.shub39.grit.core.habits.presentation.formatDateWithOrdinal
 import com.shub39.grit.core.now
 import com.shub39.grit.core.theme.flexFontRounded
-import grit.shared.core.generated.resources.Res
-import grit.shared.core.generated.resources.days_ago_format
-import grit.shared.core.generated.resources.flag_circle
-import grit.shared.core.generated.resources.started_on
+import grit.sharedui.generated.resources.*
 import kotlinx.datetime.DateTimeUnit
 import kotlinx.datetime.LocalDate
 import kotlinx.datetime.minus

@@ -17,12 +17,7 @@
 package com.shub39.grit.core.app
 
 import androidx.navigation3.runtime.NavKey
-import grit.shared.core.generated.resources.Res
-import grit.shared.core.generated.resources.alarm
-import grit.shared.core.generated.resources.check_list
-import grit.shared.core.generated.resources.habits
-import grit.shared.core.generated.resources.settings
-import grit.shared.core.generated.resources.tasks
+import grit.sharedui.generated.resources.*
 import kotlinx.serialization.Serializable
 import org.jetbrains.compose.resources.DrawableResource
 import org.jetbrains.compose.resources.StringResource

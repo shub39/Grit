@@ -40,9 +40,7 @@ import androidx.compose.ui.tooling.preview.PreviewWrapper
 import androidx.compose.ui.unit.dp
 import com.shub39.grit.core.GritPreviewWrapper
 import com.shub39.grit.core.habits.domain.WeekDayFrequencyData
-import grit.shared.core.generated.resources.Res
-import grit.shared.core.generated.resources.view_day
-import grit.shared.core.generated.resources.week_breakdown
+import grit.sharedui.generated.resources.*
 import kotlin.random.Random
 import kotlin.random.nextInt
 import kotlinx.datetime.format.DayOfWeekNames

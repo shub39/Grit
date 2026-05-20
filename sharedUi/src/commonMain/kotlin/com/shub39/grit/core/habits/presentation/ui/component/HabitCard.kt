@@ -60,11 +60,7 @@ import com.shub39.grit.core.habits.domain.HabitWithAnalytics
 import com.shub39.grit.core.habits.presentation.HabitsAction
 import com.shub39.grit.core.now
 import com.shub39.grit.core.toFormattedString
-import grit.shared.core.generated.resources.Res
-import grit.shared.core.generated.resources.analytics
-import grit.shared.core.generated.resources.check_circle
-import grit.shared.core.generated.resources.circle_border
-import grit.shared.core.generated.resources.heat
+import grit.sharedui.generated.resources.*
 import kotlinx.datetime.DateTimeUnit
 import kotlinx.datetime.DayOfWeek
 import kotlinx.datetime.LocalDate

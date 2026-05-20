@@ -52,10 +52,7 @@ import com.shub39.grit.core.theme.GritTheme
 import com.shub39.grit.core.theme.Theme
 import com.shub39.grit.core.theme.flexFontEmphasis
 import com.shub39.grit.core.theme.flexFontRounded
-import grit.shared.core.generated.resources.Res
-import grit.shared.core.generated.resources.done
-import grit.shared.core.generated.resources.settings
-import grit.shared.core.generated.resources.whats_changed
+import grit.sharedui.generated.resources.*
 import kotlinx.serialization.Serializable
 import org.jetbrains.compose.resources.stringResource
 import org.jetbrains.compose.resources.vectorResource

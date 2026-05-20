@@ -45,9 +45,7 @@ import com.shub39.grit.core.habits.presentation.HabitsAction
 import com.shub39.grit.core.habits.presentation.ui.component.HabitHeatMap
 import com.shub39.grit.core.habits.presentation.ui.component.WeekDayBreakdown
 import com.shub39.grit.core.theme.flexFontEmphasis
-import grit.shared.core.generated.resources.Res
-import grit.shared.core.generated.resources.arrow_back
-import grit.shared.core.generated.resources.overall_analytics
+import grit.sharedui.generated.resources.*
 import kotlinx.datetime.YearMonth
 import org.jetbrains.compose.resources.stringResource
 import org.jetbrains.compose.resources.vectorResource

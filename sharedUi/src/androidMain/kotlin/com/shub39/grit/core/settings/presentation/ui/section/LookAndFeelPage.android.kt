@@ -49,12 +49,7 @@ import com.shub39.grit.core.shared_ui.middleItemShape
 import com.shub39.grit.core.theme.AppTheme
 import com.shub39.grit.core.theme.PaletteStyle
 import com.shub39.grit.core.theme.toMPaletteStyle
-import grit.shared.core.generated.resources.Res
-import grit.shared.core.generated.resources.check_circle
-import grit.shared.core.generated.resources.material_theme
-import grit.shared.core.generated.resources.material_theme_desc
-import grit.shared.core.generated.resources.palette
-import grit.shared.core.generated.resources.palette_style
+import grit.sharedui.generated.resources.*
 import org.jetbrains.compose.resources.stringResource
 import org.jetbrains.compose.resources.vectorResource
 

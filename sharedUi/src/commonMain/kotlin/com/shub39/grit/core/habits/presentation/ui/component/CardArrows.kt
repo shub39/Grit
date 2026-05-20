@@ -30,9 +30,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.unit.dp
-import grit.shared.core.generated.resources.Res
-import grit.shared.core.generated.resources.arrow_back
-import grit.shared.core.generated.resources.arrow_forward
+import grit.sharedui.generated.resources.*
 import org.jetbrains.compose.resources.painterResource
 
 @Composable

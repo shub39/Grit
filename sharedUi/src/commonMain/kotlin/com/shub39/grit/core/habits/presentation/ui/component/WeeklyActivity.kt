@@ -48,10 +48,7 @@ import androidx.compose.ui.unit.dp
 import com.shub39.grit.core.GritPreviewWrapper
 import com.shub39.grit.core.habits.domain.WeeklyTimePeriod
 import com.shub39.grit.core.habits.domain.WeeklyTimePeriod.Companion.toWeeks
-import grit.shared.core.generated.resources.Res
-import grit.shared.core.generated.resources.chart_data
-import grit.shared.core.generated.resources.weekly_graph
-import grit.shared.core.generated.resources.weeks
+import grit.sharedui.generated.resources.*
 import kotlin.math.roundToInt
 import kotlin.random.Random
 import org.jetbrains.compose.resources.stringResource

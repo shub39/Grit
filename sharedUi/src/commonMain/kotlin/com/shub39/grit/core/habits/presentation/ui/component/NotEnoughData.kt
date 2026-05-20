@@ -32,9 +32,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
-import grit.shared.core.generated.resources.Res
-import grit.shared.core.generated.resources.not_enough_data
-import grit.shared.core.generated.resources.warning
+import grit.sharedui.generated.resources.*
 import org.jetbrains.compose.resources.stringResource
 import org.jetbrains.compose.resources.vectorResource
 

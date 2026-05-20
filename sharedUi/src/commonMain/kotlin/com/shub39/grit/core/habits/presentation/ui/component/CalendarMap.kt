@@ -56,9 +56,7 @@ import com.shub39.grit.core.habits.presentation.daysStartingFrom
 import com.shub39.grit.core.now
 import com.shub39.grit.core.shared_ui.endItemShape
 import com.shub39.grit.core.theme.GritTheme
-import grit.shared.core.generated.resources.Res
-import grit.shared.core.generated.resources.calendar_month
-import grit.shared.core.generated.resources.monthly_progress
+import grit.sharedui.generated.resources.*
 import kotlinx.coroutines.launch
 import kotlinx.datetime.DateTimeUnit
 import kotlinx.datetime.DayOfWeek

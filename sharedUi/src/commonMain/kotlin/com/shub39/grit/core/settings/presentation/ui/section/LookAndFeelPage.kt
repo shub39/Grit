@@ -74,7 +74,7 @@ import com.shub39.grit.core.theme.GritTheme
 import com.shub39.grit.core.theme.PaletteStyle
 import com.shub39.grit.core.theme.Theme
 import com.shub39.grit.core.theme.flexFontEmphasis
-import grit.shared.core.generated.resources.*
+import grit.sharedui.generated.resources.*
 import org.jetbrains.compose.resources.Font
 import org.jetbrains.compose.resources.stringResource
 import org.jetbrains.compose.resources.vectorResource

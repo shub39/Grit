@@ -42,9 +42,7 @@ import androidx.compose.ui.unit.dp
 import com.shub39.grit.core.shared_ui.GritBottomSheet
 import com.shub39.grit.core.shared_ui.listItemColors
 import com.shub39.grit.core.shared_ui.segmentedListItemShapes
-import grit.shared.core.generated.resources.Res
-import grit.shared.core.generated.resources.check_circle
-import grit.shared.core.generated.resources.system_default
+import grit.sharedui.generated.resources.*
 import java.util.Locale
 import kotlinx.coroutines.launch
 import org.jetbrains.compose.resources.painterResource

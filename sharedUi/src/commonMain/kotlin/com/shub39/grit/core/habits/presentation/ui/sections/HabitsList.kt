@@ -42,8 +42,7 @@ import com.shub39.grit.core.shared_ui.detachedItemShape
 import com.shub39.grit.core.shared_ui.endItemShape
 import com.shub39.grit.core.shared_ui.leadingItemShape
 import com.shub39.grit.core.shared_ui.middleItemShape
-import grit.shared.core.generated.resources.Res
-import grit.shared.core.generated.resources.drag_indicator
+import grit.sharedui.generated.resources.*
 import kotlinx.datetime.DayOfWeek
 import kotlinx.datetime.LocalDateTime
 import org.jetbrains.compose.resources.vectorResource

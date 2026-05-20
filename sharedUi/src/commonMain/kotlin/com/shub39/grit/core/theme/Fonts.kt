@@ -16,14 +16,7 @@
  */
 package com.shub39.grit.core.theme
 
-import grit.shared.core.generated.resources.Res
-import grit.shared.core.generated.resources.figtree
-import grit.shared.core.generated.resources.google_sans_flex
-import grit.shared.core.generated.resources.inter
-import grit.shared.core.generated.resources.manrope
-import grit.shared.core.generated.resources.montserrat
-import grit.shared.core.generated.resources.outfit
-import grit.shared.core.generated.resources.poppins_regular
+import grit.sharedui.generated.resources.*
 import org.jetbrains.compose.resources.FontResource
 
 /** All the font options available in-app */

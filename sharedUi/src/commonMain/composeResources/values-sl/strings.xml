@@ -74,7 +74,7 @@
     <string name="foss_desc">Vse funkcije so odklenjene. Ta različica aplikacije ne podpira nakupov v aplikaciji. Če ti je aplikacija prinesla dodano vrednost v življenju, me lahko podpiraš z donacijo na</string>
     <string name="add_reminder">Dodaj opomnik</string>
     <string name="add_reminder_desc">Prejmi obvestilo z opomnikom na izbrane dni</string>
-    <string name="invalid_date_time">Izbran datum je v preteklosti :')</string>
+    <string name="invalid_date_time">Izbran datum je v preteklosti</string>
     <string name="reorder_tasks">Prerazporedi opravila</string>
     <string name="reorder_tasks_desc">Prerazporedi opravila, ko so označena kot opravljena</string>
     <string name="weeks">Tedni</string>
@@ -86,6 +86,4 @@
     <string name="system_default">Sistemsko privzeto</string>
     <string name="language">Jezik</string>
     <string name="about">O aplikaciji</string>
-    <string name="haptic_feedback">Haptični odziv</string>
-    <string name="haptic_feedback_desc">Omogoči haptični odziv v celotni aplikaciji</string>
 </resources>

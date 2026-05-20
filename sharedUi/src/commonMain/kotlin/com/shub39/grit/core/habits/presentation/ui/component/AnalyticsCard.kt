@@ -42,8 +42,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.shub39.grit.core.blurPossible
 import com.shub39.grit.core.theme.flexFontRounded
-import grit.shared.core.generated.resources.Res
-import grit.shared.core.generated.resources.unlock_plus
+import grit.sharedui.generated.resources.*
 import org.jetbrains.compose.resources.DrawableResource
 import org.jetbrains.compose.resources.painterResource
 import org.jetbrains.compose.resources.stringResource

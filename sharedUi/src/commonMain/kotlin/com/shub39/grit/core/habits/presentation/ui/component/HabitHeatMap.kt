@@ -57,9 +57,7 @@ import com.shub39.grit.core.shared_ui.leadingItemShape
 import com.shub39.grit.core.shared_ui.listItemColors
 import com.shub39.grit.core.theme.flexFontRounded
 import com.shub39.grit.core.toFormattedString
-import grit.shared.core.generated.resources.Res
-import grit.shared.core.generated.resources.habit_map
-import grit.shared.core.generated.resources.map
+import grit.sharedui.generated.resources.*
 import kotlin.random.Random
 import kotlinx.coroutines.launch
 import kotlinx.datetime.DateTimeUnit

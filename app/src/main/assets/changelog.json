@@ -1,5 +1,11 @@
 [
   {
+    "version": "5.9.25",
+    "changes": [
+      "Fix Hebrew Translations not applied by Language Picker"
+    ]
+  },
+  {
     "version": "5.9.24",
     "changes": [
       "Updated Translations",
@@ -63,12 +69,6 @@
     "version": "5.8.3",
     "changes": [
       "Improved Navigation Experience",
-      "Updated Translations"
-    ]
-  },
-  {
-    "version": "5.8.2",
-    "changes": [
       "Updated Translations"
     ]
   }

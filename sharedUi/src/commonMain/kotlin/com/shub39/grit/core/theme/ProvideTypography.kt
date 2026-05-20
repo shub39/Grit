@@ -23,9 +23,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontVariation
 import androidx.compose.ui.tooling.preview.Preview
-import grit.shared.core.generated.resources.Res
-import grit.shared.core.generated.resources.google_sans_flex
-import grit.shared.core.generated.resources.poppins_regular
+import grit.sharedui.generated.resources.*
 import org.jetbrains.compose.resources.Font
 import org.jetbrains.compose.resources.FontResource
 

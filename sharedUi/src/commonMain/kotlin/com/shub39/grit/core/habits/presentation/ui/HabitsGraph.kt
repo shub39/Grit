@@ -64,12 +64,7 @@ import com.shub39.grit.core.navigation.verticalTransitionMetadata
 import com.shub39.grit.core.shared_ui.PageFill
 import com.shub39.grit.core.theme.flexFontEmphasis
 import com.shub39.grit.core.theme.flexFontRounded
-import grit.shared.core.generated.resources.Res
-import grit.shared.core.generated.resources.collapse
-import grit.shared.core.generated.resources.completed
-import grit.shared.core.generated.resources.expand
-import grit.shared.core.generated.resources.habits
-import grit.shared.core.generated.resources.reorder
+import grit.sharedui.generated.resources.*
 import kotlinx.serialization.Serializable
 import kotlinx.serialization.modules.SerializersModule
 import kotlinx.serialization.modules.polymorphic

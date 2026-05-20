@@ -16,10 +16,7 @@
  */
 package com.shub39.grit.core.theme
 
-import grit.shared.core.generated.resources.Res
-import grit.shared.core.generated.resources.dark
-import grit.shared.core.generated.resources.light
-import grit.shared.core.generated.resources.system
+import grit.sharedui.generated.resources.*
 import org.jetbrains.compose.resources.StringResource
 
 /** All the theme options available in-app */

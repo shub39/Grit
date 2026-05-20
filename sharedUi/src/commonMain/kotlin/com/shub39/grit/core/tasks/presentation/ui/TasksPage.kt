@@ -61,15 +61,7 @@ import com.shub39.grit.core.tasks.presentation.TaskState
 import com.shub39.grit.core.tasks.presentation.ui.component.CategoryUpsertSheet
 import com.shub39.grit.core.tasks.presentation.ui.section.TaskList
 import com.shub39.grit.core.theme.flexFontEmphasis
-import grit.shared.core.generated.resources.Res
-import grit.shared.core.generated.resources.cancel
-import grit.shared.core.generated.resources.delete
-import grit.shared.core.generated.resources.delete_category
-import grit.shared.core.generated.resources.drag_indicator
-import grit.shared.core.generated.resources.edit
-import grit.shared.core.generated.resources.edit_categories
-import grit.shared.core.generated.resources.tasks
-import grit.shared.core.generated.resources.warning
+import grit.sharedui.generated.resources.*
 import org.jetbrains.compose.resources.stringResource
 import org.jetbrains.compose.resources.vectorResource
 import sh.calvin.reorderable.ReorderableItem

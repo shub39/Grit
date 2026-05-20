@@ -86,6 +86,4 @@
     <string name="system_default">Padrão do sistema</string>
     <string name="language">Idioma</string>
     <string name="about">Sobre</string>
-    <string name="haptic_feedback">Resposta tátil</string>
-    <string name="haptic_feedback_desc">Ativa resposta tátil em todo o aplicativo</string>
 </resources>

@@ -76,13 +76,7 @@ import com.shub39.grit.core.shared_ui.endItemShape
 import com.shub39.grit.core.shared_ui.leadingItemShape
 import com.shub39.grit.core.theme.flexFontEmphasis
 import com.shub39.grit.core.theme.flexFontRounded
-import grit.shared.core.generated.resources.Res
-import grit.shared.core.generated.resources.arrow_back
-import grit.shared.core.generated.resources.cancel
-import grit.shared.core.generated.resources.delete
-import grit.shared.core.generated.resources.delete_warning
-import grit.shared.core.generated.resources.edit
-import grit.shared.core.generated.resources.warning
+import grit.sharedui.generated.resources.*
 import kotlinx.datetime.YearMonth
 import org.jetbrains.compose.resources.stringResource
 import org.jetbrains.compose.resources.vectorResource

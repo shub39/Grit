@@ -39,8 +39,7 @@ import com.github.skydoves.colorpicker.compose.BrightnessSlider
 import com.github.skydoves.colorpicker.compose.HsvColorPicker
 import com.github.skydoves.colorpicker.compose.rememberColorPickerController
 import com.shub39.grit.core.shared_ui.GritDialog
-import grit.shared.core.generated.resources.Res
-import grit.shared.core.generated.resources.done
+import grit.sharedui.generated.resources.*
 import org.jetbrains.compose.resources.stringResource
 
 // Color picker used app wide

@@ -84,8 +84,6 @@
     <string name="translate_desc">将 Grit 翻译成您的语言</string>
     <string name="language">语言</string>
     <string name="about">关于</string>
-    <string name="haptic_feedback">触觉反馈</string>
-    <string name="haptic_feedback_desc">启用触觉反馈</string>
     <string name="grit_plus">Grit Plus</string>
     <string name="system_default">系统默认</string>
 </resources>

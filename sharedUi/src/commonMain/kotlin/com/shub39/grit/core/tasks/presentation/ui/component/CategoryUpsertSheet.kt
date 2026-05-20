@@ -53,13 +53,7 @@ import androidx.compose.ui.unit.dp
 import com.shub39.grit.core.shared_ui.GritBottomSheet
 import com.shub39.grit.core.tasks.domain.Category
 import com.shub39.grit.core.theme.flexFontEmphasis
-import grit.shared.core.generated.resources.Res
-import grit.shared.core.generated.resources.add
-import grit.shared.core.generated.resources.add_category
-import grit.shared.core.generated.resources.done
-import grit.shared.core.generated.resources.edit
-import grit.shared.core.generated.resources.edit_categories
-import grit.shared.core.generated.resources.save
+import grit.sharedui.generated.resources.*
 import kotlinx.coroutines.delay
 import org.jetbrains.compose.resources.stringResource
 import org.jetbrains.compose.resources.vectorResource

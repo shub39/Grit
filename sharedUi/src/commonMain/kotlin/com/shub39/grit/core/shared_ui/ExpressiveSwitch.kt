@@ -22,9 +22,7 @@ import androidx.compose.material3.Switch
 import androidx.compose.material3.SwitchDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import grit.shared.core.generated.resources.Res
-import grit.shared.core.generated.resources.check
-import grit.shared.core.generated.resources.close
+import grit.sharedui.generated.resources.*
 import org.jetbrains.compose.resources.vectorResource
 
 @Composable

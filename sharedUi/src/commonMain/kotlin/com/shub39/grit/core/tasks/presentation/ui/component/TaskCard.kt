@@ -44,8 +44,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.shub39.grit.core.tasks.domain.Task
 import com.shub39.grit.core.toFormattedString
-import grit.shared.core.generated.resources.Res
-import grit.shared.core.generated.resources.alarm
+import grit.sharedui.generated.resources.*
 import org.jetbrains.compose.resources.vectorResource
 
 @Composable
