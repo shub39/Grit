@@ -49,4 +49,4 @@ include(":androidApp")
 
 include(":webDemo")
 
-include(":sharedUi")
+include(":shared")

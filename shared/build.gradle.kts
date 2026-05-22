@@ -23,6 +23,7 @@ plugins {
     alias(libs.plugins.compose.multiplatform)
     alias(libs.plugins.compose.compiler)
     alias(libs.plugins.kotlin.serialization)
+    alias(libs.plugins.android.kotlin.multiplatform.library)
 }
 
 kotlin {
@@ -34,32 +35,62 @@ kotlin {
         )
     }
 
+    targets.all {
+        compilations.all {
+            compileTaskProvider.configure {
+                compilerOptions.freeCompilerArgs.add("-Xexpect-actual-classes")
+            }
+        }
+    }
+
+    jvm()
+
+    android {
+        namespace = "com.shub39.grit.core"
+        compileSdk = libs.versions.compileSdk.get().toInt()
+        minSdk = libs.versions.minSdk.get().toInt()
+
+        androidResources { enable = true }
+    }
+
     wasmJs {
         browser()
         binaries.executable()
     }
 
-    jvm()
-
     sourceSets {
         commonMain.dependencies {
-            implementation(projects.shared)
-
             implementation(libs.compose.material3)
             implementation(libs.compose.runtime)
             implementation(libs.compose.foundation)
             implementation(libs.compose.ui)
             implementation(libs.compose.components.resources)
-            implementation(libs.jetbrains.navigation3.ui)
-            implementation(libs.kotlinx.datetime)
             implementation(libs.compose.windowsizeclass)
-        }
+            implementation(libs.compose.ui.tooling.preview)
+            implementation(libs.jetbrains.navigation3.ui)
 
-        jvmMain.dependencies {
-            implementation(compose.desktop.currentOs)
-            implementation(libs.kotlinx.coroutines.swing)
+            implementation(libs.kotlinx.datetime)
+            implementation(libs.reorderable)
+            implementation(libs.calendar)
+            implementation(libs.materialkolor)
+            implementation(libs.colorpicker.compose)
+
+            implementation(libs.koin.core)
+            implementation(libs.koin.compose)
+            implementation(libs.koin.compose.viewmodel)
+            implementation(libs.koin.compose.viewmodel.navigation)
+            implementation(libs.koin.annotations)
         }
     }
 }
 
-compose.desktop { application { mainClass = "MainKt" } }
+dependencies {
+    androidRuntimeClasspath(libs.compose.ui.tooling)
+    androidRuntimeClasspath(libs.compose.ui.tooling.preview)
+}
+
+androidComponents {
+    onVariants { variant ->
+        variant.sources.res?.addStaticSourceDirectory("src/commonMain/composeResources")
+    }
+}
