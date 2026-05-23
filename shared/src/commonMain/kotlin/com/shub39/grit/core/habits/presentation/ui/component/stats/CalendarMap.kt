@@ -78,15 +78,16 @@ fun CalendarMap(
     canSeeContent: Boolean,
     onAction: (HabitsAction) -> Unit,
     calendarState: CalendarState,
-    currentHabit: HabitWithAnalytics,
+    statuses: List<HabitStatus>,
+    days: Set<DayOfWeek>,
     onNavigateToPaywall: () -> Unit,
+    onDateClick: (LocalDate) -> Unit,
     modifier: Modifier = Modifier,
 ) {
     val today = LocalDate.now()
     val scope = rememberCoroutineScope()
 
-    val doneDates =
-        remember(currentHabit.statuses) { currentHabit.statuses.map { it.date }.toSet() }
+    val doneDates = remember(statuses) { statuses.map { it.date }.toSet() }
     val edgeWeeks =
         listOf(calendarState.firstDayOfWeek, daysStartingFrom(calendarState.firstDayOfWeek).last())
 
@@ -141,7 +142,7 @@ fun CalendarMap(
                 if (day.position.name == "MonthDate") {
                     val done = day.date in doneDates
                     val validDate =
-                        day.date <= today && day.date.dayOfWeek in currentHabit.habit.days
+                        day.date <= today && day.date.dayOfWeek in days
 
                     val donePrevious = day.date.minusDays(1) in doneDates
                     val doneAfter = day.date.plusDays(1) in doneDates
@@ -173,11 +174,7 @@ fun CalendarMap(
                                         isLastDayOfMonth = day.date.plusDays(1).day == 1,
                                     )
                                 )
-                                .clickable(enabled = validDate) {
-                                    onAction(
-                                        HabitsAction.InsertStatus(currentHabit.habit, day.date)
-                                    )
-                                },
+                                .clickable(enabled = validDate) { onDateClick(day.date) },
                         contentAlignment = Alignment.Center,
                     ) {
                         if (done) {
@@ -247,33 +244,16 @@ private fun Preview() {
                     endMonth = YearMonth.now(),
                     firstVisibleMonth = YearMonth.now(),
                 ),
-            currentHabit =
-                HabitWithAnalytics(
-                    habit =
-                        Habit(
-                            id = 1,
-                            title = "Test Habit",
-                            description = "Just a test Habit",
-                            time = LocalDateTime.now(),
-                            days = DayOfWeek.entries.toSet(),
-                            index = 1,
-                            reminder = false,
-                        ),
-                    statuses =
-                        (0..40).map {
-                            HabitStatus(
-                                habitId = 1,
-                                date = LocalDate.now().minus(it, DateTimeUnit.DAY),
-                            )
-                        },
-                    weeklyComparisonData = listOf(),
-                    weekDayFrequencyData = mapOf(),
-                    currentStreak = 0,
-                    bestStreak = 0,
-                    startedDaysAgo = 0,
-                    consistency = 0.28f
-                ),
+            statuses =
+                (0..40).map {
+                    HabitStatus(
+                        habitId = 1,
+                        date = LocalDate.now().minus(it, DateTimeUnit.DAY),
+                    )
+                },
+            days = DayOfWeek.entries.toSet(),
             onNavigateToPaywall = {},
+            onDateClick = {}
         )
     }
 }

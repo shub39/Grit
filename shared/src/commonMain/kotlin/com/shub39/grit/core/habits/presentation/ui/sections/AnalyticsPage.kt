@@ -221,8 +221,17 @@ fun AnalyticsPage(
                         canSeeContent = isUserSubscribed,
                         onAction = onAction,
                         calendarState = calendarState,
-                        currentHabit = currentHabit,
                         onNavigateToPaywall = onNavigateToPaywall,
+                        statuses = currentHabit.statuses,
+                        days = currentHabit.habit.days,
+                        onDateClick = {
+                            onAction(
+                                HabitsAction.InsertStatus(
+                                    habit = currentHabit.habit,
+                                    date = it
+                                )
+                            )
+                        },
                     )
                 }
             }
