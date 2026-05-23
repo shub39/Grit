@@ -14,10 +14,12 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
-package com.shub39.grit.core.domain
+package com.shub39.grit.domain
 
-interface BiometricUtils {
-    fun getAuthenticators(): Int
-
-    fun authenticationAvailable(): Boolean
+// all the different intent actions passed
+enum class IntentActions(val action: String) {
+    ADD_HABIT_STATUS("add_habit_status"),
+    HABIT_NOTIFICATION("habit"),
+    TASK_NOTIFICATION("task_notification"),
+    MARK_TASK_DONE("mark_task_done"),
 }

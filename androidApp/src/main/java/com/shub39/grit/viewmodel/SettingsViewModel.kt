@@ -14,16 +14,16 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
-package com.shub39.grit.viewmodels
+package com.shub39.grit.viewmodel
 
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.toArgb
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.shub39.grit.core.domain.BiometricUtils
-import com.shub39.grit.core.domain.ChangelogManager
-import com.shub39.grit.core.domain.SettingsDatastore
-import com.shub39.grit.core.domain.ThemeDatastore
+import com.shub39.grit.domain.BiometricUtils
+import com.shub39.grit.domain.ChangelogManager
+import com.shub39.grit.domain.SettingsDatastore
+import com.shub39.grit.domain.ThemeDatastore
 import com.shub39.grit.core.settings.domain.backup.ExportRepo
 import com.shub39.grit.core.settings.domain.backup.ExportState
 import com.shub39.grit.core.settings.domain.backup.RestoreRepo

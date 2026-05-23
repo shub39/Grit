@@ -14,11 +14,21 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
-package com.shub39.grit.core.domain
+package com.shub39.grit.core.app
 
-import com.shub39.grit.core.components.Changelog
-import kotlinx.coroutines.flow.Flow
+import androidx.compose.runtime.Immutable
+import androidx.compose.runtime.Stable
+import com.shub39.grit.core.components.VersionEntry
+import com.shub39.grit.core.settings.domain.Sections
+import com.shub39.grit.core.theme.Theme
 
-interface ChangelogManager {
-    val changelogs: Flow<Changelog>
-}
+@Stable
+@Immutable
+data class MainAppState(
+    val isAppUnlocked: Boolean = false,
+    val isBiometricLockOn: Boolean? = null,
+    val isUserSubscribed: Boolean = false,
+    val startingSection: Sections = Sections.Tasks,
+    val theme: Theme = Theme(),
+    val currentChangelog: VersionEntry? = null,
+)

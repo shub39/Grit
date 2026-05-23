@@ -14,19 +14,11 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
-package com.shub39.grit.core.domain
+package com.shub39.grit.domain
 
-import com.shub39.grit.core.habits.domain.Habit
-import com.shub39.grit.core.tasks.domain.Task
+import com.shub39.grit.core.components.Changelog
+import kotlinx.coroutines.flow.Flow
 
-interface AlarmScheduler {
-    fun schedule(habit: Habit)
-
-    fun schedule(task: Task)
-
-    fun cancel(habit: Habit)
-
-    fun cancel(task: Task)
-
-    fun cancelAll()
+interface ChangelogManager {
+    val changelogs: Flow<Changelog>
 }

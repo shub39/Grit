@@ -14,12 +14,19 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
-package com.shub39.grit.core.domain
+package com.shub39.grit.domain
 
-// all the different intent actions passed
-enum class IntentActions(val action: String) {
-    ADD_HABIT_STATUS("add_habit_status"),
-    HABIT_NOTIFICATION("habit"),
-    TASK_NOTIFICATION("task_notification"),
-    MARK_TASK_DONE("mark_task_done"),
+import com.shub39.grit.core.habits.domain.Habit
+import com.shub39.grit.core.tasks.domain.Task
+
+interface AlarmScheduler {
+    fun schedule(habit: Habit)
+
+    fun schedule(task: Task)
+
+    fun cancel(habit: Habit)
+
+    fun cancel(task: Task)
+
+    fun cancelAll()
 }

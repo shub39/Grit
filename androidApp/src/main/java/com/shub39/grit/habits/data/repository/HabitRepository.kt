@@ -17,7 +17,7 @@
 package com.shub39.grit.habits.data.repository
 
 import com.shub39.grit.core.data.notification.GritNotificationManager
-import com.shub39.grit.core.domain.SettingsDatastore
+import com.shub39.grit.domain.SettingsDatastore
 import com.shub39.grit.core.habits.domain.Habit
 import com.shub39.grit.core.habits.domain.HabitRepo
 import com.shub39.grit.core.habits.domain.HabitStatus

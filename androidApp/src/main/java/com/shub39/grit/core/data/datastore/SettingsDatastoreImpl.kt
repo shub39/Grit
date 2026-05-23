@@ -21,7 +21,7 @@ import androidx.datastore.preferences.core.Preferences
 import androidx.datastore.preferences.core.booleanPreferencesKey
 import androidx.datastore.preferences.core.edit
 import androidx.datastore.preferences.core.stringPreferencesKey
-import com.shub39.grit.core.domain.SettingsDatastore
+import com.shub39.grit.domain.SettingsDatastore
 import com.shub39.grit.core.settings.domain.Sections
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map

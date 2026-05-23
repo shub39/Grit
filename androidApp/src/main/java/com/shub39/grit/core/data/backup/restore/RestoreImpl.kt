@@ -22,7 +22,7 @@ import com.shub39.grit.core.data.backup.toCategory
 import com.shub39.grit.core.data.backup.toHabit
 import com.shub39.grit.core.data.backup.toHabitStatus
 import com.shub39.grit.core.data.backup.toTask
-import com.shub39.grit.core.domain.AlarmScheduler
+import com.shub39.grit.domain.AlarmScheduler
 import com.shub39.grit.core.habits.domain.HabitRepo
 import com.shub39.grit.core.settings.domain.backup.RestoreFailedException
 import com.shub39.grit.core.settings.domain.backup.RestoreRepo

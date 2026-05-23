@@ -54,13 +54,12 @@ import com.shub39.grit.core.navigation.verticalTransitionMetadata
 import com.shub39.grit.core.settings.domain.Sections
 import com.shub39.grit.core.settings.presentation.ui.SettingsGraph
 import com.shub39.grit.core.tasks.presentation.ui.TasksPage
-import com.shub39.grit.viewmodels.HabitViewModel
-import com.shub39.grit.viewmodels.SettingsViewModel
-import com.shub39.grit.viewmodels.TasksViewModel
+import com.shub39.grit.viewmodel.HabitViewModel
+import com.shub39.grit.viewmodel.SettingsViewModel
+import com.shub39.grit.viewmodel.TasksViewModel
 import kotlinx.serialization.Serializable
 import org.jetbrains.compose.resources.painterResource
 import org.jetbrains.compose.resources.stringResource
-import org.koin.compose.koinInject
 import org.koin.compose.viewmodel.koinViewModel
 
 private sealed interface GlobalRoutes : NavKey {
@@ -146,7 +145,7 @@ private fun MainApp(state: MainAppState, onNavigateToPaywall: () -> Unit) {
                             }
 
                             entry<AppSections.SettingsPages>(metadata = fadeTransitionMetadata()) {
-                                val svm: SettingsViewModel = koinInject()
+                                val svm: SettingsViewModel = koinViewModel()
                                 val settingsState by svm.state.collectAsStateWithLifecycle()
 
                                 SettingsGraph(
@@ -198,7 +197,7 @@ private fun MainApp(state: MainAppState, onNavigateToPaywall: () -> Unit) {
                             }
 
                             entry<AppSections.SettingsPages>(metadata = fadeTransitionMetadata()) {
-                                val svm: SettingsViewModel = koinInject()
+                                val svm: SettingsViewModel = koinViewModel()
                                 val settingsState by svm.state.collectAsStateWithLifecycle()
 
                                 SettingsGraph(
