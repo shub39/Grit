@@ -64,13 +64,13 @@ import com.kizitonwose.calendar.core.now
 import com.shub39.grit.core.LocalWindowSizeClass
 import com.shub39.grit.core.habits.presentation.HabitState
 import com.shub39.grit.core.habits.presentation.HabitsAction
-import com.shub39.grit.core.habits.presentation.ui.component.CalendarMap
-import com.shub39.grit.core.habits.presentation.ui.component.HabitStartCard
-import com.shub39.grit.core.habits.presentation.ui.component.HabitStreakCard
+import com.shub39.grit.core.habits.presentation.ui.component.stats.CalendarMap
+import com.shub39.grit.core.habits.presentation.ui.component.stats.HabitStartCard
+import com.shub39.grit.core.habits.presentation.ui.component.stats.HabitStreakCard
 import com.shub39.grit.core.habits.presentation.ui.component.HabitUpsertSheet
-import com.shub39.grit.core.habits.presentation.ui.component.WeekDayBreakdown
-import com.shub39.grit.core.habits.presentation.ui.component.WeeklyActivity
-import com.shub39.grit.core.habits.presentation.ui.component.WeeklyBooleanHeatMap
+import com.shub39.grit.core.habits.presentation.ui.component.stats.WeekDayBreakdown
+import com.shub39.grit.core.habits.presentation.ui.component.stats.WeeklyActivity
+import com.shub39.grit.core.habits.presentation.ui.component.stats.WeeklyBooleanHeatMap
 import com.shub39.grit.core.shared_ui.GritDialog
 import com.shub39.grit.core.shared_ui.endItemShape
 import com.shub39.grit.core.shared_ui.leadingItemShape
@@ -222,7 +222,6 @@ fun AnalyticsPage(
                         onAction = onAction,
                         calendarState = calendarState,
                         currentHabit = currentHabit,
-                        primary = primary,
                         onNavigateToPaywall = onNavigateToPaywall,
                     )
                 }

@@ -14,7 +14,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
-package com.shub39.grit.core.habits.presentation.ui.component
+package com.shub39.grit.core.habits.presentation.ui.component.stats
 
 import androidx.compose.animation.animateContentSize
 import androidx.compose.foundation.background
@@ -53,6 +53,8 @@ import com.shub39.grit.core.habits.domain.StreakPosition
 import com.shub39.grit.core.habits.domain.calendarMapStreakShape
 import com.shub39.grit.core.habits.presentation.HabitsAction
 import com.shub39.grit.core.habits.presentation.daysStartingFrom
+import com.shub39.grit.core.habits.presentation.ui.component.AnalyticsCard
+import com.shub39.grit.core.habits.presentation.ui.component.CardArrows
 import com.shub39.grit.core.now
 import com.shub39.grit.core.shared_ui.endItemShape
 import com.shub39.grit.core.theme.GritTheme
@@ -77,7 +79,6 @@ fun CalendarMap(
     onAction: (HabitsAction) -> Unit,
     calendarState: CalendarState,
     currentHabit: HabitWithAnalytics,
-    primary: Color,
     onNavigateToPaywall: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
@@ -92,7 +93,6 @@ fun CalendarMap(
     AnalyticsCard(
         title = stringResource(Res.string.monthly_progress),
         icon = Res.drawable.calendar_month,
-        shape = endItemShape(topRadius = 8, bottomRadius = 28),
         canSeeContent = canSeeContent,
         onPlusClick = onNavigateToPaywall,
         header = {
@@ -156,12 +156,12 @@ fun CalendarMap(
                     Box(
                         modifier =
                             Modifier.padding(
-                                    top = 1.dp,
-                                    bottom = 1.dp,
-                                    start =
-                                        if (day.date.dayOfWeek == edgeWeeks.first()) 4.dp else 0.dp,
-                                    end = if (day.date.dayOfWeek == edgeWeeks.last()) 4.dp else 0.dp,
-                                )
+                                top = 1.dp,
+                                bottom = 1.dp,
+                                start =
+                                    if (day.date.dayOfWeek == edgeWeeks.first()) 4.dp else 0.dp,
+                                end = if (day.date.dayOfWeek == edgeWeeks.last()) 4.dp else 0.dp,
+                            )
                                 .fillMaxWidth()
                                 .height(40.dp)
                                 .clip(
@@ -189,7 +189,7 @@ fun CalendarMap(
                             ) {
                                 val isStreakEnd =
                                     streakPosition == StreakPosition.START ||
-                                        streakPosition == StreakPosition.END
+                                            streakPosition == StreakPosition.END
 
                                 if (isStreakEnd) {
                                     Box(
@@ -271,8 +271,8 @@ private fun Preview() {
                     currentStreak = 0,
                     bestStreak = 0,
                     startedDaysAgo = 0,
+                    consistency = 0.28f
                 ),
-            primary = MaterialTheme.colorScheme.primary,
             onNavigateToPaywall = {},
         )
     }

@@ -18,6 +18,7 @@ package com.shub39.grit.core.habits.presentation.ui.component
 
 import androidx.compose.foundation.basicMarquee
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.RowScope
 import androidx.compose.foundation.layout.Spacer
@@ -52,14 +53,13 @@ import org.jetbrains.compose.resources.stringResource
 fun AnalyticsCard(
     title: String,
     icon: DrawableResource,
-    shape: Shape = MaterialTheme.shapes.extraLarge,
     modifier: Modifier = Modifier,
     canSeeContent: Boolean = true,
     onPlusClick: () -> Unit = {},
     header: @Composable (RowScope.() -> Unit) = {},
     content: @Composable () -> Unit,
 ) {
-    Card(modifier = modifier, shape = shape) {
+    Column(modifier = modifier) {
         Row(
             modifier =
                 Modifier.padding(start = 16.dp, end = 8.dp, top = 8.dp, bottom = 8.dp)

@@ -23,6 +23,7 @@ typealias WeekDayFrequencyData = Map<String, Int>
 /** Grouped model for [habit] and its constituent analytics calculated from [statuses] */
 data class HabitWithAnalytics(
     val habit: Habit,
+    val consistency: Float,
     val statuses: List<HabitStatus>,
     val weeklyComparisonData: WeeklyComparisonData,
     val weekDayFrequencyData: WeekDayFrequencyData,

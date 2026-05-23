@@ -14,7 +14,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
-package com.shub39.grit.core.habits.presentation.ui.component
+package com.shub39.grit.core.habits.presentation.ui.component.stats
 
 import androidx.compose.animation.animateContentSize
 import androidx.compose.foundation.background
@@ -52,6 +52,8 @@ import com.kizitonwose.calendar.compose.heatmapcalendar.rememberHeatMapCalendarS
 import com.kizitonwose.calendar.core.now
 import com.shub39.grit.core.GritPreviewWrapper
 import com.shub39.grit.core.habits.presentation.daysStartingFrom
+import com.shub39.grit.core.habits.presentation.ui.component.AnalyticsCard
+import com.shub39.grit.core.habits.presentation.ui.component.CardArrows
 import com.shub39.grit.core.shared_ui.endItemShape
 import com.shub39.grit.core.shared_ui.leadingItemShape
 import com.shub39.grit.core.shared_ui.listItemColors

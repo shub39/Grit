@@ -42,8 +42,8 @@ import com.kizitonwose.calendar.core.now
 import com.shub39.grit.core.LocalWindowSizeClass
 import com.shub39.grit.core.habits.presentation.HabitState
 import com.shub39.grit.core.habits.presentation.HabitsAction
-import com.shub39.grit.core.habits.presentation.ui.component.HabitHeatMap
-import com.shub39.grit.core.habits.presentation.ui.component.WeekDayBreakdown
+import com.shub39.grit.core.habits.presentation.ui.component.stats.HabitHeatMap
+import com.shub39.grit.core.habits.presentation.ui.component.stats.WeekDayBreakdown
 import com.shub39.grit.core.theme.flexFontEmphasis
 import grit.shared.generated.resources.*
 import kotlinx.datetime.YearMonth

@@ -45,6 +45,7 @@ import kotlinx.coroutines.launch
 import kotlinx.datetime.DayOfWeek
 import kotlinx.datetime.LocalDate
 import kotlinx.datetime.daysUntil
+import kotlinx.datetime.minus
 import org.koin.core.annotation.Single
 
 @Single(binds = [HabitRepo::class])
@@ -116,6 +117,8 @@ class HabitRepository(
                             ),
                         weekDayFrequencyData = prepareWeekDayFrequencyData(dates = dates),
                         startedDaysAgo = habit.time.date.daysUntil(LocalDate.now()).toLong(),
+                        consistency =
+                            (dates.size.toFloat() / habit.time.date.daysUntil(LocalDate.now()))
                     )
                 }
             }

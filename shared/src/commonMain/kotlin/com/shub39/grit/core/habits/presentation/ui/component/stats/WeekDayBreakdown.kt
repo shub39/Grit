@@ -14,7 +14,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
-package com.shub39.grit.core.habits.presentation.ui.component
+package com.shub39.grit.core.habits.presentation.ui.component.stats
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
@@ -40,6 +40,8 @@ import androidx.compose.ui.tooling.preview.PreviewWrapper
 import androidx.compose.ui.unit.dp
 import com.shub39.grit.core.GritPreviewWrapper
 import com.shub39.grit.core.habits.domain.WeekDayFrequencyData
+import com.shub39.grit.core.habits.presentation.ui.component.AnalyticsCard
+import com.shub39.grit.core.habits.presentation.ui.component.NotEnoughData
 import grit.shared.generated.resources.*
 import kotlin.random.Random
 import kotlin.random.nextInt

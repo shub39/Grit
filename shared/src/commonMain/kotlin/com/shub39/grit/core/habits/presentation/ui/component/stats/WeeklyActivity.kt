@@ -14,7 +14,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
-package com.shub39.grit.core.habits.presentation.ui.component
+package com.shub39.grit.core.habits.presentation.ui.component.stats
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
@@ -48,6 +48,8 @@ import androidx.compose.ui.unit.dp
 import com.shub39.grit.core.GritPreviewWrapper
 import com.shub39.grit.core.habits.domain.WeeklyTimePeriod
 import com.shub39.grit.core.habits.domain.WeeklyTimePeriod.Companion.toWeeks
+import com.shub39.grit.core.habits.presentation.ui.component.AnalyticsCard
+import com.shub39.grit.core.habits.presentation.ui.component.NotEnoughData
 import grit.shared.generated.resources.*
 import kotlin.math.roundToInt
 import kotlin.random.Random
@@ -83,6 +85,7 @@ fun WeeklyActivity(lineChartData: List<Double>, modifier: Modifier = Modifier) {
                             when (period) {
                                 WeeklyTimePeriod.WEEKS_16 ->
                                     ButtonGroupDefaults.connectedLeadingButtonShapes()
+
                                 WeeklyTimePeriod.WEEKS_8 ->
                                     ButtonGroupDefaults.connectedTrailingButtonShapes()
                             },

@@ -14,7 +14,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
-package com.shub39.grit.core.habits.presentation.ui.component
+package com.shub39.grit.core.habits.presentation.ui.component.stats
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -53,6 +53,8 @@ import com.shub39.grit.core.habits.domain.StreakPosition
 import com.shub39.grit.core.habits.domain.heatMapStreakShape
 import com.shub39.grit.core.habits.presentation.HabitsAction
 import com.shub39.grit.core.habits.presentation.daysStartingFrom
+import com.shub39.grit.core.habits.presentation.ui.component.AnalyticsCard
+import com.shub39.grit.core.habits.presentation.ui.component.CardArrows
 import com.shub39.grit.core.now
 import com.shub39.grit.core.shared_ui.endItemShape
 import com.shub39.grit.core.shared_ui.leadingItemShape
@@ -87,7 +89,6 @@ fun WeeklyBooleanHeatMap(
     AnalyticsCard(
         title = stringResource(Res.string.weekly_progress),
         icon = Res.drawable.view_week,
-        shape = leadingItemShape(topRadius = 28, bottomRadius = 8),
         modifier = modifier,
         header = {
             CardArrows(
@@ -198,7 +199,7 @@ fun WeeklyBooleanHeatMap(
                                 ) {
                                     val isStreakEnd =
                                         streakPosition == StreakPosition.START ||
-                                            streakPosition == StreakPosition.END
+                                                streakPosition == StreakPosition.END
                                     if (isStreakEnd) {
                                         Box(
                                             modifier =
