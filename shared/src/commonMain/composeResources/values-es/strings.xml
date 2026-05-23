@@ -7,7 +7,7 @@
     <string name="add_habit">Agregar Nuevo Hábito</string>
     <string name="update_description">Editar Descripción</string>
     <string name="delete">Eliminar</string>
-    <string name="delete_warning">¿Estás seguro de que quieres eliminar este Hábito? Todo el progreso se perderá para siempre.</string>
+    <string name="delete_warning">¿Estás seguro de que quieres eliminar este Hábito? Todo el progreso se perderá para siempre</string>
     <string name="cancel">Cancelar</string>
     <string name="select_time">Seleccionar hora</string>
     <string name="habits">Hábitos</string>
@@ -20,12 +20,12 @@
     <string name="delete_tasks">¿Estás seguro de que quieres eliminar todas las tareas completadas?</string>
     <string name="update_title">Editar Título</string>
     <string name="edit_categories">Editar categorías de tareas</string>
-    <string name="delete_category">¿Estás seguro? Se eliminarán todas las tareas de esta categoría.</string>
+    <string name="delete_category">¿Estás seguro? Se eliminarán todas las tareas de esta categoría</string>
     <string name="add_category">Agregar Categoría</string>
     <string name="add">Agregar Algo</string>
     <string name="habit_map">Mapa de Calor de Hábitos</string>
     <string name="look_and_feel">Apariencia</string>
-    <string name="use_amoled">Paleta AMOLED</string>
+    <string name="use_amoled">Paleta Amoled</string>
     <string name="use_amoled_desc">Se ve mejor en pantallas AMOLED</string>
     <string name="select_seed">Seleccionar color base</string>
     <string name="select_seed_desc">Seleccionar color para generar la paleta</string>
@@ -80,4 +80,10 @@
     <string name="save">Guardar</string>
     <string name="add_reminder_desc">Recibe un recordatorio de notificación en los días seleccionados</string>
     <string name="select_days">Días Seleccionados</string>
+    <string name="bmc_desc">Apóyame haciendo una pequeña donación</string>
+    <string name="translate_desc">Traduce Grit en tu idioma</string>
+    <string name="language">Idioma</string>
+    <string name="about">Acerca de</string>
+    <string name="system_default">Sistema por defecto</string>
+    <string name="whats_changed">Que ha cambiado</string>
 </resources>
