@@ -268,6 +268,9 @@ fun HabitUpsertSheetContent(
                                                 )
                                             )
                                         },
+                                        enabled =
+                                            !(newHabit.days.size == 1 &&
+                                                newHabit.days.contains(dayOfWeek)),
                                         modifier = Modifier.weight(1f),
                                         colors = ToggleButtonDefaults.tonalToggleButtonColors(),
                                         content = { Text(text = dayOfWeek.name.take(1)) },

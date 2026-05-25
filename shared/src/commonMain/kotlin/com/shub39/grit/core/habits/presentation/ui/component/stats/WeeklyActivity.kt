@@ -176,52 +176,50 @@ fun WeeklyActivity(lineChartData: List<Double>, modifier: Modifier = Modifier) {
                         val height by
                             animateDpAsState(
                                 targetValue = ((data.toFloat() / animatedMax) * 200).dp,
-                                animationSpec = MaterialTheme.motionScheme.fastEffectsSpec(),
+                                animationSpec = MaterialTheme.motionScheme.slowSpatialSpec(),
                             )
 
                         if (weight > 0f) {
                             Column(
                                 horizontalAlignment = Alignment.CenterHorizontally,
                                 verticalArrangement = Arrangement.spacedBy(4.dp),
-                                modifier = Modifier.weight(weight).animateContentSize(),
+                                modifier =
+                                    Modifier.weight(weight)
+                                        .height(height)
+                                        .background(
+                                            color =
+                                                if (data == max) MaterialTheme.colorScheme.primary
+                                                else MaterialTheme.colorScheme.secondary,
+                                            shape = CircleShape,
+                                        )
+                                        .animateContentSize(
+                                            MaterialTheme.motionScheme.slowSpatialSpec()
+                                        ),
                             ) {
-                                Row(
-                                    modifier =
-                                        Modifier.height(height)
-                                            .fillMaxWidth()
-                                            .background(
-                                                color =
-                                                    if (data == max)
-                                                        MaterialTheme.colorScheme.primary
-                                                    else MaterialTheme.colorScheme.secondary,
-                                                shape = CircleShape,
-                                            )
+                                AnimatedVisibility(
+                                    visible =
+                                        data == max &&
+                                            selectedTimePeriod == WeeklyTimePeriod.MONTHS_2,
+                                    enter = fadeIn(),
+                                    exit = fadeOut(),
                                 ) {
-                                    AnimatedVisibility(
-                                        visible =
-                                            data == max &&
-                                                selectedTimePeriod == WeeklyTimePeriod.MONTHS_2,
-                                        enter = fadeIn(),
-                                        exit = fadeOut(),
+                                    Box(
+                                        modifier =
+                                            Modifier.fillMaxWidth()
+                                                .aspectRatio(1f)
+                                                .padding(4.dp)
+                                                .background(
+                                                    color = MaterialTheme.colorScheme.onPrimary,
+                                                    shape = MaterialShapes.SoftBurst.toShape(),
+                                                ),
+                                        contentAlignment = Alignment.Center,
                                     ) {
-                                        Box(
-                                            modifier =
-                                                Modifier.fillMaxWidth()
-                                                    .aspectRatio(1f)
-                                                    .padding(4.dp)
-                                                    .background(
-                                                        color = MaterialTheme.colorScheme.onPrimary,
-                                                        shape = MaterialShapes.SoftBurst.toShape(),
-                                                    ),
-                                            contentAlignment = Alignment.Center,
-                                        ) {
-                                            Icon(
-                                                painter = painterResource(Res.drawable.check),
-                                                contentDescription = null,
-                                                tint = MaterialTheme.colorScheme.primary,
-                                                modifier = Modifier.size(20.dp),
-                                            )
-                                        }
+                                        Icon(
+                                            painter = painterResource(Res.drawable.check),
+                                            contentDescription = null,
+                                            tint = MaterialTheme.colorScheme.primary,
+                                            modifier = Modifier.size(20.dp),
+                                        )
                                     }
                                 }
                             }

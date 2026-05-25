@@ -57,7 +57,10 @@ fun NotEnoughData(modifier: Modifier = Modifier) {
                 )
             }
             Spacer(modifier = Modifier.height(4.dp))
-            Text(text = stringResource(Res.string.not_enough_data))
+            Text(
+                text = stringResource(Res.string.not_enough_data),
+                color = MaterialTheme.colorScheme.onSurface,
+            )
         }
     }
 }

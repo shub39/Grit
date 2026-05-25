@@ -16,6 +16,10 @@
  */
 package com.shub39.grit.core.habits.presentation.ui.component.stats
 
+import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.core.animateDpAsState
+import androidx.compose.animation.fadeIn
+import androidx.compose.animation.fadeOut
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -32,6 +36,7 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.material3.toShape
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontWeight
@@ -72,14 +77,20 @@ fun WeekDayBreakdown(
                 horizontalArrangement = Arrangement.spacedBy(2.dp),
             ) {
                 weekDayData.forEach { (day, data) ->
+                    val height by
+                        animateDpAsState(
+                            targetValue = ((data.toFloat() / max.toFloat()) * 200).dp,
+                            animationSpec = MaterialTheme.motionScheme.slowSpatialSpec(),
+                        )
+
                     Column(
                         horizontalAlignment = Alignment.CenterHorizontally,
                         verticalArrangement = Arrangement.spacedBy(4.dp),
                         modifier = Modifier.weight(1f),
                     ) {
-                        Box(
+                        Column(
                             modifier =
-                                Modifier.height(((data.toFloat() / max.toFloat()) * 200).dp)
+                                Modifier.height(height)
                                     .fillMaxWidth()
                                     .background(
                                         color =
@@ -88,41 +99,47 @@ fun WeekDayBreakdown(
                                         shape = CircleShape,
                                     )
                         ) {
-                            if (data == max) {
-                                Box(
-                                    modifier =
-                                        Modifier.fillMaxWidth()
-                                            .aspectRatio(1f)
-                                            .padding(4.dp)
-                                            .background(
-                                                color = MaterialTheme.colorScheme.onPrimary,
-                                                shape = MaterialShapes.SoftBurst.toShape(),
-                                            ),
-                                    contentAlignment = Alignment.Center,
-                                ) {
-                                    Text(
-                                        text = data.toString(),
-                                        color = MaterialTheme.colorScheme.primary,
-                                        style = MaterialTheme.typography.labelMedium,
-                                    )
-                                }
-                            } else if (data > (max / 2)) {
-                                Box(
-                                    modifier =
-                                        Modifier.fillMaxWidth()
-                                            .aspectRatio(1f)
-                                            .padding(4.dp)
-                                            .background(
-                                                color = MaterialTheme.colorScheme.onSecondary,
-                                                shape = MaterialShapes.Circle.toShape(),
-                                            ),
-                                    contentAlignment = Alignment.Center,
-                                ) {
-                                    Text(
-                                        text = data.toString(),
-                                        color = MaterialTheme.colorScheme.secondary,
-                                        style = MaterialTheme.typography.labelMedium,
-                                    )
+                            AnimatedVisibility(
+                                visible = data == max || data > (max / 2),
+                                enter = fadeIn(),
+                                exit = fadeOut(),
+                            ) {
+                                if (data == max) {
+                                    Box(
+                                        modifier =
+                                            Modifier.fillMaxWidth()
+                                                .aspectRatio(1f)
+                                                .padding(4.dp)
+                                                .background(
+                                                    color = MaterialTheme.colorScheme.onPrimary,
+                                                    shape = MaterialShapes.SoftBurst.toShape(),
+                                                ),
+                                        contentAlignment = Alignment.Center,
+                                    ) {
+                                        Text(
+                                            text = data.toString(),
+                                            color = MaterialTheme.colorScheme.primary,
+                                            style = MaterialTheme.typography.labelMedium,
+                                        )
+                                    }
+                                } else {
+                                    Box(
+                                        modifier =
+                                            Modifier.fillMaxWidth()
+                                                .aspectRatio(1f)
+                                                .padding(4.dp)
+                                                .background(
+                                                    color = MaterialTheme.colorScheme.onSecondary,
+                                                    shape = MaterialShapes.Circle.toShape(),
+                                                ),
+                                        contentAlignment = Alignment.Center,
+                                    ) {
+                                        Text(
+                                            text = data.toString(),
+                                            color = MaterialTheme.colorScheme.secondary,
+                                            style = MaterialTheme.typography.labelMedium,
+                                        )
+                                    }
                                 }
                             }
                         }
