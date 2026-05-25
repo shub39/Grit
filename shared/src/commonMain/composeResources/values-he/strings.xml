@@ -11,7 +11,7 @@
     <string name="select_time">בחירת שעה</string>
     <string name="habits">הרגלים</string>
     <string name="streak">רצף נוכחי</string>
-    <string name="best_streak">רצף שיא: %1$d</string>
+    <string name="best_streak">רצף שיא</string>
     <string name="settings">הגדרות</string>
     <string name="days_ago_format">לפני %1$d ימים…</string>
     <string name="too_long">ארוך מדי</string>

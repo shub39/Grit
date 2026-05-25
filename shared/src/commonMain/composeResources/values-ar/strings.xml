@@ -12,7 +12,7 @@
     <string name="select_time">حدّد الوقت</string>
     <string name="habits">العادات</string>
     <string name="streak">سلسلة الإنجاز الحالية</string>
-    <string name="best_streak">افضل سلسلة انجاز: %1$d</string>
+    <string name="best_streak">افضل سلسلة انجاز</string>
     <string name="settings">الإعدادات</string>
     <string name="days_ago_format">قبل %1$d ايام…</string>
     <string name="too_long">طويل جدًا</string>

@@ -12,7 +12,7 @@
     <string name="select_time">Seleccionar hora</string>
     <string name="habits">Hábitos</string>
     <string name="streak">Racha Actual</string>
-    <string name="best_streak">Mejor Racha: %1$d</string>
+    <string name="best_streak">Mejor Racha</string>
     <string name="settings">Ajustes</string>
     <string name="days_ago_format">Hace %1$d día(s)…</string>
     <string name="too_long">Demasiado Largo</string>

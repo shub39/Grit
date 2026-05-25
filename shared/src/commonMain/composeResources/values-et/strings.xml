@@ -79,6 +79,6 @@
     <string name="delete_warning">Oled sa kindel, et soovid seda harjumust kustutada? Kogu edenemine läheb kaduma</string>
     <string name="use_amoled_desc">Parim kogemus AMOLED ekraanidel</string>
     <string name="streak">Praegune seeria</string>
-    <string name="best_streak">Parim seeria: %1$d</string>
+    <string name="best_streak">Parim seeria</string>
     <string name="habit_map">Harjumuste soojuskaart</string>
 </resources>

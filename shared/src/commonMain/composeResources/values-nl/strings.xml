@@ -14,7 +14,7 @@
     <string name="save">Opslaan</string>
     <string name="edit_task">Taak bewerken</string>
     <string name="edit_categories">Categorieën bewerken</string>
-    <string name="best_streak">Beste Score: %1$d</string>
+    <string name="best_streak">Beste Score</string>
     <string name="delete_tasks">Weet je zeker dat je alle voltooide taken wilt verwijderen?</string>
     <string name="update_title">Bewerk titel</string>
     <string name="delete_category">Weet je het zeker? Alle taken in deze categorie worden verwijderd</string>

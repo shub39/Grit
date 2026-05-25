@@ -19,7 +19,7 @@
     <string name="add_category">新增類別</string>
     <string name="delete_warning">確定刪除此習慣嗎？所有進度將永久消失</string>
     <string name="streak">目前連續天數</string>
-    <string name="best_streak">最佳連續天數：%1$d</string>
+    <string name="best_streak">最佳連續天數</string>
     <string name="too_long">內容過長</string>
     <string name="delete_tasks">確定要刪除所有已完成的任務嗎？</string>
     <string name="delete_category">確定嗎？此類別中的所有任務都將被刪除</string>

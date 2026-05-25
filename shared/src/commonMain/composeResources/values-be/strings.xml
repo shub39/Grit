@@ -12,7 +12,7 @@
     <string name="select_time">Выбраць час</string>
     <string name="habits">Звычкі</string>
     <string name="streak">Бягучая паласа</string>
-    <string name="best_streak">Лепшая паласа: %1$d</string>
+    <string name="best_streak">Лепшая паласа</string>
     <string name="settings">Налады</string>
     <string name="days_ago_format">%1$d дзён таму…</string>
     <string name="too_long">Занадта доўга</string>

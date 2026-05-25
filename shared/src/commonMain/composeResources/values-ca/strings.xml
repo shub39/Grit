@@ -12,7 +12,7 @@
     <string name="select_time">Seleccionar hora</string>
     <string name="habits">Hàbits</string>
     <string name="streak">Ratxa</string>
-    <string name="best_streak">Millor ratxa: %1$d</string>
+    <string name="best_streak">Millor ratxa</string>
     <string name="settings">Configuració</string>
     <string name="days_ago_format">%1$d dies enrere…</string>
     <string name="too_long">Massa llarg</string>

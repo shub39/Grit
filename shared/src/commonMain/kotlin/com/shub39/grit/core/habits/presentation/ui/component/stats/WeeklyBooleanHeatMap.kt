@@ -199,7 +199,7 @@ fun WeeklyBooleanHeatMap(
                                 ) {
                                     val isStreakEnd =
                                         streakPosition == StreakPosition.START ||
-                                                streakPosition == StreakPosition.END
+                                            streakPosition == StreakPosition.END
                                     if (isStreakEnd) {
                                         Box(
                                             modifier =

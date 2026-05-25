@@ -12,7 +12,7 @@
     <string name="select_time">دەستنیشانکردنی کات</string>
     <string name="habits">خووەکان</string>
     <string name="streak">چەند ڕۆژە بەردەوامی</string>
-    <string name="best_streak">باشترین بەردەوامی: %1$d</string>
+    <string name="best_streak">باشترین بەردەوامی</string>
     <string name="settings">ڕێکخستنەکان</string>
     <string name="days_ago_format">%1$d ڕۆژ لەمەوپێش…</string>
     <string name="too_long">زۆر درێژە</string>

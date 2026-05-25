@@ -18,13 +18,13 @@ package com.shub39.grit.viewmodel
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.shub39.grit.domain.AlarmScheduler
-import com.shub39.grit.domain.SettingsDatastore
 import com.shub39.grit.core.tasks.domain.Category
 import com.shub39.grit.core.tasks.domain.CategoryColors
 import com.shub39.grit.core.tasks.domain.TaskRepo
 import com.shub39.grit.core.tasks.presentation.TaskAction
 import com.shub39.grit.core.tasks.presentation.TaskState
+import com.shub39.grit.domain.AlarmScheduler
+import com.shub39.grit.domain.SettingsDatastore
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow

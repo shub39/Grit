@@ -69,7 +69,7 @@
     <string name="whats_changed">Τι άλλαξε</string>
     <string name="select_days">Επιλέξτε ημέρες</string>
     <string name="streak">Τρέχον Σερί</string>
-    <string name="best_streak">Καλύτερο σερί:%1$d</string>
+    <string name="best_streak">Καλύτερο σερί</string>
     <string name="habit_map">Θερμικός Χάρτης Συνηθειών</string>
     <string name="use_amoled_desc">Καλύτερη εμπειρία σε οθόνες AMOLED</string>
     <string name="select_seed">Επιλογή ριζικού χρώματος</string>

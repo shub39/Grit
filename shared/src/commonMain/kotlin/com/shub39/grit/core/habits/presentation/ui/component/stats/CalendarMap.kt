@@ -34,7 +34,6 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.tooling.preview.PreviewWrapper
 import androidx.compose.ui.unit.dp
@@ -46,9 +45,7 @@ import com.kizitonwose.calendar.core.minusYears
 import com.kizitonwose.calendar.core.now
 import com.kizitonwose.calendar.core.plusDays
 import com.shub39.grit.core.GritPreviewWrapper
-import com.shub39.grit.core.habits.domain.Habit
 import com.shub39.grit.core.habits.domain.HabitStatus
-import com.shub39.grit.core.habits.domain.HabitWithAnalytics
 import com.shub39.grit.core.habits.domain.StreakPosition
 import com.shub39.grit.core.habits.domain.calendarMapStreakShape
 import com.shub39.grit.core.habits.presentation.HabitsAction
@@ -56,14 +53,12 @@ import com.shub39.grit.core.habits.presentation.daysStartingFrom
 import com.shub39.grit.core.habits.presentation.ui.component.AnalyticsCard
 import com.shub39.grit.core.habits.presentation.ui.component.CardArrows
 import com.shub39.grit.core.now
-import com.shub39.grit.core.shared_ui.endItemShape
 import com.shub39.grit.core.theme.GritTheme
 import grit.shared.generated.resources.*
 import kotlinx.coroutines.launch
 import kotlinx.datetime.DateTimeUnit
 import kotlinx.datetime.DayOfWeek
 import kotlinx.datetime.LocalDate
-import kotlinx.datetime.LocalDateTime
 import kotlinx.datetime.YearMonth
 import kotlinx.datetime.format
 import kotlinx.datetime.format.MonthNames
@@ -141,8 +136,7 @@ fun CalendarMap(
             dayContent = { day ->
                 if (day.position.name == "MonthDate") {
                     val done = day.date in doneDates
-                    val validDate =
-                        day.date <= today && day.date.dayOfWeek in days
+                    val validDate = day.date <= today && day.date.dayOfWeek in days
 
                     val donePrevious = day.date.minusDays(1) in doneDates
                     val doneAfter = day.date.plusDays(1) in doneDates
@@ -157,12 +151,12 @@ fun CalendarMap(
                     Box(
                         modifier =
                             Modifier.padding(
-                                top = 1.dp,
-                                bottom = 1.dp,
-                                start =
-                                    if (day.date.dayOfWeek == edgeWeeks.first()) 4.dp else 0.dp,
-                                end = if (day.date.dayOfWeek == edgeWeeks.last()) 4.dp else 0.dp,
-                            )
+                                    top = 1.dp,
+                                    bottom = 1.dp,
+                                    start =
+                                        if (day.date.dayOfWeek == edgeWeeks.first()) 4.dp else 0.dp,
+                                    end = if (day.date.dayOfWeek == edgeWeeks.last()) 4.dp else 0.dp,
+                                )
                                 .fillMaxWidth()
                                 .height(40.dp)
                                 .clip(
@@ -186,7 +180,7 @@ fun CalendarMap(
                             ) {
                                 val isStreakEnd =
                                     streakPosition == StreakPosition.START ||
-                                            streakPosition == StreakPosition.END
+                                        streakPosition == StreakPosition.END
 
                                 if (isStreakEnd) {
                                     Box(
@@ -246,14 +240,11 @@ private fun Preview() {
                 ),
             statuses =
                 (0..40).map {
-                    HabitStatus(
-                        habitId = 1,
-                        date = LocalDate.now().minus(it, DateTimeUnit.DAY),
-                    )
+                    HabitStatus(habitId = 1, date = LocalDate.now().minus(it, DateTimeUnit.DAY))
                 },
             days = DayOfWeek.entries.toSet(),
             onNavigateToPaywall = {},
-            onDateClick = {}
+            onDateClick = {},
         )
     }
 }

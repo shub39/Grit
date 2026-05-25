@@ -12,7 +12,7 @@
     <string name="select_time">Idő kiválaszása</string>
     <string name="habits">Szokások</string>
     <string name="streak">Jelenlegi sorozat</string>
-    <string name="best_streak">Legjobb sorozat: %1$d</string>
+    <string name="best_streak">Legjobb sorozat</string>
     <string name="settings">Beállítások</string>
     <string name="days_ago_format">%1$d napja…</string>
     <string name="too_long">Túl hosszú</string>

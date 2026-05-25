@@ -12,7 +12,7 @@
     <string name="select_time">Zaman Seç</string>
     <string name="habits">Alışkanlıklar</string>
     <string name="streak">Mevcut Seri</string>
-    <string name="best_streak">En İyi Seri: %1$d</string>
+    <string name="best_streak">En İyi Seri</string>
     <string name="settings">Ayarlar</string>
     <string name="days_ago_format">%1$d gün önce…</string>
     <string name="too_long">Çok Uzun</string>

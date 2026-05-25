@@ -12,7 +12,7 @@
     <string name="select_time">Izvēlēties laiku</string>
     <string name="habits">Paradumi</string>
     <string name="streak">Dienas Pēc Kārtas</string>
-    <string name="best_streak">Rekords Dienām Pēc Kārtas: %1$d</string>
+    <string name="best_streak">Rekords Dienām Pēc Kārtas</string>
     <string name="settings">Iestatījumi</string>
     <string name="days_ago_format">Pirms %1$d dienām…</string>
     <string name="too_long">Par Garu</string>

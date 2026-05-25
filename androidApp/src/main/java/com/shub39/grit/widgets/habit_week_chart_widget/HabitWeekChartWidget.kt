@@ -144,7 +144,7 @@ class HabitWeekChartWidget : GlanceAppWidget(), KoinComponent {
                         currentStreak = 12,
                         bestStreak = 20,
                         startedDaysAgo = 100,
-                        consistency = 0.38f
+                        consistency = 0.38f,
                     ),
             )
         }
@@ -310,7 +310,7 @@ private fun GlancePreview() {
                 currentStreak = 12,
                 bestStreak = 20,
                 startedDaysAgo = 100,
-                consistency = 0.38f
+                consistency = 0.38f,
             ),
     )
 }

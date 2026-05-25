@@ -12,7 +12,7 @@
     <string name="select_time">Вибрати час</string>
     <string name="habits">Звички</string>
     <string name="streak">Поточна серія</string>
-    <string name="best_streak">Найдовша серія: %1$d</string>
+    <string name="best_streak">Найдовша серія</string>
     <string name="settings">Налаштування</string>
     <string name="days_ago_format">%1$d днів тому…</string>
     <string name="too_long">Надто довго</string>

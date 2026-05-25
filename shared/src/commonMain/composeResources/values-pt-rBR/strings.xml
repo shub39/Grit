@@ -11,7 +11,7 @@
     <string name="select_time">Selecionar horário</string>
     <string name="habits">Hábitos</string>
     <string name="streak">Sequência Atual</string>
-    <string name="best_streak">Melhor sequência: %1$d</string>
+    <string name="best_streak">Melhor sequência</string>
     <string name="settings">Configurações</string>
     <string name="days_ago_format">%1$d Dias atrás…</string>
     <string name="too_long">Muito Longo</string>

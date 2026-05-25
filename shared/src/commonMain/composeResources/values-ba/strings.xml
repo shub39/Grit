@@ -12,7 +12,7 @@
     <string name="select_time">Ваҡыт һайларға</string>
     <string name="habits">Ғәҙәттәр</string>
     <string name="streak">Ағымдағы серия</string>
-    <string name="best_streak">Иң яҡшы серия: %1$d</string>
+    <string name="best_streak">Иң яҡшы серия</string>
     <string name="settings">Көйләүҙәр</string>
     <string name="days_ago_format">%1$d көн элек…</string>
     <string name="too_long">Ныҡ оҙаҡ</string>

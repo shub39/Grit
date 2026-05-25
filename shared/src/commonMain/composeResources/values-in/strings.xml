@@ -12,7 +12,7 @@
     <string name="select_time">Pilih waktu</string>
     <string name="habits">Kebiasaan</string>
     <string name="streak">Streak saat ini</string>
-    <string name="best_streak">Streak terbanyak : %1$d</string>
+    <string name="best_streak">Streak terbanyak</string>
     <string name="settings">Pengaturan</string>
     <string name="days_ago_format">%1$d Hari yang lalu…</string>
     <string name="too_long">Lama waktu</string>

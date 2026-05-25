@@ -56,7 +56,7 @@
     <string name="select_time">Chọn thời gian</string>
     <string name="habits">Các thói quen</string>
     <string name="streak">Chuỗi hiện tại</string>
-    <string name="best_streak">Chuỗi tốt nhất: %1$d</string>
+    <string name="best_streak">Chuỗi tốt nhất</string>
     <string name="weekly_progress">Quá trình hằng tuần</string>
     <string name="unlock_more_plus">Mở khóa nhiều thứ hơn với gói cao cấp</string>
     <string name="unlock_plus">Mở khóa với gói cao cấp</string>

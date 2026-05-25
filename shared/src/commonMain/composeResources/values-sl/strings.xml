@@ -12,7 +12,7 @@
     <string name="select_time">Izberi čas</string>
     <string name="habits">Navade</string>
     <string name="streak">Trenutni niz</string>
-    <string name="best_streak">Najdaljši niz: %1$d</string>
+    <string name="best_streak">Najdaljši niz</string>
     <string name="settings">Nastavitve</string>
     <string name="days_ago_format">%1$d dni nazaj…</string>
     <string name="too_long">Predolgo</string>

@@ -12,7 +12,7 @@
     <string name="select_time">Zeit auswählen</string>
     <string name="habits">Routinen</string>
     <string name="streak">Aktuelle Serie</string>
-    <string name="best_streak">Beste Serie: %1$d</string>
+    <string name="best_streak">Beste Serie</string>
     <string name="settings">Einstellungen</string>
     <string name="too_long">Zu lange</string>
     <string name="edit_task">Aufgabe bearbeiten</string>

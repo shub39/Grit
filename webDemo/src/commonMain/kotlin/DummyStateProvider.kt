@@ -94,14 +94,18 @@ object DummyStateProvider {
     private fun createHabitWithAnalytics(habit: Habit, daysAgo: Int): HabitWithAnalytics {
         val statuses = generateDummyStatuses(habit.id, daysAgo)
         val dates = statuses.map { it.date }
+        val currentStreak = countCurrentStreak(dates, habit.days)
+        val bestStreak = countBestStreak(dates, habit.days)
+
         return HabitWithAnalytics(
             habit = habit,
             statuses = statuses,
             weeklyComparisonData = prepareLineChartData(DayOfWeek.MONDAY, statuses),
             weekDayFrequencyData = prepareWeekDayFrequencyData(dates),
-            currentStreak = countCurrentStreak(dates, habit.days),
-            bestStreak = countBestStreak(dates, habit.days),
+            currentStreak = currentStreak,
+            bestStreak = bestStreak,
             startedDaysAgo = daysAgo.toLong(),
+            consistency = (currentStreak.toFloat() / bestStreak).coerceIn(0f, 1f),
         )
     }
 
@@ -213,6 +217,7 @@ object DummyStateProvider {
                             currentStreak = 0,
                             bestStreak = 0,
                             startedDaysAgo = 0,
+                            consistency = 0f,
                         )
                     val updatedHabits = it.habitsWithAnalytics + newHabitWithAnalytics
                     it.copy(

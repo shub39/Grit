@@ -12,7 +12,7 @@
     <string name="select_time">時刻を選択</string>
     <string name="habits">習慣</string>
     <string name="streak">連続記録</string>
-    <string name="best_streak">最高連続記録: %1$d</string>
+    <string name="best_streak">最高連続記録</string>
     <string name="settings">設定</string>
     <string name="days_ago_format">%1$d 日前…</string>
     <string name="too_long">文字数が長すぎます</string>

@@ -20,10 +20,6 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.toArgb
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.shub39.grit.domain.BiometricUtils
-import com.shub39.grit.domain.ChangelogManager
-import com.shub39.grit.domain.SettingsDatastore
-import com.shub39.grit.domain.ThemeDatastore
 import com.shub39.grit.core.settings.domain.backup.ExportRepo
 import com.shub39.grit.core.settings.domain.backup.ExportState
 import com.shub39.grit.core.settings.domain.backup.RestoreRepo
@@ -32,6 +28,10 @@ import com.shub39.grit.core.settings.domain.backup.RestoreState
 import com.shub39.grit.core.settings.presentation.BackupState
 import com.shub39.grit.core.settings.presentation.SettingsAction
 import com.shub39.grit.core.settings.presentation.SettingsState
+import com.shub39.grit.domain.BiometricUtils
+import com.shub39.grit.domain.ChangelogManager
+import com.shub39.grit.domain.SettingsDatastore
+import com.shub39.grit.domain.ThemeDatastore
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted

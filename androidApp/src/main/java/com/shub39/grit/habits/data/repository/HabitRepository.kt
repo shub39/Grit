@@ -17,13 +17,13 @@
 package com.shub39.grit.habits.data.repository
 
 import com.shub39.grit.core.data.notification.GritNotificationManager
-import com.shub39.grit.domain.SettingsDatastore
 import com.shub39.grit.core.habits.domain.Habit
 import com.shub39.grit.core.habits.domain.HabitRepo
 import com.shub39.grit.core.habits.domain.HabitStatus
 import com.shub39.grit.core.habits.domain.HabitWithAnalytics
 import com.shub39.grit.core.habits.domain.OverallAnalytics
 import com.shub39.grit.core.now
+import com.shub39.grit.domain.SettingsDatastore
 import com.shub39.grit.habits.data.database.HabitStatusDao
 import com.shub39.grit.habits.data.database.HabitsDao
 import com.shub39.grit.habits.data.toHabit
@@ -118,7 +118,7 @@ class HabitRepository(
                         weekDayFrequencyData = prepareWeekDayFrequencyData(dates = dates),
                         startedDaysAgo = habit.time.date.daysUntil(LocalDate.now()).toLong(),
                         consistency =
-                            (dates.size.toFloat() / habit.time.date.daysUntil(LocalDate.now()))
+                            (dates.size.toFloat() / habit.time.date.daysUntil(LocalDate.now())),
                     )
                 }
             }

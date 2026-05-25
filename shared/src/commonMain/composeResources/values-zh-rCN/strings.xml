@@ -12,7 +12,7 @@
     <string name="select_time">选择时间</string>
     <string name="habits">习惯</string>
     <string name="streak">当前连续</string>
-    <string name="best_streak">最佳连续天数：%1$d</string>
+    <string name="best_streak">最佳连续天数</string>
     <string name="settings">设置</string>
     <string name="days_ago_format">%1$d 天前…</string>
     <string name="too_long">过长</string>

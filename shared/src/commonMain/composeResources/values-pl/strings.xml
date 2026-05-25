@@ -12,7 +12,7 @@
     <string name="select_time">Wybierz czas</string>
     <string name="habits">Nawyki</string>
     <string name="streak">Obecna passa</string>
-    <string name="best_streak">Najlepsza seria: %1$d</string>
+    <string name="best_streak">Najlepsza seria</string>
     <string name="settings">Ustawienia</string>
     <string name="days_ago_format">%1$d dni temu…</string>
     <string name="too_long">Zbyt Długie</string>

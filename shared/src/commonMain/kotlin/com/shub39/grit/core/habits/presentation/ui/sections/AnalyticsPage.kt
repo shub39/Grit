@@ -64,16 +64,13 @@ import com.kizitonwose.calendar.core.now
 import com.shub39.grit.core.LocalWindowSizeClass
 import com.shub39.grit.core.habits.presentation.HabitState
 import com.shub39.grit.core.habits.presentation.HabitsAction
-import com.shub39.grit.core.habits.presentation.ui.component.stats.CalendarMap
-import com.shub39.grit.core.habits.presentation.ui.component.stats.HabitStartCard
-import com.shub39.grit.core.habits.presentation.ui.component.stats.HabitStreakCard
 import com.shub39.grit.core.habits.presentation.ui.component.HabitUpsertSheet
+import com.shub39.grit.core.habits.presentation.ui.component.stats.CalendarMap
+import com.shub39.grit.core.habits.presentation.ui.component.stats.StartStats
 import com.shub39.grit.core.habits.presentation.ui.component.stats.WeekDayBreakdown
 import com.shub39.grit.core.habits.presentation.ui.component.stats.WeeklyActivity
 import com.shub39.grit.core.habits.presentation.ui.component.stats.WeeklyBooleanHeatMap
 import com.shub39.grit.core.shared_ui.GritDialog
-import com.shub39.grit.core.shared_ui.endItemShape
-import com.shub39.grit.core.shared_ui.leadingItemShape
 import com.shub39.grit.core.theme.flexFontEmphasis
 import com.shub39.grit.core.theme.flexFontRounded
 import grit.shared.generated.resources.*
@@ -92,7 +89,6 @@ fun AnalyticsPage(
 ) {
     val windowSizeClass = LocalWindowSizeClass.current
 
-    val primary = MaterialTheme.colorScheme.primary
     val currentMonth = remember { YearMonth.now() }
     val currentHabit =
         state.habitsWithAnalytics.find { it.habit.id == state.analyticsHabitId } ?: return
@@ -189,21 +185,12 @@ fun AnalyticsPage(
             verticalItemSpacing = 8.dp,
         ) {
             item {
-                Column(
-                    modifier = Modifier.fillMaxWidth().widthIn(max = maxWidth),
-                    verticalArrangement = Arrangement.spacedBy(2.dp),
-                ) {
-                    HabitStartCard(
-                        date = currentHabit.habit.time.date,
-                        startedDaysAgo = currentHabit.startedDaysAgo,
-                        shape = leadingItemShape(topRadius = 28, bottomRadius = 8),
-                    )
-                    HabitStreakCard(
-                        currentStreak = currentHabit.currentStreak,
-                        bestStreak = currentHabit.bestStreak,
-                        shape = endItemShape(topRadius = 8, bottomRadius = 28),
-                    )
-                }
+                StartStats(
+                    consistency = currentHabit.consistency,
+                    startDate = currentHabit.habit.time.date,
+                    bestStreak = currentHabit.bestStreak,
+                    currentStreak = currentHabit.currentStreak,
+                )
             }
 
             item {
@@ -226,10 +213,7 @@ fun AnalyticsPage(
                         days = currentHabit.habit.days,
                         onDateClick = {
                             onAction(
-                                HabitsAction.InsertStatus(
-                                    habit = currentHabit.habit,
-                                    date = it
-                                )
+                                HabitsAction.InsertStatus(habit = currentHabit.habit, date = it)
                             )
                         },
                     )
