@@ -48,12 +48,10 @@ import com.shub39.grit.core.GritPreviewWrapper
 import com.shub39.grit.core.habits.domain.HabitStatus
 import com.shub39.grit.core.habits.domain.StreakPosition
 import com.shub39.grit.core.habits.domain.calendarMapStreakShape
-import com.shub39.grit.core.habits.presentation.HabitsAction
 import com.shub39.grit.core.habits.presentation.daysStartingFrom
 import com.shub39.grit.core.habits.presentation.ui.component.AnalyticsCard
 import com.shub39.grit.core.habits.presentation.ui.component.CardArrows
 import com.shub39.grit.core.now
-import com.shub39.grit.core.theme.GritTheme
 import grit.shared.generated.resources.*
 import kotlinx.coroutines.launch
 import kotlinx.datetime.DateTimeUnit
@@ -71,7 +69,6 @@ import org.jetbrains.compose.resources.stringResource
 @Composable
 fun CalendarMap(
     canSeeContent: Boolean,
-    onAction: (HabitsAction) -> Unit,
     calendarState: CalendarState,
     statuses: List<HabitStatus>,
     days: Set<DayOfWeek>,
@@ -113,7 +110,13 @@ fun CalendarMap(
     ) {
         HorizontalCalendar(
             state = calendarState,
-            modifier = Modifier.animateContentSize().padding(bottom = 16.dp),
+            modifier =
+                Modifier.background(
+                        color = MaterialTheme.colorScheme.surfaceContainer,
+                        shape = MaterialTheme.shapes.medium,
+                    )
+                    .animateContentSize()
+                    .padding(vertical = 16.dp),
             contentPadding = PaddingValues(horizontal = 16.dp),
             userScrollEnabled = canSeeContent,
             monthHeader = {
@@ -228,23 +231,20 @@ fun CalendarMap(
 @Preview
 @Composable
 private fun Preview() {
-    GritTheme {
-        CalendarMap(
-            canSeeContent = true,
-            onAction = {},
-            calendarState =
-                rememberCalendarState(
-                    startMonth = YearMonth.now().minusYears(1),
-                    endMonth = YearMonth.now(),
-                    firstVisibleMonth = YearMonth.now(),
-                ),
-            statuses =
-                (0..40).map {
-                    HabitStatus(habitId = 1, date = LocalDate.now().minus(it, DateTimeUnit.DAY))
-                },
-            days = DayOfWeek.entries.toSet(),
-            onNavigateToPaywall = {},
-            onDateClick = {},
-        )
-    }
+    CalendarMap(
+        canSeeContent = true,
+        calendarState =
+            rememberCalendarState(
+                startMonth = YearMonth.now().minusYears(1),
+                endMonth = YearMonth.now(),
+                firstVisibleMonth = YearMonth.now(),
+            ),
+        statuses =
+            (0..40).map {
+                HabitStatus(habitId = 1, date = LocalDate.now().minus(it, DateTimeUnit.DAY))
+            },
+        days = DayOfWeek.entries.toSet(),
+        onNavigateToPaywall = {},
+        onDateClick = {},
+    )
 }

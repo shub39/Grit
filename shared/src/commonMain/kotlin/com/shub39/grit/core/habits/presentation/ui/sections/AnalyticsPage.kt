@@ -206,7 +206,6 @@ fun AnalyticsPage(
                     )
                     CalendarMap(
                         canSeeContent = isUserSubscribed,
-                        onAction = onAction,
                         calendarState = calendarState,
                         onNavigateToPaywall = onNavigateToPaywall,
                         statuses = currentHabit.statuses,

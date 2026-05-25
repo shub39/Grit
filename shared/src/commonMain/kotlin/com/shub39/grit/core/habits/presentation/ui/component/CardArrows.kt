@@ -16,77 +16,49 @@
  */
 package com.shub39.grit.core.habits.presentation.ui.component
 
-import androidx.compose.foundation.background
-import androidx.compose.foundation.clickable
-import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material3.FilledTonalIconButton
 import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
+import androidx.compose.material3.IconButtonDefaults
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
-import androidx.compose.ui.unit.dp
-import grit.shared.generated.resources.*
+import grit.shared.generated.resources.Res
+import grit.shared.generated.resources.arrow_back
+import grit.shared.generated.resources.arrow_forward
+import grit.shared.generated.resources.expand
 import org.jetbrains.compose.resources.painterResource
 
 @Composable
 fun CardArrows(
     onBackAction: () -> Unit,
     onForwardAction: () -> Unit,
+    onExpandAction: () -> Unit = {},
     modifier: Modifier = Modifier,
 ) {
-    Row(modifier = modifier, horizontalArrangement = Arrangement.spacedBy(2.dp)) {
-        val leadingShape =
-            RoundedCornerShape(
-                topStart = 20.dp,
-                bottomStart = 20.dp,
-                topEnd = 4.dp,
-                bottomEnd = 4.dp,
-            )
-        Box(
-            modifier =
-                Modifier.size(42.dp)
-                    .background(
-                        color = MaterialTheme.colorScheme.secondaryContainer,
-                        shape = leadingShape,
-                    )
-                    .clip(leadingShape)
-                    .clickable { onBackAction() },
-            contentAlignment = Alignment.Center,
-        ) {
+    Row(modifier = modifier) {
+        IconButton(onClick = onBackAction) {
             Icon(
                 painter = painterResource(Res.drawable.arrow_back),
                 contentDescription = null,
-                tint = MaterialTheme.colorScheme.onSecondaryContainer,
+                tint = MaterialTheme.colorScheme.onSurface,
             )
         }
 
-        val trailingShape =
-            RoundedCornerShape(
-                topStart = 4.dp,
-                bottomStart = 4.dp,
-                topEnd = 20.dp,
-                bottomEnd = 20.dp,
-            )
-        Box(
-            modifier =
-                Modifier.size(42.dp)
-                    .background(
-                        color = MaterialTheme.colorScheme.secondaryContainer,
-                        shape = trailingShape,
-                    )
-                    .clip(trailingShape)
-                    .clickable { onForwardAction() },
-            contentAlignment = Alignment.Center,
-        ) {
+        IconButton(onClick = onForwardAction) {
             Icon(
                 painter = painterResource(Res.drawable.arrow_forward),
                 contentDescription = null,
-                tint = MaterialTheme.colorScheme.onSecondaryContainer,
+                tint = MaterialTheme.colorScheme.onSurface,
+            )
+        }
+
+        FilledTonalIconButton(onClick = onExpandAction, shapes = IconButtonDefaults.shapes()) {
+            Icon(
+                painter = painterResource(Res.drawable.expand),
+                contentDescription = null,
+                tint = MaterialTheme.colorScheme.onSurface,
             )
         }
     }

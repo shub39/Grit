@@ -1,9 +1,20 @@
-<vector android:autoMirrored="true" xmlns:android="http://schemas.android.com/apk/res/android"
-    android:width="24dp"
-    android:height="24dp"
-    android:viewportWidth="960"
-    android:viewportHeight="960">
-  <path
-      android:pathData="M189,960q-26,0 -44.5,-18.5T126,897q0,-26 18.5,-44.5T189,834h582q26,0 44.5,18.5T834,897q0,26 -18.5,44.5T771,960L189,960ZM480,768q-12,0 -24,-5t-21,-14L332,646q-16,-16 -16,-38t17,-39q16,-16 38,-16t38,16l16,15v-208l-16,15q-16,16 -37.5,16T333,390q-16,-16 -16,-38.5t16,-38.5l102,-102q9,-9 21,-14t24,-5q12,0 24,5t21,14l103,103q16,16 16,38t-17,39q-16,16 -38,16t-38,-16l-16,-15v208l16,-15q16,-16 37.5,-16.5T627,569q16,16 16,38.5T627,646L525,749q-9,9 -21,14t-24,5ZM189,126q-26,0 -44.5,-18.5T126,63q0,-26 18.5,-44.5T189,0h582q26,0 44.5,18.5T834,63q0,26 -18.5,44.5T771,126L189,126Z"
-      android:fillColor="#B7B7B7"/>
+<!--
+  ~ Copyright (C) 2026 The Android Open Source Project
+  ~
+  ~ Licensed under the Apache License, Version 2.0 (the "License");
+  ~ you may not use this file except in compliance with the License.
+  ~ You may obtain a copy of the License at
+  ~
+  ~      http://www.apache.org/licenses/LICENSE-2.0
+  ~
+  ~ Unless required by applicable law or agreed to in writing, software
+  ~ distributed under the License is distributed on an "AS IS" BASIS,
+  ~ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  ~ See the License for the specific language governing permissions and
+  ~ limitations under the License.
+  -->
+<vector xmlns:android="http://schemas.android.com/apk/res/android" android:autoMirrored="true" android:height="24dp" android:viewportHeight="960" android:viewportWidth="960" android:width="24dp">
+
+    <path android:fillColor="#e3e3e3" android:pathData="M303,657h97q26,0 44.5,18.5T463,720q0,26 -18.5,44.5T400,783L240,783q-26,0 -44.5,-18.5T177,720v-160q0,-26 18.5,-44.5T240,497q26,0 44.5,18.5T303,560v97ZM657,303h-97q-26,0 -44.5,-18.5T497,240q0,-26 18.5,-44.5T560,177h160q26,0 44.5,18.5T783,240v160q0,26 -18.5,44.5T720,463q-26,0 -44.5,-18.5T657,400v-97Z"/>
+
 </vector>
