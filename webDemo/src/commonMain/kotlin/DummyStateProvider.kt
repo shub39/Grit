@@ -40,6 +40,7 @@ import kotlinx.datetime.DateTimeUnit
 import kotlinx.datetime.DayOfWeek
 import kotlinx.datetime.LocalDate
 import kotlinx.datetime.LocalDateTime
+import kotlinx.datetime.LocalTime
 import kotlinx.datetime.daysUntil
 import kotlinx.datetime.format.DayOfWeekNames
 import kotlinx.datetime.isoDayNumber
@@ -69,7 +70,11 @@ object DummyStateProvider {
                 id = 1,
                 title = "Morning Walk",
                 description = "A 30-minute walk every morning",
-                time = LocalDateTime.now(),
+                time =
+                    LocalDateTime(
+                        date = LocalDate.now().minus(365, DateTimeUnit.DAY),
+                        time = LocalTime.now(),
+                    ),
                 days = DayOfWeek.entries.toSet(),
                 index = 0,
                 reminder = true,
@@ -79,15 +84,19 @@ object DummyStateProvider {
                 id = 2,
                 title = "Read a book",
                 description = "Read 20 pages of a book",
-                time = LocalDateTime.now(),
+                time =
+                    LocalDateTime(
+                        date = LocalDate.now().minus(365, DateTimeUnit.DAY),
+                        time = LocalTime.now(),
+                    ),
                 days = DayOfWeek.entries.toSet(),
                 index = 1,
                 reminder = false,
             )
 
         return listOf(
-            createHabitWithAnalytics(morningWalkHabit, 90),
-            createHabitWithAnalytics(readBookHabit, 90),
+            createHabitWithAnalytics(morningWalkHabit, 365),
+            createHabitWithAnalytics(readBookHabit, 366),
         )
     }
 
@@ -105,7 +114,9 @@ object DummyStateProvider {
             currentStreak = currentStreak,
             bestStreak = bestStreak,
             startedDaysAgo = daysAgo.toLong(),
-            consistency = (currentStreak.toFloat() / bestStreak).coerceIn(0f, 1f),
+            consistency =
+                dates.filter { it >= habit.time.date }.size.toFloat() /
+                    (habit.time.date.daysUntil(LocalDate.now()) + 1),
         )
     }
 
@@ -279,6 +290,9 @@ object DummyStateProvider {
                             weekDayFrequencyData = prepareWeekDayFrequencyData(dates),
                             currentStreak = countCurrentStreak(dates, action.habit.days),
                             bestStreak = countBestStreak(dates, action.habit.days),
+                            consistency =
+                                dates.filter { it >= action.habit.time.date }.size.toFloat() /
+                                    (action.habit.time.date.daysUntil(LocalDate.now()) + 1),
                         )
 
                     val updatedHabits =
@@ -545,7 +559,7 @@ object DummyStateProvider {
         habitStatuses: List<HabitStatus>,
     ): WeeklyComparisonData {
         val today = LocalDate.now()
-        val totalWeeks = 15
+        val totalWeeks = 52
 
         val startDateOfTodayWeek =
             today.minus(today.dayOfWeek.isoDayNumber - firstDay.isoDayNumber, DateTimeUnit.DAY)

@@ -16,16 +16,24 @@
  */
 package com.shub39.grit.core.habits.presentation.ui.component.stats
 
+import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.animateContentSize
+import androidx.compose.animation.core.animateDpAsState
+import androidx.compose.animation.core.animateFloatAsState
+import androidx.compose.animation.fadeIn
+import androidx.compose.animation.fadeOut
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material3.ButtonGroupDefaults
 import androidx.compose.material3.Icon
@@ -71,14 +79,8 @@ fun WeeklyActivity(lineChartData: List<Double>, modifier: Modifier = Modifier) {
                 .takeIf { it.any { value -> value != 0.0 } }
                 ?.maxOrNull()
         }
-    val avg =
-        remember(max) {
-            lineChartData
-                .takeLast(selectedTimePeriod.toWeeks())
-                .dropLast(1)
-                .average()
-                .fastRoundToInt()
-        }
+    val animatedMax by
+        animateFloatAsState(targetValue = max?.toFloat() ?: 1f, label = "WeeklyActivityMax")
 
     AnalyticsCard(
         title = stringResource(Res.string.weekly_graph),
@@ -116,69 +118,111 @@ fun WeeklyActivity(lineChartData: List<Double>, modifier: Modifier = Modifier) {
                 }
             }
 
-            Text(
-                text =
-                    buildAnnotatedString {
-                        withStyle(
-                            style =
-                                MaterialTheme.typography.displayMedium
-                                    .copy(fontFamily = flexFontRounded())
-                                    .toSpanStyle()
-                        ) {
-                            append("$avg ")
-                        }
+            val avg =
+                remember(selectedTimePeriod, lineChartData) {
+                    lineChartData
+                        .takeLast(selectedTimePeriod.toWeeks())
+                        .dropLast(1)
+                        .average()
+                        .fastRoundToInt()
+                }
 
-                        withStyle(
-                            style =
-                                MaterialTheme.typography.bodyMedium
-                                    .copy(fontFamily = flexFontRounded())
-                                    .toSpanStyle()
-                        ) {
-                            append("Completions per week (Avg)")
-                        }
-                    },
-                modifier = Modifier.padding(horizontal = 16.dp, vertical = 8.dp),
-            )
+            Column {
+                Spacer(modifier = Modifier.height(16.dp))
 
-            Row(
-                modifier = Modifier.padding(start = 16.dp, end = 16.dp, bottom = 16.dp),
-                verticalAlignment = Alignment.Bottom,
-                horizontalArrangement = Arrangement.spacedBy(2.dp),
-            ) {
-                lineChartData.takeLast(selectedTimePeriod.toWeeks()).forEach { data ->
-                    Column(
-                        horizontalAlignment = Alignment.CenterHorizontally,
-                        verticalArrangement = Arrangement.spacedBy(4.dp),
-                        modifier = Modifier.weight(1f),
-                    ) {
-                        Box(
-                            modifier =
-                                Modifier.height(((data.toFloat() / max.toFloat()) * 200).dp)
-                                    .fillMaxWidth()
-                                    .background(
-                                        color =
-                                            if (data == max) MaterialTheme.colorScheme.primary
-                                            else MaterialTheme.colorScheme.secondary,
-                                        shape = CircleShape,
-                                    )
-                        ) {
-                            if (data == max && selectedTimePeriod == WeeklyTimePeriod.MONTHS_2) {
-                                Box(
+                Text(
+                    text =
+                        buildAnnotatedString {
+                            withStyle(
+                                style =
+                                    MaterialTheme.typography.displayMedium
+                                        .copy(fontFamily = flexFontRounded())
+                                        .toSpanStyle()
+                            ) {
+                                append("$avg ")
+                            }
+
+                            withStyle(
+                                style =
+                                    MaterialTheme.typography.bodyMedium
+                                        .copy(fontFamily = flexFontRounded())
+                                        .toSpanStyle()
+                            ) {
+                                append("Completions per week (Avg)")
+                            }
+                        },
+                    color = MaterialTheme.colorScheme.onSurface,
+                    modifier = Modifier.padding(horizontal = 16.dp),
+                )
+
+                Row(
+                    modifier =
+                        Modifier.padding(start = 16.dp, end = 16.dp, bottom = 16.dp, top = 8.dp),
+                    verticalAlignment = Alignment.Bottom,
+                    horizontalArrangement = Arrangement.spacedBy(2.dp),
+                ) {
+                    val allData =
+                        remember(lineChartData) {
+                            lineChartData.takeLast(WeeklyTimePeriod.YEARS_1.toWeeks())
+                        }
+                    allData.forEachIndexed { index, data ->
+                        val isVisible = index >= allData.size - selectedTimePeriod.toWeeks()
+
+                        val weight by
+                            animateFloatAsState(
+                                targetValue = if (isVisible) 1f else 0f,
+                                animationSpec = MaterialTheme.motionScheme.fastEffectsSpec(),
+                            )
+                        val height by
+                            animateDpAsState(
+                                targetValue = ((data.toFloat() / animatedMax) * 200).dp,
+                                animationSpec = MaterialTheme.motionScheme.fastEffectsSpec(),
+                            )
+
+                        if (weight > 0f) {
+                            Column(
+                                horizontalAlignment = Alignment.CenterHorizontally,
+                                verticalArrangement = Arrangement.spacedBy(4.dp),
+                                modifier = Modifier.weight(weight).animateContentSize(),
+                            ) {
+                                Row(
                                     modifier =
-                                        Modifier.fillMaxWidth()
-                                            .aspectRatio(1f)
-                                            .padding(4.dp)
+                                        Modifier.height(height)
+                                            .fillMaxWidth()
                                             .background(
-                                                color = MaterialTheme.colorScheme.onPrimary,
-                                                shape = MaterialShapes.SoftBurst.toShape(),
-                                            ),
-                                    contentAlignment = Alignment.Center,
+                                                color =
+                                                    if (data == max)
+                                                        MaterialTheme.colorScheme.primary
+                                                    else MaterialTheme.colorScheme.secondary,
+                                                shape = CircleShape,
+                                            )
                                 ) {
-                                    Icon(
-                                        painter = painterResource(Res.drawable.check),
-                                        contentDescription = null,
-                                        tint = MaterialTheme.colorScheme.primary,
-                                    )
+                                    AnimatedVisibility(
+                                        visible =
+                                            data == max &&
+                                                selectedTimePeriod == WeeklyTimePeriod.MONTHS_2,
+                                        enter = fadeIn(),
+                                        exit = fadeOut(),
+                                    ) {
+                                        Box(
+                                            modifier =
+                                                Modifier.fillMaxWidth()
+                                                    .aspectRatio(1f)
+                                                    .padding(4.dp)
+                                                    .background(
+                                                        color = MaterialTheme.colorScheme.onPrimary,
+                                                        shape = MaterialShapes.SoftBurst.toShape(),
+                                                    ),
+                                            contentAlignment = Alignment.Center,
+                                        ) {
+                                            Icon(
+                                                painter = painterResource(Res.drawable.check),
+                                                contentDescription = null,
+                                                tint = MaterialTheme.colorScheme.primary,
+                                                modifier = Modifier.size(20.dp),
+                                            )
+                                        }
+                                    }
                                 }
                             }
                         }

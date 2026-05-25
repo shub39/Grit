@@ -176,7 +176,7 @@ fun AnalyticsPage(
             },
         )
 
-        val maxWidth = 300.dp
+        val maxWidth = 380.dp
         LazyVerticalStaggeredGrid(
             modifier = Modifier.fillMaxSize(),
             columns = StaggeredGridCells.Adaptive(minSize = maxWidth),

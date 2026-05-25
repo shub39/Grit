@@ -16,7 +16,9 @@
  */
 package com.shub39.grit.core.habits.presentation.ui.component.stats
 
+import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.foundation.background
+import androidx.compose.foundation.basicMarquee
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -32,6 +34,7 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Brush
@@ -156,6 +159,8 @@ fun StartStats(
                                     fontFamily = flexFontRounded(),
                                     color = MaterialTheme.colorScheme.onPrimaryContainer,
                                 ),
+                            maxLines = 1,
+                            modifier = Modifier.basicMarquee(),
                         )
                     }
                 }
@@ -222,7 +227,12 @@ fun StartStats(
                             color = MaterialTheme.colorScheme.surfaceContainer,
                         )
             ) {
-                val fraction = (currentStreak.toFloat() / bestStreak).coerceIn(0f, 1f)
+                val fraction by
+                    animateFloatAsState(
+                        targetValue = (currentStreak.toFloat() / bestStreak).coerceIn(0f, 1f),
+                        animationSpec = MaterialTheme.motionScheme.slowSpatialSpec(),
+                    )
+
                 Row(
                     modifier =
                         Modifier.fillMaxWidth()
