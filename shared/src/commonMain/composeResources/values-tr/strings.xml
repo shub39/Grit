@@ -82,7 +82,7 @@
     <string name="whats_changed">Neler Değişti</string>
     <string name="select_days">Günleri Seç</string>
     <string name="bmc_desc">Küçük bir bağış yaparak beni destekleyebilirsin</string>
-    <string name="translate_desc">Grit'i kendi diline çevir</string>
+    <string name="translate_desc">Grit\u0027i kendi diline çevir</string>
     <string name="system_default">Sistem Varsayılanı</string>
     <string name="language">Dil</string>
     <string name="about">Hakkında</string>
