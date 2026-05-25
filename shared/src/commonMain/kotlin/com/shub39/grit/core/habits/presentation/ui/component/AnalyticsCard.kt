@@ -91,7 +91,7 @@ fun AnalyticsCard(
                 modifier = Modifier.heightIn(300.dp).fillMaxWidth(),
             ) {
                 if (blurPossible()) {
-                    Box(
+                    Column(
                         modifier =
                             Modifier.fillMaxSize()
                                 .blur(

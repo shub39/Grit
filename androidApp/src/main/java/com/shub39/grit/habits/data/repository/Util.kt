@@ -108,7 +108,7 @@ fun prepareLineChartData(
     habitStatuses: List<HabitStatus>,
 ): WeeklyComparisonData {
     val today = LocalDate.now()
-    val totalWeeks = 15
+    val totalWeeks = 52
 
     // Find the start date of the 15-week period
     val startDateOfTodayWeek =

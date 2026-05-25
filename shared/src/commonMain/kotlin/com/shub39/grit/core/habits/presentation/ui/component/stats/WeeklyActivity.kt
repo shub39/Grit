@@ -28,6 +28,7 @@ import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material3.ButtonGroupDefaults
+import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialShapes
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
@@ -42,28 +43,41 @@ import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.text.buildAnnotatedString
+import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.tooling.preview.PreviewWrapper
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.util.fastRoundToInt
 import com.shub39.grit.core.GritPreviewWrapper
 import com.shub39.grit.core.habits.domain.WeeklyTimePeriod
+import com.shub39.grit.core.habits.domain.WeeklyTimePeriod.Companion.toDisplayString
 import com.shub39.grit.core.habits.domain.WeeklyTimePeriod.Companion.toWeeks
 import com.shub39.grit.core.habits.presentation.ui.component.AnalyticsCard
 import com.shub39.grit.core.habits.presentation.ui.component.NotEnoughData
+import com.shub39.grit.core.theme.flexFontRounded
 import grit.shared.generated.resources.*
-import kotlin.math.roundToInt
 import kotlin.random.Random
+import org.jetbrains.compose.resources.painterResource
 import org.jetbrains.compose.resources.stringResource
 
 @Composable
 fun WeeklyActivity(lineChartData: List<Double>, modifier: Modifier = Modifier) {
-    var selectedTimePeriod by rememberSaveable { mutableStateOf(WeeklyTimePeriod.WEEKS_8) }
+    var selectedTimePeriod by rememberSaveable { mutableStateOf(WeeklyTimePeriod.MONTHS_2) }
     val max =
         remember(selectedTimePeriod, lineChartData) {
             lineChartData
                 .takeLast(selectedTimePeriod.toWeeks())
                 .takeIf { it.any { value -> value != 0.0 } }
                 ?.maxOrNull()
+        }
+    val avg =
+        remember(max) {
+            lineChartData
+                .takeLast(selectedTimePeriod.toWeeks())
+                .dropLast(1)
+                .average()
+                .fastRoundToInt()
         }
 
     AnalyticsCard(
@@ -73,7 +87,7 @@ fun WeeklyActivity(lineChartData: List<Double>, modifier: Modifier = Modifier) {
     ) {
         if (max != null) {
             Row(
-                modifier = Modifier.padding(horizontal = 16.dp, vertical = 8.dp),
+                modifier = Modifier.padding(horizontal = 16.dp, vertical = 0.dp),
                 horizontalArrangement =
                     Arrangement.spacedBy(ButtonGroupDefaults.ConnectedSpaceBetween),
             ) {
@@ -83,11 +97,13 @@ fun WeeklyActivity(lineChartData: List<Double>, modifier: Modifier = Modifier) {
                         onCheckedChange = { selectedTimePeriod = period },
                         shapes =
                             when (period) {
-                                WeeklyTimePeriod.WEEKS_16 ->
+                                WeeklyTimePeriod.MONTHS_2 ->
                                     ButtonGroupDefaults.connectedLeadingButtonShapes()
 
-                                WeeklyTimePeriod.WEEKS_8 ->
+                                WeeklyTimePeriod.YEARS_1 ->
                                     ButtonGroupDefaults.connectedTrailingButtonShapes()
+
+                                else -> ButtonGroupDefaults.connectedMiddleButtonShapes()
                             },
                         modifier = Modifier.weight(1f),
                         colors =
@@ -95,10 +111,34 @@ fun WeeklyActivity(lineChartData: List<Double>, modifier: Modifier = Modifier) {
                                 containerColor = MaterialTheme.colorScheme.surfaceContainerHigh
                             ),
                     ) {
-                        Text(text = "${period.toWeeks()} ${stringResource(Res.string.weeks)}")
+                        Text(text = period.toDisplayString())
                     }
                 }
             }
+
+            Text(
+                text =
+                    buildAnnotatedString {
+                        withStyle(
+                            style =
+                                MaterialTheme.typography.displayMedium
+                                    .copy(fontFamily = flexFontRounded())
+                                    .toSpanStyle()
+                        ) {
+                            append("$avg ")
+                        }
+
+                        withStyle(
+                            style =
+                                MaterialTheme.typography.bodyMedium
+                                    .copy(fontFamily = flexFontRounded())
+                                    .toSpanStyle()
+                        ) {
+                            append("Completions per week (Avg)")
+                        }
+                    },
+                modifier = Modifier.padding(horizontal = 16.dp, vertical = 8.dp),
+            )
 
             Row(
                 modifier = Modifier.padding(start = 16.dp, end = 16.dp, bottom = 16.dp),
@@ -122,7 +162,7 @@ fun WeeklyActivity(lineChartData: List<Double>, modifier: Modifier = Modifier) {
                                         shape = CircleShape,
                                     )
                         ) {
-                            if (data == max) {
+                            if (data == max && selectedTimePeriod == WeeklyTimePeriod.MONTHS_2) {
                                 Box(
                                     modifier =
                                         Modifier.fillMaxWidth()
@@ -134,32 +174,10 @@ fun WeeklyActivity(lineChartData: List<Double>, modifier: Modifier = Modifier) {
                                             ),
                                     contentAlignment = Alignment.Center,
                                 ) {
-                                    if (selectedTimePeriod != WeeklyTimePeriod.WEEKS_16) {
-                                        Text(
-                                            text = data.roundToInt().toString(),
-                                            color = MaterialTheme.colorScheme.primary,
-                                            style = MaterialTheme.typography.labelMedium,
-                                        )
-                                    }
-                                }
-                            } else if (
-                                data > (max / 2) && selectedTimePeriod != WeeklyTimePeriod.WEEKS_16
-                            ) {
-                                Box(
-                                    modifier =
-                                        Modifier.fillMaxWidth()
-                                            .aspectRatio(1f)
-                                            .padding(4.dp)
-                                            .background(
-                                                color = MaterialTheme.colorScheme.onSecondary,
-                                                shape = MaterialShapes.Circle.toShape(),
-                                            ),
-                                    contentAlignment = Alignment.Center,
-                                ) {
-                                    Text(
-                                        text = data.roundToInt().toString(),
-                                        color = MaterialTheme.colorScheme.secondary,
-                                        style = MaterialTheme.typography.labelMedium,
+                                    Icon(
+                                        painter = painterResource(Res.drawable.check),
+                                        contentDescription = null,
+                                        tint = MaterialTheme.colorScheme.primary,
                                     )
                                 }
                             }

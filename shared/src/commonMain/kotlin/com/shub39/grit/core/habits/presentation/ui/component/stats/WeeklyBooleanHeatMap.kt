@@ -47,11 +47,9 @@ import com.kizitonwose.calendar.core.minusDays
 import com.kizitonwose.calendar.core.now
 import com.kizitonwose.calendar.core.plusDays
 import com.shub39.grit.core.GritPreviewWrapper
-import com.shub39.grit.core.habits.domain.Habit
 import com.shub39.grit.core.habits.domain.HabitStatus
 import com.shub39.grit.core.habits.domain.StreakPosition
 import com.shub39.grit.core.habits.domain.heatMapStreakShape
-import com.shub39.grit.core.habits.presentation.HabitsAction
 import com.shub39.grit.core.habits.presentation.daysStartingFrom
 import com.shub39.grit.core.habits.presentation.ui.component.AnalyticsCard
 import com.shub39.grit.core.habits.presentation.ui.component.CardArrows
@@ -63,7 +61,6 @@ import kotlinx.coroutines.launch
 import kotlinx.datetime.DateTimeUnit
 import kotlinx.datetime.DayOfWeek
 import kotlinx.datetime.LocalDate
-import kotlinx.datetime.LocalDateTime
 import kotlinx.datetime.YearMonth
 import kotlinx.datetime.format
 import kotlinx.datetime.format.MonthNames
@@ -71,12 +68,20 @@ import kotlinx.datetime.format.char
 import kotlinx.datetime.minus
 import org.jetbrains.compose.resources.stringResource
 
+/**
+ * Weekly Boolean heatmap of completed days, highlighting streaks
+ *
+ * @param heatMapState created HeatMapState
+ * @param days set of eligible [DayOfWeek]
+ * @param statuses list of [HabitStatus]
+ * @param onDateClick callback when a day is clicked
+ */
 @Composable
 fun WeeklyBooleanHeatMap(
     heatMapState: HeatMapCalendarState,
-    onAction: (HabitsAction) -> Unit,
-    habit: Habit,
+    days: Set<DayOfWeek>,
     statuses: List<HabitStatus>,
+    onDateClick: (LocalDate) -> Unit,
     modifier: Modifier = Modifier,
 ) {
     val today = LocalDate.now()
@@ -103,9 +108,9 @@ fun WeeklyBooleanHeatMap(
 
                 days.forEachIndexed { index, dayOfWeek ->
                     val shape =
-                        when {
-                            index == 0 -> leadingItemShape(topRadius = 20)
-                            index == days.size - 1 -> endItemShape(bottomRadius = 20)
+                        when (index) {
+                            0 -> leadingItemShape(topRadius = 20)
+                            days.size - 1 -> endItemShape(bottomRadius = 20)
                             else -> RoundedCornerShape(4.dp)
                         }
                     Box(
@@ -131,7 +136,7 @@ fun WeeklyBooleanHeatMap(
 
             Row(
                 modifier =
-                    Modifier.padding(bottom = 16.dp, end = 16.dp)
+                    Modifier.padding(bottom = 16.dp)
                         .background(
                             color = MaterialTheme.colorScheme.surfaceContainer,
                             shape = MaterialTheme.shapes.medium,
@@ -161,7 +166,7 @@ fun WeeklyBooleanHeatMap(
                         if (day.date > today) return@HeatMapCalendar
 
                         val done = day.date in doneDates
-                        val validDay = day.date.dayOfWeek in habit.days
+                        val validDay = day.date.dayOfWeek in days
 
                         val donePrevious = day.date.minusDays(1) in doneDates
                         val doneAfter = day.date.plusDays(1) in doneDates
@@ -185,9 +190,7 @@ fun WeeklyBooleanHeatMap(
                                 Modifier.padding(horizontal = 1.dp)
                                     .size(35.dp)
                                     .clip(shape)
-                                    .clickable(enabled = validDay) {
-                                        onAction(HabitsAction.InsertStatus(habit, day.date))
-                                    },
+                                    .clickable(enabled = validDay) { onDateClick(day.date) },
                             contentAlignment = Alignment.Center,
                         ) {
                             if (done) {
@@ -254,20 +257,11 @@ private fun Preview() {
                 firstVisibleMonth = YearMonth.now(),
                 firstDayOfWeek = DayOfWeek.MONDAY,
             ),
-        onAction = {},
-        habit =
-            Habit(
-                id = 1,
-                title = "Test Habit",
-                description = "A Test Habit",
-                time = LocalDateTime.now(),
-                days = DayOfWeek.entries.toSet(),
-                index = 1,
-                reminder = false,
-            ),
         statuses =
             (0..40).map {
                 HabitStatus(habitId = 1, date = LocalDate.now().minus(it, DateTimeUnit.DAY))
             },
+        days = DayOfWeek.entries.toSet(),
+        onDateClick = {},
     )
 }

@@ -17,14 +17,27 @@
 package com.shub39.grit.core.habits.domain
 
 enum class WeeklyTimePeriod {
-    WEEKS_16,
-    WEEKS_8;
+    MONTHS_2,
+    MONTHS_4,
+    MONTHS_8,
+    YEARS_1;
 
     companion object {
         fun WeeklyTimePeriod.toWeeks(): Int {
             return when (this) {
-                WEEKS_16 -> 16
-                WEEKS_8 -> 8
+                MONTHS_2 -> 8
+                MONTHS_4 -> 16
+                MONTHS_8 -> 32
+                YEARS_1 -> 52
+            }
+        }
+
+        fun WeeklyTimePeriod.toDisplayString(): String {
+            return when (this) {
+                MONTHS_2 -> "2M"
+                MONTHS_4 -> "4M"
+                MONTHS_8 -> "8M"
+                YEARS_1 -> "1Y"
             }
         }
     }

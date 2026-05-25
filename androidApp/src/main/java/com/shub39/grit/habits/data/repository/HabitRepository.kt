@@ -117,7 +117,8 @@ class HabitRepository(
                             ),
                         weekDayFrequencyData = prepareWeekDayFrequencyData(dates = dates),
                         startedDaysAgo = habit.time.date.daysUntil(LocalDate.now()).toLong(),
-                        consistency = dates.filter { it >= habit.time.date }.size.toFloat() /
+                        consistency =
+                            dates.filter { it >= habit.time.date }.size.toFloat() /
                                 (habit.time.date.daysUntil(LocalDate.now()) + 1),
                     )
                 }

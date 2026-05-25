@@ -65,7 +65,14 @@ import kotlinx.datetime.minus
 import kotlinx.datetime.plus
 import org.jetbrains.compose.resources.stringResource
 
-/** Boolean Calendar map highlighting days */
+/**
+ * Boolean Calendar highlighting completed days and streaks
+ *
+ * @param canSeeContent is user subbed?
+ * @param calendarState calendar state object
+ * @param statuses list of [HabitStatus]
+ * @param days set of [DayOfWeek]
+ */
 @Composable
 fun CalendarMap(
     canSeeContent: Boolean,

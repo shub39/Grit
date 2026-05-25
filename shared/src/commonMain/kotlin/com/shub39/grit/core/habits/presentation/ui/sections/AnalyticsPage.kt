@@ -176,13 +176,13 @@ fun AnalyticsPage(
             },
         )
 
-        val maxWidth = 380.dp
+        val maxWidth = 300.dp
         LazyVerticalStaggeredGrid(
             modifier = Modifier.fillMaxSize(),
             columns = StaggeredGridCells.Adaptive(minSize = maxWidth),
             contentPadding = PaddingValues(start = 16.dp, end = 16.dp, top = 16.dp, bottom = 60.dp),
-            horizontalArrangement = Arrangement.spacedBy(8.dp),
-            verticalItemSpacing = 8.dp,
+            horizontalArrangement = Arrangement.spacedBy(16.dp),
+            verticalItemSpacing = 16.dp,
         ) {
             item {
                 StartStats(
@@ -194,29 +194,25 @@ fun AnalyticsPage(
             }
 
             item {
-                Column(
-                    modifier = Modifier.fillMaxWidth().widthIn(max = maxWidth),
-                    verticalArrangement = Arrangement.spacedBy(2.dp),
-                ) {
-                    WeeklyBooleanHeatMap(
-                        heatMapState = heatMapState,
-                        onAction = onAction,
-                        habit = currentHabit.habit,
-                        statuses = currentHabit.statuses,
-                    )
-                    CalendarMap(
-                        canSeeContent = isUserSubscribed,
-                        calendarState = calendarState,
-                        onNavigateToPaywall = onNavigateToPaywall,
-                        statuses = currentHabit.statuses,
-                        days = currentHabit.habit.days,
-                        onDateClick = {
-                            onAction(
-                                HabitsAction.InsertStatus(habit = currentHabit.habit, date = it)
-                            )
-                        },
-                    )
-                }
+                WeeklyBooleanHeatMap(
+                    heatMapState = heatMapState,
+                    statuses = currentHabit.statuses,
+                    days = currentHabit.habit.days,
+                    onDateClick = { onAction(HabitsAction.InsertStatus(currentHabit.habit, it)) },
+                )
+            }
+
+            item {
+                CalendarMap(
+                    canSeeContent = isUserSubscribed,
+                    calendarState = calendarState,
+                    onNavigateToPaywall = onNavigateToPaywall,
+                    statuses = currentHabit.statuses,
+                    days = currentHabit.habit.days,
+                    onDateClick = {
+                        onAction(HabitsAction.InsertStatus(habit = currentHabit.habit, date = it))
+                    },
+                )
             }
 
             item {
