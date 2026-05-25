@@ -114,9 +114,7 @@ object DummyStateProvider {
             currentStreak = currentStreak,
             bestStreak = bestStreak,
             startedDaysAgo = daysAgo.toLong(),
-            consistency =
-                dates.filter { it >= habit.time.date }.size.toFloat() /
-                    (habit.time.date.daysUntil(LocalDate.now()) + 1),
+            consistency = calculateConsistency(dates, habit.days),
         )
     }
 
@@ -290,9 +288,7 @@ object DummyStateProvider {
                             weekDayFrequencyData = prepareWeekDayFrequencyData(dates),
                             currentStreak = countCurrentStreak(dates, action.habit.days),
                             bestStreak = countBestStreak(dates, action.habit.days),
-                            consistency =
-                                dates.filter { it >= action.habit.time.date }.size.toFloat() /
-                                    (action.habit.time.date.daysUntil(LocalDate.now()) + 1),
+                            consistency = calculateConsistency(dates, action.habit.days),
                         )
 
                     val updatedHabits =
@@ -606,5 +602,25 @@ object DummyStateProvider {
             checkDate = checkDate.plus(1, DateTimeUnit.DAY)
         }
         return checkDate == date2
+    }
+
+    private fun calculateConsistency(
+        dates: List<LocalDate>,
+        eligibleWeekdays: Set<DayOfWeek>,
+    ): Float {
+        val eligibleDates = dates.filter { it.dayOfWeek in eligibleWeekdays }
+        val firstCompletionDate = eligibleDates.minOrNull() ?: return 0f
+        val today = LocalDate.now()
+
+        var totalEligibleDays = 0
+        var current = firstCompletionDate
+        while (current <= today) {
+            if (current.dayOfWeek in eligibleWeekdays) {
+                totalEligibleDays++
+            }
+            current = current.plus(1, DateTimeUnit.DAY)
+        }
+
+        return if (totalEligibleDays > 0) eligibleDates.size.toFloat() / totalEligibleDays else 0f
     }
 }

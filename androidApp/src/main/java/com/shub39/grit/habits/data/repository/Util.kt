@@ -20,7 +20,6 @@ import com.shub39.grit.core.habits.domain.HabitStatus
 import com.shub39.grit.core.habits.domain.WeekDayFrequencyData
 import com.shub39.grit.core.habits.domain.WeeklyComparisonData
 import com.shub39.grit.core.now
-import kotlin.time.ExperimentalTime
 import kotlinx.datetime.DatePeriod
 import kotlinx.datetime.DateTimeUnit
 import kotlinx.datetime.DayOfWeek
@@ -31,7 +30,6 @@ import kotlinx.datetime.isoDayNumber
 import kotlinx.datetime.minus
 import kotlinx.datetime.plus
 
-@OptIn(ExperimentalTime::class)
 fun countCurrentStreak(
     dates: List<LocalDate>,
     eligibleWeekdays: Set<DayOfWeek> = DayOfWeek.entries.toSet(),
@@ -102,7 +100,6 @@ fun countBestStreak(
     return maxOf(maxConsecutive, currentConsecutive)
 }
 
-@OptIn(ExperimentalTime::class)
 fun prepareLineChartData(
     firstDay: DayOfWeek,
     habitStatuses: List<HabitStatus>,
@@ -170,4 +167,21 @@ private fun areConsecutiveEligibleDays(
         checkDate = checkDate.plus(1, DateTimeUnit.DAY)
     }
     return checkDate == date2
+}
+
+fun calculateConsistency(dates: List<LocalDate>, eligibleWeekdays: Set<DayOfWeek>): Float {
+    val eligibleDates = dates.filter { it.dayOfWeek in eligibleWeekdays }
+    val firstCompletionDate = eligibleDates.minOrNull() ?: return 0f
+    val today = LocalDate.now()
+
+    var totalEligibleDays = 0
+    var current = firstCompletionDate
+    while (current <= today) {
+        if (current.dayOfWeek in eligibleWeekdays) {
+            totalEligibleDays++
+        }
+        current = current.plus(1, DateTimeUnit.DAY)
+    }
+
+    return if (totalEligibleDays > 0) eligibleDates.size.toFloat() / totalEligibleDays else 0f
 }
