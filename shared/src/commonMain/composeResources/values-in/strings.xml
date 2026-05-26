@@ -50,7 +50,7 @@
     <string name="app_theme">Tema aplikasi</string>
     <string name="pause_notifications">Jeda Notifikasi</string>
     <string name="pause_notifications_desc">Jeda semua notifikasi aplikasi</string>
-    <string name="started_on">Dimulai Pada</string>
+    <string name="started_on">Dimulai pada</string>
     <string name="weekly_graph">Perbandingan Mingguan</string>
     <string name="not_enough_data">Belum ada data yang bisa dipamerin</string>
     <string name="items_completed">Beres</string>
@@ -81,4 +81,13 @@
     <string name="changelog">Catatan update</string>
     <string name="whats_changed">Apa aja yang Berubah</string>
     <string name="select_days">Pilih hari</string>
+    <string name="bmc_desc">Dukung saya dengan memberikan donasi kecil</string>
+    <string name="translate_desc">Terjemahkan Grit ke dalam bahasa Anda</string>
+    <string name="system_default">Default Sistem</string>
+    <string name="language">Bahasa</string>
+    <string name="about">Tentang</string>
+    <string name="consistency">Konsistensi</string>
+    <string name="calendar">Kalender</string>
+    <string name="monthly">Bulanan</string>
+    <string name="yearly">Tahunan</string>
 </resources>
