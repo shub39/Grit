@@ -44,24 +44,27 @@ import kotlinx.serialization.Serializable
 import kotlinx.serialization.modules.SerializersModule
 import kotlinx.serialization.modules.polymorphic
 
-@Serializable data object Root : NavKey
+@Serializable
+private sealed interface SettingsRoutes : NavKey {
+    @Serializable data object Root : SettingsRoutes
 
-@Serializable data object LookAndFeel : NavKey
+    @Serializable data object LookAndFeel : SettingsRoutes
 
-@Serializable data object Backup : NavKey
+    @Serializable data object Backup : SettingsRoutes
 
-@Serializable data object Changelog : NavKey
+    @Serializable data object Changelog : SettingsRoutes
 
-@Serializable data object About : NavKey
+    @Serializable data object About : SettingsRoutes
+}
 
 private val configuration = SavedStateConfiguration {
     serializersModule = SerializersModule {
         polymorphic(NavKey::class) {
-            subclass(Root::class, Root.serializer())
-            subclass(LookAndFeel::class, LookAndFeel.serializer())
-            subclass(Backup::class, Backup.serializer())
-            subclass(Changelog::class, Changelog.serializer())
-            subclass(About::class, About.serializer())
+            subclass(SettingsRoutes.Root::class, SettingsRoutes.Root.serializer())
+            subclass(SettingsRoutes.LookAndFeel::class, SettingsRoutes.LookAndFeel.serializer())
+            subclass(SettingsRoutes.Backup::class, SettingsRoutes.Backup.serializer())
+            subclass(SettingsRoutes.Changelog::class, SettingsRoutes.Changelog.serializer())
+            subclass(SettingsRoutes.About::class, SettingsRoutes.About.serializer())
         }
     }
 }
@@ -75,7 +78,7 @@ fun SettingsGraph(
     modifier: Modifier = Modifier,
 ) =
     PageFill(modifier = modifier) {
-        val backStack = rememberNavBackStack(configuration, Root)
+        val backStack = rememberNavBackStack(configuration, SettingsRoutes.Root)
 
         NavDisplay(
             modifier =
@@ -85,19 +88,19 @@ fun SettingsGraph(
             backStack = backStack,
             entryProvider =
                 entryProvider {
-                    entry<Root> {
+                    entry<SettingsRoutes.Root> {
                         RootPage(
                             state = state,
                             onAction = onAction,
-                            onNavigateToLookAndFeel = { backStack.add(LookAndFeel) },
-                            onNavigateToBackup = { backStack.add(Backup) },
+                            onNavigateToLookAndFeel = { backStack.add(SettingsRoutes.LookAndFeel) },
+                            onNavigateToBackup = { backStack.add(SettingsRoutes.Backup) },
                             onNavigateToPaywall = onNavigateToPaywall,
-                            onNavigateToChangelog = { backStack.add(Changelog) },
-                            onNavigateToAppInfo = { backStack.add(About) },
+                            onNavigateToChangelog = { backStack.add(SettingsRoutes.Changelog) },
+                            onNavigateToAppInfo = { backStack.add(SettingsRoutes.About) },
                         )
                     }
 
-                    entry<LookAndFeel>(metadata = horizontalTransitionMetadata()) {
+                    entry<SettingsRoutes.LookAndFeel>(metadata = horizontalTransitionMetadata()) {
                         LookAndFeelPage(
                             state = state,
                             onAction = onAction,
@@ -109,7 +112,7 @@ fun SettingsGraph(
                         )
                     }
 
-                    entry<Backup>(metadata = horizontalTransitionMetadata()) {
+                    entry<SettingsRoutes.Backup>(metadata = horizontalTransitionMetadata()) {
                         BackupPage(
                             state = state,
                             onAction = onAction,
@@ -119,7 +122,7 @@ fun SettingsGraph(
                         )
                     }
 
-                    entry<Changelog>(metadata = horizontalTransitionMetadata()) {
+                    entry<SettingsRoutes.Changelog>(metadata = horizontalTransitionMetadata()) {
                         Changelog(
                             changelog = state.changelog,
                             onNavigateBack = {
@@ -128,7 +131,7 @@ fun SettingsGraph(
                         )
                     }
 
-                    entry<About>(metadata = horizontalTransitionMetadata()) {
+                    entry<SettingsRoutes.About>(metadata = horizontalTransitionMetadata()) {
                         About(
                             versionName = state.currentVersion ?: "1.0.00-Demo",
                             onNavigateBack = {

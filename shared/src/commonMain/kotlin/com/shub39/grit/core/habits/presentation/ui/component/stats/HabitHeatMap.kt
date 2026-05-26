@@ -199,6 +199,7 @@ fun HabitHeatMap(
         Text(
             text = selectedDay.toFormattedString(),
             fontFamily = flexFontRounded(),
+            color = MaterialTheme.colorScheme.onSurface,
             modifier = Modifier.padding(horizontal = 16.dp),
         )
 

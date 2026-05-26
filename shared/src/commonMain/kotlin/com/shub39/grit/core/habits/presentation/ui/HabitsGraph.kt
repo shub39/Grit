@@ -71,18 +71,21 @@ import kotlinx.serialization.modules.polymorphic
 import org.jetbrains.compose.resources.painterResource
 import org.jetbrains.compose.resources.stringResource
 
-@Serializable data object HabitList : NavKey
+@Serializable
+private sealed interface HabitRoutes : NavKey {
+    @Serializable data object HabitList : HabitRoutes
 
-@Serializable data object HabitAnalytics : NavKey
+    @Serializable data object HabitAnalytics : HabitRoutes
 
-@Serializable data object OverallAnalytics : NavKey
+    @Serializable data object OverallAnalytics : HabitRoutes
+}
 
 private val config = SavedStateConfiguration {
     serializersModule = SerializersModule {
         polymorphic(NavKey::class) {
-            subclass(HabitList::class, HabitList.serializer())
-            subclass(HabitAnalytics::class, HabitAnalytics.serializer())
-            subclass(OverallAnalytics::class, OverallAnalytics.serializer())
+            subclass(HabitRoutes.HabitList::class, HabitRoutes.HabitList.serializer())
+            subclass(HabitRoutes.HabitAnalytics::class, HabitRoutes.HabitAnalytics.serializer())
+            subclass(HabitRoutes.OverallAnalytics::class, HabitRoutes.OverallAnalytics.serializer())
         }
     }
 }
@@ -100,14 +103,14 @@ fun HabitsGraph(
     val scrollBehavior = TopAppBarDefaults.enterAlwaysScrollBehavior()
 
     if (windowSizeClass.widthSizeClass != WindowWidthSizeClass.Expanded) {
-        val backstack = rememberNavBackStack(config, HabitList)
+        val backstack = rememberNavBackStack(config, HabitRoutes.HabitList)
 
         NavDisplay(
             modifier = modifier,
             backStack = backstack,
             entryProvider =
                 entryProvider {
-                    entry<HabitList> {
+                    entry<HabitRoutes.HabitList> {
                         Column(
                             modifier = Modifier.background(MaterialTheme.colorScheme.background)
                         ) {
@@ -127,7 +130,9 @@ fun HabitsGraph(
                                     state = state,
                                     onAction = onAction,
                                     lazyListState = lazyListState,
-                                    onNavigateToAnalytics = { backstack.add(HabitAnalytics) },
+                                    onNavigateToAnalytics = {
+                                        backstack.add(HabitRoutes.HabitAnalytics)
+                                    },
                                     modifier =
                                         Modifier.fillMaxHeight()
                                             .nestedScroll(scrollBehavior.nestedScrollConnection),
@@ -135,7 +140,7 @@ fun HabitsGraph(
 
                                 HabitListFABs(
                                     onNavigateToOverallAnalytics = {
-                                        backstack.add(OverallAnalytics)
+                                        backstack.add(HabitRoutes.OverallAnalytics)
                                     },
                                     state = state,
                                     fabVisible = fabVisible,
@@ -147,7 +152,7 @@ fun HabitsGraph(
                         }
                     }
 
-                    entry<HabitAnalytics>(metadata = horizontalTransitionMetadata()) {
+                    entry<HabitRoutes.HabitAnalytics>(metadata = horizontalTransitionMetadata()) {
                         AnalyticsPage(
                             state = state,
                             onAction = onAction,
@@ -160,7 +165,7 @@ fun HabitsGraph(
                         )
                     }
 
-                    entry<OverallAnalytics>(metadata = verticalTransitionMetadata()) {
+                    entry<HabitRoutes.OverallAnalytics>(metadata = verticalTransitionMetadata()) {
                         OverallAnalytics(
                             state = state,
                             onNavigateBack = {
