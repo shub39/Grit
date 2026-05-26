@@ -20,12 +20,14 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
@@ -52,6 +54,7 @@ import com.shub39.grit.core.habits.domain.calendarMapStreakShape
 import com.shub39.grit.core.habits.presentation.HabitState
 import com.shub39.grit.core.habits.presentation.daysStartingFrom
 import com.shub39.grit.core.theme.flexFontEmphasis
+import com.shub39.grit.core.theme.flexFontRounded
 import grit.shared.generated.resources.Res
 import grit.shared.generated.resources.arrow_back
 import grit.shared.generated.resources.calendar
@@ -117,22 +120,31 @@ fun Calendar(
         )
 
         VerticalCalendar(
-            modifier = Modifier.padding(horizontal = 16.dp),
+            modifier =
+                Modifier.padding(horizontal = 16.dp)
+                    .clip(RoundedCornerShape(topStart = 20.dp, topEnd = 20.dp)),
+            contentPadding = PaddingValues(top = 16.dp, bottom = 60.dp),
             state = state,
             reverseLayout = true,
-            monthHeader = {
-                Box(modifier = Modifier.padding(4.dp)) {
+            monthHeader = { calendarMonth ->
+                Box(
+                    modifier =
+                        Modifier.padding(start = 4.dp, end = 4.dp, top = 32.dp, bottom = 8.dp)
+                ) {
                     Text(
                         text =
-                            it.yearMonth.format(
+                            calendarMonth.yearMonth.format(
                                 YearMonth.Format {
                                     monthName(MonthNames.ENGLISH_FULL)
                                     char(' ')
                                     year()
                                 }
                             ),
-                        color = MaterialTheme.colorScheme.secondary,
-                        style = MaterialTheme.typography.titleMedium,
+                        style =
+                            MaterialTheme.typography.titleLarge.copy(
+                                color = MaterialTheme.colorScheme.secondary,
+                                fontFamily = flexFontRounded(),
+                            ),
                         modifier = Modifier.align(Alignment.Center),
                     )
                 }
