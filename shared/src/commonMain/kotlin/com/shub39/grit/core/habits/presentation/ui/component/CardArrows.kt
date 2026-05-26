@@ -59,7 +59,7 @@ fun CardArrows(
             FilledTonalIconButton(
                 onClick = onExpandAction,
                 shapes = IconButtonDefaults.shapes(),
-                enabled = enabled
+                enabled = enabled,
             ) {
                 Icon(
                     painter = painterResource(Res.drawable.expand),

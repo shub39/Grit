@@ -1,3 +1,19 @@
+/*
+ * Copyright (C) 2026  Shubham Gorai
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <https://www.gnu.org/licenses/>.
+ */
 package com.shub39.grit.core.habits.presentation.ui.sections
 
 import androidx.compose.foundation.background
@@ -19,7 +35,6 @@ import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.material3.windowsizeclass.WindowWidthSizeClass
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -40,7 +55,6 @@ import com.shub39.grit.core.theme.flexFontEmphasis
 import grit.shared.generated.resources.Res
 import grit.shared.generated.resources.arrow_back
 import grit.shared.generated.resources.calendar
-import grit.shared.generated.resources.weekly_progress
 import kotlinx.datetime.LocalDate
 import kotlinx.datetime.Month
 import kotlinx.datetime.YearMonth
@@ -55,34 +69,31 @@ fun Calendar(
     state: HabitState,
     onDateClick: (Habit, LocalDate) -> Unit,
     onNavigateBack: () -> Unit,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
 ) {
-    val currentHabit = state.habitsWithAnalytics
-        .find { it.habit.id == state.analyticsHabitId }
-        ?: return
+    val currentHabit =
+        state.habitsWithAnalytics.find { it.habit.id == state.analyticsHabitId } ?: return
 
     val windowSizeClass = LocalWindowSizeClass.current
 
     val today = LocalDate.now()
 
-    val doneDates = remember(currentHabit.statuses) { currentHabit.statuses.map { it.date }.toSet() }
+    val doneDates =
+        remember(currentHabit.statuses) { currentHabit.statuses.map { it.date }.toSet() }
 
-    val state = rememberCalendarState(
-        startMonth = YearMonth(year = 2024, month = Month.JANUARY),
-        endMonth = YearMonth.now(),
-        firstVisibleMonth = YearMonth.now(),
-        firstDayOfWeek = state.startingDay
-    )
-    val edgeWeeks =
-        listOf(state.firstDayOfWeek, daysStartingFrom(state.firstDayOfWeek).last())
+    val state =
+        rememberCalendarState(
+            startMonth = YearMonth(year = 2024, month = Month.JANUARY),
+            endMonth = YearMonth.now(),
+            firstVisibleMonth = YearMonth.now(),
+            firstDayOfWeek = state.startingDay,
+        )
+    val edgeWeeks = listOf(state.firstDayOfWeek, daysStartingFrom(state.firstDayOfWeek).last())
 
     Column(modifier = modifier.fillMaxSize()) {
         TopAppBar(
             title = {
-                Text(
-                    text = stringResource(Res.string.calendar),
-                    fontFamily = flexFontEmphasis()
-                )
+                Text(text = stringResource(Res.string.calendar), fontFamily = flexFontEmphasis())
             },
             navigationIcon = {
                 IconButton(onClick = onNavigateBack) {
@@ -92,10 +103,11 @@ fun Calendar(
                     )
                 }
             },
-            colors = TopAppBarDefaults.topAppBarColors(
-                scrolledContainerColor = Color.Transparent,
-                containerColor = Color.Transparent,
-            ),
+            colors =
+                TopAppBarDefaults.topAppBarColors(
+                    scrolledContainerColor = Color.Transparent,
+                    containerColor = Color.Transparent,
+                ),
             windowInsets =
                 if (windowSizeClass.widthSizeClass == WindowWidthSizeClass.Expanded) {
                     WindowInsets(0)
@@ -128,7 +140,8 @@ fun Calendar(
             dayContent = { day ->
                 if (day.position.name == "MonthDate") {
                     val done = day.date in doneDates
-                    val validDate = day.date <= today && day.date.dayOfWeek in currentHabit.habit.days
+                    val validDate =
+                        day.date <= today && day.date.dayOfWeek in currentHabit.habit.days
 
                     val donePrevious = day.date.minusDays(1) in doneDates
                     val doneAfter = day.date.plusDays(1) in doneDates
@@ -143,12 +156,12 @@ fun Calendar(
                     Box(
                         modifier =
                             Modifier.padding(
-                                top = 1.dp,
-                                bottom = 1.dp,
-                                start =
-                                    if (day.date.dayOfWeek == edgeWeeks.first()) 4.dp else 0.dp,
-                                end = if (day.date.dayOfWeek == edgeWeeks.last()) 4.dp else 0.dp,
-                            )
+                                    top = 1.dp,
+                                    bottom = 1.dp,
+                                    start =
+                                        if (day.date.dayOfWeek == edgeWeeks.first()) 4.dp else 0.dp,
+                                    end = if (day.date.dayOfWeek == edgeWeeks.last()) 4.dp else 0.dp,
+                                )
                                 .fillMaxWidth()
                                 .height(40.dp)
                                 .clip(
@@ -160,7 +173,9 @@ fun Calendar(
                                         isLastDayOfMonth = day.date.plusDays(1).day == 1,
                                     )
                                 )
-                                .clickable(enabled = validDate) { onDateClick(currentHabit.habit, day.date) },
+                                .clickable(enabled = validDate) {
+                                    onDateClick(currentHabit.habit, day.date)
+                                },
                         contentAlignment = Alignment.Center,
                     ) {
                         if (done) {
@@ -172,7 +187,7 @@ fun Calendar(
                             ) {
                                 val isStreakEnd =
                                     streakPosition == StreakPosition.START ||
-                                            streakPosition == StreakPosition.END
+                                        streakPosition == StreakPosition.END
 
                                 if (isStreakEnd) {
                                     Box(
@@ -211,7 +226,7 @@ fun Calendar(
                         }
                     }
                 }
-            }
+            },
         )
     }
 }

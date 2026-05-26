@@ -57,9 +57,9 @@ import com.shub39.grit.core.habits.presentation.HabitState
 import com.shub39.grit.core.habits.presentation.HabitsAction
 import com.shub39.grit.core.habits.presentation.ui.component.HabitListFABs
 import com.shub39.grit.core.habits.presentation.ui.sections.AnalyticsPage
+import com.shub39.grit.core.habits.presentation.ui.sections.Calendar
 import com.shub39.grit.core.habits.presentation.ui.sections.HabitsList
 import com.shub39.grit.core.habits.presentation.ui.sections.OverallAnalytics
-import com.shub39.grit.core.habits.presentation.ui.sections.Calendar
 import com.shub39.grit.core.navigation.horizontalTransitionMetadata
 import com.shub39.grit.core.navigation.verticalTransitionMetadata
 import com.shub39.grit.core.shared_ui.PageFill
@@ -74,17 +74,13 @@ import org.jetbrains.compose.resources.stringResource
 
 @Serializable
 private sealed interface HabitRoutes : NavKey {
-    @Serializable
-    data object HabitList : HabitRoutes
+    @Serializable data object HabitList : HabitRoutes
 
-    @Serializable
-    data object HabitAnalytics : HabitRoutes
+    @Serializable data object HabitAnalytics : HabitRoutes
 
-    @Serializable
-    data object OverallAnalytics : HabitRoutes
+    @Serializable data object OverallAnalytics : HabitRoutes
 
-    @Serializable
-    data object Calendar : HabitRoutes
+    @Serializable data object Calendar : HabitRoutes
 }
 
 private val config = SavedStateConfiguration {
@@ -168,9 +164,7 @@ fun HabitsGraph(
                                 if (backstack.size != 1) backstack.removeLastOrNull()
                             },
                             onNavigateToPaywall = onNavigateToPaywall,
-                            onNavigateToCalendar = {
-                                backstack.add(HabitRoutes.Calendar)
-                            },
+                            onNavigateToCalendar = { backstack.add(HabitRoutes.Calendar) },
                             isUserSubscribed = isUserSubscribed,
                             modifier = Modifier.background(MaterialTheme.colorScheme.background),
                         )
@@ -198,7 +192,7 @@ fun HabitsGraph(
                             onDateClick = { habit, date ->
                                 onAction(HabitsAction.InsertStatus(habit, date))
                             },
-                            modifier = Modifier.background(MaterialTheme.colorScheme.surface)
+                            modifier = Modifier.background(MaterialTheme.colorScheme.surface),
                         )
                     }
                 },
@@ -210,7 +204,7 @@ fun HabitsGraph(
             onAction = onAction,
             scrollBehavior = scrollBehavior,
             onNavigateToPaywall = onNavigateToPaywall,
-            isUserSubscribed = isUserSubscribed
+            isUserSubscribed = isUserSubscribed,
         )
     }
 }
@@ -222,7 +216,7 @@ private fun ExpandedScreen(
     onAction: (HabitsAction) -> Unit,
     scrollBehavior: TopAppBarScrollBehavior,
     onNavigateToPaywall: () -> Unit,
-    isUserSubscribed: Boolean
+    isUserSubscribed: Boolean,
 ) {
     Column(modifier = modifier.background(MaterialTheme.colorScheme.background)) {
         HabitsTopAppBar(state = state, onAction = onAction, scrollBehavior = scrollBehavior)
@@ -267,7 +261,7 @@ private fun ExpandedScreen(
                     targetState = state.analyticsHabitId,
                     transitionSpec = {
                         fadeIn(motionScheme.fastEffectsSpec()) togetherWith
-                                fadeOut(motionScheme.fastEffectsSpec())
+                            fadeOut(motionScheme.fastEffectsSpec())
                     },
                 ) { analyticsHabitId ->
                     if (analyticsHabitId != null) {
@@ -304,11 +298,11 @@ private fun ExpandedScreen(
                                             onDateClick = { habit, date ->
                                                 onAction(HabitsAction.InsertStatus(habit, date))
                                             },
-                                            modifier = Modifier
-                                                .background(
-                                                    MaterialTheme
-                                                        .colorScheme.surfaceContainerHighest
-                                                )
+                                            modifier =
+                                                Modifier.background(
+                                                    MaterialTheme.colorScheme
+                                                        .surfaceContainerHighest
+                                                ),
                                         )
                                     }
                                 },
@@ -349,7 +343,7 @@ private fun HabitsTopAppBar(
                 Text(
                     text =
                         "${state.completedHabitIds.size}/${state.habitsWithAnalytics.size} " +
-                                stringResource(Res.string.completed),
+                            stringResource(Res.string.completed),
                     fontFamily = flexFontRounded(),
                 )
             }

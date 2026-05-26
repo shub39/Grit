@@ -114,7 +114,7 @@ fun CalendarMap(
                     }
                 },
                 onExpandAction = onNavigateToCalendar,
-                enabled = canSeeContent
+                enabled = canSeeContent,
             )
         },
         modifier = modifier,
@@ -141,10 +141,11 @@ fun CalendarMap(
                                     year()
                                 }
                             ),
-                        style = MaterialTheme.typography.titleMedium.copy(
-                            color = MaterialTheme.colorScheme.secondary,
-                            fontFamily = flexFontRounded()
-                        ),
+                        style =
+                            MaterialTheme.typography.titleMedium.copy(
+                                color = MaterialTheme.colorScheme.secondary,
+                                fontFamily = flexFontRounded(),
+                            ),
                         modifier = Modifier.align(Alignment.Center),
                     )
                 }
@@ -259,6 +260,6 @@ private fun Preview() {
         days = DayOfWeek.entries.toSet(),
         onNavigateToPaywall = {},
         onDateClick = {},
-        onNavigateToCalendar = {}
+        onNavigateToCalendar = {},
     )
 }
