@@ -34,11 +34,12 @@ import org.jetbrains.compose.resources.painterResource
 fun CardArrows(
     onBackAction: () -> Unit,
     onForwardAction: () -> Unit,
-    onExpandAction: () -> Unit = {},
     modifier: Modifier = Modifier,
+    enabled: Boolean = true,
+    onExpandAction: (() -> Unit)? = null,
 ) {
     Row(modifier = modifier) {
-        IconButton(onClick = onBackAction) {
+        IconButton(onClick = onBackAction, enabled = enabled) {
             Icon(
                 painter = painterResource(Res.drawable.arrow_back),
                 contentDescription = null,
@@ -46,7 +47,7 @@ fun CardArrows(
             )
         }
 
-        IconButton(onClick = onForwardAction) {
+        IconButton(onClick = onForwardAction, enabled = enabled) {
             Icon(
                 painter = painterResource(Res.drawable.arrow_forward),
                 contentDescription = null,
@@ -54,12 +55,18 @@ fun CardArrows(
             )
         }
 
-        FilledTonalIconButton(onClick = onExpandAction, shapes = IconButtonDefaults.shapes()) {
-            Icon(
-                painter = painterResource(Res.drawable.expand),
-                contentDescription = null,
-                tint = MaterialTheme.colorScheme.onSurface,
-            )
+        onExpandAction?.let {
+            FilledTonalIconButton(
+                onClick = onExpandAction,
+                shapes = IconButtonDefaults.shapes(),
+                enabled = enabled
+            ) {
+                Icon(
+                    painter = painterResource(Res.drawable.expand),
+                    contentDescription = null,
+                    tint = MaterialTheme.colorScheme.onSurface,
+                )
+            }
         }
     }
 }

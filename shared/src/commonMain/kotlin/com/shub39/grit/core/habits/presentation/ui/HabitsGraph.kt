@@ -59,6 +59,7 @@ import com.shub39.grit.core.habits.presentation.ui.component.HabitListFABs
 import com.shub39.grit.core.habits.presentation.ui.sections.AnalyticsPage
 import com.shub39.grit.core.habits.presentation.ui.sections.HabitsList
 import com.shub39.grit.core.habits.presentation.ui.sections.OverallAnalytics
+import com.shub39.grit.core.habits.presentation.ui.sections.Calendar
 import com.shub39.grit.core.navigation.horizontalTransitionMetadata
 import com.shub39.grit.core.navigation.verticalTransitionMetadata
 import com.shub39.grit.core.shared_ui.PageFill
@@ -73,13 +74,17 @@ import org.jetbrains.compose.resources.stringResource
 
 @Serializable
 private sealed interface HabitRoutes : NavKey {
-    @Serializable data object HabitList : HabitRoutes
+    @Serializable
+    data object HabitList : HabitRoutes
 
-    @Serializable data object HabitAnalytics : HabitRoutes
+    @Serializable
+    data object HabitAnalytics : HabitRoutes
 
-    @Serializable data object OverallAnalytics : HabitRoutes
+    @Serializable
+    data object OverallAnalytics : HabitRoutes
 
-    @Serializable data object WeeklyProgress : HabitRoutes
+    @Serializable
+    data object Calendar : HabitRoutes
 }
 
 private val config = SavedStateConfiguration {
@@ -88,7 +93,7 @@ private val config = SavedStateConfiguration {
             subclass(HabitRoutes.HabitList::class, HabitRoutes.HabitList.serializer())
             subclass(HabitRoutes.HabitAnalytics::class, HabitRoutes.HabitAnalytics.serializer())
             subclass(HabitRoutes.OverallAnalytics::class, HabitRoutes.OverallAnalytics.serializer())
-            subclass(HabitRoutes.WeeklyProgress::class, HabitRoutes.WeeklyProgress.serializer())
+            subclass(HabitRoutes.Calendar::class, HabitRoutes.Calendar.serializer())
         }
     }
 }
@@ -163,8 +168,8 @@ fun HabitsGraph(
                                 if (backstack.size != 1) backstack.removeLastOrNull()
                             },
                             onNavigateToPaywall = onNavigateToPaywall,
-                            onNavigateToWeeklyProgress = {
-                                backstack.add(HabitRoutes.WeeklyProgress)
+                            onNavigateToCalendar = {
+                                backstack.add(HabitRoutes.Calendar)
                             },
                             isUserSubscribed = isUserSubscribed,
                             modifier = Modifier.background(MaterialTheme.colorScheme.background),
@@ -184,91 +189,139 @@ fun HabitsGraph(
                         )
                     }
 
-                    entry<HabitRoutes.WeeklyProgress>(metadata = horizontalTransitionMetadata()) {}
+                    entry<HabitRoutes.Calendar>(metadata = horizontalTransitionMetadata()) {
+                        Calendar(
+                            state = state,
+                            onNavigateBack = {
+                                if (backstack.size != 1) backstack.removeLastOrNull()
+                            },
+                            onDateClick = { habit, date ->
+                                onAction(HabitsAction.InsertStatus(habit, date))
+                            },
+                            modifier = Modifier.background(MaterialTheme.colorScheme.surface)
+                        )
+                    }
                 },
         )
     } else {
-        Column(modifier = modifier.background(MaterialTheme.colorScheme.background)) {
-            HabitsTopAppBar(state = state, onAction = onAction, scrollBehavior = scrollBehavior)
+        ExpandedScreen(
+            modifier = modifier,
+            state = state,
+            onAction = onAction,
+            scrollBehavior = scrollBehavior,
+            onNavigateToPaywall = onNavigateToPaywall,
+            isUserSubscribed = isUserSubscribed
+        )
+    }
+}
 
-            Row(modifier = Modifier.weight(1f)) {
-                Box {
-                    val lazyListState = rememberLazyListState()
-                    val fabVisible by remember {
-                        derivedStateOf { lazyListState.firstVisibleItemIndex == 0 }
-                    }
+@Composable
+private fun ExpandedScreen(
+    modifier: Modifier,
+    state: HabitState,
+    onAction: (HabitsAction) -> Unit,
+    scrollBehavior: TopAppBarScrollBehavior,
+    onNavigateToPaywall: () -> Unit,
+    isUserSubscribed: Boolean
+) {
+    Column(modifier = modifier.background(MaterialTheme.colorScheme.background)) {
+        HabitsTopAppBar(state = state, onAction = onAction, scrollBehavior = scrollBehavior)
 
-                    HabitsList(
-                        state = state,
-                        onAction = onAction,
-                        onNavigateToAnalytics = {},
-                        lazyListState = lazyListState,
-                        modifier =
-                            Modifier.fillMaxHeight()
-                                .widthIn(max = 400.dp)
-                                .nestedScroll(scrollBehavior.nestedScrollConnection),
-                    )
-
-                    HabitListFABs(
-                        onNavigateToOverallAnalytics = {
-                            onAction(HabitsAction.PrepareAnalytics(null))
-                        },
-                        state = state,
-                        fabVisible = fabVisible,
-                        onAction = onAction,
-                        onNavigateToPaywall = onNavigateToPaywall,
-                        isUserSubscribed = isUserSubscribed,
-                    )
+        Row(modifier = Modifier.weight(1f)) {
+            Box {
+                val lazyListState = rememberLazyListState()
+                val fabVisible by remember {
+                    derivedStateOf { lazyListState.firstVisibleItemIndex == 0 }
                 }
 
-                Surface(
-                    color = MaterialTheme.colorScheme.surfaceContainerHighest,
-                    shape = RoundedCornerShape(topStart = 28.dp),
-                    modifier = Modifier.weight(1f),
-                ) {
-                    val motionScheme = MaterialTheme.motionScheme
-                    AnimatedContent(
-                        targetState = state.analyticsHabitId,
-                        transitionSpec = {
-                            fadeIn(motionScheme.fastEffectsSpec()) togetherWith
+                HabitsList(
+                    state = state,
+                    onAction = onAction,
+                    onNavigateToAnalytics = {},
+                    lazyListState = lazyListState,
+                    modifier =
+                        Modifier.fillMaxHeight()
+                            .widthIn(max = 400.dp)
+                            .nestedScroll(scrollBehavior.nestedScrollConnection),
+                )
+
+                HabitListFABs(
+                    onNavigateToOverallAnalytics = {
+                        onAction(HabitsAction.PrepareAnalytics(null))
+                    },
+                    state = state,
+                    fabVisible = fabVisible,
+                    onAction = onAction,
+                    onNavigateToPaywall = onNavigateToPaywall,
+                    isUserSubscribed = isUserSubscribed,
+                )
+            }
+
+            Surface(
+                color = MaterialTheme.colorScheme.surfaceContainerHighest,
+                shape = RoundedCornerShape(topStart = 28.dp),
+                modifier = Modifier.weight(1f),
+            ) {
+                val motionScheme = MaterialTheme.motionScheme
+                AnimatedContent(
+                    targetState = state.analyticsHabitId,
+                    transitionSpec = {
+                        fadeIn(motionScheme.fastEffectsSpec()) togetherWith
                                 fadeOut(motionScheme.fastEffectsSpec())
-                        },
-                    ) {
-                        if (it != null) {
-                            val backStack = rememberNavBackStack(config, HabitRoutes.HabitAnalytics)
+                    },
+                ) { analyticsHabitId ->
+                    if (analyticsHabitId != null) {
+                        val backstack = rememberNavBackStack(config, HabitRoutes.HabitAnalytics)
 
-                            NavDisplay(
-                                backStack = backStack,
-                                entryProvider =
-                                    entryProvider {
-                                        entry<HabitRoutes.HabitAnalytics> {
-                                            AnalyticsPage(
-                                                state = state,
-                                                onAction = onAction,
-                                                onNavigateBack = {
-                                                    onAction(HabitsAction.PrepareAnalytics(null))
-                                                },
-                                                onNavigateToPaywall = onNavigateToPaywall,
-                                                onNavigateToWeeklyProgress = {
-                                                    backStack.add(HabitRoutes.WeeklyProgress)
-                                                },
-                                                isUserSubscribed = isUserSubscribed,
-                                            )
-                                        }
+                        NavDisplay(
+                            backStack = backstack,
+                            entryProvider =
+                                entryProvider {
+                                    entry<HabitRoutes.HabitAnalytics> {
+                                        AnalyticsPage(
+                                            state = state,
+                                            onAction = onAction,
+                                            onNavigateBack = {
+                                                onAction(HabitsAction.PrepareAnalytics(null))
+                                            },
+                                            onNavigateToPaywall = onNavigateToPaywall,
+                                            onNavigateToCalendar = {
+                                                backstack.add(HabitRoutes.Calendar)
+                                            },
+                                            isUserSubscribed = isUserSubscribed,
+                                        )
+                                    }
 
-                                        entry<HabitRoutes.WeeklyProgress> {}
-                                    },
-                            )
-                        } else {
-                            OverallAnalytics(
-                                state = state,
-                                onNavigateBack = {},
-                                showNavigateBack = false,
-                                onNavigateToPaywall = onNavigateToPaywall,
-                                isUserSubscribed = isUserSubscribed,
-                                onAction = onAction,
-                            )
-                        }
+                                    entry<HabitRoutes.Calendar>(
+                                        metadata = horizontalTransitionMetadata()
+                                    ) {
+                                        Calendar(
+                                            state = state,
+                                            onNavigateBack = {
+                                                if (backstack.size != 1)
+                                                    backstack.removeLastOrNull()
+                                            },
+                                            onDateClick = { habit, date ->
+                                                onAction(HabitsAction.InsertStatus(habit, date))
+                                            },
+                                            modifier = Modifier
+                                                .background(
+                                                    MaterialTheme
+                                                        .colorScheme.surfaceContainerHighest
+                                                )
+                                        )
+                                    }
+                                },
+                        )
+                    } else {
+                        OverallAnalytics(
+                            state = state,
+                            onNavigateBack = {},
+                            showNavigateBack = false,
+                            onNavigateToPaywall = onNavigateToPaywall,
+                            isUserSubscribed = isUserSubscribed,
+                            onAction = onAction,
+                        )
                     }
                 }
             }
@@ -296,7 +349,7 @@ private fun HabitsTopAppBar(
                 Text(
                     text =
                         "${state.completedHabitIds.size}/${state.habitsWithAnalytics.size} " +
-                            stringResource(Res.string.completed),
+                                stringResource(Res.string.completed),
                     fontFamily = flexFontRounded(),
                 )
             }

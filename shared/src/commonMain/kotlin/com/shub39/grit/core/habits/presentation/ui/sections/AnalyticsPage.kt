@@ -87,7 +87,7 @@ fun AnalyticsPage(
     onAction: (HabitsAction) -> Unit,
     onNavigateBack: () -> Unit,
     onNavigateToPaywall: () -> Unit,
-    onNavigateToWeeklyProgress: () -> Unit,
+    onNavigateToCalendar: () -> Unit,
     isUserSubscribed: Boolean,
     modifier: Modifier = Modifier,
 ) {
@@ -216,6 +216,7 @@ fun AnalyticsPage(
                     onNavigateToPaywall = onNavigateToPaywall,
                     statuses = currentHabit.statuses,
                     days = currentHabit.habit.days,
+                    onNavigateToCalendar = onNavigateToCalendar,
                     onDateClick = {
                         onAction(HabitsAction.InsertStatus(habit = currentHabit.habit, date = it))
                     },

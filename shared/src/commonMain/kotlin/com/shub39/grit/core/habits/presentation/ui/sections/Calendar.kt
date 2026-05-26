@@ -1,137 +1,115 @@
-/*
- * Copyright (C) 2026  Shubham Gorai
- *
- * This program is free software: you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
- *
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
- *
- * You should have received a copy of the GNU General Public License
- * along with this program.  If not, see <https://www.gnu.org/licenses/>.
- */
-package com.shub39.grit.core.habits.presentation.ui.component.stats
+package com.shub39.grit.core.habits.presentation.ui.sections
 
-import androidx.compose.animation.animateContentSize
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
+import androidx.compose.material3.TopAppBar
+import androidx.compose.material3.TopAppBarDefaults
+import androidx.compose.material3.windowsizeclass.WindowWidthSizeClass
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.tooling.preview.Preview
-import androidx.compose.ui.tooling.preview.PreviewWrapper
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
-import com.kizitonwose.calendar.compose.CalendarState
-import com.kizitonwose.calendar.compose.HorizontalCalendar
+import com.kizitonwose.calendar.compose.VerticalCalendar
 import com.kizitonwose.calendar.compose.rememberCalendarState
 import com.kizitonwose.calendar.core.minusDays
-import com.kizitonwose.calendar.core.minusYears
 import com.kizitonwose.calendar.core.now
 import com.kizitonwose.calendar.core.plusDays
-import com.shub39.grit.core.GritPreviewWrapper
-import com.shub39.grit.core.habits.domain.HabitStatus
+import com.shub39.grit.core.LocalWindowSizeClass
+import com.shub39.grit.core.habits.domain.Habit
 import com.shub39.grit.core.habits.domain.StreakPosition
 import com.shub39.grit.core.habits.domain.calendarMapStreakShape
+import com.shub39.grit.core.habits.presentation.HabitState
 import com.shub39.grit.core.habits.presentation.daysStartingFrom
-import com.shub39.grit.core.habits.presentation.ui.component.AnalyticsCard
-import com.shub39.grit.core.habits.presentation.ui.component.CardArrows
-import com.shub39.grit.core.now
-import com.shub39.grit.core.theme.flexFontRounded
-import grit.shared.generated.resources.*
-import kotlinx.coroutines.launch
-import kotlinx.datetime.DateTimeUnit
-import kotlinx.datetime.DayOfWeek
+import com.shub39.grit.core.theme.flexFontEmphasis
+import grit.shared.generated.resources.Res
+import grit.shared.generated.resources.arrow_back
+import grit.shared.generated.resources.calendar
+import grit.shared.generated.resources.weekly_progress
 import kotlinx.datetime.LocalDate
+import kotlinx.datetime.Month
 import kotlinx.datetime.YearMonth
 import kotlinx.datetime.format
 import kotlinx.datetime.format.MonthNames
 import kotlinx.datetime.format.char
-import kotlinx.datetime.minus
-import kotlinx.datetime.plus
 import org.jetbrains.compose.resources.stringResource
+import org.jetbrains.compose.resources.vectorResource
 
-/**
- * Boolean Calendar highlighting completed days and streaks
- *
- * @param canSeeContent is user subbed?
- * @param calendarState calendar state object
- * @param statuses list of [HabitStatus]
- * @param days set of [DayOfWeek]
- */
 @Composable
-fun CalendarMap(
-    canSeeContent: Boolean,
-    calendarState: CalendarState,
-    statuses: List<HabitStatus>,
-    days: Set<DayOfWeek>,
-    onNavigateToPaywall: () -> Unit,
-    onNavigateToCalendar: () -> Unit,
-    onDateClick: (LocalDate) -> Unit,
-    modifier: Modifier = Modifier,
+fun Calendar(
+    state: HabitState,
+    onDateClick: (Habit, LocalDate) -> Unit,
+    onNavigateBack: () -> Unit,
+    modifier: Modifier = Modifier
 ) {
+    val currentHabit = state.habitsWithAnalytics
+        .find { it.habit.id == state.analyticsHabitId }
+        ?: return
+
+    val windowSizeClass = LocalWindowSizeClass.current
+
     val today = LocalDate.now()
-    val scope = rememberCoroutineScope()
 
-    val doneDates = remember(statuses) { statuses.map { it.date }.toSet() }
+    val doneDates = remember(currentHabit.statuses) { currentHabit.statuses.map { it.date }.toSet() }
+
+    val state = rememberCalendarState(
+        startMonth = YearMonth(year = 2024, month = Month.JANUARY),
+        endMonth = YearMonth.now(),
+        firstVisibleMonth = YearMonth.now(),
+        firstDayOfWeek = state.startingDay
+    )
     val edgeWeeks =
-        listOf(calendarState.firstDayOfWeek, daysStartingFrom(calendarState.firstDayOfWeek).last())
+        listOf(state.firstDayOfWeek, daysStartingFrom(state.firstDayOfWeek).last())
 
-    AnalyticsCard(
-        title = stringResource(Res.string.monthly_progress),
-        icon = Res.drawable.calendar_month,
-        canSeeContent = canSeeContent,
-        onPlusClick = onNavigateToPaywall,
-        header = {
-            CardArrows(
-                onBackAction = {
-                    scope.launch {
-                        calendarState.animateScrollToMonth(
-                            calendarState.firstVisibleMonth.yearMonth.minus(1, DateTimeUnit.MONTH)
-                        )
-                    }
-                },
-                onForwardAction = {
-                    scope.launch {
-                        calendarState.animateScrollToMonth(
-                            calendarState.firstVisibleMonth.yearMonth.plus(1, DateTimeUnit.MONTH)
-                        )
-                    }
-                },
-                onExpandAction = onNavigateToCalendar,
-                enabled = canSeeContent
-            )
-        },
-        modifier = modifier,
-    ) {
-        HorizontalCalendar(
-            state = calendarState,
-            modifier =
-                Modifier.background(
-                        color = MaterialTheme.colorScheme.surfaceContainer,
-                        shape = MaterialTheme.shapes.medium,
+    Column(modifier = modifier.fillMaxSize()) {
+        TopAppBar(
+            title = {
+                Text(
+                    text = stringResource(Res.string.calendar),
+                    fontFamily = flexFontEmphasis()
+                )
+            },
+            navigationIcon = {
+                IconButton(onClick = onNavigateBack) {
+                    Icon(
+                        imageVector = vectorResource(Res.drawable.arrow_back),
+                        contentDescription = "Navigate Back",
                     )
-                    .animateContentSize()
-                    .padding(vertical = 16.dp),
-            contentPadding = PaddingValues(horizontal = 16.dp),
-            userScrollEnabled = canSeeContent,
+                }
+            },
+            colors = TopAppBarDefaults.topAppBarColors(
+                scrolledContainerColor = Color.Transparent,
+                containerColor = Color.Transparent,
+            ),
+            windowInsets =
+                if (windowSizeClass.widthSizeClass == WindowWidthSizeClass.Expanded) {
+                    WindowInsets(0)
+                } else {
+                    TopAppBarDefaults.windowInsets
+                },
+        )
+
+        VerticalCalendar(
+            modifier = Modifier.padding(horizontal = 16.dp),
+            state = state,
+            reverseLayout = true,
             monthHeader = {
-                Box(modifier = Modifier.padding(start = 4.dp, end = 4.dp, bottom = 8.dp)) {
+                Box(modifier = Modifier.padding(4.dp)) {
                     Text(
                         text =
                             it.yearMonth.format(
@@ -141,10 +119,8 @@ fun CalendarMap(
                                     year()
                                 }
                             ),
-                        style = MaterialTheme.typography.titleMedium.copy(
-                            color = MaterialTheme.colorScheme.secondary,
-                            fontFamily = flexFontRounded()
-                        ),
+                        color = MaterialTheme.colorScheme.secondary,
+                        style = MaterialTheme.typography.titleMedium,
                         modifier = Modifier.align(Alignment.Center),
                     )
                 }
@@ -152,7 +128,7 @@ fun CalendarMap(
             dayContent = { day ->
                 if (day.position.name == "MonthDate") {
                     val done = day.date in doneDates
-                    val validDate = day.date <= today && day.date.dayOfWeek in days
+                    val validDate = day.date <= today && day.date.dayOfWeek in currentHabit.habit.days
 
                     val donePrevious = day.date.minusDays(1) in doneDates
                     val doneAfter = day.date.plusDays(1) in doneDates
@@ -167,12 +143,12 @@ fun CalendarMap(
                     Box(
                         modifier =
                             Modifier.padding(
-                                    top = 1.dp,
-                                    bottom = 1.dp,
-                                    start =
-                                        if (day.date.dayOfWeek == edgeWeeks.first()) 4.dp else 0.dp,
-                                    end = if (day.date.dayOfWeek == edgeWeeks.last()) 4.dp else 0.dp,
-                                )
+                                top = 1.dp,
+                                bottom = 1.dp,
+                                start =
+                                    if (day.date.dayOfWeek == edgeWeeks.first()) 4.dp else 0.dp,
+                                end = if (day.date.dayOfWeek == edgeWeeks.last()) 4.dp else 0.dp,
+                            )
                                 .fillMaxWidth()
                                 .height(40.dp)
                                 .clip(
@@ -184,7 +160,7 @@ fun CalendarMap(
                                         isLastDayOfMonth = day.date.plusDays(1).day == 1,
                                     )
                                 )
-                                .clickable(enabled = validDate) { onDateClick(day.date) },
+                                .clickable(enabled = validDate) { onDateClick(currentHabit.habit, day.date) },
                         contentAlignment = Alignment.Center,
                     ) {
                         if (done) {
@@ -196,7 +172,7 @@ fun CalendarMap(
                             ) {
                                 val isStreakEnd =
                                     streakPosition == StreakPosition.START ||
-                                        streakPosition == StreakPosition.END
+                                            streakPosition == StreakPosition.END
 
                                 if (isStreakEnd) {
                                     Box(
@@ -235,30 +211,7 @@ fun CalendarMap(
                         }
                     }
                 }
-            },
+            }
         )
     }
-}
-
-@PreviewWrapper(GritPreviewWrapper::class)
-@Preview
-@Composable
-private fun Preview() {
-    CalendarMap(
-        canSeeContent = true,
-        calendarState =
-            rememberCalendarState(
-                startMonth = YearMonth.now().minusYears(1),
-                endMonth = YearMonth.now(),
-                firstVisibleMonth = YearMonth.now(),
-            ),
-        statuses =
-            (0..40).map {
-                HabitStatus(habitId = 1, date = LocalDate.now().minus(it, DateTimeUnit.DAY))
-            },
-        days = DayOfWeek.entries.toSet(),
-        onNavigateToPaywall = {},
-        onDateClick = {},
-        onNavigateToCalendar = {}
-    )
 }
