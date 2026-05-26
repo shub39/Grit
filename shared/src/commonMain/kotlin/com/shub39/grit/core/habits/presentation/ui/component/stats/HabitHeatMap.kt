@@ -31,6 +31,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.ListItem
+import androidx.compose.material3.ListItemDefaults
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -56,7 +57,6 @@ import com.shub39.grit.core.habits.presentation.ui.component.AnalyticsCard
 import com.shub39.grit.core.habits.presentation.ui.component.CardArrows
 import com.shub39.grit.core.shared_ui.endItemShape
 import com.shub39.grit.core.shared_ui.leadingItemShape
-import com.shub39.grit.core.shared_ui.listItemColors
 import com.shub39.grit.core.theme.flexFontRounded
 import com.shub39.grit.core.toFormattedString
 import grit.shared.generated.resources.*
@@ -215,7 +215,11 @@ fun HabitHeatMap(
                     }
 
                 ListItem(
-                    colors = listItemColors(),
+                    colors =
+                        ListItemDefaults.colors(
+                            containerColor = MaterialTheme.colorScheme.secondaryContainer,
+                            contentColor = MaterialTheme.colorScheme.onSecondaryContainer,
+                        ),
                     modifier = Modifier.padding(horizontal = 16.dp, vertical = 1.dp).clip(shape),
                     headlineContent = { Text(habit) },
                 )

@@ -78,6 +78,8 @@ private sealed interface HabitRoutes : NavKey {
     @Serializable data object HabitAnalytics : HabitRoutes
 
     @Serializable data object OverallAnalytics : HabitRoutes
+
+    @Serializable data object WeeklyProgress : HabitRoutes
 }
 
 private val config = SavedStateConfiguration {
@@ -86,6 +88,7 @@ private val config = SavedStateConfiguration {
             subclass(HabitRoutes.HabitList::class, HabitRoutes.HabitList.serializer())
             subclass(HabitRoutes.HabitAnalytics::class, HabitRoutes.HabitAnalytics.serializer())
             subclass(HabitRoutes.OverallAnalytics::class, HabitRoutes.OverallAnalytics.serializer())
+            subclass(HabitRoutes.WeeklyProgress::class, HabitRoutes.WeeklyProgress.serializer())
         }
     }
 }
@@ -160,6 +163,9 @@ fun HabitsGraph(
                                 if (backstack.size != 1) backstack.removeLastOrNull()
                             },
                             onNavigateToPaywall = onNavigateToPaywall,
+                            onNavigateToWeeklyProgress = {
+                                backstack.add(HabitRoutes.WeeklyProgress)
+                            },
                             isUserSubscribed = isUserSubscribed,
                             modifier = Modifier.background(MaterialTheme.colorScheme.background),
                         )
@@ -177,6 +183,8 @@ fun HabitsGraph(
                             modifier = Modifier.background(MaterialTheme.colorScheme.background),
                         )
                     }
+
+                    entry<HabitRoutes.WeeklyProgress>(metadata = horizontalTransitionMetadata()) {}
                 },
         )
     } else {
@@ -214,7 +222,7 @@ fun HabitsGraph(
                 }
 
                 Surface(
-                    color = MaterialTheme.colorScheme.surfaceContainerHigh,
+                    color = MaterialTheme.colorScheme.surfaceContainerHighest,
                     shape = RoundedCornerShape(topStart = 28.dp),
                     modifier = Modifier.weight(1f),
                 ) {
@@ -227,12 +235,29 @@ fun HabitsGraph(
                         },
                     ) {
                         if (it != null) {
-                            AnalyticsPage(
-                                state = state,
-                                onAction = onAction,
-                                onNavigateBack = { onAction(HabitsAction.PrepareAnalytics(null)) },
-                                onNavigateToPaywall = onNavigateToPaywall,
-                                isUserSubscribed = isUserSubscribed,
+                            val backStack = rememberNavBackStack(config, HabitRoutes.HabitAnalytics)
+
+                            NavDisplay(
+                                backStack = backStack,
+                                entryProvider =
+                                    entryProvider {
+                                        entry<HabitRoutes.HabitAnalytics> {
+                                            AnalyticsPage(
+                                                state = state,
+                                                onAction = onAction,
+                                                onNavigateBack = {
+                                                    onAction(HabitsAction.PrepareAnalytics(null))
+                                                },
+                                                onNavigateToPaywall = onNavigateToPaywall,
+                                                onNavigateToWeeklyProgress = {
+                                                    backStack.add(HabitRoutes.WeeklyProgress)
+                                                },
+                                                isUserSubscribed = isUserSubscribed,
+                                            )
+                                        }
+
+                                        entry<HabitRoutes.WeeklyProgress> {}
+                                    },
                             )
                         } else {
                             OverallAnalytics(
