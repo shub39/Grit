@@ -1,5 +1,14 @@
 # Changelog
 
+## 6.0.0
+- Added new Consistency Stat in Habit Analytics
+- Redesigned Weekly Comparison Stat, Displays weekly comparison up to 1 year
+- Miscellaneous UI improvements
+- Monthly Progress Stat can be expanded to a calendar view, up to January 2024
+- Fixed Habits being created with no selected days
+- Updated Translations
+- Thanks to everyone for 1000+ stars on GitHub 🙏
+
 ## 5.9.25
 - Fix Hebrew Translations not applied by Language Picker
 
