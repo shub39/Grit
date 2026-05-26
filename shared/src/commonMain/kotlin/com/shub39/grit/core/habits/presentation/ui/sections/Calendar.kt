@@ -16,56 +16,76 @@
  */
 package com.shub39.grit.core.habits.presentation.ui.sections
 
-import androidx.compose.foundation.background
-import androidx.compose.foundation.clickable
+import androidx.compose.animation.AnimatedContent
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.shape.CircleShape
-import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material3.ButtonGroupDefaults
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
+import androidx.compose.material3.ToggleButton
 import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.material3.windowsizeclass.WindowWidthSizeClass
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.saveable.rememberSaveable
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import com.kizitonwose.calendar.compose.VerticalCalendar
+import com.kizitonwose.calendar.compose.VerticalYearCalendar
 import com.kizitonwose.calendar.compose.rememberCalendarState
-import com.kizitonwose.calendar.core.minusDays
+import com.kizitonwose.calendar.compose.yearcalendar.rememberYearCalendarState
+import com.kizitonwose.calendar.core.Year
 import com.kizitonwose.calendar.core.now
-import com.kizitonwose.calendar.core.plusDays
 import com.shub39.grit.core.LocalWindowSizeClass
 import com.shub39.grit.core.habits.domain.Habit
-import com.shub39.grit.core.habits.domain.StreakPosition
-import com.shub39.grit.core.habits.domain.calendarMapStreakShape
+import com.shub39.grit.core.habits.domain.HabitWithAnalytics
 import com.shub39.grit.core.habits.presentation.HabitState
 import com.shub39.grit.core.habits.presentation.daysStartingFrom
+import com.shub39.grit.core.habits.presentation.ui.component.CalendarDayContent
+import com.shub39.grit.core.habits.presentation.ui.component.CalendarMonthHeader
+import com.shub39.grit.core.habits.presentation.ui.sections.CalendarType.Companion.toStringRes
 import com.shub39.grit.core.theme.flexFontEmphasis
 import com.shub39.grit.core.theme.flexFontRounded
 import grit.shared.generated.resources.Res
 import grit.shared.generated.resources.arrow_back
 import grit.shared.generated.resources.calendar
+import grit.shared.generated.resources.monthly
+import grit.shared.generated.resources.yearly
+import kotlinx.datetime.DayOfWeek
 import kotlinx.datetime.LocalDate
 import kotlinx.datetime.Month
 import kotlinx.datetime.YearMonth
-import kotlinx.datetime.format
-import kotlinx.datetime.format.MonthNames
-import kotlinx.datetime.format.char
+import org.jetbrains.compose.resources.StringResource
 import org.jetbrains.compose.resources.stringResource
 import org.jetbrains.compose.resources.vectorResource
+
+private enum class CalendarType {
+    MONTH,
+    YEAR;
+
+    companion object {
+        fun CalendarType.toStringRes(): StringResource {
+            return when (this) {
+                MONTH -> Res.string.monthly
+                YEAR -> Res.string.yearly
+            }
+        }
+    }
+}
 
 @Composable
 fun Calendar(
@@ -74,24 +94,15 @@ fun Calendar(
     onNavigateBack: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
+    var calendarType by rememberSaveable { mutableStateOf(CalendarType.MONTH) }
+
     val currentHabit =
         state.habitsWithAnalytics.find { it.habit.id == state.analyticsHabitId } ?: return
-
     val windowSizeClass = LocalWindowSizeClass.current
-
     val today = LocalDate.now()
-
     val doneDates =
         remember(currentHabit.statuses) { currentHabit.statuses.map { it.date }.toSet() }
-
-    val state =
-        rememberCalendarState(
-            startMonth = YearMonth(year = 2024, month = Month.JANUARY),
-            endMonth = YearMonth.now(),
-            firstVisibleMonth = YearMonth.now(),
-            firstDayOfWeek = state.startingDay,
-        )
-    val edgeWeeks = listOf(state.firstDayOfWeek, daysStartingFrom(state.firstDayOfWeek).last())
+    val edgeWeeks = listOf(state.startingDay, daysStartingFrom(state.startingDay).last())
 
     Column(modifier = modifier.fillMaxSize()) {
         TopAppBar(
@@ -119,126 +130,129 @@ fun Calendar(
                 },
         )
 
-        VerticalCalendar(
-            modifier =
-                Modifier.padding(horizontal = 16.dp)
-                    .clip(RoundedCornerShape(topStart = 20.dp, topEnd = 20.dp)),
-            contentPadding = PaddingValues(top = 16.dp, bottom = 60.dp),
-            state = state,
-            reverseLayout = true,
-            monthHeader = { calendarMonth ->
-                Box(
-                    modifier =
-                        Modifier.padding(start = 4.dp, end = 4.dp, top = 32.dp, bottom = 8.dp)
+        Row(
+            modifier = Modifier.padding(horizontal = 16.dp),
+            horizontalArrangement = Arrangement.spacedBy(ButtonGroupDefaults.ConnectedSpaceBetween),
+        ) {
+            CalendarType.entries.forEach { entry ->
+                ToggleButton(
+                    checked = entry == calendarType,
+                    onCheckedChange = { calendarType = entry },
+                    modifier = Modifier.weight(1f),
                 ) {
-                    Text(
-                        text =
-                            calendarMonth.yearMonth.format(
-                                YearMonth.Format {
-                                    monthName(MonthNames.ENGLISH_FULL)
-                                    char(' ')
-                                    year()
-                                }
-                            ),
-                        style =
-                            MaterialTheme.typography.titleLarge.copy(
-                                color = MaterialTheme.colorScheme.secondary,
-                                fontFamily = flexFontRounded(),
-                            ),
-                        modifier = Modifier.align(Alignment.Center),
-                    )
+                    Text(text = stringResource(entry.toStringRes()))
                 }
-            },
-            dayContent = { day ->
-                if (day.position.name == "MonthDate") {
-                    val done = day.date in doneDates
-                    val validDate =
-                        day.date <= today && day.date.dayOfWeek in currentHabit.habit.days
+            }
+        }
 
-                    val donePrevious = day.date.minusDays(1) in doneDates
-                    val doneAfter = day.date.plusDays(1) in doneDates
-                    val streakPosition =
-                        when {
-                            donePrevious && doneAfter -> StreakPosition.MIDDLE
-                            donePrevious -> StreakPosition.END
-                            doneAfter -> StreakPosition.START
-                            else -> StreakPosition.ISOLATED
-                        }
+        AnimatedContent(targetState = calendarType, modifier = Modifier.fillMaxSize()) { currentType
+            ->
+            when (currentType) {
+                CalendarType.YEAR -> {
+                    val calendarState =
+                        rememberYearCalendarState(
+                            startYear = Year(2024),
+                            endYear = Year.now(),
+                            firstVisibleYear = Year.now(),
+                            firstDayOfWeek = state.startingDay,
+                        )
 
-                    Box(
-                        modifier =
-                            Modifier.padding(
-                                    top = 1.dp,
-                                    bottom = 1.dp,
-                                    start =
-                                        if (day.date.dayOfWeek == edgeWeeks.first()) 4.dp else 0.dp,
-                                    end = if (day.date.dayOfWeek == edgeWeeks.last()) 4.dp else 0.dp,
-                                )
-                                .fillMaxWidth()
-                                .height(40.dp)
-                                .clip(
-                                    calendarMapStreakShape(
-                                        streakPosition = streakPosition,
-                                        isFirstDayOfWeek = day.date.dayOfWeek == edgeWeeks.first(),
-                                        isLastDayOfWeek = day.date.dayOfWeek == edgeWeeks.last(),
-                                        isFirstDayOfMonth = day.date.day == 1,
-                                        isLastDayOfMonth = day.date.plusDays(1).day == 1,
-                                    )
-                                )
-                                .clickable(enabled = validDate) {
-                                    onDateClick(currentHabit.habit, day.date)
-                                },
-                        contentAlignment = Alignment.Center,
-                    ) {
-                        if (done) {
+                    VerticalYearCalendar(
+                        modifier = modifier.padding(horizontal = 16.dp),
+                        contentPadding = PaddingValues(top = 16.dp, bottom = 60.dp),
+                        state = calendarState,
+                        reverseLayout = true,
+                        calendarScrollPaged = false,
+                        yearHeader = { calendarYear ->
                             Box(
                                 modifier =
-                                    Modifier.fillMaxSize()
-                                        .background(color = MaterialTheme.colorScheme.primary),
-                                contentAlignment = Alignment.Center,
-                            ) {
-                                val isStreakEnd =
-                                    streakPosition == StreakPosition.START ||
-                                        streakPosition == StreakPosition.END
-
-                                if (isStreakEnd) {
-                                    Box(
-                                        modifier =
-                                            Modifier.fillMaxSize()
-                                                .padding(2.dp)
-                                                .background(
-                                                    color = MaterialTheme.colorScheme.onPrimary,
-                                                    shape = CircleShape,
-                                                ),
-                                        contentAlignment = Alignment.Center,
-                                    ) {
-                                        Text(
-                                            text = day.date.day.toString(),
-                                            style = MaterialTheme.typography.bodyLarge,
-                                            color = MaterialTheme.colorScheme.primary,
-                                        )
-                                    }
-                                } else {
-                                    Text(
-                                        text = day.date.day.toString(),
-                                        style = MaterialTheme.typography.bodyLarge,
-                                        color = MaterialTheme.colorScheme.onPrimary,
+                                    Modifier.padding(
+                                        start = 4.dp,
+                                        end = 4.dp,
+                                        top = 32.dp,
+                                        bottom = 8.dp,
                                     )
-                                }
+                            ) {
+                                Text(
+                                    text = calendarYear.year.value.toString(),
+                                    style =
+                                        MaterialTheme.typography.titleLarge.copy(
+                                            color = MaterialTheme.colorScheme.secondary,
+                                            fontFamily = flexFontRounded(),
+                                        ),
+                                    modifier = Modifier.align(Alignment.Center),
+                                )
                             }
-                        } else {
-                            Text(
-                                text = day.date.day.toString(),
-                                style = MaterialTheme.typography.bodyLarge,
-                                color =
-                                    if (!validDate)
-                                        MaterialTheme.colorScheme.onSurface.copy(alpha = 0.5f)
-                                    else MaterialTheme.colorScheme.onSurface,
+                        },
+                        monthHeader = { calendarMonth ->
+                            CalendarMonthHeader(
+                                calendarMonth = calendarMonth,
+                                style = MaterialTheme.typography.labelMedium,
                             )
-                        }
-                    }
+                        },
+                        dayContent = { day ->
+                            CalendarDayContent(
+                                day = day,
+                                doneDates = doneDates,
+                                today = today,
+                                habitDays = currentHabit.habit.days,
+                                edgeWeeks = edgeWeeks,
+                                onDateClick = { onDateClick(currentHabit.habit, it) },
+                                height = 20.dp,
+                                style = MaterialTheme.typography.labelSmall,
+                            )
+                        },
+                    )
                 }
-            },
-        )
+
+                CalendarType.MONTH -> {
+                    MonthlyCalendar(
+                        state = state,
+                        doneDates = doneDates,
+                        today = today,
+                        currentHabit = currentHabit,
+                        edgeWeeks = edgeWeeks,
+                        onDateClick = onDateClick,
+                    )
+                }
+            }
+        }
     }
+}
+
+@Composable
+private fun MonthlyCalendar(
+    state: HabitState,
+    doneDates: Set<LocalDate>,
+    today: LocalDate,
+    currentHabit: HabitWithAnalytics,
+    edgeWeeks: List<DayOfWeek>,
+    onDateClick: (Habit, LocalDate) -> Unit,
+    modifier: Modifier = Modifier,
+) {
+    val calendarState =
+        rememberCalendarState(
+            startMonth = YearMonth(year = 2024, month = Month.JANUARY),
+            endMonth = YearMonth.now(),
+            firstVisibleMonth = YearMonth.now(),
+            firstDayOfWeek = state.startingDay,
+        )
+
+    VerticalCalendar(
+        modifier = modifier.padding(horizontal = 16.dp),
+        contentPadding = PaddingValues(top = 16.dp, bottom = 60.dp),
+        state = calendarState,
+        reverseLayout = true,
+        monthHeader = { calendarMonth -> CalendarMonthHeader(calendarMonth = calendarMonth) },
+        dayContent = { day ->
+            CalendarDayContent(
+                day = day,
+                doneDates = doneDates,
+                today = today,
+                habitDays = currentHabit.habit.days,
+                edgeWeeks = edgeWeeks,
+                onDateClick = { onDateClick(currentHabit.habit, it) },
+            )
+        },
+    )
 }

@@ -146,8 +146,11 @@ fun HabitHeatMap(
                         Box(modifier = Modifier.padding(2.dp)) {
                             Text(
                                 text = it.yearMonth.toFormattedString(),
-                                style = MaterialTheme.typography.labelSmall,
-                                color = MaterialTheme.colorScheme.onSurface,
+                                style =
+                                    MaterialTheme.typography.labelSmall.copy(
+                                        color = MaterialTheme.colorScheme.onSurface,
+                                        fontFamily = flexFontRounded(),
+                                    ),
                                 modifier = Modifier.align(Alignment.Center),
                             )
                         }

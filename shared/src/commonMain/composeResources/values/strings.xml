@@ -88,4 +88,6 @@
     <string name="about">About</string>
     <string name="consistency">Consistency</string>
     <string name="calendar">Calendar</string>
+    <string name="monthly">Monthly</string>
+    <string name="yearly">Yearly</string>
 </resources>
