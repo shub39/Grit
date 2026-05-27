@@ -247,50 +247,52 @@ fun TaskUpsertSheetContent(
                     },
                 )
             }
-        }
 
-        Column(
-            horizontalAlignment = Alignment.CenterHorizontally,
-            verticalArrangement = Arrangement.spacedBy(8.dp),
-        ) {
-            Row(
-                modifier = Modifier.padding(start = 16.dp, end = 16.dp, bottom = 32.dp),
-                horizontalArrangement = Arrangement.spacedBy(8.dp),
-            ) {
-                if (isEditSheet) {
-                    OutlinedButton(
-                        onClick = onDelete,
-                        shapes =
-                            ButtonShapes(
-                                shape = MaterialTheme.shapes.extraLarge,
-                                pressedShape = MaterialTheme.shapes.small,
-                            ),
-                        modifier = Modifier.weight(1f),
-                    ) {
-                        Text(stringResource(Res.string.delete))
-                    }
-                }
-
-                Button(
-                    onClick = {
-                        onUpsert(newTask.copy(title = textFieldState.text.toString()))
-                        onDismissRequest()
-                    },
-                    shapes =
-                        ButtonShapes(
-                            shape = MaterialTheme.shapes.extraLarge,
-                            pressedShape = MaterialTheme.shapes.small,
-                        ),
-                    modifier = Modifier.weight(1f),
-                    enabled =
-                        textFieldState.text.isNotBlank() &&
-                            textFieldState.text.length <= 100 &&
-                            isValidDateTime &&
-                            (newTask.reminder != task.reminder ||
-                                textFieldState.text.toString() != task.title ||
-                                newTask.categoryId != task.categoryId),
+            item {
+                Column(
+                    horizontalAlignment = Alignment.CenterHorizontally,
+                    verticalArrangement = Arrangement.spacedBy(8.dp),
                 ) {
-                    Text(stringResource(if (isEditSheet) Res.string.save else Res.string.add_task))
+                    Row(
+                        modifier = Modifier.padding(bottom = 32.dp),
+                        horizontalArrangement = Arrangement.spacedBy(8.dp),
+                    ) {
+                        if (isEditSheet) {
+                            OutlinedButton(
+                                onClick = onDelete,
+                                shapes =
+                                    ButtonShapes(
+                                        shape = MaterialTheme.shapes.extraLarge,
+                                        pressedShape = MaterialTheme.shapes.small,
+                                    ),
+                                modifier = Modifier.weight(1f),
+                            ) {
+                                Text(stringResource(Res.string.delete))
+                            }
+                        }
+
+                        Button(
+                            onClick = {
+                                onUpsert(newTask.copy(title = textFieldState.text.toString()))
+                                onDismissRequest()
+                            },
+                            shapes =
+                                ButtonShapes(
+                                    shape = MaterialTheme.shapes.extraLarge,
+                                    pressedShape = MaterialTheme.shapes.small,
+                                ),
+                            modifier = Modifier.weight(1f),
+                            enabled =
+                                textFieldState.text.isNotBlank() &&
+                                        textFieldState.text.length <= 100 &&
+                                        isValidDateTime &&
+                                        (newTask.reminder != task.reminder ||
+                                                textFieldState.text.toString() != task.title ||
+                                                newTask.categoryId != task.categoryId),
+                        ) {
+                            Text(stringResource(if (isEditSheet) Res.string.save else Res.string.add_task))
+                        }
+                    }
                 }
             }
         }

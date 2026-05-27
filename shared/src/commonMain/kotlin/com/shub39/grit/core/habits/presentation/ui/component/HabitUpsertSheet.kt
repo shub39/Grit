@@ -270,7 +270,7 @@ fun HabitUpsertSheetContent(
                                         },
                                         enabled =
                                             !(newHabit.days.size == 1 &&
-                                                newHabit.days.contains(dayOfWeek)),
+                                                    newHabit.days.contains(dayOfWeek)),
                                         modifier = Modifier.weight(1f),
                                         colors = ToggleButtonDefaults.tonalToggleButtonColors(),
                                         content = { Text(text = dayOfWeek.name.take(1)) },
@@ -348,25 +348,35 @@ fun HabitUpsertSheetContent(
                     }
                 }
             }
-        }
 
-        Button(
-            onClick = {
-                onUpsertHabit(
-                    newHabit.copy(
-                        title = titleTextFieldState.text.toString(),
-                        description = descTextFieldState.text.toString(),
+            item {
+                Button(
+                    onClick = {
+                        onUpsertHabit(
+                            newHabit.copy(
+                                title = titleTextFieldState.text.toString(),
+                                description = descTextFieldState.text.toString(),
+                            )
+                        )
+                        onDismissRequest()
+                    },
+                    modifier = Modifier.padding(bottom = 32.dp).fillMaxWidth(),
+                    enabled =
+                        descTextFieldState.text.length <= 50 &&
+                                titleTextFieldState.text.length <= 20 &&
+                                titleTextFieldState.text.isNotBlank(),
+                ) {
+                    Text(
+                        text = stringResource(
+                            if (isEditSheet) {
+                                Res.string.save
+                            } else {
+                                Res.string.add_habit
+                            }
+                        )
                     )
-                )
-                onDismissRequest()
-            },
-            modifier = Modifier.padding(start = 16.dp, end = 16.dp, bottom = 32.dp).fillMaxWidth(),
-            enabled =
-                descTextFieldState.text.length <= 50 &&
-                    titleTextFieldState.text.length <= 20 &&
-                    titleTextFieldState.text.isNotBlank(),
-        ) {
-            Text(text = stringResource(if (isEditSheet) Res.string.save else Res.string.add_habit))
+                }
+            }
         }
 
         if (timePickerDialog) {
