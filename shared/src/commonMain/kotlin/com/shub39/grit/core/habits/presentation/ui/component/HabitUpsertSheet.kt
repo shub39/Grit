@@ -270,7 +270,7 @@ fun HabitUpsertSheetContent(
                                         },
                                         enabled =
                                             !(newHabit.days.size == 1 &&
-                                                    newHabit.days.contains(dayOfWeek)),
+                                                newHabit.days.contains(dayOfWeek)),
                                         modifier = Modifier.weight(1f),
                                         colors = ToggleButtonDefaults.tonalToggleButtonColors(),
                                         content = { Text(text = dayOfWeek.name.take(1)) },
@@ -363,17 +363,18 @@ fun HabitUpsertSheetContent(
                     modifier = Modifier.padding(bottom = 32.dp).fillMaxWidth(),
                     enabled =
                         descTextFieldState.text.length <= 50 &&
-                                titleTextFieldState.text.length <= 20 &&
-                                titleTextFieldState.text.isNotBlank(),
+                            titleTextFieldState.text.length <= 20 &&
+                            titleTextFieldState.text.isNotBlank(),
                 ) {
                     Text(
-                        text = stringResource(
-                            if (isEditSheet) {
-                                Res.string.save
-                            } else {
-                                Res.string.add_habit
-                            }
-                        )
+                        text =
+                            stringResource(
+                                if (isEditSheet) {
+                                    Res.string.save
+                                } else {
+                                    Res.string.add_habit
+                                }
+                            )
                     )
                 }
             }

@@ -360,9 +360,9 @@ private fun MonthlyMap(
 
             Box(
                 modifier =
-                    Modifier.padding(1.dp)
-                        .fillMaxWidth()
+                    Modifier.fillMaxWidth()
                         .aspectRatio(1f)
+                        .padding(1.dp)
                         .background(
                             shape = MaterialTheme.shapes.extraSmall,
                             color =

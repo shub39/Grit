@@ -284,13 +284,17 @@ fun TaskUpsertSheetContent(
                             modifier = Modifier.weight(1f),
                             enabled =
                                 textFieldState.text.isNotBlank() &&
-                                        textFieldState.text.length <= 100 &&
-                                        isValidDateTime &&
-                                        (newTask.reminder != task.reminder ||
-                                                textFieldState.text.toString() != task.title ||
-                                                newTask.categoryId != task.categoryId),
+                                    textFieldState.text.length <= 100 &&
+                                    isValidDateTime &&
+                                    (newTask.reminder != task.reminder ||
+                                        textFieldState.text.toString() != task.title ||
+                                        newTask.categoryId != task.categoryId),
                         ) {
-                            Text(stringResource(if (isEditSheet) Res.string.save else Res.string.add_task))
+                            Text(
+                                stringResource(
+                                    if (isEditSheet) Res.string.save else Res.string.add_task
+                                )
+                            )
                         }
                     }
                 }

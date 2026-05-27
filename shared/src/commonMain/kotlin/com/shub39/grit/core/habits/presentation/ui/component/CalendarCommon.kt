@@ -139,7 +139,7 @@ fun CalendarDayContent(
                     Box(
                         modifier =
                             Modifier.fillMaxSize()
-                                .padding(2.dp)
+                                .padding(1.dp)
                                 .background(
                                     color = MaterialTheme.colorScheme.onPrimary,
                                     shape = CircleShape,
