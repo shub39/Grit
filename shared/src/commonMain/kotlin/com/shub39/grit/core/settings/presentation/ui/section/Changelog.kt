@@ -23,8 +23,8 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.itemsIndexed
+import androidx.compose.material3.FilledTonalIconButton
 import androidx.compose.material3.Icon
-import androidx.compose.material3.IconButton
 import androidx.compose.material3.ListItem
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.MediumFlexibleTopAppBar
@@ -49,8 +49,8 @@ import com.shub39.grit.core.theme.GritTheme
 import com.shub39.grit.core.theme.flexFontEmphasis
 import com.shub39.grit.core.theme.flexFontRounded
 import grit.shared.generated.resources.*
-import org.jetbrains.compose.resources.painterResource
 import org.jetbrains.compose.resources.stringResource
+import org.jetbrains.compose.resources.vectorResource
 
 @Composable
 fun Changelog(modifier: Modifier = Modifier, changelog: Changelog, onNavigateBack: () -> Unit) {
@@ -67,9 +67,9 @@ fun Changelog(modifier: Modifier = Modifier, changelog: Changelog, onNavigateBac
                     )
                 },
                 navigationIcon = {
-                    IconButton(onClick = onNavigateBack) {
+                    FilledTonalIconButton(onClick = onNavigateBack) {
                         Icon(
-                            painter = painterResource(Res.drawable.arrow_back),
+                            imageVector = vectorResource(Res.drawable.nav_arrow_back),
                             contentDescription = "Navigate Back",
                         )
                     }

@@ -35,7 +35,6 @@ import androidx.compose.foundation.lazy.LazyListScope
 import androidx.compose.material3.Card
 import androidx.compose.material3.FilledTonalIconButton
 import androidx.compose.material3.Icon
-import androidx.compose.material3.IconButton
 import androidx.compose.material3.IconButtonDefaults
 import androidx.compose.material3.ListItem
 import androidx.compose.material3.MaterialShapes
@@ -90,9 +89,9 @@ fun About(versionName: String, onNavigateBack: () -> Unit, modifier: Modifier = 
                     Text(text = stringResource(Res.string.about), fontFamily = flexFontEmphasis())
                 },
                 navigationIcon = {
-                    IconButton(onClick = onNavigateBack) {
+                    FilledTonalIconButton(onClick = onNavigateBack) {
                         Icon(
-                            painter = painterResource(Res.drawable.arrow_back),
+                            imageVector = vectorResource(Res.drawable.nav_arrow_back),
                             contentDescription = "Navigate Back",
                         )
                     }

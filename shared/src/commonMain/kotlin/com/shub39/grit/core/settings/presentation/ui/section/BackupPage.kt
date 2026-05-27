@@ -28,8 +28,8 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material3.Button
 import androidx.compose.material3.CircularProgressIndicator
+import androidx.compose.material3.FilledTonalIconButton
 import androidx.compose.material3.Icon
-import androidx.compose.material3.IconButton
 import androidx.compose.material3.ListItem
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.MediumFlexibleTopAppBar
@@ -80,9 +80,9 @@ fun BackupPage(
                 Text(text = stringResource(Res.string.backup), fontFamily = flexFontEmphasis())
             },
             navigationIcon = {
-                IconButton(onClick = onNavigateBack) {
+                FilledTonalIconButton(onClick = onNavigateBack) {
                     Icon(
-                        imageVector = vectorResource(Res.drawable.arrow_back),
+                        imageVector = vectorResource(Res.drawable.nav_arrow_back),
                         contentDescription = "Navigate Back",
                     )
                 }

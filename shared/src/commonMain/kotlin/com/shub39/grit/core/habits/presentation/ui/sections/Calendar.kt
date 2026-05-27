@@ -26,8 +26,8 @@ import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.ButtonGroupDefaults
+import androidx.compose.material3.FilledTonalIconButton
 import androidx.compose.material3.Icon
-import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.material3.ToggleButton
@@ -62,9 +62,9 @@ import com.shub39.grit.core.habits.presentation.ui.sections.CalendarType.Compani
 import com.shub39.grit.core.theme.flexFontEmphasis
 import com.shub39.grit.core.theme.flexFontRounded
 import grit.shared.generated.resources.Res
-import grit.shared.generated.resources.arrow_back
 import grit.shared.generated.resources.calendar
 import grit.shared.generated.resources.monthly
+import grit.shared.generated.resources.nav_arrow_back
 import grit.shared.generated.resources.yearly
 import kotlinx.datetime.DayOfWeek
 import kotlinx.datetime.LocalDate
@@ -112,9 +112,9 @@ fun Calendar(
                 Text(text = stringResource(Res.string.calendar), fontFamily = flexFontEmphasis())
             },
             navigationIcon = {
-                IconButton(onClick = onNavigateBack) {
+                FilledTonalIconButton(onClick = onNavigateBack) {
                     Icon(
-                        imageVector = vectorResource(Res.drawable.arrow_back),
+                        imageVector = vectorResource(Res.drawable.nav_arrow_back),
                         contentDescription = "Navigate Back",
                     )
                 }
@@ -187,7 +187,7 @@ fun Calendar(
                             }
                         },
                         monthHeader = { calendarMonth ->
-                            if (calendarMonth.yearMonth <= today.yearMonth){
+                            if (calendarMonth.yearMonth <= today.yearMonth) {
                                 CalendarMonthHeader(
                                     calendarMonth = calendarMonth,
                                     style = MaterialTheme.typography.labelMedium,
@@ -204,9 +204,8 @@ fun Calendar(
                                     edgeWeeks = edgeWeeks,
                                     onDateClick = { onDateClick(currentHabit.habit, it) },
                                     height = 20.dp,
-                                    style = MaterialTheme.typography.labelSmall.copy(
-                                        fontSize = 8.sp
-                                    ),
+                                    style =
+                                        MaterialTheme.typography.labelSmall.copy(fontSize = 8.sp),
                                 )
                             }
                         },

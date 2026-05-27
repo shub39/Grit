@@ -37,8 +37,8 @@ import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.ButtonShapes
 import androidx.compose.material3.FilledIconButton
+import androidx.compose.material3.FilledTonalIconButton
 import androidx.compose.material3.Icon
-import androidx.compose.material3.IconButton
 import androidx.compose.material3.IconButtonShapes
 import androidx.compose.material3.MaterialShapes
 import androidx.compose.material3.MaterialTheme
@@ -142,9 +142,9 @@ fun AnalyticsPage(
                     TopAppBarDefaults.windowInsets
                 },
             navigationIcon = {
-                IconButton(onClick = onNavigateBack) {
+                FilledTonalIconButton(onClick = onNavigateBack) {
                     Icon(
-                        imageVector = vectorResource(Res.drawable.arrow_back),
+                        imageVector = vectorResource(Res.drawable.nav_arrow_back),
                         contentDescription = "Navigate Back",
                     )
                 }

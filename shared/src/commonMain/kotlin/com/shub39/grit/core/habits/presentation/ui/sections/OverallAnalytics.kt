@@ -24,10 +24,10 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.widthIn
 import androidx.compose.foundation.lazy.staggeredgrid.LazyVerticalStaggeredGrid
 import androidx.compose.foundation.lazy.staggeredgrid.StaggeredGridCells
+import androidx.compose.material3.FilledTonalIconButton
 import androidx.compose.material3.Icon
-import androidx.compose.material3.IconButton
-import androidx.compose.material3.MediumFlexibleTopAppBar
 import androidx.compose.material3.Text
+import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.material3.windowsizeclass.WindowWidthSizeClass
 import androidx.compose.runtime.Composable
@@ -73,7 +73,7 @@ fun OverallAnalytics(
 
     val scrollBehavior = TopAppBarDefaults.enterAlwaysScrollBehavior()
     Column(modifier = modifier.nestedScroll(scrollBehavior.nestedScrollConnection).fillMaxSize()) {
-        MediumFlexibleTopAppBar(
+        TopAppBar(
             scrollBehavior = scrollBehavior,
             colors =
                 TopAppBarDefaults.topAppBarColors(
@@ -94,9 +94,9 @@ fun OverallAnalytics(
                 },
             navigationIcon = {
                 if (showNavigateBack) {
-                    IconButton(onClick = onNavigateBack) {
+                    FilledTonalIconButton(onClick = onNavigateBack) {
                         Icon(
-                            imageVector = vectorResource(Res.drawable.arrow_back),
+                            imageVector = vectorResource(Res.drawable.nav_arrow_back),
                             contentDescription = "Navigate Back",
                         )
                     }
