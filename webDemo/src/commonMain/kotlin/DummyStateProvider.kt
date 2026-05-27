@@ -15,6 +15,7 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 import com.shub39.grit.core.habits.domain.Habit
+import com.shub39.grit.core.habits.domain.HabitRanking
 import com.shub39.grit.core.habits.domain.HabitStatus
 import com.shub39.grit.core.habits.domain.HabitWithAnalytics
 import com.shub39.grit.core.habits.domain.OverallAnalytics
@@ -472,10 +473,24 @@ object DummyStateProvider {
                 .filter { it.statuses.any { status -> status.date == today } }
                 .map { it.habit.title }
 
+        val overallConsistency =
+            if (habitsWithAnalytics.isNotEmpty()) {
+                habitsWithAnalytics.map { it.consistency }.average().toFloat()
+            } else 0f
+
+        val topHabits =
+            habitsWithAnalytics
+                .filter { it.consistency > 0f }
+                .sortedByDescending { it.consistency }
+                .take(3)
+                .map { HabitRanking(it.habit.title, it.consistency) }
+
         return OverallAnalytics(
             heatMapData = heatMapData,
             weekDayFrequencyData = weekDayFrequencyData,
             completedHabits = completedHabits,
+            consistency = overallConsistency,
+            topHabits = topHabits,
         )
     }
 

@@ -18,6 +18,7 @@ package com.shub39.grit.habits.data.repository
 
 import com.shub39.grit.core.data.notification.GritNotificationManager
 import com.shub39.grit.core.habits.domain.Habit
+import com.shub39.grit.core.habits.domain.HabitRanking
 import com.shub39.grit.core.habits.domain.HabitRepo
 import com.shub39.grit.core.habits.domain.HabitStatus
 import com.shub39.grit.core.habits.domain.HabitWithAnalytics
@@ -134,11 +135,31 @@ class HabitRepository(
 
     override fun getOverallAnalytics(): Flow<OverallAnalytics> {
         return habits
-            .combine(habitStatuses) { _, habitStatusesFlow ->
+            .combine(habitStatuses) { habitsFlow, habitStatusesFlow ->
+                val habitConsistencies =
+                    habitsFlow.map { habit ->
+                        val dates =
+                            habitStatusesFlow.filter { it.habitId == habit.id }.map { it.date }
+                        habit.title to calculateConsistency(dates, habit.days)
+                    }
+
+                val consistencies = habitConsistencies.map { it.second }
+                val overallConsistency =
+                    if (consistencies.isNotEmpty()) consistencies.average().toFloat() else 0f
+
+                val topHabits =
+                    habitConsistencies
+                        .filter { it.second > 0f }
+                        .sortedByDescending { it.second }
+                        .take(3)
+                        .map { HabitRanking(it.first, it.second) }
+
                 OverallAnalytics(
                     heatMapData = prepareHeatMapData(habitStatusesFlow),
                     weekDayFrequencyData =
                         prepareWeekDayFrequencyData(habitStatusesFlow.map { it.date }),
+                    consistency = overallConsistency,
+                    topHabits = topHabits,
                 )
             }
             .flowOn(Dispatchers.Default)

@@ -22,8 +22,13 @@ import kotlinx.serialization.Serializable
 typealias HeatMapData = Map<LocalDate, Int>
 
 @Serializable
+data class HabitRanking(val title: String, val consistency: Float)
+
+@Serializable
 data class OverallAnalytics(
     val heatMapData: HeatMapData = emptyMap(),
     val weekDayFrequencyData: WeekDayFrequencyData = emptyMap(),
     val completedHabits: List<String> = emptyList(),
+    val consistency: Float = 0f,
+    val topHabits: List<HabitRanking> = emptyList(),
 )
