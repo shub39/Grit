@@ -82,7 +82,10 @@
     <string name="translate_desc">Traduce Grit en tu idioma</string>
     <string name="language">Idioma</string>
     <string name="about">Acerca de</string>
-    <string name="system_default">Sistema por defecto</string>
+    <string name="system_default">Por defecto del sistema</string>
     <string name="whats_changed">Que ha cambiado</string>
     <string name="consistency">Consistencia</string>
+    <string name="calendar">Calendario</string>
+    <string name="monthly">Mensualmente</string>
+    <string name="yearly">Anualmente</string>
 </resources>
