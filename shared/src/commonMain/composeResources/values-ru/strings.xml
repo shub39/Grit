@@ -14,7 +14,6 @@
     <string name="streak">Текущая серия</string>
     <string name="best_streak">Лучшая серия</string>
     <string name="settings">Настройки</string>
-    <string name="days_ago_format">%1$d дней назад…</string>
     <string name="too_long">Слишком долго</string>
     <string name="edit_task">Изменить задачу</string>
     <string name="delete_tasks">Вы уверены, что хотите удалить все завершенные задания?</string>
@@ -74,7 +73,6 @@
     <string name="invalid_date_time">Выбранное время уже прошло :\u0027)</string>
     <string name="reorder_tasks">Изменить порядок задач</string>
     <string name="reorder_tasks_desc">Изменить порядок задач отмеченных выполненными</string>
-    <string name="weeks">Недели</string>
     <string name="save">Сохранить</string>
     <string name="add_reminder_desc">Получать уведомления‑напоминания в выбранные дни</string>
     <string name="translate">Перевести</string>

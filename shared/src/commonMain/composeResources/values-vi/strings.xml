@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="settings">Cài đặt</string>
-    <string name="days_ago_format">%1$d ngày trước…</string>
     <string name="too_long">Quá dài</string>
     <string name="save">Lưu</string>
     <string name="edit_task">Chỉnh sửa tác vụ</string>
@@ -76,7 +75,6 @@
     <string name="invalid_date_time">Thời gian được chọn là quá khứ =))</string>
     <string name="reorder_tasks">Sắp xếp lại các tác vụ</string>
     <string name="reorder_tasks_desc">Sắp xếp lại các tác vụ khi được đánh dấu hoàn thành</string>
-    <string name="weeks">Các tuần</string>
     <string name="translate">Dịch</string>
     <string name="changelog">Nhật kí sửa đổi</string>
     <string name="whats_changed">Điểm mới</string>

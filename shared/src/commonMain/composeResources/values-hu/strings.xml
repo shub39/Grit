@@ -14,7 +14,6 @@
     <string name="streak">Jelenlegi sorozat</string>
     <string name="best_streak">Legjobb sorozat</string>
     <string name="settings">Beállítások</string>
-    <string name="days_ago_format">%1$d napja…</string>
     <string name="too_long">Túl hosszú</string>
     <string name="save">Mentés</string>
     <string name="edit_task">Tennivaló szerkesztése</string>
@@ -74,7 +73,6 @@
     <string name="invalid_date_time">Kiválasztott ídő a múltban van :\u0027)</string>
     <string name="reorder_tasks">Tennivalók átrendezése</string>
     <string name="reorder_tasks_desc">Tennivalók átrendezése ha azok befejezettként vannak jelölve</string>
-    <string name="weeks">Hét</string>
     <string name="unlock_plus">Feloldás a plusz csomaggal</string>
     <string name="translate">Fordítás</string>
 </resources>

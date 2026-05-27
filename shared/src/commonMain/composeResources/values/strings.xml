@@ -14,7 +14,6 @@
     <string name="streak">Current streak</string>
     <string name="best_streak">Best streak</string>
     <string name="settings">Settings</string>
-    <string name="days_ago_format">%1$d Days ago…</string>
     <string name="too_long">Too Long</string>
     <string name="save">Save</string>
     <string name="edit_task">Edit Task</string>
@@ -77,7 +76,6 @@
     <string name="invalid_date_time">Time selected is in the past :\u0027)</string>
     <string name="reorder_tasks">Reorder tasks</string>
     <string name="reorder_tasks_desc">Reorder tasks when marked as completed</string>
-    <string name="weeks">Weeks</string>
     <string name="translate">Translate</string>
     <string name="translate_desc">Translate Grit in your language</string>
     <string name="changelog">Changelog</string>
@@ -89,5 +87,5 @@
     <string name="consistency">Consistency</string>
     <string name="calendar">Calendar</string>
     <string name="monthly">Monthly</string>
-    <string name="yearly">Yearly</string>
+    <string name="yearly" >Yearly</string>
 </resources>

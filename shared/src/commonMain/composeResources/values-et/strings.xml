@@ -11,7 +11,6 @@
     <string name="select_time">Vali aeg</string>
     <string name="habits">Harjumused</string>
     <string name="settings">Seaded</string>
-    <string name="days_ago_format">%1$d päeva tagasi…</string>
     <string name="too_long">Liiga pikk</string>
     <string name="save">Salvesta</string>
     <string name="edit_task">Muuda ülesannet</string>
@@ -41,7 +40,6 @@
     <string name="weekly_progress">Nädala edenemine</string>
     <string name="overall_analytics">Üleüldine analüüs</string>
     <string name="add_reminder">Lisa meeldetuletus</string>
-    <string name="weeks">Nädalat</string>
     <string name="translate">Tõlgi</string>
     <string name="changelog">Muudatuste nimekiri</string>
     <string name="whats_changed">Mis on muutnud</string>

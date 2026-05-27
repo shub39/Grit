@@ -14,7 +14,6 @@
     <string name="streak">Racha Actual</string>
     <string name="best_streak">Mejor Racha</string>
     <string name="settings">Ajustes</string>
-    <string name="days_ago_format">Hace %1$d día(s)…</string>
     <string name="too_long">Demasiado Largo</string>
     <string name="edit_task">Editar Tarea</string>
     <string name="delete_tasks">¿Estás seguro de que quieres eliminar todas las tareas completadas?</string>
@@ -74,7 +73,6 @@
     <string name="invalid_date_time">La hora seleccionada es en el pasado :\u0027)</string>
     <string name="reorder_tasks">Reordenar tareas</string>
     <string name="reorder_tasks_desc">Reordenar tareas cuando se marquen como completadas</string>
-    <string name="weeks">Semanas</string>
     <string name="translate">Traducir</string>
     <string name="changelog">Registro de cambios</string>
     <string name="save">Guardar</string>

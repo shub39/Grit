@@ -17,7 +17,6 @@
     <string name="too_long">Zu lange</string>
     <string name="edit_task">Aufgabe bearbeiten</string>
     <string name="delete_tasks">Möchtest du wirklich alle erledigten Aufgaben löschen?</string>
-    <string name="days_ago_format">Vor %1$d Tagen…</string>
     <string name="save">Speichern</string>
     <string name="update_title">Titel bearbeiten</string>
     <string name="delete_category">Bist du sicher? Alle Aufgaben in dieser Kategorie werden gelöscht</string>
@@ -76,7 +75,6 @@
     <string name="invalid_date_time">Ausgewählte Zeit liegt in der Vergangenheit :\u0027)</string>
     <string name="reorder_tasks">Aufgaben anordnen</string>
     <string name="reorder_tasks_desc">Aufgaben neu anordnen, wenn sie abgeschlossen sind</string>
-    <string name="weeks">Wochen</string>
     <string name="translate">Übersetzen</string>
     <string name="changelog">Änderungen</string>
     <string name="whats_changed">Was sich geändert hat</string>

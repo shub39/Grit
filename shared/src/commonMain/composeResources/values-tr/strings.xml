@@ -14,7 +14,6 @@
     <string name="streak">Mevcut Seri</string>
     <string name="best_streak">En İyi Seri</string>
     <string name="settings">Ayarlar</string>
-    <string name="days_ago_format">%1$d gün önce…</string>
     <string name="too_long">Çok Uzun</string>
     <string name="edit_task">Görevi Düzenle</string>
     <string name="delete_tasks">Tamamlanmış tüm görevleri silmek istediğinizden emin misiniz?</string>
@@ -72,7 +71,6 @@
     <string name="foss_desc">Tüm özelliklerin kilidi açık. Uygulamanın bu sürümü uygulama içi satın alımları desteklememektedir. Bu uygulama hayatınıza bir değer kattıysa, bana bağış yaparak destek olabilirsiniz.</string>
     <string name="save">Kaydet</string>
     <string name="add_reminder">Hatırlatıcı Ekle</string>
-    <string name="weeks">Haftalar</string>
     <string name="translate">Çevir</string>
     <string name="changelog">Değişim Günlüğü</string>
     <string name="reorder_tasks">Görevleri yeniden yap</string>

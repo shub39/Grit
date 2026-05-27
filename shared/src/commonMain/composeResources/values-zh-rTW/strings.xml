@@ -15,7 +15,6 @@
     <string name="update_title">編輯標題</string>
     <string name="edit_categories">編輯類別</string>
     <string name="settings">設定</string>
-    <string name="days_ago_format">%1$d 天前…</string>
     <string name="add_category">新增類別</string>
     <string name="delete_warning">確定刪除此習慣嗎？所有進度將永久消失</string>
     <string name="streak">目前連續天數</string>
@@ -74,7 +73,6 @@
     <string name="invalid_date_time">所選時間是過去時間 :\u0027)</string>
     <string name="reorder_tasks">重新排序任務</string>
     <string name="reorder_tasks_desc">標記完成時重新排序任務</string>
-    <string name="weeks">週數</string>
     <string name="translate">翻譯</string>
     <string name="changelog">版本記錄</string>
     <string name="whats_changed">本次更新內容</string>

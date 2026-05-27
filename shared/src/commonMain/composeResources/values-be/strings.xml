@@ -14,7 +14,6 @@
     <string name="streak">Бягучая паласа</string>
     <string name="best_streak">Лепшая паласа</string>
     <string name="settings">Налады</string>
-    <string name="days_ago_format">%1$d дзён таму…</string>
     <string name="too_long">Занадта доўга</string>
     <string name="save">Захаваць</string>
     <string name="edit_task">Змяніць задачу</string>
@@ -76,7 +75,6 @@
     <string name="invalid_date_time">Выбраны час мінуў :\u0027)</string>
     <string name="reorder_tasks">Змяніць парадак задач</string>
     <string name="reorder_tasks_desc">Змяніць парадак скончаных задач</string>
-    <string name="weeks">Тыдні</string>
     <string name="translate">Перакласці</string>
     <string name="changelog">Спіс змен</string>
     <string name="whats_changed">Што змянілася</string>

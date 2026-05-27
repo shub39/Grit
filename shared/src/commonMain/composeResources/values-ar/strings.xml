@@ -14,7 +14,6 @@
     <string name="streak">سلسلة الإنجاز الحالية</string>
     <string name="best_streak">افضل سلسلة انجاز</string>
     <string name="settings">الإعدادات</string>
-    <string name="days_ago_format">قبل %1$d ايام…</string>
     <string name="too_long">طويل جدًا</string>
     <string name="save">احفظ</string>
     <string name="edit_task">حرّر المهمة</string>
@@ -75,7 +74,6 @@
     <string name="invalid_date_time">الوقت المحدد في الماضي :\u0027)</string>
     <string name="reorder_tasks">إعادة ترتيب المهام</string>
     <string name="reorder_tasks_desc">أعد ترتيب المهام عند اكمالها</string>
-    <string name="weeks">اسابيع</string>
     <string name="translate">ترجم</string>
     <string name="changelog">سجل التغييرات</string>
     <string name="whats_changed">التغييرات</string>

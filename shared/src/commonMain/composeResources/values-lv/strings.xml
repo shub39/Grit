@@ -14,7 +14,6 @@
     <string name="streak">Dienas Pēc Kārtas</string>
     <string name="best_streak">Rekords Dienām Pēc Kārtas</string>
     <string name="settings">Iestatījumi</string>
-    <string name="days_ago_format">Pirms %1$d dienām…</string>
     <string name="too_long">Par Garu</string>
     <string name="save">Saglabāt</string>
     <string name="edit_task">Rediģēt Uzdevumu</string>
@@ -75,7 +74,6 @@
     <string name="invalid_date_time">Izvēlētais laiks ir pagātnē :\u0027)</string>
     <string name="reorder_tasks">Mainīt uzdevumu secību</string>
     <string name="reorder_tasks_desc">Pārveidot uzdevumu secību, kad tie ir atzīmēti kā pabeigti</string>
-    <string name="weeks">Nedēļas</string>
     <string name="translate">Tulkot</string>
     <string name="changelog">Izmaiņu žurnāls</string>
 </resources>

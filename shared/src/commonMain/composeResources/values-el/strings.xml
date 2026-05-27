@@ -12,7 +12,6 @@
     <string name="select_time">Επιλογή ώρας</string>
     <string name="habits">Συνήθειες</string>
     <string name="settings">Ρυθμίσεις</string>
-    <string name="days_ago_format">%1$d ημέρες πρίν…</string>
     <string name="save">Αποθήκευση</string>
     <string name="edit_task">Επεξεργασία υπόμνησης</string>
     <string name="delete_tasks">Είστε σίγουρος/η ότι θέλετε να διαγράψετε όλες τις ολοκληρομένες υπομνήσεις;</string>
@@ -63,7 +62,6 @@
     <string name="invalid_date_time">Επιλεγμένη ώρα είναι στο παρελθόν</string>
     <string name="reorder_tasks">Ταξινόμηση υπομνήσεων</string>
     <string name="reorder_tasks_desc">Ταξινόμηση υπομνήσεων όταν είναι ολοκληρωμένες</string>
-    <string name="weeks">Εβδομάδες</string>
     <string name="translate">Μετάφραση</string>
     <string name="changelog">Αρχείο αλλαγών</string>
     <string name="whats_changed">Τι άλλαξε</string>

@@ -13,7 +13,6 @@
     <string name="streak">רצף נוכחי</string>
     <string name="best_streak">רצף שיא</string>
     <string name="settings">הגדרות</string>
-    <string name="days_ago_format">לפני %1$d ימים…</string>
     <string name="too_long">ארוך מדי</string>
     <string name="save">שמירה</string>
     <string name="edit_task">עריכת משימה</string>
@@ -61,7 +60,6 @@
     <string name="add_reminder_desc">קבלת התראת תזכורת בימים הנבחרים</string>
     <string name="invalid_date_time">השעה שנבחרה כבר חלפה :\u0027)</string>
     <string name="reorder_tasks">סידור מחדש של המשימות</string>
-    <string name="weeks">שבועות</string>
     <string name="translate">תרגום</string>
     <string name="changelog">יומן שינויים</string>
     <string name="whats_changed">מה השתנה</string>

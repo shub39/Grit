@@ -14,7 +14,6 @@
     <string name="streak">چەند ڕۆژە بەردەوامی</string>
     <string name="best_streak">باشترین بەردەوامی</string>
     <string name="settings">ڕێکخستنەکان</string>
-    <string name="days_ago_format">%1$d ڕۆژ لەمەوپێش…</string>
     <string name="too_long">زۆر درێژە</string>
     <string name="save">هەڵگرتن</string>
     <string name="edit_task">دەستکاریکردنی کارەکە</string>

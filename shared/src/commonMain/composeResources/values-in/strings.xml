@@ -14,7 +14,6 @@
     <string name="streak">Streak saat ini</string>
     <string name="best_streak">Streak terbanyak</string>
     <string name="settings">Pengaturan</string>
-    <string name="days_ago_format">%1$d Hari yang lalu…</string>
     <string name="too_long">Lama waktu</string>
     <string name="save">Simpan</string>
     <string name="edit_task">Edit tugas</string>
@@ -76,7 +75,6 @@
     <string name="invalid_date_time">Waduh, masa lalu jangan diungkit lagi :\u0027)</string>
     <string name="reorder_tasks">Atur ulang tugas</string>
     <string name="reorder_tasks_desc">Atur ulang tugas saat ditandai udah selesai</string>
-    <string name="weeks">Pekan</string>
     <string name="translate">Terjemahan</string>
     <string name="changelog">Catatan update</string>
     <string name="whats_changed">Apa aja yang Berubah</string>

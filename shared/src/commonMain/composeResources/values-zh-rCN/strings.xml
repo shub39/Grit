@@ -14,7 +14,6 @@
     <string name="streak">当前连续</string>
     <string name="best_streak">最佳连续天数</string>
     <string name="settings">设置</string>
-    <string name="days_ago_format">%1$d 天前…</string>
     <string name="too_long">过长</string>
     <string name="edit_task">编辑任务</string>
     <string name="delete_tasks">确定删除所有已完成任务？</string>
@@ -71,7 +70,6 @@
     <string name="foss_desc">所有功能均已解锁。此版本不支持应用内购买。如果这个应用对你有所帮助，欢迎通过以下方式支持我</string>
     <string name="reorder_tasks">重新排序</string>
     <string name="reorder_tasks_desc">完成后重新排序任务</string>
-    <string name="weeks">周内</string>
     <string name="translate">翻译</string>
     <string name="changelog">更新日志</string>
     <string name="add_reminder">添加提醒</string>

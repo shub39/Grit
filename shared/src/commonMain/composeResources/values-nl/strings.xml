@@ -9,7 +9,6 @@
     <string name="cancel">Annuleren</string>
     <string name="habits">Routines</string>
     <string name="settings">Instellingen</string>
-    <string name="days_ago_format">%1$d Dagen geleden…</string>
     <string name="too_long">Te lang</string>
     <string name="save">Opslaan</string>
     <string name="edit_task">Taak bewerken</string>

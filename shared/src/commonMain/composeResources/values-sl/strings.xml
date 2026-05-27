@@ -14,7 +14,6 @@
     <string name="streak">Trenutni niz</string>
     <string name="best_streak">Najdaljši niz</string>
     <string name="settings">Nastavitve</string>
-    <string name="days_ago_format">%1$d dni nazaj…</string>
     <string name="too_long">Predolgo</string>
     <string name="save">Shrani</string>
     <string name="edit_task">Uredi opravilo</string>
@@ -77,7 +76,6 @@
     <string name="invalid_date_time">Izbran datum je v preteklosti</string>
     <string name="reorder_tasks">Prerazporedi opravila</string>
     <string name="reorder_tasks_desc">Prerazporedi opravila, ko so označena kot opravljena</string>
-    <string name="weeks">Tedni</string>
     <string name="translate">Prevedi</string>
     <string name="translate_desc">Prevedi Grit v svoj jezik</string>
     <string name="changelog">Seznam spremembe</string>

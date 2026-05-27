@@ -21,7 +21,6 @@
     <string name="edit_categories">Modifier les catégories</string>
     <string name="delete_category">Êtes-vous sûr ? Toutes les tâches dans cette catégories seront supprimées</string>
     <string name="add_category">Ajouter une catégorie</string>
-    <string name="days_ago_format">Il y a %1$d…</string>
     <string name="save">Enregistrer</string>
     <string name="add">Ajouter quelque chose</string>
     <string name="habit_map">Routine heat map</string>
@@ -75,7 +74,6 @@
     <string name="invalid_date_time">Le moment choisi est révolu :\u0027)</string>
     <string name="reorder_tasks">Réorganiser les tâches</string>
     <string name="reorder_tasks_desc">Réorganiser les tâches lorsqu\u0027elles sont marquées comme terminées</string>
-    <string name="weeks">Semaines</string>
     <string name="translate">Traduire</string>
     <string name="changelog">Journaux des modifications</string>
     <string name="add_reminder_desc">Recevoir une notification de rappel les jours sélectionnés</string>

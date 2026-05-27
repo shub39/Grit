@@ -14,7 +14,6 @@
     <string name="streak">Ағымдағы серия</string>
     <string name="best_streak">Иң яҡшы серия</string>
     <string name="settings">Көйләүҙәр</string>
-    <string name="days_ago_format">%1$d көн элек…</string>
     <string name="too_long">Ныҡ оҙаҡ</string>
     <string name="save">Һаҡлау</string>
     <string name="edit_task">Бурысты уҙгәртеү</string>
@@ -75,7 +74,6 @@
     <string name="invalid_date_time">Һайланған ваҡыт бөткән :\u0027)</string>
     <string name="reorder_tasks">Бурыстар тәртибен үҙгәртеү</string>
     <string name="reorder_tasks_desc">Эшләгән тип билдәләнгән бурыстарҙың тәртибен үҙгәртергә</string>
-    <string name="weeks">Аҙна</string>
     <string name="translate">Тәржемә итеү</string>
     <string name="changelog">Үҙгәрештәр журналы</string>
 </resources>

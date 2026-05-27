@@ -14,7 +14,6 @@
     <string name="streak">Obecna passa</string>
     <string name="best_streak">Najlepsza seria</string>
     <string name="settings">Ustawienia</string>
-    <string name="days_ago_format">%1$d dni temu…</string>
     <string name="too_long">Zbyt Długie</string>
     <string name="save">Zapisz</string>
     <string name="edit_task">Edytuj Zadanie</string>
@@ -76,7 +75,6 @@
     <string name="invalid_date_time">Wybrany czas już minął :\u0027)</string>
     <string name="reorder_tasks">Zmień kolejność zadań</string>
     <string name="reorder_tasks_desc">Zmieniaj kolejność po ukończeniu</string>
-    <string name="weeks">Tygodnie</string>
     <string name="translate">Przetłumacz</string>
     <string name="changelog">Lista zmian</string>
     <string name="whats_changed">Co nowego</string>

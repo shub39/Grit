@@ -13,7 +13,6 @@
     <string name="streak">Sequência Atual</string>
     <string name="best_streak">Melhor sequência</string>
     <string name="settings">Configurações</string>
-    <string name="days_ago_format">%1$d Dias atrás…</string>
     <string name="too_long">Muito Longo</string>
     <string name="save">Salvar</string>
     <string name="edit_task">Editar Tarefa</string>
@@ -74,7 +73,6 @@
     <string name="invalid_date_time">O tempo selecionado está no passado :\u0027)</string>
     <string name="reorder_tasks">Reordenar tarefas</string>
     <string name="reorder_tasks_desc">Reordenar tarefas quando marcadas como concluídas</string>
-    <string name="weeks">Semanas</string>
     <string name="translate">Traduzir</string>
     <string name="changelog">Mudanças</string>
     <string name="done">Concluído</string>

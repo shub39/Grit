@@ -14,7 +14,6 @@
     <string name="streak">連続記録</string>
     <string name="best_streak">最高連続記録</string>
     <string name="settings">設定</string>
-    <string name="days_ago_format">%1$d 日前…</string>
     <string name="too_long">文字数が長すぎます</string>
     <string name="save">保存</string>
     <string name="edit_task">タスクを編集</string>
@@ -75,7 +74,6 @@
     <string name="invalid_date_time">日時が正しくありません</string>
     <string name="reorder_tasks">タスクの並び替え</string>
     <string name="reorder_tasks_desc">ドラッグして順番を変更できます</string>
-    <string name="weeks">週</string>
     <string name="translate">翻訳に協力</string>
     <string name="changelog">更新履歴</string>
 </resources>

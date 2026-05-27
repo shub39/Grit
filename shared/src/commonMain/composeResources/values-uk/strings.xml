@@ -14,7 +14,6 @@
     <string name="streak">Поточна серія</string>
     <string name="best_streak">Найдовша серія</string>
     <string name="settings">Налаштування</string>
-    <string name="days_ago_format">%1$d днів тому…</string>
     <string name="too_long">Надто довго</string>
     <string name="edit_task">Редагувати завдання</string>
     <string name="delete_tasks">Ви впевнені, що хочете видалити всі виконані завдання?</string>
@@ -74,7 +73,6 @@
     <string name="invalid_date_time">Обраний час вже у минулому :\u0027)</string>
     <string name="reorder_tasks">Змінити порядок завдань</string>
     <string name="reorder_tasks_desc">Змінювати порядок завдань після позначення як виконаних</string>
-    <string name="weeks">Тижні</string>
     <string name="save">Зберегти</string>
     <string name="add_reminder_desc">Отримувати нагадування сповіщенням у вибрані дні</string>
 </resources>

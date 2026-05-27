@@ -14,7 +14,6 @@
     <string name="streak">Ratxa</string>
     <string name="best_streak">Millor ratxa</string>
     <string name="settings">Configuració</string>
-    <string name="days_ago_format">%1$d dies enrere…</string>
     <string name="too_long">Massa llarg</string>
     <string name="save">Desar</string>
     <string name="edit_task">Editar tasca</string>
@@ -75,7 +74,6 @@
     <string name="invalid_date_time">L\u0027hora seleccionada és en el passat :\u0027)</string>
     <string name="reorder_tasks">Reordenar tasques</string>
     <string name="reorder_tasks_desc">Reordenar tasques quan es marquin com a completades</string>
-    <string name="weeks">Setmanes</string>
     <string name="translate">Traduir</string>
     <string name="changelog">Registre de canvis</string>
 </resources>
