@@ -209,10 +209,6 @@ fun OverallAnalytics(
                     heatMapData = state.overallAnalytics.heatMapData,
                     modifier = Modifier.widthIn(max = maxWidth),
                     totalHabits = state.habitsWithAnalytics.size,
-                    completedHabits = state.overallAnalytics.completedHabits,
-                    updateCompletedHabits = {
-                        onAction(HabitsAction.FetchCompletedHabitsForDate(it))
-                    },
                     onNavigateToCalendarHeatMap = onNavigateToCalendarHeatMap,
                 )
             }

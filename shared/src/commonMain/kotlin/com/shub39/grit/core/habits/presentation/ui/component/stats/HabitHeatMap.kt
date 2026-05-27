@@ -18,8 +18,6 @@ package com.shub39.grit.core.habits.presentation.ui.component.stats
 
 import androidx.compose.animation.animateContentSize
 import androidx.compose.foundation.background
-import androidx.compose.foundation.border
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.gestures.animateScrollBy
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -30,15 +28,10 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material3.ListItem
-import androidx.compose.material3.ListItemDefaults
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
@@ -76,17 +69,11 @@ fun HabitHeatMap(
     heatMapState: HeatMapCalendarState,
     heatMapData: Map<LocalDate, Int>,
     totalHabits: Int,
-    completedHabits: Pair<LocalDate, List<String>>?,
-    updateCompletedHabits: (LocalDate) -> Unit,
     onNavigateToCalendarHeatMap: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
     val scope = rememberCoroutineScope()
     val today = LocalDate.now()
-
-    var selectedDay by remember { mutableStateOf(today) }
-
-    LaunchedEffect(selectedDay) { updateCompletedHabits(today) }
 
     AnalyticsCard(
         title = stringResource(Res.string.habit_map),
@@ -186,57 +173,12 @@ fun HabitHeatMap(
                                                     )
                                             },
                                     )
-                                    .then(
-                                        if (selectedDay == day.date) {
-                                            Modifier.border(
-                                                width = 2.dp,
-                                                color = MaterialTheme.colorScheme.onSurface,
-                                                shape = MaterialTheme.shapes.extraSmall,
-                                            )
-                                        } else Modifier
-                                    )
                                     .clip(MaterialTheme.shapes.extraSmall)
-                                    .clickable { selectedDay = day.date }
                         )
                     },
                 )
             }
         }
-
-        if (completedHabits != null) {
-            Text(
-                text = completedHabits.first.toFormattedString(),
-                fontFamily = flexFontRounded(),
-                color = MaterialTheme.colorScheme.onSurface,
-                modifier = Modifier.padding(horizontal = 16.dp),
-            )
-
-            if (completedHabits.second.isNotEmpty()) {
-                Spacer(modifier = Modifier.height(4.dp))
-                completedHabits.second.forEachIndexed { index, habit ->
-                    val shape =
-                        when {
-                            completedHabits.second.size == 1 -> RoundedCornerShape(12.dp)
-                            index == 0 -> leadingItemShape(topRadius = 12)
-                            index == completedHabits.second.size - 1 ->
-                                endItemShape(bottomRadius = 12)
-                            else -> RoundedCornerShape(4.dp)
-                        }
-
-                    ListItem(
-                        colors =
-                            ListItemDefaults.colors(
-                                containerColor = MaterialTheme.colorScheme.secondaryContainer,
-                                contentColor = MaterialTheme.colorScheme.onSecondaryContainer,
-                            ),
-                        modifier =
-                            Modifier.padding(horizontal = 16.dp, vertical = 1.dp).clip(shape),
-                        headlineContent = { Text(habit) },
-                    )
-                }
-            }
-        }
-
         Spacer(modifier = Modifier.height(16.dp))
     }
 }
@@ -258,8 +200,6 @@ private fun Preview() {
                 LocalDate.now().minus(it, DateTimeUnit.DAY) to Random.nextInt(0, 11)
             },
         totalHabits = 10,
-        updateCompletedHabits = {},
         onNavigateToCalendarHeatMap = {},
-        completedHabits = null,
     )
 }

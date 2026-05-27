@@ -237,7 +237,10 @@ private fun YearlyMap(
         )
 
     VerticalYearCalendar(
-        modifier = modifier.padding(horizontal = 8.dp),
+        modifier =
+            modifier
+                .padding(horizontal = 8.dp)
+                .clip(RoundedCornerShape(topStart = 20.dp, topEnd = 20.dp)),
         contentPadding = PaddingValues(top = 16.dp, bottom = 60.dp),
         state = calendarState,
         reverseLayout = true,
@@ -343,7 +346,10 @@ private fun MonthlyMap(
         )
 
     VerticalCalendar(
-        modifier = modifier.padding(horizontal = 8.dp),
+        modifier =
+            modifier
+                .padding(horizontal = 8.dp)
+                .clip(RoundedCornerShape(topStart = 20.dp, topEnd = 20.dp)),
         state = calendarState,
         monthHeader = { calendarMonth -> CalendarMonthHeader(calendarMonth = calendarMonth) },
         contentPadding = PaddingValues(top = 16.dp, bottom = 60.dp),
