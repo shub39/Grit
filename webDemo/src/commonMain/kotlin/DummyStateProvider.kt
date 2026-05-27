@@ -348,7 +348,24 @@ object DummyStateProvider {
             is HabitsAction.OnToggleEditState ->
                 _habitState.update { it.copy(editState = action.pref) }
 
-            else -> {}
+            is HabitsAction.FetchCompletedHabitsForDate -> {
+                _habitState.update { state ->
+                    val completedHabits =
+                        state.habitsWithAnalytics
+                            .filter { it.statuses.any { status -> status.date == action.date } }
+                            .map { it.habit.title }
+
+                    state.copy(
+                        overallAnalytics =
+                            state.overallAnalytics.copy(
+                                completedHabits =
+                                    if (completedHabits.isNotEmpty()) {
+                                        action.date to completedHabits
+                                    } else null
+                            )
+                    )
+                }
+            }
         }
     }
 
@@ -488,7 +505,7 @@ object DummyStateProvider {
         return OverallAnalytics(
             heatMapData = heatMapData,
             weekDayFrequencyData = weekDayFrequencyData,
-            completedHabits = completedHabits,
+            completedHabits = if (completedHabits.isNotEmpty()) today to completedHabits else null,
             consistency = overallConsistency,
             topHabits = topHabits,
         )

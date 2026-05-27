@@ -16,18 +16,21 @@
  */
 package com.shub39.grit.core.habits.domain
 
-import kotlinx.datetime.LocalDate
-import kotlinx.serialization.Serializable
+import grit.shared.generated.resources.Res
+import grit.shared.generated.resources.monthly
+import grit.shared.generated.resources.yearly
+import org.jetbrains.compose.resources.StringResource
 
-typealias HeatMapData = Map<LocalDate, Int>
+enum class CalendarType {
+    MONTH,
+    YEAR;
 
-@Serializable data class HabitRanking(val title: String, val consistency: Float)
-
-@Serializable
-data class OverallAnalytics(
-    val heatMapData: HeatMapData = emptyMap(),
-    val weekDayFrequencyData: WeekDayFrequencyData = emptyMap(),
-    val completedHabits: Pair<LocalDate, List<String>>? = null,
-    val consistency: Float = 0f,
-    val topHabits: List<HabitRanking> = emptyList(),
-)
+    companion object {
+        fun CalendarType.toStringRes(): StringResource {
+            return when (this) {
+                MONTH -> Res.string.monthly
+                YEAR -> Res.string.yearly
+            }
+        }
+    }
+}

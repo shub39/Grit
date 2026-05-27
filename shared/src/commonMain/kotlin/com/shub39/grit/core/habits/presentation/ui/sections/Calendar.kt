@@ -52,42 +52,26 @@ import com.kizitonwose.calendar.compose.yearcalendar.rememberYearCalendarState
 import com.kizitonwose.calendar.core.Year
 import com.kizitonwose.calendar.core.now
 import com.shub39.grit.core.LocalWindowSizeClass
+import com.shub39.grit.core.habits.domain.CalendarType
+import com.shub39.grit.core.habits.domain.CalendarType.Companion.toStringRes
 import com.shub39.grit.core.habits.domain.Habit
 import com.shub39.grit.core.habits.domain.HabitWithAnalytics
 import com.shub39.grit.core.habits.presentation.HabitState
 import com.shub39.grit.core.habits.presentation.daysStartingFrom
 import com.shub39.grit.core.habits.presentation.ui.component.CalendarDayContent
 import com.shub39.grit.core.habits.presentation.ui.component.CalendarMonthHeader
-import com.shub39.grit.core.habits.presentation.ui.sections.CalendarType.Companion.toStringRes
 import com.shub39.grit.core.theme.flexFontEmphasis
 import com.shub39.grit.core.theme.flexFontRounded
 import grit.shared.generated.resources.Res
 import grit.shared.generated.resources.calendar
-import grit.shared.generated.resources.monthly
 import grit.shared.generated.resources.nav_arrow_back
-import grit.shared.generated.resources.yearly
 import kotlinx.datetime.DayOfWeek
 import kotlinx.datetime.LocalDate
 import kotlinx.datetime.Month
 import kotlinx.datetime.YearMonth
 import kotlinx.datetime.yearMonth
-import org.jetbrains.compose.resources.StringResource
 import org.jetbrains.compose.resources.stringResource
 import org.jetbrains.compose.resources.vectorResource
-
-private enum class CalendarType {
-    MONTH,
-    YEAR;
-
-    companion object {
-        fun CalendarType.toStringRes(): StringResource {
-            return when (this) {
-                MONTH -> Res.string.monthly
-                YEAR -> Res.string.yearly
-            }
-        }
-    }
-}
 
 @Composable
 fun Calendar(
@@ -151,64 +135,14 @@ fun Calendar(
             ->
             when (currentType) {
                 CalendarType.YEAR -> {
-                    val calendarState =
-                        rememberYearCalendarState(
-                            startYear = Year(2024),
-                            endYear = Year(today.yearMonth.year),
-                            firstVisibleYear = Year(today.yearMonth.year),
-                            firstDayOfWeek = state.startingDay,
-                        )
-
-                    VerticalYearCalendar(
-                        modifier = modifier.padding(horizontal = 8.dp),
-                        contentPadding = PaddingValues(top = 16.dp, bottom = 60.dp),
-                        state = calendarState,
-                        reverseLayout = true,
-                        calendarScrollPaged = false,
-                        yearHeader = { calendarYear ->
-                            Box(
-                                modifier =
-                                    Modifier.padding(
-                                        start = 4.dp,
-                                        end = 4.dp,
-                                        top = 32.dp,
-                                        bottom = 8.dp,
-                                    )
-                            ) {
-                                Text(
-                                    text = calendarYear.year.value.toString(),
-                                    style =
-                                        MaterialTheme.typography.titleLarge.copy(
-                                            color = MaterialTheme.colorScheme.secondary,
-                                            fontFamily = flexFontRounded(),
-                                        ),
-                                    modifier = Modifier.align(Alignment.Center),
-                                )
-                            }
-                        },
-                        monthHeader = { calendarMonth ->
-                            if (calendarMonth.yearMonth <= today.yearMonth) {
-                                CalendarMonthHeader(
-                                    calendarMonth = calendarMonth,
-                                    style = MaterialTheme.typography.labelMedium,
-                                )
-                            }
-                        },
-                        dayContent = { day ->
-                            if (day.date.yearMonth <= today.yearMonth) {
-                                CalendarDayContent(
-                                    day = day,
-                                    doneDates = doneDates,
-                                    today = today,
-                                    habitDays = currentHabit.habit.days,
-                                    edgeWeeks = edgeWeeks,
-                                    onDateClick = { onDateClick(currentHabit.habit, it) },
-                                    height = 20.dp,
-                                    style =
-                                        MaterialTheme.typography.labelSmall.copy(fontSize = 8.sp),
-                                )
-                            }
-                        },
+                    YearlyCalendar(
+                        today = today,
+                        state = state,
+                        modifier = modifier,
+                        doneDates = doneDates,
+                        currentHabit = currentHabit,
+                        edgeWeeks = edgeWeeks,
+                        onDateClick = onDateClick,
                     )
                 }
 
@@ -225,6 +159,68 @@ fun Calendar(
             }
         }
     }
+}
+
+@Composable
+private fun YearlyCalendar(
+    today: LocalDate,
+    state: HabitState,
+    modifier: Modifier,
+    doneDates: Set<LocalDate>,
+    currentHabit: HabitWithAnalytics,
+    edgeWeeks: List<DayOfWeek>,
+    onDateClick: (Habit, LocalDate) -> Unit,
+) {
+    val calendarState =
+        rememberYearCalendarState(
+            startYear = Year(2024),
+            endYear = Year(today.yearMonth.year),
+            firstVisibleYear = Year(today.yearMonth.year),
+            firstDayOfWeek = state.startingDay,
+        )
+
+    VerticalYearCalendar(
+        modifier = modifier.padding(horizontal = 8.dp),
+        contentPadding = PaddingValues(top = 16.dp, bottom = 60.dp),
+        state = calendarState,
+        reverseLayout = true,
+        calendarScrollPaged = false,
+        yearHeader = { calendarYear ->
+            Box(modifier = Modifier.padding(start = 4.dp, end = 4.dp, top = 48.dp, bottom = 0.dp)) {
+                Text(
+                    text = calendarYear.year.value.toString(),
+                    style =
+                        MaterialTheme.typography.titleLarge.copy(
+                            color = MaterialTheme.colorScheme.secondary,
+                            fontFamily = flexFontRounded(),
+                        ),
+                    modifier = Modifier.align(Alignment.Center),
+                )
+            }
+        },
+        monthHeader = { calendarMonth ->
+            if (calendarMonth.yearMonth <= today.yearMonth) {
+                CalendarMonthHeader(
+                    calendarMonth = calendarMonth,
+                    style = MaterialTheme.typography.labelMedium,
+                )
+            }
+        },
+        dayContent = { day ->
+            if (day.date.yearMonth <= today.yearMonth) {
+                CalendarDayContent(
+                    day = day,
+                    doneDates = doneDates,
+                    today = today,
+                    habitDays = currentHabit.habit.days,
+                    edgeWeeks = edgeWeeks,
+                    onDateClick = { onDateClick(currentHabit.habit, it) },
+                    height = 20.dp,
+                    style = MaterialTheme.typography.labelSmall.copy(fontSize = 8.sp),
+                )
+            }
+        },
+    )
 }
 
 @Composable

@@ -25,7 +25,6 @@ import com.shub39.grit.core.habits.presentation.HabitState
 import com.shub39.grit.core.habits.presentation.HabitsAction
 import com.shub39.grit.domain.AlarmScheduler
 import com.shub39.grit.domain.SettingsDatastore
-import kotlin.time.ExperimentalTime
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
@@ -114,7 +113,12 @@ class HabitViewModel(
                     _state.update { habitState ->
                         habitState.copy(
                             overallAnalytics =
-                                habitState.overallAnalytics.copy(completedHabits = completedHabits)
+                                habitState.overallAnalytics.copy(
+                                    completedHabits =
+                                        if (completedHabits.isNotEmpty()) {
+                                            action.date to completedHabits
+                                        } else null
+                                )
                         )
                     }
                 }
@@ -122,7 +126,6 @@ class HabitViewModel(
         }
     }
 
-    @OptIn(ExperimentalTime::class)
     private fun observeHabitStatuses() {
         habitStatusJob?.cancel()
         habitStatusJob =

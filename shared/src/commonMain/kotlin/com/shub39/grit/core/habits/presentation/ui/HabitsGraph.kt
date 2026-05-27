@@ -16,11 +16,9 @@
  */
 package com.shub39.grit.core.habits.presentation.ui
 
-import androidx.compose.animation.AnimatedContent
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
-import androidx.compose.animation.togetherWith
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -41,6 +39,7 @@ import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.material3.TopAppBarScrollBehavior
 import androidx.compose.material3.windowsizeclass.WindowWidthSizeClass
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
@@ -58,6 +57,7 @@ import com.shub39.grit.core.habits.presentation.HabitsAction
 import com.shub39.grit.core.habits.presentation.ui.component.HabitListFABs
 import com.shub39.grit.core.habits.presentation.ui.sections.AnalyticsPage
 import com.shub39.grit.core.habits.presentation.ui.sections.Calendar
+import com.shub39.grit.core.habits.presentation.ui.sections.CalendarHeatMap
 import com.shub39.grit.core.habits.presentation.ui.sections.HabitsList
 import com.shub39.grit.core.habits.presentation.ui.sections.OverallAnalytics
 import com.shub39.grit.core.navigation.horizontalTransitionMetadata
@@ -81,6 +81,8 @@ private sealed interface HabitRoutes : NavKey {
     @Serializable data object OverallAnalytics : HabitRoutes
 
     @Serializable data object Calendar : HabitRoutes
+
+    @Serializable data object CalendarHeatMap : HabitRoutes
 }
 
 private val config = SavedStateConfiguration {
@@ -90,6 +92,7 @@ private val config = SavedStateConfiguration {
             subclass(HabitRoutes.HabitAnalytics::class, HabitRoutes.HabitAnalytics.serializer())
             subclass(HabitRoutes.OverallAnalytics::class, HabitRoutes.OverallAnalytics.serializer())
             subclass(HabitRoutes.Calendar::class, HabitRoutes.Calendar.serializer())
+            subclass(HabitRoutes.CalendarHeatMap::class, HabitRoutes.CalendarHeatMap.serializer())
         }
     }
 }
@@ -180,6 +183,9 @@ fun HabitsGraph(
                             isUserSubscribed = isUserSubscribed,
                             onAction = onAction,
                             modifier = Modifier.background(MaterialTheme.colorScheme.background),
+                            onNavigateToCalendarHeatMap = {
+                                backstack.add(HabitRoutes.CalendarHeatMap)
+                            },
                         )
                     }
 
@@ -193,6 +199,19 @@ fun HabitsGraph(
                                 onAction(HabitsAction.InsertStatus(habit, date))
                             },
                             modifier = Modifier.background(MaterialTheme.colorScheme.surface),
+                        )
+                    }
+
+                    entry<HabitRoutes.CalendarHeatMap>(metadata = horizontalTransitionMetadata()) {
+                        CalendarHeatMap(
+                            state = state,
+                            onNavigateBack = {
+                                if (backstack.size != 1) backstack.removeLastOrNull()
+                            },
+                            modifier = Modifier.background(MaterialTheme.colorScheme.surface),
+                            onChangeSelectedDay = {
+                                onAction(HabitsAction.FetchCompletedHabitsForDate(it))
+                            },
                         )
                     }
                 },
@@ -256,68 +275,96 @@ private fun ExpandedScreen(
                 shape = RoundedCornerShape(topStart = 28.dp),
                 modifier = Modifier.weight(1f),
             ) {
-                val motionScheme = MaterialTheme.motionScheme
-                AnimatedContent(
-                    targetState = state.analyticsHabitId,
-                    transitionSpec = {
-                        fadeIn(motionScheme.fastEffectsSpec()) togetherWith
-                            fadeOut(motionScheme.fastEffectsSpec())
-                    },
-                ) { analyticsHabitId ->
-                    if (analyticsHabitId != null) {
-                        val backstack = rememberNavBackStack(config, HabitRoutes.HabitAnalytics)
+                val backstack = rememberNavBackStack(config, HabitRoutes.HabitAnalytics)
 
-                        NavDisplay(
-                            backStack = backstack,
-                            entryProvider =
-                                entryProvider {
-                                    entry<HabitRoutes.HabitAnalytics> {
-                                        AnalyticsPage(
-                                            state = state,
-                                            onAction = onAction,
-                                            onNavigateBack = {
-                                                onAction(HabitsAction.PrepareAnalytics(null))
-                                            },
-                                            onNavigateToPaywall = onNavigateToPaywall,
-                                            onNavigateToCalendar = {
-                                                backstack.add(HabitRoutes.Calendar)
-                                            },
-                                            isUserSubscribed = isUserSubscribed,
-                                        )
-                                    }
-
-                                    entry<HabitRoutes.Calendar>(
-                                        metadata = horizontalTransitionMetadata()
-                                    ) {
-                                        Calendar(
-                                            state = state,
-                                            onNavigateBack = {
-                                                if (backstack.size != 1)
-                                                    backstack.removeLastOrNull()
-                                            },
-                                            onDateClick = { habit, date ->
-                                                onAction(HabitsAction.InsertStatus(habit, date))
-                                            },
-                                            modifier =
-                                                Modifier.background(
-                                                    MaterialTheme.colorScheme
-                                                        .surfaceContainerHighest
-                                                ),
-                                        )
-                                    }
-                                },
-                        )
-                    } else {
-                        OverallAnalytics(
-                            state = state,
-                            onNavigateBack = {},
-                            showNavigateBack = false,
-                            onNavigateToPaywall = onNavigateToPaywall,
-                            isUserSubscribed = isUserSubscribed,
-                            onAction = onAction,
-                        )
-                    }
+                LaunchedEffect(state.analyticsHabitId) {
+                    backstack.add(
+                        if (state.analyticsHabitId != null) {
+                            HabitRoutes.HabitAnalytics
+                        } else {
+                            HabitRoutes.OverallAnalytics
+                        }
+                    )
                 }
+
+                NavDisplay(
+                    backStack = backstack,
+                    entryProvider =
+                        entryProvider {
+                            entry<HabitRoutes.HabitAnalytics>(
+                                metadata = verticalTransitionMetadata()
+                            ) {
+                                AnalyticsPage(
+                                    state = state,
+                                    onAction = onAction,
+                                    onNavigateBack = {
+                                        onAction(HabitsAction.PrepareAnalytics(null))
+                                    },
+                                    onNavigateToPaywall = onNavigateToPaywall,
+                                    onNavigateToCalendar = { backstack.add(HabitRoutes.Calendar) },
+                                    isUserSubscribed = isUserSubscribed,
+                                    modifier =
+                                        Modifier.background(
+                                            MaterialTheme.colorScheme.surfaceContainerHighest
+                                        ),
+                                )
+                            }
+
+                            entry<HabitRoutes.Calendar>(metadata = horizontalTransitionMetadata()) {
+                                Calendar(
+                                    state = state,
+                                    onNavigateBack = {
+                                        if (backstack.size != 1) backstack.removeLastOrNull()
+                                    },
+                                    onDateClick = { habit, date ->
+                                        onAction(HabitsAction.InsertStatus(habit, date))
+                                    },
+                                    modifier =
+                                        Modifier.background(
+                                            MaterialTheme.colorScheme.surfaceContainerHighest
+                                        ),
+                                )
+                            }
+
+                            entry<HabitRoutes.OverallAnalytics>(
+                                metadata = verticalTransitionMetadata()
+                            ) {
+                                OverallAnalytics(
+                                    state = state,
+                                    onNavigateBack = {},
+                                    showNavigateBack = false,
+                                    onNavigateToPaywall = onNavigateToPaywall,
+                                    isUserSubscribed = isUserSubscribed,
+                                    onAction = onAction,
+                                    onNavigateToCalendarHeatMap = {
+                                        backstack.add(HabitRoutes.CalendarHeatMap)
+                                    },
+                                    modifier =
+                                        Modifier.background(
+                                            MaterialTheme.colorScheme.surfaceContainerHighest
+                                        ),
+                                )
+                            }
+
+                            entry<HabitRoutes.CalendarHeatMap>(
+                                metadata = horizontalTransitionMetadata()
+                            ) {
+                                CalendarHeatMap(
+                                    state = state,
+                                    onNavigateBack = {
+                                        if (backstack.size != 1) backstack.removeLastOrNull()
+                                    },
+                                    modifier =
+                                        Modifier.background(
+                                            MaterialTheme.colorScheme.surfaceContainerHighest
+                                        ),
+                                    onChangeSelectedDay = {
+                                        onAction(HabitsAction.FetchCompletedHabitsForDate(it))
+                                    },
+                                )
+                            }
+                        },
+                )
             }
         }
     }

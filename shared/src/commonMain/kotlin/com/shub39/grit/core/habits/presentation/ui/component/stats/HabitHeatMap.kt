@@ -60,6 +60,7 @@ import com.shub39.grit.core.shared_ui.leadingItemShape
 import com.shub39.grit.core.theme.flexFontRounded
 import com.shub39.grit.core.toFormattedString
 import grit.shared.generated.resources.*
+import kotlin.collections.forEachIndexed
 import kotlin.random.Random
 import kotlinx.coroutines.launch
 import kotlinx.datetime.DateTimeUnit
@@ -75,15 +76,17 @@ fun HabitHeatMap(
     heatMapState: HeatMapCalendarState,
     heatMapData: Map<LocalDate, Int>,
     totalHabits: Int,
-    completedHabits: List<String>,
+    completedHabits: Pair<LocalDate, List<String>>?,
     updateCompletedHabits: (LocalDate) -> Unit,
+    onNavigateToCalendarHeatMap: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
     val scope = rememberCoroutineScope()
     val today = LocalDate.now()
+
     var selectedDay by remember { mutableStateOf(today) }
 
-    LaunchedEffect(selectedDay) { updateCompletedHabits(selectedDay) }
+    LaunchedEffect(selectedDay) { updateCompletedHabits(today) }
 
     AnalyticsCard(
         title = stringResource(Res.string.habit_map),
@@ -96,6 +99,7 @@ fun HabitHeatMap(
             CardArrows(
                 onBackAction = { scope.launch { heatMapState.animateScrollBy(-150f) } },
                 onForwardAction = { scope.launch { heatMapState.animateScrollBy(150f) } },
+                onExpandAction = onNavigateToCalendarHeatMap,
             )
         },
     ) {
@@ -199,33 +203,37 @@ fun HabitHeatMap(
             }
         }
 
-        Text(
-            text = selectedDay.toFormattedString(),
-            fontFamily = flexFontRounded(),
-            color = MaterialTheme.colorScheme.onSurface,
-            modifier = Modifier.padding(horizontal = 16.dp),
-        )
+        if (completedHabits != null) {
+            Text(
+                text = completedHabits.first.toFormattedString(),
+                fontFamily = flexFontRounded(),
+                color = MaterialTheme.colorScheme.onSurface,
+                modifier = Modifier.padding(horizontal = 16.dp),
+            )
 
-        if (completedHabits.isNotEmpty()) {
-            Spacer(modifier = Modifier.height(4.dp))
-            completedHabits.forEachIndexed { index, habit ->
-                val shape =
-                    when {
-                        completedHabits.size == 1 -> RoundedCornerShape(12.dp)
-                        index == 0 -> leadingItemShape(topRadius = 12)
-                        index == completedHabits.size - 1 -> endItemShape(bottomRadius = 12)
-                        else -> RoundedCornerShape(4.dp)
-                    }
+            if (completedHabits.second.isNotEmpty()) {
+                Spacer(modifier = Modifier.height(4.dp))
+                completedHabits.second.forEachIndexed { index, habit ->
+                    val shape =
+                        when {
+                            completedHabits.second.size == 1 -> RoundedCornerShape(12.dp)
+                            index == 0 -> leadingItemShape(topRadius = 12)
+                            index == completedHabits.second.size - 1 ->
+                                endItemShape(bottomRadius = 12)
+                            else -> RoundedCornerShape(4.dp)
+                        }
 
-                ListItem(
-                    colors =
-                        ListItemDefaults.colors(
-                            containerColor = MaterialTheme.colorScheme.secondaryContainer,
-                            contentColor = MaterialTheme.colorScheme.onSecondaryContainer,
-                        ),
-                    modifier = Modifier.padding(horizontal = 16.dp, vertical = 1.dp).clip(shape),
-                    headlineContent = { Text(habit) },
-                )
+                    ListItem(
+                        colors =
+                            ListItemDefaults.colors(
+                                containerColor = MaterialTheme.colorScheme.secondaryContainer,
+                                contentColor = MaterialTheme.colorScheme.onSecondaryContainer,
+                            ),
+                        modifier =
+                            Modifier.padding(horizontal = 16.dp, vertical = 1.dp).clip(shape),
+                        headlineContent = { Text(habit) },
+                    )
+                }
             }
         }
 
@@ -250,7 +258,8 @@ private fun Preview() {
                 LocalDate.now().minus(it, DateTimeUnit.DAY) to Random.nextInt(0, 11)
             },
         totalHabits = 10,
-        completedHabits = listOf("Habit 1", "Habit 2", "Habit ${Random.nextInt()}"),
         updateCompletedHabits = {},
+        onNavigateToCalendarHeatMap = {},
+        completedHabits = null,
     )
 }

@@ -42,7 +42,6 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.StrokeCap
-import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import com.kizitonwose.calendar.compose.heatmapcalendar.rememberHeatMapCalendarState
@@ -67,6 +66,7 @@ fun OverallAnalytics(
     onAction: (HabitsAction) -> Unit,
     onNavigateBack: () -> Unit,
     onNavigateToPaywall: () -> Unit,
+    onNavigateToCalendarHeatMap: () -> Unit,
     showNavigateBack: Boolean = true,
     isUserSubscribed: Boolean,
     modifier: Modifier = Modifier,
@@ -82,10 +82,8 @@ fun OverallAnalytics(
             firstDayOfWeek = state.startingDay,
         )
 
-    val scrollBehavior = TopAppBarDefaults.enterAlwaysScrollBehavior()
-    Column(modifier = modifier.nestedScroll(scrollBehavior.nestedScrollConnection).fillMaxSize()) {
+    Column(modifier = modifier.fillMaxSize()) {
         TopAppBar(
-            scrollBehavior = scrollBehavior,
             colors =
                 TopAppBarDefaults.topAppBarColors(
                     scrolledContainerColor = Color.Transparent,
@@ -127,7 +125,8 @@ fun OverallAnalytics(
                 Row(
                     modifier = Modifier.fillMaxWidth().widthIn(max = maxWidth),
                     verticalAlignment = Alignment.CenterVertically,
-                    horizontalArrangement = Arrangement.spacedBy(24.dp, Alignment.CenterHorizontally),
+                    horizontalArrangement =
+                        Arrangement.spacedBy(24.dp, Alignment.CenterHorizontally),
                 ) {
                     Box(contentAlignment = Alignment.Center) {
                         CircularProgressIndicator(
@@ -139,7 +138,8 @@ fun OverallAnalytics(
 
                         Column(horizontalAlignment = Alignment.CenterHorizontally) {
                             Text(
-                                text = "${(state.overallAnalytics.consistency * 100).roundToInt()}%",
+                                text =
+                                    "${(state.overallAnalytics.consistency * 100).roundToInt()}%",
                                 style =
                                     MaterialTheme.typography.headlineSmall.copy(
                                         fontFamily = flexFontRounded(),
@@ -181,7 +181,7 @@ fun OverallAnalytics(
                                             style =
                                                 MaterialTheme.typography.titleSmall.copy(
                                                     fontFamily = flexFontRounded(),
-                                                    color = MaterialTheme.colorScheme.onSurface
+                                                    color = MaterialTheme.colorScheme.onSurface,
                                                 ),
                                             maxLines = 1,
                                             overflow = TextOverflow.Ellipsis,
@@ -213,6 +213,7 @@ fun OverallAnalytics(
                     updateCompletedHabits = {
                         onAction(HabitsAction.FetchCompletedHabitsForDate(it))
                     },
+                    onNavigateToCalendarHeatMap = onNavigateToCalendarHeatMap,
                 )
             }
 
