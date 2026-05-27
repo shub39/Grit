@@ -1,0 +1,206 @@
+/*
+ * Copyright (C) 2026  Shubham Gorai
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <https://www.gnu.org/licenses/>.
+ */
+package com.shub39.grit.viewmodel
+
+import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
+import com.shub39.grit.core.habits.domain.Habit
+import com.shub39.grit.core.habits.domain.HabitRepo
+import com.shub39.grit.core.habits.domain.HabitStatus
+import com.shub39.grit.core.habits.presentation.HabitState
+import com.shub39.grit.core.habits.presentation.HabitsAction
+import com.shub39.grit.domain.AlarmScheduler
+import com.shub39.grit.domain.SettingsDatastore
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.SharingStarted
+import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.combine
+import kotlinx.coroutines.flow.launchIn
+import kotlinx.coroutines.flow.onEach
+import kotlinx.coroutines.flow.onStart
+import kotlinx.coroutines.flow.stateIn
+import kotlinx.coroutines.flow.update
+import kotlinx.coroutines.launch
+import kotlinx.datetime.LocalDate
+import org.koin.core.annotation.KoinViewModel
+
+@KoinViewModel
+class HabitViewModel(
+    private val scheduler: AlarmScheduler,
+    private val repo: HabitRepo,
+    private val datastore: SettingsDatastore,
+) : ViewModel() {
+    private var habitStatusJob: Job? = null
+    private var overallAnalyticsJob: Job? = null
+    private var observeDatastoreJob: Job? = null
+
+    private val _state = MutableStateFlow(HabitState())
+
+    val state =
+        _state
+            .asStateFlow()
+            .onStart {
+                observeDataStore()
+                observeHabitStatuses()
+                observeOverallAnalytics()
+
+                rescheduleAllHabits()
+            }
+            .stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000), HabitState())
+
+    // handles actions from habit page
+    fun onAction(action: HabitsAction) {
+        viewModelScope.launch {
+            when (action) {
+                is HabitsAction.AddHabit -> upsertHabit(action.habit)
+
+                is HabitsAction.DeleteHabit -> deleteHabit(action.habit)
+
+                is HabitsAction.InsertStatus -> insertHabitStatus(action.habit, action.date)
+
+                is HabitsAction.UpdateHabit -> upsertHabit(action.habit)
+
+                HabitsAction.ReorderHabits -> {
+                    val currentList =
+                        _state.value.habitsWithAnalytics.mapIndexed { index, analytics ->
+                            analytics.habit.copy(index = index)
+                        }
+
+                    currentList.forEach { upsertHabit(it) }
+                }
+
+                is HabitsAction.PrepareAnalytics -> {
+                    _state.update { it.copy(analyticsHabitId = action.habit?.id) }
+                }
+
+                HabitsAction.OnAddHabitClicked -> {
+                    _state.update { it.copy(showHabitAddSheet = true) }
+                }
+
+                HabitsAction.DismissAddHabitDialog ->
+                    _state.update { it.copy(showHabitAddSheet = false) }
+
+                is HabitsAction.OnToggleCompactView -> datastore.setCompactView(action.pref)
+
+                is HabitsAction.OnToggleEditState ->
+                    _state.update { it.copy(editState = action.pref) }
+
+                is HabitsAction.OnTransientHabitReorder -> {
+                    val currentList = _state.value.habitsWithAnalytics.toMutableList()
+                    currentList.add(action.to, currentList.removeAt(action.from))
+                    _state.update { it.copy(habitsWithAnalytics = currentList) }
+                }
+
+                is HabitsAction.FetchCompletedHabitsForDate -> {
+                    val completedHabits =
+                        repo.getCompletedHabitsForDate(action.date).map { it.title }
+
+                    _state.update { habitState ->
+                        habitState.copy(
+                            overallAnalytics =
+                                habitState.overallAnalytics.copy(
+                                    completedHabits =
+                                        if (completedHabits.isNotEmpty()) {
+                                            action.date to completedHabits
+                                        } else null
+                                )
+                        )
+                    }
+                }
+            }
+        }
+    }
+
+    private fun observeHabitStatuses() {
+        habitStatusJob?.cancel()
+        habitStatusJob =
+            viewModelScope.launch {
+                combine(repo.getHabitsWithAnalytics(), repo.getCompletedHabitIds()) {
+                        habits,
+                        completedHabits ->
+                        _state.update {
+                            it.copy(
+                                habitsWithAnalytics = habits,
+                                completedHabitIds = completedHabits,
+                            )
+                        }
+                    }
+                    .launchIn(this)
+            }
+    }
+
+    private fun observeOverallAnalytics() {
+        overallAnalyticsJob?.cancel()
+        overallAnalyticsJob =
+            repo
+                .getOverallAnalytics()
+                .onEach { overallAnalytics ->
+                    _state.update { it.copy(overallAnalytics = overallAnalytics) }
+                }
+                .launchIn(viewModelScope)
+    }
+
+    private fun observeDataStore() {
+        observeDatastoreJob?.cancel()
+        observeDatastoreJob =
+            viewModelScope.launch {
+                datastore
+                    .getCompactViewPref()
+                    .onEach { pref -> _state.update { it.copy(compactHabitView = pref) } }
+                    .launchIn(this)
+
+                datastore
+                    .getStartOfTheWeekPref()
+                    .onEach { pref -> _state.update { it.copy(startingDay = pref) } }
+                    .launchIn(this)
+
+                datastore
+                    .getIs24Hr()
+                    .onEach { pref -> _state.update { it.copy(is24Hr = pref) } }
+                    .launchIn(this)
+            }
+    }
+
+    private suspend fun rescheduleAllHabits() {
+        repo.getHabits().forEach { habit -> scheduler.schedule(habit) }
+    }
+
+    private suspend fun upsertHabit(habit: Habit) {
+        repo.upsertHabit(habit)
+        scheduler.schedule(habit)
+    }
+
+    private suspend fun deleteHabit(habit: Habit) {
+        repo.deleteHabit(habit.id)
+        scheduler.cancel(habit)
+    }
+
+    private suspend fun insertHabitStatus(habit: Habit, date: LocalDate) {
+        val isHabitCompleted =
+            _state.value.habitsWithAnalytics
+                .find { it.habit == habit }
+                ?.statuses
+                ?.any { it.date == date } ?: false
+
+        if (isHabitCompleted) {
+            repo.deleteHabitStatus(habit.id, date)
+        } else {
+            repo.insertHabitStatus(HabitStatus(habitId = habit.id, date = date))
+        }
+    }
+}

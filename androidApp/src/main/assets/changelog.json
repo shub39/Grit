@@ -1,0 +1,80 @@
+[
+  {
+    "version": "6.0.0",
+    "changes": [
+      "Added new Consistency Stat in Habit Analytics",
+      "Redesigned Weekly Comparison Stat, Displays weekly comparison up to 1 year",
+      "Miscellaneous UI improvements #291",
+      "Monthly Progress Stat can be expanded to a calendar view, up to January 2024",
+      "Fixed Habits being created with no selected days",
+      "Updated Translations",
+      "Thanks to everyone for 1000+ stars on GitHub 🙏"
+    ]
+  },
+  {
+    "version": "5.9.25",
+    "changes": [
+      "Fix Hebrew Translations not applied by Language Picker"
+    ]
+  },
+  {
+    "version": "5.9.24",
+    "changes": [
+      "Updated Translations",
+      "Added ability to choose export locations for backups",
+      "Miscellaneous UI improvements"
+    ]
+  },
+  {
+    "version": "5.9.23",
+    "changes": [
+      "Updated Translations",
+      "(Android 13+) Added ability to change app language from Settings"
+    ]
+  },
+  {
+    "version": "5.9.22",
+    "changes": [
+      "Updated Translations",
+      "Fixed Unable to change Task Categories"
+    ]
+  },
+  {
+    "version": "5.9.21",
+    "changes": [
+      "Updated Translations"
+    ]
+  },
+  {
+    "version": "5.9.2",
+    "changes": [
+      "Miscellaneous UI fixes",
+      "Updated Translations",
+      "Added Keyboard Autofocus to new Habit (#280)"
+    ]
+  },
+  {
+    "version": "5.9.1",
+    "changes": [
+      "Miscellaneous fixes and updates",
+      "Updated Translations"
+    ]
+  },
+  {
+    "version": "5.9.0",
+    "changes": [
+      "Fixed Floating action button position on large displays",
+      "Fixed Icons for RTL languages (#272)",
+      "Added Preview images for widgets in widget picker (#273)",
+      "Added Expressive Motion scheme to animations",
+      "Updated Translations"
+    ]
+  },
+  {
+    "version": "5.8.4",
+    "changes": [
+      "Changed Navigation Animation",
+      "Misc UI fixes"
+    ]
+  }
+]

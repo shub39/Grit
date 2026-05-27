@@ -1,0 +1,20 @@
+<!--
+  ~ Copyright (C) 2026 The Android Open Source Project
+  ~
+  ~ Licensed under the Apache License, Version 2.0 (the "License");
+  ~ you may not use this file except in compliance with the License.
+  ~ You may obtain a copy of the License at
+  ~
+  ~      http://www.apache.org/licenses/LICENSE-2.0
+  ~
+  ~ Unless required by applicable law or agreed to in writing, software
+  ~ distributed under the License is distributed on an "AS IS" BASIS,
+  ~ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  ~ See the License for the specific language governing permissions and
+  ~ limitations under the License.
+  -->
+<vector xmlns:android="http://schemas.android.com/apk/res/android" android:autoMirrored="true" android:height="24dp" android:viewportHeight="960" android:viewportWidth="960" android:width="24dp">
+
+    <path android:fillColor="#e3e3e3" android:pathData="M507,556 L280,782q-16,16 -38.5,16T203,782q-16,-16 -16,-38.5t16,-38.5l329,-330h-72v15q0,23 -16,39t-39,16q-23,0 -39,-16t-16,-39v-62q0,-26 18.5,-44.5T413,265h193q25,0 48,9.5t41,27.5l110,110q20,20 44,31t50,16q23,5 40,21.5t17,39.5q0,23 -18,39t-41,12q-46,-7 -88,-25t-76,-52l-30,-30 -67,66 35,35q22,22 18,52.5T658,664L485,764q-20,11 -42,5.5T410,744q-11,-20 -5.5,-42t25.5,-33l120,-69 -43,-44ZM135,555q-23,0 -39,-16t-16,-39q0,-23 16,-39t39,-16h120q23,0 39,16t16,39q0,23 -16,39t-39,16L135,555ZM55,405q-23,0 -39,-16T0,350q0,-23 16,-39t39,-16h120q23,0 39,16t16,39q0,23 -16,39t-39,16L55,405ZM816,323q-40,0 -67.5,-27.5T721,228q0,-40 27.5,-67.5T816,133q39,0 67,28t28,67q0,39 -28,67t-67,28ZM135,255q-23,0 -39,-16t-16,-39q0,-23 16,-39t39,-16h120q23,0 39,16t16,39q0,23 -16,39t-39,16L135,255Z"/>
+
+</vector>
