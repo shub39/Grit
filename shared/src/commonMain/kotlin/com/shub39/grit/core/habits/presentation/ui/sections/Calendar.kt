@@ -44,6 +44,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import com.kizitonwose.calendar.compose.VerticalCalendar
 import com.kizitonwose.calendar.compose.VerticalYearCalendar
 import com.kizitonwose.calendar.compose.rememberCalendarState
@@ -69,6 +70,7 @@ import kotlinx.datetime.DayOfWeek
 import kotlinx.datetime.LocalDate
 import kotlinx.datetime.Month
 import kotlinx.datetime.YearMonth
+import kotlinx.datetime.yearMonth
 import org.jetbrains.compose.resources.StringResource
 import org.jetbrains.compose.resources.stringResource
 import org.jetbrains.compose.resources.vectorResource
@@ -152,13 +154,13 @@ fun Calendar(
                     val calendarState =
                         rememberYearCalendarState(
                             startYear = Year(2024),
-                            endYear = Year.now(),
-                            firstVisibleYear = Year.now(),
+                            endYear = Year(today.yearMonth.year),
+                            firstVisibleYear = Year(today.yearMonth.year),
                             firstDayOfWeek = state.startingDay,
                         )
 
                     VerticalYearCalendar(
-                        modifier = modifier.padding(horizontal = 16.dp),
+                        modifier = modifier.padding(horizontal = 8.dp),
                         contentPadding = PaddingValues(top = 16.dp, bottom = 60.dp),
                         state = calendarState,
                         reverseLayout = true,
@@ -185,22 +187,28 @@ fun Calendar(
                             }
                         },
                         monthHeader = { calendarMonth ->
-                            CalendarMonthHeader(
-                                calendarMonth = calendarMonth,
-                                style = MaterialTheme.typography.labelMedium,
-                            )
+                            if (calendarMonth.yearMonth <= today.yearMonth){
+                                CalendarMonthHeader(
+                                    calendarMonth = calendarMonth,
+                                    style = MaterialTheme.typography.labelMedium,
+                                )
+                            }
                         },
                         dayContent = { day ->
-                            CalendarDayContent(
-                                day = day,
-                                doneDates = doneDates,
-                                today = today,
-                                habitDays = currentHabit.habit.days,
-                                edgeWeeks = edgeWeeks,
-                                onDateClick = { onDateClick(currentHabit.habit, it) },
-                                height = 20.dp,
-                                style = MaterialTheme.typography.labelSmall,
-                            )
+                            if (day.date.yearMonth <= today.yearMonth) {
+                                CalendarDayContent(
+                                    day = day,
+                                    doneDates = doneDates,
+                                    today = today,
+                                    habitDays = currentHabit.habit.days,
+                                    edgeWeeks = edgeWeeks,
+                                    onDateClick = { onDateClick(currentHabit.habit, it) },
+                                    height = 20.dp,
+                                    style = MaterialTheme.typography.labelSmall.copy(
+                                        fontSize = 8.sp
+                                    ),
+                                )
+                            }
                         },
                     )
                 }
