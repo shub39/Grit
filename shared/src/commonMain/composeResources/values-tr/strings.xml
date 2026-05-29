@@ -11,7 +11,7 @@
     <string name="cancel">İptal</string>
     <string name="select_time">Zaman Seç</string>
     <string name="habits">Alışkanlıklar</string>
-    <string name="streak">Mevcut Seri</string>
+    <string name="streak">Mevcut seri</string>
     <string name="best_streak">En İyi Seri</string>
     <string name="settings">Ayarlar</string>
     <string name="too_long">Çok Uzun</string>
@@ -48,7 +48,7 @@
     <string name="app_theme">Uygulama Teması</string>
     <string name="pause_notifications">Bildirimleri Duraklat</string>
     <string name="pause_notifications_desc">Tüm uygulama bildirimlerini duraklat</string>
-    <string name="started_on">Başlangıç Tarihi</string>
+    <string name="started_on">Başlangıç tarihi</string>
     <string name="weekly_graph">Haftalık Karşılaştırma</string>
     <string name="not_enough_data">Yeterli veri yok</string>
     <string name="items_completed">tamamlandı</string>
@@ -84,4 +84,8 @@
     <string name="system_default">Sistem Varsayılanı</string>
     <string name="language">Dil</string>
     <string name="about">Hakkında</string>
+    <string name="consistency">Tutarlılık</string>
+    <string name="calendar">Takvim</string>
+    <string name="monthly">Aylık</string>
+    <string name="yearly">Yıllık</string>
 </resources>
