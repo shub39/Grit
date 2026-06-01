@@ -84,4 +84,8 @@
     <string name="about">关于</string>
     <string name="grit_plus">Grit Plus</string>
     <string name="system_default">系统默认</string>
+    <string name="consistency">连贯性</string>
+    <string name="calendar">日历</string>
+    <string name="monthly">每月</string>
+    <string name="yearly">每年</string>
 </resources>
