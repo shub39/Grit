@@ -30,19 +30,13 @@ plugins {
 
 kotlin {
     compilerOptions {
+        freeCompilerArgs.add("-Xcontext-sensitive-resolution")
+        freeCompilerArgs.add("-Xexpect-actual-classes")
         optIn.add("androidx.compose.material3.ExperimentalMaterial3Api")
         optIn.add("androidx.compose.material3.ExperimentalMaterial3ExpressiveApi")
         optIn.add(
             "androidx.compose.material3.windowsizeclass.ExperimentalMaterial3WindowSizeClassApi"
         )
-    }
-
-    targets.all {
-        compilations.all {
-            compileTaskProvider.configure {
-                compilerOptions.freeCompilerArgs.add("-Xexpect-actual-classes")
-            }
-        }
     }
 
     jvm()
@@ -62,6 +56,8 @@ kotlin {
 
     sourceSets {
         commonMain.dependencies {
+            implementation(projects.shared.core)
+
             implementation(libs.compose.material3)
             implementation(libs.compose.runtime)
             implementation(libs.compose.foundation)

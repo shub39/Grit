@@ -21,8 +21,8 @@ import android.content.Context
 import android.content.Intent
 import android.util.Log
 import com.shub39.grit.core.data.notification.NotificationAlarmScheduler
-import com.shub39.grit.shared.ui.habits.domain.HabitRepo
-import com.shub39.grit.shared.ui.tasks.domain.TaskRepo
+import com.shub39.grit.core.habits.HabitRepo
+import com.shub39.grit.core.tasks.TaskRepo
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.SupervisorJob

@@ -16,16 +16,15 @@
  */
 package com.shub39.grit.viewmodel
 
-import androidx.compose.ui.graphics.Color
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.shub39.grit.BuildConfig
-import com.shub39.grit.app.MainAppState
 import com.shub39.grit.billing.BillingHandler
 import com.shub39.grit.billing.SubscriptionResult
 import com.shub39.grit.domain.ChangelogManager
 import com.shub39.grit.domain.SettingsDatastore
 import com.shub39.grit.domain.ThemeDatastore
+import com.shub39.grit.shared.ui.app.MainAppState
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
@@ -93,7 +92,7 @@ class MainViewModel(
                                 theme =
                                     it.theme.copy(
                                         paletteStyle = palette,
-                                        seedColor = Color(seedColor),
+                                        seedColor = seedColor,
                                         font = font,
                                         isMaterialYou = materialYou,
                                         appTheme = appTheme,

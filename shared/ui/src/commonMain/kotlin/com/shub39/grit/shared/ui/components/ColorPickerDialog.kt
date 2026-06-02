@@ -38,7 +38,6 @@ import com.github.skydoves.colorpicker.compose.AlphaTile
 import com.github.skydoves.colorpicker.compose.BrightnessSlider
 import com.github.skydoves.colorpicker.compose.HsvColorPicker
 import com.github.skydoves.colorpicker.compose.rememberColorPickerController
-import com.shub39.grit.shared.ui.shared_ui.GritDialog
 import grit.shared.ui.generated.resources.*
 import org.jetbrains.compose.resources.stringResource
 

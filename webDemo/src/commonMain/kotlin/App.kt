@@ -45,11 +45,11 @@ import com.shub39.grit.shared.ui.LocalWindowSizeClass
 import com.shub39.grit.shared.ui.app.AppSections
 import com.shub39.grit.shared.ui.app.AppSections.Companion.toIconRes
 import com.shub39.grit.shared.ui.app.AppSections.Companion.toStringRes
-import com.shub39.grit.shared.ui.habits.presentation.ui.HabitsGraph
+import com.shub39.grit.shared.ui.habit.ui.HabitsGraph
 import com.shub39.grit.shared.ui.navigation.fadeTransitionMetadata
-import com.shub39.grit.shared.ui.settings.presentation.SettingsAction
-import com.shub39.grit.shared.ui.settings.presentation.ui.SettingsGraph
-import com.shub39.grit.shared.ui.tasks.presentation.ui.TasksPage
+import com.shub39.grit.shared.ui.setting.SettingsAction
+import com.shub39.grit.shared.ui.setting.ui.SettingsGraph
+import com.shub39.grit.shared.ui.task.ui.TasksPage
 import com.shub39.grit.shared.ui.theme.AppTheme
 import com.shub39.grit.shared.ui.theme.GritTheme
 import grit.webdemo.generated.resources.Res

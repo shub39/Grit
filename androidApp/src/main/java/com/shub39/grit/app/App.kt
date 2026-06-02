@@ -47,13 +47,13 @@ import com.shub39.grit.shared.ui.LocalWindowSizeClass
 import com.shub39.grit.shared.ui.app.AppSections
 import com.shub39.grit.shared.ui.app.AppSections.Companion.toIconRes
 import com.shub39.grit.shared.ui.app.AppSections.Companion.toStringRes
+import com.shub39.grit.shared.ui.app.MainAppState
 import com.shub39.grit.shared.ui.components.ChangelogSheet
-import com.shub39.grit.shared.ui.habits.presentation.ui.HabitsGraph
+import com.shub39.grit.shared.ui.habit.ui.HabitsGraph
 import com.shub39.grit.shared.ui.navigation.fadeTransitionMetadata
 import com.shub39.grit.shared.ui.navigation.verticalTransitionMetadata
-import com.shub39.grit.shared.ui.settings.domain.Sections
-import com.shub39.grit.shared.ui.settings.presentation.ui.SettingsGraph
-import com.shub39.grit.shared.ui.tasks.presentation.ui.TasksPage
+import com.shub39.grit.shared.ui.setting.ui.SettingsGraph
+import com.shub39.grit.shared.ui.task.ui.TasksPage
 import com.shub39.grit.viewmodel.HabitViewModel
 import com.shub39.grit.viewmodel.SettingsViewModel
 import com.shub39.grit.viewmodel.TasksViewModel
@@ -73,7 +73,7 @@ fun App(state: MainAppState, onRefreshSub: () -> Unit, onDismissChangelog: () ->
     val mainBackStack = rememberNavBackStack(GlobalRoutes.App)
 
     if (state.currentChangelog != null) {
-        ChangelogSheet(currentLog = state.currentChangelog, onDismissRequest = onDismissChangelog)
+        ChangelogSheet(currentLog = state.currentChangelog!!, onDismissRequest = onDismissChangelog)
     }
 
     NavDisplay(
@@ -108,8 +108,8 @@ private fun MainApp(state: MainAppState, onNavigateToPaywall: () -> Unit) {
     val appBackStack =
         rememberNavBackStack(
             when (state.startingSection) {
-                Sections.Tasks -> AppSections.TaskPages
-                Sections.Habits -> AppSections.HabitPages
+                Tasks -> AppSections.TaskPages
+                Habits -> AppSections.HabitPages
             }
         )
 

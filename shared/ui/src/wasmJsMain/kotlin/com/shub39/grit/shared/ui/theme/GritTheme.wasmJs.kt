@@ -18,18 +18,21 @@ package com.shub39.grit.shared.ui.theme
 
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.graphics.Color
 import com.materialkolor.DynamicMaterialTheme
-import com.shub39.grit.shared.ui.theme.Fonts.Companion.toFontRes
+import com.shub39.grit.core.theme.Theme
+import com.shub39.grit.shared.ui.toFontRes
+import com.shub39.grit.shared.ui.toMPaletteStyle
 
 @Composable
 actual fun GritTheme(theme: Theme, content: @Composable (() -> Unit)) {
     DynamicMaterialTheme(
-        seedColor = theme.seedColor,
+        seedColor = Color(theme.seedColor),
         isDark =
             when (theme.appTheme) {
-                AppTheme.SYSTEM -> isSystemInDarkTheme()
-                AppTheme.DARK -> true
-                AppTheme.LIGHT -> false
+                SYSTEM -> isSystemInDarkTheme()
+                DARK -> true
+                LIGHT -> false
             },
         isAmoled = theme.isAmoled,
         style = theme.paletteStyle.toMPaletteStyle(),

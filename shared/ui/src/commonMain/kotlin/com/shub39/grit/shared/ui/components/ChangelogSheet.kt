@@ -41,25 +41,15 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import com.shub39.grit.shared.ui.shared_ui.GritBottomSheet
-import com.shub39.grit.shared.ui.shared_ui.detachedItemShape
-import com.shub39.grit.shared.ui.shared_ui.endItemShape
-import com.shub39.grit.shared.ui.shared_ui.leadingItemShape
-import com.shub39.grit.shared.ui.shared_ui.listItemColors
-import com.shub39.grit.shared.ui.shared_ui.middleItemShape
-import com.shub39.grit.shared.ui.theme.AppTheme
+import com.shub39.grit.core.app.VersionEntry
+import com.shub39.grit.core.theme.AppTheme
+import com.shub39.grit.core.theme.Theme
 import com.shub39.grit.shared.ui.theme.GritTheme
-import com.shub39.grit.shared.ui.theme.Theme
 import com.shub39.grit.shared.ui.theme.flexFontEmphasis
 import com.shub39.grit.shared.ui.theme.flexFontRounded
 import grit.shared.ui.generated.resources.*
-import kotlinx.serialization.Serializable
 import org.jetbrains.compose.resources.stringResource
 import org.jetbrains.compose.resources.vectorResource
-
-@Serializable data class VersionEntry(val version: String, val changes: List<String>)
-
-typealias Changelog = List<VersionEntry>
 
 @Composable
 fun ChangelogSheet(

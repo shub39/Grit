@@ -58,10 +58,10 @@ import androidx.glance.text.TextDecoration
 import androidx.glance.text.TextStyle
 import com.shub39.grit.R
 import com.shub39.grit.app.MainActivity
-import com.shub39.grit.shared.ui.tasks.domain.Category
-import com.shub39.grit.shared.ui.tasks.domain.CategoryColors
-import com.shub39.grit.shared.ui.tasks.domain.Task
-import com.shub39.grit.shared.ui.tasks.domain.TaskRepo
+import com.shub39.grit.core.tasks.Category
+import com.shub39.grit.core.tasks.CategoryColors
+import com.shub39.grit.core.tasks.Task
+import com.shub39.grit.core.tasks.TaskRepo
 import com.shub39.grit.widgets.WidgetSize
 import kotlinx.coroutines.launch
 import org.koin.core.component.KoinComponent

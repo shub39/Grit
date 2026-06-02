@@ -16,22 +16,18 @@
  */
 package com.shub39.grit.viewmodel
 
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.toArgb
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.shub39.grit.core.settings.backup.ExportRepo
+import com.shub39.grit.core.settings.backup.RestoreRepo
 import com.shub39.grit.domain.BiometricUtils
 import com.shub39.grit.domain.ChangelogManager
 import com.shub39.grit.domain.SettingsDatastore
 import com.shub39.grit.domain.ThemeDatastore
-import com.shub39.grit.shared.ui.settings.domain.backup.ExportRepo
-import com.shub39.grit.shared.ui.settings.domain.backup.ExportState
-import com.shub39.grit.shared.ui.settings.domain.backup.RestoreRepo
-import com.shub39.grit.shared.ui.settings.domain.backup.RestoreResult
-import com.shub39.grit.shared.ui.settings.domain.backup.RestoreState
-import com.shub39.grit.shared.ui.settings.presentation.BackupState
-import com.shub39.grit.shared.ui.settings.presentation.SettingsAction
-import com.shub39.grit.shared.ui.settings.presentation.SettingsState
+import com.shub39.grit.shared.ui.setting.BackupState
+import com.shub39.grit.shared.ui.setting.SettingsAction
+import com.shub39.grit.shared.ui.setting.SettingsState
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
@@ -96,25 +92,19 @@ class SettingsViewModel(
 
                 SettingsAction.OnExport -> {
                     _state.update {
-                        it.copy(
-                            backupState = it.backupState.copy(exportState = ExportState.EXPORTING)
-                        )
+                        it.copy(backupState = it.backupState.copy(exportState = EXPORTING))
                     }
 
                     exportRepo.exportToJson()
 
                     _state.update {
-                        it.copy(
-                            backupState = it.backupState.copy(exportState = ExportState.EXPORTED)
-                        )
+                        it.copy(backupState = it.backupState.copy(exportState = EXPORTED))
                     }
                 }
 
                 SettingsAction.OnRestore -> {
                     _state.update {
-                        it.copy(
-                            backupState = it.backupState.copy(restoreState = RestoreState.RESTORING)
-                        )
+                        it.copy(backupState = it.backupState.copy(restoreState = RESTORING))
                     }
 
                     val result = restoreRepo.restoreData()
@@ -125,8 +115,8 @@ class SettingsViewModel(
                                 it.backupState.copy(
                                     restoreState =
                                         when (result) {
-                                            is RestoreResult.Failure -> RestoreState.FAILURE
-                                            RestoreResult.Success -> RestoreState.RESTORED
+                                            is Failure -> FAILURE
+                                            Success -> RESTORED
                                         }
                                 )
                         )
@@ -193,7 +183,7 @@ class SettingsViewModel(
                 themeDatastore
                     .getSeedColorFlow()
                     .onEach { flow ->
-                        _state.update { it.copy(theme = it.theme.copy(seedColor = Color(flow))) }
+                        _state.update { it.copy(theme = it.theme.copy(seedColor = flow)) }
                     }
                     .launchIn(this)
 

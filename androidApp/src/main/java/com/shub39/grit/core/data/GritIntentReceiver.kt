@@ -21,13 +21,13 @@ import android.content.Context
 import android.content.Intent
 import android.util.Log
 import com.shub39.grit.core.data.notification.GritNotificationManager
+import com.shub39.grit.core.habits.HabitRepo
+import com.shub39.grit.core.habits.HabitStatus
+import com.shub39.grit.core.now
+import com.shub39.grit.core.tasks.TaskRepo
 import com.shub39.grit.domain.AlarmScheduler
 import com.shub39.grit.domain.IntentActions
 import com.shub39.grit.domain.SettingsDatastore
-import com.shub39.grit.shared.ui.habits.domain.HabitRepo
-import com.shub39.grit.shared.ui.habits.domain.HabitStatus
-import com.shub39.grit.shared.ui.now
-import com.shub39.grit.shared.ui.tasks.domain.TaskRepo
 import kotlin.time.ExperimentalTime
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers

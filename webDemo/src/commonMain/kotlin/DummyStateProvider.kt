@@ -14,6 +14,8 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
+import com.shub39.grit.shared.ui.habit.HabitState
+import com.shub39.grit.shared.ui.habit.HabitsAction
 import com.shub39.grit.shared.ui.habits.domain.Habit
 import com.shub39.grit.shared.ui.habits.domain.HabitRanking
 import com.shub39.grit.shared.ui.habits.domain.HabitStatus
@@ -21,15 +23,13 @@ import com.shub39.grit.shared.ui.habits.domain.HabitWithAnalytics
 import com.shub39.grit.shared.ui.habits.domain.OverallAnalytics
 import com.shub39.grit.shared.ui.habits.domain.WeekDayFrequencyData
 import com.shub39.grit.shared.ui.habits.domain.WeeklyComparisonData
-import com.shub39.grit.shared.ui.habits.presentation.HabitState
-import com.shub39.grit.shared.ui.habits.presentation.HabitsAction
 import com.shub39.grit.shared.ui.now
-import com.shub39.grit.shared.ui.settings.presentation.SettingsAction
-import com.shub39.grit.shared.ui.settings.presentation.SettingsState
+import com.shub39.grit.shared.ui.setting.SettingsAction
+import com.shub39.grit.shared.ui.setting.SettingsState
+import com.shub39.grit.shared.ui.task.TaskAction
+import com.shub39.grit.shared.ui.task.TaskState
 import com.shub39.grit.shared.ui.tasks.domain.Category
 import com.shub39.grit.shared.ui.tasks.domain.Task
-import com.shub39.grit.shared.ui.tasks.presentation.TaskAction
-import com.shub39.grit.shared.ui.tasks.presentation.TaskState
 import kotlin.random.Random
 import kotlin.time.ExperimentalTime
 import kotlinx.coroutines.flow.MutableStateFlow

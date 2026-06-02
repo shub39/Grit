@@ -17,10 +17,10 @@
 package com.shub39.grit.core.data.backup
 
 import com.shub39.grit.core.data.Converters
-import com.shub39.grit.shared.ui.habits.domain.Habit
-import com.shub39.grit.shared.ui.habits.domain.HabitStatus
-import com.shub39.grit.shared.ui.tasks.domain.Category
-import com.shub39.grit.shared.ui.tasks.domain.Task
+import com.shub39.grit.core.habits.Habit
+import com.shub39.grit.core.habits.HabitStatus
+import com.shub39.grit.core.tasks.Category
+import com.shub39.grit.core.tasks.Task
 import kotlin.time.ExperimentalTime
 import kotlin.time.Instant
 import kotlinx.datetime.TimeZone

@@ -16,7 +16,7 @@
  */
 package com.shub39.grit.domain
 
-import com.shub39.grit.shared.ui.components.Changelog
+import com.shub39.grit.core.app.Changelog
 import kotlinx.coroutines.flow.Flow
 
 interface ChangelogManager {

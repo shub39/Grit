@@ -16,8 +16,8 @@
  */
 package com.shub39.grit.tasks.data
 
-import com.shub39.grit.shared.ui.tasks.domain.Category
-import com.shub39.grit.shared.ui.tasks.domain.Task
+import com.shub39.grit.core.tasks.Category
+import com.shub39.grit.core.tasks.Task
 import com.shub39.grit.tasks.data.database.CategoryEntity
 import com.shub39.grit.tasks.data.database.TaskEntity
 

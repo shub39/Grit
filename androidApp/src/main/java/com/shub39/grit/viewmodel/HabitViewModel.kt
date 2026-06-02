@@ -18,13 +18,13 @@ package com.shub39.grit.viewmodel
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.shub39.grit.core.habits.Habit
+import com.shub39.grit.core.habits.HabitRepo
+import com.shub39.grit.core.habits.HabitStatus
 import com.shub39.grit.domain.AlarmScheduler
 import com.shub39.grit.domain.SettingsDatastore
-import com.shub39.grit.shared.ui.habits.domain.Habit
-import com.shub39.grit.shared.ui.habits.domain.HabitRepo
-import com.shub39.grit.shared.ui.habits.domain.HabitStatus
-import com.shub39.grit.shared.ui.habits.presentation.HabitState
-import com.shub39.grit.shared.ui.habits.presentation.HabitsAction
+import com.shub39.grit.shared.ui.habit.HabitState
+import com.shub39.grit.shared.ui.habit.HabitsAction
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
