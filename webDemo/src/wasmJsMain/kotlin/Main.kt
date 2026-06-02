@@ -18,7 +18,7 @@ import androidx.compose.material3.windowsizeclass.calculateWindowSizeClass
 import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.window.ComposeViewport
-import com.shub39.grit.core.LocalWindowSizeClass
+import com.shub39.grit.shared.ui.LocalWindowSizeClass
 
 @OptIn(ExperimentalComposeUiApi::class)
 fun main() {

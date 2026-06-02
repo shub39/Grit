@@ -16,10 +16,10 @@
  */
 package com.shub39.grit.habits.data
 
-import com.shub39.grit.core.habits.domain.Habit
-import com.shub39.grit.core.habits.domain.HabitStatus
 import com.shub39.grit.habits.data.database.HabitEntity
 import com.shub39.grit.habits.data.database.HabitStatusEntity
+import com.shub39.grit.shared.ui.habits.domain.Habit
+import com.shub39.grit.shared.ui.habits.domain.HabitStatus
 
 fun HabitEntity.toHabit(): Habit {
     return Habit(

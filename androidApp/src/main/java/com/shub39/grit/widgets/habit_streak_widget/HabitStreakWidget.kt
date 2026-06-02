@@ -64,10 +64,10 @@ import androidx.glance.text.Text
 import androidx.glance.text.TextStyle
 import com.shub39.grit.R
 import com.shub39.grit.app.MainActivity
-import com.shub39.grit.core.habits.domain.Habit
-import com.shub39.grit.core.habits.domain.HabitRepo
-import com.shub39.grit.core.habits.domain.HabitWithAnalytics
-import com.shub39.grit.core.now
+import com.shub39.grit.shared.ui.habits.domain.Habit
+import com.shub39.grit.shared.ui.habits.domain.HabitRepo
+import com.shub39.grit.shared.ui.habits.domain.HabitWithAnalytics
+import com.shub39.grit.shared.ui.now
 import com.shub39.grit.widgets.WidgetSize
 import kotlinx.coroutines.launch
 import kotlinx.datetime.LocalDateTime

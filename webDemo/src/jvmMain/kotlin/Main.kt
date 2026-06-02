@@ -14,14 +14,11 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
-import androidx.compose.material3.windowsizeclass.ExperimentalMaterial3WindowSizeClassApi
 import androidx.compose.material3.windowsizeclass.calculateWindowSizeClass
 import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.ui.window.singleWindowApplication
-import com.shub39.grit.core.LocalWindowSizeClass
+import com.shub39.grit.shared.ui.LocalWindowSizeClass
 
-// only meant foe testing with hot reload
-@OptIn(ExperimentalMaterial3WindowSizeClassApi::class)
 fun main() {
     singleWindowApplication(title = "Hot Reload") {
         val windowSizeClass = calculateWindowSizeClass()

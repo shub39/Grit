@@ -18,9 +18,9 @@ package com.shub39.grit.app
 
 import androidx.compose.runtime.Immutable
 import androidx.compose.runtime.Stable
-import com.shub39.grit.core.components.VersionEntry
-import com.shub39.grit.core.settings.domain.Sections
-import com.shub39.grit.core.theme.Theme
+import com.shub39.grit.shared.ui.components.VersionEntry
+import com.shub39.grit.shared.ui.settings.domain.Sections
+import com.shub39.grit.shared.ui.theme.Theme
 
 @Stable
 @Immutable

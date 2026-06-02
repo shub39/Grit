@@ -16,10 +16,10 @@
  */
 package com.shub39.grit.habits.data.repository
 
-import com.shub39.grit.core.habits.domain.HabitStatus
-import com.shub39.grit.core.habits.domain.WeekDayFrequencyData
-import com.shub39.grit.core.habits.domain.WeeklyComparisonData
-import com.shub39.grit.core.now
+import com.shub39.grit.shared.ui.habits.domain.HabitStatus
+import com.shub39.grit.shared.ui.habits.domain.WeekDayFrequencyData
+import com.shub39.grit.shared.ui.habits.domain.WeeklyComparisonData
+import com.shub39.grit.shared.ui.now
 import kotlinx.datetime.DatePeriod
 import kotlinx.datetime.DateTimeUnit
 import kotlinx.datetime.DayOfWeek

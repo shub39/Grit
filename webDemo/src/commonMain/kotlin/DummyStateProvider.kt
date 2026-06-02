@@ -14,22 +14,22 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
-import com.shub39.grit.core.habits.domain.Habit
-import com.shub39.grit.core.habits.domain.HabitRanking
-import com.shub39.grit.core.habits.domain.HabitStatus
-import com.shub39.grit.core.habits.domain.HabitWithAnalytics
-import com.shub39.grit.core.habits.domain.OverallAnalytics
-import com.shub39.grit.core.habits.domain.WeekDayFrequencyData
-import com.shub39.grit.core.habits.domain.WeeklyComparisonData
-import com.shub39.grit.core.habits.presentation.HabitState
-import com.shub39.grit.core.habits.presentation.HabitsAction
-import com.shub39.grit.core.now
-import com.shub39.grit.core.settings.presentation.SettingsAction
-import com.shub39.grit.core.settings.presentation.SettingsState
-import com.shub39.grit.core.tasks.domain.Category
-import com.shub39.grit.core.tasks.domain.Task
-import com.shub39.grit.core.tasks.presentation.TaskAction
-import com.shub39.grit.core.tasks.presentation.TaskState
+import com.shub39.grit.shared.ui.habits.domain.Habit
+import com.shub39.grit.shared.ui.habits.domain.HabitRanking
+import com.shub39.grit.shared.ui.habits.domain.HabitStatus
+import com.shub39.grit.shared.ui.habits.domain.HabitWithAnalytics
+import com.shub39.grit.shared.ui.habits.domain.OverallAnalytics
+import com.shub39.grit.shared.ui.habits.domain.WeekDayFrequencyData
+import com.shub39.grit.shared.ui.habits.domain.WeeklyComparisonData
+import com.shub39.grit.shared.ui.habits.presentation.HabitState
+import com.shub39.grit.shared.ui.habits.presentation.HabitsAction
+import com.shub39.grit.shared.ui.now
+import com.shub39.grit.shared.ui.settings.presentation.SettingsAction
+import com.shub39.grit.shared.ui.settings.presentation.SettingsState
+import com.shub39.grit.shared.ui.tasks.domain.Category
+import com.shub39.grit.shared.ui.tasks.domain.Task
+import com.shub39.grit.shared.ui.tasks.presentation.TaskAction
+import com.shub39.grit.shared.ui.tasks.presentation.TaskState
 import kotlin.random.Random
 import kotlin.time.ExperimentalTime
 import kotlinx.coroutines.flow.MutableStateFlow

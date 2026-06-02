@@ -29,9 +29,9 @@ import androidx.core.app.NotificationCompat
 import androidx.core.app.NotificationManagerCompat
 import com.shub39.grit.R
 import com.shub39.grit.core.data.GritIntentReceiver
-import com.shub39.grit.core.habits.domain.Habit
-import com.shub39.grit.core.tasks.domain.Task
 import com.shub39.grit.domain.IntentActions
+import com.shub39.grit.shared.ui.habits.domain.Habit
+import com.shub39.grit.shared.ui.tasks.domain.Task
 import org.koin.core.annotation.Single
 
 @Single

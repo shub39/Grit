@@ -21,8 +21,8 @@ import androidx.sqlite.execSQL
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import androidx.test.platform.app.InstrumentationRegistry
 import com.google.common.truth.Truth.assertThat
-import com.shub39.grit.core.now
 import com.shub39.grit.habits.data.database.HabitDatabase
+import com.shub39.grit.shared.ui.now
 import kotlin.time.ExperimentalTime
 import kotlinx.coroutines.runBlocking
 import kotlinx.datetime.DateTimeUnit

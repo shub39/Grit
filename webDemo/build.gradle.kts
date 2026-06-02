@@ -43,7 +43,7 @@ kotlin {
 
     sourceSets {
         commonMain.dependencies {
-            implementation(projects.shared)
+            implementation(projects.shared.ui)
 
             implementation(libs.compose.material3)
             implementation(libs.compose.runtime)
