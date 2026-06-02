@@ -14,10 +14,19 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
-package com.shub39.grit.domain
+package com.shub39.grit.core.interfaces
 
-interface BiometricUtils {
-    fun getAuthenticators(): Int
+import com.shub39.grit.core.habits.Habit
+import com.shub39.grit.core.tasks.Task
 
-    fun authenticationAvailable(): Boolean
+interface AlarmScheduler {
+    fun schedule(habit: Habit)
+
+    fun schedule(task: Task)
+
+    fun cancel(habit: Habit)
+
+    fun cancel(task: Task)
+
+    fun cancelAll()
 }

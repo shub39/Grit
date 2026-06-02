@@ -23,8 +23,8 @@ import com.shub39.grit.core.habits.HabitRepo
 import com.shub39.grit.core.habits.HabitStatus
 import com.shub39.grit.core.habits.HabitWithAnalytics
 import com.shub39.grit.core.habits.OverallAnalytics
+import com.shub39.grit.core.interfaces.SettingsDatastore
 import com.shub39.grit.core.now
-import com.shub39.grit.domain.SettingsDatastore
 import com.shub39.grit.habits.data.database.HabitStatusDao
 import com.shub39.grit.habits.data.database.HabitsDao
 import com.shub39.grit.habits.data.toHabit

@@ -30,7 +30,6 @@ import androidx.compose.material3.NavigationRail
 import androidx.compose.material3.NavigationRailItem
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
-import androidx.compose.material3.windowsizeclass.WindowWidthSizeClass
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.getValue
@@ -54,9 +53,9 @@ import com.shub39.grit.shared.ui.navigation.fadeTransitionMetadata
 import com.shub39.grit.shared.ui.navigation.verticalTransitionMetadata
 import com.shub39.grit.shared.ui.setting.ui.SettingsGraph
 import com.shub39.grit.shared.ui.task.ui.TasksPage
-import com.shub39.grit.viewmodel.HabitViewModel
-import com.shub39.grit.viewmodel.SettingsViewModel
-import com.shub39.grit.viewmodel.TasksViewModel
+import com.shub39.grit.shared.ui.viewmodel.HabitViewModel
+import com.shub39.grit.shared.ui.viewmodel.SettingsViewModel
+import com.shub39.grit.shared.ui.viewmodel.TasksViewModel
 import kotlinx.serialization.Serializable
 import org.jetbrains.compose.resources.painterResource
 import org.jetbrains.compose.resources.stringResource

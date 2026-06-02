@@ -14,15 +14,11 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
-package com.shub39.grit.billing
+package com.shub39.grit.core.interfaces
 
-import com.shub39.grit.core.billing.BillingHandler
-import com.shub39.grit.core.billing.SubscriptionResult
-import org.koin.core.annotation.Single
+import com.shub39.grit.core.app.Changelog
+import kotlinx.coroutines.flow.Flow
 
-@Single(binds = [BillingHandler::class])
-class BillingHandler : BillingHandler {
-    override suspend fun isPlusUser(): Boolean = true
-
-    override suspend fun userResult(): SubscriptionResult = SubscriptionResult.Subscribed
+interface ChangelogManager {
+    val changelogs: Flow<Changelog>
 }

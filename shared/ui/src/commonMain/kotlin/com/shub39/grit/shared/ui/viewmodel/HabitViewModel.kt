@@ -14,15 +14,15 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
-package com.shub39.grit.viewmodel
+package com.shub39.grit.shared.ui.viewmodel
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.shub39.grit.core.habits.Habit
 import com.shub39.grit.core.habits.HabitRepo
 import com.shub39.grit.core.habits.HabitStatus
-import com.shub39.grit.domain.AlarmScheduler
-import com.shub39.grit.domain.SettingsDatastore
+import com.shub39.grit.core.interfaces.AlarmScheduler
+import com.shub39.grit.core.interfaces.SettingsDatastore
 import com.shub39.grit.shared.ui.habit.HabitState
 import com.shub39.grit.shared.ui.habit.HabitsAction
 import kotlinx.coroutines.Job
@@ -38,12 +38,13 @@ import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import kotlinx.datetime.LocalDate
 import org.koin.core.annotation.KoinViewModel
+import org.koin.core.annotation.Provided
 
 @KoinViewModel
 class HabitViewModel(
-    private val scheduler: AlarmScheduler,
-    private val repo: HabitRepo,
-    private val datastore: SettingsDatastore,
+    @Provided private val scheduler: AlarmScheduler,
+    @Provided private val repo: HabitRepo,
+    @Provided private val datastore: SettingsDatastore,
 ) : ViewModel() {
     private var habitStatusJob: Job? = null
     private var overallAnalyticsJob: Job? = null
@@ -92,13 +93,11 @@ class HabitViewModel(
                     _state.update { it.copy(showHabitAddSheet = true) }
                 }
 
-                DismissAddHabitDialog ->
-                    _state.update { it.copy(showHabitAddSheet = false) }
+                DismissAddHabitDialog -> _state.update { it.copy(showHabitAddSheet = false) }
 
                 is OnToggleCompactView -> datastore.setCompactView(action.pref)
 
-                is OnToggleEditState ->
-                    _state.update { it.copy(editState = action.pref) }
+                is OnToggleEditState -> _state.update { it.copy(editState = action.pref) }
 
                 is OnTransientHabitReorder -> {
                     val currentList = _state.value.habitsWithAnalytics.toMutableList()

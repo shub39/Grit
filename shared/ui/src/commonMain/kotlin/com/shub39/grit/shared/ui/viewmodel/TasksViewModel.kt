@@ -14,15 +14,15 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
-package com.shub39.grit.viewmodel
+package com.shub39.grit.shared.ui.viewmodel
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.shub39.grit.core.interfaces.AlarmScheduler
+import com.shub39.grit.core.interfaces.SettingsDatastore
 import com.shub39.grit.core.tasks.Category
 import com.shub39.grit.core.tasks.CategoryColors
 import com.shub39.grit.core.tasks.TaskRepo
-import com.shub39.grit.domain.AlarmScheduler
-import com.shub39.grit.domain.SettingsDatastore
 import com.shub39.grit.shared.ui.task.TaskAction
 import com.shub39.grit.shared.ui.task.TaskState
 import kotlinx.coroutines.Job
@@ -37,12 +37,13 @@ import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import org.koin.core.annotation.KoinViewModel
+import org.koin.core.annotation.Provided
 
 @KoinViewModel
 class TasksViewModel(
-    private val repo: TaskRepo,
-    private val scheduler: AlarmScheduler,
-    private val datastore: SettingsDatastore,
+    @Provided private val repo: TaskRepo,
+    @Provided private val scheduler: AlarmScheduler,
+    @Provided private val datastore: SettingsDatastore,
 ) : ViewModel() {
 
     companion object {

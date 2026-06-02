@@ -132,8 +132,7 @@ fun CalendarDayContent(
                     Modifier.fillMaxSize().background(color = MaterialTheme.colorScheme.primary),
                 contentAlignment = Alignment.Center,
             ) {
-                val isStreakEnd =
-                    streakPosition == START || streakPosition == END
+                val isStreakEnd = streakPosition == START || streakPosition == END
 
                 if (isStreakEnd) {
                     Box(

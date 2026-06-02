@@ -30,8 +30,8 @@ import androidx.core.app.NotificationManagerCompat
 import com.shub39.grit.R
 import com.shub39.grit.core.data.GritIntentReceiver
 import com.shub39.grit.core.habits.Habit
+import com.shub39.grit.core.interfaces.IntentActions
 import com.shub39.grit.core.tasks.Task
-import com.shub39.grit.domain.IntentActions
 import org.koin.core.annotation.Single
 
 @Single

@@ -14,15 +14,12 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
-package com.shub39.grit.billing
+package com.shub39.grit.core.interfaces
 
-import com.shub39.grit.core.billing.BillingHandler
-import com.shub39.grit.core.billing.SubscriptionResult
-import org.koin.core.annotation.Single
-
-@Single(binds = [BillingHandler::class])
-class BillingHandler : BillingHandler {
-    override suspend fun isPlusUser(): Boolean = true
-
-    override suspend fun userResult(): SubscriptionResult = SubscriptionResult.Subscribed
+// all the different intent actions passed
+enum class IntentActions(val action: String) {
+    ADD_HABIT_STATUS("add_habit_status"),
+    HABIT_NOTIFICATION("habit"),
+    TASK_NOTIFICATION("task_notification"),
+    MARK_TASK_DONE("mark_task_done"),
 }

@@ -14,16 +14,14 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
-package com.shub39.grit.viewmodel
+package com.shub39.grit.shared.ui.viewmodel
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.shub39.grit.BuildConfig
-import com.shub39.grit.billing.BillingHandler
-import com.shub39.grit.billing.SubscriptionResult
-import com.shub39.grit.domain.ChangelogManager
-import com.shub39.grit.domain.SettingsDatastore
-import com.shub39.grit.domain.ThemeDatastore
+import com.shub39.grit.core.billing.BillingHandler
+import com.shub39.grit.core.interfaces.ChangelogManager
+import com.shub39.grit.core.interfaces.SettingsDatastore
+import com.shub39.grit.core.interfaces.ThemeDatastore
 import com.shub39.grit.shared.ui.app.MainAppState
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -38,13 +36,14 @@ import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import org.koin.core.annotation.KoinViewModel
+import org.koin.core.annotation.Provided
 
 @KoinViewModel
 class MainViewModel(
-    private val themeDatastore: ThemeDatastore,
-    private val settingsDatastore: SettingsDatastore,
-    private val billingHandler: BillingHandler,
-    private val changelogManager: ChangelogManager,
+    @Provided private val themeDatastore: ThemeDatastore,
+    @Provided private val settingsDatastore: SettingsDatastore,
+    @Provided private val billingHandler: BillingHandler,
+    @Provided private val changelogManager: ChangelogManager,
 ) : ViewModel() {
     var observerJob: Job? = null
 
@@ -126,7 +125,7 @@ class MainViewModel(
             val changeLogs = changelogManager.changelogs.first()
             val lastShownChangelog = settingsDatastore.getLastChangelogShown().first()
 
-            if (BuildConfig.DEBUG || lastShownChangelog != BuildConfig.VERSION_NAME) {
+            if (lastShownChangelog != changeLogs.firstOrNull()?.version) {
                 _state.update { it.copy(currentChangelog = changeLogs.firstOrNull()) }
             }
         }
@@ -145,8 +144,9 @@ class MainViewModel(
 
     fun dismissChangelog() {
         _state.update { it.copy(currentChangelog = null) }
-        viewModelScope.launch {
-            settingsDatastore.updateLastChangelogShown(BuildConfig.VERSION_NAME)
+
+        _state.value.currentChangelog?.version?.let {
+            viewModelScope.launch { settingsDatastore.updateLastChangelogShown(it) }
         }
     }
 }

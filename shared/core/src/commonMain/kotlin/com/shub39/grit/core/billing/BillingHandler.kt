@@ -14,11 +14,10 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
-package com.shub39.grit.domain
+package com.shub39.grit.core.billing
 
-import com.shub39.grit.core.app.Changelog
-import kotlinx.coroutines.flow.Flow
+interface BillingHandler {
+    suspend fun isPlusUser(): Boolean
 
-interface ChangelogManager {
-    val changelogs: Flow<Changelog>
+    suspend fun userResult(): SubscriptionResult
 }

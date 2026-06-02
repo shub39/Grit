@@ -14,7 +14,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
-package com.shub39.grit.billing
+package com.shub39.grit.core.billing
 
 sealed interface SubscriptionResult {
     data object Subscribed : SubscriptionResult

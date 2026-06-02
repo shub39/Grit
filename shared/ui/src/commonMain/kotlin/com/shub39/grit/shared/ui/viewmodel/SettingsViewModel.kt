@@ -14,17 +14,17 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
-package com.shub39.grit.viewmodel
+package com.shub39.grit.shared.ui.viewmodel
 
 import androidx.compose.ui.graphics.toArgb
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.shub39.grit.core.interfaces.BiometricUtils
+import com.shub39.grit.core.interfaces.ChangelogManager
+import com.shub39.grit.core.interfaces.SettingsDatastore
+import com.shub39.grit.core.interfaces.ThemeDatastore
 import com.shub39.grit.core.settings.backup.ExportRepo
 import com.shub39.grit.core.settings.backup.RestoreRepo
-import com.shub39.grit.domain.BiometricUtils
-import com.shub39.grit.domain.ChangelogManager
-import com.shub39.grit.domain.SettingsDatastore
-import com.shub39.grit.domain.ThemeDatastore
 import com.shub39.grit.shared.ui.setting.BackupState
 import com.shub39.grit.shared.ui.setting.SettingsAction
 import com.shub39.grit.shared.ui.setting.SettingsState
@@ -40,15 +40,16 @@ import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import org.koin.core.annotation.KoinViewModel
+import org.koin.core.annotation.Provided
 
 @KoinViewModel
 class SettingsViewModel(
-    private val exportRepo: ExportRepo,
-    private val restoreRepo: RestoreRepo,
-    private val themeDatastore: ThemeDatastore,
-    private val settingsDatastore: SettingsDatastore,
-    private val changelogManager: ChangelogManager,
-    private val biometricUtils: BiometricUtils,
+    @Provided private val exportRepo: ExportRepo,
+    @Provided private val restoreRepo: RestoreRepo,
+    @Provided private val themeDatastore: ThemeDatastore,
+    @Provided private val settingsDatastore: SettingsDatastore,
+    @Provided private val changelogManager: ChangelogManager,
+    @Provided private val biometricUtils: BiometricUtils,
 ) : ViewModel() {
     private var observeJob: Job? = null
 
@@ -77,14 +78,11 @@ class SettingsViewModel(
 
                 is ChangePaletteStyle -> themeDatastore.setPaletteStyle(action.style)
 
-                is ChangeSeedColor ->
-                    themeDatastore.setSeedColor(action.color.toArgb())
+                is ChangeSeedColor -> themeDatastore.setSeedColor(action.color.toArgb())
 
-                is ChangeStartOfTheWeek ->
-                    settingsDatastore.setStartOfWeek(action.pref)
+                is ChangeStartOfTheWeek -> settingsDatastore.setStartOfWeek(action.pref)
 
-                is ChangeStartingPage ->
-                    settingsDatastore.setStartingPage(action.page)
+                is ChangeStartingPage -> settingsDatastore.setStartingPage(action.page)
 
                 OnResetBackupState -> {
                     _state.update { it.copy(backupState = BackupState()) }
@@ -123,16 +121,13 @@ class SettingsViewModel(
                     }
                 }
 
-                is ChangePauseNotifications ->
-                    settingsDatastore.setNotifications(action.pref)
+                is ChangePauseNotifications -> settingsDatastore.setNotifications(action.pref)
 
                 is ChangeFontPref -> themeDatastore.setFontPref(action.font)
 
-                is ChangeBiometricLock ->
-                    settingsDatastore.setBiometricPref(action.pref)
+                is ChangeBiometricLock -> settingsDatastore.setBiometricPref(action.pref)
 
-                is ChangeReorderTasks ->
-                    settingsDatastore.setTaskReorderPref(action.pref)
+                is ChangeReorderTasks -> settingsDatastore.setTaskReorderPref(action.pref)
             }
         }
 
