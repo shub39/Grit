@@ -182,10 +182,9 @@ fun CalendarHeatMap(
             }
         }
 
-        AnimatedContent(targetState = calendarType, modifier = Modifier.fillMaxSize()) { currentType
-            ->
-            when (currentType) {
-                CalendarType.YEAR -> {
+        AnimatedContent(targetState = calendarType, modifier = Modifier.fillMaxSize()) { type ->
+            when (type) {
+                YEAR -> {
                     YearlyMap(
                         today = today,
                         state = state,
@@ -198,7 +197,7 @@ fun CalendarHeatMap(
                     )
                 }
 
-                CalendarType.MONTH -> {
+                MONTH -> {
                     MonthlyMap(
                         state = state,
                         today = today,

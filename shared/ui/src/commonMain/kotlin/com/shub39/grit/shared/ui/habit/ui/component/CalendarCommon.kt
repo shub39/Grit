@@ -95,12 +95,12 @@ fun CalendarDayContent(
 
     val donePrevious = day.date.minusDays(1) in doneDates
     val doneAfter = day.date.plusDays(1) in doneDates
-    val streakPosition =
+    val streakPosition: StreakPosition =
         when {
-            donePrevious && doneAfter -> StreakPosition.MIDDLE
-            donePrevious -> StreakPosition.END
-            doneAfter -> StreakPosition.START
-            else -> StreakPosition.ISOLATED
+            donePrevious && doneAfter -> MIDDLE
+            donePrevious -> END
+            doneAfter -> START
+            else -> ISOLATED
         }
 
     Box(
@@ -133,7 +133,7 @@ fun CalendarDayContent(
                 contentAlignment = Alignment.Center,
             ) {
                 val isStreakEnd =
-                    streakPosition == StreakPosition.START || streakPosition == StreakPosition.END
+                    streakPosition == START || streakPosition == END
 
                 if (isStreakEnd) {
                     Box(

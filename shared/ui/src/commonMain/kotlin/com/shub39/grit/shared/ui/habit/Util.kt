@@ -17,12 +17,6 @@
 package com.shub39.grit.shared.ui.habit
 
 import kotlinx.datetime.DayOfWeek
-import kotlinx.datetime.LocalDate
-import kotlinx.datetime.YearMonth
-import kotlinx.datetime.format
-import kotlinx.datetime.format.MonthNames
-import kotlinx.datetime.format.char
-import kotlinx.datetime.yearMonth
 
 fun daysStartingFrom(start: DayOfWeek): Set<DayOfWeek> {
     val allDays = DayOfWeek.entries
@@ -46,18 +40,4 @@ fun getOrdinalSuffix(day: Int): String {
                 else -> "${day}th"
             }
     }
-}
-
-fun formatDateWithOrdinal(date: LocalDate): String {
-    val day = date.day
-    val yearMonth =
-        date.yearMonth.format(
-            YearMonth.Format {
-                monthName(MonthNames.ENGLISH_ABBREVIATED)
-                char(' ')
-                year()
-            }
-        )
-
-    return "${getOrdinalSuffix(day)} $yearMonth"
 }

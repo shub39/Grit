@@ -97,9 +97,9 @@ actual fun PaletteStylePicker(
                         primary = seedColor,
                         isDark =
                             when (appTheme) {
-                                AppTheme.SYSTEM -> isSystemInDarkTheme()
-                                AppTheme.DARK -> true
-                                AppTheme.LIGHT -> false
+                                SYSTEM -> isSystemInDarkTheme()
+                                DARK -> true
+                                LIGHT -> false
                             },
                         isAmoled = isAmoled,
                         style = style.toMPaletteStyle(),

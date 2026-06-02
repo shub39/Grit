@@ -129,10 +129,9 @@ fun Calendar(
             }
         }
 
-        AnimatedContent(targetState = calendarType, modifier = Modifier.fillMaxSize()) { currentType
-            ->
-            when (currentType) {
-                CalendarType.YEAR -> {
+        AnimatedContent(targetState = calendarType, modifier = Modifier.fillMaxSize()) { type ->
+            when (type) {
+                YEAR -> {
                     YearlyCalendar(
                         today = today,
                         state = state,
@@ -144,7 +143,7 @@ fun Calendar(
                     )
                 }
 
-                CalendarType.MONTH -> {
+                MONTH -> {
                     MonthlyCalendar(
                         state = state,
                         doneDates = doneDates,

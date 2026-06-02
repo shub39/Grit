@@ -67,15 +67,15 @@ class HabitViewModel(
     fun onAction(action: HabitsAction) {
         viewModelScope.launch {
             when (action) {
-                is HabitsAction.AddHabit -> upsertHabit(action.habit)
+                is AddHabit -> upsertHabit(action.habit)
 
-                is HabitsAction.DeleteHabit -> deleteHabit(action.habit)
+                is DeleteHabit -> deleteHabit(action.habit)
 
-                is HabitsAction.InsertStatus -> insertHabitStatus(action.habit, action.date)
+                is InsertStatus -> insertHabitStatus(action.habit, action.date)
 
-                is HabitsAction.UpdateHabit -> upsertHabit(action.habit)
+                is UpdateHabit -> upsertHabit(action.habit)
 
-                HabitsAction.ReorderHabits -> {
+                ReorderHabits -> {
                     val currentList =
                         _state.value.habitsWithAnalytics.mapIndexed { index, analytics ->
                             analytics.habit.copy(index = index)
@@ -84,29 +84,29 @@ class HabitViewModel(
                     currentList.forEach { upsertHabit(it) }
                 }
 
-                is HabitsAction.PrepareAnalytics -> {
+                is PrepareAnalytics -> {
                     _state.update { it.copy(analyticsHabitId = action.habit?.id) }
                 }
 
-                HabitsAction.OnAddHabitClicked -> {
+                OnAddHabitClicked -> {
                     _state.update { it.copy(showHabitAddSheet = true) }
                 }
 
-                HabitsAction.DismissAddHabitDialog ->
+                DismissAddHabitDialog ->
                     _state.update { it.copy(showHabitAddSheet = false) }
 
-                is HabitsAction.OnToggleCompactView -> datastore.setCompactView(action.pref)
+                is OnToggleCompactView -> datastore.setCompactView(action.pref)
 
-                is HabitsAction.OnToggleEditState ->
+                is OnToggleEditState ->
                     _state.update { it.copy(editState = action.pref) }
 
-                is HabitsAction.OnTransientHabitReorder -> {
+                is OnTransientHabitReorder -> {
                     val currentList = _state.value.habitsWithAnalytics.toMutableList()
                     currentList.add(action.to, currentList.removeAt(action.from))
                     _state.update { it.copy(habitsWithAnalytics = currentList) }
                 }
 
-                is HabitsAction.FetchCompletedHabitsForDate -> {
+                is FetchCompletedHabitsForDate -> {
                     val completedHabits =
                         repo.getCompletedHabitsForDate(action.date).map { it.title }
 

@@ -99,10 +99,10 @@ fun WeeklyActivity(lineChartData: List<Double>, modifier: Modifier = Modifier) {
                         onCheckedChange = { selectedTimePeriod = period },
                         shapes =
                             when (period) {
-                                WeeklyTimePeriod.MONTHS_2 ->
+                                MONTHS_2 ->
                                     ButtonGroupDefaults.connectedLeadingButtonShapes()
 
-                                WeeklyTimePeriod.YEARS_1 ->
+                                YEARS_1 ->
                                     ButtonGroupDefaults.connectedTrailingButtonShapes()
 
                                 else -> ButtonGroupDefaults.connectedMiddleButtonShapes()

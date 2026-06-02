@@ -114,7 +114,7 @@ private fun MainApp(state: MainAppState, onNavigateToPaywall: () -> Unit) {
         )
 
     when (windowSizeClass.widthSizeClass) {
-        WindowWidthSizeClass.Compact -> {
+        Compact -> {
             Scaffold(
                 bottomBar = {
                     AppNavBar(

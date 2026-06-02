@@ -68,7 +68,7 @@ class TasksViewModel(
     fun onAction(action: TaskAction) {
         viewModelScope.launch {
             when (action) {
-                is TaskAction.UpsertTask -> {
+                is UpsertTask -> {
                     if (action.task.status) {
                         repo.upsertTask(action.task.copy(reminder = null))
                     } else {
@@ -78,27 +78,27 @@ class TasksViewModel(
                     }
                 }
 
-                TaskAction.DeleteTasks -> {
+                DeleteTasks -> {
                     deleteTasks()
                 }
 
-                is TaskAction.ChangeCategory -> {
+                is ChangeCategory -> {
                     _state.update { it.copy(currentCategory = action.category) }
                 }
 
-                is TaskAction.AddCategory -> {
+                is AddCategory -> {
                     upsertCategory(action.category)
 
                     _state.update { it.copy(currentCategory = it.tasks.keys.firstOrNull()) }
                 }
 
-                is TaskAction.ReorderTasks -> {
+                is ReorderTasks -> {
                     for (pair in action.mapping) {
                         repo.updateTaskIndexById(pair.second.id, pair.first)
                     }
                 }
 
-                is TaskAction.ReorderCategories -> {
+                is ReorderCategories -> {
                     for (category in action.mapping) {
                         upsertCategory(category.second.copy(index = category.first))
                     }
@@ -108,7 +108,7 @@ class TasksViewModel(
                     _state.update { it.copy(currentCategory = it.tasks.keys.firstOrNull()) }
                 }
 
-                is TaskAction.DeleteCategory -> {
+                is DeleteCategory -> {
                     deleteCategory(action.category)
 
                     delay(REORDER_DELAY)
@@ -116,7 +116,7 @@ class TasksViewModel(
                     _state.update { it.copy(currentCategory = it.tasks.keys.firstOrNull()) }
                 }
 
-                is TaskAction.DeleteTask -> repo.deleteTask(action.task)
+                is DeleteTask -> repo.deleteTask(action.task)
             }
         }
     }

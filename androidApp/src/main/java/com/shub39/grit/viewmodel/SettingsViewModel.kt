@@ -67,30 +67,30 @@ class SettingsViewModel(
     fun onAction(action: SettingsAction) =
         viewModelScope.launch {
             when (action) {
-                is SettingsAction.ChangeAmoled -> themeDatastore.setAmoledPref(action.pref)
+                is ChangeAmoled -> themeDatastore.setAmoledPref(action.pref)
 
-                is SettingsAction.ChangeAppTheme -> themeDatastore.setAppTheme(action.appTheme)
+                is ChangeAppTheme -> themeDatastore.setAppTheme(action.appTheme)
 
-                is SettingsAction.ChangeIs24Hr -> settingsDatastore.setIs24Hr(action.pref)
+                is ChangeIs24Hr -> settingsDatastore.setIs24Hr(action.pref)
 
-                is SettingsAction.ChangeMaterialYou -> themeDatastore.setMaterialYou(action.pref)
+                is ChangeMaterialYou -> themeDatastore.setMaterialYou(action.pref)
 
-                is SettingsAction.ChangePaletteStyle -> themeDatastore.setPaletteStyle(action.style)
+                is ChangePaletteStyle -> themeDatastore.setPaletteStyle(action.style)
 
-                is SettingsAction.ChangeSeedColor ->
+                is ChangeSeedColor ->
                     themeDatastore.setSeedColor(action.color.toArgb())
 
-                is SettingsAction.ChangeStartOfTheWeek ->
+                is ChangeStartOfTheWeek ->
                     settingsDatastore.setStartOfWeek(action.pref)
 
-                is SettingsAction.ChangeStartingPage ->
+                is ChangeStartingPage ->
                     settingsDatastore.setStartingPage(action.page)
 
-                SettingsAction.OnResetBackupState -> {
+                OnResetBackupState -> {
                     _state.update { it.copy(backupState = BackupState()) }
                 }
 
-                SettingsAction.OnExport -> {
+                OnExport -> {
                     _state.update {
                         it.copy(backupState = it.backupState.copy(exportState = EXPORTING))
                     }
@@ -102,7 +102,7 @@ class SettingsViewModel(
                     }
                 }
 
-                SettingsAction.OnRestore -> {
+                OnRestore -> {
                     _state.update {
                         it.copy(backupState = it.backupState.copy(restoreState = RESTORING))
                     }
@@ -123,15 +123,15 @@ class SettingsViewModel(
                     }
                 }
 
-                is SettingsAction.ChangePauseNotifications ->
+                is ChangePauseNotifications ->
                     settingsDatastore.setNotifications(action.pref)
 
-                is SettingsAction.ChangeFontPref -> themeDatastore.setFontPref(action.font)
+                is ChangeFontPref -> themeDatastore.setFontPref(action.font)
 
-                is SettingsAction.ChangeBiometricLock ->
+                is ChangeBiometricLock ->
                     settingsDatastore.setBiometricPref(action.pref)
 
-                is SettingsAction.ChangeReorderTasks ->
+                is ChangeReorderTasks ->
                     settingsDatastore.setTaskReorderPref(action.pref)
             }
         }

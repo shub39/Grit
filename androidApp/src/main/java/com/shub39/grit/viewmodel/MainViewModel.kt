@@ -136,7 +136,7 @@ class MainViewModel(
         val isSubscribed = billingHandler.userResult()
 
         when (isSubscribed) {
-            SubscriptionResult.Subscribed -> {
+            Subscribed -> {
                 _state.update { it.copy(isUserSubscribed = true) }
             }
             else -> {}
