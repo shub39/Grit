@@ -23,6 +23,7 @@ plugins {
     alias(libs.plugins.compose.multiplatform)
     alias(libs.plugins.compose.compiler)
     alias(libs.plugins.kotlin.serialization)
+    alias(libs.plugins.koin.compiler)
 }
 
 kotlin {
@@ -44,6 +45,7 @@ kotlin {
     sourceSets {
         commonMain.dependencies {
             implementation(projects.shared.ui)
+            implementation(projects.shared.core)
 
             implementation(libs.compose.material3)
             implementation(libs.compose.runtime)
@@ -53,6 +55,12 @@ kotlin {
             implementation(libs.jetbrains.navigation3.ui)
             implementation(libs.kotlinx.datetime)
             implementation(libs.compose.windowsizeclass)
+
+            implementation(libs.koin.core)
+            implementation(libs.koin.compose)
+            implementation(libs.koin.compose.viewmodel)
+            implementation(libs.koin.compose.viewmodel.navigation)
+            implementation(libs.koin.annotations)
         }
 
         jvmMain.dependencies {
