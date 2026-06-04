@@ -46,11 +46,14 @@ import kotlinx.datetime.DatePeriod
 import kotlinx.datetime.DateTimeUnit
 import kotlinx.datetime.DayOfWeek
 import kotlinx.datetime.LocalDate
+import kotlinx.datetime.LocalDateTime
+import kotlinx.datetime.LocalTime
 import kotlinx.datetime.daysUntil
 import kotlinx.datetime.format.DayOfWeekNames
 import kotlinx.datetime.isoDayNumber
 import kotlinx.datetime.minus
 import kotlinx.datetime.plus
+import kotlin.random.Random
 import org.koin.core.annotation.Single
 
 @Single(binds = [ThemeDatastore::class])
@@ -156,6 +159,21 @@ class TaskRepoStub : TaskRepo {
         listOf(Category(id = 1, name = "General", index = 0, color = "#FFFFFF"))
     )
 
+    init {
+        val work = Category(id = 2, name = "Work", index = 1, color = "#4285F4")
+        val personal = Category(id = 3, name = "Personal", index = 2, color = "#34A853")
+        _categories.update { it + listOf(work, personal) }
+
+        _tasks.update {
+            listOf(
+                Task(id = 1, categoryId = 1, title = "Welcome to Grit! 🚀"),
+                Task(id = 2, categoryId = 2, title = "Complete project documentation"),
+                Task(id = 3, categoryId = 2, title = "Team meeting", status = true),
+                Task(id = 4, categoryId = 3, title = "Buy groceries 🛒")
+            )
+        }
+    }
+
     override fun getTasksFlow(): Flow<Map<Category, List<Task>>> =
         _tasks.asStateFlow().map { taskList ->
             val categories = _categories.value
@@ -235,6 +253,41 @@ class HabitRepoStub(
         datastore.getStartOfTheWeekPref().onEach { day ->
             _firstDayOfWeek.update { day }
         }.launchIn(CoroutineScope(Dispatchers.Default))
+
+        val today = LocalDate.now()
+        val exercise = Habit(
+            id = 1,
+            title = "Exercise",
+            description = "30 mins of physical activity",
+            time = LocalDateTime(today, LocalTime(8, 0)),
+            days = DayOfWeek.entries.toSet(),
+            index = 0,
+            reminder = true
+        )
+        val read = Habit(
+            id = 2,
+            title = "Read",
+            description = "Read 10 pages of a book",
+            time = LocalDateTime(today, LocalTime(21, 0)),
+            days = DayOfWeek.entries.toSet(),
+            index = 1,
+            reminder = true
+        )
+        _habits.update { listOf(exercise, read) }
+
+        _statuses.update {
+            val generatedStatuses = mutableListOf<HabitStatus>()
+            var statusId = 1L
+            listOf(exercise, read).forEach { habit ->
+                for (i in 0..180) {
+                    val date = today.minus(i, DateTimeUnit.DAY)
+                    if (Random.nextFloat() < 0.7f) {
+                        generatedStatuses.add(HabitStatus(id = statusId++, habitId = habit.id, date = date))
+                    }
+                }
+            }
+            generatedStatuses
+        }
     }
 
     override suspend fun upsertHabit(habit: Habit) {
