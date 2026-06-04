@@ -59,7 +59,7 @@ class MainViewModel(
             }
             .stateIn(
                 scope = viewModelScope,
-                started = SharingStarted.Companion.Eagerly,
+                started = SharingStarted.Eagerly,
                 initialValue = MainAppState(),
             )
 

@@ -17,6 +17,7 @@ fun main() {
     startKoin<AppModule>()
 
     ComposeViewport {
+
         val windowSizeClass = calculateWindowSizeClass()
         val viewmodel = koinViewModel<MainViewModel>()
         val state by viewmodel.state.collectAsStateWithLifecycle()

@@ -26,8 +26,14 @@ plugins {
     alias(libs.plugins.koin.compiler)
 }
 
+koinCompiler {
+    compileSafety = false // wasmJs builds won't compile
+}
+
 kotlin {
     compilerOptions {
+        freeCompilerArgs.add("-Xcontext-sensitive-resolution")
+        freeCompilerArgs.add("-Xexpect-actual-classes")
         optIn.add("androidx.compose.material3.ExperimentalMaterial3Api")
         optIn.add("androidx.compose.material3.ExperimentalMaterial3ExpressiveApi")
         optIn.add(

@@ -77,12 +77,12 @@ fun SettingsGraph(
     onNavigateToPaywall: () -> Unit,
     modifier: Modifier = Modifier,
 ) =
-    PageFill(modifier = modifier) {
+    PageFill(modifier = modifier.background(MaterialTheme.colorScheme.background)) {
         val backStack = rememberNavBackStack(configuration, SettingsRoutes.Root)
 
         NavDisplay(
             modifier =
-                Modifier.background(MaterialTheme.colorScheme.background)
+                Modifier
                     .widthIn(max = 600.dp)
                     .fillMaxSize(),
             backStack = backStack,
