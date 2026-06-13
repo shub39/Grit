@@ -1,5 +1,8 @@
 # Changelog
 
+## 6.0.1
+- Updated Translations
+
 ## 6.0.0
 - Added new Consistency Stat in Habit Analytics
 - Redesigned Weekly Comparison Stat, Displays weekly comparison up to 1 year

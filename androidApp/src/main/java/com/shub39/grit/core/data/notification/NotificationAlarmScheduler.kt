@@ -23,11 +23,11 @@ import android.content.Intent
 import android.os.Build
 import android.util.Log
 import com.shub39.grit.core.data.GritIntentReceiver
-import com.shub39.grit.core.habits.domain.Habit
+import com.shub39.grit.core.habits.Habit
+import com.shub39.grit.core.interfaces.AlarmScheduler
+import com.shub39.grit.core.interfaces.IntentActions
 import com.shub39.grit.core.now
-import com.shub39.grit.core.tasks.domain.Task
-import com.shub39.grit.domain.AlarmScheduler
-import com.shub39.grit.domain.IntentActions
+import com.shub39.grit.core.tasks.Task
 import kotlin.time.ExperimentalTime
 import kotlinx.datetime.DateTimeUnit
 import kotlinx.datetime.LocalDateTime
@@ -89,7 +89,7 @@ class NotificationAlarmScheduler(private val context: Context) : AlarmScheduler 
         if (task.reminder == null) return
         val scheduleTime = task.reminder!!
 
-        val now = LocalDateTime.Companion.now()
+        val now = LocalDateTime.now()
 
         if (scheduleTime < now) {
             Log.d(TAG, "Task '${task.title}' reminder time is in the past")
@@ -112,7 +112,7 @@ class NotificationAlarmScheduler(private val context: Context) : AlarmScheduler 
 
         alarmManager.setExactAndAllowWhileIdle(
             AlarmManager.RTC_WAKEUP,
-            scheduleTime.toInstant(TimeZone.Companion.currentSystemDefault()).toEpochMilliseconds(),
+            scheduleTime.toInstant(TimeZone.currentSystemDefault()).toEpochMilliseconds(),
             pendingIntent,
         )
 

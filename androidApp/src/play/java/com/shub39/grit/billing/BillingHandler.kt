@@ -19,23 +19,25 @@ package com.shub39.grit.billing
 import com.revenuecat.purchases.CacheFetchPolicy
 import com.revenuecat.purchases.Purchases
 import com.revenuecat.purchases.awaitCustomerInfo
+import com.shub39.grit.core.billing.BillingHandler
+import com.shub39.grit.core.billing.SubscriptionResult
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import org.koin.core.annotation.Single
 
 @Single
-class BillingHandler {
+class BillingHandler : BillingHandler {
     companion object {
         private const val ENTITLEMENT_PLUS = "Plus"
     }
 
     private val purchases by lazy { Purchases.sharedInstance }
 
-    suspend fun isPlusUser(): Boolean {
+    override suspend fun isPlusUser(): Boolean {
         return userResult() is SubscriptionResult.Subscribed
     }
 
-    suspend fun userResult(): SubscriptionResult {
+    override suspend fun userResult(): SubscriptionResult {
         try {
             val userInfo =
                 withContext(Dispatchers.IO) {

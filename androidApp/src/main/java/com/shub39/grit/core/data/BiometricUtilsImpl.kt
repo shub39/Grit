@@ -19,7 +19,7 @@ package com.shub39.grit.core.data
 import android.content.Context
 import android.os.Build
 import androidx.biometric.BiometricManager
-import com.shub39.grit.domain.BiometricUtils
+import com.shub39.grit.core.interfaces.BiometricUtils
 import org.koin.core.annotation.Single
 
 @Single(binds = [BiometricUtils::class])

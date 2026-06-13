@@ -16,8 +16,8 @@
  */
 package com.shub39.grit.habits.data
 
-import com.shub39.grit.core.habits.domain.Habit
-import com.shub39.grit.core.habits.domain.HabitStatus
+import com.shub39.grit.core.habits.Habit
+import com.shub39.grit.core.habits.HabitStatus
 import com.shub39.grit.habits.data.database.HabitEntity
 import com.shub39.grit.habits.data.database.HabitStatusEntity
 

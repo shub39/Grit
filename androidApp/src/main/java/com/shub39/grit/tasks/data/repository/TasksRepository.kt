@@ -17,9 +17,9 @@
 package com.shub39.grit.tasks.data.repository
 
 import com.shub39.grit.core.data.notification.GritNotificationManager
-import com.shub39.grit.core.tasks.domain.Category
-import com.shub39.grit.core.tasks.domain.Task
-import com.shub39.grit.core.tasks.domain.TaskRepo
+import com.shub39.grit.core.tasks.Category
+import com.shub39.grit.core.tasks.Task
+import com.shub39.grit.core.tasks.TaskRepo
 import com.shub39.grit.tasks.data.database.CategoryDao
 import com.shub39.grit.tasks.data.database.TasksDao
 import com.shub39.grit.tasks.data.toCategory

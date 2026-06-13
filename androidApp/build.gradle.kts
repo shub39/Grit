@@ -25,8 +25,8 @@ plugins {
 }
 
 val appName = "Grit"
-val appVersionCode = 6000
-val appVersionName = "6.0.0"
+val appVersionCode = 6010
+val appVersionName = "6.0.1"
 
 val gitHash = execute("git", "rev-parse", "HEAD").take(7)
 
@@ -112,7 +112,7 @@ android {
             res.directories.addAll(
                 listOf(
                     "src/main/res",
-                    "${project(":shared").projectDir}/src/commonMain/composeResources",
+                    "${project(":shared:ui").projectDir}/src/commonMain/composeResources",
                 )
             )
         }
@@ -121,6 +121,7 @@ android {
 
 kotlin {
     compilerOptions {
+        freeCompilerArgs.add("-Xcontext-sensitive-resolution")
         optIn.add("androidx.compose.material3.ExperimentalMaterial3Api")
         optIn.add("androidx.compose.material3.ExperimentalMaterial3ExpressiveApi")
         optIn.add(
@@ -130,7 +131,8 @@ kotlin {
 }
 
 dependencies {
-    implementation(projects.shared)
+    implementation(projects.shared.core)
+    implementation(projects.shared.ui)
 
     "playImplementation"(libs.purchases)
     "playImplementation"(libs.purchases.ui)

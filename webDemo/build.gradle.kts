@@ -23,10 +23,17 @@ plugins {
     alias(libs.plugins.compose.multiplatform)
     alias(libs.plugins.compose.compiler)
     alias(libs.plugins.kotlin.serialization)
+    alias(libs.plugins.koin.compiler)
+}
+
+koinCompiler {
+    compileSafety = false // wasmJs builds won't compile
 }
 
 kotlin {
     compilerOptions {
+        freeCompilerArgs.add("-Xcontext-sensitive-resolution")
+        freeCompilerArgs.add("-Xexpect-actual-classes")
         optIn.add("androidx.compose.material3.ExperimentalMaterial3Api")
         optIn.add("androidx.compose.material3.ExperimentalMaterial3ExpressiveApi")
         optIn.add(
@@ -43,7 +50,8 @@ kotlin {
 
     sourceSets {
         commonMain.dependencies {
-            implementation(projects.shared)
+            implementation(projects.shared.ui)
+            implementation(projects.shared.core)
 
             implementation(libs.compose.material3)
             implementation(libs.compose.runtime)
@@ -53,6 +61,12 @@ kotlin {
             implementation(libs.jetbrains.navigation3.ui)
             implementation(libs.kotlinx.datetime)
             implementation(libs.compose.windowsizeclass)
+
+            implementation(libs.koin.core)
+            implementation(libs.koin.compose)
+            implementation(libs.koin.compose.viewmodel)
+            implementation(libs.koin.compose.viewmodel.navigation)
+            implementation(libs.koin.annotations)
         }
 
         jvmMain.dependencies {

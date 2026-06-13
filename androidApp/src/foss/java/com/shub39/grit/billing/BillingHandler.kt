@@ -16,11 +16,13 @@
  */
 package com.shub39.grit.billing
 
+import com.shub39.grit.core.billing.BillingHandler
+import com.shub39.grit.core.billing.SubscriptionResult
 import org.koin.core.annotation.Single
 
-@Single
-class BillingHandler {
-    suspend fun isPlusUser(): Boolean = true
+@Single(binds = [BillingHandler::class])
+class BillingHandler : BillingHandler {
+    override suspend fun isPlusUser(): Boolean = true
 
-    suspend fun userResult(): SubscriptionResult = SubscriptionResult.Subscribed
+    override suspend fun userResult(): SubscriptionResult = SubscriptionResult.Subscribed
 }

@@ -1,0 +1,209 @@
+/*
+ * Copyright (C) 2026  Shubham Gorai
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <https://www.gnu.org/licenses/>.
+ */
+package com.shub39.grit.shared.ui.setting.ui.section
+
+import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.material3.Button
+import androidx.compose.material3.CircularProgressIndicator
+import androidx.compose.material3.FilledTonalIconButton
+import androidx.compose.material3.Icon
+import androidx.compose.material3.ListItem
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.MediumFlexibleTopAppBar
+import androidx.compose.material3.Surface
+import androidx.compose.material3.Text
+import androidx.compose.material3.TopAppBarDefaults
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
+import androidx.compose.ui.input.nestedscroll.nestedScroll
+import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.dp
+import com.shub39.grit.core.settings.backup.ExportState
+import com.shub39.grit.core.settings.backup.RestoreState
+import com.shub39.grit.core.theme.AppTheme
+import com.shub39.grit.core.theme.Theme
+import com.shub39.grit.shared.ui.components.endItemShape
+import com.shub39.grit.shared.ui.components.leadingItemShape
+import com.shub39.grit.shared.ui.components.listItemColors
+import com.shub39.grit.shared.ui.setting.SettingsAction
+import com.shub39.grit.shared.ui.setting.SettingsState
+import com.shub39.grit.shared.ui.theme.GritTheme
+import com.shub39.grit.shared.ui.theme.flexFontEmphasis
+import grit.shared.ui.generated.resources.*
+import org.jetbrains.compose.resources.painterResource
+import org.jetbrains.compose.resources.stringResource
+import org.jetbrains.compose.resources.vectorResource
+
+@Composable
+fun BackupPage(
+    state: SettingsState,
+    onAction: (SettingsAction) -> Unit,
+    onNavigateBack: () -> Unit,
+) {
+    LaunchedEffect(Unit) { onAction(SettingsAction.OnResetBackupState) }
+
+    val scrollBehavior = TopAppBarDefaults.enterAlwaysScrollBehavior()
+    Column(
+        modifier =
+            Modifier.fillMaxSize()
+                .nestedScroll(scrollBehavior.nestedScrollConnection)
+                .background(MaterialTheme.colorScheme.background)
+    ) {
+        MediumFlexibleTopAppBar(
+            scrollBehavior = scrollBehavior,
+            title = {
+                Text(text = stringResource(Res.string.backup), fontFamily = flexFontEmphasis())
+            },
+            navigationIcon = {
+                FilledTonalIconButton(onClick = onNavigateBack) {
+                    Icon(
+                        imageVector = vectorResource(Res.drawable.nav_arrow_back),
+                        contentDescription = "Navigate Back",
+                    )
+                }
+            },
+        )
+
+        LazyColumn(
+            modifier = Modifier.fillMaxWidth(),
+            contentPadding = PaddingValues(start = 12.dp, end = 12.dp, top = 16.dp, bottom = 60.dp),
+        ) {
+            item {
+                Column(verticalArrangement = Arrangement.spacedBy(2.dp)) {
+                    Column(modifier = Modifier.clip(leadingItemShape())) {
+                        ListItem(
+                            headlineContent = { Text(text = stringResource(Res.string.export)) },
+                            leadingContent = {
+                                Icon(
+                                    imageVector = vectorResource(Res.drawable.drive_folder_upload),
+                                    contentDescription = null,
+                                )
+                            },
+                            colors = listItemColors(),
+                            supportingContent = {
+                                Text(text = stringResource(Res.string.export_desc))
+                            },
+                        )
+
+                        Row(
+                            modifier =
+                                Modifier.fillParentMaxWidth()
+                                    .background(listItemColors().containerColor)
+                                    .padding(start = 52.dp, end = 16.dp, bottom = 8.dp)
+                        ) {
+                            Button(
+                                onClick = { onAction(SettingsAction.OnExport) },
+                                enabled = state.backupState.exportState == ExportState.IDLE,
+                                modifier = Modifier.weight(1f),
+                            ) {
+                                when (state.backupState.exportState) {
+                                    IDLE ->
+                                        Icon(
+                                            painter = painterResource(Res.drawable.play_arrow),
+                                            contentDescription = "Start",
+                                        )
+
+                                    EXPORTING ->
+                                        CircularProgressIndicator(modifier = Modifier.size(24.dp))
+
+                                    EXPORTED ->
+                                        Icon(
+                                            imageVector = vectorResource(Res.drawable.check_circle),
+                                            contentDescription = "Done",
+                                        )
+                                }
+                            }
+                        }
+                    }
+
+                    Column(modifier = Modifier.clip(endItemShape())) {
+                        ListItem(
+                            colors = listItemColors(),
+                            leadingContent = {
+                                Icon(
+                                    imageVector = vectorResource(Res.drawable.download),
+                                    contentDescription = null,
+                                )
+                            },
+                            headlineContent = { Text(text = stringResource(Res.string.restore)) },
+                            supportingContent = {
+                                Text(text = stringResource(Res.string.restore_desc))
+                            },
+                        )
+
+                        Row(
+                            modifier =
+                                Modifier.fillParentMaxWidth()
+                                    .background(listItemColors().containerColor)
+                                    .padding(start = 52.dp, end = 16.dp, bottom = 8.dp)
+                        ) {
+                            Button(
+                                onClick = { onAction(SettingsAction.OnRestore) },
+                                enabled =
+                                    state.backupState.restoreState == RestoreState.IDLE ||
+                                        state.backupState.restoreState == RestoreState.FAILURE,
+                                modifier = Modifier.weight(1f),
+                            ) {
+                                when (state.backupState.restoreState) {
+                                    IDLE ->
+                                        Icon(
+                                            painter = painterResource(Res.drawable.play_arrow),
+                                            contentDescription = "Start",
+                                        )
+
+                                    RESTORING ->
+                                        CircularProgressIndicator(modifier = Modifier.size(24.dp))
+
+                                    RESTORED ->
+                                        Icon(
+                                            imageVector = vectorResource(Res.drawable.check_circle),
+                                            contentDescription = "Done",
+                                        )
+
+                                    FAILURE ->
+                                        Icon(
+                                            imageVector = vectorResource(Res.drawable.warning),
+                                            contentDescription = "Fail",
+                                        )
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+}
+
+@Preview
+@Composable
+private fun Preview() {
+    GritTheme(theme = Theme(appTheme = AppTheme.DARK)) {
+        Surface { BackupPage(state = SettingsState(), onAction = {}, onNavigateBack = {}) }
+    }
+}

@@ -18,11 +18,10 @@ branch of the main repository. Please reference the issue you created in your pu
 I'll review your pull request as soon as possible. Thank you for your contribution!
 
 ## Overview of modules
-* `:androidApp:` : Builds the android apk, contains code for widgets and android specific implementations
-* `:sharedUi` : All presentation logic for the app, including habits and tasks ui and shared
-common components 
-* `:webDemo:` : Builds the web demo which is deployed by CI on push to master. Also can be used as 
-hot reload
+* `:androidApp` : Builds the Android app, contains code for widgets and Android-specific implementations.
+* `:shared:ui` : Multiplatform UI module containing all presentation logic, Jetpack Compose UI for habits and tasks, and shared components.
+* `:shared:core` : Multiplatform core module containing domain models, repository interfaces, and business logic.
+* `:webDemo` : Builds the web and desktop demo which is deployed by CI on push to master. Also can be used with hot reload:
 ```shell
 ./gradlew :webDemo:hotRunJvm --auto
 ```

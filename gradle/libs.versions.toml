@@ -8,27 +8,27 @@ espresso-core = "3.7.0"
 junit = "4.13.2"
 junit-version = "1.3.0"
 kotlinx-datetime = "0.8.0"
-purchases = "10.6.0"
+purchases = "10.9.0"
 splashscreen = "1.2.0"
 datastore = "1.2.1"
-colorpicker = "1.1.4"
+colorpicker = "1.2.0"
 glance = "1.2.0-rc01"
 koin = "4.2.1"
-koin-plugin = "0.6.2"
-kotlin = "2.3.21"
-ksp = "2.3.6"
+koin-plugin = "1.0.1"
+kotlin = "2.4.0"
+ksp = "2.3.9"
 material3 = "1.11.0-alpha07"
 reorderable = "3.1.0"
-room3 = "3.0.0-alpha05"
+room3 = "3.0.0-alpha06"
 navigation = "1.1.1"
 materialkolor = "4.1.1"
 compose-junit = "1.11.2"
 biometric = "1.4.0-alpha02"
 truth = "1.4.5"
-compose-multiplatform = "1.11.0"
+compose-multiplatform = "1.11.1"
 kotlinx-coroutines = "1.11.0"
 kotlinx-serialization-json = "1.11.0"
-spotless = "8.5.1"
+spotless = "8.6.0"
 filekit = "0.14.1"
 ktfmt = "0.61"
 
@@ -80,6 +80,7 @@ calendar = { module = "com.kizitonwose.calendar:compose-multiplatform", version.
 truth = { module = "com.google.truth:truth", version.ref = "truth" }
 kotlinx-serialization-json = { module = "org.jetbrains.kotlinx:kotlinx-serialization-json", version.ref = "kotlinx-serialization-json" }
 kotlinx-coroutines-swing = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-swing", version.ref = "kotlinx-coroutines" }
+kotlinx-coroutines = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-core", version.ref = "kotlinx-coroutines" }
 
 [plugins]
 android-kotlin-multiplatform-library = { id = "com.android.kotlin.multiplatform.library", version.ref = "agp" }

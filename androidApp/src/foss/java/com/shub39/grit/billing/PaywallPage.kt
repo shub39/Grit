@@ -18,7 +18,7 @@ package com.shub39.grit.billing
 
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import com.shub39.grit.core.components.FossPaywall
+import com.shub39.grit.shared.ui.components.FossPaywall
 
 @Composable
 fun PaywallPage(isPlusUser: Boolean, onDismissRequest: () -> Unit, modifier: Modifier = Modifier) {
