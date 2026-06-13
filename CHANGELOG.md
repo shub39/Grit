@@ -1,7 +1,8 @@
 # Changelog
 
-## 6.0.1
+## 6.0.2
 - Updated Translations
+- Miscellaneous Bug Fixes and Improvements
 
 ## 6.0.0
 - Added new Consistency Stat in Habit Analytics

@@ -143,10 +143,9 @@ class MainViewModel(
     }
 
     fun dismissChangelog() {
-        _state.update { it.copy(currentChangelog = null) }
-
         _state.value.currentChangelog?.version?.let {
             viewModelScope.launch { settingsDatastore.updateLastChangelogShown(it) }
         }
+        _state.update { it.copy(currentChangelog = null) }
     }
 }
