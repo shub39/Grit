@@ -32,6 +32,7 @@ import com.shub39.grit.core.tasks.TaskRepo
 import com.shub39.grit.core.theme.AppTheme
 import com.shub39.grit.core.theme.Fonts
 import com.shub39.grit.core.theme.PaletteStyle
+import kotlin.random.Random
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
@@ -53,7 +54,6 @@ import kotlinx.datetime.format.DayOfWeekNames
 import kotlinx.datetime.isoDayNumber
 import kotlinx.datetime.minus
 import kotlinx.datetime.plus
-import kotlin.random.Random
 import org.koin.core.annotation.Single
 
 @Single(binds = [ThemeDatastore::class])
@@ -70,31 +70,37 @@ class ThemeDatastoreStub : ThemeDatastore {
     }
 
     override fun getAppThemeFlow(): Flow<AppTheme> = _appTheme.asStateFlow()
+
     override suspend fun setAppTheme(theme: AppTheme) {
         _appTheme.update { theme }
     }
 
     override fun getSeedColorFlow(): Flow<Int> = _seedColor.asStateFlow()
+
     override suspend fun setSeedColor(color: Int) {
         _seedColor.update { color }
     }
 
     override fun getAmoledPref(): Flow<Boolean> = _amoled.asStateFlow()
+
     override suspend fun setAmoledPref(pref: Boolean) {
         _amoled.update { pref }
     }
 
     override fun getPaletteStyle(): Flow<PaletteStyle> = _paletteStyle.asStateFlow()
+
     override suspend fun setPaletteStyle(style: PaletteStyle) {
         _paletteStyle.update { style }
     }
 
     override fun getMaterialYouFlow(): Flow<Boolean> = _materialYou.asStateFlow()
+
     override suspend fun setMaterialYou(pref: Boolean) {
         _materialYou.update { pref }
     }
 
     override fun getFontPrefFlow(): Flow<Fonts> = _fontPref.asStateFlow()
+
     override suspend fun setFontPref(font: Fonts) {
         _fontPref.update { font }
     }
@@ -112,41 +118,49 @@ class SettingsDatastoreStub : SettingsDatastore {
     private val _lastChangelog = MutableStateFlow("")
 
     override fun getStartOfTheWeekPref(): Flow<DayOfWeek> = _startOfWeek.asStateFlow()
+
     override suspend fun setStartOfWeek(day: DayOfWeek) {
         _startOfWeek.update { day }
     }
 
     override fun getStartingSectionPref(): Flow<Sections> = _startingSection.asStateFlow()
+
     override suspend fun setStartingPage(page: Sections) {
         _startingSection.update { page }
     }
 
     override fun getIs24Hr(): Flow<Boolean> = _is24Hr.asStateFlow()
+
     override suspend fun setIs24Hr(pref: Boolean) {
         _is24Hr.update { pref }
     }
 
     override fun getNotificationsFlow(): Flow<Boolean> = _notifications.asStateFlow()
+
     override suspend fun setNotifications(pref: Boolean) {
         _notifications.update { pref }
     }
 
     override fun getBiometricLockPref(): Flow<Boolean> = _biometricLock.asStateFlow()
+
     override suspend fun setBiometricPref(pref: Boolean) {
         _biometricLock.update { pref }
     }
 
     override fun getTaskReorderPref(): Flow<Boolean> = _taskReorder.asStateFlow()
+
     override suspend fun setTaskReorderPref(pref: Boolean) {
         _taskReorder.update { pref }
     }
 
     override fun getCompactViewPref(): Flow<Boolean> = _compactView.asStateFlow()
+
     override suspend fun setCompactView(pref: Boolean) {
         _compactView.update { pref }
     }
 
     override fun getLastChangelogShown(): Flow<String> = _lastChangelog.asStateFlow()
+
     override suspend fun updateLastChangelogShown(version: String) {
         _lastChangelog.update { version }
     }
@@ -155,9 +169,10 @@ class SettingsDatastoreStub : SettingsDatastore {
 @Single(binds = [TaskRepo::class])
 class TaskRepoStub : TaskRepo {
     private val _tasks = MutableStateFlow<List<Task>>(emptyList())
-    private val _categories = MutableStateFlow<List<Category>>(
-        listOf(Category(id = 1, name = "General", index = 0, color = "#FFFFFF"))
-    )
+    private val _categories =
+        MutableStateFlow<List<Category>>(
+            listOf(Category(id = 1, name = "General", index = 0, color = "#FFFFFF"))
+        )
 
     init {
         val work = Category(id = 2, name = "Work", index = 1, color = "#4285F4")
@@ -169,7 +184,7 @@ class TaskRepoStub : TaskRepo {
                 Task(id = 1, categoryId = 1, title = "Welcome to Grit! 🚀"),
                 Task(id = 2, categoryId = 2, title = "Complete project documentation"),
                 Task(id = 3, categoryId = 2, title = "Team meeting", status = true),
-                Task(id = 4, categoryId = 3, title = "Buy groceries 🛒")
+                Task(id = 4, categoryId = 3, title = "Buy groceries 🛒"),
             )
         }
     }
@@ -192,9 +207,7 @@ class TaskRepoStub : TaskRepo {
     override suspend fun getCategories(): List<Category> = _categories.value
 
     override suspend fun updateTaskIndexById(id: Long, index: Int) {
-        _tasks.update { list ->
-            list.map { if (it.id == id) it.copy(index = index) else it }
-        }
+        _tasks.update { list -> list.map { if (it.id == id) it.copy(index = index) else it } }
     }
 
     override suspend fun upsertTask(task: Task) {
@@ -241,38 +254,39 @@ class TaskRepoStub : TaskRepo {
 }
 
 @Single(binds = [HabitRepo::class])
-class HabitRepoStub(
-    private val datastore: SettingsDatastore
-) : HabitRepo {
+class HabitRepoStub(private val datastore: SettingsDatastore) : HabitRepo {
     private val _habits = MutableStateFlow<List<Habit>>(emptyList())
     private val _statuses = MutableStateFlow<List<HabitStatus>>(emptyList())
 
     private val _firstDayOfWeek = MutableStateFlow(DayOfWeek.MONDAY)
 
     init {
-        datastore.getStartOfTheWeekPref().onEach { day ->
-            _firstDayOfWeek.update { day }
-        }.launchIn(CoroutineScope(Dispatchers.Default))
+        datastore
+            .getStartOfTheWeekPref()
+            .onEach { day -> _firstDayOfWeek.update { day } }
+            .launchIn(CoroutineScope(Dispatchers.Default))
 
         val today = LocalDate.now()
-        val exercise = Habit(
-            id = 1,
-            title = "Exercise",
-            description = "30 mins of physical activity",
-            time = LocalDateTime(today, LocalTime(8, 0)),
-            days = DayOfWeek.entries.toSet(),
-            index = 0,
-            reminder = true
-        )
-        val read = Habit(
-            id = 2,
-            title = "Read",
-            description = "Read 10 pages of a book",
-            time = LocalDateTime(today, LocalTime(21, 0)),
-            days = DayOfWeek.entries.toSet(),
-            index = 1,
-            reminder = true
-        )
+        val exercise =
+            Habit(
+                id = 1,
+                title = "Exercise",
+                description = "30 mins of physical activity",
+                time = LocalDateTime(today, LocalTime(8, 0)),
+                days = DayOfWeek.entries.toSet(),
+                index = 0,
+                reminder = true,
+            )
+        val read =
+            Habit(
+                id = 2,
+                title = "Read",
+                description = "Read 10 pages of a book",
+                time = LocalDateTime(today, LocalTime(21, 0)),
+                days = DayOfWeek.entries.toSet(),
+                index = 1,
+                reminder = true,
+            )
         _habits.update { listOf(exercise, read) }
 
         _statuses.update {
@@ -282,7 +296,9 @@ class HabitRepoStub(
                 for (i in 0..180) {
                     val date = today.minus(i, DateTimeUnit.DAY)
                     if (Random.nextFloat() < 0.7f) {
-                        generatedStatuses.add(HabitStatus(id = statusId++, habitId = habit.id, date = date))
+                        generatedStatuses.add(
+                            HabitStatus(id = statusId++, habitId = habit.id, date = date)
+                        )
                     }
                 }
             }
@@ -326,35 +342,40 @@ class HabitRepoStub(
                     weekDayFrequencyData = prepareWeekDayFrequencyData(dates),
                     currentStreak = countCurrentStreak(dates, habit.days),
                     bestStreak = countBestStreak(dates, habit.days),
-                    startedDaysAgo = habit.time.date.daysUntil(LocalDate.now()).toLong()
+                    startedDaysAgo = habit.time.date.daysUntil(LocalDate.now()).toLong(),
                 )
             }
         }
 
     override fun getCompletedHabitIds(): Flow<List<Long>> =
-        _statuses.asStateFlow().map { it.filter { s -> s.date == LocalDate.now() }.map { s -> s.habitId }.distinct() }
+        _statuses.asStateFlow().map {
+            it.filter { s -> s.date == LocalDate.now() }.map { s -> s.habitId }.distinct()
+        }
 
     override fun getOverallAnalytics(): Flow<OverallAnalytics> =
         combine(_habits, _statuses) { habits, statuses ->
-            val habitConsistencies = habits.map { habit ->
-                val dates = statuses.filter { it.habitId == habit.id }.map { it.date }
-                habit.title to calculateConsistency(dates, habit.days)
-            }
+            val habitConsistencies =
+                habits.map { habit ->
+                    val dates = statuses.filter { it.habitId == habit.id }.map { it.date }
+                    habit.title to calculateConsistency(dates, habit.days)
+                }
 
             val consistencies = habitConsistencies.map { it.second }
-            val overallConsistency = if (consistencies.isNotEmpty()) consistencies.average().toFloat() else 0f
+            val overallConsistency =
+                if (consistencies.isNotEmpty()) consistencies.average().toFloat() else 0f
 
-            val topHabits = habitConsistencies
-                .filter { it.second > 0f }
-                .sortedByDescending { it.second }
-                .take(3)
-                .map { HabitRanking(it.first, it.second) }
+            val topHabits =
+                habitConsistencies
+                    .filter { it.second > 0f }
+                    .sortedByDescending { it.second }
+                    .take(3)
+                    .map { HabitRanking(it.first, it.second) }
 
             OverallAnalytics(
                 heatMapData = prepareHeatMapData(statuses),
                 weekDayFrequencyData = prepareWeekDayFrequencyData(statuses.map { it.date }),
                 consistency = overallConsistency,
-                topHabits = topHabits
+                topHabits = topHabits,
             )
         }
 
@@ -376,9 +397,7 @@ class HabitRepoStub(
     }
 
     override suspend fun deleteHabitStatus(habitId: Long, date: LocalDate) {
-        _statuses.update { list ->
-            list.filterNot { it.habitId == habitId && it.date == date }
-        }
+        _statuses.update { list -> list.filterNot { it.habitId == habitId && it.date == date } }
     }
 
     override suspend fun getCompletedHabitsForDate(date: LocalDate): List<Habit> {
@@ -387,10 +406,7 @@ class HabitRepoStub(
     }
 }
 
-private fun countCurrentStreak(
-    dates: List<LocalDate>,
-    eligibleWeekdays: Set<DayOfWeek>,
-): Int {
+private fun countCurrentStreak(dates: List<LocalDate>, eligibleWeekdays: Set<DayOfWeek>): Int {
     if (dates.isEmpty()) return 0
 
     val today = LocalDate.now()
@@ -427,10 +443,7 @@ private fun countCurrentStreak(
     return streak
 }
 
-private fun countBestStreak(
-    dates: List<LocalDate>,
-    eligibleWeekdays: Set<DayOfWeek>,
-): Int {
+private fun countBestStreak(dates: List<LocalDate>, eligibleWeekdays: Set<DayOfWeek>): Int {
     if (dates.isEmpty()) return 0
 
     val filteredDates = dates.filter { eligibleWeekdays.contains(it.dayOfWeek) }.sorted()

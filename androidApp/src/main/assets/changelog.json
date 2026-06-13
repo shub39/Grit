@@ -1,5 +1,11 @@
 [
   {
+    "version": "6.0.1",
+    "changes": [
+      "Updated Translations"
+    ]
+  },
+  {
     "version": "6.0.0",
     "changes": [
       "Added new Consistency Stat in Habit Analytics",
@@ -68,13 +74,6 @@
       "Added Preview images for widgets in widget picker (#273)",
       "Added Expressive Motion scheme to animations",
       "Updated Translations"
-    ]
-  },
-  {
-    "version": "5.8.4",
-    "changes": [
-      "Changed Navigation Animation",
-      "Misc UI fixes"
     ]
   }
 ]

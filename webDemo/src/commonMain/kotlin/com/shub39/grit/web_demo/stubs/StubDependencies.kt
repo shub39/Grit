@@ -34,6 +34,7 @@ import org.koin.core.annotation.Single
 @Single(binds = [BillingHandler::class])
 class BillingHandlerStub : BillingHandler {
     override suspend fun isPlusUser(): Boolean = true
+
     override suspend fun userResult(): SubscriptionResult = SubscriptionResult.Subscribed
 }
 
@@ -45,9 +46,13 @@ class ChangelogManagerStub : ChangelogManager {
 @Single(binds = [AlarmScheduler::class])
 class AlarmSchedulerStub : AlarmScheduler {
     override fun schedule(habit: Habit) {}
+
     override fun schedule(task: Task) {}
+
     override fun cancel(habit: Habit) {}
+
     override fun cancel(task: Task) {}
+
     override fun cancelAll() {}
 }
 
@@ -64,5 +69,6 @@ class RestoreRepoStub : RestoreRepo {
 @Single(binds = [BiometricUtils::class])
 class BiometricUtilsStub : BiometricUtils {
     override fun getAuthenticators(): Int = 0
+
     override fun authenticationAvailable(): Boolean = false
 }

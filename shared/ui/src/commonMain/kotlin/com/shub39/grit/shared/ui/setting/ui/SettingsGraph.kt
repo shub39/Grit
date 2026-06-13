@@ -81,10 +81,7 @@ fun SettingsGraph(
         val backStack = rememberNavBackStack(configuration, SettingsRoutes.Root)
 
         NavDisplay(
-            modifier =
-                Modifier
-                    .widthIn(max = 600.dp)
-                    .fillMaxSize(),
+            modifier = Modifier.widthIn(max = 600.dp).fillMaxSize(),
             backStack = backStack,
             entryProvider =
                 entryProvider {
