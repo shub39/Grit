@@ -24,10 +24,16 @@ plugins {
     alias(libs.plugins.compose.compiler)
     alias(libs.plugins.kotlin.serialization)
     alias(libs.plugins.koin.compiler)
+    id("com.ryinex.kotlin.browser.preloader") version "1.0.3"
 }
 
 koinCompiler {
     compileSafety = false // wasmJs builds won't compile
+}
+
+preloader {
+    jsModuleName.set("webDemo")
+    logo.set(rootProject.file("fastlane/metadata/android/en-US/images/icon.png"))
 }
 
 kotlin {
