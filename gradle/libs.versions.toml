@@ -31,6 +31,7 @@ kotlinx-serialization-json = "1.11.0"
 spotless = "8.6.0"
 filekit = "0.14.1"
 ktfmt = "0.61"
+browser-preloader = "1.0.3"
 
 [libraries]
 # Android and compose stuff
@@ -93,3 +94,4 @@ compose-multiplatform = { id = "org.jetbrains.compose", version.ref = "compose-m
 kotlin-multiplatform = { id = "org.jetbrains.kotlin.multiplatform", version.ref = "kotlin" }
 spotless = { id = "com.diffplug.spotless", version.ref = "spotless" }
 koin-compiler = { id = "io.insert-koin.compiler.plugin", version.ref = "koin-plugin" }
+kotlin-browser-preloader = { id = "com.ryinex.kotlin.browser.preloader", version.ref = "browser-preloader" }

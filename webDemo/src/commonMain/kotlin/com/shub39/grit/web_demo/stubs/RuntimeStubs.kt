@@ -170,9 +170,7 @@ class SettingsDatastoreStub : SettingsDatastore {
 class TaskRepoStub : TaskRepo {
     private val _tasks = MutableStateFlow<List<Task>>(emptyList())
     private val _categories =
-        MutableStateFlow<List<Category>>(
-            listOf(Category(id = 1, name = "General", index = 0, color = "#FFFFFF"))
-        )
+        MutableStateFlow(listOf(Category(id = 1, name = "General", index = 0, color = "#FFFFFF")))
 
     init {
         val work = Category(id = 2, name = "Work", index = 1, color = "#4285F4")
@@ -181,10 +179,10 @@ class TaskRepoStub : TaskRepo {
 
         _tasks.update {
             listOf(
-                Task(id = 1, categoryId = 1, title = "Welcome to Grit! 🚀"),
+                Task(id = 1, categoryId = 1, title = "Welcome to Grit!"),
                 Task(id = 2, categoryId = 2, title = "Complete project documentation"),
                 Task(id = 3, categoryId = 2, title = "Team meeting", status = true),
-                Task(id = 4, categoryId = 3, title = "Buy groceries 🛒"),
+                Task(id = 4, categoryId = 3, title = "Buy groceries"),
             )
         }
     }

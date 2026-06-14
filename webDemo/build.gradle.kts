@@ -24,7 +24,7 @@ plugins {
     alias(libs.plugins.compose.compiler)
     alias(libs.plugins.kotlin.serialization)
     alias(libs.plugins.koin.compiler)
-    id("com.ryinex.kotlin.browser.preloader") version "1.0.3"
+    alias(libs.plugins.kotlin.browser.preloader)
 }
 
 koinCompiler {
