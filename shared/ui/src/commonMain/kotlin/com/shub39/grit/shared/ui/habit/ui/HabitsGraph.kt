@@ -40,9 +40,11 @@ import androidx.compose.material3.TopAppBarScrollBehavior
 import androidx.compose.material3.windowsizeclass.WindowWidthSizeClass
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
+import androidx.compose.runtime.snapshotFlow
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.unit.dp
@@ -129,8 +131,35 @@ fun HabitsGraph(
 
                             PageFill {
                                 val lazyListState = rememberLazyListState()
-                                val fabVisible by remember {
-                                    derivedStateOf { lazyListState.firstVisibleItemIndex == 0 }
+                                var fabVisible by remember { mutableStateOf(true) }
+                                var previousScrollOffset by remember { mutableStateOf(0) }
+
+                                LaunchedEffect(lazyListState) {
+                                    snapshotFlow {
+                                            lazyListState.firstVisibleItemIndex to
+                                                lazyListState.firstVisibleItemScrollOffset
+                                        }
+                                        .collect { (index, offset) ->
+                                            when {
+                                                index == 0 && offset == 0 -> {
+                                                    fabVisible = true
+                                                    previousScrollOffset = 0
+                                                }
+                                                index >= 1 -> {
+                                                    fabVisible = false
+                                                }
+                                                else -> {
+                                                    if (
+                                                        offset > previousScrollOffset && offset > 5
+                                                    ) {
+                                                        fabVisible = false
+                                                    } else if (offset < previousScrollOffset) {
+                                                        fabVisible = true
+                                                    }
+                                                    previousScrollOffset = offset
+                                                }
+                                            }
+                                        }
                                 }
 
                                 HabitsList(
@@ -243,8 +272,33 @@ private fun ExpandedScreen(
         Row(modifier = Modifier.weight(1f)) {
             Box {
                 val lazyListState = rememberLazyListState()
-                val fabVisible by remember {
-                    derivedStateOf { lazyListState.firstVisibleItemIndex == 0 }
+                var fabVisible by remember { mutableStateOf(true) }
+                var previousScrollOffset by remember { mutableStateOf(0) }
+
+                LaunchedEffect(lazyListState) {
+                    snapshotFlow {
+                            lazyListState.firstVisibleItemIndex to
+                                lazyListState.firstVisibleItemScrollOffset
+                        }
+                        .collect { (index, offset) ->
+                            when {
+                                index == 0 && offset == 0 -> {
+                                    fabVisible = true
+                                    previousScrollOffset = 0
+                                }
+                                index >= 1 -> {
+                                    fabVisible = false
+                                }
+                                else -> {
+                                    if (offset > previousScrollOffset && offset > 5) {
+                                        fabVisible = false
+                                    } else if (offset < previousScrollOffset) {
+                                        fabVisible = true
+                                    }
+                                    previousScrollOffset = offset
+                                }
+                            }
+                        }
                 }
 
                 HabitsList(
