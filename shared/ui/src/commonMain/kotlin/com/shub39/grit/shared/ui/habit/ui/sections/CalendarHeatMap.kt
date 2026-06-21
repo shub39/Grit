@@ -95,7 +95,7 @@ fun CalendarHeatMap(
     val windowSizeClass = LocalWindowSizeClass.current
     val today = LocalDate.now()
     val totalHabits = state.habitsWithAnalytics.size
-    var selectedDay: LocalDate? by remember { mutableStateOf(today) }
+    var selectedDay: LocalDate? by remember { mutableStateOf(null) }
 
     LaunchedEffect(selectedDay) { onChangeSelectedDay(selectedDay) }
 
