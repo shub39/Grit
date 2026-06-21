@@ -106,6 +106,15 @@ class HabitViewModel(
                 }
 
                 is FetchCompletedHabitsForDate -> {
+                    if (action.date == null) {
+                        _state.update {
+                            it.copy(
+                                overallAnalytics = it.overallAnalytics.copy(completedHabits = null)
+                            )
+                        }
+                        return@launch
+                    }
+
                     val completedHabits =
                         repo.getCompletedHabitsForDate(action.date).map { it.title }
 

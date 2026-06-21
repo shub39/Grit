@@ -55,6 +55,7 @@ import com.shub39.grit.shared.ui.habit.daysStartingFrom
 import com.shub39.grit.shared.ui.habit.ui.component.AnalyticsCard
 import com.shub39.grit.shared.ui.habit.ui.component.CardArrows
 import com.shub39.grit.shared.ui.heatMapStreakShape
+import com.shub39.grit.shared.ui.theme.flexFontRounded
 import grit.shared.ui.generated.resources.*
 import kotlinx.coroutines.launch
 import kotlinx.datetime.DateTimeUnit
@@ -214,14 +215,20 @@ fun WeeklyBooleanHeatMap(
                                         ) {
                                             Text(
                                                 text = day.date.day.toString(),
-                                                style = MaterialTheme.typography.bodyMedium,
+                                                style =
+                                                    MaterialTheme.typography.bodyMedium.copy(
+                                                        fontFamily = flexFontRounded()
+                                                    ),
                                                 color = MaterialTheme.colorScheme.primary,
                                             )
                                         }
                                     } else {
                                         Text(
                                             text = day.date.day.toString(),
-                                            style = MaterialTheme.typography.bodyMedium,
+                                            style =
+                                                MaterialTheme.typography.bodyMedium.copy(
+                                                    fontFamily = flexFontRounded()
+                                                ),
                                             color = MaterialTheme.colorScheme.onPrimary,
                                         )
                                     }
@@ -229,7 +236,10 @@ fun WeeklyBooleanHeatMap(
                             } else {
                                 Text(
                                     text = day.date.day.toString(),
-                                    style = MaterialTheme.typography.bodyMedium,
+                                    style =
+                                        MaterialTheme.typography.bodyMedium.copy(
+                                            fontFamily = flexFontRounded()
+                                        ),
                                     color =
                                         if (!validDay)
                                             MaterialTheme.colorScheme.onSurface.copy(alpha = 0.5f)

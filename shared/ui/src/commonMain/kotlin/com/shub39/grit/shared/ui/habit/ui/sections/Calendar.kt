@@ -44,7 +44,6 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 import com.kizitonwose.calendar.compose.VerticalCalendar
 import com.kizitonwose.calendar.compose.VerticalYearCalendar
 import com.kizitonwose.calendar.compose.rememberCalendarState
@@ -57,8 +56,9 @@ import com.shub39.grit.core.habits.HabitWithAnalytics
 import com.shub39.grit.shared.ui.LocalWindowSizeClass
 import com.shub39.grit.shared.ui.habit.HabitState
 import com.shub39.grit.shared.ui.habit.daysStartingFrom
-import com.shub39.grit.shared.ui.habit.ui.component.CalendarDayContent
 import com.shub39.grit.shared.ui.habit.ui.component.CalendarMonthHeader
+import com.shub39.grit.shared.ui.habit.ui.component.MonthlyCalendarDayContent
+import com.shub39.grit.shared.ui.habit.ui.component.YearlyCalendarDayContent
 import com.shub39.grit.shared.ui.theme.flexFontEmphasis
 import com.shub39.grit.shared.ui.theme.flexFontRounded
 import com.shub39.grit.shared.ui.toStringRes
@@ -165,8 +165,8 @@ private fun YearlyCalendar(
     modifier: Modifier,
     doneDates: Set<LocalDate>,
     currentHabit: HabitWithAnalytics,
-    edgeWeeks: List<DayOfWeek>,
     onDateClick: (Habit, LocalDate) -> Unit,
+    edgeWeeks: List<DayOfWeek>,
 ) {
     val calendarState =
         rememberYearCalendarState(
@@ -179,6 +179,8 @@ private fun YearlyCalendar(
     VerticalYearCalendar(
         modifier = modifier.padding(horizontal = 8.dp),
         contentPadding = PaddingValues(top = 16.dp, bottom = 60.dp),
+        monthHorizontalSpacing = 4.dp,
+        monthVerticalSpacing = 4.dp,
         state = calendarState,
         reverseLayout = true,
         calendarScrollPaged = false,
@@ -205,15 +207,13 @@ private fun YearlyCalendar(
         },
         dayContent = { day ->
             if (day.date.yearMonth <= today.yearMonth) {
-                CalendarDayContent(
+                YearlyCalendarDayContent(
                     day = day,
                     doneDates = doneDates,
                     today = today,
                     habitDays = currentHabit.habit.days,
                     edgeWeeks = edgeWeeks,
                     onDateClick = { onDateClick(currentHabit.habit, it) },
-                    height = 20.dp,
-                    style = MaterialTheme.typography.labelSmall.copy(fontSize = 8.sp),
                 )
             }
         },
@@ -245,7 +245,7 @@ private fun MonthlyCalendar(
         reverseLayout = true,
         monthHeader = { calendarMonth -> CalendarMonthHeader(calendarMonth = calendarMonth) },
         dayContent = { day ->
-            CalendarDayContent(
+            MonthlyCalendarDayContent(
                 day = day,
                 doneDates = doneDates,
                 today = today,

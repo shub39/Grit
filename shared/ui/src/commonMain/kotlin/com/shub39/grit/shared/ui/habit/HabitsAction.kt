@@ -52,5 +52,5 @@ sealed interface HabitsAction {
 
     data object ReorderHabits : HabitsAction
 
-    data class FetchCompletedHabitsForDate(val date: LocalDate) : HabitsAction
+    data class FetchCompletedHabitsForDate(val date: LocalDate?) : HabitsAction
 }
