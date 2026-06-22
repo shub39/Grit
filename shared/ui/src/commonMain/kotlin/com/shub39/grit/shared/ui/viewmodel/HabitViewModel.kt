@@ -49,6 +49,7 @@ class HabitViewModel(
     private var habitStatusJob: Job? = null
     private var overallAnalyticsJob: Job? = null
     private var observeDatastoreJob: Job? = null
+    private var completedHabitsFetchJob: Job? = null
 
     private val _state = MutableStateFlow(HabitState())
 
@@ -106,28 +107,31 @@ class HabitViewModel(
                 }
 
                 is FetchCompletedHabitsForDate -> {
-                    if (action.date == null) {
-                        _state.update {
-                            it.copy(
-                                overallAnalytics = it.overallAnalytics.copy(completedHabits = null)
+                    completedHabitsFetchJob?.cancel()
+                    completedHabitsFetchJob = launch {
+                        if (action.date == null) {
+                            _state.update {
+                                it.copy(
+                                    overallAnalytics = it.overallAnalytics.copy(completedHabits = null)
+                                )
+                            }
+                            return@launch
+                        }
+
+                        val completedHabits =
+                            repo.getCompletedHabitsForDate(action.date).map { it.title }
+
+                        _state.update { habitState ->
+                            habitState.copy(
+                                overallAnalytics =
+                                    habitState.overallAnalytics.copy(
+                                        completedHabits =
+                                            if (completedHabits.isNotEmpty()) {
+                                                action.date to completedHabits
+                                            } else null
+                                    )
                             )
                         }
-                        return@launch
-                    }
-
-                    val completedHabits =
-                        repo.getCompletedHabitsForDate(action.date).map { it.title }
-
-                    _state.update { habitState ->
-                        habitState.copy(
-                            overallAnalytics =
-                                habitState.overallAnalytics.copy(
-                                    completedHabits =
-                                        if (completedHabits.isNotEmpty()) {
-                                            action.date to completedHabits
-                                        } else null
-                                )
-                        )
                     }
                 }
             }
@@ -138,16 +142,15 @@ class HabitViewModel(
         habitStatusJob?.cancel()
         habitStatusJob =
             viewModelScope.launch {
-                combine(repo.getHabitsWithAnalytics(), repo.getCompletedHabitIds()) {
-                        habits,
-                        completedHabits ->
-                        _state.update {
-                            it.copy(
-                                habitsWithAnalytics = habits,
-                                completedHabitIds = completedHabits,
-                            )
-                        }
+                combine(repo.getHabitsWithAnalytics(), repo.getCompletedHabitIds()) { habits,
+                                                                                      completedHabits ->
+                    _state.update {
+                        it.copy(
+                            habitsWithAnalytics = habits,
+                            completedHabitIds = completedHabits,
+                        )
                     }
+                }
                     .launchIn(this)
             }
     }
