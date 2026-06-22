@@ -1,6 +1,9 @@
 > [!CAUTION]
+>
 > ## [Keep Android Open](https://keepandroidopen.org/)
-> ###  Your phone is about to stop being yours.
+>
+> ### Your phone is about to stop being yours.
+>
 > Starting September 2026, a silent update, nonconsensually pushed by Google, will block every
 > Android app whose developer hasn't registered with Google, signed their contract, paid up, and
 > handed over government ID.
@@ -14,10 +17,8 @@
 [<img alt="Get it on izzyondroid" src="badges/izzyondroid.png" width="180px">](https://apt.izzysoft.de/fdroid/index/apk/com.shub39.grit)
 [<img alt="Get it on fdroid" src="badges/fdroid.png" width="180px">](https://f-droid.org/en/packages/com.shub39.grit/)
 
-# Screenshots
-
 | ![Image 1](fastlane/metadata/android/en-US/images/phoneScreenshots/1.png) | ![Image 2](fastlane/metadata/android/en-US/images/phoneScreenshots/2.png) |
-|:-------------------------------------------------------------------------:|:-------------------------------------------------------------------------:|
+| :-----------------------------------------------------------------------: | :-----------------------------------------------------------------------: |
 | ![Image 3](fastlane/metadata/android/en-US/images/phoneScreenshots/3.png) | ![Image 4](fastlane/metadata/android/en-US/images/phoneScreenshots/4.png) |
 | ![Image 5](fastlane/metadata/android/en-US/images/phoneScreenshots/5.png) | ![Image 6](fastlane/metadata/android/en-US/images/phoneScreenshots/6.png) |
 
@@ -31,15 +32,15 @@
 
 Check out planned changes in [RoadMap](https://github.com/shub39/Grit/discussions/66)
 
-# Motivation 
+# Motivation
 
 There are plenty of todo list and habit tracker apps for android. Some have the features I love while some have good UI design.
-While learning android I made this app for myself that brings together all the features that I like keeping everything simple. 
+While learning android I made this app for myself that brings together all the features that I like keeping everything simple.
 I eventually want to turn this app into a productivity hub with many social features like progress sharing in the form of beautiful cards.
 
 # Stargazers over time
 
-[![Stargazers over time](https://starchart.cc/shub39/Grit.svg?background=%23282828&axis=%23f2dfd3&line=%23ffb780)](https://starchart.cc/shub39/Grit)
+[![Star History Chart](https://api.star-history.com/svg?repos=shub39/Grit&type=Date)](https://star-history.com/#shub39/Grit&Date)
 
 ## Translations
 
@@ -65,6 +66,7 @@ Please read [CONTRIBUTING.md](CONTRIBUTING.md) for details on our code of conduc
 # Building from Source
 
 ## Prerequisites
+
 - JDK 21
 - Android SDK (compileSdk 37 / targetSdk 37)
 - Android Studio (recommended) or Gradle 9.5.1+
@@ -80,6 +82,7 @@ Please read [CONTRIBUTING.md](CONTRIBUTING.md) for details on our code of conduc
 ```
 
 On Windows:
+
 ```bat
 gradlew.bat assembleFossRelease
 ```
@@ -103,11 +106,13 @@ After signing, verify the APK matches the official signing certificate fingerpri
 # Security
 
 SHA-256 fingerprint for the signing certificate used for GitHub releases:
+
 ```text
 0F:E1:B9:F4:4A:4D:B9:7E:C5:09:48:F5:18:9F:6B:43:00:71:6C:C6:D4:84:3F:56:98:D6:14:A2:15:2E:21:88
 ```
 
 Verify with:
+
 ```shell
 keytool -list -printcert -jarfile androidApp/build/outputs/apk/foss/release/*.apk | grep SHA256
 ```

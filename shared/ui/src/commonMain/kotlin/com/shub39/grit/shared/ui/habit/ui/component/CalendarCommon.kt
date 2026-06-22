@@ -17,6 +17,7 @@
 package com.shub39.grit.shared.ui.habit.ui.component
 
 import androidx.compose.foundation.background
+import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.PaddingValues
@@ -31,6 +32,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
@@ -83,6 +85,7 @@ fun YearlyCalendarDayContent(
     doneDates: Set<LocalDate>,
     today: LocalDate,
     habitDays: Set<DayOfWeek>,
+    startDate: LocalDate,
     edgeWeeks: List<DayOfWeek>,
     modifier: Modifier = Modifier,
     style: TextStyle =
@@ -92,7 +95,7 @@ fun YearlyCalendarDayContent(
     if (day.position != DayPosition.MonthDate) return
 
     val done = day.date in doneDates
-    val validDate = day.date <= today && day.date.dayOfWeek in habitDays
+    val validDate = day.date <= today && day.date >= startDate && day.date.dayOfWeek in habitDays
 
     val donePrevious = day.date.minusDays(1) in doneDates
     val doneAfter = day.date.plusDays(1) in doneDates
@@ -165,6 +168,18 @@ fun YearlyCalendarDayContent(
                         )
             )
         }
+
+        if (day.date == startDate) {
+            Box(
+                modifier =
+                    Modifier.matchParentSize()
+                        .border(
+                            width = 1.dp,
+                            color = Color(0xFFFFD700),
+                            shape = CircleShape,
+                        )
+            )
+        }
     }
 }
 
@@ -174,6 +189,7 @@ fun MonthlyCalendarDayContent(
     doneDates: Set<LocalDate>,
     today: LocalDate,
     habitDays: Set<DayOfWeek>,
+    startDate: LocalDate,
     edgeWeeks: List<DayOfWeek>,
     onDateClick: (LocalDate) -> Unit,
     modifier: Modifier = Modifier,
@@ -183,7 +199,7 @@ fun MonthlyCalendarDayContent(
     if (day.position != DayPosition.MonthDate) return
 
     val done = day.date in doneDates
-    val validDate = day.date <= today && day.date.dayOfWeek in habitDays
+    val validDate = day.date <= today && day.date >= startDate && day.date.dayOfWeek in habitDays
 
     val donePrevious = day.date.minusDays(1) in doneDates
     val doneAfter = day.date.plusDays(1) in doneDates
@@ -258,6 +274,18 @@ fun MonthlyCalendarDayContent(
                 color =
                     if (!validDate) MaterialTheme.colorScheme.onSurface.copy(alpha = 0.5f)
                     else MaterialTheme.colorScheme.onSurface,
+            )
+        }
+
+        if (day.date == startDate) {
+            Box(
+                modifier =
+                    Modifier.matchParentSize()
+                        .border(
+                            width = 1.dp,
+                            color = Color(0xFFFFD700),
+                            shape = CircleShape,
+                        )
             )
         }
     }

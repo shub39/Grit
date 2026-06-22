@@ -22,6 +22,7 @@ import androidx.compose.animation.animateColorAsState
 import androidx.compose.animation.animateContentSize
 import androidx.compose.foundation.background
 import androidx.compose.foundation.basicMarquee
+import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -48,6 +49,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.Shape
 import androidx.compose.ui.semantics.Role
 import androidx.compose.ui.text.font.FontWeight
@@ -237,9 +239,11 @@ fun HabitCard(
                 contentPadding = PaddingValues(8.dp),
                 state = weekState,
                 dayContent = { weekDay ->
+                    val startDate = habitWithAnalytics.habit.time.date
                     val done = habitWithAnalytics.statuses.any { it.date == weekDay.date }
                     val validDay =
                         weekDay.date <= today &&
+                            weekDay.date >= startDate &&
                             weekDay.date.dayOfWeek in habitWithAnalytics.habit.days
 
                     Box(
@@ -278,6 +282,15 @@ fun HabitCard(
                                         Modifier.background(
                                             color = MaterialTheme.colorScheme.primary,
                                             shape = shape,
+                                        )
+                                    } else Modifier
+                                )
+                                .then(
+                                    if (weekDay.date == startDate) {
+                                        Modifier.border(
+                                            width = 1.dp,
+                                            color = Color(0xFFFFD700),
+                                            shape = RoundedCornerShape(20.dp),
                                         )
                                     } else Modifier
                                 )

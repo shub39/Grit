@@ -67,8 +67,10 @@ import com.shub39.grit.app.MainActivity
 import com.shub39.grit.core.habits.Habit
 import com.shub39.grit.core.habits.HabitRepo
 import com.shub39.grit.core.habits.HabitWithAnalytics
+import com.shub39.grit.core.interfaces.ThemeDatastore
 import com.shub39.grit.core.now
 import com.shub39.grit.widgets.WidgetSize
+import com.shub39.grit.widgets.rememberWidgetColorProviders
 import kotlinx.coroutines.launch
 import kotlinx.datetime.LocalDateTime
 import org.koin.core.component.KoinComponent
@@ -85,6 +87,7 @@ class HabitStreakWidget : GlanceAppWidget(), KoinComponent {
 
     override suspend fun provideGlance(context: Context, id: GlanceId) {
         val repo = get<HabitRepo>()
+        val themeDatastore = get<ThemeDatastore>()
 
         provideContent {
             val scope = rememberCoroutineScope()
@@ -99,8 +102,22 @@ class HabitStreakWidget : GlanceAppWidget(), KoinComponent {
             val currentData = sortedData.find { it.habit.id == habitId } ?: sortedData.firstOrNull()
             val currentIndex = if (currentData == null) 0 else sortedData.indexOf(currentData)
 
+            val appTheme by themeDatastore.getAppThemeFlow().collectAsState(com.shub39.grit.core.theme.AppTheme.SYSTEM)
+            val seedColor by themeDatastore.getSeedColorFlow().collectAsState(0xFFFFFF)
+            val isAmoled by themeDatastore.getAmoledPref().collectAsState(false)
+            val paletteStyle by themeDatastore.getPaletteStyle().collectAsState(com.shub39.grit.core.theme.PaletteStyle.TONALSPOT)
+            val isMaterialYou by themeDatastore.getMaterialYouFlow().collectAsState(false)
+
+            val colors = rememberWidgetColorProviders(
+                appTheme = appTheme,
+                seedColor = seedColor,
+                isAmoled = isAmoled,
+                paletteStyle = paletteStyle,
+                isMaterialYou = isMaterialYou,
+            )
+
             key(size) {
-                GlanceTheme {
+                GlanceTheme(colors = colors) {
                     Content(
                         habitWithAnalytics = currentData,
                         onUpdateWidget = {

@@ -212,6 +212,7 @@ private fun YearlyCalendar(
                     doneDates = doneDates,
                     today = today,
                     habitDays = currentHabit.habit.days,
+                    startDate = currentHabit.habit.time.date,
                     edgeWeeks = edgeWeeks,
                     onDateClick = { onDateClick(currentHabit.habit, it) },
                 )
@@ -250,6 +251,7 @@ private fun MonthlyCalendar(
                 doneDates = doneDates,
                 today = today,
                 habitDays = currentHabit.habit.days,
+                startDate = currentHabit.habit.time.date,
                 edgeWeeks = edgeWeeks,
                 onDateClick = { onDateClick(currentHabit.habit, it) },
             )

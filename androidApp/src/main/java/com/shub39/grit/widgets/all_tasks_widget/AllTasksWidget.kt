@@ -58,11 +58,13 @@ import androidx.glance.text.TextDecoration
 import androidx.glance.text.TextStyle
 import com.shub39.grit.R
 import com.shub39.grit.app.MainActivity
+import com.shub39.grit.core.interfaces.ThemeDatastore
 import com.shub39.grit.core.tasks.Category
 import com.shub39.grit.core.tasks.CategoryColors
 import com.shub39.grit.core.tasks.Task
 import com.shub39.grit.core.tasks.TaskRepo
 import com.shub39.grit.widgets.WidgetSize
+import com.shub39.grit.widgets.rememberWidgetColorProviders
 import kotlinx.coroutines.launch
 import org.koin.core.component.KoinComponent
 import org.koin.core.component.get
@@ -72,14 +74,29 @@ class AllTasksWidget : GlanceAppWidget(), KoinComponent {
 
     override suspend fun provideGlance(context: Context, id: GlanceId) {
         val repo = get<TaskRepo>()
+        val themeDatastore = get<ThemeDatastore>()
 
         provideContent {
             val scope = rememberCoroutineScope()
             val size = LocalSize.current
             val tasks by repo.getTasksFlow().collectAsState(emptyMap())
 
+            val appTheme by themeDatastore.getAppThemeFlow().collectAsState(com.shub39.grit.core.theme.AppTheme.SYSTEM)
+            val seedColor by themeDatastore.getSeedColorFlow().collectAsState(0xFFFFFF)
+            val isAmoled by themeDatastore.getAmoledPref().collectAsState(false)
+            val paletteStyle by themeDatastore.getPaletteStyle().collectAsState(com.shub39.grit.core.theme.PaletteStyle.TONALSPOT)
+            val isMaterialYou by themeDatastore.getMaterialYouFlow().collectAsState(false)
+
+            val colors = rememberWidgetColorProviders(
+                appTheme = appTheme,
+                seedColor = seedColor,
+                isAmoled = isAmoled,
+                paletteStyle = paletteStyle,
+                isMaterialYou = isMaterialYou,
+            )
+
             key(size) {
-                GlanceTheme {
+                GlanceTheme(colors = colors) {
                     Content(
                         tasks = tasks.filter { it.value.isNotEmpty() },
                         onUpdateTaskStatus = {

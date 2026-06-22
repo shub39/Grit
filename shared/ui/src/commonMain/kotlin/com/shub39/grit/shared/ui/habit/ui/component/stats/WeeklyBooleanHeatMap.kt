@@ -17,6 +17,7 @@
 package com.shub39.grit.shared.ui.habit.ui.component.stats
 
 import androidx.compose.foundation.background
+import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.gestures.animateScrollBy
 import androidx.compose.foundation.layout.Box
@@ -37,6 +38,7 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.tooling.preview.PreviewWrapper
 import androidx.compose.ui.unit.dp
@@ -80,6 +82,7 @@ import org.jetbrains.compose.resources.stringResource
 fun WeeklyBooleanHeatMap(
     heatMapState: HeatMapCalendarState,
     days: Set<DayOfWeek>,
+    startDate: LocalDate,
     statuses: List<HabitStatus>,
     onDateClick: (LocalDate) -> Unit,
     modifier: Modifier = Modifier,
@@ -166,7 +169,7 @@ fun WeeklyBooleanHeatMap(
                         if (day.date > today) return@HeatMapCalendar
 
                         val done = day.date in doneDates
-                        val validDay = day.date.dayOfWeek in days
+                        val validDay = day.date.dayOfWeek in days && day.date >= startDate
 
                         val donePrevious = day.date.minusDays(1) in doneDates
                         val doneAfter = day.date.plusDays(1) in doneDates
@@ -246,6 +249,18 @@ fun WeeklyBooleanHeatMap(
                                         else MaterialTheme.colorScheme.onSurface,
                                 )
                             }
+
+                            if (day.date == startDate) {
+                                Box(
+                                    modifier =
+                                        Modifier.matchParentSize()
+                                            .border(
+                                                width = 1.dp,
+                                                color = Color(0xFFFFD700),
+                                                shape = MaterialShapes.Circle.toShape(),
+                                            )
+                                )
+                            }
                         }
                     },
                 )
@@ -271,6 +286,7 @@ private fun Preview() {
                 HabitStatus(habitId = 1, date = LocalDate.now().minus(it, DateTimeUnit.DAY))
             },
         days = DayOfWeek.entries.toSet(),
+        startDate = LocalDate.now().minus(40, DateTimeUnit.DAY),
         onDateClick = {},
     )
 }

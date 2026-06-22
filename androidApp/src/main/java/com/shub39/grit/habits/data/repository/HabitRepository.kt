@@ -115,7 +115,7 @@ class HabitRepository(
                                 firstDay = firstDayOfWeek.value,
                                 habitStatuses = habitStatusesForHabit,
                             ),
-                        weekDayFrequencyData = prepareWeekDayFrequencyData(dates = dates),
+                        weekDayFrequencyData = prepareWeekDayFrequencyData(dates = dates, firstDayOfWeek = firstDayOfWeek.value),
                         startedDaysAgo = habit.time.date.daysUntil(LocalDate.now()).toLong(),
                         consistency = calculateConsistency(dates, habit.days),
                     )
@@ -156,7 +156,7 @@ class HabitRepository(
                 OverallAnalytics(
                     heatMapData = prepareHeatMapData(habitStatusesFlow),
                     weekDayFrequencyData =
-                        prepareWeekDayFrequencyData(habitStatusesFlow.map { it.date }),
+                        prepareWeekDayFrequencyData(habitStatusesFlow.map { it.date }, firstDayOfWeek.value),
                     consistency = overallConsistency,
                     topHabits = topHabits,
                 )

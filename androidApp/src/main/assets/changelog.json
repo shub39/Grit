@@ -1,5 +1,13 @@
 [
   {
+    "version": "6.0.4",
+    "changes": [
+      "UI: Can now swipe between tabs",
+      "Fixed widgets not matching the app theme",
+      "Added a gold circle for habit creation date and grayed out previous days in calendar"
+    ]
+  },
+  {
     "version": "6.0.3",
     "changes": [
       "Updated Translations",
@@ -66,13 +74,6 @@
       "Miscellaneous UI fixes",
       "Updated Translations",
       "Added Keyboard Autofocus to new Habit (#280)"
-    ]
-  },
-  {
-    "version": "5.9.1",
-    "changes": [
-      "Miscellaneous fixes and updates",
-      "Updated Translations"
     ]
   }
 ]

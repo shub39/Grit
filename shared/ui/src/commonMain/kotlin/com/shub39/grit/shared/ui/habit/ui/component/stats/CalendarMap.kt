@@ -64,6 +64,7 @@ fun CalendarMap(
     calendarState: CalendarState,
     statuses: List<HabitStatus>,
     days: Set<DayOfWeek>,
+    startDate: LocalDate,
     onNavigateToPaywall: () -> Unit,
     onNavigateToCalendar: () -> Unit,
     onDateClick: (LocalDate) -> Unit,
@@ -127,6 +128,7 @@ fun CalendarMap(
                     doneDates = doneDates,
                     today = today,
                     habitDays = days,
+                    startDate = startDate,
                     edgeWeeks = edgeWeeks,
                     onDateClick = onDateClick,
                 )
@@ -152,6 +154,7 @@ private fun Preview() {
                 HabitStatus(habitId = 1, date = LocalDate.now().minus(it, DateTimeUnit.DAY))
             },
         days = DayOfWeek.entries.toSet(),
+        startDate = LocalDate.now().minus(40, DateTimeUnit.DAY),
         onNavigateToPaywall = {},
         onDateClick = {},
         onNavigateToCalendar = {},

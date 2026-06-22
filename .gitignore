@@ -14,5 +14,3 @@ local.properties
 *.jks
 *.keystore
 release.jks
-gradle.properties
-.gitignore

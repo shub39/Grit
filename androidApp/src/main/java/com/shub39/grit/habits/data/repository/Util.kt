@@ -136,10 +136,17 @@ fun prepareLineChartData(
     return values
 }
 
-fun prepareWeekDayFrequencyData(dates: List<LocalDate>): WeekDayFrequencyData {
+fun prepareWeekDayFrequencyData(
+    dates: List<LocalDate>,
+    firstDayOfWeek: DayOfWeek = DayOfWeek.MONDAY
+): WeekDayFrequencyData {
     val dayFrequency = dates.groupingBy { it.dayOfWeek }.eachCount()
 
-    return DayOfWeek.entries.associate { dayOfWeek ->
+    val orderedDays = DayOfWeek.entries.toMutableList()
+    val index = orderedDays.indexOf(firstDayOfWeek)
+    val rotatedDays = orderedDays.subList(index, orderedDays.size) + orderedDays.subList(0, index)
+
+    return rotatedDays.associate { dayOfWeek ->
         val weekName = DayOfWeekNames.ENGLISH_ABBREVIATED.names[dayOfWeek.isoDayNumber - 1]
 
         weekName to (dayFrequency[dayOfWeek] ?: 0)
