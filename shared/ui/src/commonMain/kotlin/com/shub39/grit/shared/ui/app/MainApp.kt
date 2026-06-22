@@ -31,26 +31,26 @@ import androidx.compose.material3.NavigationRailItem
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.windowsizeclass.WindowWidthSizeClass.Companion.Compact
+import androidx.compose.foundation.pager.HorizontalPager
+import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalLayoutDirection
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation3.runtime.NavKey
-import androidx.navigation3.runtime.entryProvider
-import androidx.navigation3.runtime.rememberNavBackStack
-import androidx.navigation3.ui.NavDisplay
 import com.shub39.grit.shared.ui.LocalWindowSizeClass
 import com.shub39.grit.shared.ui.app.AppSections.Companion.toIconRes
 import com.shub39.grit.shared.ui.app.AppSections.Companion.toStringRes
 import com.shub39.grit.shared.ui.habit.ui.HabitsGraph
-import com.shub39.grit.shared.ui.navigation.fadeTransitionMetadata
 import com.shub39.grit.shared.ui.setting.ui.SettingsGraph
 import com.shub39.grit.shared.ui.task.ui.TasksPage
 import com.shub39.grit.shared.ui.viewmodel.HabitViewModel
 import com.shub39.grit.shared.ui.viewmodel.SettingsViewModel
 import com.shub39.grit.shared.ui.viewmodel.TasksViewModel
+import kotlinx.coroutines.launch
 import org.jetbrains.compose.resources.painterResource
 import org.jetbrains.compose.resources.stringResource
 import org.koin.compose.viewmodel.koinViewModel
@@ -59,29 +59,34 @@ import org.koin.compose.viewmodel.koinViewModel
 fun MainApp(state: MainAppState, onNavigateToPaywall: () -> Unit) {
     val windowSizeClass = LocalWindowSizeClass.current
 
-    val appBackStack =
-        rememberNavBackStack(
-            AppSections.configuration,
-            when (state.startingSection) {
-                Tasks -> AppSections.TaskPages
-                Habits -> AppSections.HabitPages
-            },
-        )
+    val pagerState = rememberPagerState(
+        initialPage = when (state.startingSection) {
+            Tasks -> AppSections.mainRoutes.indexOf(AppSections.TaskPages).coerceAtLeast(0)
+            Habits -> AppSections.mainRoutes.indexOf(AppSections.HabitPages).coerceAtLeast(0)
+        },
+        pageCount = { AppSections.mainRoutes.size }
+    )
+    val coroutineScope = rememberCoroutineScope()
 
     when (windowSizeClass.widthSizeClass) {
         Compact -> {
             Scaffold(
                 bottomBar = {
                     AppNavBar(
-                        currentRoute = appBackStack.last(),
+                        currentRoute = AppSections.mainRoutes[pagerState.currentPage],
                         onNavigate = { route ->
-                            appBackStack.removeAll { it == route }
-                            appBackStack.add(route)
+                            val index = AppSections.mainRoutes.indexOf(route)
+                            if (index != -1) {
+                                coroutineScope.launch {
+                                    pagerState.animateScrollToPage(index)
+                                }
+                            }
                         },
                     )
                 }
             ) { padding ->
-                NavDisplay(
+                HorizontalPager(
+                    state = pagerState,
                     modifier =
                         Modifier.padding(
                                 start = padding.calculateStartPadding(LocalLayoutDirection.current),
@@ -89,93 +94,96 @@ fun MainApp(state: MainAppState, onNavigateToPaywall: () -> Unit) {
                                 bottom = padding.calculateBottomPadding(),
                             )
                             .background(MaterialTheme.colorScheme.background),
-                    backStack = appBackStack,
-                    entryProvider =
-                        entryProvider {
-                            entry<AppSections.TaskPages>(metadata = fadeTransitionMetadata()) {
-                                val tvm: TasksViewModel = koinViewModel()
-                                val taskPageState by tvm.state.collectAsStateWithLifecycle()
+                ) { page ->
+                    when (val route = AppSections.mainRoutes[page]) {
+                        is AppSections.TaskPages -> {
+                            val tvm: TasksViewModel = koinViewModel()
+                            val taskPageState by tvm.state.collectAsStateWithLifecycle()
 
-                                TasksPage(state = taskPageState, onAction = tvm::onAction)
-                            }
+                            TasksPage(state = taskPageState, onAction = tvm::onAction)
+                        }
 
-                            entry<AppSections.SettingsPages>(metadata = fadeTransitionMetadata()) {
-                                val svm: SettingsViewModel = koinViewModel()
-                                val settingsState by svm.state.collectAsStateWithLifecycle()
+                        is AppSections.SettingsPages -> {
+                            val svm: SettingsViewModel = koinViewModel()
+                            val settingsState by svm.state.collectAsStateWithLifecycle()
 
-                                SettingsGraph(
-                                    state = settingsState,
-                                    onAction = svm::onAction,
-                                    isUserSubscribed = state.isUserSubscribed,
-                                    onNavigateToPaywall = onNavigateToPaywall,
-                                )
-                            }
+                            SettingsGraph(
+                                state = settingsState,
+                                onAction = svm::onAction,
+                                isUserSubscribed = state.isUserSubscribed,
+                                onNavigateToPaywall = onNavigateToPaywall,
+                            )
+                        }
 
-                            entry<AppSections.HabitPages>(metadata = fadeTransitionMetadata()) {
-                                val hvm: HabitViewModel = koinViewModel()
-                                val habitsPageState by hvm.state.collectAsStateWithLifecycle()
+                        is AppSections.HabitPages -> {
+                            val hvm: HabitViewModel = koinViewModel()
+                            val habitsPageState by hvm.state.collectAsStateWithLifecycle()
 
-                                HabitsGraph(
-                                    state = habitsPageState,
-                                    onAction = hvm::onAction,
-                                    isUserSubscribed = state.isUserSubscribed,
-                                    onNavigateToPaywall = onNavigateToPaywall,
-                                )
-                            }
-                        },
-                )
+                            HabitsGraph(
+                                state = habitsPageState,
+                                onAction = hvm::onAction,
+                                isUserSubscribed = state.isUserSubscribed,
+                                onNavigateToPaywall = onNavigateToPaywall,
+                            )
+                        }
+                    }
+                }
             }
         }
 
         else -> {
             Row(modifier = Modifier.background(MaterialTheme.colorScheme.surface)) {
                 AppNavRail(
-                    currentRoute = appBackStack.last(),
+                    currentRoute = AppSections.mainRoutes[pagerState.currentPage],
                     onNavigate = { route ->
-                        appBackStack.removeAll { it == route }
-                        appBackStack.add(route)
+                        val index = AppSections.mainRoutes.indexOf(route)
+                        if (index != -1) {
+                            coroutineScope.launch {
+                                pagerState.animateScrollToPage(index)
+                            }
+                        }
                     },
                 )
 
-                NavDisplay(
+                HorizontalPager(
+                    state = pagerState,
                     modifier =
                         Modifier.fillMaxWidth().background(MaterialTheme.colorScheme.background),
-                    backStack = appBackStack,
-                    contentAlignment = Alignment.Center,
-                    entryProvider =
-                        entryProvider {
-                            entry<AppSections.TaskPages>(metadata = fadeTransitionMetadata()) {
-                                val tvm: TasksViewModel = koinViewModel()
-                                val taskPageState by tvm.state.collectAsStateWithLifecycle()
+                    verticalAlignment = Alignment.CenterVertically,
+                ) { page ->
+                    when (val route = AppSections.mainRoutes[page]) {
+                        is AppSections.TaskPages -> {
+                            val tvm: TasksViewModel = koinViewModel()
+                            val taskPageState by tvm.state.collectAsStateWithLifecycle()
 
-                                TasksPage(state = taskPageState, onAction = tvm::onAction)
-                            }
+                            TasksPage(state = taskPageState, onAction = tvm::onAction)
+                        }
 
-                            entry<AppSections.SettingsPages>(metadata = fadeTransitionMetadata()) {
-                                val svm: SettingsViewModel = koinViewModel()
-                                val settingsState by svm.state.collectAsStateWithLifecycle()
+                        is AppSections.SettingsPages -> {
+                            val svm: SettingsViewModel = koinViewModel()
+                            val settingsState by svm.state.collectAsStateWithLifecycle()
 
-                                SettingsGraph(
-                                    state = settingsState,
-                                    onAction = svm::onAction,
-                                    isUserSubscribed = state.isUserSubscribed,
-                                    onNavigateToPaywall = onNavigateToPaywall,
-                                )
-                            }
+                            SettingsGraph(
+                                state = settingsState,
+                                onAction = svm::onAction,
+                                isUserSubscribed = state.isUserSubscribed,
+                                onNavigateToPaywall = onNavigateToPaywall,
+                            )
+                        }
 
-                            entry<AppSections.HabitPages>(metadata = fadeTransitionMetadata()) {
-                                val hvm: HabitViewModel = koinViewModel()
-                                val habitsPageState by hvm.state.collectAsStateWithLifecycle()
+                        is AppSections.HabitPages -> {
+                            val hvm: HabitViewModel = koinViewModel()
+                            val habitsPageState by hvm.state.collectAsStateWithLifecycle()
 
-                                HabitsGraph(
-                                    state = habitsPageState,
-                                    onAction = hvm::onAction,
-                                    isUserSubscribed = state.isUserSubscribed,
-                                    onNavigateToPaywall = onNavigateToPaywall,
-                                )
-                            }
-                        },
-                )
+                            HabitsGraph(
+                                state = habitsPageState,
+                                onAction = hvm::onAction,
+                                isUserSubscribed = state.isUserSubscribed,
+                                onNavigateToPaywall = onNavigateToPaywall,
+                            )
+                        }
+                    }
+                }
             }
         }
     }
