@@ -14,6 +14,8 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
+import java.util.Properties
+import java.io.FileInputStream
 plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.compose.compiler)
@@ -30,9 +32,26 @@ val appVersionName = "6.0.3"
 
 val gitHash = execute("git", "rev-parse", "HEAD").take(7)
 
+val localProperties = Properties()
+val localPropertiesFile = rootProject.file("local.properties")
+if (localPropertiesFile.exists()) {
+    localProperties.load(FileInputStream(localPropertiesFile))
+}
+
 android {
     namespace = "com.shub39.grit"
     compileSdk = libs.versions.compileSdk.get().toInt()
+
+    signingConfigs {
+        if (localProperties.containsKey("storeFile")) {
+            create("release") {
+                storeFile = rootProject.file(localProperties.getProperty("storeFile"))
+                storePassword = localProperties.getProperty("storePassword")
+                keyAlias = localProperties.getProperty("keyAlias")
+                keyPassword = localProperties.getProperty("keyPassword")
+            }
+        }
+    }
 
     defaultConfig {
         applicationId = "com.shub39.grit"
@@ -49,6 +68,9 @@ android {
 
     buildTypes {
         release {
+            if (localProperties.containsKey("storeFile")) {
+                signingConfig = signingConfigs.getByName("release")
+            }
             resValue("string", "app_name", appName)
             isMinifyEnabled = true
             isShrinkResources = true
