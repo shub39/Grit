@@ -62,9 +62,52 @@ Translations are done via weblate, you can contribute there!
 
 Please read [CONTRIBUTING.md](CONTRIBUTING.md) for details on our code of conduct, and the process for submitting pull requests.
 
+# Building from Source
+
+## Prerequisites
+- JDK 21
+- Android SDK (compileSdk 37 / targetSdk 37)
+- Android Studio (recommended) or Gradle 9.5.1+
+
+## Build a Release APK
+
+```shell
+# FOSS variant (no Google Play dependencies)
+./gradlew assembleFossRelease
+
+# Play variant (requires RevenueCat API key)
+./gradlew assemblePlayRelease
+```
+
+On Windows:
+```bat
+gradlew.bat assembleFossRelease
+```
+
+The APK will be at `androidApp/build/outputs/apk/foss/release/`.
+
+## Signing
+
+Grit's CI signs builds via injected Gradle properties. To sign locally, create a keystore and pass:
+
+```shell
+./gradlew assembleFossRelease \
+  -Pandroid.injected.signing.store.file=/path/to/keystore.jks \
+  -Pandroid.injected.signing.store.password=storepass \
+  -Pandroid.injected.signing.key.alias=key0 \
+  -Pandroid.injected.signing.key.password=keypass
+```
+
+After signing, verify the APK matches the official signing certificate fingerprint listed below.
+
 # Security
 
-SHA-256 fingerprint for the signing certificate used for github releases
+SHA-256 fingerprint for the signing certificate used for GitHub releases:
 ```text
 0F:E1:B9:F4:4A:4D:B9:7E:C5:09:48:F5:18:9F:6B:43:00:71:6C:C6:D4:84:3F:56:98:D6:14:A2:15:2E:21:88
+```
+
+Verify with:
+```shell
+keytool -list -printcert -jarfile androidApp/build/outputs/apk/foss/release/*.apk | grep SHA256
 ```
