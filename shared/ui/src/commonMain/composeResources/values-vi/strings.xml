@@ -61,7 +61,7 @@
     <string name="unlock_plus">Mở khóa với gói cao cấp</string>
     <string name="monthly_progress">Tiến trình hàng tháng</string>
     <string name="foss">Bạn đang sử dụng ứng dụng miễn phí và mã nguồn mở</string>
-    <string name="foss_desc">Tất cả tính năng đã được mở khóa. Ứng dụng này không hỗ trợ giao dịch mua trong ứng dụng. Nếu ứng dụng này hữu ích cho cuộc đời của bạn, hỗ trợ tôi bằng cách quyên góp cho tôi tại</string>
+    <string name="foss_desc">Tất cả tính năng đã được mở khóa. Ứng dụng này không hỗ trợ giao dịch mua trong ứng dụng. Nếu ứng dụng này hữu ích cho cuộc sống của bạn, hỗ trợ tôi bằng cách quyên góp cho tôi tại</string>
     <string name="add_reminder">Thêm Lời nhắc</string>
     <string name="grit_plus">Grit cao cấp</string>
     <string name="add_reminder_desc">Nhận thông báo nhắc nhở trong các ngày đã chọn</string>
@@ -81,4 +81,9 @@
     <string name="select_days">Chọn các ngày</string>
     <string name="system_default">Mặc định của hệ thống</string>
     <string name="language">Ngôn ngữ</string>
+    <string name="bmc_desc">Hỗ trợ tôi bằng một khoản quyên góp nhỏ</string>
+    <string name="translate_desc">Dịch Grit sang ngôn ngữ của bạn</string>
+    <string name="about">Giới thiệu</string>
+    <string name="consistency">Sự phù hợp (Consistency)</string>
+    <string name="yearly">Hằng năm</string>
 </resources>

@@ -17,9 +17,9 @@
 package com.shub39.grit.tasks.data.database
 
 import androidx.room3.AutoMigration
+import androidx.room3.ColumnTypeConverters
 import androidx.room3.Database
 import androidx.room3.RoomDatabase
-import androidx.room3.TypeConverters
 import com.shub39.grit.core.data.Converters
 
 @Database(
@@ -28,7 +28,7 @@ import com.shub39.grit.core.data.Converters
     exportSchema = true,
     autoMigrations = [AutoMigration(from = 4, to = 5)],
 )
-@TypeConverters(Converters::class)
+@ColumnTypeConverters(Converters::class)
 abstract class TaskDatabase : RoomDatabase() {
     abstract fun taskDao(): TasksDao
 

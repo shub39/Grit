@@ -17,8 +17,8 @@
 package com.shub39.grit.shared.ui.habit.ui.sections
 
 import androidx.compose.animation.AnimatedContent
+import androidx.compose.animation.core.animateDpAsState
 import androidx.compose.foundation.background
-import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -58,7 +58,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 import com.kizitonwose.calendar.compose.VerticalCalendar
 import com.kizitonwose.calendar.compose.VerticalYearCalendar
 import com.kizitonwose.calendar.compose.rememberCalendarState
@@ -89,20 +88,19 @@ import org.jetbrains.compose.resources.vectorResource
 fun CalendarHeatMap(
     state: HabitState,
     onNavigateBack: () -> Unit,
-    onChangeSelectedDay: (LocalDate) -> Unit,
+    onChangeSelectedDay: (LocalDate?) -> Unit,
     modifier: Modifier = Modifier,
 ) {
     var calendarType by rememberSaveable { mutableStateOf(CalendarType.MONTH) }
     val windowSizeClass = LocalWindowSizeClass.current
     val today = LocalDate.now()
     val totalHabits = state.habitsWithAnalytics.size
-    var selectedDay by remember { mutableStateOf(today) }
-    var showHabits by remember { mutableStateOf(false) }
+    var selectedDay: LocalDate? by remember { mutableStateOf(null) }
 
     LaunchedEffect(selectedDay) { onChangeSelectedDay(selectedDay) }
 
-    if (showHabits && state.overallAnalytics.completedHabits != null) {
-        GritBottomSheet(onDismissRequest = { showHabits = false }, padding = 16.dp) {
+    if (state.overallAnalytics.completedHabits != null) {
+        GritBottomSheet(onDismissRequest = { selectedDay = null }, padding = 16.dp) {
             state.overallAnalytics.completedHabits?.let { (date, habits) ->
                 Text(
                     text = date.toFormattedString(),
@@ -190,10 +188,7 @@ fun CalendarHeatMap(
                         state = state,
                         totalHabits = totalHabits,
                         selectedDay = selectedDay,
-                        onChangeSelectedDay = {
-                            selectedDay = it
-                            showHabits = true
-                        },
+                        onChangeSelectedDay = { selectedDay = it },
                     )
                 }
 
@@ -203,10 +198,7 @@ fun CalendarHeatMap(
                         today = today,
                         totalHabits = totalHabits,
                         selectedDay = selectedDay,
-                        onChangeSelectedDay = {
-                            selectedDay = it
-                            showHabits = true
-                        },
+                        onChangeSelectedDay = { selectedDay = it },
                     )
                 }
             }
@@ -220,7 +212,7 @@ private fun YearlyMap(
     today: LocalDate,
     state: HabitState,
     totalHabits: Int,
-    selectedDay: LocalDate,
+    selectedDay: LocalDate?,
     onChangeSelectedDay: (LocalDate) -> Unit,
 ) {
     val calendarState =
@@ -238,6 +230,8 @@ private fun YearlyMap(
                 .clip(RoundedCornerShape(topStart = 20.dp, topEnd = 20.dp)),
         contentPadding = PaddingValues(top = 16.dp, bottom = 60.dp),
         state = calendarState,
+        monthVerticalSpacing = 4.dp,
+        monthHorizontalSpacing = 4.dp,
         reverseLayout = true,
         calendarScrollPaged = false,
         yearHeader = { calendarYear ->
@@ -266,13 +260,16 @@ private fun YearlyMap(
                 return@VerticalYearCalendar
             val count = state.overallAnalytics.heatMapData[day.date]
 
+            val corners by
+                animateDpAsState(targetValue = if (selectedDay == day.date) 1000.dp else 2.dp)
+
             Box(
                 modifier =
                     Modifier.padding(1.dp)
                         .fillMaxWidth()
                         .aspectRatio(1f)
                         .background(
-                            shape = MaterialTheme.shapes.extraSmall,
+                            shape = RoundedCornerShape(corners),
                             color =
                                 when (count) {
                                     0 -> MaterialTheme.colorScheme.surfaceContainerHighest
@@ -285,40 +282,9 @@ private fun YearlyMap(
                                         )
                                 },
                         )
-                        .then(
-                            if (selectedDay == day.date) {
-                                Modifier.border(
-                                    width = 2.dp,
-                                    color = MaterialTheme.colorScheme.onSurface,
-                                    shape = MaterialTheme.shapes.extraSmall,
-                                )
-                            } else Modifier
-                        )
                         .clip(MaterialTheme.shapes.medium)
-                        .clickable { onChangeSelectedDay(day.date) },
-                contentAlignment = Alignment.Center,
-            ) {
-                val textColor =
-                    when (count) {
-                        0 -> MaterialTheme.colorScheme.onSurface
-                        null -> MaterialTheme.colorScheme.onSurfaceVariant
-                        else -> {
-                            val alpha = (count.toFloat() / totalHabits).coerceIn(0f, 1f)
-
-                            if (alpha in 0f..0.5f) {
-                                MaterialTheme.colorScheme.primary
-                            } else {
-                                MaterialTheme.colorScheme.onPrimary
-                            }
-                        }
-                    }
-
-                Text(
-                    text = day.date.day.toString(),
-                    style =
-                        MaterialTheme.typography.labelSmall.copy(fontSize = 8.sp, color = textColor),
-                )
-            }
+                        .clickable(enabled = count != null) { onChangeSelectedDay(day.date) }
+            )
         },
     )
 }
@@ -329,7 +295,7 @@ private fun MonthlyMap(
     state: HabitState,
     today: LocalDate,
     totalHabits: Int,
-    selectedDay: LocalDate,
+    selectedDay: LocalDate?,
     onChangeSelectedDay: (LocalDate) -> Unit,
 ) {
     val calendarState =
@@ -353,13 +319,16 @@ private fun MonthlyMap(
             if (day.date > today || day.position != DayPosition.MonthDate) return@VerticalCalendar
             val count = state.overallAnalytics.heatMapData[day.date]
 
+            val corners by
+                animateDpAsState(targetValue = if (selectedDay == day.date) 1000.dp else 8.dp)
+
             Box(
                 modifier =
                     Modifier.fillMaxWidth()
                         .aspectRatio(1f)
                         .padding(1.dp)
                         .background(
-                            shape = MaterialTheme.shapes.extraSmall,
+                            shape = RoundedCornerShape(corners),
                             color =
                                 when (count) {
                                     0 -> MaterialTheme.colorScheme.surfaceContainerHighest
@@ -372,17 +341,8 @@ private fun MonthlyMap(
                                         )
                                 },
                         )
-                        .then(
-                            if (selectedDay == day.date) {
-                                Modifier.border(
-                                    width = 2.dp,
-                                    color = MaterialTheme.colorScheme.onSurface,
-                                    shape = MaterialTheme.shapes.extraSmall,
-                                )
-                            } else Modifier
-                        )
-                        .clip(MaterialTheme.shapes.medium)
-                        .clickable { onChangeSelectedDay(day.date) },
+                        .clip(RoundedCornerShape(corners))
+                        .clickable(enabled = count != null) { onChangeSelectedDay(day.date) },
                 contentAlignment = Alignment.Center,
             ) {
                 val textColor =
@@ -400,7 +360,11 @@ private fun MonthlyMap(
                         }
                     }
 
-                Text(text = day.date.day.toString(), color = textColor)
+                Text(
+                    text = day.date.day.toString(),
+                    color = textColor,
+                    fontFamily = flexFontRounded(),
+                )
             }
         },
     )

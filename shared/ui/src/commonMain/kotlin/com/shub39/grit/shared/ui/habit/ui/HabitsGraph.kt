@@ -130,7 +130,10 @@ fun HabitsGraph(
                             PageFill {
                                 val lazyListState = rememberLazyListState()
                                 val fabVisible by remember {
-                                    derivedStateOf { lazyListState.firstVisibleItemIndex == 0 }
+                                    derivedStateOf {
+                                        lazyListState.firstVisibleItemIndex == 0 &&
+                                            lazyListState.firstVisibleItemScrollOffset == 0
+                                    }
                                 }
 
                                 HabitsList(
@@ -244,7 +247,10 @@ private fun ExpandedScreen(
             Box {
                 val lazyListState = rememberLazyListState()
                 val fabVisible by remember {
-                    derivedStateOf { lazyListState.firstVisibleItemIndex == 0 }
+                    derivedStateOf {
+                        lazyListState.firstVisibleItemIndex == 0 &&
+                            lazyListState.firstVisibleItemScrollOffset == 0
+                    }
                 }
 
                 HabitsList(

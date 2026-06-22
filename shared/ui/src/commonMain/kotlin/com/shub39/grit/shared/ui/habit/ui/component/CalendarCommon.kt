@@ -34,6 +34,7 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import com.kizitonwose.calendar.core.CalendarDay
 import com.kizitonwose.calendar.core.CalendarMonth
 import com.kizitonwose.calendar.core.DayPosition
@@ -77,7 +78,98 @@ fun CalendarMonthHeader(
 }
 
 @Composable
-fun CalendarDayContent(
+fun YearlyCalendarDayContent(
+    day: CalendarDay,
+    doneDates: Set<LocalDate>,
+    today: LocalDate,
+    habitDays: Set<DayOfWeek>,
+    edgeWeeks: List<DayOfWeek>,
+    modifier: Modifier = Modifier,
+    style: TextStyle =
+        MaterialTheme.typography.labelSmall.copy(fontSize = 9.sp, fontFamily = flexFontRounded()),
+    onDateClick: (LocalDate) -> Unit,
+) {
+    if (day.position != DayPosition.MonthDate) return
+
+    val done = day.date in doneDates
+    val validDate = day.date <= today && day.date.dayOfWeek in habitDays
+
+    val donePrevious = day.date.minusDays(1) in doneDates
+    val doneAfter = day.date.plusDays(1) in doneDates
+    val streakPosition: StreakPosition =
+        when {
+            donePrevious && doneAfter -> MIDDLE
+            donePrevious -> END
+            doneAfter -> START
+            else -> ISOLATED
+        }
+
+    Box(
+        modifier =
+            modifier
+                .padding(top = 1.dp, bottom = 1.dp)
+                .fillMaxWidth()
+                .height(20.dp)
+                .clip(
+                    calendarMapStreakShape(
+                        streakPosition = streakPosition,
+                        isFirstDayOfWeek = day.date.dayOfWeek == edgeWeeks.first(),
+                        isLastDayOfWeek = day.date.dayOfWeek == edgeWeeks.last(),
+                        isFirstDayOfMonth = day.date.day == 1,
+                        isLastDayOfMonth = day.date.plusDays(1).day == 1,
+                    )
+                )
+                .clickable(enabled = validDate) { onDateClick(day.date) },
+        contentAlignment = Alignment.Center,
+    ) {
+        if (done) {
+            Box(
+                modifier =
+                    Modifier.fillMaxSize().background(color = MaterialTheme.colorScheme.primary),
+                contentAlignment = Alignment.Center,
+            ) {
+                val isStreakEnd = streakPosition == START || streakPosition == END
+
+                if (isStreakEnd) {
+                    Box(
+                        modifier =
+                            Modifier.fillMaxSize()
+                                .padding(1.dp)
+                                .background(
+                                    color = MaterialTheme.colorScheme.onPrimary,
+                                    shape = CircleShape,
+                                ),
+                        contentAlignment = Alignment.Center,
+                    ) {
+                        Text(
+                            text = day.date.day.toString(),
+                            style = style,
+                            color = MaterialTheme.colorScheme.primary,
+                        )
+                    }
+                } else {
+                    Text(
+                        text = day.date.day.toString(),
+                        style = style,
+                        color = MaterialTheme.colorScheme.onPrimary,
+                    )
+                }
+            }
+        } else if (validDate) {
+            Box(
+                modifier =
+                    Modifier.matchParentSize()
+                        .background(
+                            color = MaterialTheme.colorScheme.surfaceContainerLow,
+                            shape = CircleShape,
+                        )
+            )
+        }
+    }
+}
+
+@Composable
+fun MonthlyCalendarDayContent(
     day: CalendarDay,
     doneDates: Set<LocalDate>,
     today: LocalDate,
@@ -86,7 +178,7 @@ fun CalendarDayContent(
     onDateClick: (LocalDate) -> Unit,
     modifier: Modifier = Modifier,
     height: Dp = 40.dp,
-    style: TextStyle = MaterialTheme.typography.bodyLarge,
+    style: TextStyle = MaterialTheme.typography.bodyLarge.copy(fontFamily = flexFontRounded()),
 ) {
     if (day.position != DayPosition.MonthDate) return
 

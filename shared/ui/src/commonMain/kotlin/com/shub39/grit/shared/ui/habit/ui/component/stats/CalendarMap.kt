@@ -37,9 +37,9 @@ import com.shub39.grit.core.habits.HabitStatus
 import com.shub39.grit.shared.ui.GritPreviewWrapper
 import com.shub39.grit.shared.ui.habit.daysStartingFrom
 import com.shub39.grit.shared.ui.habit.ui.component.AnalyticsCard
-import com.shub39.grit.shared.ui.habit.ui.component.CalendarDayContent
 import com.shub39.grit.shared.ui.habit.ui.component.CalendarMonthHeader
 import com.shub39.grit.shared.ui.habit.ui.component.CardArrows
+import com.shub39.grit.shared.ui.habit.ui.component.MonthlyCalendarDayContent
 import grit.shared.ui.generated.resources.*
 import kotlinx.coroutines.launch
 import kotlinx.datetime.DateTimeUnit
@@ -122,7 +122,7 @@ fun CalendarMap(
                 )
             },
             dayContent = { day ->
-                CalendarDayContent(
+                MonthlyCalendarDayContent(
                     day = day,
                     doneDates = doneDates,
                     today = today,

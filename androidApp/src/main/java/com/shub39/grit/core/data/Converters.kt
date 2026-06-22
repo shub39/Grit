@@ -16,8 +16,7 @@
  */
 package com.shub39.grit.core.data
 
-import androidx.room3.TypeConverter
-import kotlin.time.ExperimentalTime
+import androidx.room3.ColumnTypeConverter
 import kotlin.time.Instant
 import kotlinx.datetime.DayOfWeek
 import kotlinx.datetime.LocalDate
@@ -29,37 +28,35 @@ import kotlinx.datetime.toLocalDateTime
 object Converters {
     val allDays = dayOfWeekToString(DayOfWeek.entries.toSet())
 
-    @TypeConverter
+    @ColumnTypeConverter
     fun dayOfWeekToString(value: Set<DayOfWeek>): String {
         return value.joinToString(",") { it.name }
     }
 
-    @TypeConverter
+    @ColumnTypeConverter
     fun dayOfWeekFromString(value: String): Set<DayOfWeek> {
         return if (value.isBlank()) emptySet()
         else value.split(",").map { DayOfWeek.valueOf(it) }.toSet()
     }
 
-    @OptIn(ExperimentalTime::class)
-    @TypeConverter
+    @ColumnTypeConverter
     fun dateFromTimestamp(value: Long?): LocalDateTime? {
         return value?.let {
             Instant.fromEpochSeconds(value).toLocalDateTime(TimeZone.currentSystemDefault())
         }
     }
 
-    @OptIn(ExperimentalTime::class)
-    @TypeConverter
+    @ColumnTypeConverter
     fun dateToTimestamp(date: LocalDateTime?): Long? {
         return date?.toInstant(TimeZone.currentSystemDefault())?.epochSeconds
     }
 
-    @TypeConverter
+    @ColumnTypeConverter
     fun dayFromTimestamp(value: Long): LocalDate {
         return value.let { LocalDate.fromEpochDays(value) }
     }
 
-    @TypeConverter
+    @ColumnTypeConverter
     fun dayToTimestamp(date: LocalDate): Long {
         return date.toEpochDays()
     }

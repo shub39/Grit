@@ -1,5 +1,13 @@
 [
   {
+    "version": "6.0.3",
+    "changes": [
+      "Updated Translations",
+      "Calendar UI Improvements",
+      "Improved Floating Action Button Visibility #299 @therealVitia"
+    ]
+  },
+  {
     "version": "6.0.2",
     "changes": [
       "Updated Translations",
@@ -64,16 +72,6 @@
     "version": "5.9.1",
     "changes": [
       "Miscellaneous fixes and updates",
-      "Updated Translations"
-    ]
-  },
-  {
-    "version": "5.9.0",
-    "changes": [
-      "Fixed Floating action button position on large displays",
-      "Fixed Icons for RTL languages (#272)",
-      "Added Preview images for widgets in widget picker (#273)",
-      "Added Expressive Motion scheme to animations",
       "Updated Translations"
     ]
   }
