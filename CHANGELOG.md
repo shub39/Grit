@@ -1,5 +1,10 @@
 # Changelog
 
+## 6.0.3
+- Updated Translations
+- Calendar UI Improvements
+- Improved Floating Action Button Visibility #299 @therealVitia
+
 ## 6.0.2
 - Updated Translations
 - Miscellaneous Bug Fixes and Improvements
