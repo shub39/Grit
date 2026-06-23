@@ -78,12 +78,19 @@ class HabitViewModel(
                 is UpdateHabit -> upsertHabit(action.habit)
 
                 ReorderHabits -> {
+                    _state.update { it.copy(isReordering = true) }
                     val currentList =
                         _state.value.habitsWithAnalytics.mapIndexed { index, analytics ->
                             analytics.habit.copy(index = index)
                         }
 
-                    currentList.forEach { upsertHabit(it) }
+                    launch {
+                        try {
+                            currentList.forEach { upsertHabit(it) }
+                        } finally {
+                            _state.update { it.copy(isReordering = false) }
+                        }
+                    }
                 }
 
                 is PrepareAnalytics -> {
@@ -101,9 +108,25 @@ class HabitViewModel(
                 is OnToggleEditState -> _state.update { it.copy(editState = action.pref) }
 
                 is OnTransientHabitReorder -> {
-                    val currentList = _state.value.habitsWithAnalytics.toMutableList()
-                    currentList.add(action.to, currentList.removeAt(action.from))
-                    _state.update { it.copy(habitsWithAnalytics = currentList) }
+                    if (action.from == action.to) return@launch
+                    val currentState = _state.value
+                    val filteredList = currentState.habitsWithAnalytics.filter {
+                        (it.habit.id in currentState.archivedHabitIds) == currentState.showArchivedHabits
+                    }
+                    if (action.from in filteredList.indices && action.to in filteredList.indices) {
+                        val fromItem = filteredList[action.from]
+                        val toItem = filteredList[action.to]
+
+                        val currentList = currentState.habitsWithAnalytics.toMutableList()
+                        val fromIndexUnfiltered = currentList.indexOf(fromItem)
+                        currentList.removeAt(fromIndexUnfiltered)
+
+                        val toIndexUnfiltered = currentList.indexOf(toItem)
+                        val insertIndex = if (action.from < action.to) toIndexUnfiltered + 1 else toIndexUnfiltered
+
+                        currentList.add(insertIndex, fromItem)
+                        _state.update { it.copy(habitsWithAnalytics = currentList) }
+                    }
                 }
 
                 is FetchCompletedHabitsForDate -> {
@@ -160,7 +183,7 @@ class HabitViewModel(
                 combine(repo.getHabitsWithAnalytics(), repo.getCompletedHabitIds()) { habits,
                                                                                       completedHabits ->
                     _state.update {
-                        it.copy(
+                        if (it.isReordering) it else it.copy(
                             habitsWithAnalytics = habits,
                             completedHabitIds = completedHabits,
                         )

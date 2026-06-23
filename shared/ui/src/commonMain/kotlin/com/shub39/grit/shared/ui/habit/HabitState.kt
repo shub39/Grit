@@ -60,4 +60,5 @@ data class HabitState(
     val archivedHabitIds: Set<Long> = emptySet(),
     val showArchivedHabits: Boolean = false,
     val showOverallAnalytics: Boolean = false,
+    val isReordering: Boolean = false,
 )

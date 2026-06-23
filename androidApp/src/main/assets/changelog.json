@@ -7,7 +7,9 @@
       "Added a gold circle to indicate habit creation date (days days prior to that are grayed out)",
       "Fixed analytics & stats to respect the first day of week preference",
       "Added ability to archive habits",
-      "Added app shortcuts for launcher"
+      "Added app shortcuts for launcher",
+      "Smooth fade animation when switching between app themes",
+      "Added a tactile bounce effect when tapping habit cards"
     ]
   },
   {

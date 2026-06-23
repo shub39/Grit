@@ -60,7 +60,10 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.focus.focusRequester
+import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
+import androidx.compose.ui.input.pointer.pointerInput
+import androidx.compose.foundation.gestures.detectTapGestures
 import androidx.compose.ui.text.TextRange
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardCapitalization
@@ -127,6 +130,8 @@ fun HabitUpsertSheetContent(
             initialSelection = TextRange(newHabit.description.length),
         )
 
+    val focusManager = LocalFocusManager.current
+
     LaunchedEffect(Unit) {
         delay(400)
         focusRequester.requestFocus()
@@ -136,7 +141,11 @@ fun HabitUpsertSheetContent(
     GritBottomSheet(
         onDismissRequest = onDismissRequest,
         padding = 0.dp,
-        modifier = modifier.imePadding(),
+        modifier = modifier
+            .imePadding()
+            .pointerInput(Unit) {
+                detectTapGestures(onTap = { focusManager.clearFocus() })
+            },
     ) {
         Column(
             verticalArrangement = Arrangement.spacedBy(8.dp),
@@ -185,7 +194,7 @@ fun HabitUpsertSheetContent(
                             imeAction = ImeAction.Next,
                         ),
                     label = {
-                        if (newHabit.title.length <= 20) {
+                        if (titleTextFieldState.text.trimEnd().length <= 20) {
                             Text(
                                 text =
                                     stringResource(
@@ -197,7 +206,7 @@ fun HabitUpsertSheetContent(
                             Text(text = stringResource(Res.string.too_long))
                         }
                     },
-                    isError = newHabit.title.length > 20,
+                    isError = titleTextFieldState.text.trimEnd().length > 20,
                     modifier = Modifier.fillMaxWidth().focusRequester(focusRequester),
                 )
             }
@@ -214,7 +223,7 @@ fun HabitUpsertSheetContent(
                         ),
                     modifier = Modifier.fillMaxWidth(),
                     label = {
-                        if (newHabit.description.length <= 50) {
+                        if (descTextFieldState.text.trimEnd().length <= 50) {
                             Text(
                                 text =
                                     stringResource(
@@ -226,7 +235,7 @@ fun HabitUpsertSheetContent(
                             Text(text = stringResource(Res.string.too_long))
                         }
                     },
-                    isError = newHabit.description.length > 50,
+                    isError = descTextFieldState.text.trimEnd().length > 50,
                 )
             }
 
@@ -354,16 +363,16 @@ fun HabitUpsertSheetContent(
                     onClick = {
                         onUpsertHabit(
                             newHabit.copy(
-                                title = titleTextFieldState.text.toString(),
-                                description = descTextFieldState.text.toString(),
+                                title = titleTextFieldState.text.toString().trim(),
+                                description = descTextFieldState.text.toString().trim(),
                             )
                         )
                         onDismissRequest()
                     },
                     modifier = Modifier.padding(bottom = 32.dp).fillMaxWidth(),
                     enabled =
-                        descTextFieldState.text.length <= 50 &&
-                            titleTextFieldState.text.length <= 20 &&
+                        descTextFieldState.text.trimEnd().length <= 50 &&
+                            titleTextFieldState.text.trimEnd().length <= 20 &&
                             titleTextFieldState.text.isNotBlank(),
                 ) {
                     Text(
