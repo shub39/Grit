@@ -148,4 +148,8 @@ class MainViewModel(
         }
         _state.update { it.copy(currentChangelog = null) }
     }
+
+    fun setShortcutAction(action: String?) {
+        _state.update { it.copy(shortcutAction = action) }
+    }
 }

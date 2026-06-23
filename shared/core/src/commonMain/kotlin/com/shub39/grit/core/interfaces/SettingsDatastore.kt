@@ -52,4 +52,8 @@ interface SettingsDatastore {
     fun getLastChangelogShown(): Flow<String>
 
     suspend fun updateLastChangelogShown(version: String)
+
+    fun getArchivedHabitIds(): Flow<Set<Long>>
+
+    suspend fun setArchivedHabitIds(ids: Set<Long>)
 }

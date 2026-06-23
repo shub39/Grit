@@ -1,10 +1,12 @@
 # Changelog
 
-## 6.0.4
+## 6.1.0
 - UI: Can now swipe between tabs
 - Fixed widgets not matching the app theme
-- Added a gold circle for habit creation date and grayed out previous days in calendar
-- Fixed habit analytics and stats to respect the first day of the week preference
+- Added a gold circle to indicate habit creation date (days days prior to that are grayed out)
+- Fixed analytics & stats to respect the first day of week preference
+- Added ability to archive habits
+- Added app shortcuts for launcher
 
 ## 6.0.3
 - Updated Translations

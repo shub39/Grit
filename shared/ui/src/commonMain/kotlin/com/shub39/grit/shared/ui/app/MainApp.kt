@@ -50,6 +50,7 @@ import com.shub39.grit.shared.ui.task.ui.TasksPage
 import com.shub39.grit.shared.ui.viewmodel.HabitViewModel
 import com.shub39.grit.shared.ui.viewmodel.SettingsViewModel
 import com.shub39.grit.shared.ui.viewmodel.TasksViewModel
+import com.shub39.grit.shared.ui.viewmodel.MainViewModel
 import kotlinx.coroutines.launch
 import org.jetbrains.compose.resources.painterResource
 import org.jetbrains.compose.resources.stringResource
@@ -67,6 +68,31 @@ fun MainApp(state: MainAppState, onNavigateToPaywall: () -> Unit) {
         pageCount = { AppSections.mainRoutes.size }
     )
     val coroutineScope = rememberCoroutineScope()
+
+    val mvm: MainViewModel = koinViewModel()
+    val tvm: TasksViewModel = koinViewModel()
+    val hvm: HabitViewModel = koinViewModel()
+
+    androidx.compose.runtime.LaunchedEffect(state.shortcutAction) {
+        state.shortcutAction?.let { action ->
+            when (action) {
+                "add_habit" -> {
+                    pagerState.animateScrollToPage(AppSections.mainRoutes.indexOf(AppSections.HabitPages).coerceAtLeast(0))
+                    hvm.onAction(com.shub39.grit.shared.ui.habit.HabitsAction.OnAddHabitClicked)
+                }
+                "add_task" -> {
+                    pagerState.animateScrollToPage(AppSections.mainRoutes.indexOf(AppSections.TaskPages).coerceAtLeast(0))
+                    tvm.onAction(com.shub39.grit.shared.ui.task.TaskAction.ToggleAddTaskSheet(true))
+                }
+                "overall_analytics" -> {
+                    pagerState.animateScrollToPage(AppSections.mainRoutes.indexOf(AppSections.HabitPages).coerceAtLeast(0))
+                    hvm.onAction(com.shub39.grit.shared.ui.habit.HabitsAction.PrepareAnalytics(null))
+                    hvm.onAction(com.shub39.grit.shared.ui.habit.HabitsAction.ToggleOverallAnalytics(true))
+                }
+            }
+            mvm.setShortcutAction(null)
+        }
+    }
 
     when (windowSizeClass.widthSizeClass) {
         Compact -> {
@@ -97,7 +123,6 @@ fun MainApp(state: MainAppState, onNavigateToPaywall: () -> Unit) {
                 ) { page ->
                     when (val route = AppSections.mainRoutes[page]) {
                         is AppSections.TaskPages -> {
-                            val tvm: TasksViewModel = koinViewModel()
                             val taskPageState by tvm.state.collectAsStateWithLifecycle()
 
                             TasksPage(state = taskPageState, onAction = tvm::onAction)
@@ -116,7 +141,6 @@ fun MainApp(state: MainAppState, onNavigateToPaywall: () -> Unit) {
                         }
 
                         is AppSections.HabitPages -> {
-                            val hvm: HabitViewModel = koinViewModel()
                             val habitsPageState by hvm.state.collectAsStateWithLifecycle()
 
                             HabitsGraph(
@@ -153,7 +177,6 @@ fun MainApp(state: MainAppState, onNavigateToPaywall: () -> Unit) {
                 ) { page ->
                     when (val route = AppSections.mainRoutes[page]) {
                         is AppSections.TaskPages -> {
-                            val tvm: TasksViewModel = koinViewModel()
                             val taskPageState by tvm.state.collectAsStateWithLifecycle()
 
                             TasksPage(state = taskPageState, onAction = tvm::onAction)
@@ -172,7 +195,6 @@ fun MainApp(state: MainAppState, onNavigateToPaywall: () -> Unit) {
                         }
 
                         is AppSections.HabitPages -> {
-                            val hvm: HabitViewModel = koinViewModel()
                             val habitsPageState by hvm.state.collectAsStateWithLifecycle()
 
                             HabitsGraph(

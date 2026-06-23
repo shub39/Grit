@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="utf-8"?>
+<shortcuts xmlns:android="http://schemas.android.com/apk/res/android">
+    <shortcut
+        android:shortcutId="add_habit"
+        android:enabled="true"
+        android:icon="@drawable/ic_shortcut_add"
+        android:shortcutShortLabel="@string/shortcut_add_habit"
+        android:shortcutLongLabel="@string/shortcut_add_new_habit">
+        <intent
+            android:action="android.intent.action.VIEW"
+            android:targetPackage="com.shub39.grit"
+            android:targetClass="com.shub39.grit.app.MainActivity">
+            <extra android:name="shortcut_action" android:value="add_habit" />
+        </intent>
+        <categories android:name="android.shortcut.conversation" />
+    </shortcut>
+
+    <shortcut
+        android:shortcutId="add_task"
+        android:enabled="true"
+        android:icon="@drawable/ic_shortcut_task"
+        android:shortcutShortLabel="@string/shortcut_add_task"
+        android:shortcutLongLabel="@string/shortcut_add_new_task">
+        <intent
+            android:action="android.intent.action.VIEW"
+            android:targetPackage="com.shub39.grit"
+            android:targetClass="com.shub39.grit.app.MainActivity">
+            <extra android:name="shortcut_action" android:value="add_task" />
+        </intent>
+        <categories android:name="android.shortcut.conversation" />
+    </shortcut>
+
+    <shortcut
+        android:shortcutId="overall_analytics"
+        android:enabled="true"
+        android:icon="@drawable/ic_shortcut_analytics"
+        android:shortcutShortLabel="@string/shortcut_analytics"
+        android:shortcutLongLabel="@string/shortcut_overall_analytics">
+        <intent
+            android:action="android.intent.action.VIEW"
+            android:targetPackage="com.shub39.grit"
+            android:targetClass="com.shub39.grit.app.MainActivity">
+            <extra android:name="shortcut_action" android:value="overall_analytics" />
+        </intent>
+        <categories android:name="android.shortcut.conversation" />
+    </shortcut>
+
+</shortcuts>

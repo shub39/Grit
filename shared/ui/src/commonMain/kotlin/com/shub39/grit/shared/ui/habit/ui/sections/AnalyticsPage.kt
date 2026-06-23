@@ -150,6 +150,21 @@ fun AnalyticsPage(
                 }
             },
             actions = {
+                val isArchived = currentHabit.habit.id in state.archivedHabitIds
+                OutlinedIconButton(
+                    onClick = { onAction(HabitsAction.ToggleArchiveHabit(currentHabit.habit.id, !isArchived)) },
+                    shapes =
+                        IconButtonShapes(
+                            shape = CircleShape,
+                            pressedShape = MaterialTheme.shapes.small,
+                        ),
+                ) {
+                    Icon(
+                        imageVector = vectorResource(if (isArchived) Res.drawable.drive_folder_upload else Res.drawable.download),
+                        contentDescription = if (isArchived) "Unarchive Habit" else "Archive Habit",
+                    )
+                }
+
                 OutlinedIconButton(
                     onClick = { deleteDialog = true },
                     shapes =

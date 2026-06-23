@@ -35,4 +35,6 @@ sealed interface TaskAction {
     data class ReorderCategories(val mapping: List<Pair<Int, Category>>) : TaskAction
 
     data class UpsertTask(val task: Task) : TaskAction
+
+    data class ToggleAddTaskSheet(val show: Boolean) : TaskAction
 }

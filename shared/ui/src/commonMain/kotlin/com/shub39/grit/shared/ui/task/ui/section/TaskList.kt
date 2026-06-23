@@ -122,6 +122,13 @@ fun TaskList(state: TaskState, onAction: (TaskAction) -> Unit, onEditCategories:
         var editState by remember { mutableStateOf(false) }
         var editTask: Task? by remember { mutableStateOf(null) }
 
+        androidx.compose.runtime.LaunchedEffect(state.showAddTaskSheet) {
+            if (state.showAddTaskSheet) {
+                showTaskAddSheet = true
+                onAction(TaskAction.ToggleAddTaskSheet(false))
+            }
+        }
+
         val scrollBehavior = TopAppBarDefaults.enterAlwaysScrollBehavior()
 
         Column(

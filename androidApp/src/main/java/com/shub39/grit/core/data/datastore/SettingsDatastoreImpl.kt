@@ -21,6 +21,7 @@ import androidx.datastore.preferences.core.Preferences
 import androidx.datastore.preferences.core.booleanPreferencesKey
 import androidx.datastore.preferences.core.edit
 import androidx.datastore.preferences.core.stringPreferencesKey
+import androidx.datastore.preferences.core.stringSetPreferencesKey
 import com.shub39.grit.core.interfaces.SettingsDatastore
 import com.shub39.grit.core.settings.Sections
 import kotlinx.coroutines.flow.Flow
@@ -40,6 +41,7 @@ class SettingsDatastoreImpl(private val datastore: DataStore<Preferences>) : Set
         private val taskReorderKey = booleanPreferencesKey("task_reorder")
         private val compactHabitView = booleanPreferencesKey("compact_habit_view")
         private val lastChangelogShownKey = stringPreferencesKey("last_changelog_shown")
+        private val archivedHabitIdsKey = stringSetPreferencesKey("archived_habit_ids")
     }
 
     override fun getStartOfTheWeekPref(): Flow<DayOfWeek> =
@@ -102,5 +104,16 @@ class SettingsDatastoreImpl(private val datastore: DataStore<Preferences>) : Set
 
     override suspend fun updateLastChangelogShown(version: String) {
         datastore.edit { settings -> settings[lastChangelogShownKey] = version }
+    }
+
+    override fun getArchivedHabitIds(): Flow<Set<Long>> =
+        datastore.data.map { prefs ->
+            prefs[archivedHabitIdsKey]?.mapNotNull { it.toLongOrNull() }?.toSet() ?: emptySet()
+        }
+
+    override suspend fun setArchivedHabitIds(ids: Set<Long>) {
+        datastore.edit { prefs ->
+            prefs[archivedHabitIdsKey] = ids.map { it.toString() }.toSet()
+        }
     }
 }

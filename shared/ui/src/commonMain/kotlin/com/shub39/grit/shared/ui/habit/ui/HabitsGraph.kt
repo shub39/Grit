@@ -109,8 +109,21 @@ fun HabitsGraph(
 
     val scrollBehavior = TopAppBarDefaults.enterAlwaysScrollBehavior()
 
+    val filteredState = state.copy(
+        habitsWithAnalytics = state.habitsWithAnalytics.filter {
+            (it.habit.id in state.archivedHabitIds) == state.showArchivedHabits
+        }
+    )
+
     if (windowSizeClass.widthSizeClass != WindowWidthSizeClass.Expanded) {
         val backstack = rememberNavBackStack(config, HabitRoutes.HabitList)
+
+        LaunchedEffect(state.showOverallAnalytics) {
+            if (state.showOverallAnalytics) {
+                backstack.add(HabitRoutes.OverallAnalytics)
+                onAction(HabitsAction.ToggleOverallAnalytics(false))
+            }
+        }
 
         NavDisplay(
             modifier = modifier,
@@ -122,7 +135,7 @@ fun HabitsGraph(
                             modifier = Modifier.background(MaterialTheme.colorScheme.background)
                         ) {
                             HabitsTopAppBar(
-                                state = state,
+                                state = filteredState,
                                 onAction = onAction,
                                 scrollBehavior = scrollBehavior,
                             )
@@ -137,7 +150,7 @@ fun HabitsGraph(
                                 }
 
                                 HabitsList(
-                                    state = state,
+                                    state = filteredState,
                                     onAction = onAction,
                                     lazyListState = lazyListState,
                                     onNavigateToAnalytics = {
@@ -152,7 +165,7 @@ fun HabitsGraph(
                                     onNavigateToOverallAnalytics = {
                                         backstack.add(HabitRoutes.OverallAnalytics)
                                     },
-                                    state = state,
+                                    state = filteredState,
                                     fabVisible = fabVisible,
                                     onAction = onAction,
                                     onNavigateToPaywall = onNavigateToPaywall,
@@ -222,7 +235,7 @@ fun HabitsGraph(
     } else {
         ExpandedScreen(
             modifier = modifier,
-            state = state,
+            state = filteredState,
             onAction = onAction,
             scrollBehavior = scrollBehavior,
             onNavigateToPaywall = onNavigateToPaywall,
@@ -403,7 +416,7 @@ private fun HabitsTopAppBar(
         },
         actions = {
             AnimatedVisibility(
-                visible = state.habitsWithAnalytics.isNotEmpty(),
+                visible = state.habitsWithAnalytics.isNotEmpty() || state.archivedHabitIds.isNotEmpty() || state.showArchivedHabits,
                 enter = fadeIn(MaterialTheme.motionScheme.fastEffectsSpec()),
                 exit = fadeOut(MaterialTheme.motionScheme.fastEffectsSpec()),
             ) {
@@ -428,6 +441,22 @@ private fun HabitsTopAppBar(
                                     }
                                 ),
                             contentDescription = "Compact View",
+                        )
+                    }
+
+                    FilledTonalIconToggleButton(
+                        checked = state.showArchivedHabits,
+                        shapes =
+                            IconToggleButtonShapes(
+                                shape = CircleShape,
+                                checkedShape = MaterialTheme.shapes.small,
+                                pressedShape = MaterialTheme.shapes.extraSmall,
+                            ),
+                        onCheckedChange = { onAction(HabitsAction.ToggleShowArchivedHabits(it)) },
+                    ) {
+                        Icon(
+                            painter = painterResource(Res.drawable.download),
+                            contentDescription = "Archived Habits",
                         )
                     }
 

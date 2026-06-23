@@ -54,6 +54,10 @@ class MainActivity : FragmentActivity() {
 
         createNotificationChannel(this)
 
+        intent.getStringExtra("shortcut_action")?.let {
+            mainViewModel.setShortcutAction(it)
+        }
+
         setContent {
             val windowSizeClass = calculateWindowSizeClass(this)
 
@@ -95,6 +99,13 @@ class MainActivity : FragmentActivity() {
                     }
                 }
             }
+        }
+    }
+
+    override fun onNewIntent(intent: android.content.Intent) {
+        super.onNewIntent(intent)
+        intent.getStringExtra("shortcut_action")?.let {
+            mainViewModel.setShortcutAction(it)
         }
     }
 

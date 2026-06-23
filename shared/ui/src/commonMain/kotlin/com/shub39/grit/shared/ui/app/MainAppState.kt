@@ -31,4 +31,5 @@ data class MainAppState(
     val startingSection: Sections = Sections.Tasks,
     val theme: Theme = Theme(),
     val currentChangelog: VersionEntry? = null,
+    val shortcutAction: String? = null,
 )

@@ -53,4 +53,10 @@ sealed interface HabitsAction {
     data object ReorderHabits : HabitsAction
 
     data class FetchCompletedHabitsForDate(val date: LocalDate?) : HabitsAction
+
+    data class ToggleArchiveHabit(val id: Long, val isArchived: Boolean) : HabitsAction
+
+    data class ToggleShowArchivedHabits(val show: Boolean) : HabitsAction
+
+    data class ToggleOverallAnalytics(val show: Boolean) : HabitsAction
 }

@@ -40,6 +40,8 @@ import kotlinx.datetime.DayOfWeek
  * @property is24Hr A user preference flag to display time in 24-hour format.
  * @property startingDay A user preference for the day of the week the calendar/week view should
  *   start on.
+ * @property archivedHabitIds A set of habit IDs that the user has archived.
+ * @property showArchivedHabits A boolean flag to view archived habits.
  */
 @Stable
 @Immutable
@@ -55,4 +57,7 @@ data class HabitState(
     val compactHabitView: Boolean = false,
     val is24Hr: Boolean = false,
     val startingDay: DayOfWeek = DayOfWeek.MONDAY,
+    val archivedHabitIds: Set<Long> = emptySet(),
+    val showArchivedHabits: Boolean = false,
+    val showOverallAnalytics: Boolean = false,
 )

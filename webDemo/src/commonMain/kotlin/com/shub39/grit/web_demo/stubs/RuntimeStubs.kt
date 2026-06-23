@@ -164,6 +164,14 @@ class SettingsDatastoreStub : SettingsDatastore {
     override suspend fun updateLastChangelogShown(version: String) {
         _lastChangelog.update { version }
     }
+
+    override fun getArchivedHabitIds(): Flow<Set<Long>> {
+        return flowOf(emptySet())
+    }
+
+    override suspend fun setArchivedHabitIds(ids: Set<Long>) {
+        TODO("Not yet implemented")
+    }
 }
 
 @Single(binds = [TaskRepo::class])

@@ -134,6 +134,21 @@ class HabitViewModel(
                         }
                     }
                 }
+
+                is ToggleArchiveHabit -> {
+                    val currentArchived = _state.value.archivedHabitIds.toMutableSet()
+                    if (action.isArchived) currentArchived.add(action.id)
+                    else currentArchived.remove(action.id)
+                    datastore.setArchivedHabitIds(currentArchived)
+                }
+
+                is ToggleShowArchivedHabits -> {
+                    _state.update { it.copy(showArchivedHabits = action.show) }
+                }
+
+                is ToggleOverallAnalytics -> {
+                    _state.update { it.copy(showOverallAnalytics = action.show) }
+                }
             }
         }
     }
@@ -183,6 +198,11 @@ class HabitViewModel(
                 datastore
                     .getIs24Hr()
                     .onEach { pref -> _state.update { it.copy(is24Hr = pref) } }
+                    .launchIn(this)
+
+                datastore
+                    .getArchivedHabitIds()
+                    .onEach { pref -> _state.update { it.copy(archivedHabitIds = pref) } }
                     .launchIn(this)
             }
     }

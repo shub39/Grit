@@ -118,6 +118,8 @@ class TasksViewModel(
                 }
 
                 is DeleteTask -> repo.deleteTask(action.task)
+
+                is ToggleAddTaskSheet -> _state.update { it.copy(showAddTaskSheet = action.show) }
             }
         }
     }

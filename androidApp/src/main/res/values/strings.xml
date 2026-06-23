@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="shortcut_add_habit">Add Habit</string>
+    <string name="shortcut_add_new_habit">Add New Habit</string>
+    <string name="shortcut_add_task">Add Task</string>
+    <string name="shortcut_add_new_task">Add New Task</string>
+    <string name="shortcut_analytics">Analytics</string>
+    <string name="shortcut_overall_analytics">Overall Analytics</string>
+</resources>

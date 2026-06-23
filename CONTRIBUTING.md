@@ -3,6 +3,7 @@
 Thank you for your interest in contributing to Grit! appreciate your support.
 
 ## How to Contribute
+
 1. **Fork the Repository:** Fork the repository to your own GitHub account.
 2. **Create a Branch:** Create a new branch for your feature or bug fix from `dev`. Use a 
 descriptive name, such as `feat/add-new-feature` or `fix/resolve-issue-123`.
