@@ -7,6 +7,8 @@
 - Fixed analytics & stats to respect the first day of week preference
 - Added ability to archive habits
 - Added app shortcuts for launcher
+- Smooth fade animation when switching between app themes
+- Added a tactile bounce effect when tapping habit cards
 
 ## 6.0.3
 - Updated Translations

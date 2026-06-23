@@ -58,7 +58,7 @@ actual fun GritTheme(theme: Theme, content: @Composable (() -> Unit)) {
         }
 
     MaterialExpressiveTheme(
-        colorScheme = colorScheme,
+        colorScheme = colorScheme.animated(),
         motionScheme = MotionScheme.expressive(),
         typography = provideTypography(theme.font.toFontRes()),
         content = content,
