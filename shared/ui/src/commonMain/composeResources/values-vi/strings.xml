@@ -84,6 +84,8 @@
     <string name="bmc_desc">Hỗ trợ tôi bằng một khoản quyên góp nhỏ</string>
     <string name="translate_desc">Dịch Grit sang ngôn ngữ của bạn</string>
     <string name="about">Giới thiệu</string>
-    <string name="consistency">Sự phù hợp (Consistency)</string>
-    <string name="yearly">Hằng năm</string>
+    <string name="consistency">Mức độ kỷ luật</string>
+    <string name="yearly">Hàng năm</string>
+    <string name="calendar">Lịch</string>
+    <string name="monthly">Hàng tháng</string>
 </resources>
