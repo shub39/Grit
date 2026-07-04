@@ -52,11 +52,11 @@ class NotificationAlarmScheduler(private val context: Context) : AlarmScheduler 
         if (!habit.reminder || habit.days.isEmpty()) return
 
         var scheduleTime = habit.time
-        val now = LocalDateTime.Companion.now()
+        val now = LocalDateTime.now()
 
         while ((scheduleTime < now) || !habit.days.contains(scheduleTime.dayOfWeek)) {
             scheduleTime =
-                scheduleTime.date.plus(1, DateTimeUnit.Companion.DAY).let {
+                scheduleTime.date.plus(1, DateTimeUnit.DAY).let {
                     LocalDateTime(date = it, time = scheduleTime.time)
                 }
         }
@@ -77,7 +77,7 @@ class NotificationAlarmScheduler(private val context: Context) : AlarmScheduler 
 
         alarmManager.setExactAndAllowWhileIdle(
             AlarmManager.RTC_WAKEUP,
-            scheduleTime.toInstant(TimeZone.Companion.currentSystemDefault()).toEpochMilliseconds(),
+            scheduleTime.toInstant(TimeZone.currentSystemDefault()).toEpochMilliseconds(),
             pendingIntent,
         )
 
