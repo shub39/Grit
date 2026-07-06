@@ -79,4 +79,13 @@
     <string name="changelog">Änderungen</string>
     <string name="whats_changed">Was sich geändert hat</string>
     <string name="select_days">Tage auswählen</string>
+    <string name="bmc_desc">Unterstütze mich durch eine kleine Spende</string>
+    <string name="translate_desc">Übersetzer Grit in deine Sprache</string>
+    <string name="system_default">System Standard</string>
+    <string name="language">Sprache</string>
+    <string name="about">Über</string>
+    <string name="calendar">Kalender</string>
+    <string name="monthly">Monatlich</string>
+    <string name="yearly">Jährlich</string>
+    <string name="consistency">Regelmäßigkeit</string>
 </resources>
