@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="tasks">Мәсьәлә</string>
+    <string name="tasks">Бурыстар</string>
     <string name="material_theme">Material You темаһы</string>
     <string name="done">Әҙер</string>
-    <string name="add_task">Мәсьәлә өҫтәү</string>
+    <string name="add_task">Бурыс өҫтәү</string>
     <string name="add_habit">Яңы ғәҙәт өҫтәү</string>
     <string name="update_description">Тасуирламаны үҙгәртеү</string>
     <string name="delete">Юйыу</string>
@@ -76,4 +76,16 @@
     <string name="reorder_tasks_desc">Эшләгән тип билдәләнгән бурыстарҙың тәртибен үҙгәртергә</string>
     <string name="translate">Тәржемә итеү</string>
     <string name="changelog">Үҙгәрештәр журналы</string>
+    <string name="bmc_desc">Бәләкәй генә иғәнә яһап, мине хуплағыҙ</string>
+    <string name="add_reminder_desc">Билгеленгән көндәрҙә иҫкәртмә алырға</string>
+    <string name="translate_desc">Grit-ты үҙ телегеҙгә тәржемә итегеҙ</string>
+    <string name="whats_changed">Нимә үҙгәрҙе</string>
+    <string name="select_days">Көндәрҙе һайла</string>
+    <string name="system_default">Система буйынса</string>
+    <string name="language">Тел һайлау</string>
+    <string name="about">Ҡушымта тураһында</string>
+    <string name="consistency">Даимилыҡ</string>
+    <string name="calendar">Календарь</string>
+    <string name="monthly">Айлыҡ</string>
+    <string name="yearly">Йыллыҡ</string>
 </resources>
