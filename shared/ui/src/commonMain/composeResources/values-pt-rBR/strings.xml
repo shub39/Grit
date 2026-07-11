@@ -2,7 +2,7 @@
 <resources>
     <string name="tasks">Tarefas</string>
     <string name="add_task">Criar Tarefa</string>
-    <string name="material_theme">Material You Theme</string>
+    <string name="material_theme">Tema Material You</string>
     <string name="add_habit">Criar Novo Hábito</string>
     <string name="update_description">Editar Descrição</string>
     <string name="delete">Deletar</string>
@@ -84,4 +84,8 @@
     <string name="system_default">Padrão do sistema</string>
     <string name="language">Idioma</string>
     <string name="about">Sobre</string>
+    <string name="calendar">Calendário</string>
+    <string name="monthly">Mensalmente</string>
+    <string name="yearly">Anualmente</string>
+    <string name="consistency">Consistência</string>
 </resources>
