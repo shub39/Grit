@@ -40,6 +40,7 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -52,6 +53,7 @@ import androidx.compose.ui.text.input.KeyboardCapitalization
 import androidx.compose.ui.unit.dp
 import com.shub39.grit.core.tasks.Category
 import com.shub39.grit.shared.ui.components.GritBottomSheet
+import com.shub39.grit.shared.ui.components.genericSaver
 import com.shub39.grit.shared.ui.theme.flexFontEmphasis
 import grit.shared.ui.generated.resources.*
 import kotlinx.coroutines.delay
@@ -66,7 +68,8 @@ fun CategoryUpsertSheet(
     onDismiss: () -> Unit,
     onUpsertCategory: (Category) -> Unit,
 ) {
-    var newCategory by remember { mutableStateOf(category) }
+    var newCategory by
+        rememberSaveable(stateSaver = genericSaver<Category>()) { mutableStateOf(category) }
 
     val textFieldState =
         rememberTextFieldState(

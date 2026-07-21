@@ -53,6 +53,7 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -72,6 +73,7 @@ import com.shub39.grit.shared.ui.components.ExpressiveSwitch
 import com.shub39.grit.shared.ui.components.GritBottomSheet
 import com.shub39.grit.shared.ui.components.GritTimePicker
 import com.shub39.grit.shared.ui.components.detachedItemShape
+import com.shub39.grit.shared.ui.components.genericSaver
 import com.shub39.grit.shared.ui.components.listItemColors
 import com.shub39.grit.shared.ui.theme.flexFontEmphasis
 import grit.shared.ui.generated.resources.*
@@ -113,7 +115,7 @@ fun TaskUpsertSheetContent(
     onPermissionRequest: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
-    var newTask by remember { mutableStateOf(task) }
+    var newTask by rememberSaveable(stateSaver = genericSaver<Task>()) { mutableStateOf(task) }
 
     val textFieldState =
         rememberTextFieldState(
@@ -313,7 +315,7 @@ fun TaskUpsertSheetContent(
     }
 
     if (showDateTimePicker) {
-        var showTimePicker by remember { mutableStateOf(false) }
+        var showTimePicker by rememberSaveable { mutableStateOf(false) }
 
         DatePickerDialog(
             onDismissRequest = { updateDateTimePickerVisibility(false) },

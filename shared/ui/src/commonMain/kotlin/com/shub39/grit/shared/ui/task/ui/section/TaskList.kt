@@ -95,6 +95,7 @@ import com.shub39.grit.shared.ui.components.GritDialog
 import com.shub39.grit.shared.ui.components.PageFill
 import com.shub39.grit.shared.ui.components.detachedItemShape
 import com.shub39.grit.shared.ui.components.endItemShape
+import com.shub39.grit.shared.ui.components.genericSaver
 import com.shub39.grit.shared.ui.components.leadingItemShape
 import com.shub39.grit.shared.ui.components.middleItemShape
 import com.shub39.grit.shared.ui.task.TaskAction
@@ -121,7 +122,8 @@ fun TaskList(state: TaskState, onAction: (TaskAction) -> Unit, onEditCategories:
         var showCategoryAddSheet by rememberSaveable { mutableStateOf(false) }
         var showDeleteDialog by rememberSaveable { mutableStateOf(false) }
         var editState by rememberSaveable { mutableStateOf(false) }
-        var editTask: Task? by remember { mutableStateOf(null) }
+        var editTask: Task? by
+            rememberSaveable(stateSaver = genericSaver<Task?>()) { mutableStateOf(null) }
 
         val scrollBehavior = TopAppBarDefaults.enterAlwaysScrollBehavior()
 

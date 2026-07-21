@@ -25,12 +25,13 @@ import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.core.content.ContextCompat
 import com.shub39.grit.core.habits.Habit
+import com.shub39.grit.shared.ui.components.genericSaver
 
 @Composable
 actual fun HabitUpsertSheet(
@@ -43,8 +44,8 @@ actual fun HabitUpsertSheet(
 ) {
     val context = LocalContext.current
 
-    var newHabit by remember { mutableStateOf(habit) }
-    var notificationPermission by remember {
+    var newHabit by rememberSaveable(stateSaver = genericSaver<Habit>()) { mutableStateOf(habit) }
+    var notificationPermission by rememberSaveable {
         mutableStateOf(
             (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU &&
                 ContextCompat.checkSelfPermission(

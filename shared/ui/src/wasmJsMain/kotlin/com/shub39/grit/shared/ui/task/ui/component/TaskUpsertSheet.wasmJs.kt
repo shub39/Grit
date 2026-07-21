@@ -19,7 +19,7 @@ package com.shub39.grit.shared.ui.task.ui.component
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import com.shub39.grit.core.tasks.Category
@@ -36,7 +36,7 @@ actual fun TaskUpsertSheet(
     modifier: Modifier,
     isEditSheet: Boolean,
 ) {
-    var showDateTimePicker by remember { mutableStateOf(false) }
+    var showDateTimePicker by rememberSaveable { mutableStateOf(false) }
 
     TaskUpsertSheetContent(
         task = task,

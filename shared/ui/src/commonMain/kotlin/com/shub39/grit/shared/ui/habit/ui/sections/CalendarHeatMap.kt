@@ -50,7 +50,6 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
@@ -69,6 +68,7 @@ import com.shub39.grit.core.habits.CalendarType
 import com.shub39.grit.core.toFormattedString
 import com.shub39.grit.shared.ui.LocalWindowSizeClass
 import com.shub39.grit.shared.ui.components.GritBottomSheet
+import com.shub39.grit.shared.ui.components.LocalDateSaver
 import com.shub39.grit.shared.ui.components.endItemShape
 import com.shub39.grit.shared.ui.components.leadingItemShape
 import com.shub39.grit.shared.ui.habit.HabitState
@@ -95,7 +95,8 @@ fun CalendarHeatMap(
     val windowSizeClass = LocalWindowSizeClass.current
     val today = LocalDate.now()
     val totalHabits = state.habitsWithAnalytics.size
-    var selectedDay: LocalDate? by remember { mutableStateOf(null) }
+    var selectedDay: LocalDate? by
+        rememberSaveable(stateSaver = LocalDateSaver) { mutableStateOf(null) }
 
     LaunchedEffect(selectedDay) { onChangeSelectedDay(selectedDay) }
 
