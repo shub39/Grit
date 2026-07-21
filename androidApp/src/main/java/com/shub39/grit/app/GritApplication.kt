@@ -19,6 +19,7 @@ package com.shub39.grit.app
 import android.annotation.SuppressLint
 import android.app.Application
 import android.os.Build
+import android.util.Log
 import androidx.glance.appwidget.GlanceAppWidgetManager
 import com.shub39.grit.billing.BillingInitializer
 import com.shub39.grit.core.data.notification.GritNotificationManager
@@ -48,14 +49,18 @@ class GritApplication : Application() {
         BillingInitializer().initialize(this)
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.VANILLA_ICE_CREAM) {
-            val manager = GlanceAppWidgetManager(applicationContext)
+            try {
+                val manager = GlanceAppWidgetManager(applicationContext)
 
-            @SuppressLint("CheckResult")
-            MainScope().launch {
-                manager.setWidgetPreviews(HabitOverviewWidgetReceiver::class)
-                manager.setWidgetPreviews(HabitStreakWidgetReceiver::class)
-                manager.setWidgetPreviews(AllTasksWidgetReceiver::class)
-                manager.setWidgetPreviews(HabitWeekChartWidgetReceiver::class)
+                @SuppressLint("CheckResult")
+                MainScope().launch {
+                    manager.setWidgetPreviews(HabitOverviewWidgetReceiver::class)
+                    manager.setWidgetPreviews(HabitStreakWidgetReceiver::class)
+                    manager.setWidgetPreviews(AllTasksWidgetReceiver::class)
+                    manager.setWidgetPreviews(HabitWeekChartWidgetReceiver::class)
+                }
+            } catch (e: Exception) {
+                Log.e("GritApplication", "Error while setting up widget previews", e)
             }
         }
     }
