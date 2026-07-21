@@ -17,9 +17,8 @@
 package com.shub39.grit.habits.data.database
 
 import androidx.room3.Dao
-import androidx.room3.Insert
-import androidx.room3.OnConflictStrategy
 import androidx.room3.Query
+import androidx.room3.Upsert
 import kotlinx.coroutines.flow.Flow
 
 @Dao
@@ -31,8 +30,7 @@ interface HabitsDao {
 
     @Query("SELECT * FROM habit_index") fun getAllHabitsFlow(): Flow<List<HabitEntity>>
 
-    @Insert(onConflict = OnConflictStrategy.REPLACE)
-    suspend fun upsertHabit(habitEntity: HabitEntity): Long
+    @Upsert suspend fun upsertHabit(habitEntity: HabitEntity): Long
 
     @Query("DELETE FROM habit_index WHERE id = :habitId") suspend fun deleteHabit(habitId: Long)
 

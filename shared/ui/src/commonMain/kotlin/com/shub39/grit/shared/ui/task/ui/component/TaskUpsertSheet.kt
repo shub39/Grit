@@ -75,6 +75,7 @@ import com.shub39.grit.shared.ui.components.detachedItemShape
 import com.shub39.grit.shared.ui.components.listItemColors
 import com.shub39.grit.shared.ui.theme.flexFontEmphasis
 import grit.shared.ui.generated.resources.*
+import kotlin.time.Clock
 import kotlin.time.Duration.Companion.milliseconds
 import kotlin.time.Instant
 import kotlinx.coroutines.delay
@@ -120,8 +121,17 @@ fun TaskUpsertSheetContent(
             initialSelection = TextRange(newTask.title.length),
         )
 
-    val timePickerState = rememberTimePickerState(is24Hour = is24Hr)
-    val datePickerState = rememberDatePickerState()
+    val now = LocalDateTime.now()
+    val timePickerState =
+        rememberTimePickerState(
+            initialHour = now.time.hour,
+            initialMinute = now.time.minute,
+            is24Hour = is24Hr,
+        )
+    val datePickerState =
+        rememberDatePickerState(
+            initialSelectedDateMillis = Clock.System.now().toEpochMilliseconds()
+        )
     val isValidDateTime =
         if (newTask.reminder != null) {
             newTask.reminder!! > LocalDateTime.now()
