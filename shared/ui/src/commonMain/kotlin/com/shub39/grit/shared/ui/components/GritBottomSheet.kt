@@ -35,10 +35,11 @@ import androidx.compose.ui.unit.dp
 @Composable
 fun GritBottomSheet(
     onDismissRequest: () -> Unit,
-    sheetState: SheetState = rememberBottomSheetState(
-        initialValue = SheetValue.Hidden,
-        enabledValues = setOf(SheetValue.Hidden, SheetValue.Expanded)
-    ),
+    sheetState: SheetState =
+        rememberBottomSheetState(
+            initialValue = SheetValue.Hidden,
+            enabledValues = setOf(SheetValue.Hidden, SheetValue.Expanded),
+        ),
     modifier: Modifier = Modifier,
     padding: Dp = 32.dp,
     content: @Composable (ColumnScope.() -> Unit),

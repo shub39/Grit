@@ -112,7 +112,8 @@ class HabitViewModel(
                         if (action.date == null) {
                             _state.update {
                                 it.copy(
-                                    overallAnalytics = it.overallAnalytics.copy(completedHabits = null)
+                                    overallAnalytics =
+                                        it.overallAnalytics.copy(completedHabits = null)
                                 )
                             }
                             return@launch
@@ -142,15 +143,16 @@ class HabitViewModel(
         habitStatusJob?.cancel()
         habitStatusJob =
             viewModelScope.launch {
-                combine(repo.getHabitsWithAnalytics(), repo.getCompletedHabitIds()) { habits,
-                                                                                      completedHabits ->
-                    _state.update {
-                        it.copy(
-                            habitsWithAnalytics = habits,
-                            completedHabitIds = completedHabits,
-                        )
+                combine(repo.getHabitsWithAnalytics(), repo.getCompletedHabitIds()) {
+                        habits,
+                        completedHabits ->
+                        _state.update {
+                            it.copy(
+                                habitsWithAnalytics = habits,
+                                completedHabitIds = completedHabits,
+                            )
+                        }
                     }
-                }
                     .launchIn(this)
             }
     }

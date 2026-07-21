@@ -128,7 +128,7 @@ fun AnalyticsPage(
                 Text(
                     text = currentHabit.habit.title,
                     modifier = Modifier.basicMarquee(),
-                    fontFamily = flexFontEmphasis()
+                    fontFamily = flexFontEmphasis(),
                 )
             },
             subtitle = {

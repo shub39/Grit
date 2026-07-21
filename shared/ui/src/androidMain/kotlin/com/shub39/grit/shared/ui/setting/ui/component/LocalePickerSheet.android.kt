@@ -56,10 +56,11 @@ private data class AppLocale(val locale: Locale, val name: String)
 actual fun LocalePickerSheet(onDismissRequest: () -> Unit, modifier: Modifier) {
     val context = LocalContext.current
     val scope = rememberCoroutineScope()
-    val sheetState = rememberBottomSheetState(
-        initialValue = SheetValue.Hidden,
-        enabledValues = setOf(SheetValue.Hidden, SheetValue.Expanded)
-    )
+    val sheetState =
+        rememberBottomSheetState(
+            initialValue = SheetValue.Hidden,
+            enabledValues = setOf(SheetValue.Hidden, SheetValue.Expanded),
+        )
 
     val currentLocales = remember {
         if (Build.VERSION.SDK_INT >= 33) {

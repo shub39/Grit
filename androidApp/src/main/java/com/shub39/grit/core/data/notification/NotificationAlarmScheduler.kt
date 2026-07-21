@@ -81,7 +81,7 @@ class NotificationAlarmScheduler(private val context: Context) : AlarmScheduler 
             pendingIntent,
         )
 
-        Log.d(TAG, "Scheduled: Habit '${habit.title}' at $scheduleTime")
+        Log.d(TAG, "Scheduled: Habit '$habit' at $scheduleTime")
     }
 
     override fun schedule(task: Task) {
@@ -116,7 +116,7 @@ class NotificationAlarmScheduler(private val context: Context) : AlarmScheduler 
             pendingIntent,
         )
 
-        Log.d(TAG, "Scheduled: Task '${task.title}' at $scheduleTime")
+        Log.d(TAG, "Scheduled: Task '$task' at $scheduleTime")
     }
 
     override fun cancel(habit: Habit) {

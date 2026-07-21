@@ -25,6 +25,7 @@ import com.shub39.grit.core.tasks.CategoryColors
 import com.shub39.grit.core.tasks.TaskRepo
 import com.shub39.grit.shared.ui.task.TaskAction
 import com.shub39.grit.shared.ui.task.TaskState
+import kotlin.time.Duration.Companion.milliseconds
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -61,7 +62,6 @@ class TasksViewModel(
             .onStart {
                 observeTasks()
                 observeDatastore()
-
                 rescheduleAllTasks()
             }
             .stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000), TaskState())
@@ -104,7 +104,7 @@ class TasksViewModel(
                         upsertCategory(category.second.copy(index = category.first))
                     }
 
-                    delay(REORDER_DELAY)
+                    delay(REORDER_DELAY.milliseconds)
 
                     _state.update { it.copy(currentCategory = it.tasks.keys.firstOrNull()) }
                 }
@@ -112,7 +112,7 @@ class TasksViewModel(
                 is DeleteCategory -> {
                     deleteCategory(action.category)
 
-                    delay(REORDER_DELAY)
+                    delay(REORDER_DELAY.milliseconds)
 
                     _state.update { it.copy(currentCategory = it.tasks.keys.firstOrNull()) }
                 }
