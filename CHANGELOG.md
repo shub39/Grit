@@ -1,5 +1,11 @@
 # Changelog
 
+## 6.0.5
+- Updated Translations
+- Fixed bugs with reminders
+- Fixed App crashing in private spaces #305
+- Fixed categories sheet disappearing after enabling dark mode #304
+
 ## 6.0.4
 - Updated Translations
 - Increased habit title and description length limits
