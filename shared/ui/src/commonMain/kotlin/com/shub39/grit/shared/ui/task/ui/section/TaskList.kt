@@ -78,6 +78,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -116,11 +117,11 @@ fun TaskList(state: TaskState, onAction: (TaskAction) -> Unit, onEditCategories:
     PageFill {
         val windowSizeClass = LocalWindowSizeClass.current
 
-        var showTaskAddSheet by remember { mutableStateOf(false) }
-        var showCategoryAddSheet by remember { mutableStateOf(false) }
-        var showDeleteDialog by remember { mutableStateOf(false) }
-        var editState by remember { mutableStateOf(false) }
-        var editTask: Task? by remember { mutableStateOf(null) }
+        var showTaskAddSheet by rememberSaveable { mutableStateOf(false) }
+        var showCategoryAddSheet by rememberSaveable { mutableStateOf(false) }
+        var showDeleteDialog by rememberSaveable { mutableStateOf(false) }
+        var editState by rememberSaveable { mutableStateOf(false) }
+        var editTask: Task? by rememberSaveable { mutableStateOf(null) }
 
         val scrollBehavior = TopAppBarDefaults.enterAlwaysScrollBehavior()
 
