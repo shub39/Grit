@@ -194,8 +194,8 @@ class HabitViewModel(
     }
 
     private suspend fun upsertHabit(habit: Habit) {
-        repo.upsertHabit(habit)
-        scheduler.schedule(habit)
+        val newId = repo.upsertHabit(habit)
+        scheduler.schedule(habit.copy(id = newId))
     }
 
     private suspend fun deleteHabit(habit: Habit) {

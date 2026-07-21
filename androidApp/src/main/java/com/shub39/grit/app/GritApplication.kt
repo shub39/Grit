@@ -21,6 +21,7 @@ import android.app.Application
 import android.os.Build
 import androidx.glance.appwidget.GlanceAppWidgetManager
 import com.shub39.grit.billing.BillingInitializer
+import com.shub39.grit.core.data.notification.GritNotificationManager
 import com.shub39.grit.di.GritModules
 import com.shub39.grit.widgets.all_tasks_widget.AllTasksWidgetReceiver
 import com.shub39.grit.widgets.habit_overview_widget.HabitOverviewWidgetReceiver
@@ -36,6 +37,8 @@ class GritApplication : Application() {
 
     override fun onCreate() {
         super.onCreate()
+
+        GritNotificationManager.createNotificationChannel(this)
 
         startKoin<GritModules> {
             androidLogger()

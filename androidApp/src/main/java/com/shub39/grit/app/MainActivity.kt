@@ -32,7 +32,6 @@ import androidx.core.content.ContextCompat
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import androidx.fragment.app.FragmentActivity
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import com.shub39.grit.core.data.notification.GritNotificationManager.Companion.createNotificationChannel
 import com.shub39.grit.core.interfaces.BiometricUtils
 import com.shub39.grit.shared.ui.LocalWindowSizeClass
 import com.shub39.grit.shared.ui.components.InitialLoading
@@ -51,8 +50,6 @@ class MainActivity : FragmentActivity() {
         installSplashScreen()
         enableEdgeToEdge()
         FileKit.init(this)
-
-        createNotificationChannel(this)
 
         setContent {
             val windowSizeClass = calculateWindowSizeClass(this)
