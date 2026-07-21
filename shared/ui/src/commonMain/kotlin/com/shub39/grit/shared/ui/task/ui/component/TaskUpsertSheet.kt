@@ -75,13 +75,13 @@ import com.shub39.grit.shared.ui.components.detachedItemShape
 import com.shub39.grit.shared.ui.components.listItemColors
 import com.shub39.grit.shared.ui.theme.flexFontEmphasis
 import grit.shared.ui.generated.resources.*
-import kotlin.time.Clock
 import kotlin.time.Duration.Companion.milliseconds
 import kotlin.time.Instant
 import kotlinx.coroutines.delay
 import kotlinx.datetime.LocalDateTime
 import kotlinx.datetime.LocalTime
 import kotlinx.datetime.TimeZone
+import kotlinx.datetime.toInstant
 import kotlinx.datetime.toLocalDateTime
 import org.jetbrains.compose.resources.stringResource
 import org.jetbrains.compose.resources.vectorResource
@@ -130,7 +130,7 @@ fun TaskUpsertSheetContent(
         )
     val datePickerState =
         rememberDatePickerState(
-            initialSelectedDateMillis = Clock.System.now().toEpochMilliseconds()
+            initialSelectedDateMillis = now.toInstant(TimeZone.UTC).toEpochMilliseconds()
         )
     val isValidDateTime =
         if (newTask.reminder != null) {

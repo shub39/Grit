@@ -49,18 +49,18 @@ class GritApplication : Application() {
         BillingInitializer().initialize(this)
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.VANILLA_ICE_CREAM) {
-            try {
-                val manager = GlanceAppWidgetManager(applicationContext)
+            val manager = GlanceAppWidgetManager(applicationContext)
 
-                @SuppressLint("CheckResult")
-                MainScope().launch {
+            @SuppressLint("CheckResult")
+            MainScope().launch {
+                try {
                     manager.setWidgetPreviews(HabitOverviewWidgetReceiver::class)
                     manager.setWidgetPreviews(HabitStreakWidgetReceiver::class)
                     manager.setWidgetPreviews(AllTasksWidgetReceiver::class)
                     manager.setWidgetPreviews(HabitWeekChartWidgetReceiver::class)
+                } catch (e: Exception) {
+                    Log.e("GritApplication", "Error while setting up widget previews", e)
                 }
-            } catch (e: Exception) {
-                Log.e("GritApplication", "Error while setting up widget previews", e)
             }
         }
     }

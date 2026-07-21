@@ -121,7 +121,7 @@ fun TaskList(state: TaskState, onAction: (TaskAction) -> Unit, onEditCategories:
         var showCategoryAddSheet by rememberSaveable { mutableStateOf(false) }
         var showDeleteDialog by rememberSaveable { mutableStateOf(false) }
         var editState by rememberSaveable { mutableStateOf(false) }
-        var editTask: Task? by rememberSaveable { mutableStateOf(null) }
+        var editTask: Task? by remember { mutableStateOf(null) }
 
         val scrollBehavior = TopAppBarDefaults.enterAlwaysScrollBehavior()
 
