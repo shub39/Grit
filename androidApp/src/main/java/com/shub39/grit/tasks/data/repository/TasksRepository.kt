@@ -82,11 +82,16 @@ class TasksRepository(
         tasksDao.updateTaskIndexById(id, index)
     }
 
-    override suspend fun upsertTask(task: Task) {
-        tasksDao.upsertTask(task.toTaskEntity())
+    override suspend fun upsertTask(task: Task): Long {
+        return if (task.id == 0L) {
+            tasksDao.upsertTask(task.toTaskEntity())
+        } else {
+            tasksDao.upsertTask(task.toTaskEntity())
+            if (task.status) {
+                notificationManager.cancelNotification(task)
+            }
 
-        if (task.status) {
-            notificationManager.cancelNotification(task)
+            task.id
         }
     }
 

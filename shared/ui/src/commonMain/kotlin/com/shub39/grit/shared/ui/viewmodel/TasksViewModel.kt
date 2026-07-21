@@ -73,9 +73,9 @@ class TasksViewModel(
                     if (action.task.status) {
                         repo.upsertTask(action.task.copy(reminder = null))
                     } else {
-                        repo.upsertTask(action.task)
+                        val newId = repo.upsertTask(action.task)
 
-                        scheduler.schedule(action.task)
+                        scheduler.schedule(action.task.copy(id = newId))
                     }
                 }
 

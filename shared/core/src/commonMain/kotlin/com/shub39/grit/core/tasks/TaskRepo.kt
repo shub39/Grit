@@ -32,7 +32,7 @@ interface TaskRepo {
 
     suspend fun updateTaskIndexById(id: Long, index: Int)
 
-    suspend fun upsertTask(task: Task)
+    suspend fun upsertTask(task: Task): Long
 
     suspend fun deleteTask(task: Task)
 
