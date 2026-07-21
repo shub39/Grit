@@ -208,7 +208,7 @@ class TaskRepoStub : TaskRepo {
         _tasks.update { list -> list.map { if (it.id == id) it.copy(index = index) else it } }
     }
 
-    override suspend fun upsertTask(task: Task) {
+    override suspend fun upsertTask(task: Task): Long {
         _tasks.update { list ->
             val existing = list.find { it.id == task.id && it.id != 0L }
             if (existing != null) {
@@ -218,6 +218,7 @@ class TaskRepoStub : TaskRepo {
                 list + task.copy(id = newId)
             }
         }
+        return task.id
     }
 
     override suspend fun deleteTask(task: Task) {
@@ -304,7 +305,7 @@ class HabitRepoStub(private val datastore: SettingsDatastore) : HabitRepo {
         }
     }
 
-    override suspend fun upsertHabit(habit: Habit) {
+    override suspend fun upsertHabit(habit: Habit): Long {
         _habits.update { list ->
             val existing = list.find { it.id == habit.id && it.id != 0L }
             if (existing != null) {
@@ -314,6 +315,7 @@ class HabitRepoStub(private val datastore: SettingsDatastore) : HabitRepo {
                 list + habit.copy(id = newId)
             }
         }
+        return habit.id
     }
 
     override suspend fun deleteHabit(habitId: Long) {
