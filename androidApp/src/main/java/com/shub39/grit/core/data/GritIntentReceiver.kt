@@ -28,6 +28,7 @@ import com.shub39.grit.core.interfaces.IntentActions
 import com.shub39.grit.core.interfaces.SettingsDatastore
 import com.shub39.grit.core.now
 import com.shub39.grit.core.tasks.TaskRepo
+import com.shub39.grit.habits.data.database.HabitsDao
 import kotlin.time.ExperimentalTime
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -80,10 +81,18 @@ class GritIntentReceiver : BroadcastReceiver(), KoinComponent {
     private suspend fun markTaskDone(intent: Intent) {
         Log.d(TAG, "Mark task done intent received")
         val taskId = intent.getLongExtra("task_id", -1)
-        if (taskId < 0) return
+        if (taskId < 0) {
+            Log.e(TAG, "Invalid Task Id: $taskId")
+            return
+        }
 
         val taskRepo = get<TaskRepo>()
-        val task = taskRepo.getTaskById(taskId) ?: return
+        val task = taskRepo.getTaskById(taskId)
+
+        if (task == null) {
+            Log.e(TAG, "Invalid Task Id: $taskId")
+            return
+        }
 
         taskRepo.upsertTask(task.copy(status = true, reminder = null))
 
@@ -95,7 +104,10 @@ class GritIntentReceiver : BroadcastReceiver(), KoinComponent {
     private suspend fun addHabitStatus(intent: Intent) {
         Log.d(TAG, "Add habit status intent received")
         val habitId = intent.getLongExtra("habit_id", -1)
-        if (habitId < 0) return
+        if (habitId < 0 || get<HabitsDao>().getHabitById(habitId) == null) {
+            Log.e(TAG, "Invalid Habit Id: $habitId")
+            return
+        }
 
         val habitRepo = get<HabitRepo>()
 
@@ -109,11 +121,20 @@ class GritIntentReceiver : BroadcastReceiver(), KoinComponent {
     private suspend fun taskNotification(intent: Intent) {
         Log.d(TAG, "Task notification intent received")
         val taskId = intent.getLongExtra("task_id", -1)
-        if (taskId < 0) return
+        if (taskId < 0) {
+            Log.e(TAG, "Invalid Task Id: $taskId")
+            return
+        }
 
         val taskRepo = get<TaskRepo>()
 
-        val task = taskRepo.getTaskById(taskId) ?: return
+        val task = taskRepo.getTaskById(taskId)
+
+        if (task == null) {
+            Log.e(TAG, "Invalid Task Id: $taskId")
+            return
+        }
+
         if (!task.status && task.reminder != null) {
             Log.d(TAG, "sending Task notification")
             get<GritNotificationManager>().taskNotification(task)
@@ -124,12 +145,23 @@ class GritIntentReceiver : BroadcastReceiver(), KoinComponent {
         Log.d(TAG, "Habit notification intent received")
 
         val habitId = intent.getLongExtra("habit_id", -1)
-        if (habitId < 0L) return
+        if (habitId < 0L) {
+            Log.e(TAG, "Invalid Habit Id: $habitId")
+            return
+        }
 
         val habitRepo = get<HabitRepo>()
 
-        val habit = habitRepo.getHabitById(habitId) ?: return
-        if (!habit.reminder) return
+        val habit = habitRepo.getHabitById(habitId)
+
+        if (habit == null) {
+            Log.e(TAG, "Invalid Habit Id: $habitId")
+            return
+        }
+        if (!habit.reminder) {
+            Log.e(TAG, "Reminders are disabled for habit: ${habit.title}")
+            return
+        }
 
         // check if habit is completed today, if not then show notification
         val habitStatus = habitRepo.getStatusForHabit(habitId)

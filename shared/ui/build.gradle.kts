@@ -68,6 +68,7 @@ kotlin {
             implementation(libs.jetbrains.navigation3.ui)
 
             implementation(libs.kotlinx.datetime)
+            implementation(libs.kotlinx.serialization.json)
             implementation(libs.reorderable)
             implementation(libs.calendar)
             implementation(libs.materialkolor)

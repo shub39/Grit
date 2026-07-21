@@ -25,7 +25,7 @@ import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
@@ -46,8 +46,8 @@ actual fun TaskUpsertSheet(
 ) {
     val context = LocalContext.current
 
-    var showDateTimePicker by remember { mutableStateOf(false) }
-    var notificationPermission by remember {
+    var showDateTimePicker by rememberSaveable { mutableStateOf(false) }
+    var notificationPermission by rememberSaveable {
         mutableStateOf(
             (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU &&
                 ContextCompat.checkSelfPermission(

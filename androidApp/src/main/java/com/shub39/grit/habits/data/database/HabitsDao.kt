@@ -30,7 +30,7 @@ interface HabitsDao {
 
     @Query("SELECT * FROM habit_index") fun getAllHabitsFlow(): Flow<List<HabitEntity>>
 
-    @Upsert suspend fun upsertHabit(habitEntity: HabitEntity)
+    @Upsert suspend fun upsertHabit(habitEntity: HabitEntity): Long
 
     @Query("DELETE FROM habit_index WHERE id = :habitId") suspend fun deleteHabit(habitId: Long)
 

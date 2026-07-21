@@ -56,4 +56,6 @@ class BillingHandler : BillingHandler {
 
         return SubscriptionResult.NotSubscribed
     }
+
+    override suspend fun isFoss(): Boolean = false
 }

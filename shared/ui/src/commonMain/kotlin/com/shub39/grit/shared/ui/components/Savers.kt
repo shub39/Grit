@@ -14,17 +14,16 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
-package com.shub39.grit.billing
+package com.shub39.grit.shared.ui.components
 
-import com.shub39.grit.core.billing.BillingHandler
-import com.shub39.grit.core.billing.SubscriptionResult
-import org.koin.core.annotation.Single
+import androidx.compose.runtime.saveable.Saver
+import kotlinx.datetime.LocalDate
+import kotlinx.serialization.json.Json
 
-@Single(binds = [BillingHandler::class])
-class BillingHandler : BillingHandler {
-    override suspend fun isPlusUser(): Boolean = true
+val LocalDateSaver =
+    Saver<LocalDate?, String>(save = { it?.toString() ?: "" }) {
+        if (it.isEmpty()) null else LocalDate.parse(it)
+    }
 
-    override suspend fun userResult(): SubscriptionResult = SubscriptionResult.Subscribed
-
-    override suspend fun isFoss(): Boolean = true
-}
+inline fun <reified T> genericSaver() =
+    Saver<T, String>(save = { Json.encodeToString(it) }) { Json.decodeFromString(it) }

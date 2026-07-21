@@ -77,8 +77,13 @@ class HabitRepository(
         }
     }
 
-    override suspend fun upsertHabit(habit: Habit) {
-        habitDao.upsertHabit(habit.toHabitEntity())
+    override suspend fun upsertHabit(habit: Habit): Long {
+        return if (habit.id == 0L) {
+            habitDao.upsertHabit(habit.toHabitEntity())
+        } else {
+            habitDao.upsertHabit(habit.toHabitEntity())
+            habit.id
+        }
     }
 
     override suspend fun deleteHabit(habitId: Long) {

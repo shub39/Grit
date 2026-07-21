@@ -44,6 +44,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -62,7 +63,6 @@ import com.shub39.grit.shared.ui.task.ui.component.CategoryUpsertSheet
 import com.shub39.grit.shared.ui.task.ui.section.TaskList
 import com.shub39.grit.shared.ui.theme.flexFontEmphasis
 import grit.shared.ui.generated.resources.*
-import grit.shared.ui.generated.resources.add
 import kotlin.invoke
 import org.jetbrains.compose.resources.stringResource
 import org.jetbrains.compose.resources.vectorResource
@@ -71,7 +71,7 @@ import sh.calvin.reorderable.rememberReorderableLazyListState
 
 @Composable
 fun TasksPage(state: TaskState, onAction: (TaskAction) -> Unit) {
-    var showCategoryEditor by remember { mutableStateOf(false) }
+    var showCategoryEditor by rememberSaveable { mutableStateOf(false) }
 
     TaskList(state = state, onAction = onAction, onEditCategories = { showCategoryEditor = true })
 
@@ -144,8 +144,8 @@ private fun CategoryEditDialog(
                 contentPadding = PaddingValues(bottom = 16.dp),
             ) {
                 itemsIndexed(categories, key = { _, it -> it.id }) { index, category ->
-                    var showEditSheet by remember { mutableStateOf(false) }
-                    var showDeleteDialog by remember { mutableStateOf(false) }
+                    var showEditSheet by rememberSaveable { mutableStateOf(false) }
+                    var showDeleteDialog by rememberSaveable { mutableStateOf(false) }
 
                     ReorderableItem(reorderableListState, key = category.id) {
                         val shape =

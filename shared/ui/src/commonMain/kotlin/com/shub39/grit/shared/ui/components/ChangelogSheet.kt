@@ -28,7 +28,8 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.itemsIndexed
-import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonDefaults
+import androidx.compose.material3.FilledTonalButton
 import androidx.compose.material3.Icon
 import androidx.compose.material3.ListItem
 import androidx.compose.material3.MaterialShapes
@@ -56,6 +57,8 @@ fun ChangelogSheet(
     modifier: Modifier = Modifier,
     currentLog: VersionEntry,
     onDismissRequest: () -> Unit,
+    showSupportButton: Boolean,
+    onNavigateToPaywall: () -> Unit,
 ) {
     GritBottomSheet(onDismissRequest = onDismissRequest, modifier = modifier, padding = 0.dp) {
         Column(
@@ -112,8 +115,38 @@ fun ChangelogSheet(
                 }
             }
 
-            Button(onClick = onDismissRequest, modifier = Modifier.fillMaxWidth()) {
-                Text(text = stringResource(Res.string.done))
+            Column(
+                modifier = Modifier.fillMaxWidth(),
+                verticalArrangement = Arrangement.spacedBy(2.dp),
+            ) {
+                FilledTonalButton(
+                    onClick = onDismissRequest,
+                    shape = if (showSupportButton) leadingItemShape() else detachedItemShape(),
+                    modifier = Modifier.height(ButtonDefaults.MediumContainerHeight).fillMaxWidth(),
+                ) {
+                    Text(
+                        text = stringResource(Res.string.done),
+                        style = ButtonDefaults.textStyleFor(ButtonDefaults.MediumContainerHeight),
+                    )
+                }
+
+                if (showSupportButton) {
+                    FilledTonalButton(
+                        onClick = {
+                            onDismissRequest()
+                            onNavigateToPaywall()
+                        },
+                        shape = endItemShape(),
+                        modifier =
+                            Modifier.height(ButtonDefaults.MediumContainerHeight).fillMaxWidth(),
+                    ) {
+                        Text(
+                            text = "Support Grit",
+                            style =
+                                ButtonDefaults.textStyleFor(ButtonDefaults.MediumContainerHeight),
+                        )
+                    }
+                }
             }
 
             Spacer(modifier = Modifier.height(16.dp))
@@ -138,6 +171,8 @@ private fun Preview() {
                         ),
                 ),
             onDismissRequest = {},
+            showSupportButton = true,
+            onNavigateToPaywall = {},
         )
     }
 }

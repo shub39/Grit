@@ -20,4 +20,6 @@ interface BillingHandler {
     suspend fun isPlusUser(): Boolean
 
     suspend fun userResult(): SubscriptionResult
+
+    suspend fun isFoss(): Boolean
 }

@@ -1,5 +1,15 @@
 [
   {
+    "version": "6.0.5",
+    "changes": [
+      "Updated Translations",
+      "Fixed bugs with reminders",
+      "Fixed App crashing in private spaces #305",
+      "Fixed categories sheet disappearing after enabling dark mode #304",
+      "Miscellaneous UI updates"
+    ]
+  },
+  {
     "version": "6.0.4",
     "changes": [
       "Updated Translations",
@@ -65,14 +75,6 @@
     "version": "5.9.21",
     "changes": [
       "Updated Translations"
-    ]
-  },
-  {
-    "version": "5.9.2",
-    "changes": [
-      "Miscellaneous UI fixes",
-      "Updated Translations",
-      "Added Keyboard Autofocus to new Habit (#280)"
     ]
   }
 ]

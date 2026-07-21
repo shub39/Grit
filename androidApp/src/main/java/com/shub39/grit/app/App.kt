@@ -40,7 +40,12 @@ fun App(state: MainAppState, onRefreshSub: () -> Unit, onDismissChangelog: () ->
     val mainBackStack = rememberNavBackStack(GlobalRoutes.App)
 
     if (state.currentChangelog != null) {
-        ChangelogSheet(currentLog = state.currentChangelog!!, onDismissRequest = onDismissChangelog)
+        ChangelogSheet(
+            currentLog = state.currentChangelog!!,
+            onDismissRequest = onDismissChangelog,
+            showSupportButton = !state.isUserSubscribed || state.isFoss,
+            onNavigateToPaywall = { mainBackStack.add(GlobalRoutes.PaywallPage) },
+        )
     }
 
     NavDisplay(

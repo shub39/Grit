@@ -20,7 +20,7 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.datetime.LocalDate
 
 interface HabitRepo {
-    suspend fun upsertHabit(habit: Habit)
+    suspend fun upsertHabit(habit: Habit): Long
 
     suspend fun deleteHabit(habitId: Long)
 

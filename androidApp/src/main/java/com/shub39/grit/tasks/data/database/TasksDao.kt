@@ -33,7 +33,7 @@ interface TasksDao {
 
     @Query("SELECT * FROM task WHERE id = :id") suspend fun getTaskById(id: Long): TaskEntity?
 
-    @Upsert suspend fun upsertTask(taskEntity: TaskEntity)
+    @Upsert suspend fun upsertTask(taskEntity: TaskEntity): Long
 
     @Delete suspend fun deleteTask(taskEntity: TaskEntity)
 

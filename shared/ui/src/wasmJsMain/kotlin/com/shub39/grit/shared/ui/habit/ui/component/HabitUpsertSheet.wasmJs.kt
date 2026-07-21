@@ -19,10 +19,11 @@ package com.shub39.grit.shared.ui.habit.ui.component
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import com.shub39.grit.core.habits.Habit
+import com.shub39.grit.shared.ui.components.genericSaver
 
 @Composable
 actual fun HabitUpsertSheet(
@@ -33,7 +34,7 @@ actual fun HabitUpsertSheet(
     modifier: Modifier,
     isEditSheet: Boolean,
 ) {
-    var newHabit by remember { mutableStateOf(habit) }
+    var newHabit by rememberSaveable(stateSaver = genericSaver<Habit>()) { mutableStateOf(habit) }
 
     HabitUpsertSheetContent(
         newHabit = newHabit,
