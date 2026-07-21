@@ -49,7 +49,7 @@
     <string name="edit_categories">Kategorien bearbeiten</string>
     <string name="habit_map">Gewohnheits-Heatmap</string>
     <string name="look_and_feel">Erscheinungsbild</string>
-    <string name="use_amoled">AMOLED Palette</string>
+    <string name="use_amoled">Amoled-Palette</string>
     <string name="select_seed">Wähle Seed Farbe</string>
     <string name="palette_style">Stil der Palette</string>
     <string name="look_and_feel_desc">Passe die App auf verschiedene Weisen an</string>
