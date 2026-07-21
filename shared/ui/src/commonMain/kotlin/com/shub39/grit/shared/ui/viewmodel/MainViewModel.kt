@@ -125,6 +125,13 @@ class MainViewModel(
             val changeLogs = changelogManager.changelogs.first()
             val lastShownChangelog = settingsDatastore.getLastChangelogShown().first()
 
+            if (lastShownChangelog.isBlank()) {
+                changeLogs.firstOrNull()?.version?.let {
+                    settingsDatastore.updateLastChangelogShown(it)
+                }
+                return@launch // do not open changelog on first launch
+            }
+
             if (lastShownChangelog != changeLogs.firstOrNull()?.version) {
                 _state.update { it.copy(currentChangelog = changeLogs.firstOrNull()) }
             }
@@ -132,6 +139,8 @@ class MainViewModel(
     }
 
     private suspend fun checkSubscription() {
+        _state.update { it.copy(isFoss = billingHandler.isFoss()) }
+
         val isSubscribed = billingHandler.userResult()
 
         when (isSubscribed) {

@@ -46,6 +46,7 @@ import androidx.compose.ui.unit.dp
 import com.shub39.grit.shared.ui.GritPreviewWrapper
 import com.shub39.grit.shared.ui.theme.flexFontRounded
 import grit.shared.ui.generated.resources.*
+import org.jetbrains.compose.resources.painterResource
 import org.jetbrains.compose.resources.stringResource
 import org.jetbrains.compose.resources.vectorResource
 
@@ -97,22 +98,51 @@ fun FossPaywall(modifier: Modifier = Modifier) {
                     )
                 }
 
-                FilledTonalButton(
-                    onClick = { uriHandler.openUri("https://buymeacoffee.com/shub39") },
-                    modifier = Modifier.height(ButtonDefaults.MediumContainerHeight),
+                Column(
+                    modifier = Modifier.fillMaxWidth(),
+                    verticalArrangement = Arrangement.spacedBy(2.dp),
                 ) {
-                    Icon(
-                        imageVector = vectorResource(Res.drawable.buymeacoffee),
-                        contentDescription = "Buy me a coffee",
-                        modifier = Modifier.size(ButtonDefaults.MediumIconSize),
-                    )
+                    FilledTonalButton(
+                        onClick = { uriHandler.openUri("https://buymeacoffee.com/shub39") },
+                        shape = leadingItemShape(),
+                        modifier =
+                            Modifier.fillMaxWidth().height(ButtonDefaults.MediumContainerHeight),
+                    ) {
+                        Icon(
+                            painter = painterResource(Res.drawable.buymeacoffee),
+                            contentDescription = "Buy me a coffee",
+                            modifier = Modifier.size(ButtonDefaults.MediumIconSize),
+                        )
 
-                    Spacer(modifier = Modifier.width(ButtonDefaults.IconSpacing))
+                        Spacer(modifier = Modifier.width(ButtonDefaults.IconSpacing))
 
-                    Text(
-                        text = stringResource(Res.string.bmc),
-                        style = ButtonDefaults.textStyleFor(ButtonDefaults.MediumContainerHeight),
-                    )
+                        Text(
+                            text = stringResource(Res.string.bmc),
+                            style =
+                                ButtonDefaults.textStyleFor(ButtonDefaults.MediumContainerHeight),
+                        )
+                    }
+
+                    FilledTonalButton(
+                        onClick = { uriHandler.openUri("https://github.com/sponsors/shub39") },
+                        shape = endItemShape(),
+                        modifier =
+                            Modifier.fillMaxWidth().height(ButtonDefaults.MediumContainerHeight),
+                    ) {
+                        Icon(
+                            painter = painterResource(Res.drawable.github),
+                            contentDescription = "GitHub Sponsors",
+                            modifier = Modifier.size(ButtonDefaults.MediumIconSize),
+                        )
+
+                        Spacer(modifier = Modifier.width(ButtonDefaults.IconSpacing))
+
+                        Text(
+                            text = "GitHub Sponsors",
+                            style =
+                                ButtonDefaults.textStyleFor(ButtonDefaults.MediumContainerHeight),
+                        )
+                    }
                 }
             }
         }

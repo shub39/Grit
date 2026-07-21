@@ -25,4 +25,6 @@ class BillingHandler : BillingHandler {
     override suspend fun isPlusUser(): Boolean = true
 
     override suspend fun userResult(): SubscriptionResult = SubscriptionResult.Subscribed
+
+    override suspend fun isFoss(): Boolean = true
 }

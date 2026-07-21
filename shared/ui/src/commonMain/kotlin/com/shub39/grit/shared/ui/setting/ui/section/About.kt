@@ -61,6 +61,7 @@ import com.shub39.grit.shared.ui.components.detachedItemShape
 import com.shub39.grit.shared.ui.components.endItemShape
 import com.shub39.grit.shared.ui.components.leadingItemShape
 import com.shub39.grit.shared.ui.components.listItemColors
+import com.shub39.grit.shared.ui.components.middleItemShape
 import com.shub39.grit.shared.ui.setting.ui.component.LicenseBottomSheet
 import com.shub39.grit.shared.ui.theme.flexFontEmphasis
 import com.shub39.grit.shared.ui.theme.flexFontRounded
@@ -156,6 +157,28 @@ private fun LazyListScope.engagementLinks(uriHandler: UriHandler) {
                 modifier =
                     Modifier.clip(leadingItemShape()).clickable {
                         uriHandler.openUri("https://buymeacoffee.com/shub39")
+                    },
+            )
+            ListItem(
+                colors = listItemColors(),
+                leadingContent = {
+                    Icon(
+                        painter = painterResource(Res.drawable.github),
+                        contentDescription = null,
+                        modifier = Modifier.size(24.dp),
+                    )
+                },
+                trailingContent = {
+                    Icon(
+                        painter = painterResource(Res.drawable.open_link),
+                        contentDescription = null,
+                    )
+                },
+                headlineContent = { Text(text = "GitHub Sponsors") },
+                supportingContent = { Text(text = "Support me through GitHub") },
+                modifier =
+                    Modifier.clip(middleItemShape()).clickable {
+                        uriHandler.openUri("https://github.com/sponsors/shub39")
                     },
             )
             ListItem(
