@@ -58,8 +58,8 @@
     <string name="app_theme">App Design</string>
     <string name="edit_habit">Gewohnheit bearbeiten</string>
     <string name="font">Schriftart</string>
-    <string name="biometric_lock">Biometrische Sperre</string>
-    <string name="biometric_lock_desc">Benutze die biometrische Authentifizierung, um die App zu entsperren</string>
+    <string name="biometric_lock">Biometrische Entsperrung</string>
+    <string name="biometric_lock_desc">Benutze die Biometrische Authentifizierung, um die Anwendung zu entsperren</string>
     <string name="bmc">Spendiere mir einen Kaffee</string>
     <string name="weekly_progress">Wöchentlicher Fortschritt</string>
     <string name="overall_analytics">Generelle Analytik</string>
@@ -68,7 +68,7 @@
     <string name="grit_plus">Grit Plus</string>
     <string name="monthly_progress">Monatlicher Fortschritt</string>
     <string name="week_breakdown">Wochentagsübersicht</string>
-    <string name="foss">Du benutzt die FOSS Variante</string>
+    <string name="foss">Du benutzt die Freie und quelloffene Software</string>
     <string name="foss_desc">Alle Funktionen sind freigeschaltet. Diese App-Variante unterstützt keine In-App-Käufe. Wenn dir diese App in irgendeiner Weise geholfen hat, unterstütze mich bitte mit einer Spende auf</string>
     <string name="add_reminder">Erinnerung hinzufügen</string>
     <string name="add_reminder_desc">Erhalte eine Benachrichtigung an ausgewählten Tagen</string>
@@ -80,7 +80,7 @@
     <string name="whats_changed">Was sich geändert hat</string>
     <string name="select_days">Tage auswählen</string>
     <string name="bmc_desc">Unterstütze mich durch eine kleine Spende</string>
-    <string name="translate_desc">Übersetzer Grit in deine Sprache</string>
+    <string name="translate_desc">Übersetze Grit in deine Sprache</string>
     <string name="system_default">System Standard</string>
     <string name="language">Sprache</string>
     <string name="about">Über</string>
