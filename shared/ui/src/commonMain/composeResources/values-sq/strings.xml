@@ -17,7 +17,7 @@
     <string name="too_long">Shumë i gjatë</string>
     <string name="save">Ruaj</string>
     <string name="edit_task">Modifiko detyrën</string>
-    <string name="delete_tasks">Je i sigurt që dëshiron t'i fshish të gjitha detyrat e përfunduara?</string>
+    <string name="delete_tasks">Je i sigurt që dëshiron t\'i fshish të gjitha detyrat e përfunduara?</string>
     <string name="update_title">Modifiko titullin</string>
     <string name="edit_categories">Modifiko kategoritë</string>
     <string name="delete_category">Je i sigurt? Të gjitha detyrat në këtë kategori do të fshihen</string>
@@ -73,7 +73,7 @@
     <string name="foss_desc">Të gjitha veçoritë janë të zhbllokuara. Ky variant i aplikacionit nuk mbështet blerje brenda aplikacionit. Nëse ky aplikacion i shtoi vlerë jetës tënde, më mbështet duke dhuruar në</string>
     <string name="add_reminder">Shto kujtues</string>
     <string name="add_reminder_desc">Merr një njoftim kujtues në ditët e zgjedhura</string>
-    <string name="invalid_date_time">Koha e zgjedhur është në të shkuarën :')</string>
+    <string name="invalid_date_time">Koha e zgjedhur është në të shkuarën :\')</string>
     <string name="reorder_tasks">Rirendit detyrat</string>
     <string name="reorder_tasks_desc">Rirendit detyrat kur shënohen si të përfunduara</string>
     <string name="translate">Përkthe</string>

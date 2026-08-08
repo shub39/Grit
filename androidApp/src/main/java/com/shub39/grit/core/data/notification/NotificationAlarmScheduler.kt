@@ -28,7 +28,6 @@ import com.shub39.grit.core.interfaces.AlarmScheduler
 import com.shub39.grit.core.interfaces.IntentActions
 import com.shub39.grit.core.now
 import com.shub39.grit.core.tasks.Task
-import kotlin.time.ExperimentalTime
 import kotlinx.datetime.DateTimeUnit
 import kotlinx.datetime.LocalDateTime
 import kotlinx.datetime.TimeZone
@@ -38,7 +37,6 @@ import org.koin.core.annotation.Single
 
 // implementation of AlarmScheduler using AlarmManager
 @Single(binds = [AlarmScheduler::class])
-@OptIn(ExperimentalTime::class)
 class NotificationAlarmScheduler(private val context: Context) : AlarmScheduler {
 
     companion object {

@@ -20,8 +20,8 @@ import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
 import android.util.Log
-import com.shub39.grit.core.data.notification.NotificationAlarmScheduler
 import com.shub39.grit.core.habits.HabitRepo
+import com.shub39.grit.core.interfaces.AlarmScheduler
 import com.shub39.grit.core.tasks.TaskRepo
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -36,7 +36,7 @@ class BootReceiver : BroadcastReceiver(), KoinComponent {
 
     override fun onReceive(context: Context, intent: Intent?) {
         if (intent?.action == Intent.ACTION_BOOT_COMPLETED) {
-            val scheduler = get<NotificationAlarmScheduler>()
+            val scheduler = get<AlarmScheduler>()
             val habitRepo = get<HabitRepo>()
             val taskRepo = get<TaskRepo>()
             val pendingResult = goAsync()
