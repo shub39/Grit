@@ -1,5 +1,9 @@
 # Changelog
 
+## 6.0.6
+- Updated Translations
+- Fixed UI bug where add button covers reorder handle in tasks list #307
+
 ## 6.0.5
 - Updated Translations
 - Fixed bugs with reminders

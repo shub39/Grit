@@ -52,7 +52,7 @@
     <string name="weekly_graph">Сравнение по неделям</string>
     <string name="not_enough_data">Недостаточно данных</string>
     <string name="items_completed">завершено</string>
-    <string name="completed">завершено сегодня</string>
+    <string name="completed">Завершено сегодня</string>
     <string name="title">Название</string>
     <string name="description">Описание</string>
     <string name="edit_habit">Изменить привычку</string>
@@ -79,4 +79,13 @@
     <string name="changelog">Журнал изменений</string>
     <string name="whats_changed">Что изменилось</string>
     <string name="select_days">Выбрать дни</string>
+    <string name="bmc_desc">Поддержите меня, сделав небольшое пожертвование</string>
+    <string name="translate_desc">Переведите Grit на ваш язык</string>
+    <string name="system_default">Системные настройки по умолчанию</string>
+    <string name="language">Язык</string>
+    <string name="about">О приложении</string>
+    <string name="consistency">Последовательность</string>
+    <string name="calendar">Календарь</string>
+    <string name="monthly">Ежемесячно</string>
+    <string name="yearly">Ежегодно</string>
 </resources>

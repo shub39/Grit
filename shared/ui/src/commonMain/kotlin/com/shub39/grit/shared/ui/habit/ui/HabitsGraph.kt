@@ -153,7 +153,7 @@ fun HabitsGraph(
                                         backstack.add(HabitRoutes.OverallAnalytics)
                                     },
                                     state = state,
-                                    fabVisible = fabVisible,
+                                    fabVisible = fabVisible && !state.editState,
                                     onAction = onAction,
                                     onNavigateToPaywall = onNavigateToPaywall,
                                     isUserSubscribed = isUserSubscribed,
