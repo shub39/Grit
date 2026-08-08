@@ -1,5 +1,12 @@
 [
   {
+    "version": "6.0.6",
+    "changes": [
+      "Updated Translations",
+      "Fixed UI bug where add button covers reorder handle in tasks list #307"
+    ]
+  },
+  {
     "version": "6.0.5",
     "changes": [
       "Updated Translations",
@@ -69,12 +76,6 @@
     "changes": [
       "Updated Translations",
       "Fixed Unable to change Task Categories"
-    ]
-  },
-  {
-    "version": "5.9.21",
-    "changes": [
-      "Updated Translations"
     ]
   }
 ]
