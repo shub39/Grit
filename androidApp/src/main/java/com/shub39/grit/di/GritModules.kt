@@ -29,9 +29,11 @@ import com.shub39.grit.tasks.data.database.TaskDatabase
 import com.shub39.grit.tasks.data.database.TaskDbFactory
 import com.shub39.grit.tasks.data.database.TasksDao
 import org.koin.core.annotation.ComponentScan
+import org.koin.core.annotation.Configuration
 import org.koin.core.annotation.Module
 import org.koin.core.annotation.Single
 
+@Configuration
 @Module(includes = [UIModules::class])
 @ComponentScan("com.shub39.grit")
 class GritModules {
