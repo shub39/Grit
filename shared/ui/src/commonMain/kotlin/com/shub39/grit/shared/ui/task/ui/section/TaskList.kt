@@ -182,7 +182,7 @@ fun TaskList(state: TaskState, onAction: (TaskAction) -> Unit, onEditCategories:
                         else Modifier.navigationBarsPadding()
                     )
                     .animateFloatingActionButton(
-                        visible = state.currentCategory != null,
+                        visible = state.currentCategory != null && !editState,
                         alignment = Alignment.BottomEnd,
                         scaleAnimationSpec = MaterialTheme.motionScheme.fastSpatialSpec(),
                         alphaAnimationSpec = MaterialTheme.motionScheme.fastEffectsSpec(),
