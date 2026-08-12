@@ -84,4 +84,8 @@
     <string name="about">À propos</string>
     <string name="bmc_desc">Soutenez moi en effectuant un petit don</string>
     <string name="system_default">Paramètres par défaut</string>
+    <string name="calendar">Calendrier</string>
+    <string name="monthly">Mensuel</string>
+    <string name="yearly">Annuel</string>
+    <string name="consistency">Constance</string>
 </resources>
