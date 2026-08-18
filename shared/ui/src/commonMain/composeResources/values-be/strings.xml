@@ -79,4 +79,13 @@
     <string name="changelog">Спіс змен</string>
     <string name="whats_changed">Што змянілася</string>
     <string name="select_days">Выбраныя дні</string>
+    <string name="bmc_desc">Падтрымайце мяне, зрабіўшы маленькае ахвяраванне</string>
+    <string name="translate_desc">Перакладзіце Grit на вашу мову</string>
+    <string name="system_default">Па змаўчанні</string>
+    <string name="language">Мова</string>
+    <string name="about">Пра праграму</string>
+    <string name="consistency">Паслядоўнасць</string>
+    <string name="calendar">Каляндар</string>
+    <string name="monthly">Штомесячна</string>
+    <string name="yearly">Штогод</string>
 </resources>
