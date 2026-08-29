@@ -24,7 +24,7 @@
     <string name="add">添加内容</string>
     <string name="habit_map">习惯热力图</string>
     <string name="look_and_feel">外观与风格</string>
-    <string name="use_amoled">AMOLED 调色板</string>
+    <string name="use_amoled">Amoled 调色板</string>
     <string name="use_amoled_desc">在AMOLED屏幕上效果最佳</string>
     <string name="select_seed">选择种子色</string>
     <string name="select_seed_desc">选择生成调色板的基准颜色</string>

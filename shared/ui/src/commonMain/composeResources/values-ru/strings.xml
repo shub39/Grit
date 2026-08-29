@@ -81,7 +81,7 @@
     <string name="select_days">Выбрать дни</string>
     <string name="bmc_desc">Поддержите меня, сделав небольшое пожертвование</string>
     <string name="translate_desc">Переведите Grit на ваш язык</string>
-    <string name="system_default">Системные настройки по умолчанию</string>
+    <string name="system_default">Системные настройки</string>
     <string name="language">Язык</string>
     <string name="about">О приложении</string>
     <string name="consistency">Последовательность</string>
