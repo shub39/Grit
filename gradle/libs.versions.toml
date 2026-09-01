@@ -8,7 +8,7 @@ espresso-core = "3.7.0"
 junit = "4.13.2"
 junit-version = "1.3.0"
 kotlinx-datetime = "0.8.0"
-purchases = "10.18.1"
+purchases = "10.19.1"
 splashscreen = "1.2.0"
 datastore = "1.2.1"
 colorpicker = "1.2.0"
@@ -21,21 +21,21 @@ material3 = "1.12.0-alpha03"
 reorderable = "3.1.0"
 room3 = "3.0.2"
 navigation = "1.1.1"
-materialkolor = "5.0.0"
+materialkolor = "5.0.1"
 compose-junit = "1.12.0"
 biometric = "1.4.0-alpha02"
 truth = "1.4.5"
-compose-multiplatform = "1.12.0-rc01"
+compose-multiplatform = "1.12.0"
+compose-windowsizeclass = "1.9.0"
 kotlinx-coroutines = "1.11.0"
 kotlinx-serialization-json = "1.11.0"
-spotless = "8.10.0"
+spotless = "8.10.1"
 filekit = "0.15.0"
 ktfmt = "0.61"
 browser-preloader = "1.0.3"
 
 [libraries]
 # Android and compose stuff
-compose-windowsizeclass = { module = "org.jetbrains.compose.material3:material3-window-size-class", version.ref = "material3" }
 androidx-espresso-core = { module = "androidx.test.espresso:espresso-core", version.ref = "espresso-core" }
 androidx-junit = { module = "androidx.test.ext:junit", version.ref = "junit-version" }
 androidx-datastore-preferences-core = { module = "androidx.datastore:datastore-preferences-core", version.ref = "datastore" }
@@ -61,6 +61,7 @@ compose-runtime = { module = "org.jetbrains.compose.runtime:runtime", version.re
 compose-ui = { module = "org.jetbrains.compose.ui:ui", version.ref = "compose-multiplatform" }
 compose-ui-tooling = { module = "org.jetbrains.compose.ui:ui-tooling", version.ref = "compose-multiplatform" }
 compose-ui-tooling-preview = { module = "org.jetbrains.compose.ui:ui-tooling-preview", version.ref = "compose-multiplatform" }
+compose-windowsizeclass = { module = "org.jetbrains.compose.material3:material3-window-size-class", version.ref = "compose-windowsizeclass" }
 
 # Koin
 koin-core = { module = "io.insert-koin:koin-core", version.ref = "koin" }
