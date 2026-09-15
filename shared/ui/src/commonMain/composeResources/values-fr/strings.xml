@@ -71,7 +71,7 @@
     <string name="week_breakdown">Répartition par jour de la semaine</string>
     <string name="foss_desc">Toutes les fonctionnalités sont débloquées. Cette variante de l\u0027application ne prend pas en charge les achats intégrés. Si cette application vous a apporté une valeur ajoutée, soutenez-moi en faisant un don sur</string>
     <string name="add_reminder">Ajouter un rappel</string>
-    <string name="invalid_date_time">Le moment choisi est révolu :\u0027)</string>
+    <string name="invalid_date_time">Le moment choisi est révolu :')</string>
     <string name="reorder_tasks">Réorganiser les tâches</string>
     <string name="reorder_tasks_desc">Réorganiser les tâches lorsqu\u0027elles sont marquées comme terminées</string>
     <string name="translate">Traduire</string>
