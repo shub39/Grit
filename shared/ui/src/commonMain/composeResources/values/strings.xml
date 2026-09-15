@@ -73,7 +73,7 @@
     <string name="foss_desc">All features are unlocked. This variant of the app does not support In-App Purchases. If this app added value to your life, Support me by donating on</string>
     <string name="add_reminder">Add Reminder</string>
     <string name="add_reminder_desc">Receive a notification reminder on selected days</string>
-    <string name="invalid_date_time">Time selected is in the past :\u0027)</string>
+    <string name="invalid_date_time">Time selected is in the past</string>
     <string name="reorder_tasks">Reorder tasks</string>
     <string name="reorder_tasks_desc">Reorder tasks when marked as completed</string>
     <string name="translate">Translate</string>

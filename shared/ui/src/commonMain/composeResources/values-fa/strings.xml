@@ -73,7 +73,7 @@
     <string name="foss_desc">همه امکانات فعال هستند. این نسخه از برنامه از پرداخت درون‌برنامه‌ای پشتیبانی نمی‌کند. اگر این برنامه برایتان مفید بوده، می‌توانید با حمایت مالی به ما کمک کنید از طریق</string>
     <string name="add_reminder">افزودن یادآور</string>
     <string name="add_reminder_desc">دریافت یادآور در روزهای انتخاب‌شده</string>
-    <string name="invalid_date_time">زمان انتخاب‌شده در گذشته است :')</string>
+    <string name="invalid_date_time">زمان انتخاب‌شده در گذشته است</string>
     <string name="reorder_tasks">تغییر ترتیب کارها</string>
     <string name="reorder_tasks_desc">تغییر ترتیب کارها پس از انجام</string>
     <string name="translate">ترجمه</string>

@@ -62,7 +62,7 @@
     <string name="biometric_lock_desc">앱의 잠금을 풀 때 생체 인증 요구</string>
     <string name="add_reminder">알림 추가</string>
     <string name="add_reminder_desc">선택한 요일에 알림 수신</string>
-    <string name="invalid_date_time">과거의 시간을 선택했습니다 :')</string>
+    <string name="invalid_date_time">과거의 시간을 선택했습니다</string>
     <string name="week_breakdown">요일별 분석</string>
     <string name="monthly_progress">월간 진척</string>
     <string name="grit_plus">Grit Plus</string>
