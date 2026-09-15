@@ -70,7 +70,7 @@
     <string name="foss_desc">Tutte le opzioni sono sbloccate. Questa variante dell\u0027apparato non supporta pagamaneti in App. Se questa app ha un valore per te supportami donando su</string>
     <string name="add_reminder">Aggiungi Promemoria</string>
     <string name="add_reminder_desc">Ricevi un promemoria i giorni selezionati</string>
-    <string name="invalid_date_time">L\u0027ora o il giorno selezionati sono nel passato... :P</string>
+    <string name="invalid_date_time">L'ora o il giorno selezionati sono nel passato... :P</string>
     <string name="reorder_tasks">Riordina task</string>
     <string name="reorder_tasks_desc">Riordina task quando vengono completate</string>
     <string name="translate">Traduci</string>
