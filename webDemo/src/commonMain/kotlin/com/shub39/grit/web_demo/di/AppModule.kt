@@ -16,10 +16,20 @@
  */
 package com.shub39.grit.web_demo.di
 
+import com.shub39.grit.core.interfaces.AnalyticsWrapper
 import com.shub39.grit.shared.ui.di.UIModules
 import org.koin.core.annotation.ComponentScan
 import org.koin.core.annotation.Configuration
 import org.koin.core.annotation.Module
+import org.koin.core.annotation.Single
 
 @Configuration
-@Module(includes = [UIModules::class]) @ComponentScan("com.shub39.grit.web_demo") class AppModule
+@Module(includes = [UIModules::class])
+@ComponentScan("com.shub39.grit.web_demo")
+class AppModule {
+    @Single
+    fun provideAnalyticsWrapper(): AnalyticsWrapper =
+        object : AnalyticsWrapper {
+            override fun trackEvent(event: String, properties: Map<String, Any>) {}
+        }
+}
