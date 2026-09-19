@@ -20,7 +20,6 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.shub39.grit.core.billing.BillingHandler
 import com.shub39.grit.core.interfaces.AnalyticsWrapper
-import com.shub39.grit.core.interfaces.ChangelogManager
 import com.shub39.grit.core.interfaces.SettingsDatastore
 import com.shub39.grit.core.interfaces.ThemeDatastore
 import com.shub39.grit.shared.ui.app.MainAppState
@@ -29,7 +28,6 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.combine
-import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.flow.onStart
@@ -44,7 +42,6 @@ class MainViewModel(
     @Provided private val themeDatastore: ThemeDatastore,
     @Provided private val settingsDatastore: SettingsDatastore,
     @Provided private val billingHandler: BillingHandler,
-    @Provided private val changelogManager: ChangelogManager,
     @Provided private val analytics: AnalyticsWrapper,
 ) : ViewModel() {
     var observerJob: Job? = null
@@ -60,7 +57,6 @@ class MainViewModel(
                     emptyMap(),
                 )
                 checkSubscription()
-                checkChangelog()
                 observeDatastore()
             }
             .stateIn(
@@ -126,24 +122,6 @@ class MainViewModel(
             }
     }
 
-    private fun checkChangelog() {
-        viewModelScope.launch {
-            val changeLogs = changelogManager.changelogs.first()
-            val lastShownChangelog = settingsDatastore.getLastChangelogShown().first()
-
-            if (lastShownChangelog.isBlank()) {
-                changeLogs.firstOrNull()?.version?.let {
-                    settingsDatastore.updateLastChangelogShown(it)
-                }
-                return@launch // do not open changelog on first launch
-            }
-
-            if (lastShownChangelog != changeLogs.firstOrNull()?.version) {
-                _state.update { it.copy(currentChangelog = changeLogs.firstOrNull()) }
-            }
-        }
-    }
-
     private suspend fun checkSubscription() {
         _state.update { it.copy(isFoss = billingHandler.isFoss()) }
 
@@ -166,12 +144,5 @@ class MainViewModel(
             AnalyticsWrapper.Companion.AnalyticsEvent.PAYWALL_OPENED.name,
             emptyMap(),
         )
-    }
-
-    fun dismissChangelog() {
-        _state.value.currentChangelog?.version?.let {
-            viewModelScope.launch { settingsDatastore.updateLastChangelogShown(it) }
-        }
-        _state.update { it.copy(currentChangelog = null) }
     }
 }

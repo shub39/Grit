@@ -25,7 +25,6 @@ import androidx.navigation3.ui.NavDisplay
 import com.shub39.grit.billing.PaywallPage
 import com.shub39.grit.shared.ui.app.MainApp
 import com.shub39.grit.shared.ui.app.MainAppState
-import com.shub39.grit.shared.ui.components.ChangelogSheet
 import com.shub39.grit.shared.ui.navigation.verticalTransitionMetadata
 import kotlinx.serialization.Serializable
 
@@ -36,22 +35,8 @@ private sealed interface GlobalRoutes : NavKey {
 }
 
 @Composable
-fun App(
-    state: MainAppState,
-    onPaywallOpened: () -> Unit,
-    onRefreshSub: () -> Unit,
-    onDismissChangelog: () -> Unit,
-) {
+fun App(state: MainAppState, onPaywallOpened: () -> Unit, onRefreshSub: () -> Unit) {
     val mainBackStack = rememberNavBackStack(GlobalRoutes.App)
-
-    if (state.currentChangelog != null) {
-        ChangelogSheet(
-            currentLog = state.currentChangelog!!,
-            onDismissRequest = onDismissChangelog,
-            showSupportButton = !state.isUserSubscribed || state.isFoss,
-            onNavigateToPaywall = { mainBackStack.add(GlobalRoutes.PaywallPage) },
-        )
-    }
 
     NavDisplay(
         backStack = mainBackStack,

@@ -91,7 +91,6 @@ class MainActivity : FragmentActivity() {
                         App(
                             state = state,
                             onRefreshSub = { mainViewModel.updateSubscription() },
-                            onDismissChangelog = { mainViewModel.dismissChangelog() },
                             onPaywallOpened = { mainViewModel.trackPaywallOpened() },
                         )
                     } else {

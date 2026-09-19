@@ -158,12 +158,6 @@ class SettingsDatastoreStub : SettingsDatastore {
     override suspend fun setCompactView(pref: Boolean) {
         _compactView.update { pref }
     }
-
-    override fun getLastChangelogShown(): Flow<String> = _lastChangelog.asStateFlow()
-
-    override suspend fun updateLastChangelogShown(version: String) {
-        _lastChangelog.update { version }
-    }
 }
 
 @Single(binds = [TaskRepo::class])

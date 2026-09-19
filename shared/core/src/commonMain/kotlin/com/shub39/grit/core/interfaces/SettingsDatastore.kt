@@ -48,8 +48,4 @@ interface SettingsDatastore {
     fun getCompactViewPref(): Flow<Boolean>
 
     suspend fun setCompactView(pref: Boolean)
-
-    fun getLastChangelogShown(): Flow<String>
-
-    suspend fun updateLastChangelogShown(version: String)
 }
