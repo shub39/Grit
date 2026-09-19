@@ -35,4 +35,14 @@ sealed interface TaskAction {
     data class ReorderCategories(val mapping: List<Pair<Int, Category>>) : TaskAction
 
     data class UpsertTask(val task: Task) : TaskAction
+
+    data object OnTasksOpened : TaskAction
+
+    data object OnTaskSheetOpened : TaskAction
+
+    data object OnTaskSheetDismissed : TaskAction
+
+    data object OnTaskCategorySheetOpened : TaskAction
+
+    data object OnTaskCategorySheetDismissed : TaskAction
 }

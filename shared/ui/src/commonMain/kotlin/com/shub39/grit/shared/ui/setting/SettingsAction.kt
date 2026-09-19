@@ -53,4 +53,10 @@ sealed interface SettingsAction {
     data class ChangeMaterialYou(val pref: Boolean) : SettingsAction
 
     data class ChangeBiometricLock(val pref: Boolean) : SettingsAction
+
+    data object OnSettingsOpened : SettingsAction
+
+    data object OnAboutViewed : SettingsAction
+
+    data object OnChangelogViewed : SettingsAction
 }

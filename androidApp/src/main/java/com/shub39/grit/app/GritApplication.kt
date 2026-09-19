@@ -21,6 +21,7 @@ import android.app.Application
 import android.os.Build
 import android.util.Log
 import androidx.glance.appwidget.GlanceAppWidgetManager
+import com.shub39.grit.analytics.AnalyticsInitializer
 import com.shub39.grit.billing.BillingInitializer
 import com.shub39.grit.core.data.notification.GritNotificationManager
 import com.shub39.grit.di.GritModules
@@ -47,6 +48,7 @@ class GritApplication : Application() {
         }
 
         BillingInitializer().initialize(this)
+        AnalyticsInitializer().setup(this)
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.VANILLA_ICE_CREAM) {
             val manager = GlanceAppWidgetManager(applicationContext)

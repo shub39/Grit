@@ -22,6 +22,7 @@ import com.shub39.grit.core.habits.Habit
 import com.shub39.grit.core.habits.HabitRepo
 import com.shub39.grit.core.habits.HabitStatus
 import com.shub39.grit.core.interfaces.AlarmScheduler
+import com.shub39.grit.core.interfaces.AnalyticsWrapper
 import com.shub39.grit.core.interfaces.SettingsDatastore
 import com.shub39.grit.shared.ui.habit.HabitState
 import com.shub39.grit.shared.ui.habit.HabitsAction
@@ -45,6 +46,7 @@ class HabitViewModel(
     @Provided private val scheduler: AlarmScheduler,
     @Provided private val repo: HabitRepo,
     @Provided private val datastore: SettingsDatastore,
+    @Provided private val analytics: AnalyticsWrapper,
 ) : ViewModel() {
     private var habitStatusJob: Job? = null
     private var overallAnalyticsJob: Job? = null
@@ -69,13 +71,31 @@ class HabitViewModel(
     fun onAction(action: HabitsAction) {
         viewModelScope.launch {
             when (action) {
-                is AddHabit -> upsertHabit(action.habit)
+                is AddHabit -> {
+                    analytics.trackEvent(
+                        AnalyticsWrapper.Companion.AnalyticsEvent.HABIT_CREATED.name,
+                        mapOf("has_reminder" to action.habit.reminder),
+                    )
+                    upsertHabit(action.habit)
+                }
 
-                is DeleteHabit -> deleteHabit(action.habit)
+                is DeleteHabit -> {
+                    analytics.trackEvent(
+                        AnalyticsWrapper.Companion.AnalyticsEvent.HABIT_DELETED.name,
+                        mapOf("has_reminder" to action.habit.reminder),
+                    )
+                    deleteHabit(action.habit)
+                }
 
                 is InsertStatus -> insertHabitStatus(action.habit, action.date)
 
-                is UpdateHabit -> upsertHabit(action.habit)
+                is UpdateHabit -> {
+                    analytics.trackEvent(
+                        AnalyticsWrapper.Companion.AnalyticsEvent.HABIT_EDITED.name,
+                        mapOf("has_reminder" to action.habit.reminder),
+                    )
+                    upsertHabit(action.habit)
+                }
 
                 ReorderHabits -> {
                     val currentList =
@@ -87,14 +107,30 @@ class HabitViewModel(
                 }
 
                 is PrepareAnalytics -> {
+                    if (action.habit != null) {
+                        analytics.trackEvent(
+                            AnalyticsWrapper.Companion.AnalyticsEvent.HABIT_ANALYTICS_VIEWED.name,
+                            mapOf("has_reminder" to action.habit.reminder),
+                        )
+                    }
                     _state.update { it.copy(analyticsHabitId = action.habit?.id) }
                 }
 
                 OnAddHabitClicked -> {
+                    analytics.trackEvent(
+                        AnalyticsWrapper.Companion.AnalyticsEvent.HABIT_SHEET_OPENED.name,
+                        emptyMap(),
+                    )
                     _state.update { it.copy(showHabitAddSheet = true) }
                 }
 
-                DismissAddHabitDialog -> _state.update { it.copy(showHabitAddSheet = false) }
+                DismissAddHabitDialog -> {
+                    analytics.trackEvent(
+                        AnalyticsWrapper.Companion.AnalyticsEvent.HABIT_SHEET_DISMISSED.name,
+                        emptyMap(),
+                    )
+                    _state.update { it.copy(showHabitAddSheet = false) }
+                }
 
                 is OnToggleCompactView -> datastore.setCompactView(action.pref)
 
@@ -134,6 +170,20 @@ class HabitViewModel(
                             )
                         }
                     }
+                }
+
+                OnHabitsOpened -> {
+                    analytics.trackEvent(
+                        AnalyticsWrapper.Companion.AnalyticsEvent.HABITS_OPENED.name,
+                        emptyMap(),
+                    )
+                }
+
+                OnOverallAnalyticsViewed -> {
+                    analytics.trackEvent(
+                        AnalyticsWrapper.Companion.AnalyticsEvent.OVERALL_ANALYTICS_VIEWED.name,
+                        emptyMap(),
+                    )
                 }
             }
         }
@@ -211,8 +261,20 @@ class HabitViewModel(
                 ?.any { it.date == date } ?: false
 
         if (isHabitCompleted) {
+            analytics.trackEvent(
+                AnalyticsWrapper.Companion.AnalyticsEvent.HABIT_STATUS_UPDATED.name,
+                mapOf("status" to "uncompleted"),
+            )
             repo.deleteHabitStatus(habit.id, date)
         } else {
+            analytics.trackEvent(
+                AnalyticsWrapper.Companion.AnalyticsEvent.HABIT_COMPLETED.name,
+                emptyMap(),
+            )
+            analytics.trackEvent(
+                AnalyticsWrapper.Companion.AnalyticsEvent.HABIT_STATUS_UPDATED.name,
+                mapOf("status" to "completed"),
+            )
             repo.insertHabitStatus(HabitStatus(habitId = habit.id, date = date))
         }
     }

@@ -39,7 +39,6 @@ class SettingsDatastoreImpl(private val datastore: DataStore<Preferences>) : Set
         private val biometricLockKey = booleanPreferencesKey("biometric")
         private val taskReorderKey = booleanPreferencesKey("task_reorder")
         private val compactHabitView = booleanPreferencesKey("compact_habit_view")
-        private val lastChangelogShownKey = stringPreferencesKey("last_changelog_shown")
     }
 
     override fun getStartOfTheWeekPref(): Flow<DayOfWeek> =
@@ -95,12 +94,5 @@ class SettingsDatastoreImpl(private val datastore: DataStore<Preferences>) : Set
 
     override suspend fun setCompactView(pref: Boolean) {
         datastore.edit { prefs -> prefs[compactHabitView] = pref }
-    }
-
-    override fun getLastChangelogShown(): Flow<String> =
-        datastore.data.map { prefs -> prefs[lastChangelogShownKey] ?: "" }
-
-    override suspend fun updateLastChangelogShown(version: String) {
-        datastore.edit { settings -> settings[lastChangelogShownKey] = version }
     }
 }

@@ -28,11 +28,15 @@ import com.shub39.grit.core.settings.backup.RestoreRepo
 import com.shub39.grit.core.settings.backup.RestoreResult
 import com.shub39.grit.core.tasks.Task
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.flowOf
 import org.koin.core.annotation.Single
 
 @Single(binds = [BillingHandler::class])
 class BillingHandlerStub : BillingHandler {
+    override val isPlus: StateFlow<Boolean> = MutableStateFlow(false)
+
     override suspend fun isPlusUser(): Boolean = true
 
     override suspend fun userResult(): SubscriptionResult = SubscriptionResult.Subscribed

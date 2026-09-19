@@ -14,16 +14,10 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
-package com.shub39.grit.core.billing
+package com.shub39.grit.analytics
 
-import kotlinx.coroutines.flow.StateFlow
+import com.shub39.grit.core.interfaces.AnalyticsWrapper
 
-interface BillingHandler {
-    val isPlus: StateFlow<Boolean>
-
-    suspend fun isPlusUser(): Boolean
-
-    suspend fun userResult(): SubscriptionResult
-
-    suspend fun isFoss(): Boolean
+class AnalyticsImpl : AnalyticsWrapper {
+    override fun trackEvent(event: String, properties: Map<String, Any>) {}
 }

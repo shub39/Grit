@@ -1,5 +1,10 @@
 # Changelog
 
+## 6.0.8
+- Updated Translations
+- Removed Changelog Sheet
+- Miscellaneous Fixes and Improvements
+
 ## 6.0.7
 - Updated Translations
 

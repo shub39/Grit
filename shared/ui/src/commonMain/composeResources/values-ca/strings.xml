@@ -71,7 +71,7 @@
     <string name="foss">Esteu utilitzant la variant FOSS</string>
     <string name="foss_desc">Totes les funcions estan desbloquejades. Aquesta variant de l\u0027aplicació no admet compres integrades. Si aquesta aplicació ha aportat valor a la vostra vida, doneu suport donant a</string>
     <string name="add_reminder">Afegir recordatori</string>
-    <string name="invalid_date_time">L\u0027hora seleccionada és en el passat :\u0027)</string>
+    <string name="invalid_date_time">L\u0027hora seleccionada és en el passat</string>
     <string name="reorder_tasks">Reordenar tasques</string>
     <string name="reorder_tasks_desc">Reordenar tasques quan es marquin com a completades</string>
     <string name="translate">Traduir</string>

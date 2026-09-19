@@ -19,6 +19,7 @@ package com.shub39.grit.shared.ui.viewmodel
 import androidx.compose.ui.graphics.toArgb
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.shub39.grit.core.interfaces.AnalyticsWrapper
 import com.shub39.grit.core.interfaces.BiometricUtils
 import com.shub39.grit.core.interfaces.ChangelogManager
 import com.shub39.grit.core.interfaces.SettingsDatastore
@@ -50,6 +51,7 @@ class SettingsViewModel(
     @Provided private val settingsDatastore: SettingsDatastore,
     @Provided private val changelogManager: ChangelogManager,
     @Provided private val biometricUtils: BiometricUtils,
+    @Provided private val analytics: AnalyticsWrapper,
 ) : ViewModel() {
     private var observeJob: Job? = null
 
@@ -68,21 +70,69 @@ class SettingsViewModel(
     fun onAction(action: SettingsAction) =
         viewModelScope.launch {
             when (action) {
-                is ChangeAmoled -> themeDatastore.setAmoledPref(action.pref)
+                is ChangeAmoled -> {
+                    analytics.trackEvent(
+                        AnalyticsWrapper.Companion.AnalyticsEvent.LOOK_AND_FEEL_UPDATED.name,
+                        mapOf("setting" to "ChangeAmoled", "value" to action.pref),
+                    )
+                    themeDatastore.setAmoledPref(action.pref)
+                }
 
-                is ChangeAppTheme -> themeDatastore.setAppTheme(action.appTheme)
+                is ChangeAppTheme -> {
+                    analytics.trackEvent(
+                        AnalyticsWrapper.Companion.AnalyticsEvent.LOOK_AND_FEEL_UPDATED.name,
+                        mapOf("setting" to "ChangeAppTheme", "value" to action.appTheme.name),
+                    )
+                    themeDatastore.setAppTheme(action.appTheme)
+                }
 
-                is ChangeIs24Hr -> settingsDatastore.setIs24Hr(action.pref)
+                is ChangeIs24Hr -> {
+                    analytics.trackEvent(
+                        AnalyticsWrapper.Companion.AnalyticsEvent.SETTINGS_UPDATED.name,
+                        mapOf("setting" to "ChangeIs24Hr", "value" to action.pref),
+                    )
+                    settingsDatastore.setIs24Hr(action.pref)
+                }
 
-                is ChangeMaterialYou -> themeDatastore.setMaterialYou(action.pref)
+                is ChangeMaterialYou -> {
+                    analytics.trackEvent(
+                        AnalyticsWrapper.Companion.AnalyticsEvent.LOOK_AND_FEEL_UPDATED.name,
+                        mapOf("setting" to "ChangeMaterialYou", "value" to action.pref),
+                    )
+                    themeDatastore.setMaterialYou(action.pref)
+                }
 
-                is ChangePaletteStyle -> themeDatastore.setPaletteStyle(action.style)
+                is ChangePaletteStyle -> {
+                    analytics.trackEvent(
+                        AnalyticsWrapper.Companion.AnalyticsEvent.LOOK_AND_FEEL_UPDATED.name,
+                        mapOf("setting" to "ChangePaletteStyle", "value" to action.style.name),
+                    )
+                    themeDatastore.setPaletteStyle(action.style)
+                }
 
-                is ChangeSeedColor -> themeDatastore.setSeedColor(action.color.toArgb())
+                is ChangeSeedColor -> {
+                    analytics.trackEvent(
+                        AnalyticsWrapper.Companion.AnalyticsEvent.LOOK_AND_FEEL_UPDATED.name,
+                        mapOf("setting" to "ChangeSeedColor"),
+                    )
+                    themeDatastore.setSeedColor(action.color.toArgb())
+                }
 
-                is ChangeStartOfTheWeek -> settingsDatastore.setStartOfWeek(action.pref)
+                is ChangeStartOfTheWeek -> {
+                    analytics.trackEvent(
+                        AnalyticsWrapper.Companion.AnalyticsEvent.SETTINGS_UPDATED.name,
+                        mapOf("setting" to "ChangeStartOfTheWeek", "value" to action.pref.name),
+                    )
+                    settingsDatastore.setStartOfWeek(action.pref)
+                }
 
-                is ChangeStartingPage -> settingsDatastore.setStartingPage(action.page)
+                is ChangeStartingPage -> {
+                    analytics.trackEvent(
+                        AnalyticsWrapper.Companion.AnalyticsEvent.SETTINGS_UPDATED.name,
+                        mapOf("setting" to "ChangeStartingPage", "value" to action.page.name),
+                    )
+                    settingsDatastore.setStartingPage(action.page)
+                }
 
                 OnResetBackupState -> {
                     _state.update { it.copy(backupState = BackupState()) }
@@ -94,6 +144,10 @@ class SettingsViewModel(
                     }
 
                     exportRepo.exportToJson()
+                    analytics.trackEvent(
+                        AnalyticsWrapper.Companion.AnalyticsEvent.BACKUP_CREATED.name,
+                        mapOf("status" to "success"),
+                    )
 
                     _state.update {
                         it.copy(backupState = it.backupState.copy(exportState = EXPORTED))
@@ -106,6 +160,10 @@ class SettingsViewModel(
                     }
 
                     val result = restoreRepo.restoreData()
+                    analytics.trackEvent(
+                        AnalyticsWrapper.Companion.AnalyticsEvent.BACKUP_RESTORED.name,
+                        mapOf("status" to result.toString()),
+                    )
 
                     _state.update {
                         it.copy(
@@ -121,13 +179,58 @@ class SettingsViewModel(
                     }
                 }
 
-                is ChangePauseNotifications -> settingsDatastore.setNotifications(action.pref)
+                is ChangePauseNotifications -> {
+                    analytics.trackEvent(
+                        AnalyticsWrapper.Companion.AnalyticsEvent.SETTINGS_UPDATED.name,
+                        mapOf("setting" to "ChangePauseNotifications", "value" to action.pref),
+                    )
+                    settingsDatastore.setNotifications(action.pref)
+                }
 
-                is ChangeFontPref -> themeDatastore.setFontPref(action.font)
+                is ChangeFontPref -> {
+                    analytics.trackEvent(
+                        AnalyticsWrapper.Companion.AnalyticsEvent.LOOK_AND_FEEL_UPDATED.name,
+                        mapOf("setting" to "ChangeFontPref", "value" to action.font.name),
+                    )
+                    themeDatastore.setFontPref(action.font)
+                }
 
-                is ChangeBiometricLock -> settingsDatastore.setBiometricPref(action.pref)
+                is ChangeBiometricLock -> {
+                    analytics.trackEvent(
+                        AnalyticsWrapper.Companion.AnalyticsEvent.SETTINGS_UPDATED.name,
+                        mapOf("setting" to "ChangeBiometricLock", "value" to action.pref),
+                    )
+                    settingsDatastore.setBiometricPref(action.pref)
+                }
 
-                is ChangeReorderTasks -> settingsDatastore.setTaskReorderPref(action.pref)
+                is ChangeReorderTasks -> {
+                    analytics.trackEvent(
+                        AnalyticsWrapper.Companion.AnalyticsEvent.SETTINGS_UPDATED.name,
+                        mapOf("setting" to "ChangeReorderTasks", "value" to action.pref),
+                    )
+                    settingsDatastore.setTaskReorderPref(action.pref)
+                }
+
+                OnSettingsOpened -> {
+                    analytics.trackEvent(
+                        AnalyticsWrapper.Companion.AnalyticsEvent.SETTINGS_OPENED.name,
+                        emptyMap(),
+                    )
+                }
+
+                OnAboutViewed -> {
+                    analytics.trackEvent(
+                        AnalyticsWrapper.Companion.AnalyticsEvent.ABOUT_VIEWED.name,
+                        emptyMap(),
+                    )
+                }
+
+                OnChangelogViewed -> {
+                    analytics.trackEvent(
+                        AnalyticsWrapper.Companion.AnalyticsEvent.CHANGELOG_VIEWED.name,
+                        emptyMap(),
+                    )
+                }
             }
         }
 

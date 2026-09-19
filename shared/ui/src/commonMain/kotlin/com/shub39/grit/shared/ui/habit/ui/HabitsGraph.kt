@@ -109,6 +109,8 @@ fun HabitsGraph(
 
     val scrollBehavior = TopAppBarDefaults.enterAlwaysScrollBehavior()
 
+    LaunchedEffect(Unit) { onAction(HabitsAction.OnHabitsOpened) }
+
     if (windowSizeClass.widthSizeClass != WindowWidthSizeClass.Expanded) {
         val backstack = rememberNavBackStack(config, HabitRoutes.HabitList)
 
@@ -177,6 +179,7 @@ fun HabitsGraph(
                     }
 
                     entry<HabitRoutes.OverallAnalytics>(metadata = verticalTransitionMetadata()) {
+                        LaunchedEffect(Unit) { onAction(HabitsAction.OnOverallAnalyticsViewed) }
                         OverallAnalytics(
                             state = state,
                             onNavigateBack = {

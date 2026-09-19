@@ -18,7 +18,9 @@ package com.shub39.grit.di
 
 import androidx.datastore.core.DataStore
 import androidx.datastore.preferences.core.Preferences
+import com.shub39.grit.analytics.AnalyticsImpl
 import com.shub39.grit.core.data.datastore.DatastoreFactory
+import com.shub39.grit.core.interfaces.AnalyticsWrapper
 import com.shub39.grit.habits.data.database.HabitDatabase
 import com.shub39.grit.habits.data.database.HabitDbFactory
 import com.shub39.grit.habits.data.database.HabitStatusDao
@@ -37,6 +39,8 @@ import org.koin.core.annotation.Single
 @Module(includes = [UIModules::class])
 @ComponentScan("com.shub39.grit")
 class GritModules {
+    @Single fun provideAnalyticsWrapper(): AnalyticsWrapper = AnalyticsImpl()
+
     @Single fun getHabitDb(dbFactory: HabitDbFactory): HabitDatabase = dbFactory.create().build()
 
     @Single fun getTaskDb(dbFactory: TaskDbFactory): TaskDatabase = dbFactory.create().build()

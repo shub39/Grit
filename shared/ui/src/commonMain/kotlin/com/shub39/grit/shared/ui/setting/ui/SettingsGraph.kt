@@ -21,6 +21,7 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.widthIn
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.tooling.preview.PreviewWrapper
@@ -80,6 +81,8 @@ fun SettingsGraph(
     PageFill(modifier = modifier.background(MaterialTheme.colorScheme.background)) {
         val backStack = rememberNavBackStack(configuration, SettingsRoutes.Root)
 
+        LaunchedEffect(Unit) { onAction(SettingsAction.OnSettingsOpened) }
+
         NavDisplay(
             modifier = Modifier.widthIn(max = 600.dp).fillMaxSize(),
             backStack = backStack,
@@ -120,6 +123,7 @@ fun SettingsGraph(
                     }
 
                     entry<SettingsRoutes.Changelog>(metadata = horizontalTransitionMetadata()) {
+                        LaunchedEffect(Unit) { onAction(SettingsAction.OnChangelogViewed) }
                         Changelog(
                             changelog = state.changelog,
                             onNavigateBack = {
@@ -129,6 +133,7 @@ fun SettingsGraph(
                     }
 
                     entry<SettingsRoutes.About>(metadata = horizontalTransitionMetadata()) {
+                        LaunchedEffect(Unit) { onAction(SettingsAction.OnAboutViewed) }
                         About(
                             versionName = state.currentVersion ?: "1.0.00-Demo",
                             onNavigateBack = {

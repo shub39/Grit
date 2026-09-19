@@ -19,9 +19,12 @@ package com.shub39.grit.billing
 import com.revenuecat.purchases.CacheFetchPolicy
 import com.revenuecat.purchases.Purchases
 import com.revenuecat.purchases.awaitCustomerInfo
+import com.revenuecat.purchases.interfaces.UpdatedCustomerInfoListener
 import com.shub39.grit.core.billing.BillingHandler
 import com.shub39.grit.core.billing.SubscriptionResult
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.withContext
 import org.koin.core.annotation.Single
 
@@ -31,10 +34,19 @@ class BillingHandler : BillingHandler {
         private const val ENTITLEMENT_PLUS = "Plus"
     }
 
+    override val isPlus = MutableStateFlow(false)
+
     private val purchases by lazy { Purchases.sharedInstance }
 
+    init {
+        purchases.updatedCustomerInfoListener = UpdatedCustomerInfoListener { customerInfo ->
+            isPlus.update { customerInfo.entitlements.all[ENTITLEMENT_PLUS]?.isActive == true }
+        }
+    }
+
     override suspend fun isPlusUser(): Boolean {
-        return userResult() is SubscriptionResult.Subscribed
+        isPlus.update { userResult() is SubscriptionResult.Subscribed }
+        return isPlus.value
     }
 
     override suspend fun userResult(): SubscriptionResult {
@@ -46,14 +58,16 @@ class BillingHandler : BillingHandler {
                     )
                 }
             val entitlement = userInfo.entitlements.all[ENTITLEMENT_PLUS]
-            val isPlus = entitlement?.isActive
-            if (isPlus == true) {
+            val isSubscribed = entitlement?.isActive
+            if (isSubscribed == true) {
+                isPlus.update { true }
                 return SubscriptionResult.Subscribed
             }
         } catch (e: Exception) {
             return SubscriptionResult.Error(e)
         }
 
+        isPlus.update { false }
         return SubscriptionResult.NotSubscribed
     }
 
