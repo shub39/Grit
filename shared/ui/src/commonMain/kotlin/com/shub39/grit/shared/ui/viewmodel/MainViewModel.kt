@@ -19,6 +19,7 @@ package com.shub39.grit.shared.ui.viewmodel
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.shub39.grit.core.billing.BillingHandler
+import com.shub39.grit.core.interfaces.AnalyticsWrapper
 import com.shub39.grit.core.interfaces.ChangelogManager
 import com.shub39.grit.core.interfaces.SettingsDatastore
 import com.shub39.grit.core.interfaces.ThemeDatastore
@@ -44,6 +45,7 @@ class MainViewModel(
     @Provided private val settingsDatastore: SettingsDatastore,
     @Provided private val billingHandler: BillingHandler,
     @Provided private val changelogManager: ChangelogManager,
+    @Provided private val analytics: AnalyticsWrapper,
 ) : ViewModel() {
     var observerJob: Job? = null
 
@@ -53,6 +55,10 @@ class MainViewModel(
         _state
             .asStateFlow()
             .onStart {
+                analytics.trackEvent(
+                    AnalyticsWrapper.Companion.AnalyticsEvent.APP_OPENED.name,
+                    emptyMap(),
+                )
                 checkSubscription()
                 checkChangelog()
                 observeDatastore()
@@ -145,10 +151,21 @@ class MainViewModel(
 
         when (isSubscribed) {
             Subscribed -> {
+                analytics.trackEvent(
+                    AnalyticsWrapper.Companion.AnalyticsEvent.PAYWALL_PURCHASED.name,
+                    emptyMap(),
+                )
                 _state.update { it.copy(isUserSubscribed = true) }
             }
             else -> {}
         }
+    }
+
+    fun trackPaywallOpened() {
+        analytics.trackEvent(
+            AnalyticsWrapper.Companion.AnalyticsEvent.PAYWALL_OPENED.name,
+            emptyMap(),
+        )
     }
 
     fun dismissChangelog() {

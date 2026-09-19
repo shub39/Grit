@@ -19,6 +19,7 @@ package com.shub39.grit.shared.ui.viewmodel
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.shub39.grit.core.interfaces.AlarmScheduler
+import com.shub39.grit.core.interfaces.AnalyticsWrapper
 import com.shub39.grit.core.interfaces.SettingsDatastore
 import com.shub39.grit.core.tasks.Category
 import com.shub39.grit.core.tasks.CategoryColors
@@ -45,6 +46,7 @@ class TasksViewModel(
     @Provided private val repo: TaskRepo,
     @Provided private val scheduler: AlarmScheduler,
     @Provided private val datastore: SettingsDatastore,
+    @Provided private val analytics: AnalyticsWrapper,
 ) : ViewModel() {
 
     companion object {
@@ -71,8 +73,23 @@ class TasksViewModel(
             when (action) {
                 is UpsertTask -> {
                     if (action.task.status) {
+                        analytics.trackEvent(
+                            AnalyticsWrapper.Companion.AnalyticsEvent.TASK_COMPLETED.name,
+                            mapOf("has_reminder" to (action.task.reminder != null)),
+                        )
                         repo.upsertTask(action.task.copy(reminder = null))
                     } else {
+                        if (action.task.id == 0L) {
+                            analytics.trackEvent(
+                                AnalyticsWrapper.Companion.AnalyticsEvent.TASK_CREATED.name,
+                                mapOf("has_reminder" to (action.task.reminder != null)),
+                            )
+                        } else {
+                            analytics.trackEvent(
+                                AnalyticsWrapper.Companion.AnalyticsEvent.TASK_EDITED.name,
+                                mapOf("has_reminder" to (action.task.reminder != null)),
+                            )
+                        }
                         val newId = repo.upsertTask(action.task)
 
                         scheduler.schedule(action.task.copy(id = newId))
@@ -88,6 +105,17 @@ class TasksViewModel(
                 }
 
                 is AddCategory -> {
+                    if (action.category.id == 0L) {
+                        analytics.trackEvent(
+                            AnalyticsWrapper.Companion.AnalyticsEvent.TASK_CATEGORY_CREATED.name,
+                            emptyMap(),
+                        )
+                    } else {
+                        analytics.trackEvent(
+                            AnalyticsWrapper.Companion.AnalyticsEvent.TASK_CATEGORY_EDITED.name,
+                            emptyMap(),
+                        )
+                    }
                     upsertCategory(action.category)
 
                     _state.update { it.copy(currentCategory = it.tasks.keys.firstOrNull()) }
@@ -110,6 +138,10 @@ class TasksViewModel(
                 }
 
                 is DeleteCategory -> {
+                    analytics.trackEvent(
+                        AnalyticsWrapper.Companion.AnalyticsEvent.TASK_CATEGORY_DELETED.name,
+                        emptyMap(),
+                    )
                     deleteCategory(action.category)
 
                     delay(REORDER_DELAY.milliseconds)
@@ -117,7 +149,49 @@ class TasksViewModel(
                     _state.update { it.copy(currentCategory = it.tasks.keys.firstOrNull()) }
                 }
 
-                is DeleteTask -> repo.deleteTask(action.task)
+                is DeleteTask -> {
+                    analytics.trackEvent(
+                        AnalyticsWrapper.Companion.AnalyticsEvent.TASK_DELETED.name,
+                        mapOf("has_reminder" to (action.task.reminder != null)),
+                    )
+                    repo.deleteTask(action.task)
+                }
+
+                OnTasksOpened -> {
+                    analytics.trackEvent(
+                        AnalyticsWrapper.Companion.AnalyticsEvent.TASKS_OPENED.name,
+                        emptyMap(),
+                    )
+                }
+
+                OnTaskSheetOpened -> {
+                    analytics.trackEvent(
+                        AnalyticsWrapper.Companion.AnalyticsEvent.TASK_SHEET_OPENED.name,
+                        emptyMap(),
+                    )
+                }
+
+                OnTaskSheetDismissed -> {
+                    analytics.trackEvent(
+                        AnalyticsWrapper.Companion.AnalyticsEvent.TASK_SHEET_DISMISSED.name,
+                        emptyMap(),
+                    )
+                }
+
+                OnTaskCategorySheetOpened -> {
+                    analytics.trackEvent(
+                        AnalyticsWrapper.Companion.AnalyticsEvent.TASK_CATEGORY_SHEET_OPENED.name,
+                        emptyMap(),
+                    )
+                }
+
+                OnTaskCategorySheetDismissed -> {
+                    analytics.trackEvent(
+                        AnalyticsWrapper.Companion.AnalyticsEvent.TASK_CATEGORY_SHEET_DISMISSED
+                            .name,
+                        emptyMap(),
+                    )
+                }
             }
         }
     }
@@ -163,6 +237,10 @@ class TasksViewModel(
 
     private suspend fun deleteTasks() {
         for (task in _state.value.completedTasks) {
+            analytics.trackEvent(
+                AnalyticsWrapper.Companion.AnalyticsEvent.TASK_DELETED.name,
+                mapOf("has_reminder" to (task.reminder != null)),
+            )
             repo.deleteTask(task)
         }
     }

@@ -75,6 +75,7 @@ import androidx.compose.material3.animateFloatingActionButton
 import androidx.compose.material3.toShape
 import androidx.compose.material3.windowsizeclass.WindowWidthSizeClass
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -107,7 +108,6 @@ import com.shub39.grit.shared.ui.theme.flexFontEmphasis
 import com.shub39.grit.shared.ui.theme.flexFontRounded
 import grit.shared.ui.generated.resources.*
 import grit.shared.ui.generated.resources.add
-import kotlin.invoke
 import org.jetbrains.compose.resources.stringResource
 import org.jetbrains.compose.resources.vectorResource
 import sh.calvin.reorderable.ReorderableItem
@@ -146,7 +146,10 @@ fun TaskList(state: TaskState, onAction: (TaskAction) -> Unit, onEditCategories:
                 state = state,
                 isReorderMode = editState,
                 onAction = onAction,
-                onAddCategoryClick = { showCategoryAddSheet = true },
+                onAddCategoryClick = {
+                    onAction(TaskAction.OnTaskCategorySheetOpened)
+                    showCategoryAddSheet = true
+                },
                 onEditCategoriesClick = onEditCategories,
                 isExpanded = windowSizeClass.widthSizeClass == WindowWidthSizeClass.Expanded,
                 onReorderModeChange = { editState = it },
@@ -224,31 +227,44 @@ fun TaskList(state: TaskState, onAction: (TaskAction) -> Unit, onEditCategories:
 
         if (showCategoryAddSheet) {
             CategoryUpsertSheet(
-                onDismiss = { showCategoryAddSheet = false },
+                onDismiss = {
+                    onAction(TaskAction.OnTaskCategorySheetDismissed)
+                    showCategoryAddSheet = false
+                },
                 category = Category(name = "", color = CategoryColors.GRAY.color),
                 onUpsertCategory = {
                     onAction(TaskAction.AddCategory(it))
+                    onAction(TaskAction.OnTaskCategorySheetDismissed)
                     showCategoryAddSheet = false
                 },
             )
         }
 
         if (editTask != null) {
+            LaunchedEffect(editTask) { onAction(TaskAction.OnTaskSheetOpened) }
             TaskUpsertSheet(
                 task = editTask!!,
                 categories = state.tasks.keys.toList(),
-                onDismissRequest = { editTask = null },
+                onDismissRequest = {
+                    onAction(TaskAction.OnTaskSheetDismissed)
+                    editTask = null
+                },
                 isEditSheet = true,
                 is24Hr = state.is24Hour,
-                onUpsert = { onAction(TaskAction.UpsertTask(it)) },
+                onUpsert = {
+                    onAction(TaskAction.UpsertTask(it))
+                    onAction(TaskAction.OnTaskSheetDismissed)
+                },
                 onDelete = {
                     editTask?.let { onAction(TaskAction.DeleteTask(it)) }
+                    onAction(TaskAction.OnTaskSheetDismissed)
                     editTask = null
                 },
             )
         }
 
         if (showTaskAddSheet && state.currentCategory != null) {
+            LaunchedEffect(Unit) { onAction(TaskAction.OnTaskSheetOpened) }
             TaskUpsertSheet(
                 task =
                     Task(
@@ -260,8 +276,14 @@ fun TaskList(state: TaskState, onAction: (TaskAction) -> Unit, onEditCategories:
                     ),
                 is24Hr = state.is24Hour,
                 categories = state.tasks.keys.toList(),
-                onDismissRequest = { showTaskAddSheet = false },
-                onUpsert = { onAction(TaskAction.UpsertTask(it)) },
+                onDismissRequest = {
+                    onAction(TaskAction.OnTaskSheetDismissed)
+                    showTaskAddSheet = false
+                },
+                onUpsert = {
+                    onAction(TaskAction.UpsertTask(it))
+                    onAction(TaskAction.OnTaskSheetDismissed)
+                },
                 onDelete = {},
             )
         }

@@ -36,7 +36,12 @@ private sealed interface GlobalRoutes : NavKey {
 }
 
 @Composable
-fun App(state: MainAppState, onRefreshSub: () -> Unit, onDismissChangelog: () -> Unit) {
+fun App(
+    state: MainAppState,
+    onPaywallOpened: () -> Unit,
+    onRefreshSub: () -> Unit,
+    onDismissChangelog: () -> Unit,
+) {
     val mainBackStack = rememberNavBackStack(GlobalRoutes.App)
 
     if (state.currentChangelog != null) {
@@ -66,7 +71,10 @@ fun App(state: MainAppState, onRefreshSub: () -> Unit, onDismissChangelog: () ->
                 entry<GlobalRoutes.App> {
                     MainApp(
                         state = state,
-                        onNavigateToPaywall = { mainBackStack.add(GlobalRoutes.PaywallPage) },
+                        onNavigateToPaywall = {
+                            onPaywallOpened()
+                            mainBackStack.add(GlobalRoutes.PaywallPage)
+                        },
                     )
                 }
             },

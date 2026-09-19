@@ -41,6 +41,7 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.material3.toShape
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -63,7 +64,6 @@ import com.shub39.grit.shared.ui.task.ui.component.CategoryUpsertSheet
 import com.shub39.grit.shared.ui.task.ui.section.TaskList
 import com.shub39.grit.shared.ui.theme.flexFontEmphasis
 import grit.shared.ui.generated.resources.*
-import kotlin.invoke
 import org.jetbrains.compose.resources.stringResource
 import org.jetbrains.compose.resources.vectorResource
 import sh.calvin.reorderable.ReorderableItem
@@ -71,15 +71,27 @@ import sh.calvin.reorderable.rememberReorderableLazyListState
 
 @Composable
 fun TasksPage(state: TaskState, onAction: (TaskAction) -> Unit) {
+    LaunchedEffect(Unit) { onAction(TaskAction.OnTasksOpened) }
+
     var showCategoryEditor by rememberSaveable { mutableStateOf(false) }
 
-    TaskList(state = state, onAction = onAction, onEditCategories = { showCategoryEditor = true })
+    TaskList(
+        state = state,
+        onAction = onAction,
+        onEditCategories = {
+            onAction(TaskAction.OnTaskCategorySheetOpened)
+            showCategoryEditor = true
+        },
+    )
 
     if (showCategoryEditor) {
         CategoryEditDialog(
             state = state,
             onAction = onAction,
-            onDismissRequest = { showCategoryEditor = false },
+            onDismissRequest = {
+                onAction(TaskAction.OnTaskCategorySheetDismissed)
+                showCategoryEditor = false
+            },
         )
     }
 }

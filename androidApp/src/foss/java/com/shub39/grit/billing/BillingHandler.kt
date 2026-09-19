@@ -18,10 +18,14 @@ package com.shub39.grit.billing
 
 import com.shub39.grit.core.billing.BillingHandler
 import com.shub39.grit.core.billing.SubscriptionResult
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
 import org.koin.core.annotation.Single
 
 @Single(binds = [BillingHandler::class])
 class BillingHandler : BillingHandler {
+    override val isPlus: StateFlow<Boolean> = MutableStateFlow(true)
+
     override suspend fun isPlusUser(): Boolean = true
 
     override suspend fun userResult(): SubscriptionResult = SubscriptionResult.Subscribed
