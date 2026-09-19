@@ -1,5 +1,13 @@
 [
   {
+    "version": "6.0.8",
+    "changes": [
+      "Updated Translations",
+      "Removed Changelog Sheet",
+      "Miscellaneous Fixes and Improvements"
+    ]
+  },
+  {
     "version": "6.0.7",
     "changes": [
       "Updated Translations"
@@ -68,13 +76,6 @@
       "Updated Translations",
       "Added ability to choose export locations for backups",
       "Miscellaneous UI improvements"
-    ]
-  },
-  {
-    "version": "5.9.23",
-    "changes": [
-      "Updated Translations",
-      "(Android 13+) Added ability to change app language from Settings"
     ]
   }
 ]

@@ -232,7 +232,7 @@ class TasksViewModel(
     }
 
     private suspend fun addDefault() {
-        upsertCategory(Category(name = "Misc", color = CategoryColors.GRAY.color))
+        upsertCategory(Category(name = "Category 1", color = CategoryColors.GRAY.color))
     }
 
     private suspend fun deleteTasks() {
