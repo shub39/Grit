@@ -72,7 +72,7 @@
     <string name="foss_desc">Udah kebuka semua ya fiturnya! Versi ini bebas biaya alias gak ada in-app purchase. Kalau ngerasa Grit bikin hidupmu lebih tertata, yuk traktir kopi aku di</string>
     <string name="add_reminder">Tambahin Pengingat</string>
     <string name="add_reminder_desc">Terima pengingat notifikasi pada hari-hari tertentu</string>
-    <string name="invalid_date_time">Waduh, masa lalu jangan diungkit lagi :')</string>
+    <string name="invalid_date_time">Waduh, masa lalu jangan diungkit lagi</string>
     <string name="reorder_tasks">Atur ulang tugas</string>
     <string name="reorder_tasks_desc">Atur ulang tugas saat ditandai udah selesai</string>
     <string name="translate">Terjemahan</string>

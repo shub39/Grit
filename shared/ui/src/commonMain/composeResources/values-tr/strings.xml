@@ -75,7 +75,7 @@
     <string name="changelog">Değişim Günlüğü</string>
     <string name="reorder_tasks">Görevleri yeniden yap</string>
     <string name="add_reminder_desc">Seçilmiş günlerde hatırlatma bildirimi al</string>
-    <string name="invalid_date_time">Seçilen zaman geçmişte kaldı :')</string>
+    <string name="invalid_date_time">Seçilen zaman geçmişte kaldı</string>
     <string name="reorder_tasks_desc">Görevleri tamamlandıkları zaman yeniden sırala</string>
     <string name="whats_changed">Neler Değişti</string>
     <string name="select_days">Günleri Seç</string>
