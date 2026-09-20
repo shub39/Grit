@@ -56,7 +56,7 @@ class MainViewModel(
                     AnalyticsWrapper.Companion.AnalyticsEvent.APP_OPENED.name,
                     emptyMap(),
                 )
-                checkSubscription()
+                checkSubscription(appStart = true)
                 observeDatastore()
             }
             .stateIn(
@@ -122,14 +122,14 @@ class MainViewModel(
             }
     }
 
-    private suspend fun checkSubscription() {
+    private suspend fun checkSubscription(appStart: Boolean = false) {
         _state.update { it.copy(isFoss = billingHandler.isFoss()) }
 
         val isSubscribed = billingHandler.userResult()
 
         when (isSubscribed) {
             Subscribed -> {
-                if (!_state.value.isUserSubscribed) {
+                if (!_state.value.isUserSubscribed && !appStart) {
                     analytics.trackEvent(
                         AnalyticsWrapper.Companion.AnalyticsEvent.PAYWALL_PURCHASED.name,
                         emptyMap(),

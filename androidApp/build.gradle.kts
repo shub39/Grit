@@ -43,8 +43,8 @@ plugins {
 }
 
 val appName = "Grit"
-val appVersionCode = 6090
-val appVersionName = "6.0.9"
+val appVersionCode = 6091
+val appVersionName = "6.0.91"
 
 val gitHash = execute("git", "rev-parse", "HEAD").take(7)
 
