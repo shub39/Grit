@@ -129,10 +129,12 @@ class MainViewModel(
 
         when (isSubscribed) {
             Subscribed -> {
-                analytics.trackEvent(
-                    AnalyticsWrapper.Companion.AnalyticsEvent.PAYWALL_PURCHASED.name,
-                    emptyMap(),
-                )
+                if (!_state.value.isUserSubscribed) {
+                    analytics.trackEvent(
+                        AnalyticsWrapper.Companion.AnalyticsEvent.PAYWALL_PURCHASED.name,
+                        emptyMap(),
+                    )
+                }
                 _state.update { it.copy(isUserSubscribed = true) }
             }
             else -> {}
