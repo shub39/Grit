@@ -1,6 +1,6 @@
 # Changelog
 
-## 6.0.8
+## 6.0.9
 - Updated Translations
 - Removed Changelog Sheet
 - Miscellaneous Fixes and Improvements
