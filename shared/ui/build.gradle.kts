@@ -14,9 +14,6 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
-@file:OptIn(ExperimentalWasmDsl::class)
-
-import org.jetbrains.kotlin.gradle.ExperimentalWasmDsl
 
 plugins {
     alias(libs.plugins.kotlin.multiplatform)
@@ -47,11 +44,6 @@ kotlin {
         minSdk = libs.versions.minSdk.get().toInt()
 
         androidResources { enable = true }
-    }
-
-    wasmJs {
-        browser()
-        binaries.executable()
     }
 
     sourceSets {

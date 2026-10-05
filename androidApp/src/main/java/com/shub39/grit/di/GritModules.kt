@@ -19,24 +19,25 @@ package com.shub39.grit.di
 import androidx.datastore.core.DataStore
 import androidx.datastore.preferences.core.Preferences
 import com.shub39.grit.analytics.AnalyticsImpl
-import com.shub39.grit.core.data.datastore.DatastoreFactory
 import com.shub39.grit.core.interfaces.AnalyticsWrapper
-import com.shub39.grit.habits.data.database.HabitDatabase
-import com.shub39.grit.habits.data.database.HabitDbFactory
-import com.shub39.grit.habits.data.database.HabitStatusDao
-import com.shub39.grit.habits.data.database.HabitsDao
+import com.shub39.grit.logic.core.datastore.DatastoreFactory
+import com.shub39.grit.logic.di.LogicModules
+import com.shub39.grit.logic.habits.database.HabitDatabase
+import com.shub39.grit.logic.habits.database.HabitDbFactory
+import com.shub39.grit.logic.habits.database.HabitStatusDao
+import com.shub39.grit.logic.habits.database.HabitsDao
+import com.shub39.grit.logic.tasks.database.CategoryDao
+import com.shub39.grit.logic.tasks.database.TaskDatabase
+import com.shub39.grit.logic.tasks.database.TaskDbFactory
+import com.shub39.grit.logic.tasks.database.TasksDao
 import com.shub39.grit.shared.ui.di.UIModules
-import com.shub39.grit.tasks.data.database.CategoryDao
-import com.shub39.grit.tasks.data.database.TaskDatabase
-import com.shub39.grit.tasks.data.database.TaskDbFactory
-import com.shub39.grit.tasks.data.database.TasksDao
 import org.koin.core.annotation.ComponentScan
 import org.koin.core.annotation.Configuration
 import org.koin.core.annotation.Module
 import org.koin.core.annotation.Single
 
 @Configuration
-@Module(includes = [UIModules::class])
+@Module(includes = [UIModules::class, LogicModules::class])
 @ComponentScan("com.shub39.grit")
 class GritModules {
     @Single fun provideAnalyticsWrapper(): AnalyticsWrapper = AnalyticsImpl()

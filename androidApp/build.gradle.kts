@@ -166,6 +166,7 @@ kotlin {
 dependencies {
     implementation(projects.shared.core)
     implementation(projects.shared.ui)
+    implementation(projects.shared.logic)
 
     "playImplementation"(libs.purchases)
     "playImplementation"(libs.purchases.ui)

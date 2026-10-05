@@ -30,12 +30,13 @@ import androidx.core.app.NotificationManagerCompat
 import com.shub39.grit.R
 import com.shub39.grit.core.data.GritIntentReceiver
 import com.shub39.grit.core.habits.Habit
+import com.shub39.grit.core.interfaces.GritNotificationManager
 import com.shub39.grit.core.interfaces.IntentActions
 import com.shub39.grit.core.tasks.Task
 import org.koin.core.annotation.Single
 
-@Single
-class GritNotificationManager(private val context: Context) {
+@Single(binds = [GritNotificationManager::class])
+class GritNotificationManager(private val context: Context) : GritNotificationManager {
     companion object {
         private const val TAG = "NotificationManager"
         private const val HABIT_NOTIF_ID_OFFSET = 0
@@ -57,7 +58,7 @@ class GritNotificationManager(private val context: Context) {
     private val notificationManager by lazy { NotificationManagerCompat.from(context) }
 
     // shows habit notification if permission granted
-    fun habitNotification(habit: Habit) {
+    override fun habitNotification(habit: Habit) {
         Log.d(TAG, "Sending Habit Notification")
 
         val intent =
@@ -93,7 +94,7 @@ class GritNotificationManager(private val context: Context) {
     }
 
     // show task notification if permission granted
-    fun taskNotification(task: Task) {
+    override fun taskNotification(task: Task) {
         val intent =
             Intent(context, GritIntentReceiver::class.java).apply {
                 putExtra("task_id", task.id)
@@ -124,11 +125,11 @@ class GritNotificationManager(private val context: Context) {
         }
     }
 
-    fun cancelNotification(habitId: Int) {
+    override fun cancelNotification(habitId: Int) {
         notificationManager.cancel(habitId + HABIT_NOTIF_ID_OFFSET)
     }
 
-    fun cancelNotification(task: Task) {
+    override fun cancelNotification(task: Task) {
         notificationManager.cancel(task.id.toInt() + TASK_NOTIF_ID_OFFSET)
     }
 }

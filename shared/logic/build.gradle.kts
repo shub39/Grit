@@ -14,9 +14,6 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
-@file:OptIn(ExperimentalWasmDsl::class)
-
-import org.jetbrains.kotlin.gradle.ExperimentalWasmDsl
 
 plugins {
     alias(libs.plugins.kotlin.multiplatform)
@@ -38,16 +35,11 @@ kotlin {
     jvm()
 
     android {
-        namespace = "com.shub39.grit.shared.core"
+        namespace = "com.shub39.grit.logic"
         compileSdk = libs.versions.compileSdk.get().toInt()
         minSdk = libs.versions.minSdk.get().toInt()
 
         androidResources { enable = true }
-    }
-
-    wasmJs {
-        browser()
-        binaries.executable()
     }
 
     sourceSets {
@@ -61,6 +53,12 @@ kotlin {
             implementation(libs.kotlinx.serialization.json)
             implementation(libs.kotlinx.coroutines)
 
+            implementation(libs.filekit.core)
+            implementation(libs.filekit.dialogs)
+
+            implementation(libs.androidx.room.runtime)
+            implementation(libs.androidx.datastore.preferences.core)
+
             implementation(libs.koin.core)
             implementation(libs.koin.compose)
             implementation(libs.koin.compose.viewmodel)
@@ -72,7 +70,6 @@ kotlin {
 
 dependencies {
     add("kspJvm", libs.androidx.room.compiler)
-    add("kspWasmJs", libs.androidx.room.compiler)
     add("kspAndroid", libs.androidx.room.compiler)
 }
 
