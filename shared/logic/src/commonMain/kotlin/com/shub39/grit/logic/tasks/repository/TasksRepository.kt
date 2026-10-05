@@ -16,7 +16,7 @@
  */
 package com.shub39.grit.logic.tasks.repository
 
-import com.shub39.grit.core.interfaces.GritNotificationManager
+import com.shub39.grit.core.interfaces.AppNotificationManager
 import com.shub39.grit.core.tasks.Category
 import com.shub39.grit.core.tasks.Task
 import com.shub39.grit.core.tasks.TaskRepo
@@ -37,7 +37,7 @@ import org.koin.core.annotation.Single
 class TasksRepository(
     private val tasksDao: TasksDao,
     private val categoryDao: CategoryDao,
-    private val notificationManager: GritNotificationManager,
+    private val notificationManager: AppNotificationManager,
 ) : TaskRepo {
 
     private val tasksFlow =

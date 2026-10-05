@@ -22,7 +22,7 @@ import com.shub39.grit.core.habits.HabitRepo
 import com.shub39.grit.core.habits.HabitStatus
 import com.shub39.grit.core.habits.HabitWithAnalytics
 import com.shub39.grit.core.habits.OverallAnalytics
-import com.shub39.grit.core.interfaces.GritNotificationManager
+import com.shub39.grit.core.interfaces.AppNotificationManager
 import com.shub39.grit.core.interfaces.SettingsDatastore
 import com.shub39.grit.core.now
 import com.shub39.grit.logic.habits.database.HabitStatusDao
@@ -55,7 +55,7 @@ class HabitRepository(
     private val habitDao: HabitsDao,
     private val habitStatusDao: HabitStatusDao,
     private val datastore: SettingsDatastore,
-    private val notificationManager: GritNotificationManager,
+    private val notificationManager: AppNotificationManager,
 ) : HabitRepo {
 
     private val habits =

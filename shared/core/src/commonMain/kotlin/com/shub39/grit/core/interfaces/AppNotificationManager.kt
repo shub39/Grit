@@ -19,7 +19,7 @@ package com.shub39.grit.core.interfaces
 import com.shub39.grit.core.habits.Habit
 import com.shub39.grit.core.tasks.Task
 
-interface GritNotificationManager {
+interface AppNotificationManager {
     fun habitNotification(habit: Habit)
 
     fun taskNotification(task: Task)

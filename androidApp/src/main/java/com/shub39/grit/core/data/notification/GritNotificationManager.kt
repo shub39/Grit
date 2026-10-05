@@ -30,13 +30,13 @@ import androidx.core.app.NotificationManagerCompat
 import com.shub39.grit.R
 import com.shub39.grit.core.data.GritIntentReceiver
 import com.shub39.grit.core.habits.Habit
-import com.shub39.grit.core.interfaces.GritNotificationManager
+import com.shub39.grit.core.interfaces.AppNotificationManager
 import com.shub39.grit.core.interfaces.IntentActions
 import com.shub39.grit.core.tasks.Task
 import org.koin.core.annotation.Single
 
-@Single(binds = [GritNotificationManager::class])
-class GritNotificationManager(private val context: Context) : GritNotificationManager {
+@Single(binds = [AppNotificationManager::class])
+class GritNotificationManager(private val context: Context) : AppNotificationManager {
     companion object {
         private const val TAG = "NotificationManager"
         private const val HABIT_NOTIF_ID_OFFSET = 0

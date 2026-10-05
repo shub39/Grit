@@ -22,7 +22,7 @@ import com.shub39.grit.core.billing.SubscriptionResult
 import com.shub39.grit.core.habits.Habit
 import com.shub39.grit.core.interfaces.AlarmScheduler
 import com.shub39.grit.core.interfaces.AnalyticsWrapper
-import com.shub39.grit.core.interfaces.GritNotificationManager
+import com.shub39.grit.core.interfaces.AppNotificationManager
 import com.shub39.grit.core.tasks.Task
 import com.shub39.grit.logic.di.LogicModules
 import com.shub39.grit.shared.ui.di.UIModules
@@ -82,8 +82,8 @@ class GritModules {
         }
 
     @Single
-    fun getNotificationManager(): GritNotificationManager =
-        object : GritNotificationManager {
+    fun getNotificationManager(): AppNotificationManager =
+        object : AppNotificationManager {
             override fun habitNotification(habit: Habit) {
                 GritLogger.d("NotificationManager", "Habit Notification: $habit")
             }

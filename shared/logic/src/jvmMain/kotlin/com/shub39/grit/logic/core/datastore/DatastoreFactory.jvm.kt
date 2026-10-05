@@ -27,9 +27,9 @@ actual class DatastoreFactory {
     private val userHome = System.getProperty("user.home")
     private val appDataDir =
         when {
-            os.contains("win") -> File(System.getenv("APPDATA"), "Rush")
-            os.contains("mac") -> File(userHome, "Library/Application Support/Rush")
-            else -> File(userHome, ".local/share/Rush")
+            os.contains("win") -> File(System.getenv("APPDATA"), "Grit")
+            os.contains("mac") -> File(userHome, "Library/Application Support/Grit")
+            else -> File(userHome, ".local/share/Grit")
         }
 
     init {
