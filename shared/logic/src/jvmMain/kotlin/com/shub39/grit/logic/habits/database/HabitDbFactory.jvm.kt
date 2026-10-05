@@ -18,12 +18,13 @@ package com.shub39.grit.logic.habits.database
 
 import androidx.room3.Room
 import androidx.room3.RoomDatabase
+import androidx.sqlite.driver.bundled.BundledSQLiteDriver
 import org.koin.core.annotation.Single
 
 // jvm is only used for hot reload
 @Single
 actual class HabitDbFactory {
     actual fun create(): RoomDatabase.Builder<HabitDatabase> {
-        return Room.inMemoryDatabaseBuilder()
+        return Room.inMemoryDatabaseBuilder<HabitDatabase>().setDriver(BundledSQLiteDriver())
     }
 }

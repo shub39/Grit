@@ -18,12 +18,13 @@ package com.shub39.grit.logic.tasks.database
 
 import androidx.room3.Room
 import androidx.room3.RoomDatabase
+import androidx.sqlite.driver.bundled.BundledSQLiteDriver
 import org.koin.core.annotation.Single
 
 // only used in hot reload
 @Single
 actual class TaskDbFactory {
     actual fun create(): RoomDatabase.Builder<TaskDatabase> {
-        return Room.inMemoryDatabaseBuilder()
+        return Room.inMemoryDatabaseBuilder<TaskDatabase>().setDriver(BundledSQLiteDriver())
     }
 }

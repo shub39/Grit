@@ -65,6 +65,10 @@ kotlin {
             implementation(libs.koin.compose.viewmodel.navigation)
             implementation(libs.koin.annotations)
         }
+        jvmMain.dependencies {
+            implementation(libs.androidx.sqlite.bundled)
+            implementation(libs.kotlinx.coroutines.swing)
+        }
     }
 }
 

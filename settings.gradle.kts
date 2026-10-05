@@ -45,6 +45,6 @@ dependencyResolutionManagement {
     }
 }
 
-include(":androidApp")
+include(":androidApp", ":desktopApp")
 
 include(":shared:ui", ":shared:core", ":shared:logic")
