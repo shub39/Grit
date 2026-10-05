@@ -1,0 +1,81 @@
+[
+  {
+    "version": "6.0.91",
+    "changes": [
+      "Updated Translations",
+      "Removed Changelog Sheet",
+      "Miscellaneous Fixes and Improvements"
+    ]
+  },
+  {
+    "version": "6.0.7",
+    "changes": [
+      "Updated Translations"
+    ]
+  },
+  {
+    "version": "6.0.6",
+    "changes": [
+      "Updated Translations",
+      "Fixed UI bug where add button covers reorder handle in tasks list #307"
+    ]
+  },
+  {
+    "version": "6.0.5",
+    "changes": [
+      "Updated Translations",
+      "Fixed bugs with reminders",
+      "Fixed App crashing in private spaces #305",
+      "Fixed categories sheet disappearing after enabling dark mode #304",
+      "Miscellaneous UI updates"
+    ]
+  },
+  {
+    "version": "6.0.4",
+    "changes": [
+      "Updated Translations",
+      "Increased habit title and description length limits"
+    ]
+  },
+  {
+    "version": "6.0.3",
+    "changes": [
+      "Updated Translations",
+      "Calendar UI Improvements",
+      "Improved Floating Action Button Visibility #299 @therealVitia"
+    ]
+  },
+  {
+    "version": "6.0.2",
+    "changes": [
+      "Updated Translations",
+      "Miscellaneous Bug Fixes and Improvements"
+    ]
+  },
+  {
+    "version": "6.0.0",
+    "changes": [
+      "Added new Consistency Stat in Habit Analytics",
+      "Redesigned Weekly Comparison Stat, Displays weekly comparison up to 1 year",
+      "Miscellaneous UI improvements #291",
+      "Monthly Progress Stat can be expanded to a calendar view, up to January 2024",
+      "Fixed Habits being created with no selected days",
+      "Updated Translations",
+      "Thanks to everyone for 1000+ stars on GitHub 🙏"
+    ]
+  },
+  {
+    "version": "5.9.25",
+    "changes": [
+      "Fix Hebrew Translations not applied by Language Picker"
+    ]
+  },
+  {
+    "version": "5.9.24",
+    "changes": [
+      "Updated Translations",
+      "Added ability to choose export locations for backups",
+      "Miscellaneous UI improvements"
+    ]
+  }
+]

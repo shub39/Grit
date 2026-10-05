@@ -1,0 +1,37 @@
+/*
+ * Copyright (C) 2026  Shubham Gorai
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <https://www.gnu.org/licenses/>.
+ */
+package com.shub39.grit.core
+
+import android.util.Log
+
+actual object GritLogger {
+    actual fun e(tag: String, message: String, throwable: Throwable?) {
+        if (throwable != null) {
+            Log.e(tag, message, throwable)
+        } else {
+            Log.e(tag, message)
+        }
+    }
+
+    actual fun d(tag: String, message: String) {
+        Log.d(tag, message)
+    }
+
+    actual fun i(tag: String, message: String) {
+        Log.i(tag, message)
+    }
+}
