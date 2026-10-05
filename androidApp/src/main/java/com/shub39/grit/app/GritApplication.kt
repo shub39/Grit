@@ -21,6 +21,7 @@ import android.app.Application
 import android.os.Build
 import android.util.Log
 import androidx.glance.appwidget.GlanceAppWidgetManager
+import com.shub39.grit.BuildConfig
 import com.shub39.grit.analytics.AnalyticsInitializer
 import com.shub39.grit.billing.BillingInitializer
 import com.shub39.grit.core.data.notification.GritNotificationManager
@@ -43,7 +44,7 @@ class GritApplication : Application() {
         GritNotificationManager.createNotificationChannel(this)
 
         startKoin<GritModules> {
-            androidLogger()
+            if (BuildConfig.DEBUG) androidLogger()
             androidContext(this@GritApplication)
         }
 

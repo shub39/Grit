@@ -1,5 +1,5 @@
 [versions]
-agp = "9.4.0"
+agp = "9.4.1"
 compileSdk = "37"
 minSdk = "29"
 targetSdk = "37"
@@ -8,10 +8,10 @@ espresso-core = "3.7.0"
 junit = "4.13.2"
 junit-version = "1.3.0"
 kotlinx-datetime = "0.8.0"
-purchases = "10.21.0"
+purchases = "10.24.0"
 splashscreen = "1.2.0"
 datastore = "1.2.1"
-colorpicker = "1.2.0"
+colorpicker = "1.3.0"
 glance = "1.2.0"
 koin = "4.2.2"
 koin-plugin = "1.2.1"
@@ -20,19 +20,19 @@ ksp = "2.3.10"
 material3 = "1.12.0-alpha03"
 reorderable = "3.1.0"
 room3 = "3.0.3"
-navigation = "1.1.1"
+navigation = "1.1.2"
 materialkolor = "5.0.1"
 compose-junit = "1.12.1"
 biometric = "1.4.0-alpha02"
 truth = "1.4.5"
-compose-multiplatform = "1.12.0"
+compose-multiplatform = "1.12.1"
 compose-windowsizeclass = "1.9.0"
 kotlinx-coroutines = "1.11.0"
 kotlinx-serialization-json = "1.11.0"
-spotless = "8.10.2"
+spotless = "8.10.3"
 filekit = "0.16.0"
+sqlite = "2.7.1"
 ktfmt = "0.61"
-browser-preloader = "1.0.3"
 
 [libraries]
 # Android and compose stuff
@@ -52,6 +52,7 @@ filekit-core = { module = "io.github.vinceglb:filekit-core", version.ref = "file
 filekit-dialogs = { module = "io.github.vinceglb:filekit-dialogs", version.ref = "filekit" }
 jetbrains-navigation3-ui = { module = "org.jetbrains.androidx.navigation3:navigation3-ui", version.ref = "navigation" }
 androidx-biometric = { group = "androidx.biometric", name = "biometric-ktx", version.ref = "biometric" }
+androidx-sqlite-bundled = { module = "androidx.sqlite:sqlite-bundled", version.ref = "sqlite" }
 
 # CMP
 compose-components-resources = { module = "org.jetbrains.compose.components:components-resources", version.ref = "compose-multiplatform" }
@@ -95,4 +96,3 @@ compose-multiplatform = { id = "org.jetbrains.compose", version.ref = "compose-m
 kotlin-multiplatform = { id = "org.jetbrains.kotlin.multiplatform", version.ref = "kotlin" }
 spotless = { id = "com.diffplug.spotless", version.ref = "spotless" }
 koin-compiler = { id = "io.insert-koin.compiler.plugin", version.ref = "koin-plugin" }
-kotlin-browser-preloader = { id = "com.ryinex.kotlin.browser.preloader", version.ref = "browser-preloader" }

@@ -21,9 +21,9 @@ I'll review your pull request as soon as possible. Thank you for your contributi
 * `:androidApp` : Builds the Android app, contains code for widgets and Android-specific implementations.
 * `:shared:ui` : Multiplatform UI module containing all presentation logic, Jetpack Compose UI for habits and tasks, and shared components.
 * `:shared:core` : Multiplatform core module containing domain models, repository interfaces, and business logic.
-* `:webDemo` : Builds the web and desktop demo which is deployed by CI on push to master. Also can be used with hot reload:
+* `:desktopApp` : Builds the desktop app, Only use for Hot Reload and Testing Features
 ```shell
-./gradlew :webDemo:hotRunJvm --auto
+./gradlew :desktopApp:hotRunJvm --auto
 ```
 
 ## Compose Guidelines
