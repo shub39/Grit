@@ -16,8 +16,9 @@
  */
 package com.shub39.grit.analytics
 
+import com.shub39.grit.core.AnalyticsEvent
 import com.shub39.grit.core.interfaces.AnalyticsWrapper
 
 class AnalyticsImpl : AnalyticsWrapper {
-    override fun trackEvent(event: String, properties: Map<String, Any>) {}
+    override fun trackEvent(event: AnalyticsEvent, properties: Map<String, Any>) {}
 }

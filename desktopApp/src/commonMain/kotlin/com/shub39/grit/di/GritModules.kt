@@ -16,6 +16,7 @@
  */
 package com.shub39.grit.di
 
+import com.shub39.grit.core.AnalyticsEvent
 import com.shub39.grit.core.GritLogger
 import com.shub39.grit.core.billing.BillingHandler
 import com.shub39.grit.core.billing.SubscriptionResult
@@ -52,8 +53,8 @@ class GritModules {
     @Single
     fun provideAnalyticsWrapper(): AnalyticsWrapper =
         object : AnalyticsWrapper {
-            override fun trackEvent(event: String, properties: Map<String, Any>) {
-                GritLogger.d("Analytics", "$event: $properties")
+            override fun trackEvent(event: AnalyticsEvent, properties: Map<String, Any>) {
+                GritLogger.d("Analytics", "${event.name}: $properties")
             }
         }
 

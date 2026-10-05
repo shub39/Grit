@@ -18,6 +18,7 @@ package com.shub39.grit.shared.ui.viewmodel
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.shub39.grit.core.AnalyticsEvent
 import com.shub39.grit.core.billing.BillingHandler
 import com.shub39.grit.core.interfaces.AnalyticsWrapper
 import com.shub39.grit.core.interfaces.SettingsDatastore
@@ -52,10 +53,7 @@ class MainViewModel(
         _state
             .asStateFlow()
             .onStart {
-                analytics.trackEvent(
-                    AnalyticsWrapper.Companion.AnalyticsEvent.APP_OPENED.name,
-                    emptyMap(),
-                )
+                analytics.trackEvent(AnalyticsEvent.APP_OPENED, emptyMap())
                 checkSubscription(appStart = true)
                 observeDatastore()
             }
@@ -130,10 +128,7 @@ class MainViewModel(
         when (isSubscribed) {
             Subscribed -> {
                 if (!_state.value.isUserSubscribed && !appStart) {
-                    analytics.trackEvent(
-                        AnalyticsWrapper.Companion.AnalyticsEvent.PAYWALL_PURCHASED.name,
-                        emptyMap(),
-                    )
+                    analytics.trackEvent(AnalyticsEvent.PAYWALL_PURCHASED, emptyMap())
                 }
                 _state.update { it.copy(isUserSubscribed = true) }
             }
@@ -142,9 +137,6 @@ class MainViewModel(
     }
 
     fun trackPaywallOpened() {
-        analytics.trackEvent(
-            AnalyticsWrapper.Companion.AnalyticsEvent.PAYWALL_OPENED.name,
-            emptyMap(),
-        )
+        analytics.trackEvent(AnalyticsEvent.PAYWALL_OPENED, emptyMap())
     }
 }

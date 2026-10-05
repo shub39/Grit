@@ -19,6 +19,7 @@ package com.shub39.grit.shared.ui.viewmodel
 import androidx.compose.ui.graphics.toArgb
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.shub39.grit.core.AnalyticsEvent
 import com.shub39.grit.core.interfaces.AnalyticsWrapper
 import com.shub39.grit.core.interfaces.BiometricUtils
 import com.shub39.grit.core.interfaces.ChangelogManager
@@ -72,7 +73,7 @@ class SettingsViewModel(
             when (action) {
                 is ChangeAmoled -> {
                     analytics.trackEvent(
-                        AnalyticsWrapper.Companion.AnalyticsEvent.LOOK_AND_FEEL_UPDATED.name,
+                        AnalyticsEvent.LOOK_AND_FEEL_UPDATED,
                         mapOf("setting" to "ChangeAmoled", "value" to action.pref),
                     )
                     themeDatastore.setAmoledPref(action.pref)
@@ -80,7 +81,7 @@ class SettingsViewModel(
 
                 is ChangeAppTheme -> {
                     analytics.trackEvent(
-                        AnalyticsWrapper.Companion.AnalyticsEvent.LOOK_AND_FEEL_UPDATED.name,
+                        AnalyticsEvent.LOOK_AND_FEEL_UPDATED,
                         mapOf("setting" to "ChangeAppTheme", "value" to action.appTheme.name),
                     )
                     themeDatastore.setAppTheme(action.appTheme)
@@ -88,7 +89,7 @@ class SettingsViewModel(
 
                 is ChangeIs24Hr -> {
                     analytics.trackEvent(
-                        AnalyticsWrapper.Companion.AnalyticsEvent.SETTINGS_UPDATED.name,
+                        AnalyticsEvent.SETTINGS_UPDATED,
                         mapOf("setting" to "ChangeIs24Hr", "value" to action.pref),
                     )
                     settingsDatastore.setIs24Hr(action.pref)
@@ -96,7 +97,7 @@ class SettingsViewModel(
 
                 is ChangeMaterialYou -> {
                     analytics.trackEvent(
-                        AnalyticsWrapper.Companion.AnalyticsEvent.LOOK_AND_FEEL_UPDATED.name,
+                        AnalyticsEvent.LOOK_AND_FEEL_UPDATED,
                         mapOf("setting" to "ChangeMaterialYou", "value" to action.pref),
                     )
                     themeDatastore.setMaterialYou(action.pref)
@@ -104,7 +105,7 @@ class SettingsViewModel(
 
                 is ChangePaletteStyle -> {
                     analytics.trackEvent(
-                        AnalyticsWrapper.Companion.AnalyticsEvent.LOOK_AND_FEEL_UPDATED.name,
+                        AnalyticsEvent.LOOK_AND_FEEL_UPDATED,
                         mapOf("setting" to "ChangePaletteStyle", "value" to action.style.name),
                     )
                     themeDatastore.setPaletteStyle(action.style)
@@ -112,7 +113,7 @@ class SettingsViewModel(
 
                 is ChangeSeedColor -> {
                     analytics.trackEvent(
-                        AnalyticsWrapper.Companion.AnalyticsEvent.LOOK_AND_FEEL_UPDATED.name,
+                        AnalyticsEvent.LOOK_AND_FEEL_UPDATED,
                         mapOf("setting" to "ChangeSeedColor"),
                     )
                     themeDatastore.setSeedColor(action.color.toArgb())
@@ -120,7 +121,7 @@ class SettingsViewModel(
 
                 is ChangeStartOfTheWeek -> {
                     analytics.trackEvent(
-                        AnalyticsWrapper.Companion.AnalyticsEvent.SETTINGS_UPDATED.name,
+                        AnalyticsEvent.SETTINGS_UPDATED,
                         mapOf("setting" to "ChangeStartOfTheWeek", "value" to action.pref.name),
                     )
                     settingsDatastore.setStartOfWeek(action.pref)
@@ -128,7 +129,7 @@ class SettingsViewModel(
 
                 is ChangeStartingPage -> {
                     analytics.trackEvent(
-                        AnalyticsWrapper.Companion.AnalyticsEvent.SETTINGS_UPDATED.name,
+                        AnalyticsEvent.SETTINGS_UPDATED,
                         mapOf("setting" to "ChangeStartingPage", "value" to action.page.name),
                     )
                     settingsDatastore.setStartingPage(action.page)
@@ -145,7 +146,7 @@ class SettingsViewModel(
 
                     exportRepo.exportToJson()
                     analytics.trackEvent(
-                        AnalyticsWrapper.Companion.AnalyticsEvent.BACKUP_CREATED.name,
+                        AnalyticsEvent.BACKUP_CREATED,
                         mapOf("status" to "success"),
                     )
 
@@ -161,7 +162,7 @@ class SettingsViewModel(
 
                     val result = restoreRepo.restoreData()
                     analytics.trackEvent(
-                        AnalyticsWrapper.Companion.AnalyticsEvent.BACKUP_RESTORED.name,
+                        AnalyticsEvent.BACKUP_RESTORED,
                         mapOf("status" to result.toString()),
                     )
 
@@ -181,7 +182,7 @@ class SettingsViewModel(
 
                 is ChangePauseNotifications -> {
                     analytics.trackEvent(
-                        AnalyticsWrapper.Companion.AnalyticsEvent.SETTINGS_UPDATED.name,
+                        AnalyticsEvent.SETTINGS_UPDATED,
                         mapOf("setting" to "ChangePauseNotifications", "value" to action.pref),
                     )
                     settingsDatastore.setNotifications(action.pref)
@@ -189,7 +190,7 @@ class SettingsViewModel(
 
                 is ChangeFontPref -> {
                     analytics.trackEvent(
-                        AnalyticsWrapper.Companion.AnalyticsEvent.LOOK_AND_FEEL_UPDATED.name,
+                        AnalyticsEvent.LOOK_AND_FEEL_UPDATED,
                         mapOf("setting" to "ChangeFontPref", "value" to action.font.name),
                     )
                     themeDatastore.setFontPref(action.font)
@@ -197,7 +198,7 @@ class SettingsViewModel(
 
                 is ChangeBiometricLock -> {
                     analytics.trackEvent(
-                        AnalyticsWrapper.Companion.AnalyticsEvent.SETTINGS_UPDATED.name,
+                        AnalyticsEvent.SETTINGS_UPDATED,
                         mapOf("setting" to "ChangeBiometricLock", "value" to action.pref),
                     )
                     settingsDatastore.setBiometricPref(action.pref)
@@ -205,31 +206,22 @@ class SettingsViewModel(
 
                 is ChangeReorderTasks -> {
                     analytics.trackEvent(
-                        AnalyticsWrapper.Companion.AnalyticsEvent.SETTINGS_UPDATED.name,
+                        AnalyticsEvent.SETTINGS_UPDATED,
                         mapOf("setting" to "ChangeReorderTasks", "value" to action.pref),
                     )
                     settingsDatastore.setTaskReorderPref(action.pref)
                 }
 
                 OnSettingsOpened -> {
-                    analytics.trackEvent(
-                        AnalyticsWrapper.Companion.AnalyticsEvent.SETTINGS_OPENED.name,
-                        emptyMap(),
-                    )
+                    analytics.trackEvent(AnalyticsEvent.SETTINGS_OPENED, emptyMap())
                 }
 
                 OnAboutViewed -> {
-                    analytics.trackEvent(
-                        AnalyticsWrapper.Companion.AnalyticsEvent.ABOUT_VIEWED.name,
-                        emptyMap(),
-                    )
+                    analytics.trackEvent(AnalyticsEvent.ABOUT_VIEWED, emptyMap())
                 }
 
                 OnChangelogViewed -> {
-                    analytics.trackEvent(
-                        AnalyticsWrapper.Companion.AnalyticsEvent.CHANGELOG_VIEWED.name,
-                        emptyMap(),
-                    )
+                    analytics.trackEvent(AnalyticsEvent.CHANGELOG_VIEWED, emptyMap())
                 }
             }
         }

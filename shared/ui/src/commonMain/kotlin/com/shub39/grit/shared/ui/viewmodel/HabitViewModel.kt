@@ -18,6 +18,7 @@ package com.shub39.grit.shared.ui.viewmodel
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.shub39.grit.core.AnalyticsEvent
 import com.shub39.grit.core.habits.Habit
 import com.shub39.grit.core.habits.HabitRepo
 import com.shub39.grit.core.habits.HabitStatus
@@ -73,7 +74,7 @@ class HabitViewModel(
             when (action) {
                 is AddHabit -> {
                     analytics.trackEvent(
-                        AnalyticsWrapper.Companion.AnalyticsEvent.HABIT_CREATED.name,
+                        AnalyticsEvent.HABIT_CREATED,
                         mapOf("has_reminder" to action.habit.reminder),
                     )
                     upsertHabit(action.habit)
@@ -81,7 +82,7 @@ class HabitViewModel(
 
                 is DeleteHabit -> {
                     analytics.trackEvent(
-                        AnalyticsWrapper.Companion.AnalyticsEvent.HABIT_DELETED.name,
+                        AnalyticsEvent.HABIT_DELETED,
                         mapOf("has_reminder" to action.habit.reminder),
                     )
                     deleteHabit(action.habit)
@@ -91,7 +92,7 @@ class HabitViewModel(
 
                 is UpdateHabit -> {
                     analytics.trackEvent(
-                        AnalyticsWrapper.Companion.AnalyticsEvent.HABIT_EDITED.name,
+                        AnalyticsEvent.HABIT_EDITED,
                         mapOf("has_reminder" to action.habit.reminder),
                     )
                     upsertHabit(action.habit)
@@ -109,7 +110,7 @@ class HabitViewModel(
                 is PrepareAnalytics -> {
                     if (action.habit != null) {
                         analytics.trackEvent(
-                            AnalyticsWrapper.Companion.AnalyticsEvent.HABIT_ANALYTICS_VIEWED.name,
+                            AnalyticsEvent.HABIT_ANALYTICS_VIEWED,
                             mapOf("has_reminder" to action.habit.reminder),
                         )
                     }
@@ -117,18 +118,12 @@ class HabitViewModel(
                 }
 
                 OnAddHabitClicked -> {
-                    analytics.trackEvent(
-                        AnalyticsWrapper.Companion.AnalyticsEvent.HABIT_SHEET_OPENED.name,
-                        emptyMap(),
-                    )
+                    analytics.trackEvent(AnalyticsEvent.HABIT_SHEET_OPENED, emptyMap())
                     _state.update { it.copy(showHabitAddSheet = true) }
                 }
 
                 DismissAddHabitDialog -> {
-                    analytics.trackEvent(
-                        AnalyticsWrapper.Companion.AnalyticsEvent.HABIT_SHEET_DISMISSED.name,
-                        emptyMap(),
-                    )
+                    analytics.trackEvent(AnalyticsEvent.HABIT_SHEET_DISMISSED, emptyMap())
                     _state.update { it.copy(showHabitAddSheet = false) }
                 }
 
@@ -173,17 +168,11 @@ class HabitViewModel(
                 }
 
                 OnHabitsOpened -> {
-                    analytics.trackEvent(
-                        AnalyticsWrapper.Companion.AnalyticsEvent.HABITS_OPENED.name,
-                        emptyMap(),
-                    )
+                    analytics.trackEvent(AnalyticsEvent.HABITS_OPENED, emptyMap())
                 }
 
                 OnOverallAnalyticsViewed -> {
-                    analytics.trackEvent(
-                        AnalyticsWrapper.Companion.AnalyticsEvent.OVERALL_ANALYTICS_VIEWED.name,
-                        emptyMap(),
-                    )
+                    analytics.trackEvent(AnalyticsEvent.OVERALL_ANALYTICS_VIEWED, emptyMap())
                 }
             }
         }
@@ -262,17 +251,14 @@ class HabitViewModel(
 
         if (isHabitCompleted) {
             analytics.trackEvent(
-                AnalyticsWrapper.Companion.AnalyticsEvent.HABIT_STATUS_UPDATED.name,
+                AnalyticsEvent.HABIT_STATUS_UPDATED,
                 mapOf("status" to "uncompleted"),
             )
             repo.deleteHabitStatus(habit.id, date)
         } else {
+            analytics.trackEvent(AnalyticsEvent.HABIT_COMPLETED, emptyMap())
             analytics.trackEvent(
-                AnalyticsWrapper.Companion.AnalyticsEvent.HABIT_COMPLETED.name,
-                emptyMap(),
-            )
-            analytics.trackEvent(
-                AnalyticsWrapper.Companion.AnalyticsEvent.HABIT_STATUS_UPDATED.name,
+                AnalyticsEvent.HABIT_STATUS_UPDATED,
                 mapOf("status" to "completed"),
             )
             repo.insertHabitStatus(HabitStatus(habitId = habit.id, date = date))
