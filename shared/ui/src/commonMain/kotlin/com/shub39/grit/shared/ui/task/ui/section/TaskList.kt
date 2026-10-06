@@ -91,6 +91,8 @@ import com.shub39.grit.core.tasks.Category
 import com.shub39.grit.core.tasks.CategoryColors
 import com.shub39.grit.core.tasks.Task
 import com.shub39.grit.shared.ui.LocalWindowSizeClass
+import com.shub39.grit.shared.ui.WindowSize.Companion.isCompact
+import com.shub39.grit.shared.ui.WindowSize.Companion.isExpanded
 import com.shub39.grit.shared.ui.components.Empty
 import com.shub39.grit.shared.ui.components.GritDialog
 import com.shub39.grit.shared.ui.components.PageFill
@@ -139,7 +141,7 @@ fun TaskList(state: TaskState, onAction: (TaskAction) -> Unit, onEditCategories:
                 isReorderMode = editState,
                 onReorderToggle = { editState = it },
                 onDeleteClick = { showDeleteDialog = true },
-                isExpanded = windowSizeClass.widthSizeClass == WindowWidthSizeClass.Expanded,
+                isExpanded = windowSizeClass.isExpanded(),
             )
 
             CategorySelector(
@@ -151,17 +153,17 @@ fun TaskList(state: TaskState, onAction: (TaskAction) -> Unit, onEditCategories:
                     showCategoryAddSheet = true
                 },
                 onEditCategoriesClick = onEditCategories,
-                isExpanded = windowSizeClass.widthSizeClass == WindowWidthSizeClass.Expanded,
+                isExpanded = windowSizeClass.isExpanded(),
                 onReorderModeChange = { editState = it },
             )
 
-            if (windowSizeClass.widthSizeClass != WindowWidthSizeClass.Expanded) {
+            if (!windowSizeClass.isExpanded()) {
                 CompactTasksView(
                     state = state,
                     isReorderMode = editState,
                     onAction = onAction,
                     onEditTask = { editTask = it },
-                    isCompact = windowSizeClass.widthSizeClass == WindowWidthSizeClass.Compact,
+                    isCompact = windowSizeClass.isCompact(),
                 )
             } else {
                 ExpandedTasksView(
@@ -180,8 +182,7 @@ fun TaskList(state: TaskState, onAction: (TaskAction) -> Unit, onEditCategories:
                 Modifier.align(Alignment.BottomEnd)
                     .padding(16.dp)
                     .then(
-                        if (windowSizeClass.widthSizeClass != WindowWidthSizeClass.Expanded)
-                            Modifier
+                        if (!windowSizeClass.isExpanded()) Modifier
                         else Modifier.navigationBarsPadding()
                     )
                     .animateFloatingActionButton(
@@ -203,7 +204,7 @@ fun TaskList(state: TaskState, onAction: (TaskAction) -> Unit, onEditCategories:
                 AnimatedVisibility(
                     visible =
                         state.tasks[state.currentCategory].isNullOrEmpty() ||
-                            windowSizeClass.widthSizeClass == WindowWidthSizeClass.Expanded,
+                                windowSizeClass.isExpanded(),
                     enter = fadeIn(MaterialTheme.motionScheme.fastEffectsSpec()),
                     exit = fadeOut(MaterialTheme.motionScheme.fastEffectsSpec()),
                 ) {

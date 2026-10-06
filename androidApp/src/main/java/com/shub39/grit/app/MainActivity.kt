@@ -58,9 +58,6 @@ class MainActivity : FragmentActivity() {
         FileKit.init(this)
 
         setContent {
-            val windowSizeClass = calculateWindowSizeClass(this)
-
-            CompositionLocalProvider(LocalWindowSizeClass provides windowSizeClass) {
                 val state by mainViewModel.state.collectAsStateWithLifecycle()
 
                 var showContent by remember { mutableStateOf(false) }
@@ -96,7 +93,6 @@ class MainActivity : FragmentActivity() {
                     } else {
                         InitialLoading()
                     }
-                }
             }
         }
     }

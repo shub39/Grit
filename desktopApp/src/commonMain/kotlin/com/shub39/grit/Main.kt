@@ -35,9 +35,7 @@ fun main() {
     singleWindowApplication {
         val mainVM = koinViewModel<MainViewModel>()
         val state by mainVM.state.collectAsStateWithLifecycle()
-        val windowSizeClass = calculateWindowSizeClass()
 
-        CompositionLocalProvider(LocalWindowSizeClass provides windowSizeClass) {
             GritTheme(theme = state.theme) {
                 MainApp(
                     state = state,
@@ -46,6 +44,5 @@ fun main() {
                     },
                 )
             }
-        }
     }
 }
