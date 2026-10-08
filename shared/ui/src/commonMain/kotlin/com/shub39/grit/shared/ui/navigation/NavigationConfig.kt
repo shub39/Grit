@@ -81,6 +81,8 @@ class TopLevelBackStack(private val startKey: Routes = TaskList) {
             backStack.clear()
             backStack.add(startKey)
 
+            if (route == startKey) return
+
             if (route.getTopLevelRoute() is Settings) {
                 backStack.add(SettingsHome)
                 if (route !is SettingsHome) backStack.add(route)

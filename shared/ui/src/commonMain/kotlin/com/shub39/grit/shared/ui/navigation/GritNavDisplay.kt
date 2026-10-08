@@ -40,7 +40,6 @@ import com.shub39.grit.shared.ui.habit.ui.sections.Calendar
 import com.shub39.grit.shared.ui.habit.ui.sections.CalendarHeatMap
 import com.shub39.grit.shared.ui.habit.ui.sections.HabitsList
 import com.shub39.grit.shared.ui.habit.ui.sections.OverallAnalytics
-import com.shub39.grit.shared.ui.setting.SettingsAction
 import com.shub39.grit.shared.ui.setting.ui.section.About
 import com.shub39.grit.shared.ui.setting.ui.section.BackupPage
 import com.shub39.grit.shared.ui.setting.ui.section.Changelog
@@ -63,15 +62,16 @@ fun GritNavDisplay(
     val globalState by globalVM.state.collectAsStateWithLifecycle()
 
     val adaptiveInfo = currentWindowAdaptiveInfoV2()
-    val topLevelBackStack = retain(globalState.startingSection) {
-        TopLevelBackStack(
-            startKey =
-                when (globalState.startingSection) {
-                    Sections.Tasks -> TaskList
-                    Sections.Habits -> HabitsList
-                }
-        )
-    }
+    val topLevelBackStack =
+        retain(globalState.startingSection) {
+            TopLevelBackStack(
+                startKey =
+                    when (globalState.startingSection) {
+                        Sections.Tasks -> TaskList
+                        Sections.Habits -> HabitsList
+                    }
+            )
+        }
 
     CompositionLocalProvider(LocalWindowSizeClass provides adaptiveInfo.windowSizeClass) {
         GritTheme(theme = globalState.theme) {
@@ -146,9 +146,7 @@ private fun EntryProviderScope<Routes>.habitsScreens(
         val viewModel = koinViewModel<HabitViewModel>()
         val state by viewModel.state.collectAsStateWithLifecycle()
 
-        LaunchedEffect(Unit) {
-            viewModel.onAction(OnHabitsOpened)
-        }
+        LaunchedEffect(Unit) { viewModel.onAction(OnHabitsOpened) }
 
         HabitsList(
             state = state,
@@ -236,9 +234,7 @@ private fun EntryProviderScope<Routes>.settingsScreens(
         val viewModel = koinViewModel<SettingsViewModel>()
         val state by viewModel.state.collectAsStateWithLifecycle()
 
-        LaunchedEffect(Unit) {
-            viewModel.onAction(OnSettingsOpened)
-        }
+        LaunchedEffect(Unit) { viewModel.onAction(OnSettingsOpened) }
 
         RootPage(
             modifier = Modifier.background(colorScheme.background),
