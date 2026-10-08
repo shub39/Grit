@@ -71,15 +71,17 @@ fun Routes.getSubType(): Routes =
         else -> this
     }
 
-class TopLevelBackStack(startKey: Routes = TaskList) {
+class TopLevelBackStack(private val startKey: Routes = TaskList) {
     val backStack = mutableStateListOf(startKey)
 
     fun isRouteOnTop(route: Routes): Boolean = backStack.lastOrNull() == route
 
     fun add(route: Routes) {
         if (!isRouteOnTop(route)) {
+            backStack.clear()
+            backStack.add(startKey)
+
             if (route.getTopLevelRoute() is Settings) {
-                backStack.removeAll(SETTINGS_ROUTES)
                 backStack.add(SettingsHome)
                 if (route !is SettingsHome) backStack.add(route)
                 return
