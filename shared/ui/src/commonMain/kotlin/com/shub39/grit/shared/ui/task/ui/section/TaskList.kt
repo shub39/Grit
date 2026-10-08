@@ -21,6 +21,8 @@ import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.animateContentSize
 import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
+import androidx.compose.animation.scaleIn
+import androidx.compose.animation.scaleOut
 import androidx.compose.animation.togetherWith
 import androidx.compose.foundation.background
 import androidx.compose.foundation.combinedClickable
@@ -71,9 +73,7 @@ import androidx.compose.material3.TextButton
 import androidx.compose.material3.ToggleButton
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.material3.TopAppBarScrollBehavior
-import androidx.compose.material3.animateFloatingActionButton
 import androidx.compose.material3.toShape
-import androidx.compose.material3.windowsizeclass.WindowWidthSizeClass
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
@@ -91,6 +91,8 @@ import com.shub39.grit.core.tasks.Category
 import com.shub39.grit.core.tasks.CategoryColors
 import com.shub39.grit.core.tasks.Task
 import com.shub39.grit.shared.ui.LocalWindowSizeClass
+import com.shub39.grit.shared.ui.WindowSize.Companion.isCompact
+import com.shub39.grit.shared.ui.WindowSize.Companion.isExpanded
 import com.shub39.grit.shared.ui.components.Empty
 import com.shub39.grit.shared.ui.components.GritDialog
 import com.shub39.grit.shared.ui.components.PageFill
@@ -139,7 +141,7 @@ fun TaskList(state: TaskState, onAction: (TaskAction) -> Unit, onEditCategories:
                 isReorderMode = editState,
                 onReorderToggle = { editState = it },
                 onDeleteClick = { showDeleteDialog = true },
-                isExpanded = windowSizeClass.widthSizeClass == WindowWidthSizeClass.Expanded,
+                isExpanded = windowSizeClass.isExpanded(),
             )
 
             CategorySelector(
@@ -151,17 +153,17 @@ fun TaskList(state: TaskState, onAction: (TaskAction) -> Unit, onEditCategories:
                     showCategoryAddSheet = true
                 },
                 onEditCategoriesClick = onEditCategories,
-                isExpanded = windowSizeClass.widthSizeClass == WindowWidthSizeClass.Expanded,
+                isExpanded = windowSizeClass.isExpanded(),
                 onReorderModeChange = { editState = it },
             )
 
-            if (windowSizeClass.widthSizeClass != WindowWidthSizeClass.Expanded) {
+            if (!windowSizeClass.isExpanded()) {
                 CompactTasksView(
                     state = state,
                     isReorderMode = editState,
                     onAction = onAction,
                     onEditTask = { editTask = it },
-                    isCompact = windowSizeClass.widthSizeClass == WindowWidthSizeClass.Compact,
+                    isCompact = windowSizeClass.isCompact(),
                 )
             } else {
                 ExpandedTasksView(
@@ -172,45 +174,43 @@ fun TaskList(state: TaskState, onAction: (TaskAction) -> Unit, onEditCategories:
             }
         }
 
-        MediumFloatingActionButton(
-            onClick = { showTaskAddSheet = true },
-            containerColor = MaterialTheme.colorScheme.tertiaryContainer,
-            contentColor = MaterialTheme.colorScheme.onTertiaryContainer,
-            modifier =
-                Modifier.align(Alignment.BottomEnd)
-                    .padding(16.dp)
-                    .then(
-                        if (windowSizeClass.widthSizeClass != WindowWidthSizeClass.Expanded)
-                            Modifier
-                        else Modifier.navigationBarsPadding()
-                    )
-                    .animateFloatingActionButton(
-                        visible = state.currentCategory != null && !editState,
-                        alignment = Alignment.BottomEnd,
-                        scaleAnimationSpec = MaterialTheme.motionScheme.fastSpatialSpec(),
-                        alphaAnimationSpec = MaterialTheme.motionScheme.fastEffectsSpec(),
-                    ),
+        val isFabVisible = state.currentCategory != null && !editState
+        AnimatedVisibility(
+            visible = isFabVisible,
+            enter =
+                fadeIn(MaterialTheme.motionScheme.fastEffectsSpec()) +
+                    scaleIn(animationSpec = MaterialTheme.motionScheme.fastSpatialSpec()),
+            exit =
+                fadeOut(MaterialTheme.motionScheme.fastEffectsSpec()) +
+                    scaleOut(animationSpec = MaterialTheme.motionScheme.fastSpatialSpec()),
+            modifier = Modifier.align(Alignment.BottomEnd).padding(16.dp).navigationBarsPadding(),
         ) {
-            Row(
-                modifier = Modifier.padding(16.dp),
-                verticalAlignment = Alignment.CenterVertically,
+            MediumFloatingActionButton(
+                onClick = { showTaskAddSheet = true },
+                containerColor = MaterialTheme.colorScheme.tertiaryContainer,
+                contentColor = MaterialTheme.colorScheme.onTertiaryContainer,
             ) {
-                Icon(
-                    imageVector = vectorResource(Res.drawable.add),
-                    contentDescription = null,
-                    modifier = Modifier.size(FloatingActionButtonDefaults.MediumIconSize),
-                )
-                AnimatedVisibility(
-                    visible =
-                        state.tasks[state.currentCategory].isNullOrEmpty() ||
-                            windowSizeClass.widthSizeClass == WindowWidthSizeClass.Expanded,
-                    enter = fadeIn(MaterialTheme.motionScheme.fastEffectsSpec()),
-                    exit = fadeOut(MaterialTheme.motionScheme.fastEffectsSpec()),
+                Row(
+                    modifier = Modifier.padding(16.dp),
+                    verticalAlignment = Alignment.CenterVertically,
                 ) {
-                    Text(
-                        text = stringResource(Res.string.add_task),
-                        modifier = Modifier.padding(start = 8.dp),
+                    Icon(
+                        imageVector = vectorResource(Res.drawable.add),
+                        contentDescription = null,
+                        modifier = Modifier.size(FloatingActionButtonDefaults.MediumIconSize),
                     )
+                    AnimatedVisibility(
+                        visible =
+                            state.tasks[state.currentCategory].isNullOrEmpty() ||
+                                windowSizeClass.isExpanded(),
+                        enter = fadeIn(MaterialTheme.motionScheme.fastEffectsSpec()),
+                        exit = fadeOut(MaterialTheme.motionScheme.fastEffectsSpec()),
+                    ) {
+                        Text(
+                            text = stringResource(Res.string.add_task),
+                            modifier = Modifier.padding(start = 8.dp),
+                        )
+                    }
                 }
             }
         }

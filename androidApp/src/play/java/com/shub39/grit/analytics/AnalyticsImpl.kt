@@ -18,6 +18,7 @@ package com.shub39.grit.analytics
 
 import com.posthog.PostHog
 import com.shub39.grit.BuildConfig
+import com.shub39.grit.core.AnalyticsEvent
 import com.shub39.grit.core.billing.BillingHandler
 import com.shub39.grit.core.interfaces.AnalyticsWrapper
 import kotlin.time.Clock
@@ -33,7 +34,7 @@ class AnalyticsImpl : AnalyticsWrapper, KoinComponent {
             "is_plus" to get<BillingHandler>().isPlus.value,
         )
 
-    override fun trackEvent(event: String, properties: Map<String, Any>) {
-        PostHog.capture(event = event, properties = getDefaultProperties() + properties)
+    override fun trackEvent(event: AnalyticsEvent, properties: Map<String, Any>) {
+        PostHog.capture(event = event.name, properties = getDefaultProperties() + properties)
     }
 }

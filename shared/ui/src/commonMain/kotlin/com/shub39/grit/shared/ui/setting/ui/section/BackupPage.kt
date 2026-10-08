@@ -31,7 +31,6 @@ import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.FilledTonalIconButton
 import androidx.compose.material3.Icon
 import androidx.compose.material3.ListItem
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.MediumFlexibleTopAppBar
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
@@ -61,6 +60,7 @@ import org.jetbrains.compose.resources.vectorResource
 
 @Composable
 fun BackupPage(
+    modifier: Modifier = Modifier,
     state: SettingsState,
     onAction: (SettingsAction) -> Unit,
     onNavigateBack: () -> Unit,
@@ -68,12 +68,7 @@ fun BackupPage(
     LaunchedEffect(Unit) { onAction(SettingsAction.OnResetBackupState) }
 
     val scrollBehavior = TopAppBarDefaults.enterAlwaysScrollBehavior()
-    Column(
-        modifier =
-            Modifier.fillMaxSize()
-                .nestedScroll(scrollBehavior.nestedScrollConnection)
-                .background(MaterialTheme.colorScheme.background)
-    ) {
+    Column(modifier = modifier.fillMaxSize().nestedScroll(scrollBehavior.nestedScrollConnection)) {
         MediumFlexibleTopAppBar(
             scrollBehavior = scrollBehavior,
             title = {

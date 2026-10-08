@@ -16,11 +16,28 @@
  */
 package com.shub39.grit.shared.ui
 
-import androidx.compose.runtime.ProvidableCompositionLocal
-import androidx.compose.runtime.staticCompositionLocalOf
 import androidx.window.core.layout.WindowSizeClass
 
-/** CompositionLocal for window size class to make adaptive screens */
-val LocalWindowSizeClass: ProvidableCompositionLocal<WindowSizeClass> = staticCompositionLocalOf {
-    error("No window size class provided")
+enum class WindowSize {
+    COMPACT,
+    MEDIUM,
+    EXPANDED;
+
+    companion object {
+        fun WindowSizeClass.getWindowSize(): WindowSize {
+            return if (isAtLeastBreakpoint(840, 900)) {
+                EXPANDED
+            } else if (isAtLeastBreakpoint(600, 480)) {
+                MEDIUM
+            } else {
+                COMPACT
+            }
+        }
+
+        fun WindowSizeClass.isExpanded(): Boolean = getWindowSize() == EXPANDED
+
+        fun WindowSizeClass.isCompact(): Boolean = getWindowSize() == COMPACT
+
+        fun WindowSizeClass.isMedium(): Boolean = getWindowSize() == MEDIUM
+    }
 }

@@ -35,7 +35,6 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
-import androidx.compose.material3.windowsizeclass.WindowWidthSizeClass
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
@@ -48,6 +47,7 @@ import com.kizitonwose.calendar.compose.heatmapcalendar.rememberHeatMapCalendarS
 import com.kizitonwose.calendar.core.minusMonths
 import com.kizitonwose.calendar.core.now
 import com.shub39.grit.shared.ui.LocalWindowSizeClass
+import com.shub39.grit.shared.ui.WindowSize.Companion.isExpanded
 import com.shub39.grit.shared.ui.habit.HabitState
 import com.shub39.grit.shared.ui.habit.HabitsAction
 import com.shub39.grit.shared.ui.habit.ui.component.stats.HabitHeatMap
@@ -96,7 +96,7 @@ fun OverallAnalytics(
                 )
             },
             windowInsets =
-                if (windowSizeClass.widthSizeClass == WindowWidthSizeClass.Expanded) {
+                if (windowSizeClass.isExpanded()) {
                     WindowInsets(0)
                 } else {
                     TopAppBarDefaults.windowInsets

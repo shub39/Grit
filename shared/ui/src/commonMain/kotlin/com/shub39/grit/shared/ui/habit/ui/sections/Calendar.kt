@@ -33,7 +33,6 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.ToggleButton
 import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
-import androidx.compose.material3.windowsizeclass.WindowWidthSizeClass
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -54,6 +53,7 @@ import com.shub39.grit.core.habits.CalendarType
 import com.shub39.grit.core.habits.Habit
 import com.shub39.grit.core.habits.HabitWithAnalytics
 import com.shub39.grit.shared.ui.LocalWindowSizeClass
+import com.shub39.grit.shared.ui.WindowSize.Companion.isExpanded
 import com.shub39.grit.shared.ui.habit.HabitState
 import com.shub39.grit.shared.ui.habit.daysStartingFrom
 import com.shub39.grit.shared.ui.habit.ui.component.CalendarMonthHeader
@@ -107,7 +107,7 @@ fun Calendar(
                     containerColor = Color.Transparent,
                 ),
             windowInsets =
-                if (windowSizeClass.widthSizeClass == WindowWidthSizeClass.Expanded) {
+                if (windowSizeClass.isExpanded()) {
                     WindowInsets(0)
                 } else {
                     TopAppBarDefaults.windowInsets

@@ -21,9 +21,7 @@ import android.widget.Toast
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import androidx.biometric.BiometricPrompt
-import androidx.compose.material3.windowsizeclass.calculateWindowSizeClass
 import androidx.compose.runtime.ComposeRuntimeFlags
-import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.ExperimentalComposeApi
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
@@ -34,10 +32,10 @@ import androidx.core.content.ContextCompat
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import androidx.fragment.app.FragmentActivity
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import com.shub39.grit.billing.PaywallPage
 import com.shub39.grit.core.interfaces.BiometricUtils
-import com.shub39.grit.shared.ui.LocalWindowSizeClass
 import com.shub39.grit.shared.ui.components.InitialLoading
-import com.shub39.grit.shared.ui.theme.GritTheme
+import com.shub39.grit.shared.ui.navigation.GritNavDisplay
 import com.shub39.grit.shared.ui.viewmodel.MainViewModel
 import io.github.vinceglb.filekit.FileKit
 import io.github.vinceglb.filekit.dialogs.init
@@ -58,45 +56,37 @@ class MainActivity : FragmentActivity() {
         FileKit.init(this)
 
         setContent {
-            val windowSizeClass = calculateWindowSizeClass(this)
+            val state by mainViewModel.state.collectAsStateWithLifecycle()
 
-            CompositionLocalProvider(LocalWindowSizeClass provides windowSizeClass) {
-                val state by mainViewModel.state.collectAsStateWithLifecycle()
+            var showContent by remember { mutableStateOf(false) }
 
-                var showContent by remember { mutableStateOf(false) }
-
-                LaunchedEffect(state.isAppUnlocked, state.isBiometricLockOn) {
-                    state.isBiometricLockOn?.let {
-                        when {
-                            !it || state.isAppUnlocked -> showContent = true
-                            else -> {
-                                showBiometricPrompt(
-                                    onSuccess = {
-                                        mainViewModel.setAppUnlocked(true)
+            LaunchedEffect(state.isAppUnlocked, state.isBiometricLockOn) {
+                state.isBiometricLockOn?.let {
+                    when {
+                        !it || state.isAppUnlocked -> showContent = true
+                        else -> {
+                            showBiometricPrompt(
+                                onSuccess = {
+                                    mainViewModel.setAppUnlocked(true)
+                                    showContent = true
+                                },
+                                onError = { errorCode, errString ->
+                                    handleBiometricError(errorCode, errString) {
                                         showContent = true
-                                    },
-                                    onError = { errorCode, errString ->
-                                        handleBiometricError(errorCode, errString) {
-                                            showContent = true
-                                        }
-                                    },
-                                )
-                            }
+                                    }
+                                },
+                            )
                         }
                     }
                 }
+            }
 
-                GritTheme(theme = state.theme) {
-                    if (showContent) {
-                        App(
-                            state = state,
-                            onRefreshSub = { mainViewModel.updateSubscription() },
-                            onPaywallOpened = { mainViewModel.trackPaywallOpened() },
-                        )
-                    } else {
-                        InitialLoading()
-                    }
+            if (showContent) {
+                GritNavDisplay { isPlusUser, onDismissRequest ->
+                    PaywallPage(isPlusUser = isPlusUser, onDismissRequest = onDismissRequest)
                 }
+            } else {
+                InitialLoading()
             }
         }
     }
