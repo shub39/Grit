@@ -81,6 +81,7 @@ import org.jetbrains.compose.resources.vectorResource
 
 @Composable
 fun LookAndFeelPage(
+    modifier: Modifier = Modifier,
     state: SettingsState,
     onAction: (SettingsAction) -> Unit,
     isUserSubscribed: Boolean,
@@ -90,12 +91,7 @@ fun LookAndFeelPage(
     var colorPickerDialog by remember { mutableStateOf(false) }
 
     val scrollBehavior = TopAppBarDefaults.enterAlwaysScrollBehavior()
-    Column(
-        modifier =
-            Modifier.fillMaxSize()
-                .nestedScroll(scrollBehavior.nestedScrollConnection)
-                .background(MaterialTheme.colorScheme.background)
-    ) {
+    Column(modifier = Modifier.fillMaxSize().nestedScroll(scrollBehavior.nestedScrollConnection)) {
         MediumFlexibleTopAppBar(
             scrollBehavior = scrollBehavior,
             title = {

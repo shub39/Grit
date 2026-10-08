@@ -61,6 +61,7 @@ import org.jetbrains.compose.resources.vectorResource
 /** Root settings page all roads start from here */
 @Composable
 fun RootPage(
+    modifier: Modifier = Modifier,
     state: SettingsState,
     onAction: (SettingsAction) -> Unit,
     onNavigateToLookAndFeel: () -> Unit,
@@ -72,7 +73,7 @@ fun RootPage(
     var showLocalePicker by rememberSaveable { mutableStateOf(false) }
 
     val scrollBehavior = TopAppBarDefaults.enterAlwaysScrollBehavior()
-    Column(modifier = Modifier.nestedScroll(scrollBehavior.nestedScrollConnection).fillMaxSize()) {
+    Column(modifier = modifier.nestedScroll(scrollBehavior.nestedScrollConnection).fillMaxSize()) {
         LargeFlexibleTopAppBar(
             scrollBehavior = scrollBehavior,
             title = {

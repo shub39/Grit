@@ -18,12 +18,13 @@ package com.shub39.grit.shared.ui.navigation
 
 import androidx.compose.animation.SharedTransitionLayout
 import androidx.compose.foundation.background
-import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.MaterialTheme.colorScheme
 import androidx.compose.material3.adaptive.currentWindowAdaptiveInfoV2
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.remember
 import androidx.compose.runtime.retain.retain
 import androidx.compose.ui.Modifier
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
@@ -59,7 +60,7 @@ fun GritNavDisplay(
     val globalVM = koinViewModel<MainViewModel>()
     val globalState by globalVM.state.collectAsStateWithLifecycle()
 
-    val windowSizeClass = currentWindowAdaptiveInfoV2()
+    val adaptiveInfo = currentWindowAdaptiveInfoV2()
     val topLevelBackStack = retain {
         TopLevelBackStack(
             startKey =
@@ -70,11 +71,15 @@ fun GritNavDisplay(
         )
     }
 
-    CompositionLocalProvider(LocalWindowSizeClass provides windowSizeClass.windowSizeClass) {
+    CompositionLocalProvider(LocalWindowSizeClass provides adaptiveInfo.windowSizeClass) {
         GritTheme(theme = globalState.theme) {
-            SharedTransitionLayout(
-                modifier = modifier.background(MaterialTheme.colorScheme.background)
-            ) {
+            SharedTransitionLayout(modifier = modifier.background(colorScheme.background)) {
+                val windowSizeClass = LocalWindowSizeClass.current
+
+                val listDetailSceneStrategy =
+                    remember(windowSizeClass) { ListDetailSceneStrategy<Routes>(windowSizeClass) }
+                val twoPaneSceneStrategy =
+                    remember(windowSizeClass) { TwoPaneSceneStrategy<Routes>(windowSizeClass) }
                 val responsiveNavigationSceneDecoratorStrategy =
                     rememberResponsiveNavigationSceneDecoratorStrategy<Routes>(
                         navBar = {
@@ -96,6 +101,7 @@ fun GritNavDisplay(
                     backStack = topLevelBackStack.backStack,
                     sharedTransitionScope = this,
                     sceneDecoratorStrategies = listOf(responsiveNavigationSceneDecoratorStrategy),
+                    sceneStrategies = listOf(listDetailSceneStrategy, twoPaneSceneStrategy),
                     onBack = { topLevelBackStack.removeLast() },
                     entryProvider =
                         entryProvider {
@@ -106,7 +112,9 @@ fun GritNavDisplay(
                                 TasksPage(state = state, onAction = viewModel::onAction)
                             }
 
-                            entry<HabitsList>(metadata = fadeTransitionMetadata()) {
+                            entry<HabitsList>(
+                                metadata = ListDetailScene.listPane() + fadeTransitionMetadata()
+                            ) {
                                 val viewModel = koinViewModel<HabitViewModel>()
                                 val state by viewModel.state.collectAsStateWithLifecycle()
 
@@ -124,7 +132,12 @@ fun GritNavDisplay(
                                 )
                             }
 
-                            entry<HabitAnalytics>(metadata = horizontalTransitionMetadata()) {
+                            entry<HabitAnalytics>(
+                                metadata =
+                                    ListDetailScene.detailPane() +
+                                        TwoPaneScene.twoPane() +
+                                        horizontalTransitionMetadata()
+                            ) {
                                 val viewModel = koinViewModel<HabitViewModel>()
                                 val state by viewModel.state.collectAsStateWithLifecycle()
 
@@ -135,10 +148,13 @@ fun GritNavDisplay(
                                     onNavigateToPaywall = { topLevelBackStack.add(Paywall) },
                                     onNavigateToCalendar = { topLevelBackStack.add(Calendar) },
                                     isUserSubscribed = globalState.isUserSubscribed,
+                                    modifier = Modifier.background(colorScheme.background),
                                 )
                             }
 
-                            entry<Calendar>(metadata = horizontalTransitionMetadata()) {
+                            entry<Calendar>(
+                                metadata = TwoPaneScene.twoPane() + horizontalTransitionMetadata()
+                            ) {
                                 val viewModel = koinViewModel<HabitViewModel>()
                                 val state by viewModel.state.collectAsStateWithLifecycle()
 
@@ -148,10 +164,16 @@ fun GritNavDisplay(
                                     onDateClick = { habit, date ->
                                         viewModel.onAction(HabitsAction.InsertStatus(habit, date))
                                     },
+                                    modifier = Modifier.background(colorScheme.background),
                                 )
                             }
 
-                            entry<OverallAnalytics>(metadata = verticalTransitionMetadata()) {
+                            entry<OverallAnalytics>(
+                                metadata =
+                                    ListDetailScene.detailPane() +
+                                        TwoPaneScene.twoPane() +
+                                        verticalTransitionMetadata()
+                            ) {
                                 val viewModel = koinViewModel<HabitViewModel>()
                                 val state by viewModel.state.collectAsStateWithLifecycle()
 
@@ -164,10 +186,13 @@ fun GritNavDisplay(
                                     onNavigateToCalendarHeatMap = {
                                         topLevelBackStack.add(CalendarHeatMap)
                                     },
+                                    modifier = Modifier.background(colorScheme.background),
                                 )
                             }
 
-                            entry<CalendarHeatMap>(metadata = horizontalTransitionMetadata()) {
+                            entry<CalendarHeatMap>(
+                                metadata = TwoPaneScene.twoPane() + horizontalTransitionMetadata()
+                            ) {
                                 val viewModel = koinViewModel<HabitViewModel>()
                                 val state by viewModel.state.collectAsStateWithLifecycle()
 
@@ -183,6 +208,7 @@ fun GritNavDisplay(
                                             HabitsAction.FetchCompletedHabitsForDate(it)
                                         )
                                     },
+                                    modifier = Modifier.background(colorScheme.background),
                                 )
                             }
 
@@ -192,11 +218,14 @@ fun GritNavDisplay(
                                 }
                             }
 
-                            entry<SettingsHome>(metadata = fadeTransitionMetadata()) {
+                            entry<SettingsHome>(
+                                metadata = TwoPaneScene.twoPane() + fadeTransitionMetadata()
+                            ) {
                                 val viewModel = koinViewModel<SettingsViewModel>()
                                 val state by viewModel.state.collectAsStateWithLifecycle()
 
                                 RootPage(
+                                    modifier = Modifier.background(colorScheme.background),
                                     state = state,
                                     onAction = viewModel::onAction,
                                     onNavigateToLookAndFeel = {
@@ -209,7 +238,9 @@ fun GritNavDisplay(
                                 )
                             }
 
-                            entry<LookAndFeel>(metadata = horizontalTransitionMetadata()) {
+                            entry<LookAndFeel>(
+                                metadata = TwoPaneScene.twoPane() + horizontalTransitionMetadata()
+                            ) {
                                 val viewModel = koinViewModel<SettingsViewModel>()
                                 val state by viewModel.state.collectAsStateWithLifecycle()
 
@@ -219,21 +250,27 @@ fun GritNavDisplay(
                                     isUserSubscribed = globalState.isUserSubscribed,
                                     onNavigateToPaywall = { topLevelBackStack.add(Paywall) },
                                     onNavigateBack = { topLevelBackStack.removeLast() },
+                                    modifier = Modifier.background(colorScheme.background),
                                 )
                             }
 
-                            entry<Backup>(metadata = horizontalTransitionMetadata()) {
+                            entry<Backup>(
+                                metadata = TwoPaneScene.twoPane() + horizontalTransitionMetadata()
+                            ) {
                                 val viewModel = koinViewModel<SettingsViewModel>()
                                 val state by viewModel.state.collectAsStateWithLifecycle()
 
                                 BackupPage(
+                                    modifier = Modifier.background(colorScheme.background),
                                     state = state,
                                     onAction = viewModel::onAction,
                                     onNavigateBack = { topLevelBackStack.removeLast() },
                                 )
                             }
 
-                            entry<About>(metadata = horizontalTransitionMetadata()) {
+                            entry<About>(
+                                metadata = TwoPaneScene.twoPane() + horizontalTransitionMetadata()
+                            ) {
                                 val viewModel = koinViewModel<SettingsViewModel>()
                                 val state by viewModel.state.collectAsStateWithLifecycle()
 
@@ -242,12 +279,15 @@ fun GritNavDisplay(
                                 }
 
                                 About(
+                                    modifier = Modifier.background(colorScheme.background),
                                     versionName = state.currentVersion ?: "1.0.00-Demo",
                                     onNavigateBack = { topLevelBackStack.removeLast() },
                                 )
                             }
 
-                            entry<Changelog>(metadata = horizontalTransitionMetadata()) {
+                            entry<Changelog>(
+                                metadata = TwoPaneScene.twoPane() + horizontalTransitionMetadata()
+                            ) {
                                 val viewModel = koinViewModel<SettingsViewModel>()
                                 val state by viewModel.state.collectAsStateWithLifecycle()
 
@@ -256,6 +296,7 @@ fun GritNavDisplay(
                                 }
 
                                 Changelog(
+                                    modifier = Modifier.background(colorScheme.background),
                                     changelog = state.changelog,
                                     onNavigateBack = { topLevelBackStack.removeLast() },
                                 )
