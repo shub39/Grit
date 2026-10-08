@@ -45,7 +45,6 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.ToggleButton
 import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
-import androidx.compose.material3.windowsizeclass.WindowWidthSizeClass
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
@@ -67,6 +66,7 @@ import com.kizitonwose.calendar.core.now
 import com.shub39.grit.core.habits.CalendarType
 import com.shub39.grit.core.toFormattedString
 import com.shub39.grit.shared.ui.LocalWindowSizeClass
+import com.shub39.grit.shared.ui.WindowSize.Companion.isExpanded
 import com.shub39.grit.shared.ui.components.GritBottomSheet
 import com.shub39.grit.shared.ui.components.LocalDateSaver
 import com.shub39.grit.shared.ui.components.endItemShape
@@ -159,7 +159,7 @@ fun CalendarHeatMap(
                     containerColor = Color.Transparent,
                 ),
             windowInsets =
-                if (windowSizeClass.widthSizeClass == WindowWidthSizeClass.Expanded) {
+                if (windowSizeClass.isExpanded()) {
                     WindowInsets(0)
                 } else {
                     TopAppBarDefaults.windowInsets

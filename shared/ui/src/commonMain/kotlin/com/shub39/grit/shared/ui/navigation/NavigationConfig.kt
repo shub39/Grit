@@ -1,52 +1,82 @@
+/*
+ * Copyright (C) 2026  Shubham Gorai
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <https://www.gnu.org/licenses/>.
+ */
 package com.shub39.grit.shared.ui.navigation
 
 import androidx.compose.runtime.mutableStateListOf
 import androidx.navigation3.runtime.NavKey
 
-sealed interface Routes: NavKey {
-    data object Paywall: Routes
+interface Routes : NavKey
 
-    sealed interface TaskPages : Routes {
-        data object TaskList : TaskPages
+data object Paywall : Routes
+
+data object Tasks : Routes
+
+data object TaskList : Routes
+
+data object Habits : Routes
+
+data object HabitsList : Routes
+
+data object HabitAnalytics : Routes
+
+data object OverallAnalytics : Routes
+
+data object Calendar : Routes
+
+data object CalendarHeatMap : Routes
+
+data object Settings : Routes
+
+data object SettingsHome : Routes
+
+data object About : Routes
+
+data object Changelog : Routes
+
+data object Backup : Routes
+
+data object LookAndFeel : Routes
+
+fun Routes.getTopLevelRoute(): Routes? =
+    when (val subType = this.getSubType()) {
+        Tasks,
+        Habits,
+        Settings -> subType
+        else -> null
     }
 
-    sealed interface HabitPages : Routes {
-        data object HabitList : HabitPages
-        data object HabitAnalytics : HabitPages
-        data object OverallAnalytics : HabitPages
-        data object Calendar : HabitPages
-        data object CalendarHeatMap : HabitPages
+fun Routes.getSubType(): Routes =
+    when (this) {
+        HabitAnalytics,
+        HabitsList,
+        OverallAnalytics,
+        Calendar,
+        CalendarHeatMap -> Habits
+        About,
+        Backup,
+        Changelog,
+        LookAndFeel,
+        SettingsHome -> Settings
+        TaskList -> Tasks
+        else -> this
     }
 
-    sealed interface SettingsPages : Routes {
-        data object Settings : SettingsPages
-        data object About : SettingsPages
-        data object Changelog : SettingsPages
-        data object Backup : SettingsPages
-        data object LookAndFeel : SettingsPages
-    }
-}
-
-class TopLevelBackStack(startKey: Routes = Routes.TaskPages.TaskList) {
+class TopLevelBackStack(startKey: Routes = TaskList) {
     val backStack = mutableStateListOf(startKey)
-
-    fun Routes.getSubType() = when (this) {
-        Routes.HabitPages.HabitAnalytics -> Routes.HabitPages::class
-        Routes.HabitPages.HabitList -> Routes.HabitPages::class
-        Routes.HabitPages.OverallAnalytics -> Routes.HabitPages::class
-        Routes.HabitPages.Calendar -> Routes.HabitPages::class
-        Routes.HabitPages.CalendarHeatMap -> Routes.HabitPages::class
-
-        Paywall -> this
-
-        Routes.SettingsPages.About -> Routes.SettingsPages::class
-        Routes.SettingsPages.Backup -> Routes.SettingsPages::class
-        Routes.SettingsPages.Changelog -> Routes.SettingsPages::class
-        Routes.SettingsPages.LookAndFeel -> Routes.SettingsPages::class
-        Routes.SettingsPages.Settings -> Routes.SettingsPages::class
-
-        Routes.TaskPages.TaskList -> Routes.TaskPages::class
-    }
 
     fun isRouteOnTop(route: Routes): Boolean = backStack.lastOrNull() == route
 

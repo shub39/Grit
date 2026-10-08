@@ -1,3 +1,19 @@
+/*
+ * Copyright (C) 2026  Shubham Gorai
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <https://www.gnu.org/licenses/>.
+ */
 package com.shub39.grit.shared.ui.navigation
 
 import androidx.compose.animation.EnterExitState
@@ -37,51 +53,52 @@ data class ResponsiveNavigationScene<T : Any>(
 ) : Scene<T> by scene {
     override val key = scene::class to scene.key
 
-    override val content = @Composable {
-        val animatedContentScope = LocalNavAnimatedContentScope.current
-        val isMovableContentCaller =
-            animatedContentScope.transition.targetState == EnterExitState.Visible
+    override val content =
+        @Composable {
+            val animatedContentScope = LocalNavAnimatedContentScope.current
+            val isMovableContentCaller =
+                animatedContentScope.transition.targetState == EnterExitState.Visible
 
-        with(sharedTransitionScope) {
-            if (windowSizeClass.isWidthAtLeastBreakpoint(WindowSizeClass.WIDTH_DP_MEDIUM_LOWER_BOUND)) {
-                Row(Modifier.fillMaxSize()) {
-                    Box(
-                        modifier = Modifier
-                            .cacheSize(!isMovableContentCaller)
-                            .sharedElement(
-                                rememberSharedContentState("nav-rail"),
-                                animatedContentScope
-                            )
-                    ) {
-                        if (isMovableContentCaller) {
-                            navRailContent()
+            with(sharedTransitionScope) {
+                if (
+                    windowSizeClass.isWidthAtLeastBreakpoint(
+                        WindowSizeClass.WIDTH_DP_MEDIUM_LOWER_BOUND
+                    )
+                ) {
+                    Row(Modifier.fillMaxSize()) {
+                        Box(
+                            modifier =
+                                Modifier.cacheSize(!isMovableContentCaller)
+                                    .sharedElement(
+                                        rememberSharedContentState("nav-rail"),
+                                        animatedContentScope,
+                                    )
+                        ) {
+                            if (isMovableContentCaller) {
+                                navRailContent()
+                            }
                         }
+                        Box(modifier = Modifier.weight(1f)) { scene.content() }
                     }
-                    Box(modifier = Modifier.weight(1f)) {
-                        scene.content()
-                    }
-                }
-            } else {
-                Column(Modifier.fillMaxSize()) {
-                    Box(modifier = Modifier.weight(1f)) {
-                        scene.content()
-                    }
-                    Box(
-                        modifier = Modifier
-                            .cacheSize(!isMovableContentCaller)
-                            .sharedElement(
-                                rememberSharedContentState("nav-bar"),
-                                animatedContentScope
-                            )
-                    ) {
-                        if (isMovableContentCaller) {
-                            navBarContent()
+                } else {
+                    Column(Modifier.fillMaxSize()) {
+                        Box(modifier = Modifier.weight(1f)) { scene.content() }
+                        Box(
+                            modifier =
+                                Modifier.cacheSize(!isMovableContentCaller)
+                                    .sharedElement(
+                                        rememberSharedContentState("nav-bar"),
+                                        animatedContentScope,
+                                    )
+                        ) {
+                            if (isMovableContentCaller) {
+                                navBarContent()
+                            }
                         }
                     }
                 }
             }
         }
-    }
 }
 
 @Composable
@@ -89,7 +106,7 @@ fun <T : Any> rememberResponsiveNavigationSceneDecoratorStrategy(
     navBar: @Composable () -> Unit,
     navRail: @Composable () -> Unit,
     sharedTransitionScope: SharedTransitionScope,
-    windowSizeClass: WindowSizeClass = currentWindowAdaptiveInfoV2().windowSizeClass
+    windowSizeClass: WindowSizeClass = currentWindowAdaptiveInfoV2().windowSizeClass,
 ): ResponsiveNavigationSceneDecoratorStrategy<T> {
     val currentNavBar by rememberUpdatedState(navBar)
     val currentNavRail by rememberUpdatedState(navRail)
@@ -102,7 +119,7 @@ fun <T : Any> rememberResponsiveNavigationSceneDecoratorStrategy(
             windowSizeClass,
             sharedTransitionScope,
             movableNavBar,
-            movableNavRail
+            movableNavRail,
         )
     }
 }
@@ -120,25 +137,23 @@ class ResponsiveNavigationSceneDecoratorStrategy<T : Any>(
             sharedTransitionScope,
             windowSizeClass,
             navBarContent,
-            navRailContent
+            navRailContent,
         )
     }
-
 }
 
 /**
  * A modifier that caches the measured size of the component and optionally reuses it. For example,
  * this can be used to maintain the size of an element that contains moveable content.
  *
- * @param useCachedSize If true, the modifier will use the previously measured and cached size
- * (if available) instead of the current size. If false, it measures normally and caches the new size.
+ * @param useCachedSize If true, the modifier will use the previously measured and cached size (if
+ *   available) instead of the current size. If false, it measures normally and caches the new size.
  */
 private fun Modifier.cacheSize(useCachedSize: Boolean): Modifier =
     this.then(CacheSizeElement(useCachedSize))
 
-private data class CacheSizeElement(
-    val useCachedSize: Boolean
-) : ModifierNodeElement<CacheSizeNode>() {
+private data class CacheSizeElement(val useCachedSize: Boolean) :
+    ModifierNodeElement<CacheSizeNode>() {
 
     override fun create() = CacheSizeNode(useCachedSize)
 
@@ -152,9 +167,7 @@ private data class CacheSizeElement(
     }
 }
 
-private class CacheSizeNode(
-    useCachedSize: Boolean
-) : Modifier.Node(), LayoutModifierNode {
+private class CacheSizeNode(useCachedSize: Boolean) : Modifier.Node(), LayoutModifierNode {
 
     var useCachedSize: Boolean = useCachedSize
         set(value) {
@@ -169,22 +182,21 @@ private class CacheSizeNode(
 
     override fun MeasureScope.measure(
         measurable: Measurable,
-        constraints: Constraints
+        constraints: Constraints,
     ): MeasureResult {
         val placeable = measurable.measure(constraints)
         val currentSize = IntSize(placeable.width, placeable.height)
 
-        val size = if (useCachedSize && isSizeCached) {
-            cachedSize
-        } else {
-            currentSize
-        }
+        val size =
+            if (useCachedSize && isSizeCached) {
+                cachedSize
+            } else {
+                currentSize
+            }
 
         cachedSize = size
         isSizeCached = true
 
-        return layout(size.width, size.height) {
-            placeable.placeRelative(0, 0)
-        }
+        return layout(size.width, size.height) { placeable.placeRelative(0, 0) }
     }
 }

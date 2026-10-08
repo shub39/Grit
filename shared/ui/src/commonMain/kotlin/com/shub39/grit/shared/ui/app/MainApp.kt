@@ -30,7 +30,6 @@ import androidx.compose.material3.NavigationRail
 import androidx.compose.material3.NavigationRailItem
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
-import androidx.compose.material3.windowsizeclass.WindowWidthSizeClass.Companion.Compact
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
@@ -42,6 +41,7 @@ import androidx.navigation3.runtime.entryProvider
 import androidx.navigation3.runtime.rememberNavBackStack
 import androidx.navigation3.ui.NavDisplay
 import com.shub39.grit.shared.ui.LocalWindowSizeClass
+import com.shub39.grit.shared.ui.WindowSize.Companion.isCompact
 import com.shub39.grit.shared.ui.app.AppSections.Companion.toIconRes
 import com.shub39.grit.shared.ui.app.AppSections.Companion.toStringRes
 import com.shub39.grit.shared.ui.habit.ui.HabitsGraph
@@ -68,8 +68,8 @@ fun MainApp(state: MainAppState, onNavigateToPaywall: () -> Unit) {
             },
         )
 
-    when (windowSizeClass.widthSizeClass) {
-        Compact -> {
+    when (windowSizeClass.isCompact()) {
+        true -> {
             Scaffold(
                 bottomBar = {
                     AppNavBar(

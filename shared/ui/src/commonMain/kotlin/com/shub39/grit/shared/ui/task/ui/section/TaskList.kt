@@ -73,7 +73,6 @@ import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.material3.TopAppBarScrollBehavior
 import androidx.compose.material3.animateFloatingActionButton
 import androidx.compose.material3.toShape
-import androidx.compose.material3.windowsizeclass.WindowWidthSizeClass
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
@@ -204,7 +203,7 @@ fun TaskList(state: TaskState, onAction: (TaskAction) -> Unit, onEditCategories:
                 AnimatedVisibility(
                     visible =
                         state.tasks[state.currentCategory].isNullOrEmpty() ||
-                                windowSizeClass.isExpanded(),
+                            windowSizeClass.isExpanded(),
                     enter = fadeIn(MaterialTheme.motionScheme.fastEffectsSpec()),
                     exit = fadeOut(MaterialTheme.motionScheme.fastEffectsSpec()),
                 ) {

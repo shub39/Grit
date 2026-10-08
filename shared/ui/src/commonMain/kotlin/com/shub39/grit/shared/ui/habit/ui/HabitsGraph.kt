@@ -16,35 +16,22 @@
  */
 package com.shub39.grit.shared.ui.habit.ui
 
-import androidx.compose.animation.AnimatedVisibility
-import androidx.compose.animation.fadeIn
-import androidx.compose.animation.fadeOut
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.fillMaxHeight
-import androidx.compose.foundation.layout.widthIn
 import androidx.compose.foundation.lazy.rememberLazyListState
-import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material3.FilledTonalIconToggleButton
-import androidx.compose.material3.Icon
-import androidx.compose.material3.IconToggleButtonShapes
-import androidx.compose.material3.LargeFlexibleTopAppBar
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
-import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.material3.TopAppBarScrollBehavior
-import androidx.compose.material3.windowsizeclass.WindowWidthSizeClass
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.unit.dp
 import androidx.navigation3.runtime.NavKey
 import androidx.navigation3.runtime.entryProvider
@@ -52,6 +39,7 @@ import androidx.navigation3.runtime.rememberNavBackStack
 import androidx.navigation3.ui.NavDisplay
 import androidx.savedstate.serialization.SavedStateConfiguration
 import com.shub39.grit.shared.ui.LocalWindowSizeClass
+import com.shub39.grit.shared.ui.WindowSize.Companion.isExpanded
 import com.shub39.grit.shared.ui.components.PageFill
 import com.shub39.grit.shared.ui.habit.HabitState
 import com.shub39.grit.shared.ui.habit.HabitsAction
@@ -59,18 +47,13 @@ import com.shub39.grit.shared.ui.habit.ui.component.HabitListFABs
 import com.shub39.grit.shared.ui.habit.ui.sections.AnalyticsPage
 import com.shub39.grit.shared.ui.habit.ui.sections.Calendar
 import com.shub39.grit.shared.ui.habit.ui.sections.CalendarHeatMap
-import com.shub39.grit.shared.ui.habit.ui.sections.HabitsList
 import com.shub39.grit.shared.ui.habit.ui.sections.OverallAnalytics
 import com.shub39.grit.shared.ui.navigation.horizontalTransitionMetadata
 import com.shub39.grit.shared.ui.navigation.verticalTransitionMetadata
-import com.shub39.grit.shared.ui.theme.flexFontEmphasis
-import com.shub39.grit.shared.ui.theme.flexFontRounded
 import grit.shared.ui.generated.resources.*
 import kotlinx.serialization.Serializable
 import kotlinx.serialization.modules.SerializersModule
 import kotlinx.serialization.modules.polymorphic
-import org.jetbrains.compose.resources.painterResource
-import org.jetbrains.compose.resources.stringResource
 
 @Serializable
 private sealed interface HabitRoutes : NavKey {
@@ -111,7 +94,7 @@ fun HabitsGraph(
 
     LaunchedEffect(Unit) { onAction(HabitsAction.OnHabitsOpened) }
 
-    if (windowSizeClass.widthSizeClass != WindowWidthSizeClass.Expanded) {
+    if (!windowSizeClass.isExpanded()) {
         val backstack = rememberNavBackStack(config, HabitRoutes.HabitList)
 
         NavDisplay(
@@ -123,12 +106,6 @@ fun HabitsGraph(
                         Column(
                             modifier = Modifier.background(MaterialTheme.colorScheme.background)
                         ) {
-                            HabitsTopAppBar(
-                                state = state,
-                                onAction = onAction,
-                                scrollBehavior = scrollBehavior,
-                            )
-
                             PageFill {
                                 val lazyListState = rememberLazyListState()
                                 val fabVisible by remember {
@@ -137,18 +114,6 @@ fun HabitsGraph(
                                             lazyListState.firstVisibleItemScrollOffset == 0
                                     }
                                 }
-
-                                HabitsList(
-                                    state = state,
-                                    onAction = onAction,
-                                    lazyListState = lazyListState,
-                                    onNavigateToAnalytics = {
-                                        backstack.add(HabitRoutes.HabitAnalytics)
-                                    },
-                                    modifier =
-                                        Modifier.fillMaxHeight()
-                                            .nestedScroll(scrollBehavior.nestedScrollConnection),
-                                )
 
                                 HabitListFABs(
                                     onNavigateToOverallAnalytics = {
@@ -244,8 +209,6 @@ private fun ExpandedScreen(
     isUserSubscribed: Boolean,
 ) {
     Column(modifier = modifier.background(MaterialTheme.colorScheme.background)) {
-        HabitsTopAppBar(state = state, onAction = onAction, scrollBehavior = scrollBehavior)
-
         Row(modifier = Modifier.weight(1f)) {
             Box {
                 val lazyListState = rememberLazyListState()
@@ -255,17 +218,6 @@ private fun ExpandedScreen(
                             lazyListState.firstVisibleItemScrollOffset == 0
                     }
                 }
-
-                HabitsList(
-                    state = state,
-                    onAction = onAction,
-                    onNavigateToAnalytics = {},
-                    lazyListState = lazyListState,
-                    modifier =
-                        Modifier.fillMaxHeight()
-                            .widthIn(max = 400.dp)
-                            .nestedScroll(scrollBehavior.nestedScrollConnection),
-                )
 
                 HabitListFABs(
                     onNavigateToOverallAnalytics = {
@@ -377,81 +329,4 @@ private fun ExpandedScreen(
             }
         }
     }
-}
-
-@Composable
-private fun HabitsTopAppBar(
-    state: HabitState,
-    onAction: (HabitsAction) -> Unit,
-    modifier: Modifier = Modifier,
-    scrollBehavior: TopAppBarScrollBehavior? = null,
-) {
-    LargeFlexibleTopAppBar(
-        modifier = modifier,
-        scrollBehavior = scrollBehavior,
-        colors =
-            TopAppBarDefaults.topAppBarColors(
-                scrolledContainerColor = MaterialTheme.colorScheme.surface
-            ),
-        title = { Text(text = stringResource(Res.string.habits), fontFamily = flexFontEmphasis()) },
-        subtitle = {
-            Column {
-                Text(
-                    text =
-                        "${state.completedHabitIds.size}/${state.habitsWithAnalytics.size} " +
-                            stringResource(Res.string.completed),
-                    fontFamily = flexFontRounded(),
-                )
-            }
-        },
-        actions = {
-            AnimatedVisibility(
-                visible = state.habitsWithAnalytics.isNotEmpty(),
-                enter = fadeIn(MaterialTheme.motionScheme.fastEffectsSpec()),
-                exit = fadeOut(MaterialTheme.motionScheme.fastEffectsSpec()),
-            ) {
-                Row {
-                    FilledTonalIconToggleButton(
-                        checked = state.compactHabitView,
-                        shapes =
-                            IconToggleButtonShapes(
-                                shape = CircleShape,
-                                checkedShape = MaterialTheme.shapes.small,
-                                pressedShape = MaterialTheme.shapes.extraSmall,
-                            ),
-                        onCheckedChange = { onAction(HabitsAction.OnToggleCompactView(it)) },
-                    ) {
-                        Icon(
-                            painter =
-                                painterResource(
-                                    if (state.compactHabitView) {
-                                        Res.drawable.expand
-                                    } else {
-                                        Res.drawable.collapse
-                                    }
-                                ),
-                            contentDescription = "Compact View",
-                        )
-                    }
-
-                    FilledTonalIconToggleButton(
-                        checked = state.editState,
-                        shapes =
-                            IconToggleButtonShapes(
-                                shape = CircleShape,
-                                checkedShape = MaterialTheme.shapes.small,
-                                pressedShape = MaterialTheme.shapes.extraSmall,
-                            ),
-                        onCheckedChange = { onAction(HabitsAction.OnToggleEditState(it)) },
-                        enabled = state.habitsWithAnalytics.isNotEmpty(),
-                    ) {
-                        Icon(
-                            painter = painterResource(Res.drawable.reorder),
-                            contentDescription = null,
-                        )
-                    }
-                }
-            }
-        },
-    )
 }

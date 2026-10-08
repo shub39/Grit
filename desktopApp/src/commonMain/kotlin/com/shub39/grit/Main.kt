@@ -16,33 +16,14 @@
  */
 package com.shub39.grit
 
-import androidx.compose.material3.windowsizeclass.calculateWindowSizeClass
-import androidx.compose.runtime.CompositionLocalProvider
-import androidx.compose.runtime.getValue
 import androidx.compose.ui.window.singleWindowApplication
-import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.shub39.grit.di.GritModules
-import com.shub39.grit.shared.ui.LocalWindowSizeClass
-import com.shub39.grit.shared.ui.app.MainApp
-import com.shub39.grit.shared.ui.theme.GritTheme
-import com.shub39.grit.shared.ui.viewmodel.MainViewModel
-import org.koin.compose.viewmodel.koinViewModel
+import com.shub39.grit.shared.ui.components.FossPaywall
+import com.shub39.grit.shared.ui.navigation.GritNavDisplay
 import org.koin.plugin.module.dsl.startKoin
 
 fun main() {
     startKoin<GritModules>()
 
-    singleWindowApplication {
-        val mainVM = koinViewModel<MainViewModel>()
-        val state by mainVM.state.collectAsStateWithLifecycle()
-
-            GritTheme(theme = state.theme) {
-                MainApp(
-                    state = state,
-                    onNavigateToPaywall = {
-                        // TODO: Move to proper nav3
-                    },
-                )
-            }
-    }
+    singleWindowApplication(title = "Grit") { GritNavDisplay(paywall = { _, _ -> FossPaywall() }) }
 }

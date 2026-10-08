@@ -32,12 +32,12 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.MediumFloatingActionButton
 import androidx.compose.material3.Text
 import androidx.compose.material3.animateFloatingActionButton
-import androidx.compose.material3.windowsizeclass.WindowWidthSizeClass
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import com.shub39.grit.shared.ui.LocalWindowSizeClass
+import com.shub39.grit.shared.ui.WindowSize.Companion.isExpanded
 import com.shub39.grit.shared.ui.habit.HabitState
 import com.shub39.grit.shared.ui.habit.HabitsAction
 import grit.shared.ui.generated.resources.*
@@ -61,11 +61,11 @@ fun BoxScope.HabitListFABs(
             modifier
                 .padding(16.dp)
                 .then(
-                    if (windowSizeClass.widthSizeClass != WindowWidthSizeClass.Expanded) Modifier
+                    if (!windowSizeClass.isExpanded()) Modifier
                     else Modifier.navigationBarsPadding()
                 )
                 .align(
-                    if (windowSizeClass.widthSizeClass == WindowWidthSizeClass.Expanded) {
+                    if (windowSizeClass.isExpanded()) {
                         Alignment.BottomStart
                     } else {
                         Alignment.BottomEnd
@@ -74,7 +74,7 @@ fun BoxScope.HabitListFABs(
         horizontalArrangement = Arrangement.spacedBy(8.dp),
         verticalAlignment = Alignment.Bottom,
     ) {
-        if (windowSizeClass.widthSizeClass != WindowWidthSizeClass.Expanded) {
+        if (!windowSizeClass.isExpanded()) {
             FloatingActionButton(
                 onClick = onNavigateToOverallAnalytics,
                 containerColor = MaterialTheme.colorScheme.secondaryContainer,

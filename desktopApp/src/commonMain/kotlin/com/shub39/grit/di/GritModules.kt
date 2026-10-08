@@ -24,6 +24,7 @@ import com.shub39.grit.core.habits.Habit
 import com.shub39.grit.core.interfaces.AlarmScheduler
 import com.shub39.grit.core.interfaces.AnalyticsWrapper
 import com.shub39.grit.core.interfaces.AppNotificationManager
+import com.shub39.grit.core.interfaces.BiometricUtils
 import com.shub39.grit.core.tasks.Task
 import com.shub39.grit.logic.di.LogicModules
 import com.shub39.grit.shared.ui.di.UIModules
@@ -38,6 +39,14 @@ import org.koin.core.annotation.Single
 @Module(includes = [UIModules::class, LogicModules::class])
 @ComponentScan("com.shub39.grit")
 class GritModules {
+    @Single
+    fun provideBiometricUtils(): BiometricUtils =
+        object : BiometricUtils {
+            override fun getAuthenticators(): Int = 0
+
+            override fun authenticationAvailable(): Boolean = false
+        }
+
     @Single
     fun provideBillingHandler(): BillingHandler =
         object : BillingHandler {
