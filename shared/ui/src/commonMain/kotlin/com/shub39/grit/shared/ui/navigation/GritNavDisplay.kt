@@ -28,17 +28,18 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.retain.retain
 import androidx.compose.ui.Modifier
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import androidx.navigation3.runtime.EntryProviderScope
 import androidx.navigation3.runtime.entryProvider
 import androidx.navigation3.ui.NavDisplay
 import com.shub39.grit.core.settings.Sections
 import com.shub39.grit.shared.ui.LocalWindowSizeClass
+import com.shub39.grit.shared.ui.app.MainAppState
 import com.shub39.grit.shared.ui.habit.HabitsAction
 import com.shub39.grit.shared.ui.habit.ui.sections.AnalyticsPage
 import com.shub39.grit.shared.ui.habit.ui.sections.Calendar
 import com.shub39.grit.shared.ui.habit.ui.sections.CalendarHeatMap
 import com.shub39.grit.shared.ui.habit.ui.sections.HabitsList
 import com.shub39.grit.shared.ui.habit.ui.sections.OverallAnalytics
-import com.shub39.grit.shared.ui.setting.SettingsAction
 import com.shub39.grit.shared.ui.setting.ui.section.About
 import com.shub39.grit.shared.ui.setting.ui.section.BackupPage
 import com.shub39.grit.shared.ui.setting.ui.section.Changelog
@@ -112,105 +113,10 @@ fun GritNavDisplay(
                                 TasksPage(state = state, onAction = viewModel::onAction)
                             }
 
-                            entry<HabitsList>(
-                                metadata = ListDetailScene.listPane() + fadeTransitionMetadata()
-                            ) {
-                                val viewModel = koinViewModel<HabitViewModel>()
-                                val state by viewModel.state.collectAsStateWithLifecycle()
-
-                                HabitsList(
-                                    state = state,
-                                    onAction = viewModel::onAction,
-                                    onNavigateToAnalytics = {
-                                        topLevelBackStack.add(HabitAnalytics)
-                                    },
-                                    onNavigateToPaywall = { topLevelBackStack.add(Paywall) },
-                                    onNavigateToOverallAnalytics = {
-                                        topLevelBackStack.add(OverallAnalytics)
-                                    },
-                                    isUserSubscribed = globalState.isUserSubscribed,
-                                )
-                            }
-
-                            entry<HabitAnalytics>(
-                                metadata =
-                                    ListDetailScene.detailPane() +
-                                        TwoPaneScene.twoPane() +
-                                        horizontalTransitionMetadata()
-                            ) {
-                                val viewModel = koinViewModel<HabitViewModel>()
-                                val state by viewModel.state.collectAsStateWithLifecycle()
-
-                                AnalyticsPage(
-                                    state = state,
-                                    onAction = viewModel::onAction,
-                                    onNavigateBack = { topLevelBackStack.removeLast() },
-                                    onNavigateToPaywall = { topLevelBackStack.add(Paywall) },
-                                    onNavigateToCalendar = { topLevelBackStack.add(Calendar) },
-                                    isUserSubscribed = globalState.isUserSubscribed,
-                                    modifier = Modifier.background(colorScheme.background),
-                                )
-                            }
-
-                            entry<Calendar>(
-                                metadata = TwoPaneScene.twoPane() + horizontalTransitionMetadata()
-                            ) {
-                                val viewModel = koinViewModel<HabitViewModel>()
-                                val state by viewModel.state.collectAsStateWithLifecycle()
-
-                                Calendar(
-                                    state = state,
-                                    onNavigateBack = { topLevelBackStack.removeLast() },
-                                    onDateClick = { habit, date ->
-                                        viewModel.onAction(HabitsAction.InsertStatus(habit, date))
-                                    },
-                                    modifier = Modifier.background(colorScheme.background),
-                                )
-                            }
-
-                            entry<OverallAnalytics>(
-                                metadata =
-                                    ListDetailScene.detailPane() +
-                                        TwoPaneScene.twoPane() +
-                                        verticalTransitionMetadata()
-                            ) {
-                                val viewModel = koinViewModel<HabitViewModel>()
-                                val state by viewModel.state.collectAsStateWithLifecycle()
-
-                                OverallAnalytics(
-                                    state = state,
-                                    onNavigateBack = { topLevelBackStack.removeLast() },
-                                    onNavigateToPaywall = { topLevelBackStack.add(Paywall) },
-                                    isUserSubscribed = globalState.isUserSubscribed,
-                                    onAction = viewModel::onAction,
-                                    onNavigateToCalendarHeatMap = {
-                                        topLevelBackStack.add(CalendarHeatMap)
-                                    },
-                                    modifier = Modifier.background(colorScheme.background),
-                                )
-                            }
-
-                            entry<CalendarHeatMap>(
-                                metadata = TwoPaneScene.twoPane() + horizontalTransitionMetadata()
-                            ) {
-                                val viewModel = koinViewModel<HabitViewModel>()
-                                val state by viewModel.state.collectAsStateWithLifecycle()
-
-                                LaunchedEffect(Unit) {
-                                    viewModel.onAction(HabitsAction.OnOverallAnalyticsViewed)
-                                }
-
-                                CalendarHeatMap(
-                                    state = state,
-                                    onNavigateBack = { topLevelBackStack.removeLast() },
-                                    onChangeSelectedDay = {
-                                        viewModel.onAction(
-                                            HabitsAction.FetchCompletedHabitsForDate(it)
-                                        )
-                                    },
-                                    modifier = Modifier.background(colorScheme.background),
-                                )
-                            }
+                            habitsScreens(
+                                topLevelBackStack = topLevelBackStack,
+                                globalState = globalState,
+                            )
 
                             entry<Paywall>(metadata = verticalTransitionMetadata()) {
                                 paywall(globalState.isUserSubscribed) {
@@ -218,92 +124,172 @@ fun GritNavDisplay(
                                 }
                             }
 
-                            entry<SettingsHome>(
-                                metadata = TwoPaneScene.twoPane() + fadeTransitionMetadata()
-                            ) {
-                                val viewModel = koinViewModel<SettingsViewModel>()
-                                val state by viewModel.state.collectAsStateWithLifecycle()
-
-                                RootPage(
-                                    modifier = Modifier.background(colorScheme.background),
-                                    state = state,
-                                    onAction = viewModel::onAction,
-                                    onNavigateToLookAndFeel = {
-                                        topLevelBackStack.add(LookAndFeel)
-                                    },
-                                    onNavigateToBackup = { topLevelBackStack.add(Backup) },
-                                    onNavigateToPaywall = { topLevelBackStack.add(Paywall) },
-                                    onNavigateToChangelog = { topLevelBackStack.add(Changelog) },
-                                    onNavigateToAppInfo = { topLevelBackStack.add(About) },
-                                )
-                            }
-
-                            entry<LookAndFeel>(
-                                metadata = TwoPaneScene.twoPane() + horizontalTransitionMetadata()
-                            ) {
-                                val viewModel = koinViewModel<SettingsViewModel>()
-                                val state by viewModel.state.collectAsStateWithLifecycle()
-
-                                LookAndFeelPage(
-                                    state = state,
-                                    onAction = viewModel::onAction,
-                                    isUserSubscribed = globalState.isUserSubscribed,
-                                    onNavigateToPaywall = { topLevelBackStack.add(Paywall) },
-                                    onNavigateBack = { topLevelBackStack.removeLast() },
-                                    modifier = Modifier.background(colorScheme.background),
-                                )
-                            }
-
-                            entry<Backup>(
-                                metadata = TwoPaneScene.twoPane() + horizontalTransitionMetadata()
-                            ) {
-                                val viewModel = koinViewModel<SettingsViewModel>()
-                                val state by viewModel.state.collectAsStateWithLifecycle()
-
-                                BackupPage(
-                                    modifier = Modifier.background(colorScheme.background),
-                                    state = state,
-                                    onAction = viewModel::onAction,
-                                    onNavigateBack = { topLevelBackStack.removeLast() },
-                                )
-                            }
-
-                            entry<About>(
-                                metadata = TwoPaneScene.twoPane() + horizontalTransitionMetadata()
-                            ) {
-                                val viewModel = koinViewModel<SettingsViewModel>()
-                                val state by viewModel.state.collectAsStateWithLifecycle()
-
-                                LaunchedEffect(Unit) {
-                                    viewModel.onAction(SettingsAction.OnAboutViewed)
-                                }
-
-                                About(
-                                    modifier = Modifier.background(colorScheme.background),
-                                    versionName = state.currentVersion ?: "1.0.00-Demo",
-                                    onNavigateBack = { topLevelBackStack.removeLast() },
-                                )
-                            }
-
-                            entry<Changelog>(
-                                metadata = TwoPaneScene.twoPane() + horizontalTransitionMetadata()
-                            ) {
-                                val viewModel = koinViewModel<SettingsViewModel>()
-                                val state by viewModel.state.collectAsStateWithLifecycle()
-
-                                LaunchedEffect(Unit) {
-                                    viewModel.onAction(SettingsAction.OnChangelogViewed)
-                                }
-
-                                Changelog(
-                                    modifier = Modifier.background(colorScheme.background),
-                                    changelog = state.changelog,
-                                    onNavigateBack = { topLevelBackStack.removeLast() },
-                                )
-                            }
+                            settingsScreens(
+                                topLevelBackStack = topLevelBackStack,
+                                globalState = globalState,
+                            )
                         },
                 )
             }
         }
+    }
+}
+
+private fun EntryProviderScope<Routes>.habitsScreens(
+    topLevelBackStack: TopLevelBackStack,
+    globalState: MainAppState,
+) {
+    entry<HabitsList>(metadata = ListDetailScene.listPane() + fadeTransitionMetadata()) {
+        val viewModel = koinViewModel<HabitViewModel>()
+        val state by viewModel.state.collectAsStateWithLifecycle()
+
+        HabitsList(
+            state = state,
+            onAction = viewModel::onAction,
+            onNavigateToAnalytics = { topLevelBackStack.add(HabitAnalytics) },
+            onNavigateToPaywall = { topLevelBackStack.add(Paywall) },
+            onNavigateToOverallAnalytics = { topLevelBackStack.add(OverallAnalytics) },
+            isUserSubscribed = globalState.isUserSubscribed,
+            modifier = Modifier.background(colorScheme.background),
+        )
+    }
+
+    entry<HabitAnalytics>(
+        metadata =
+            ListDetailScene.detailPane() + TwoPaneScene.twoPane() + horizontalTransitionMetadata()
+    ) {
+        val viewModel = koinViewModel<HabitViewModel>()
+        val state by viewModel.state.collectAsStateWithLifecycle()
+
+        AnalyticsPage(
+            state = state,
+            onAction = viewModel::onAction,
+            onNavigateBack = { topLevelBackStack.removeLast() },
+            onNavigateToPaywall = { topLevelBackStack.add(Paywall) },
+            onNavigateToCalendar = { topLevelBackStack.add(Calendar) },
+            isUserSubscribed = globalState.isUserSubscribed,
+            modifier = Modifier.background(colorScheme.background),
+        )
+    }
+
+    entry<Calendar>(metadata = TwoPaneScene.twoPane() + horizontalTransitionMetadata()) {
+        val viewModel = koinViewModel<HabitViewModel>()
+        val state by viewModel.state.collectAsStateWithLifecycle()
+
+        Calendar(
+            state = state,
+            onNavigateBack = { topLevelBackStack.removeLast() },
+            onDateClick = { habit, date ->
+                viewModel.onAction(HabitsAction.InsertStatus(habit, date))
+            },
+            modifier = Modifier.background(colorScheme.background),
+        )
+    }
+
+    entry<OverallAnalytics>(
+        metadata =
+            ListDetailScene.detailPane() + TwoPaneScene.twoPane() + verticalTransitionMetadata()
+    ) {
+        val viewModel = koinViewModel<HabitViewModel>()
+        val state by viewModel.state.collectAsStateWithLifecycle()
+
+        OverallAnalytics(
+            state = state,
+            onNavigateBack = { topLevelBackStack.removeLast() },
+            onNavigateToPaywall = { topLevelBackStack.add(Paywall) },
+            isUserSubscribed = globalState.isUserSubscribed,
+            onAction = viewModel::onAction,
+            onNavigateToCalendarHeatMap = { topLevelBackStack.add(CalendarHeatMap) },
+            modifier = Modifier.background(colorScheme.background),
+        )
+    }
+
+    entry<CalendarHeatMap>(metadata = TwoPaneScene.twoPane() + horizontalTransitionMetadata()) {
+        val viewModel = koinViewModel<HabitViewModel>()
+        val state by viewModel.state.collectAsStateWithLifecycle()
+
+        LaunchedEffect(Unit) { viewModel.onAction(OnOverallAnalyticsViewed) }
+
+        CalendarHeatMap(
+            state = state,
+            onNavigateBack = { topLevelBackStack.removeLast() },
+            onChangeSelectedDay = {
+                viewModel.onAction(HabitsAction.FetchCompletedHabitsForDate(it))
+            },
+            modifier = Modifier.background(colorScheme.background),
+        )
+    }
+}
+
+private fun EntryProviderScope<Routes>.settingsScreens(
+    topLevelBackStack: TopLevelBackStack,
+    globalState: MainAppState,
+) {
+    entry<SettingsHome>(metadata = TwoPaneScene.twoPane() + fadeTransitionMetadata()) {
+        val viewModel = koinViewModel<SettingsViewModel>()
+        val state by viewModel.state.collectAsStateWithLifecycle()
+
+        RootPage(
+            modifier = Modifier.background(colorScheme.background),
+            state = state,
+            onAction = viewModel::onAction,
+            onNavigateToLookAndFeel = { topLevelBackStack.add(LookAndFeel) },
+            onNavigateToBackup = { topLevelBackStack.add(Backup) },
+            onNavigateToPaywall = { topLevelBackStack.add(Paywall) },
+            onNavigateToChangelog = { topLevelBackStack.add(Changelog) },
+            onNavigateToAppInfo = { topLevelBackStack.add(About) },
+        )
+    }
+
+    entry<LookAndFeel>(metadata = TwoPaneScene.twoPane() + horizontalTransitionMetadata()) {
+        val viewModel = koinViewModel<SettingsViewModel>()
+        val state by viewModel.state.collectAsStateWithLifecycle()
+
+        LookAndFeelPage(
+            state = state,
+            onAction = viewModel::onAction,
+            isUserSubscribed = globalState.isUserSubscribed,
+            onNavigateToPaywall = { topLevelBackStack.add(Paywall) },
+            onNavigateBack = { topLevelBackStack.removeLast() },
+            modifier = Modifier.background(colorScheme.background),
+        )
+    }
+
+    entry<Backup>(metadata = TwoPaneScene.twoPane() + horizontalTransitionMetadata()) {
+        val viewModel = koinViewModel<SettingsViewModel>()
+        val state by viewModel.state.collectAsStateWithLifecycle()
+
+        BackupPage(
+            modifier = Modifier.background(colorScheme.background),
+            state = state,
+            onAction = viewModel::onAction,
+            onNavigateBack = { topLevelBackStack.removeLast() },
+        )
+    }
+
+    entry<About>(metadata = TwoPaneScene.twoPane() + horizontalTransitionMetadata()) {
+        val viewModel = koinViewModel<SettingsViewModel>()
+        val state by viewModel.state.collectAsStateWithLifecycle()
+
+        LaunchedEffect(Unit) { viewModel.onAction(OnAboutViewed) }
+
+        About(
+            modifier = Modifier.background(colorScheme.background),
+            versionName = state.currentVersion ?: "1.0.00-Demo",
+            onNavigateBack = { topLevelBackStack.removeLast() },
+        )
+    }
+
+    entry<Changelog>(metadata = TwoPaneScene.twoPane() + horizontalTransitionMetadata()) {
+        val viewModel = koinViewModel<SettingsViewModel>()
+        val state by viewModel.state.collectAsStateWithLifecycle()
+
+        LaunchedEffect(Unit) { viewModel.onAction(OnChangelogViewed) }
+
+        Changelog(
+            modifier = Modifier.background(colorScheme.background),
+            changelog = state.changelog,
+            onNavigateBack = { topLevelBackStack.removeLast() },
+        )
     }
 }

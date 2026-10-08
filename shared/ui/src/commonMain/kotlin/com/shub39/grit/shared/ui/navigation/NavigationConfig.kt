@@ -51,6 +51,10 @@ data object Backup : Routes
 
 data object LookAndFeel : Routes
 
+private val SETTINGS_ROUTES = listOf(About, Backup, Changelog, LookAndFeel, SettingsHome)
+private val HABIT_ROUTES =
+    listOf(HabitAnalytics, HabitsList, OverallAnalytics, Calendar, CalendarHeatMap)
+
 fun Routes.getTopLevelRoute(): Routes? =
     when (val subType = this.getSubType()) {
         Tasks,
@@ -61,16 +65,8 @@ fun Routes.getTopLevelRoute(): Routes? =
 
 fun Routes.getSubType(): Routes =
     when (this) {
-        HabitAnalytics,
-        HabitsList,
-        OverallAnalytics,
-        Calendar,
-        CalendarHeatMap -> Habits
-        About,
-        Backup,
-        Changelog,
-        LookAndFeel,
-        SettingsHome -> Settings
+        in HABIT_ROUTES -> Habits
+        in SETTINGS_ROUTES -> Settings
         TaskList -> Tasks
         else -> this
     }
@@ -81,7 +77,16 @@ class TopLevelBackStack(startKey: Routes = TaskList) {
     fun isRouteOnTop(route: Routes): Boolean = backStack.lastOrNull() == route
 
     fun add(route: Routes) {
-        if (!isRouteOnTop(route)) backStack.add(route)
+        if (!isRouteOnTop(route)) {
+            if (route.getTopLevelRoute() is Settings) {
+                backStack.removeAll(SETTINGS_ROUTES)
+                backStack.add(SettingsHome)
+                if (route !is SettingsHome) backStack.add(route)
+                return
+            }
+
+            backStack.add(route)
+        }
     }
 
     fun removeLast() {

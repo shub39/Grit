@@ -32,9 +32,10 @@ import androidx.core.content.ContextCompat
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import androidx.fragment.app.FragmentActivity
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import com.shub39.grit.billing.PaywallPage
 import com.shub39.grit.core.interfaces.BiometricUtils
 import com.shub39.grit.shared.ui.components.InitialLoading
-import com.shub39.grit.shared.ui.theme.GritTheme
+import com.shub39.grit.shared.ui.navigation.GritNavDisplay
 import com.shub39.grit.shared.ui.viewmodel.MainViewModel
 import io.github.vinceglb.filekit.FileKit
 import io.github.vinceglb.filekit.dialogs.init
@@ -80,16 +81,12 @@ class MainActivity : FragmentActivity() {
                 }
             }
 
-            GritTheme(theme = state.theme) {
-                if (showContent) {
-                    App(
-                        state = state,
-                        onRefreshSub = { mainViewModel.updateSubscription() },
-                        onPaywallOpened = { mainViewModel.trackPaywallOpened() },
-                    )
-                } else {
-                    InitialLoading()
+            if (showContent) {
+                GritNavDisplay { isPlusUser, onDismissRequest ->
+                    PaywallPage(isPlusUser = isPlusUser, onDismissRequest = onDismissRequest)
                 }
+            } else {
+                InitialLoading()
             }
         }
     }
