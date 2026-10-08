@@ -22,6 +22,7 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.widthIn
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyListScope
 import androidx.compose.material3.Icon
@@ -44,6 +45,7 @@ import androidx.compose.ui.unit.dp
 import com.shub39.grit.core.settings.Sections
 import com.shub39.grit.shared.ui.GritPreviewWrapper
 import com.shub39.grit.shared.ui.components.ExpressiveSwitch
+import com.shub39.grit.shared.ui.components.PageFill
 import com.shub39.grit.shared.ui.components.detachedItemShape
 import com.shub39.grit.shared.ui.components.endItemShape
 import com.shub39.grit.shared.ui.components.leadingItemShape
@@ -69,270 +71,291 @@ fun RootPage(
     onNavigateToPaywall: () -> Unit,
     onNavigateToChangelog: () -> Unit,
     onNavigateToAppInfo: () -> Unit,
-) {
-    var showLocalePicker by rememberSaveable { mutableStateOf(false) }
+) =
+    PageFill(modifier = modifier.fillMaxSize()) {
+        var showLocalePicker by rememberSaveable { mutableStateOf(false) }
 
-    val scrollBehavior = TopAppBarDefaults.enterAlwaysScrollBehavior()
-    Column(modifier = modifier.nestedScroll(scrollBehavior.nestedScrollConnection).fillMaxSize()) {
-        LargeFlexibleTopAppBar(
-            scrollBehavior = scrollBehavior,
-            title = {
-                Text(text = stringResource(Res.string.settings), fontFamily = flexFontEmphasis())
-            },
-            colors =
-                TopAppBarDefaults.topAppBarColors(
-                    scrolledContainerColor = MaterialTheme.colorScheme.surface
-                ),
-        )
-
-        LazyColumn(
-            modifier = Modifier.fillMaxSize(),
-            contentPadding = PaddingValues(start = 12.dp, end = 12.dp, top = 16.dp, bottom = 60.dp),
-            verticalArrangement = Arrangement.spacedBy(16.dp),
+        val scrollBehavior = TopAppBarDefaults.enterAlwaysScrollBehavior()
+        Column(
+            modifier =
+                Modifier.widthIn(max = 700.dp).nestedScroll(scrollBehavior.nestedScrollConnection)
         ) {
-            // Grit Plus
-            item {
-                ListItem(
-                    headlineContent = { Text(text = stringResource(Res.string.grit_plus)) },
-                    colors = listItemColors(),
-                    modifier =
-                        Modifier.clip(detachedItemShape()).clickable { onNavigateToPaywall() },
-                    trailingContent = {
-                        Icon(
-                            imageVector = vectorResource(Res.drawable.arrow_forward),
-                            contentDescription = "Grit Plus",
-                        )
-                    },
-                    leadingContent = {
-                        Icon(
-                            imageVector = vectorResource(Res.drawable.grit_icon),
-                            contentDescription = null,
-                            modifier = Modifier.size(30.dp),
-                            tint = MaterialTheme.colorScheme.primary,
-                        )
-                    },
-                )
-            }
+            LargeFlexibleTopAppBar(
+                scrollBehavior = scrollBehavior,
+                title = {
+                    Text(
+                        text = stringResource(Res.string.settings),
+                        fontFamily = flexFontEmphasis(),
+                    )
+                },
+                colors =
+                    TopAppBarDefaults.topAppBarColors(
+                        scrolledContainerColor = MaterialTheme.colorScheme.surface
+                    ),
+            )
 
-            // General settings
-            item {
-                Column(verticalArrangement = Arrangement.spacedBy(2.dp)) {
+            LazyColumn(
+                modifier = Modifier.fillMaxSize(),
+                contentPadding =
+                    PaddingValues(start = 12.dp, end = 12.dp, top = 16.dp, bottom = 60.dp),
+                verticalArrangement = Arrangement.spacedBy(16.dp),
+            ) {
+                // Grit Plus
+                item {
                     ListItem(
-                        headlineContent = {
-                            Text(text = stringResource(Res.string.pause_notifications))
-                        },
-                        supportingContent = {
-                            Text(text = stringResource(Res.string.pause_notifications_desc))
-                        },
+                        headlineContent = { Text(text = stringResource(Res.string.grit_plus)) },
+                        colors = listItemColors(),
+                        modifier =
+                            Modifier.clip(detachedItemShape()).clickable { onNavigateToPaywall() },
                         trailingContent = {
-                            ExpressiveSwitch(
-                                checked = state.pauseNotifications,
-                                onCheckedChange = {
-                                    onAction(SettingsAction.ChangePauseNotifications(it))
-                                },
+                            Icon(
+                                imageVector = vectorResource(Res.drawable.arrow_forward),
+                                contentDescription = "Grit Plus",
                             )
                         },
-                        colors = listItemColors(),
-                        modifier = Modifier.clip(leadingItemShape()),
-                    )
-
-                    ListItem(
-                        headlineContent = { Text(text = stringResource(Res.string.reorder_tasks)) },
-                        supportingContent = {
-                            Text(text = stringResource(Res.string.reorder_tasks_desc))
-                        },
-                        trailingContent = {
-                            ExpressiveSwitch(
-                                checked = state.reorderTasks,
-                                onCheckedChange = {
-                                    onAction(SettingsAction.ChangeReorderTasks(it))
-                                },
+                        leadingContent = {
+                            Icon(
+                                imageVector = vectorResource(Res.drawable.grit_icon),
+                                contentDescription = null,
+                                modifier = Modifier.size(30.dp),
+                                tint = MaterialTheme.colorScheme.primary,
                             )
                         },
-                        colors = listItemColors(),
-                        modifier = Modifier.clip(middleItemShape()),
                     )
+                }
 
-                    ListItem(
-                        headlineContent = { Text(text = stringResource(Res.string.show_habits)) },
-                        supportingContent = {
-                            Text(text = stringResource(Res.string.show_habits_desc))
-                        },
-                        trailingContent = {
-                            ExpressiveSwitch(
-                                checked = state.startingPage == Sections.Habits,
-                                onCheckedChange = {
-                                    onAction(
-                                        SettingsAction.ChangeStartingPage(
-                                            if (it) Sections.Habits else Sections.Tasks
-                                        )
-                                    )
-                                },
-                            )
-                        },
-                        colors = listItemColors(),
-                        modifier = Modifier.clip(middleItemShape()),
-                    )
-
-                    ListItem(
-                        headlineContent = { Text(text = stringResource(Res.string.staring_day)) },
-                        trailingContent = {
-                            ExpressiveSwitch(
-                                checked = state.startOfTheWeek == DayOfWeek.SUNDAY,
-                                onCheckedChange = {
-                                    onAction(
-                                        SettingsAction.ChangeStartOfTheWeek(
-                                            if (it) DayOfWeek.SUNDAY else DayOfWeek.MONDAY
-                                        )
-                                    )
-                                },
-                            )
-                        },
-                        colors = listItemColors(),
-                        modifier = Modifier.clip(middleItemShape()),
-                    )
-
-                    if (state.isBiometricLockAvailable) {
+                // General settings
+                item {
+                    Column(verticalArrangement = Arrangement.spacedBy(2.dp)) {
                         ListItem(
                             headlineContent = {
-                                Text(text = stringResource(Res.string.biometric_lock))
+                                Text(text = stringResource(Res.string.pause_notifications))
                             },
                             supportingContent = {
-                                Text(text = stringResource(Res.string.biometric_lock_desc))
+                                Text(text = stringResource(Res.string.pause_notifications_desc))
                             },
                             trailingContent = {
                                 ExpressiveSwitch(
-                                    checked = state.isBiometricLockOn == true,
+                                    checked = state.pauseNotifications,
                                     onCheckedChange = {
-                                        onAction(SettingsAction.ChangeBiometricLock(it))
+                                        onAction(SettingsAction.ChangePauseNotifications(it))
+                                    },
+                                )
+                            },
+                            colors = listItemColors(),
+                            modifier = Modifier.clip(leadingItemShape()),
+                        )
+
+                        ListItem(
+                            headlineContent = {
+                                Text(text = stringResource(Res.string.reorder_tasks))
+                            },
+                            supportingContent = {
+                                Text(text = stringResource(Res.string.reorder_tasks_desc))
+                            },
+                            trailingContent = {
+                                ExpressiveSwitch(
+                                    checked = state.reorderTasks,
+                                    onCheckedChange = {
+                                        onAction(SettingsAction.ChangeReorderTasks(it))
                                     },
                                 )
                             },
                             colors = listItemColors(),
                             modifier = Modifier.clip(middleItemShape()),
                         )
-                    }
 
-                    ListItem(
-                        headlineContent = { Text(text = stringResource(Res.string.use_24Hr)) },
-                        supportingContent = {
-                            Text(text = stringResource(Res.string.use_24Hr_desc))
-                        },
-                        trailingContent = {
-                            ExpressiveSwitch(
-                                checked = state.is24Hr,
-                                onCheckedChange = { onAction(SettingsAction.ChangeIs24Hr(it)) },
-                            )
-                        },
-                        colors = listItemColors(),
-                        modifier = Modifier.clip(endItemShape()),
-                    )
-                }
-            }
-
-            // look and feel customizations
-            item {
-                Column(verticalArrangement = Arrangement.spacedBy(2.dp)) {
-                    ListItem(
-                        modifier =
-                            Modifier.clip(leadingItemShape()).clickable {
-                                onNavigateToLookAndFeel()
+                        ListItem(
+                            headlineContent = {
+                                Text(text = stringResource(Res.string.show_habits))
                             },
-                        headlineContent = { Text(text = stringResource(Res.string.look_and_feel)) },
-                        supportingContent = {
-                            Text(text = stringResource(Res.string.look_and_feel_desc))
-                        },
-                        trailingContent = {
-                            Icon(
-                                imageVector = vectorResource(Res.drawable.arrow_forward),
-                                contentDescription = "Navigate",
-                            )
-                        },
-                        leadingContent = {
-                            Icon(
-                                imageVector = vectorResource(Res.drawable.palette),
-                                contentDescription = "Navigate",
-                            )
-                        },
-                        colors = listItemColors(),
-                    )
+                            supportingContent = {
+                                Text(text = stringResource(Res.string.show_habits_desc))
+                            },
+                            trailingContent = {
+                                ExpressiveSwitch(
+                                    checked = state.startingPage == Sections.Habits,
+                                    onCheckedChange = {
+                                        onAction(
+                                            SettingsAction.ChangeStartingPage(
+                                                if (it) Sections.Habits else Sections.Tasks
+                                            )
+                                        )
+                                    },
+                                )
+                            },
+                            colors = listItemColors(),
+                            modifier = Modifier.clip(middleItemShape()),
+                        )
 
-                    ListItem(
-                        modifier = Modifier.clip(endItemShape()).clickable { onNavigateToBackup() },
-                        colors = listItemColors(),
-                        headlineContent = { Text(text = stringResource(Res.string.backup)) },
-                        supportingContent = { Text(text = stringResource(Res.string.backup_desc)) },
-                        trailingContent = {
-                            Icon(
-                                imageVector = vectorResource(Res.drawable.arrow_forward),
-                                contentDescription = "Navigate",
+                        ListItem(
+                            headlineContent = {
+                                Text(text = stringResource(Res.string.staring_day))
+                            },
+                            trailingContent = {
+                                ExpressiveSwitch(
+                                    checked = state.startOfTheWeek == DayOfWeek.SUNDAY,
+                                    onCheckedChange = {
+                                        onAction(
+                                            SettingsAction.ChangeStartOfTheWeek(
+                                                if (it) DayOfWeek.SUNDAY else DayOfWeek.MONDAY
+                                            )
+                                        )
+                                    },
+                                )
+                            },
+                            colors = listItemColors(),
+                            modifier = Modifier.clip(middleItemShape()),
+                        )
+
+                        if (state.isBiometricLockAvailable) {
+                            ListItem(
+                                headlineContent = {
+                                    Text(text = stringResource(Res.string.biometric_lock))
+                                },
+                                supportingContent = {
+                                    Text(text = stringResource(Res.string.biometric_lock_desc))
+                                },
+                                trailingContent = {
+                                    ExpressiveSwitch(
+                                        checked = state.isBiometricLockOn == true,
+                                        onCheckedChange = {
+                                            onAction(SettingsAction.ChangeBiometricLock(it))
+                                        },
+                                    )
+                                },
+                                colors = listItemColors(),
+                                modifier = Modifier.clip(middleItemShape()),
                             )
-                        },
-                        leadingContent = {
-                            Icon(
-                                imageVector = vectorResource(Res.drawable.download),
-                                contentDescription = "Backup",
-                            )
-                        },
-                    )
+                        }
+
+                        ListItem(
+                            headlineContent = { Text(text = stringResource(Res.string.use_24Hr)) },
+                            supportingContent = {
+                                Text(text = stringResource(Res.string.use_24Hr_desc))
+                            },
+                            trailingContent = {
+                                ExpressiveSwitch(
+                                    checked = state.is24Hr,
+                                    onCheckedChange = { onAction(SettingsAction.ChangeIs24Hr(it)) },
+                                )
+                            },
+                            colors = listItemColors(),
+                            modifier = Modifier.clip(endItemShape()),
+                        )
+                    }
                 }
+
+                // look and feel customizations
+                item {
+                    Column(verticalArrangement = Arrangement.spacedBy(2.dp)) {
+                        ListItem(
+                            modifier =
+                                Modifier.clip(leadingItemShape()).clickable {
+                                    onNavigateToLookAndFeel()
+                                },
+                            headlineContent = {
+                                Text(text = stringResource(Res.string.look_and_feel))
+                            },
+                            supportingContent = {
+                                Text(text = stringResource(Res.string.look_and_feel_desc))
+                            },
+                            trailingContent = {
+                                Icon(
+                                    imageVector = vectorResource(Res.drawable.arrow_forward),
+                                    contentDescription = "Navigate",
+                                )
+                            },
+                            leadingContent = {
+                                Icon(
+                                    imageVector = vectorResource(Res.drawable.palette),
+                                    contentDescription = "Navigate",
+                                )
+                            },
+                            colors = listItemColors(),
+                        )
+
+                        ListItem(
+                            modifier =
+                                Modifier.clip(endItemShape()).clickable { onNavigateToBackup() },
+                            colors = listItemColors(),
+                            headlineContent = { Text(text = stringResource(Res.string.backup)) },
+                            supportingContent = {
+                                Text(text = stringResource(Res.string.backup_desc))
+                            },
+                            trailingContent = {
+                                Icon(
+                                    imageVector = vectorResource(Res.drawable.arrow_forward),
+                                    contentDescription = "Navigate",
+                                )
+                            },
+                            leadingContent = {
+                                Icon(
+                                    imageVector = vectorResource(Res.drawable.download),
+                                    contentDescription = "Backup",
+                                )
+                            },
+                        )
+                    }
+                }
+
+                // Changelogs
+                item {
+                    Column(verticalArrangement = Arrangement.spacedBy(2.dp)) {
+                        ListItem(
+                            colors = listItemColors(),
+                            leadingContent = {
+                                Icon(
+                                    imageVector = vectorResource(Res.drawable.info),
+                                    contentDescription = null,
+                                )
+                            },
+                            supportingContent = {
+                                Text(text = "Grit ${state.currentVersion ?: "x.x.x"}")
+                            },
+                            trailingContent = {
+                                Icon(
+                                    imageVector = vectorResource(Res.drawable.arrow_forward),
+                                    contentDescription = "Navigate",
+                                )
+                            },
+                            headlineContent = { Text(text = stringResource(Res.string.about)) },
+                            modifier =
+                                Modifier.clip(leadingItemShape()).clickable {
+                                    onNavigateToAppInfo()
+                                },
+                        )
+
+                        ListItem(
+                            colors = listItemColors(),
+                            leadingContent = {
+                                Icon(
+                                    imageVector = vectorResource(Res.drawable.check_list),
+                                    contentDescription = null,
+                                )
+                            },
+                            trailingContent = {
+                                Icon(
+                                    imageVector = vectorResource(Res.drawable.arrow_forward),
+                                    contentDescription = "Navigate",
+                                )
+                            },
+                            headlineContent = { Text(text = stringResource(Res.string.changelog)) },
+                            modifier =
+                                Modifier.clip(endItemShape()).clickable { onNavigateToChangelog() },
+                        )
+                    }
+                }
+
+                // language picker
+                languagePicker(onClick = { showLocalePicker = true })
             }
 
-            // Changelogs
-            item {
-                Column(verticalArrangement = Arrangement.spacedBy(2.dp)) {
-                    ListItem(
-                        colors = listItemColors(),
-                        leadingContent = {
-                            Icon(
-                                imageVector = vectorResource(Res.drawable.info),
-                                contentDescription = null,
-                            )
-                        },
-                        supportingContent = {
-                            Text(text = "Grit ${state.currentVersion ?: "x.x.x"}")
-                        },
-                        trailingContent = {
-                            Icon(
-                                imageVector = vectorResource(Res.drawable.arrow_forward),
-                                contentDescription = "Navigate",
-                            )
-                        },
-                        headlineContent = { Text(text = stringResource(Res.string.about)) },
-                        modifier =
-                            Modifier.clip(leadingItemShape()).clickable { onNavigateToAppInfo() },
-                    )
-
-                    ListItem(
-                        colors = listItemColors(),
-                        leadingContent = {
-                            Icon(
-                                imageVector = vectorResource(Res.drawable.check_list),
-                                contentDescription = null,
-                            )
-                        },
-                        trailingContent = {
-                            Icon(
-                                imageVector = vectorResource(Res.drawable.arrow_forward),
-                                contentDescription = "Navigate",
-                            )
-                        },
-                        headlineContent = { Text(text = stringResource(Res.string.changelog)) },
-                        modifier =
-                            Modifier.clip(endItemShape()).clickable { onNavigateToChangelog() },
-                    )
-                }
+            if (showLocalePicker) {
+                LocalePickerSheet(onDismissRequest = { showLocalePicker = false })
             }
-
-            // language picker
-            languagePicker(onClick = { showLocalePicker = true })
-        }
-
-        if (showLocalePicker) {
-            LocalePickerSheet(onDismissRequest = { showLocalePicker = false })
         }
     }
-}
 
 expect fun LazyListScope.languagePicker(onClick: () -> Unit)
 

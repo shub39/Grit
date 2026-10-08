@@ -85,6 +85,26 @@ class TopLevelBackStack(startKey: Routes = TaskList) {
                 return
             }
 
+            if (route.getTopLevelRoute() is Habits) {
+                backStack.removeAll(HABIT_ROUTES)
+                backStack.add(HabitsList)
+                if (route is HabitsList) return
+                when (route) {
+                    HabitAnalytics -> backStack.add(HabitAnalytics)
+                    OverallAnalytics -> backStack.add(OverallAnalytics)
+                    Calendar -> {
+                        backStack.add(HabitAnalytics)
+                        backStack.add(Calendar)
+                    }
+                    CalendarHeatMap -> {
+                        backStack.add(OverallAnalytics)
+                        backStack.add(CalendarHeatMap)
+                    }
+                    else -> backStack.add(route)
+                }
+                return
+            }
+
             backStack.add(route)
         }
     }

@@ -102,7 +102,7 @@ fun GritNavDisplay(
                     backStack = topLevelBackStack.backStack,
                     sharedTransitionScope = this,
                     sceneDecoratorStrategies = listOf(responsiveNavigationSceneDecoratorStrategy),
-                    sceneStrategies = listOf(listDetailSceneStrategy, twoPaneSceneStrategy),
+                    sceneStrategies = listOf(twoPaneSceneStrategy, listDetailSceneStrategy),
                     onBack = { topLevelBackStack.removeLast() },
                     entryProvider =
                         entryProvider {
@@ -156,7 +156,7 @@ private fun EntryProviderScope<Routes>.habitsScreens(
 
     entry<HabitAnalytics>(
         metadata =
-            ListDetailScene.detailPane() + TwoPaneScene.twoPane() + horizontalTransitionMetadata()
+            TwoPaneScene.twoPane() + ListDetailScene.detailPane() + horizontalTransitionMetadata()
     ) {
         val viewModel = koinViewModel<HabitViewModel>()
         val state by viewModel.state.collectAsStateWithLifecycle()
@@ -188,7 +188,7 @@ private fun EntryProviderScope<Routes>.habitsScreens(
 
     entry<OverallAnalytics>(
         metadata =
-            ListDetailScene.detailPane() + TwoPaneScene.twoPane() + verticalTransitionMetadata()
+            TwoPaneScene.twoPane() + ListDetailScene.detailPane() + horizontalTransitionMetadata()
     ) {
         val viewModel = koinViewModel<HabitViewModel>()
         val state by viewModel.state.collectAsStateWithLifecycle()

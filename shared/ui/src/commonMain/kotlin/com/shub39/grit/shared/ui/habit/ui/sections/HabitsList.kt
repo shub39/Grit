@@ -24,7 +24,9 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxHeight
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.widthIn
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyListState
 import androidx.compose.foundation.lazy.itemsIndexed
@@ -86,40 +88,41 @@ fun HabitsList(
     isUserSubscribed: Boolean,
     onNavigateToPaywall: () -> Unit,
     modifier: Modifier = Modifier,
-) {
-    val scrollBehavior = TopAppBarDefaults.enterAlwaysScrollBehavior()
-    Column(modifier = modifier) {
-        HabitsTopAppBar(state = state, onAction = onAction, scrollBehavior = scrollBehavior)
+) =
+    PageFill(modifier = modifier.fillMaxSize()) {
+        val scrollBehavior = TopAppBarDefaults.enterAlwaysScrollBehavior()
+        Column(modifier = Modifier.widthIn(max = 700.dp)) {
+            HabitsTopAppBar(state = state, onAction = onAction, scrollBehavior = scrollBehavior)
 
-        PageFill {
-            val lazyListState = rememberLazyListState()
-            val fabVisible by remember {
-                derivedStateOf {
-                    lazyListState.firstVisibleItemIndex == 0 &&
-                        lazyListState.firstVisibleItemScrollOffset == 0
+            PageFill {
+                val lazyListState = rememberLazyListState()
+                val fabVisible by remember {
+                    derivedStateOf {
+                        lazyListState.firstVisibleItemIndex == 0 &&
+                            lazyListState.firstVisibleItemScrollOffset == 0
+                    }
                 }
+
+                HabitsListContent(
+                    state = state,
+                    onAction = onAction,
+                    lazyListState = lazyListState,
+                    onNavigateToAnalytics = onNavigateToAnalytics,
+                    modifier =
+                        Modifier.fillMaxHeight().nestedScroll(scrollBehavior.nestedScrollConnection),
+                )
+
+                HabitListFABs(
+                    onNavigateToOverallAnalytics = onNavigateToOverallAnalytics,
+                    state = state,
+                    fabVisible = fabVisible && !state.editState,
+                    onAction = onAction,
+                    onNavigateToPaywall = onNavigateToPaywall,
+                    isUserSubscribed = isUserSubscribed,
+                )
             }
-
-            HabitsListContent(
-                state = state,
-                onAction = onAction,
-                lazyListState = lazyListState,
-                onNavigateToAnalytics = onNavigateToAnalytics,
-                modifier =
-                    Modifier.fillMaxHeight().nestedScroll(scrollBehavior.nestedScrollConnection),
-            )
-
-            HabitListFABs(
-                onNavigateToOverallAnalytics = onNavigateToOverallAnalytics,
-                state = state,
-                fabVisible = fabVisible && !state.editState,
-                onAction = onAction,
-                onNavigateToPaywall = onNavigateToPaywall,
-                isUserSubscribed = isUserSubscribed,
-            )
         }
     }
-}
 
 @Composable
 private fun HabitsTopAppBar(
