@@ -27,12 +27,10 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.size
-import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.ButtonGroupDefaults
 import androidx.compose.material3.DropdownMenu
 import androidx.compose.material3.DropdownMenuItem
-import androidx.compose.material3.FilledTonalButton
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.MenuDefaults
@@ -47,13 +45,9 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.DpOffset
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.window.PopupProperties
 import grit.shared.ui.generated.resources.Res
-import grit.shared.ui.generated.resources.arrow_back
-import grit.shared.ui.generated.resources.arrow_forward
 import grit.shared.ui.generated.resources.check
 import grit.shared.ui.generated.resources.edit
 import org.jetbrains.compose.resources.painterResource
@@ -97,9 +91,7 @@ fun <T> ListSelect(
                     checked = false,
                     enabled = enabled,
                     onCheckedChange = { expanded = true },
-                    modifier = Modifier
-                        .height(ButtonDefaults.MinHeight)
-                        .weight(0.7f),
+                    modifier = Modifier.height(ButtonDefaults.MinHeight).weight(0.7f),
                     shapes = ButtonGroupDefaults.connectedLeadingButtonShapes(),
                     content = { labelProvider(selected) },
                 )
@@ -109,9 +101,7 @@ fun <T> ListSelect(
                         checked = expanded,
                         enabled = enabled,
                         onCheckedChange = { expanded = true },
-                        modifier = Modifier
-                            .height(ButtonDefaults.MinHeight)
-                            .fillMaxWidth(),
+                        modifier = Modifier.height(ButtonDefaults.MinHeight).fillMaxWidth(),
                         shapes = ButtonGroupDefaults.connectedTrailingButtonShapes(),
                         content = {
                             Icon(
@@ -139,11 +129,11 @@ fun <T> ListSelect(
                                     shapes = MenuDefaults.itemShape(index, options.size),
                                     checked = option == selected,
                                     leadingIcon = {
-                                            Icon(
-                                                painter = painterResource(Res.drawable.check),
-                                                contentDescription = null,
-                                                modifier = Modifier.size(18.dp),
-                                            )
+                                        Icon(
+                                            painter = painterResource(Res.drawable.check),
+                                            contentDescription = null,
+                                            modifier = Modifier.size(18.dp),
+                                        )
                                     },
                                 )
                             } else {
