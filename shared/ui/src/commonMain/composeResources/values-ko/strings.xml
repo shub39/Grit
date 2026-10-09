@@ -88,4 +88,5 @@
     <string name="calendar">캘린더</string>
     <string name="monthly">월간</string>
     <string name="yearly">연간</string>
+    <string name="add_subtasks">하위 작업 추가</string>
 </resources>
