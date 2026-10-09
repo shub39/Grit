@@ -23,11 +23,11 @@ import android.app.PendingIntent
 import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageManager
-import android.util.Log
 import androidx.core.app.ActivityCompat
 import androidx.core.app.NotificationCompat
 import androidx.core.app.NotificationManagerCompat
 import com.shub39.grit.R
+import com.shub39.grit.core.GritLogger
 import com.shub39.grit.core.data.GritIntentReceiver
 import com.shub39.grit.core.habits.Habit
 import com.shub39.grit.core.interfaces.AppNotificationManager
@@ -59,7 +59,7 @@ class GritNotificationManager(private val context: Context) : AppNotificationMan
 
     // shows habit notification if permission granted
     override fun habitNotification(habit: Habit) {
-        Log.d(TAG, "Sending Habit Notification")
+        GritLogger.d(TAG, "Sending Habit Notification")
 
         val intent =
             Intent(context, GritIntentReceiver::class.java).apply {
@@ -89,7 +89,7 @@ class GritNotificationManager(private val context: Context) : AppNotificationMan
         ) {
             notificationManager.notify(habit.id.toInt() + HABIT_NOTIF_ID_OFFSET, builder.build())
         } else {
-            Log.e(TAG, "Notification permission denied!")
+            GritLogger.e(TAG, "Notification permission denied!")
         }
     }
 
@@ -121,7 +121,7 @@ class GritNotificationManager(private val context: Context) : AppNotificationMan
         ) {
             notificationManager.notify(task.id.toInt() + TASK_NOTIF_ID_OFFSET, builder.build())
         } else {
-            Log.e(TAG, "Notification permission denied!")
+            GritLogger.e(TAG, "Notification permission denied!")
         }
     }
 

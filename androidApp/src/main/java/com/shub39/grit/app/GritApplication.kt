@@ -19,11 +19,11 @@ package com.shub39.grit.app
 import android.annotation.SuppressLint
 import android.app.Application
 import android.os.Build
-import android.util.Log
 import androidx.glance.appwidget.GlanceAppWidgetManager
 import com.shub39.grit.BuildConfig
 import com.shub39.grit.analytics.AnalyticsInitializer
 import com.shub39.grit.billing.BillingInitializer
+import com.shub39.grit.core.GritLogger
 import com.shub39.grit.core.data.notification.GritNotificationManager
 import com.shub39.grit.di.GritModules
 import com.shub39.grit.widgets.all_tasks_widget.AllTasksWidgetReceiver
@@ -62,7 +62,7 @@ class GritApplication : Application() {
                     manager.setWidgetPreviews(AllTasksWidgetReceiver::class)
                     manager.setWidgetPreviews(HabitWeekChartWidgetReceiver::class)
                 } catch (e: Exception) {
-                    Log.e("GritApplication", "Error while setting up widget previews", e)
+                    GritLogger.e("GritApplication", "Error while setting up widget previews", e)
                 }
             }
         }

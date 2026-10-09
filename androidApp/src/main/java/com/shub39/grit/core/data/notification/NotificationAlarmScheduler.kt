@@ -21,7 +21,7 @@ import android.app.PendingIntent
 import android.content.Context
 import android.content.Intent
 import android.os.Build
-import android.util.Log
+import com.shub39.grit.core.GritLogger
 import com.shub39.grit.core.data.GritIntentReceiver
 import com.shub39.grit.core.habits.Habit
 import com.shub39.grit.core.interfaces.AlarmScheduler
@@ -79,7 +79,7 @@ class NotificationAlarmScheduler(private val context: Context) : AlarmScheduler 
             pendingIntent,
         )
 
-        Log.d(TAG, "Scheduled: Habit '$habit' at $scheduleTime")
+        GritLogger.d(TAG, "Scheduled: Habit '$habit' at $scheduleTime")
     }
 
     override fun schedule(task: Task) {
@@ -90,7 +90,7 @@ class NotificationAlarmScheduler(private val context: Context) : AlarmScheduler 
         val now = LocalDateTime.now()
 
         if (scheduleTime < now) {
-            Log.d(TAG, "Task '${task.title}' reminder time is in the past")
+            GritLogger.d(TAG, "Task '${task.title}' reminder time is in the past")
             return
         }
 
@@ -114,7 +114,7 @@ class NotificationAlarmScheduler(private val context: Context) : AlarmScheduler 
             pendingIntent,
         )
 
-        Log.d(TAG, "Scheduled: Task '$task' at $scheduleTime")
+        GritLogger.d(TAG, "Scheduled: Task '$task' at $scheduleTime")
     }
 
     override fun cancel(habit: Habit) {
@@ -132,7 +132,7 @@ class NotificationAlarmScheduler(private val context: Context) : AlarmScheduler 
             )
 
         alarmManager.cancel(pendingIntent)
-        Log.d(TAG, "Cancelled: Habit '${habit.title}'")
+        GritLogger.d(TAG, "Cancelled: Habit '${habit.title}'")
     }
 
     override fun cancel(task: Task) {
@@ -150,7 +150,7 @@ class NotificationAlarmScheduler(private val context: Context) : AlarmScheduler 
             )
 
         alarmManager.cancel(pendingIntent)
-        Log.d(TAG, "Cancelled: Task '${task.title}'")
+        GritLogger.d(TAG, "Cancelled: Task '${task.title}'")
     }
 
     override fun cancelAll() {
