@@ -88,4 +88,5 @@
     <string name="calendar">Takvim</string>
     <string name="monthly">Aylık</string>
     <string name="yearly">Yıllık</string>
+    <string name="add_subtasks">Alt Görev Ekle</string>
 </resources>
