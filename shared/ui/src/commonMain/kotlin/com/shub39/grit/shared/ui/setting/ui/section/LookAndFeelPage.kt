@@ -17,11 +17,11 @@
 package com.shub39.grit.shared.ui.setting.ui.section
 
 import androidx.compose.foundation.background
+import androidx.compose.foundation.basicMarquee
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.FlowRow
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
@@ -36,12 +36,9 @@ import androidx.compose.material3.IconButton
 import androidx.compose.material3.IconButtonDefaults
 import androidx.compose.material3.LinearWavyProgressIndicator
 import androidx.compose.material3.ListItem
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.MediumFlexibleTopAppBar
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
-import androidx.compose.material3.ToggleButton
-import androidx.compose.material3.ToggleButtonDefaults
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.material3.contentColorFor
 import androidx.compose.runtime.Composable
@@ -63,6 +60,7 @@ import com.shub39.grit.core.theme.PaletteStyle
 import com.shub39.grit.core.theme.Theme
 import com.shub39.grit.shared.ui.components.ColorPickerDialog
 import com.shub39.grit.shared.ui.components.ExpressiveSwitch
+import com.shub39.grit.shared.ui.components.ListSelect
 import com.shub39.grit.shared.ui.components.detachedItemShape
 import com.shub39.grit.shared.ui.components.endItemShape
 import com.shub39.grit.shared.ui.components.leadingItemShape
@@ -149,22 +147,18 @@ fun LookAndFeelPage(
                                     .background(listItemColors().containerColor)
                                     .padding(start = 52.dp, end = 16.dp, bottom = 8.dp),
                         ) {
-                            AppTheme.entries.forEach { appTheme ->
-                                ToggleButton(
-                                    checked = appTheme == state.theme.appTheme,
-                                    onCheckedChange = {
-                                        onAction(SettingsAction.ChangeAppTheme(appTheme))
-                                    },
-                                    modifier = Modifier.weight(1f),
-                                    colors =
-                                        ToggleButtonDefaults.toggleButtonColors(
-                                            containerColor =
-                                                MaterialTheme.colorScheme.surfaceContainerLow
-                                        ),
-                                ) {
-                                    Text(text = stringResource(appTheme.toDisplayString()))
-                                }
-                            }
+                            ListSelect(
+                                title = null,
+                                options = AppTheme.entries.toList(),
+                                selected = state.theme.appTheme,
+                                onSelectedChange = { onAction(SettingsAction.ChangeAppTheme(it)) },
+                                labelProvider = {
+                                    Text(
+                                        text = stringResource(it.toDisplayString()),
+                                        modifier = Modifier.basicMarquee(),
+                                    )
+                                },
+                            )
                         }
                     }
 
@@ -216,34 +210,27 @@ fun LookAndFeelPage(
                             colors = listItemColors(),
                         )
 
-                        FlowRow(
+                        Row(
                             modifier =
                                 Modifier.fillParentMaxWidth()
                                     .background(listItemColors().containerColor)
                                     .padding(start = 52.dp, end = 16.dp, bottom = 8.dp),
                             horizontalArrangement = Arrangement.spacedBy(4.dp),
                         ) {
-                            Fonts.entries.forEach { font ->
-                                ToggleButton(
-                                    checked = state.theme.font == font,
-                                    onCheckedChange = {
-                                        onAction(SettingsAction.ChangeFontPref(font))
-                                    },
-                                    enabled = isUserSubscribed,
-                                    colors =
-                                        ToggleButtonDefaults.toggleButtonColors(
-                                            containerColor =
-                                                MaterialTheme.colorScheme.surfaceContainerLow
-                                        ),
-                                ) {
+                            ListSelect(
+                                title = null,
+                                options = Fonts.entries.toList(),
+                                selected = state.theme.font,
+                                onSelectedChange = { onAction(SettingsAction.ChangeFontPref(it)) },
+                                labelProvider = { font ->
                                     Text(
                                         text = font.toDisplayString(),
                                         fontFamily =
                                             font.toFontRes()?.let { FontFamily(Font(it)) }
                                                 ?: FontFamily.Default,
                                     )
-                                }
-                            }
+                                },
+                            )
                         }
                     }
 

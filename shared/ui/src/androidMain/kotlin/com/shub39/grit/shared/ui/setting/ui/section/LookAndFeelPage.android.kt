@@ -17,25 +17,21 @@
 package com.shub39.grit.shared.ui.setting.ui.section
 
 import android.os.Build
-import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.background
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.FlowRow
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material3.Icon
 import androidx.compose.material3.ListItem
-import androidx.compose.material3.MaterialShapes
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
-import androidx.compose.material3.toShape
 import androidx.compose.runtime.Composable
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
@@ -45,6 +41,7 @@ import com.materialkolor.rememberDynamicColorScheme
 import com.shub39.grit.core.theme.AppTheme
 import com.shub39.grit.core.theme.PaletteStyle
 import com.shub39.grit.shared.ui.components.ExpressiveSwitch
+import com.shub39.grit.shared.ui.components.ListSelect
 import com.shub39.grit.shared.ui.components.endItemShape
 import com.shub39.grit.shared.ui.components.listItemColors
 import com.shub39.grit.shared.ui.components.middleItemShape
@@ -99,81 +96,64 @@ actual fun PaletteStylePicker(
             },
         )
 
-        FlowRow(
+        Row(
             horizontalArrangement = Arrangement.spacedBy(8.dp),
             modifier =
                 Modifier.fillMaxWidth()
                     .background(listItemColors().containerColor)
                     .padding(start = 52.dp, end = 16.dp, bottom = 16.dp),
-            verticalArrangement = Arrangement.spacedBy(8.dp),
         ) {
-            PaletteStyle.entries.toList().forEach { style ->
-                val scheme =
-                    rememberDynamicColorScheme(
-                        primary =
-                            if (isMaterialYou && Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
-                                colorResource(android.R.color.system_accent1_200)
-                            } else seedColor,
-                        isDark =
-                            when (appTheme) {
-                                SYSTEM -> isSystemInDarkTheme()
-                                DARK -> true
-                                LIGHT -> false
-                            },
-                        isAmoled = isAmoled,
-                        style = style.toMPaletteStyle(),
-                    )
-                val selected = paletteStyle == style
+            ListSelect(
+                title = null,
+                options = PaletteStyle.entries.toList(),
+                selected = paletteStyle,
+                onSelectedChange = onClick,
+                enabled = isUserSubscribed,
+                labelProvider = { style: PaletteStyle ->
+                    val scheme =
+                        rememberDynamicColorScheme(
+                            primary =
+                                if (
+                                    isMaterialYou && Build.VERSION.SDK_INT >= Build.VERSION_CODES.S
+                                ) {
+                                    colorResource(android.R.color.system_accent1_900)
+                                } else seedColor,
+                            isDark =
+                                when (appTheme) {
+                                    AppTheme.SYSTEM -> isSystemInDarkTheme()
+                                    AppTheme.DARK -> true
+                                    AppTheme.LIGHT -> false
+                                },
+                            isAmoled = isAmoled,
+                            style = style.toMPaletteStyle(),
+                        )
 
-                Box(
-                    modifier =
-                        Modifier.size(50.dp)
-                            .clip(
-                                shape =
-                                    if (selected) MaterialShapes.VerySunny.toShape()
-                                    else CircleShape
-                            )
-                            .clickable(enabled = isUserSubscribed) { onClick(style) },
-                    contentAlignment = Alignment.Center,
-                ) {
-                    Canvas(modifier = Modifier.matchParentSize()) {
-                        val colors =
-                            listOf(
+                    Row(
+                        modifier =
+                            Modifier.size(width = 56.dp, height = 24.dp)
+                                .clip(MaterialTheme.shapes.extraSmall)
+                    ) {
+                        listOf(
                                 scheme.primary,
                                 scheme.primaryContainer,
+                                scheme.onPrimary,
                                 scheme.secondary,
                                 scheme.secondaryContainer,
+                                scheme.onSecondary,
                                 scheme.tertiary,
                                 scheme.tertiaryContainer,
+                                scheme.onTertiary,
+                                scheme.surface,
+                                scheme.onSurface,
                             )
-                        val sweepAngle = 360f / colors.size
-                        colors.forEachIndexed { index, color ->
-                            drawArc(
-                                color = color,
-                                startAngle = index * sweepAngle,
-                                sweepAngle = sweepAngle,
-                                useCenter = true,
-                            )
-                        }
-                    }
-
-                    Box(
-                        modifier =
-                            Modifier.matchParentSize()
-                                .background(
-                                    color = scheme.primary.copy(alpha = if (selected) 0.7f else 0f)
+                            .forEach { color ->
+                                Box(
+                                    modifier = Modifier.weight(1f).fillMaxHeight().background(color)
                                 )
-                    )
-
-                    if (selected) {
-                        Icon(
-                            imageVector = vectorResource(Res.drawable.check_circle),
-                            contentDescription = null,
-                            tint = scheme.onTertiary,
-                        )
+                            }
                     }
-                }
-            }
+                },
+            )
         }
     }
 }
