@@ -28,6 +28,7 @@ data class ExportSchema(
     val habitStatus: List<HabitStatusSchema>,
     val tasks: List<TaskSchema>,
     val categories: List<CategorySchema>,
+    val subTasks: List<SubTaskSchema>,
 )
 
 @Serializable
@@ -55,3 +56,13 @@ data class TaskSchema(
 
 @Serializable
 data class CategorySchema(val id: Long = 0, val name: String, val index: Int = 0, val color: String)
+
+@Serializable
+data class SubTaskSchema(
+    val id: Long = 0,
+    val taskId: Long,
+    val title: String,
+    val index: Int,
+    val status: Boolean = false,
+    val reminder: Long? = null,
+)

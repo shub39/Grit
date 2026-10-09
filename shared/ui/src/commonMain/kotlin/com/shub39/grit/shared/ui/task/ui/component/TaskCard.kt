@@ -42,24 +42,24 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.shub39.grit.core.tasks.Task
+import com.shub39.grit.core.tasks.TaskWithSubTasks
 import com.shub39.grit.core.toFormattedString
 import grit.shared.ui.generated.resources.*
 import org.jetbrains.compose.resources.vectorResource
 
 @Composable
 fun TaskCard(
-    task: Task,
+    modifier: Modifier = Modifier,
+    taskWithSubTasks: TaskWithSubTasks,
     dragState: Boolean = false,
     reorderIcon: @Composable () -> Unit,
     is24Hr: Boolean,
-    modifier: Modifier = Modifier,
     shape: Shape = RoundedCornerShape(4.dp),
 ) {
     val cardContent by
         animateColorAsState(
             targetValue =
-                when (task.status) {
+                when (taskWithSubTasks.task.status) {
                     true -> MaterialTheme.colorScheme.onSurface
                     else -> MaterialTheme.colorScheme.onSecondaryContainer
                 },
@@ -69,7 +69,7 @@ fun TaskCard(
     val cardContainer by
         animateColorAsState(
             targetValue =
-                when (task.status) {
+                when (taskWithSubTasks.task.status) {
                     true -> MaterialTheme.colorScheme.surfaceContainerHighest
                     else -> MaterialTheme.colorScheme.secondaryContainer
                 },
@@ -94,17 +94,17 @@ fun TaskCard(
         ) {
             Column(modifier = Modifier.weight(1f)) {
                 Text(
-                    text = task.title,
+                    text = taskWithSubTasks.task.title,
                     style = MaterialTheme.typography.bodyLarge.copy(fontWeight = FontWeight.Bold),
                     textDecoration =
-                        if (task.status) {
+                        if (taskWithSubTasks.task.status) {
                             TextDecoration.LineThrough
                         } else {
                             TextDecoration.None
                         },
                 )
 
-                if (task.reminder != null) {
+                if (taskWithSubTasks.task.reminder != null) {
                     Row(
                         verticalAlignment = Alignment.CenterVertically,
                         horizontalArrangement = Arrangement.spacedBy(4.dp),
@@ -116,7 +116,7 @@ fun TaskCard(
                         )
 
                         Text(
-                            text = task.reminder!!.toFormattedString(is24Hr),
+                            text = taskWithSubTasks.task.reminder!!.toFormattedString(is24Hr),
                             style =
                                 MaterialTheme.typography.labelSmall.copy(
                                     fontSize = 12.sp,

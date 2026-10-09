@@ -34,6 +34,7 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.material3.ToggleButton
 import androidx.compose.material3.ToggleButtonDefaults
+import androidx.compose.material3.TonalToggleButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -102,7 +103,7 @@ fun <T> ListSelect(
                 horizontalArrangement =
                     Arrangement.spacedBy(ButtonGroupDefaults.ConnectedSpaceBetween),
             ) {
-                ToggleButton(
+                TonalToggleButton(
                     checked = false,
                     enabled = enabled,
                     onCheckedChange = {
@@ -158,7 +159,7 @@ fun <T> ListSelect(
                     }
                 }
 
-                ToggleButton(
+                TonalToggleButton(
                     checked = false,
                     enabled = enabled,
                     onCheckedChange = {

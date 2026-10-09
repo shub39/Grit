@@ -67,6 +67,14 @@ class ExportImpl(private val taskRepo: TaskRepo, private val habitsRepo: HabitRe
                     }
                     .await()
 
+            val subTasksDef =
+                async {
+                        withContext(Dispatchers.IO) {
+                            taskRepo.getSubTasks().map { it.toSubTaskSchema() }
+                        }
+                    }
+                    .await()
+
             val time = LocalDateTime.now().toString().replace(":", "").replace(" ", "")
             val file =
                 FileKit.openFileSaver(
@@ -81,6 +89,7 @@ class ExportImpl(private val taskRepo: TaskRepo, private val habitsRepo: HabitRe
                         habitStatus = statusesDef,
                         tasks = tasksDef,
                         categories = categoriesDef,
+                        subTasks = subTasksDef,
                     )
                 )
             )

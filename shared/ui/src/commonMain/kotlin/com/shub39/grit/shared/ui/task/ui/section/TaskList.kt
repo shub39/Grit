@@ -454,7 +454,7 @@ private fun CompactTasksView(
                         mutableStateOf(
                             (state.tasks[category] ?: emptyList()).run {
                                 if (state.reorderTasks) {
-                                    filter { !it.status }
+                                    filter { !it.task.status }
                                 } else this
                             }
                         )
@@ -472,9 +472,10 @@ private fun CompactTasksView(
                     contentPadding = PaddingValues(8.dp),
                     verticalArrangement = Arrangement.spacedBy(2.dp),
                 ) {
-                    itemsIndexed(items = reorderableTasks, key = { _, it -> it.id }) { index, task
-                        ->
-                        ReorderableItem(reorderableListState, key = task.id) {
+                    itemsIndexed(items = reorderableTasks, key = { _, it -> it.task.id }) {
+                        index,
+                        taskWithSubTasks ->
+                        ReorderableItem(reorderableListState, key = taskWithSubTasks.task.id) {
                             val cardShape =
                                 when {
                                     reorderableTasks.size == 1 -> RoundedCornerShape(20.dp)
@@ -498,7 +499,7 @@ private fun CompactTasksView(
                                 }
 
                             TaskCard(
-                                task = task,
+                                taskWithSubTasks = taskWithSubTasks,
                                 dragState = isReorderMode,
                                 reorderIcon = {
                                     Icon(
@@ -510,7 +511,7 @@ private fun CompactTasksView(
                                                     onAction(
                                                         TaskAction.ReorderTasks(
                                                             reorderableTasks.mapIndexed { i, t ->
-                                                                i to t
+                                                                i to t.task
                                                             }
                                                         )
                                                     )
@@ -527,14 +528,18 @@ private fun CompactTasksView(
                                             onClick = {
                                                 if (!isReorderMode) {
                                                     val updatedTask =
-                                                        task.copy(status = !task.status)
+                                                        taskWithSubTasks.task.copy(
+                                                            status = !taskWithSubTasks.task.status
+                                                        )
 
                                                     onAction(TaskAction.UpsertTask(updatedTask))
                                                 }
                                             },
                                             onLongClick = {
-                                                if (!isReorderMode && !task.status) {
-                                                    onEditTask(task)
+                                                if (
+                                                    !isReorderMode && !taskWithSubTasks.task.status
+                                                ) {
+                                                    onEditTask(taskWithSubTasks.task)
                                                 }
                                             },
                                         ),
@@ -544,15 +549,15 @@ private fun CompactTasksView(
 
                     if (state.reorderTasks) {
                         val completedTasks =
-                            (state.tasks[category] ?: emptyList()).filter { it.status }
+                            (state.tasks[category] ?: emptyList()).filter { it.task.status }
 
                         if (reorderableTasks.isNotEmpty()) {
                             item { Spacer(modifier = Modifier.height(16.dp)) }
                         }
                         itemsIndexed(
                             items = completedTasks,
-                            key = { _, it -> "completed_task_${it.id}" },
-                        ) { index, task ->
+                            key = { _, it -> "completed_task_${it.task.id}" },
+                        ) { index, taskWithSubTasks ->
                             val cardShape =
                                 when {
                                     completedTasks.size == 1 -> RoundedCornerShape(20.dp)
@@ -576,7 +581,7 @@ private fun CompactTasksView(
                                 }
 
                             TaskCard(
-                                task = task,
+                                taskWithSubTasks = taskWithSubTasks,
                                 dragState = false,
                                 reorderIcon = {},
                                 is24Hr = state.is24Hour,
@@ -588,7 +593,9 @@ private fun CompactTasksView(
                                             onClick = {
                                                 if (!isReorderMode) {
                                                     val updatedTask =
-                                                        task.copy(status = !task.status)
+                                                        taskWithSubTasks.task.copy(
+                                                            status = !taskWithSubTasks.task.status
+                                                        )
 
                                                     onAction(TaskAction.UpsertTask(updatedTask))
                                                 }
@@ -623,8 +630,10 @@ private fun ExpandedTasksView(
         horizontalArrangement = Arrangement.spacedBy(8.dp),
         modifier = Modifier.fillMaxSize(),
     ) {
-        items(tasksAndCategories, key = { it.first.id }) { (category, tasks) ->
-            val displayTasks = if (state.reorderTasks) tasks.filter { !it.status } else tasks
+        items(tasksAndCategories, key = { it.first.id }) { (category, taskWithSubTasks) ->
+            val displayTasks =
+                if (state.reorderTasks) taskWithSubTasks.filter { !it.task.status }
+                else taskWithSubTasks
             var showReorderDialog by remember { mutableStateOf(false) }
 
             Surface(
@@ -666,7 +675,9 @@ private fun ExpandedTasksView(
                         }
                     }
 
-                    itemsIndexed(items = displayTasks, key = { _, it -> it.id }) { index, task ->
+                    itemsIndexed(items = displayTasks, key = { _, it -> it.task.id }) {
+                        index,
+                        taskWithSubTasks ->
                         val cardShape =
                             when {
                                 displayTasks.size == 1 -> RoundedCornerShape(20.dp)
@@ -690,7 +701,7 @@ private fun ExpandedTasksView(
                             }
 
                         TaskCard(
-                            task = task,
+                            taskWithSubTasks = taskWithSubTasks,
                             dragState = false,
                             reorderIcon = {},
                             is24Hr = state.is24Hour,
@@ -700,22 +711,29 @@ private fun ExpandedTasksView(
                                     .clip(cardShape)
                                     .combinedClickable(
                                         onClick = {
-                                            val updatedTask = task.copy(status = !task.status)
+                                            val updatedTask =
+                                                taskWithSubTasks.task.copy(
+                                                    status = !taskWithSubTasks.task.status
+                                                )
                                             onAction(TaskAction.UpsertTask(updatedTask))
                                         },
-                                        onLongClick = { if (!task.status) onEditTask(task) },
+                                        onLongClick = {
+                                            if (!taskWithSubTasks.task.status)
+                                                onEditTask(taskWithSubTasks.task)
+                                        },
                                     ),
                         )
                     }
 
                     if (state.reorderTasks) {
-                        val completedTasks = tasks.filter { it.status }
+                        val completedTasks = taskWithSubTasks.filter { it.task.status }
 
                         if (completedTasks.isNotEmpty()) {
                             item { Spacer(modifier = Modifier.height(16.dp)) }
                         }
-                        itemsIndexed(items = completedTasks, key = { _, it -> it.id }) { index, task
-                            ->
+                        itemsIndexed(items = completedTasks, key = { _, it -> it.task.id }) {
+                            index,
+                            taskWithSubtasks ->
                             val cardShape =
                                 when {
                                     completedTasks.size == 1 -> RoundedCornerShape(20.dp)
@@ -739,7 +757,7 @@ private fun ExpandedTasksView(
                                 }
 
                             TaskCard(
-                                task = task,
+                                taskWithSubTasks = taskWithSubtasks,
                                 dragState = false,
                                 reorderIcon = {},
                                 is24Hr = state.is24Hour,
@@ -749,15 +767,21 @@ private fun ExpandedTasksView(
                                         .clip(cardShape)
                                         .combinedClickable(
                                             onClick = {
-                                                val updatedTask = task.copy(status = !task.status)
+                                                val updatedTask =
+                                                    taskWithSubtasks.task.copy(
+                                                        status = !taskWithSubtasks.task.status
+                                                    )
                                                 onAction(TaskAction.UpsertTask(updatedTask))
                                             },
-                                            onLongClick = { if (!task.status) onEditTask(task) },
+                                            onLongClick = {
+                                                if (!taskWithSubtasks.task.status)
+                                                    onEditTask(taskWithSubtasks.task)
+                                            },
                                         ),
                             )
                         }
                     }
-                    if (tasks.isEmpty()) {
+                    if (taskWithSubTasks.isEmpty()) {
                         item { Empty(modifier = Modifier.padding(32.dp)) }
                     }
                 }
@@ -777,7 +801,9 @@ private fun ExpandedTasksView(
 
                             onAction(
                                 TaskAction.ReorderTasks(
-                                    reorderableTasks.mapIndexed { index, task -> index to task }
+                                    reorderableTasks.mapIndexed { index, taskWithSubtasks ->
+                                        index to taskWithSubtasks.task
+                                    }
                                 )
                             )
                         }
@@ -822,10 +848,13 @@ private fun ExpandedTasksView(
                             verticalArrangement = Arrangement.spacedBy(2.dp),
                             contentPadding = PaddingValues(bottom = 16.dp),
                         ) {
-                            itemsIndexed(items = reorderableTasks, key = { _, it -> it.id }) {
+                            itemsIndexed(items = reorderableTasks, key = { _, it -> it.task.id }) {
                                 index,
-                                task ->
-                                ReorderableItem(reorderableListState, key = task.id) {
+                                taskWithSubTasks ->
+                                ReorderableItem(
+                                    reorderableListState,
+                                    key = taskWithSubTasks.task.id,
+                                ) {
                                     val shape =
                                         when {
                                             reorderableTasks.size == 1 -> detachedItemShape()
@@ -843,7 +872,7 @@ private fun ExpandedTasksView(
                                             ),
                                         headlineContent = {
                                             Text(
-                                                text = task.title,
+                                                text = taskWithSubTasks.task.title,
                                                 maxLines = 1,
                                                 overflow = TextOverflow.Ellipsis,
                                             )

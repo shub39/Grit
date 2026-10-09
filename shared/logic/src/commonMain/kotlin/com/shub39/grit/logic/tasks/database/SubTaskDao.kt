@@ -14,20 +14,21 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
-package com.shub39.grit.shared.ui.task
+package com.shub39.grit.logic.tasks.database
 
-import androidx.compose.runtime.Immutable
-import androidx.compose.runtime.Stable
-import com.shub39.grit.core.tasks.Category
-import com.shub39.grit.core.tasks.Task
-import com.shub39.grit.core.tasks.TaskWithSubTasks
+import androidx.room3.Dao
+import androidx.room3.Delete
+import androidx.room3.Query
+import androidx.room3.Upsert
+import kotlinx.coroutines.flow.Flow
 
-@Stable
-@Immutable
-data class TaskState(
-    val tasks: Map<Category, List<TaskWithSubTasks>> = emptyMap(),
-    val currentCategory: Category? = null,
-    val completedTasks: List<Task> = emptyList(),
-    val is24Hour: Boolean = false,
-    val reorderTasks: Boolean = true,
-)
+@Dao
+interface SubTaskDao {
+    @Query("SELECT * FROM sub_tasks") fun getSubTasksFlow(): Flow<List<SubTaskEntity>>
+
+    @Query("SELECT * FROM sub_tasks") suspend fun getSubTasks(): List<SubTaskEntity>
+
+    @Upsert suspend fun upsertSubTask(subTaskEntity: SubTaskEntity): Long
+
+    @Delete suspend fun deleteSubTask(subTaskEntity: SubTaskEntity)
+}

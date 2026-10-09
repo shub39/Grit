@@ -19,15 +19,14 @@ package com.shub39.grit.logic.core.backup
 import com.shub39.grit.core.habits.Habit
 import com.shub39.grit.core.habits.HabitStatus
 import com.shub39.grit.core.tasks.Category
+import com.shub39.grit.core.tasks.SubTask
 import com.shub39.grit.core.tasks.Task
 import com.shub39.grit.logic.core.Converters
-import kotlin.time.ExperimentalTime
 import kotlin.time.Instant
 import kotlinx.datetime.TimeZone
 import kotlinx.datetime.toInstant
 import kotlinx.datetime.toLocalDateTime
 
-@OptIn(ExperimentalTime::class)
 fun Habit.toHabitSchema(): HabitSchema {
     return HabitSchema(
         id = id,
@@ -40,7 +39,6 @@ fun Habit.toHabitSchema(): HabitSchema {
     )
 }
 
-@OptIn(ExperimentalTime::class)
 fun HabitSchema.toHabit(): Habit {
     return Habit(
         id = id,
@@ -89,4 +87,26 @@ fun CategorySchema.toCategory(): Category {
 
 fun Category.toCategorySchema(): CategorySchema {
     return CategorySchema(id = id, name = name, index = index, color = color)
+}
+
+fun SubTask.toSubTaskSchema(): SubTaskSchema {
+    return SubTaskSchema(
+        id = id,
+        taskId = taskId,
+        title = title,
+        index = index,
+        status = status,
+        reminder = reminder?.let { Converters.dateToTimestamp(it) },
+    )
+}
+
+fun SubTaskSchema.toSubTask(): SubTask {
+    return SubTask(
+        id = id,
+        taskId = taskId,
+        title = title,
+        index = index,
+        status = status,
+        reminder = reminder?.let { Converters.dateFromTimestamp(it) },
+    )
 }

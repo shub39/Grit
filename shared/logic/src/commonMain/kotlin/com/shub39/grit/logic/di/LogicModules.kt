@@ -24,6 +24,7 @@ import com.shub39.grit.logic.habits.database.HabitDbFactory
 import com.shub39.grit.logic.habits.database.HabitStatusDao
 import com.shub39.grit.logic.habits.database.HabitsDao
 import com.shub39.grit.logic.tasks.database.CategoryDao
+import com.shub39.grit.logic.tasks.database.SubTaskDao
 import com.shub39.grit.logic.tasks.database.TaskDatabase
 import com.shub39.grit.logic.tasks.database.TaskDbFactory
 import com.shub39.grit.logic.tasks.database.TasksDao
@@ -45,6 +46,8 @@ class LogicModules {
     @Single fun getTasksDao(db: TaskDatabase): TasksDao = db.taskDao()
 
     @Single fun getCategoryDao(db: TaskDatabase): CategoryDao = db.categoryDao()
+
+    @Single fun getSubTasksDao(db: TaskDatabase): SubTaskDao = db.subTaskDao()
 
     @Single fun getHabitsDao(db: HabitDatabase): HabitsDao = db.habitDao()
 

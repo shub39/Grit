@@ -20,7 +20,6 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.FlowRow
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -35,7 +34,6 @@ import androidx.compose.material3.ButtonShapes
 import androidx.compose.material3.DatePicker
 import androidx.compose.material3.DatePickerDialog
 import androidx.compose.material3.Icon
-import androidx.compose.material3.IconButton
 import androidx.compose.material3.ListItem
 import androidx.compose.material3.MaterialShapes
 import androidx.compose.material3.MaterialTheme
@@ -43,8 +41,6 @@ import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
-import androidx.compose.material3.ToggleButton
-import androidx.compose.material3.ToggleButtonDefaults
 import androidx.compose.material3.rememberDatePickerState
 import androidx.compose.material3.rememberTimePickerState
 import androidx.compose.material3.toShape
@@ -72,6 +68,7 @@ import com.shub39.grit.core.toFormattedString
 import com.shub39.grit.shared.ui.components.ExpressiveSwitch
 import com.shub39.grit.shared.ui.components.GritBottomSheet
 import com.shub39.grit.shared.ui.components.GritTimePicker
+import com.shub39.grit.shared.ui.components.ListSelect
 import com.shub39.grit.shared.ui.components.detachedItemShape
 import com.shub39.grit.shared.ui.components.genericSaver
 import com.shub39.grit.shared.ui.components.listItemColors
@@ -134,10 +131,7 @@ fun TaskUpsertSheetContent(
         rememberDatePickerState(
             initialSelectedDateMillis = now.toInstant(TimeZone.UTC).toEpochMilliseconds()
         )
-    val isValidDateTime =
-        if (newTask.reminder != null) {
-            newTask.reminder!! > LocalDateTime.now()
-        } else true
+    val isValidDateTime = newTask.reminder == null || newTask.reminder!! > LocalDateTime.now()
 
     GritBottomSheet(
         modifier = modifier.imePadding(),
@@ -178,16 +172,15 @@ fun TaskUpsertSheetContent(
             contentPadding = PaddingValues(horizontal = 16.dp),
         ) {
             item {
-                FlowRow(horizontalArrangement = Arrangement.spacedBy(2.dp)) {
-                    categories.forEach { category ->
-                        ToggleButton(
-                            checked = category.id == newTask.categoryId,
-                            onCheckedChange = { newTask = newTask.copy(categoryId = category.id) },
-                            colors = ToggleButtonDefaults.tonalToggleButtonColors(),
-                            content = { Text(category.name) },
-                        )
-                    }
-                }
+                ListSelect(
+                    title = null,
+                    options = categories.map { it.id },
+                    selected = newTask.categoryId,
+                    onSelectedChange = { newTask = newTask.copy(categoryId = it) },
+                    labelProvider = { id ->
+                        Text(text = categories.find { it.id == id }?.name ?: "")
+                    },
+                )
             }
 
             item {
@@ -321,7 +314,20 @@ fun TaskUpsertSheetContent(
             onDismissRequest = { updateDateTimePickerVisibility(false) },
             confirmButton = {
                 TextButton(
-                    onClick = {
+                    onClick = { showTimePicker = true },
+                    enabled = datePickerState.selectedDateMillis != null,
+                ) {
+                    Text(stringResource(Res.string.select_time))
+                }
+            },
+        ) {
+            DatePicker(state = datePickerState)
+
+            if (showTimePicker) {
+                GritTimePicker(
+                    onDismissRequest = { showTimePicker = false },
+                    state = timePickerState,
+                    onConfirm = {
                         if (datePickerState.selectedDateMillis != null) {
                             newTask =
                                 newTask.copy(
@@ -344,27 +350,6 @@ fun TaskUpsertSheetContent(
                             updateDateTimePickerVisibility(false)
                         }
                     },
-                    enabled = datePickerState.selectedDateMillis != null,
-                ) {
-                    Text(stringResource(Res.string.done))
-                }
-            },
-            dismissButton = {
-                IconButton(onClick = { showTimePicker = true }) {
-                    Icon(
-                        imageVector = vectorResource(Res.drawable.schedule),
-                        contentDescription = "Select Time",
-                    )
-                }
-            },
-        ) {
-            DatePicker(state = datePickerState)
-
-            if (showTimePicker) {
-                GritTimePicker(
-                    onDismissRequest = { showTimePicker = false },
-                    state = timePickerState,
-                    onConfirm = { showTimePicker = false },
                 )
             }
         }

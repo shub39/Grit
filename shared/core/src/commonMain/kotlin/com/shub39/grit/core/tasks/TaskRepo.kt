@@ -20,11 +20,17 @@ import kotlinx.coroutines.flow.Flow
 
 /** Interface for tasks repository */
 interface TaskRepo {
-    fun getTasksFlow(): Flow<Map<Category, List<Task>>>
+    fun getTasksFlow(): Flow<Map<Category, List<TaskWithSubTasks>>>
 
     fun getCompletedTasksFlow(): Flow<List<Task>>
 
     suspend fun getTasks(): List<Task>
+
+    suspend fun getSubTasks(): List<SubTask>
+
+    suspend fun upsertSubTask(subTask: SubTask)
+
+    suspend fun deleteSubTask(subTask: SubTask)
 
     suspend fun getTaskById(id: Long): Task?
 

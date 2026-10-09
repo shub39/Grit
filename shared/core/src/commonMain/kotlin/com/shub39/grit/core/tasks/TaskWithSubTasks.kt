@@ -14,20 +14,6 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
-package com.shub39.grit.shared.ui.task
+package com.shub39.grit.core.tasks
 
-import androidx.compose.runtime.Immutable
-import androidx.compose.runtime.Stable
-import com.shub39.grit.core.tasks.Category
-import com.shub39.grit.core.tasks.Task
-import com.shub39.grit.core.tasks.TaskWithSubTasks
-
-@Stable
-@Immutable
-data class TaskState(
-    val tasks: Map<Category, List<TaskWithSubTasks>> = emptyMap(),
-    val currentCategory: Category? = null,
-    val completedTasks: List<Task> = emptyList(),
-    val is24Hour: Boolean = false,
-    val reorderTasks: Boolean = true,
-)
+data class TaskWithSubTasks(val task: Task, val subTasks: List<SubTask>)

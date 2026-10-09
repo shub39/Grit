@@ -117,14 +117,14 @@ class TasksViewModel(
                 }
 
                 is ReorderTasks -> {
-                    for (pair in action.mapping) {
-                        repo.updateTaskIndexById(pair.second.id, pair.first)
+                    for ((first, second) in action.mapping) {
+                        repo.updateTaskIndexById(second.id, first)
                     }
                 }
 
                 is ReorderCategories -> {
-                    for (category in action.mapping) {
-                        upsertCategory(category.second.copy(index = category.first))
+                    for ((first, second) in action.mapping) {
+                        upsertCategory(second.copy(index = first))
                     }
 
                     delay(REORDER_DELAY.milliseconds)
