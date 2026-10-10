@@ -45,6 +45,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.DpOffset
 import androidx.compose.ui.unit.dp
 import grit.shared.ui.generated.resources.Res
@@ -115,7 +116,9 @@ fun <T> ListSelect(
                         expanded = expanded,
                         onDismissRequest = { expanded = false },
                         offset = DpOffset(10.dp, 10.dp),
-                        shape = MaterialTheme.shapes.medium,
+                        containerColor = Color.Transparent,
+                        tonalElevation = 0.dp,
+                        shadowElevation = 0.dp,
                         border = null,
                     ) {
                         options.forEachIndexed { index, option ->
@@ -128,11 +131,11 @@ fun <T> ListSelect(
                                     },
                                     shapes = MenuDefaults.itemShape(index, options.size),
                                     checked = option == selected,
+                                    colors = MenuDefaults.selectableItemVibrantColors(),
                                     leadingIcon = {
                                         Icon(
                                             painter = painterResource(Res.drawable.check),
-                                            contentDescription = null,
-                                            modifier = Modifier.size(18.dp),
+                                            contentDescription = null
                                         )
                                     },
                                 )
@@ -143,6 +146,7 @@ fun <T> ListSelect(
                                         onSelectedChange(option)
                                         expanded = false
                                     },
+                                    colors = MenuDefaults.selectableItemVibrantColors(),
                                     shapes = MenuDefaults.itemShape(index, options.size),
                                     checked = option == selected,
                                 )
