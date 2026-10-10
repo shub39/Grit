@@ -1,18 +1,7 @@
-> [!CAUTION]
-> ## [Keep Android Open](https://keepandroidopen.org/)
-> ###  Your phone is about to stop being yours.
-> Starting September 2026, a silent update, nonconsensually pushed by Google, will block every
-> Android app whose developer hasn't registered with Google, signed their contract, paid up, and
-> handed over government ID.
-> **Every app and every device, worldwide, with no opt-out.**
-
 ![](fastlane/metadata/android/en-US/images/featureGraphic.png)
 
-[<img alt="Try web Demo" src="badges/webDemo.png" width="180px">](https://shub39.github.io/Grit)
 [<img alt="Get it on Google Play" src="badges/playstore.png" width="180px">](https://play.google.com/store/apps/details?id=com.shub39.grit)
 [<img alt="Get it on github" src="badges/github.png" width="180px">](https://github.com/shub39/Grit/releases)
-[<img alt="Get it on izzyondroid" src="badges/izzyondroid.png" width="180px">](https://apt.izzysoft.de/fdroid/index/apk/com.shub39.grit)
-[<img alt="Get it on fdroid" src="badges/fdroid.png" width="180px">](https://f-droid.org/en/packages/com.shub39.grit/)
 
 # Screenshots
 
