@@ -316,6 +316,7 @@ fun TaskList(
                 onUpsert = {
                     onAction(TaskAction.UpsertTask(it))
                     onAction(TaskAction.OnTaskSheetDismissed)
+                    showTaskUpsertSheet = null
                 },
                 onDelete = {
                     when (sheet) {
@@ -323,6 +324,7 @@ fun TaskList(
                         else -> {}
                     }
                     onAction(TaskAction.OnTaskSheetDismissed)
+                    showTaskUpsertSheet = null
                 },
             )
         }
@@ -351,6 +353,7 @@ fun TaskList(
                         is Edit -> onAction(TaskAction.DeleteSubTask(sheet.subTask))
                         else -> {}
                     }
+                    showSubTaskUpsertSheet = null
                 },
             )
         }

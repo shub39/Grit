@@ -220,6 +220,7 @@ fun LookAndFeelPage(
                             ListSelect(
                                 title = null,
                                 options = Fonts.entries.toList(),
+                                enabled = isUserSubscribed,
                                 selected = state.theme.font,
                                 onSelectedChange = { onAction(SettingsAction.ChangeFontPref(it)) },
                                 labelProvider = { font ->
