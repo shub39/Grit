@@ -128,6 +128,12 @@ sealed interface ShowSubTaskUpsertSheet {
     data class Edit(val subTask: SubTask) : ShowSubTaskUpsertSheet
 }
 
+sealed interface UpdateStatusTarget {
+    data object TaskStatus : UpdateStatusTarget
+
+    data class SubTaskStatus(val subTask: SubTask) : UpdateStatusTarget
+}
+
 @Composable
 fun TaskList(
     modifier: Modifier = Modifier,
@@ -567,13 +573,25 @@ private fun CompactTasksView(
                                 is24Hr = state.is24Hour,
                                 shape = cardShape,
                                 onUpdateStatus = {
-                                    if (!isReorderMode) {
-                                        val updatedTask =
-                                            taskWithSubTasks.task.copy(
-                                                status = !taskWithSubTasks.task.status
-                                            )
+                                    when (it) {
+                                        TaskStatus -> {
+                                            if (!isReorderMode) {
+                                                val updatedTask =
+                                                    taskWithSubTasks.task.copy(
+                                                        status = !taskWithSubTasks.task.status
+                                                    )
 
-                                        onAction(TaskAction.UpsertTask(updatedTask))
+                                                onAction(TaskAction.UpsertTask(updatedTask))
+                                            }
+                                        }
+
+                                        is SubTaskStatus -> {
+                                            onAction(
+                                                TaskAction.UpsertSubTask(
+                                                    it.subTask.copy(status = !it.subTask.status)
+                                                )
+                                            )
+                                        }
                                     }
                                 },
                                 onEdit = {
@@ -626,13 +644,25 @@ private fun CompactTasksView(
                                 is24Hr = state.is24Hour,
                                 shape = cardShape,
                                 onUpdateStatus = {
-                                    if (!isReorderMode) {
-                                        val updatedTask =
-                                            taskWithSubTasks.task.copy(
-                                                status = !taskWithSubTasks.task.status
-                                            )
+                                    when (it) {
+                                        TaskStatus -> {
+                                            if (!isReorderMode) {
+                                                val updatedTask =
+                                                    taskWithSubTasks.task.copy(
+                                                        status = !taskWithSubTasks.task.status
+                                                    )
 
-                                        onAction(TaskAction.UpsertTask(updatedTask))
+                                                onAction(TaskAction.UpsertTask(updatedTask))
+                                            }
+                                        }
+
+                                        is SubTaskStatus -> {
+                                            onAction(
+                                                TaskAction.UpsertSubTask(
+                                                    it.subTask.copy(status = !it.subTask.status)
+                                                )
+                                            )
+                                        }
                                     }
                                 },
                                 onEdit = {},
@@ -741,12 +771,24 @@ private fun ExpandedTasksView(
                             is24Hr = state.is24Hour,
                             shape = cardShape,
                             onUpdateStatus = {
-                                val updatedTask =
-                                    taskWithSubTasks.task.copy(
-                                        status = !taskWithSubTasks.task.status
-                                    )
+                                when (it) {
+                                    TaskStatus -> {
+                                        val updatedTask =
+                                            taskWithSubTasks.task.copy(
+                                                status = !taskWithSubTasks.task.status
+                                            )
 
-                                onAction(TaskAction.UpsertTask(updatedTask))
+                                        onAction(TaskAction.UpsertTask(updatedTask))
+                                    }
+
+                                    is SubTaskStatus -> {
+                                        onAction(
+                                            TaskAction.UpsertSubTask(
+                                                it.subTask.copy(status = !it.subTask.status)
+                                            )
+                                        )
+                                    }
+                                }
                             },
                             onEdit = {
                                 if (!taskWithSubTasks.task.status) {
@@ -795,12 +837,24 @@ private fun ExpandedTasksView(
                                 is24Hr = state.is24Hour,
                                 shape = cardShape,
                                 onUpdateStatus = {
-                                    val updatedTask =
-                                        taskWithSubtasks.task.copy(
-                                            status = !taskWithSubtasks.task.status
-                                        )
+                                    when (it) {
+                                        TaskStatus -> {
+                                            val updatedTask =
+                                                taskWithSubtasks.task.copy(
+                                                    status = !taskWithSubtasks.task.status
+                                                )
 
-                                    onAction(TaskAction.UpsertTask(updatedTask))
+                                            onAction(TaskAction.UpsertTask(updatedTask))
+                                        }
+
+                                        is SubTaskStatus -> {
+                                            onAction(
+                                                TaskAction.UpsertSubTask(
+                                                    it.subTask.copy(status = !it.subTask.status)
+                                                )
+                                            )
+                                        }
+                                    }
                                 },
                                 onEdit = {
                                     if (!taskWithSubtasks.task.status) {

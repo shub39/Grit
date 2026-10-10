@@ -61,6 +61,7 @@ import com.shub39.grit.core.tasks.TaskWithSubTasks
 import com.shub39.grit.core.toFormattedString
 import com.shub39.grit.shared.ui.components.segmentedListItemShapes
 import com.shub39.grit.shared.ui.task.ui.section.ShowSubTaskUpsertSheet
+import com.shub39.grit.shared.ui.task.ui.section.UpdateStatusTarget
 import grit.shared.ui.generated.resources.*
 import org.jetbrains.compose.resources.stringResource
 import org.jetbrains.compose.resources.vectorResource
@@ -73,7 +74,7 @@ fun TaskCard(
     reorderIcon: @Composable () -> Unit,
     is24Hr: Boolean,
     shape: Shape = RoundedCornerShape(4.dp),
-    onUpdateStatus: () -> Unit,
+    onUpdateStatus: (UpdateStatusTarget) -> Unit,
     onEdit: () -> Unit,
     onShowSubTasksSheet: (ShowSubTaskUpsertSheet) -> Unit,
 ) {
@@ -115,7 +116,7 @@ fun TaskCard(
                                     touchOffset = with(density) { DpOffset(it.x.toDp(), 0.dp) }
                                     expanded = true
                                 },
-                                onTap = { onUpdateStatus() },
+                                onTap = { onUpdateStatus(UpdateStatusTarget.TaskStatus) },
                             )
                         }
                         .clip(shape),
@@ -187,7 +188,9 @@ fun TaskCard(
                                     Modifier.pointerInput(Unit) {
                                             detectTapGestures(
                                                 onTap = {
-                                                    // TODO: Edit Subtask status
+                                                    onUpdateStatus(
+                                                        UpdateStatusTarget.SubTaskStatus(subTask)
+                                                    )
                                                 },
                                                 onLongPress = {
                                                     onShowSubTasksSheet(
