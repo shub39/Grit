@@ -185,9 +185,17 @@ class TasksViewModel(
                 }
 
                 is TaskAction.UpsertSubTask -> {
-                    repo.upsertSubTask(action.subTask)
-                    scheduler.schedule(action.subTask)
-                    analytics.trackEvent(AnalyticsEvent.TASK_SUBTASK_CREATED, emptyMap())
+                    if (action.subTask.status) {
+                        analytics.trackEvent(AnalyticsEvent.TASK_SUBTASK_COMPLETED, emptyMap())
+                        repo.upsertSubTask(action.subTask.copy(reminder = null))
+                        scheduler.cancel(action.subTask)
+                    } else {
+                        if (action.subTask.id == 0L) {
+                            analytics.trackEvent(AnalyticsEvent.TASK_SUBTASK_CREATED, emptyMap())
+                        }
+                        repo.upsertSubTask(action.subTask)
+                        scheduler.schedule(action.subTask)
+                    }
                 }
             }
         }

@@ -28,6 +28,7 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -44,6 +45,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberUpdatedState
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -55,6 +57,7 @@ import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.unit.DpOffset
+import androidx.compose.ui.unit.IntOffset
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.shub39.grit.core.tasks.TaskWithSubTasks
@@ -83,6 +86,9 @@ fun TaskCard(
 
     val density = LocalDensity.current
 
+    val currentOnUpdateStatus by rememberUpdatedState(onUpdateStatus)
+    val currentOnShowSubTasksSheet by rememberUpdatedState(onShowSubTasksSheet)
+
     val cardContent by
         animateColorAsState(
             targetValue =
@@ -106,17 +112,18 @@ fun TaskCard(
     val cardColors =
         CardDefaults.cardColors(containerColor = cardContainer, contentColor = cardContent)
 
-    Box(modifier = modifier) {
-        Column {
+    Column(modifier = modifier) {
+        Box {
             Card(
                 modifier =
                     Modifier.pointerInput(Unit) {
                             detectTapGestures(
                                 onLongPress = {
-                                    touchOffset = with(density) { DpOffset(it.x.toDp(), 0.dp) }
+                                    touchOffset =
+                                        with(density) { DpOffset(it.x.toDp(), it.y.toDp()) }
                                     expanded = true
                                 },
-                                onTap = { onUpdateStatus(UpdateStatusTarget.TaskStatus) },
+                                onTap = { currentOnUpdateStatus(UpdateStatusTarget.TaskStatus) },
                             )
                         }
                         .clip(shape),
@@ -170,71 +177,125 @@ fun TaskCard(
                 }
             }
 
-            if (taskWithSubTasks.subTasks.isNotEmpty()) {
-                AnimatedVisibility(
-                    visible = !dragState,
-                    modifier = Modifier.fillMaxWidth().padding(start = 16.dp),
+            Box(
+                modifier =
+                    Modifier.offset {
+                        IntOffset(touchOffset.x.roundToPx(), touchOffset.y.roundToPx())
+                    }
+            ) {
+                DropdownMenu(
+                    expanded = expanded,
+                    onDismissRequest = { expanded = false },
+                    tonalElevation = 0.dp,
+                    shadowElevation = 0.dp,
+                    containerColor = Color.Transparent,
+                    border = null,
                 ) {
-                    Column(
-                        verticalArrangement = Arrangement.spacedBy(2.dp),
-                        modifier = Modifier.padding(top = 2.dp),
-                    ) {
-                        taskWithSubTasks.subTasks.forEachIndexed { index, subTask ->
-                            val subTaskShape =
-                                segmentedListItemShapes(index, taskWithSubTasks.subTasks.size).shape
+                    DropdownMenuItem(
+                        text = { Text(text = stringResource(Res.string.edit_task)) },
+                        onClick = {
+                            onEdit()
+                            expanded = false
+                        },
+                        colors = MenuDefaults.selectableItemColors(),
+                        leadingIcon = {
+                            Icon(
+                                imageVector = vectorResource(Res.drawable.edit),
+                                contentDescription = null,
+                            )
+                        },
+                        shape = MenuDefaults.leadingItemShape,
+                    )
 
-                            Card(
-                                modifier =
-                                    Modifier.pointerInput(Unit) {
+                    Spacer(modifier = Modifier.height(2.dp))
+
+                    DropdownMenuItem(
+                        text = { Text(text = stringResource(Res.string.add_subtasks)) },
+                        onClick = {
+                            onShowSubTasksSheet(ShowSubTaskUpsertSheet.Add(taskWithSubTasks.task))
+                            expanded = false
+                        },
+                        colors = MenuDefaults.selectableItemColors(),
+                        leadingIcon = {
+                            Icon(
+                                imageVector = vectorResource(Res.drawable.add),
+                                contentDescription = null,
+                            )
+                        },
+                        shape = MenuDefaults.trailingItemShape,
+                    )
+                }
+            }
+        }
+
+        if (taskWithSubTasks.subTasks.isNotEmpty()) {
+            AnimatedVisibility(
+                visible = !dragState,
+                modifier = Modifier.fillMaxWidth().padding(start = 16.dp),
+            ) {
+                Column(
+                    verticalArrangement = Arrangement.spacedBy(2.dp),
+                    modifier = Modifier.padding(top = 2.dp),
+                ) {
+                    taskWithSubTasks.subTasks.forEachIndexed { index, subTask ->
+                        val currentSubTask by rememberUpdatedState(subTask)
+                        val subTaskShape =
+                            segmentedListItemShapes(index, taskWithSubTasks.subTasks.size).shape
+
+                        Card(
+                            modifier =
+                                Modifier.pointerInput(subTask.id) {
+                                        if (!taskWithSubTasks.task.status) {
                                             detectTapGestures(
                                                 onTap = {
-                                                    onUpdateStatus(
-                                                        UpdateStatusTarget.SubTaskStatus(subTask)
+                                                    currentOnUpdateStatus(
+                                                        UpdateStatusTarget.SubTaskStatus(
+                                                            currentSubTask
+                                                        )
                                                     )
                                                 },
                                                 onLongPress = {
-                                                    onShowSubTasksSheet(
-                                                        ShowSubTaskUpsertSheet.Edit(subTask)
+                                                    currentOnShowSubTasksSheet(
+                                                        ShowSubTaskUpsertSheet.Edit(currentSubTask)
                                                     )
                                                 },
                                             )
                                         }
-                                        .clip(subTaskShape),
-                                shape = subTaskShape,
-                            ) {
-                                Column(modifier = Modifier.fillMaxWidth().padding(16.dp)) {
-                                    Text(
-                                        text = subTask.title,
-                                        style =
-                                            typography.bodyLarge.copy(fontWeight = FontWeight.Bold),
-                                        textDecoration =
-                                            if (subTask.status) {
-                                                TextDecoration.LineThrough
-                                            } else {
-                                                TextDecoration.None
-                                            },
-                                    )
+                                    }
+                                    .clip(subTaskShape),
+                            shape = subTaskShape,
+                        ) {
+                            Column(modifier = Modifier.fillMaxWidth().padding(16.dp)) {
+                                Text(
+                                    text = subTask.title,
+                                    style = typography.bodyLarge.copy(fontWeight = FontWeight.Bold),
+                                    textDecoration =
+                                        if (subTask.status) {
+                                            TextDecoration.LineThrough
+                                        } else {
+                                            TextDecoration.None
+                                        },
+                                )
 
-                                    if (subTask.reminder != null) {
-                                        Row(
-                                            verticalAlignment = Alignment.CenterVertically,
-                                            horizontalArrangement = Arrangement.spacedBy(4.dp),
-                                        ) {
-                                            Icon(
-                                                imageVector = vectorResource(Res.drawable.alarm),
-                                                contentDescription = "Reminder",
-                                                modifier = Modifier.size(12.dp),
-                                            )
+                                if (subTask.reminder != null) {
+                                    Row(
+                                        verticalAlignment = Alignment.CenterVertically,
+                                        horizontalArrangement = Arrangement.spacedBy(4.dp),
+                                    ) {
+                                        Icon(
+                                            imageVector = vectorResource(Res.drawable.alarm),
+                                            contentDescription = "Reminder",
+                                            modifier = Modifier.size(12.dp),
+                                        )
 
-                                            Text(
-                                                text = subTask.reminder!!.toFormattedString(is24Hr),
-                                                style =
-                                                    typography.labelSmall.copy(
-                                                        fontSize = 12.sp,
-                                                        fontWeight = FontWeight.Light,
-                                                    ),
-                                            )
-                                        }
+                                        Text(
+                                            text = subTask.reminder!!.toFormattedString(is24Hr),
+                                            style =
+                                                typography.labelSmall.copy(
+                                                    fontSize = 12.sp,
+                                                    fontWeight = FontWeight.Light,
+                                                ),
+                                        )
                                     }
                                 }
                             }
@@ -242,44 +303,6 @@ fun TaskCard(
                     }
                 }
             }
-        }
-
-        DropdownMenu(
-            expanded = expanded,
-            onDismissRequest = { expanded = false },
-            tonalElevation = 0.dp,
-            shadowElevation = 0.dp,
-            containerColor = Color.Transparent,
-            offset = touchOffset,
-            border = null,
-        ) {
-            DropdownMenuItem(
-                text = { Text(text = stringResource(Res.string.edit_task)) },
-                onClick = {
-                    onEdit()
-                    expanded = false
-                },
-                colors = MenuDefaults.selectableItemColors(),
-                leadingIcon = {
-                    Icon(imageVector = vectorResource(Res.drawable.edit), contentDescription = null)
-                },
-                shape = MenuDefaults.leadingItemShape,
-            )
-
-            Spacer(modifier = Modifier.height(2.dp))
-
-            DropdownMenuItem(
-                text = { Text(text = stringResource(Res.string.add_subtasks)) },
-                onClick = {
-                    onShowSubTasksSheet(ShowSubTaskUpsertSheet.Add(taskWithSubTasks.task))
-                    expanded = false
-                },
-                colors = MenuDefaults.selectableItemColors(),
-                leadingIcon = {
-                    Icon(imageVector = vectorResource(Res.drawable.add), contentDescription = null)
-                },
-                shape = MenuDefaults.trailingItemShape,
-            )
         }
     }
 }

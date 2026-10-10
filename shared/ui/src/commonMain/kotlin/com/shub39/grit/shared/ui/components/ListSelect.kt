@@ -135,7 +135,7 @@ fun <T> ListSelect(
                                     leadingIcon = {
                                         Icon(
                                             painter = painterResource(Res.drawable.check),
-                                            contentDescription = null
+                                            contentDescription = null,
                                         )
                                     },
                                 )
