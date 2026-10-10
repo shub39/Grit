@@ -18,12 +18,17 @@ package com.shub39.grit.logic.tasks.repository
 
 import com.shub39.grit.core.interfaces.AppNotificationManager
 import com.shub39.grit.core.tasks.Category
+import com.shub39.grit.core.tasks.SubTask
 import com.shub39.grit.core.tasks.Task
 import com.shub39.grit.core.tasks.TaskRepo
+import com.shub39.grit.core.tasks.TaskWithSubTasks
 import com.shub39.grit.logic.tasks.database.CategoryDao
+import com.shub39.grit.logic.tasks.database.SubTaskDao
 import com.shub39.grit.logic.tasks.database.TasksDao
 import com.shub39.grit.logic.tasks.toCategory
 import com.shub39.grit.logic.tasks.toCategoryEntity
+import com.shub39.grit.logic.tasks.toSubTask
+import com.shub39.grit.logic.tasks.toSubTaskEntity
 import com.shub39.grit.logic.tasks.toTask
 import com.shub39.grit.logic.tasks.toTaskEntity
 import kotlinx.coroutines.Dispatchers
@@ -37,6 +42,7 @@ import org.koin.core.annotation.Single
 class TasksRepository(
     private val tasksDao: TasksDao,
     private val categoryDao: CategoryDao,
+    private val subTaskDao: SubTaskDao,
     private val notificationManager: AppNotificationManager,
 ) : TaskRepo {
 
@@ -52,14 +58,25 @@ class TasksRepository(
             .map { entities -> entities.map { it.toCategory() }.sortedBy { it.index } }
             .flowOn(Dispatchers.IO)
 
-    override fun getTasksFlow(): Flow<Map<Category, List<Task>>> {
-        return tasksFlow
-            .combine(categoriesFlow) { tasks, categories ->
-                categories.associateWith { category ->
-                    tasks.filter { it.categoryId == category.id }
-                }
+    val subTasksFlow =
+        subTaskDao
+            .getSubTasksFlow()
+            .map { entities -> entities.map { it.toSubTask() }.sortedBy { it.index } }
+            .flowOn(Dispatchers.IO)
+
+    override fun getTasksFlow(): Flow<Map<Category, List<TaskWithSubTasks>>> {
+        return combine(tasksFlow, categoriesFlow, subTasksFlow) { tasks, categories, subTasks ->
+            categories.associateWith {
+                tasks
+                    .filter { task -> task.categoryId == it.id }
+                    .map { task ->
+                        TaskWithSubTasks(
+                            task,
+                            subTasks.filter { subTask -> subTask.taskId == task.id },
+                        )
+                    }
             }
-            .flowOn(Dispatchers.Default)
+        }
     }
 
     override fun getCompletedTasksFlow(): Flow<List<Task>> {
@@ -70,8 +87,33 @@ class TasksRepository(
         return tasksDao.getTasks().map { it.toTask() }
     }
 
+    override suspend fun getSubTasks(): List<SubTask> {
+        return subTaskDao.getSubTasks().map { it.toSubTask() }
+    }
+
+    override suspend fun upsertSubTask(subTask: SubTask): Long {
+        return if (subTask.id == 0L) {
+            subTaskDao.upsertSubTask(subTask.toSubTaskEntity())
+        } else {
+            subTaskDao.upsertSubTask(subTask.toSubTaskEntity())
+            if (subTask.status) {
+                notificationManager.cancelNotification(subTask)
+            }
+
+            subTask.id
+        }
+    }
+
+    override suspend fun deleteSubTask(subTask: SubTask) {
+        subTaskDao.deleteSubTask(subTask.toSubTaskEntity())
+    }
+
     override suspend fun getTaskById(id: Long): Task? {
         return tasksDao.getTaskById(id)?.toTask()
+    }
+
+    override suspend fun getSubTaskById(id: Long): SubTask? {
+        return subTaskDao.getSubTaskById(id)?.toSubTask()
     }
 
     override suspend fun getCategories(): List<Category> {

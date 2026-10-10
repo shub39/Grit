@@ -14,14 +14,17 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
-package com.shub39.grit.core.interfaces
+package com.shub39.grit.core.tasks
 
-// all the different intent actions passed
-enum class IntentActions(val action: String) {
-    ADD_HABIT_STATUS("add_habit_status"),
-    HABIT_NOTIFICATION("habit"),
-    TASK_NOTIFICATION("task_notification"),
-    SUBTASK_NOTIFICATION("subtask_notification"),
-    MARK_TASK_DONE("mark_task_done"),
-    MARK_SUBTASK_DONE("mark_subtask_done"),
-}
+import kotlinx.datetime.LocalDateTime
+import kotlinx.serialization.Serializable
+
+@Serializable
+data class SubTask(
+    val id: Long = 0,
+    val taskId: Long,
+    val title: String,
+    val status: Boolean = false,
+    val index: Int = 0,
+    val reminder: LocalDateTime? = null,
+)

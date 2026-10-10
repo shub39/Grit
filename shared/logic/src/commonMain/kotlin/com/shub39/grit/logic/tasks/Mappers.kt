@@ -17,8 +17,10 @@
 package com.shub39.grit.logic.tasks
 
 import com.shub39.grit.core.tasks.Category
+import com.shub39.grit.core.tasks.SubTask
 import com.shub39.grit.core.tasks.Task
 import com.shub39.grit.logic.tasks.database.CategoryEntity
+import com.shub39.grit.logic.tasks.database.SubTaskEntity
 import com.shub39.grit.logic.tasks.database.TaskEntity
 
 fun Task.toTaskEntity(): TaskEntity {
@@ -49,4 +51,26 @@ fun CategoryEntity.toCategory(): Category {
 
 fun Category.toCategoryEntity(): CategoryEntity {
     return CategoryEntity(id = id, name = name, color = color, index = index)
+}
+
+fun SubTask.toSubTaskEntity(): SubTaskEntity {
+    return SubTaskEntity(
+        id = id,
+        taskId = taskId,
+        title = title,
+        status = status,
+        index = index,
+        reminder = reminder,
+    )
+}
+
+fun SubTaskEntity.toSubTask(): SubTask {
+    return SubTask(
+        id = id,
+        taskId = taskId,
+        title = title,
+        status = status,
+        index = index,
+        reminder = reminder,
+    )
 }

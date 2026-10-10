@@ -16,22 +16,6 @@
  */
 import java.util.Properties
 
-/*
- * Copyright (C) 2026  Shubham Gorai
- *
- * This program is free software: you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
- *
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
- *
- * You should have received a copy of the GNU General Public License
- * along with this program.  If not, see <https://www.gnu.org/licenses/>.
- */
 plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.compose.compiler)
@@ -43,8 +27,8 @@ plugins {
 }
 
 val appName = "Grit"
-val appVersionCode = 6091
-val appVersionName = "6.0.91"
+val appVersionCode = 6100
+val appVersionName = "6.1.0"
 
 val gitHash = execute("git", "rev-parse", "HEAD").take(7)
 

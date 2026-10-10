@@ -20,7 +20,6 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.imePadding
@@ -62,18 +61,27 @@ import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardCapitalization
 import androidx.compose.ui.unit.dp
 import com.shub39.grit.core.now
-import com.shub39.grit.core.tasks.Category
-import com.shub39.grit.core.tasks.Task
+import com.shub39.grit.core.tasks.SubTask
 import com.shub39.grit.core.toFormattedString
 import com.shub39.grit.shared.ui.components.ExpressiveSwitch
 import com.shub39.grit.shared.ui.components.GritBottomSheet
 import com.shub39.grit.shared.ui.components.GritTimePicker
-import com.shub39.grit.shared.ui.components.ListSelect
 import com.shub39.grit.shared.ui.components.detachedItemShape
 import com.shub39.grit.shared.ui.components.genericSaver
 import com.shub39.grit.shared.ui.components.listItemColors
 import com.shub39.grit.shared.ui.theme.flexFontEmphasis
-import grit.shared.ui.generated.resources.*
+import grit.shared.ui.generated.resources.Res
+import grit.shared.ui.generated.resources.add
+import grit.shared.ui.generated.resources.add_reminder
+import grit.shared.ui.generated.resources.add_subtasks
+import grit.shared.ui.generated.resources.add_task
+import grit.shared.ui.generated.resources.alarm
+import grit.shared.ui.generated.resources.delete
+import grit.shared.ui.generated.resources.edit
+import grit.shared.ui.generated.resources.edit_task
+import grit.shared.ui.generated.resources.invalid_date_time
+import grit.shared.ui.generated.resources.save
+import grit.shared.ui.generated.resources.select_time
 import kotlin.time.Duration.Companion.milliseconds
 import kotlin.time.Instant
 import kotlinx.coroutines.delay
@@ -86,11 +94,10 @@ import org.jetbrains.compose.resources.stringResource
 import org.jetbrains.compose.resources.vectorResource
 
 @Composable
-expect fun TaskUpsertSheet(
-    task: Task,
-    categories: List<Category>,
+expect fun SubTaskUpsertSheet(
+    subTask: SubTask,
     onDismissRequest: () -> Unit,
-    onUpsert: (Task) -> Unit,
+    onUpsert: (SubTask) -> Unit,
     onDelete: () -> Unit,
     is24Hr: Boolean,
     modifier: Modifier = Modifier,
@@ -98,12 +105,11 @@ expect fun TaskUpsertSheet(
 )
 
 @Composable
-fun TaskUpsertSheetContent(
+fun SubTaskUpsertSheetContent(
     modifier: Modifier = Modifier,
-    task: Task,
-    categories: List<Category>,
+    subTask: SubTask,
     onDismissRequest: () -> Unit,
-    onUpsert: (Task) -> Unit,
+    onUpsert: (SubTask) -> Unit,
     onDelete: () -> Unit,
     is24Hr: Boolean,
     isEditSheet: Boolean = false,
@@ -112,12 +118,13 @@ fun TaskUpsertSheetContent(
     updateDateTimePickerVisibility: (Boolean) -> Unit,
     onPermissionRequest: () -> Unit,
 ) {
-    var newTask by rememberSaveable(stateSaver = genericSaver<Task>()) { mutableStateOf(task) }
+    var newSubTask by
+        rememberSaveable(stateSaver = genericSaver<SubTask>()) { mutableStateOf(subTask) }
 
     val textFieldState =
         rememberTextFieldState(
-            initialText = newTask.title,
-            initialSelection = TextRange(newTask.title.length),
+            initialText = newSubTask.title,
+            initialSelection = TextRange(newSubTask.title.length),
         )
 
     val now = LocalDateTime.now()
@@ -131,7 +138,7 @@ fun TaskUpsertSheetContent(
         rememberDatePickerState(
             initialSelectedDateMillis = now.toInstant(TimeZone.UTC).toEpochMilliseconds()
         )
-    val isValidDateTime = newTask.reminder == null || newTask.reminder!! > LocalDateTime.now()
+    val isValidDateTime = newSubTask.reminder == null || newSubTask.reminder!! > LocalDateTime.now()
 
     GritBottomSheet(
         modifier = modifier.imePadding(),
@@ -161,141 +168,133 @@ fun TaskUpsertSheetContent(
 
             Text(
                 text =
-                    stringResource(if (isEditSheet) Res.string.edit_task else Res.string.add_task),
+                    stringResource(
+                        if (isEditSheet) Res.string.edit_task else Res.string.add_subtasks
+                    ),
                 style = MaterialTheme.typography.headlineSmall.copy(fontFamily = flexFontEmphasis()),
             )
-        }
 
-        LazyColumn(
-            modifier = Modifier.fillMaxWidth().clip(MaterialTheme.shapes.large),
-            verticalArrangement = Arrangement.spacedBy(8.dp),
-            contentPadding = PaddingValues(horizontal = 16.dp),
-        ) {
-            item {
-                ListSelect(
-                    title = null,
-                    options = categories.map { it.id },
-                    selected = newTask.categoryId,
-                    onSelectedChange = { newTask = newTask.copy(categoryId = it) },
-                    labelProvider = { id ->
-                        Text(text = categories.find { it.id == id }?.name ?: "")
-                    },
-                )
-            }
+            LazyColumn(
+                modifier = Modifier.fillMaxWidth(),
+                verticalArrangement = Arrangement.spacedBy(8.dp),
+            ) {
+                item {
+                    val keyboardController = LocalSoftwareKeyboardController.current
+                    val focusRequester = remember { FocusRequester() }
 
-            item {
-                val keyboardController = LocalSoftwareKeyboardController.current
-                val focusRequester = remember { FocusRequester() }
+                    LaunchedEffect(Unit) {
+                        delay(400.milliseconds)
+                        focusRequester.requestFocus()
+                        keyboardController?.show()
+                    }
 
-                LaunchedEffect(Unit) {
-                    delay(400.milliseconds)
-                    focusRequester.requestFocus()
-                    keyboardController?.show()
+                    OutlinedTextField(
+                        state = textFieldState,
+                        shape = MaterialTheme.shapes.medium,
+                        placeholder = { Text(text = stringResource(Res.string.add_task)) },
+                        keyboardOptions =
+                            KeyboardOptions.Default.copy(
+                                capitalization = KeyboardCapitalization.Sentences,
+                                imeAction = ImeAction.None,
+                            ),
+                        onKeyboardAction = { defaultAction ->
+                            textFieldState.edit { append("\n") }
+                            defaultAction()
+                        },
+                        modifier = Modifier.fillMaxWidth().focusRequester(focusRequester),
+                    )
                 }
 
-                OutlinedTextField(
-                    state = textFieldState,
-                    shape = MaterialTheme.shapes.medium,
-                    placeholder = { Text(text = stringResource(Res.string.add_task)) },
-                    keyboardOptions =
-                        KeyboardOptions.Default.copy(
-                            capitalization = KeyboardCapitalization.Sentences,
-                            imeAction = ImeAction.None,
-                        ),
-                    onKeyboardAction = { defaultAction ->
-                        textFieldState.edit { append("\n") }
-                        defaultAction()
-                    },
-                    modifier = Modifier.fillMaxWidth().focusRequester(focusRequester),
-                )
-            }
-
-            item {
-                ListItem(
-                    modifier = Modifier.clip(detachedItemShape()),
-                    colors = listItemColors(),
-                    leadingContent = {
-                        Icon(
-                            imageVector = vectorResource(Res.drawable.alarm),
-                            contentDescription = null,
-                        )
-                    },
-                    headlineContent = { Text(text = stringResource(Res.string.add_reminder)) },
-                    supportingContent = {
-                        if (newTask.reminder != null) {
-                            Column {
-                                Text(text = newTask.reminder!!.toFormattedString(is24Hr = is24Hr))
-                                if (!isValidDateTime) {
+                item {
+                    ListItem(
+                        modifier = Modifier.clip(detachedItemShape()),
+                        colors = listItemColors(),
+                        leadingContent = {
+                            Icon(
+                                imageVector = vectorResource(Res.drawable.alarm),
+                                contentDescription = null,
+                            )
+                        },
+                        headlineContent = { Text(text = stringResource(Res.string.add_reminder)) },
+                        supportingContent = {
+                            if (newSubTask.reminder != null) {
+                                Column {
                                     Text(
-                                        text = stringResource(Res.string.invalid_date_time),
-                                        color = MaterialTheme.colorScheme.error,
+                                        text =
+                                            newSubTask.reminder!!.toFormattedString(is24Hr = is24Hr)
                                     )
+                                    if (!isValidDateTime) {
+                                        Text(
+                                            text = stringResource(Res.string.invalid_date_time),
+                                            color = MaterialTheme.colorScheme.error,
+                                        )
+                                    }
                                 }
                             }
-                        }
-                    },
-                    trailingContent = {
-                        ExpressiveSwitch(
-                            checked = newTask.reminder != null,
-                            onCheckedChange = { checked ->
-                                if (checked) {
-                                    if (notificationPermission) {
-                                        updateDateTimePickerVisibility(true)
+                        },
+                        trailingContent = {
+                            ExpressiveSwitch(
+                                checked = newSubTask.reminder != null,
+                                onCheckedChange = { checked ->
+                                    if (checked) {
+                                        if (notificationPermission) {
+                                            updateDateTimePickerVisibility(true)
+                                        } else {
+                                            onPermissionRequest()
+                                        }
                                     } else {
-                                        onPermissionRequest()
+                                        newSubTask = newSubTask.copy(reminder = null)
                                     }
-                                } else {
-                                    newTask = newTask.copy(reminder = null)
-                                }
-                            },
-                        )
-                    },
-                )
-            }
+                                },
+                            )
+                        },
+                    )
+                }
 
-            item {
-                Row(
-                    modifier = Modifier.padding(bottom = 32.dp),
-                    horizontalArrangement = Arrangement.spacedBy(8.dp),
-                ) {
-                    if (isEditSheet) {
-                        OutlinedButton(
-                            onClick = onDelete,
+                item {
+                    Row(
+                        modifier = Modifier.padding(bottom = 32.dp).fillMaxWidth(),
+                        horizontalArrangement = Arrangement.spacedBy(8.dp),
+                    ) {
+                        if (isEditSheet) {
+                            OutlinedButton(
+                                onClick = {
+                                    onDelete()
+                                    onDismissRequest()
+                                },
+                                shapes =
+                                    ButtonShapes(
+                                        shape = MaterialTheme.shapes.extraLarge,
+                                        pressedShape = MaterialTheme.shapes.small,
+                                    ),
+                                modifier = Modifier.weight(1f),
+                            ) {
+                                Text(stringResource(Res.string.delete))
+                            }
+                        }
+
+                        Button(
+                            onClick = {
+                                onUpsert(newSubTask.copy(title = textFieldState.text.toString()))
+                                onDismissRequest()
+                            },
                             shapes =
                                 ButtonShapes(
                                     shape = MaterialTheme.shapes.extraLarge,
                                     pressedShape = MaterialTheme.shapes.small,
                                 ),
                             modifier = Modifier.weight(1f),
+                            enabled =
+                                textFieldState.text.isNotBlank() &&
+                                    textFieldState.text.length <= 100 &&
+                                    isValidDateTime,
                         ) {
-                            Text(stringResource(Res.string.delete))
-                        }
-                    }
-
-                    Button(
-                        onClick = {
-                            onUpsert(newTask.copy(title = textFieldState.text.toString()))
-                            onDismissRequest()
-                        },
-                        shapes =
-                            ButtonShapes(
-                                shape = MaterialTheme.shapes.extraLarge,
-                                pressedShape = MaterialTheme.shapes.small,
-                            ),
-                        modifier = Modifier.weight(1f),
-                        enabled =
-                            textFieldState.text.isNotBlank() &&
-                                textFieldState.text.length <= 100 &&
-                                isValidDateTime &&
-                                (newTask.reminder != task.reminder ||
-                                    textFieldState.text.toString() != task.title ||
-                                    newTask.categoryId != task.categoryId),
-                    ) {
-                        Text(
-                            stringResource(
-                                if (isEditSheet) Res.string.save else Res.string.add_task
+                            Text(
+                                stringResource(
+                                    if (isEditSheet) Res.string.save else Res.string.add_subtasks
+                                )
                             )
-                        )
+                        }
                     }
                 }
             }
@@ -324,8 +323,8 @@ fun TaskUpsertSheetContent(
                     state = timePickerState,
                     onConfirm = {
                         if (datePickerState.selectedDateMillis != null) {
-                            newTask =
-                                newTask.copy(
+                            newSubTask =
+                                newSubTask.copy(
                                     reminder =
                                         LocalDateTime(
                                             date =

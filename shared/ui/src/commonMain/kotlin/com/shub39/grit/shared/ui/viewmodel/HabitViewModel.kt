@@ -250,17 +250,9 @@ class HabitViewModel(
                 ?.any { it.date == date } ?: false
 
         if (isHabitCompleted) {
-            analytics.trackEvent(
-                AnalyticsEvent.HABIT_STATUS_UPDATED,
-                mapOf("status" to "uncompleted"),
-            )
             repo.deleteHabitStatus(habit.id, date)
         } else {
             analytics.trackEvent(AnalyticsEvent.HABIT_COMPLETED, emptyMap())
-            analytics.trackEvent(
-                AnalyticsEvent.HABIT_STATUS_UPDATED,
-                mapOf("status" to "completed"),
-            )
             repo.insertHabitStatus(HabitStatus(habitId = habit.id, date = date))
         }
     }

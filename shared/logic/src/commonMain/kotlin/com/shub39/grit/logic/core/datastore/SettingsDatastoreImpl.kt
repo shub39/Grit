@@ -90,7 +90,7 @@ class SettingsDatastoreImpl(private val datastore: DataStore<Preferences>) : Set
     }
 
     override fun getCompactViewPref(): Flow<Boolean> =
-        datastore.data.map { pref -> pref[compactHabitView] ?: false }
+        datastore.data.map { pref -> pref[compactHabitView] ?: true }
 
     override suspend fun setCompactView(pref: Boolean) {
         datastore.edit { prefs -> prefs[compactHabitView] = pref }

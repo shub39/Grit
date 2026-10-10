@@ -41,7 +41,6 @@ class ThemeDatastoreImpl(private val datastore: DataStore<Preferences>) : ThemeD
         private val paletteKey = stringPreferencesKey("palette")
         private val materialYouKey = booleanPreferencesKey("material_you")
         private val fontPrefKey = stringPreferencesKey("font")
-        private val hapticPrefKey = booleanPreferencesKey("haptic")
     }
 
     override suspend fun resetAppTheme() {
@@ -50,7 +49,7 @@ class ThemeDatastoreImpl(private val datastore: DataStore<Preferences>) : ThemeD
             settings[amoledKey] = false
             settings[paletteKey] = PaletteStyle.TONALSPOT.name
             settings[materialYouKey] = false
-            settings[fontPrefKey] = Fonts.FIGTREE.name
+            settings[fontPrefKey] = Fonts.GOOGLE_SANS.name
         }
     }
 
@@ -101,7 +100,7 @@ class ThemeDatastoreImpl(private val datastore: DataStore<Preferences>) : ThemeD
 
     override fun getFontPrefFlow(): Flow<Fonts> =
         datastore.data.map { prefs ->
-            val font = prefs[fontPrefKey] ?: Fonts.FIGTREE.name
+            val font = prefs[fontPrefKey] ?: Fonts.GOOGLE_SANS.name
             Fonts.valueOf(font)
         }
 

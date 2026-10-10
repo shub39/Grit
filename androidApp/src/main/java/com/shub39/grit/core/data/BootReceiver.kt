@@ -19,7 +19,7 @@ package com.shub39.grit.core.data
 import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
-import android.util.Log
+import com.shub39.grit.core.GritLogger
 import com.shub39.grit.core.habits.HabitRepo
 import com.shub39.grit.core.interfaces.AlarmScheduler
 import com.shub39.grit.core.tasks.TaskRepo
@@ -45,15 +45,20 @@ class BootReceiver : BroadcastReceiver(), KoinComponent {
                 try {
                     habitRepo.getHabits().forEach {
                         scheduler.schedule(it)
-                        Log.d("BootReceiver", "Scheduled habit: ${it.id}")
+                        GritLogger.d("BootReceiver", "Scheduled habit: ${it.id}")
                     }
 
                     taskRepo.getTasks().forEach {
                         scheduler.schedule(it)
-                        Log.d("BootReceiver", "Scheduled task: ${it.id}")
+                        GritLogger.d("BootReceiver", "Scheduled task: ${it.id}")
+                    }
+
+                    taskRepo.getSubTasks().forEach {
+                        scheduler.schedule(it)
+                        GritLogger.d("BootReceiver", "Scheduled subtask: ${it.id}")
                     }
                 } catch (t: Exception) {
-                    Log.e("BootReceiver", "Failed to initiate alarms", t)
+                    GritLogger.e("BootReceiver", "Failed to initiate alarms", t)
                 } finally {
                     pendingResult.finish()
                 }

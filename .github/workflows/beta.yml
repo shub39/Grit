@@ -58,7 +58,7 @@ jobs:
             exit 1
           fi
           
-          message=$(echo "New Grit beta **${{ env.VERSION }}**\n${{ env.COMMIT }}")
+          message=$(echo "New Grit beta **${{ env.VERSION }}**")
           curl -F "payload_json={\"content\":\"${message}\"}" \
           -F "grit_beta=@${APK_PATH}" \
           ${{ env.WEBHOOK }}

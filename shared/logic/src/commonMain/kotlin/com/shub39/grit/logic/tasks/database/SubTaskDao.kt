@@ -14,14 +14,24 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
-package com.shub39.grit.core.interfaces
+package com.shub39.grit.logic.tasks.database
 
-// all the different intent actions passed
-enum class IntentActions(val action: String) {
-    ADD_HABIT_STATUS("add_habit_status"),
-    HABIT_NOTIFICATION("habit"),
-    TASK_NOTIFICATION("task_notification"),
-    SUBTASK_NOTIFICATION("subtask_notification"),
-    MARK_TASK_DONE("mark_task_done"),
-    MARK_SUBTASK_DONE("mark_subtask_done"),
+import androidx.room3.Dao
+import androidx.room3.Delete
+import androidx.room3.Query
+import androidx.room3.Upsert
+import kotlinx.coroutines.flow.Flow
+
+@Dao
+interface SubTaskDao {
+    @Query("SELECT * FROM sub_tasks") fun getSubTasksFlow(): Flow<List<SubTaskEntity>>
+
+    @Query("SELECT * FROM sub_tasks") suspend fun getSubTasks(): List<SubTaskEntity>
+
+    @Query("SELECT * FROM sub_tasks WHERE id = :id")
+    suspend fun getSubTaskById(id: Long): SubTaskEntity?
+
+    @Upsert suspend fun upsertSubTask(subTaskEntity: SubTaskEntity): Long
+
+    @Delete suspend fun deleteSubTask(subTaskEntity: SubTaskEntity)
 }

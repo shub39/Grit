@@ -20,11 +20,12 @@ import androidx.compose.runtime.Immutable
 import androidx.compose.runtime.Stable
 import com.shub39.grit.core.tasks.Category
 import com.shub39.grit.core.tasks.Task
+import com.shub39.grit.core.tasks.TaskWithSubTasks
 
 @Stable
 @Immutable
 data class TaskState(
-    val tasks: Map<Category, List<Task>> = emptyMap(),
+    val tasks: Map<Category, List<TaskWithSubTasks>> = emptyMap(),
     val currentCategory: Category? = null,
     val completedTasks: List<Task> = emptyList(),
     val is24Hour: Boolean = false,

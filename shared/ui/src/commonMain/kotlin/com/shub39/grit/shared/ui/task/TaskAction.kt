@@ -17,6 +17,7 @@
 package com.shub39.grit.shared.ui.task
 
 import com.shub39.grit.core.tasks.Category
+import com.shub39.grit.core.tasks.SubTask
 import com.shub39.grit.core.tasks.Task
 
 sealed interface TaskAction {
@@ -36,13 +37,23 @@ sealed interface TaskAction {
 
     data class UpsertTask(val task: Task) : TaskAction
 
+    data class UpsertSubTask(val subTask: SubTask) : TaskAction
+
+    data class DeleteSubTask(val subTask: SubTask) : TaskAction
+
     data object OnTasksOpened : TaskAction
 
     data object OnTaskSheetOpened : TaskAction
 
     data object OnTaskSheetDismissed : TaskAction
 
+    data object OnSubTaskSheetOpened : TaskAction
+
+    data object OnSubTaskSheetDismissed : TaskAction
+
     data object OnTaskCategorySheetOpened : TaskAction
 
     data object OnTaskCategorySheetDismissed : TaskAction
+
+    data object OnSubTaskPreview : TaskAction
 }

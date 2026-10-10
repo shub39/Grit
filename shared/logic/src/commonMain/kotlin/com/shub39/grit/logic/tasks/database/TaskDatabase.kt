@@ -25,10 +25,10 @@ import androidx.room3.RoomDatabaseConstructor
 import com.shub39.grit.logic.core.Converters
 
 @Database(
-    entities = [TaskEntity::class, CategoryEntity::class],
+    entities = [TaskEntity::class, CategoryEntity::class, SubTaskEntity::class],
     version = TaskDatabase.SCHEMA_VERSION,
     exportSchema = true,
-    autoMigrations = [AutoMigration(from = 4, to = 5)],
+    autoMigrations = [AutoMigration(from = 4, to = 5), AutoMigration(from = 5, to = 6)],
 )
 @ConstructedBy(TasksDbConstructor::class)
 @ColumnTypeConverters(Converters::class)
@@ -37,9 +37,11 @@ abstract class TaskDatabase : RoomDatabase() {
 
     abstract fun categoryDao(): CategoryDao
 
+    abstract fun subTaskDao(): SubTaskDao
+
     companion object {
         const val DB_NAME = "task_database"
-        const val SCHEMA_VERSION = 5
+        const val SCHEMA_VERSION = 6
     }
 }
 

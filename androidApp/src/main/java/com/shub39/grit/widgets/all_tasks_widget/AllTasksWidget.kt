@@ -62,6 +62,7 @@ import com.shub39.grit.core.tasks.Category
 import com.shub39.grit.core.tasks.CategoryColors
 import com.shub39.grit.core.tasks.Task
 import com.shub39.grit.core.tasks.TaskRepo
+import com.shub39.grit.core.tasks.TaskWithSubTasks
 import com.shub39.grit.widgets.WidgetSize
 import kotlinx.coroutines.launch
 import org.koin.core.component.KoinComponent
@@ -98,33 +99,7 @@ class AllTasksWidget : GlanceAppWidget(), KoinComponent {
         val previewItems =
             mapOf(
                 Category(name = "Chores", index = 1, color = CategoryColors.GRAY.color) to
-                    listOf(
-                        Task(
-                            id = 1,
-                            categoryId = 1,
-                            title = "Laundry",
-                            index = 1,
-                            status = false,
-                            reminder = null,
-                        ),
-                        Task(
-                            id = 2,
-                            categoryId = 1,
-                            title =
-                                "Watch a 5 hour long video essay on a video game i will never play",
-                            index = 2,
-                            status = false,
-                            reminder = null,
-                        ),
-                        Task(
-                            id = 3,
-                            categoryId = 1,
-                            title = "Get Groceries, Meat",
-                            index = 3,
-                            status = true,
-                            reminder = null,
-                        ),
-                    )
+                    emptyList<TaskWithSubTasks>() // TODO: Add items later
             )
 
         provideContent {
@@ -136,7 +111,7 @@ class AllTasksWidget : GlanceAppWidget(), KoinComponent {
 @Composable
 @GlanceComposable
 private fun Content(
-    tasks: Map<Category, List<Task>>,
+    tasks: Map<Category, List<TaskWithSubTasks>>,
     onUpdateTaskStatus: (Task) -> Unit,
     onUpdateWidget: () -> Unit,
     modifier: GlanceModifier = GlanceModifier,
@@ -193,8 +168,8 @@ private fun Content(
                             ),
                     )
                     Spacer(GlanceModifier.height(8.dp))
-                    taskGroup.value.forEach { task ->
-                        val status = task.status
+                    taskGroup.value.forEach { taskWithSubTasks ->
+                        val status = taskWithSubTasks.task.status
 
                         Column {
                             Column(
@@ -225,12 +200,12 @@ private fun Content(
                                         )
                                         .padding(horizontal = 10.dp, vertical = 4.dp)
                                         .clickable {
-                                            onUpdateTaskStatus(task)
+                                            onUpdateTaskStatus(taskWithSubTasks.task)
                                             onUpdateWidget()
                                         }
                             ) {
                                 Text(
-                                    text = task.title,
+                                    text = taskWithSubTasks.task.title,
                                     modifier = GlanceModifier.fillMaxWidth().padding(8.dp),
                                     style =
                                         TextStyle(
@@ -270,17 +245,7 @@ private fun GlancePreview() {
                     name = "Category $it",
                     index = it,
                     color = CategoryColors.GRAY.color,
-                ) to
-                    (0..1).map { taskId ->
-                        Task(
-                            id = taskId.toLong(),
-                            categoryId = it.toLong(),
-                            title = "Task $taskId, Category $it",
-                            index = it,
-                            status = false,
-                            reminder = null,
-                        )
-                    }
+                ) to emptyList() // TODO: Add proper dummy items later
             },
         onUpdateTaskStatus = {},
         onUpdateWidget = {},

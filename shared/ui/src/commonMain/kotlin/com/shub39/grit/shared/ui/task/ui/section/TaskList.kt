@@ -25,7 +25,6 @@ import androidx.compose.animation.scaleIn
 import androidx.compose.animation.scaleOut
 import androidx.compose.animation.togetherWith
 import androidx.compose.foundation.background
-import androidx.compose.foundation.combinedClickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -89,6 +88,7 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import com.shub39.grit.core.tasks.Category
 import com.shub39.grit.core.tasks.CategoryColors
+import com.shub39.grit.core.tasks.SubTask
 import com.shub39.grit.core.tasks.Task
 import com.shub39.grit.shared.ui.LocalWindowSizeClass
 import com.shub39.grit.shared.ui.WindowSize.Companion.isCompact
@@ -104,6 +104,8 @@ import com.shub39.grit.shared.ui.components.middleItemShape
 import com.shub39.grit.shared.ui.task.TaskAction
 import com.shub39.grit.shared.ui.task.TaskState
 import com.shub39.grit.shared.ui.task.ui.component.CategoryUpsertSheet
+import com.shub39.grit.shared.ui.task.ui.component.SubTaskUpsertSheet
+import com.shub39.grit.shared.ui.task.ui.component.SubTasksFeaturePreview
 import com.shub39.grit.shared.ui.task.ui.component.TaskCard
 import com.shub39.grit.shared.ui.task.ui.component.TaskUpsertSheet
 import com.shub39.grit.shared.ui.theme.flexFontEmphasis
@@ -115,17 +117,49 @@ import org.jetbrains.compose.resources.vectorResource
 import sh.calvin.reorderable.ReorderableItem
 import sh.calvin.reorderable.rememberReorderableLazyListState
 
+sealed interface ShowTaskUpsertSheet {
+    data object Add : ShowTaskUpsertSheet
+
+    data class Edit(val task: Task) : ShowTaskUpsertSheet
+}
+
+sealed interface ShowSubTaskUpsertSheet {
+    data class Add(val parentTask: Task) : ShowSubTaskUpsertSheet
+
+    data class Edit(val subTask: SubTask) : ShowSubTaskUpsertSheet
+}
+
+sealed interface UpdateStatusTarget {
+    data object TaskStatus : UpdateStatusTarget
+
+    data class SubTaskStatus(val subTask: SubTask) : UpdateStatusTarget
+}
+
 @Composable
-fun TaskList(state: TaskState, onAction: (TaskAction) -> Unit, onEditCategories: () -> Unit) =
-    PageFill {
+fun TaskList(
+    modifier: Modifier = Modifier,
+    isPlusUser: Boolean,
+    onOpenPaywall: () -> Unit,
+    state: TaskState,
+    onAction: (TaskAction) -> Unit,
+    onEditCategories: () -> Unit,
+) =
+    PageFill(modifier = modifier) {
         val windowSizeClass = LocalWindowSizeClass.current
 
-        var showTaskAddSheet by rememberSaveable { mutableStateOf(false) }
         var showCategoryAddSheet by rememberSaveable { mutableStateOf(false) }
         var showDeleteDialog by rememberSaveable { mutableStateOf(false) }
         var editState by rememberSaveable { mutableStateOf(false) }
-        var editTask: Task? by
-            rememberSaveable(stateSaver = genericSaver<Task?>()) { mutableStateOf(null) }
+        var showSubTasksFeaturePreview by rememberSaveable { mutableStateOf(false) }
+
+        var showTaskUpsertSheet: ShowTaskUpsertSheet? by
+            rememberSaveable(stateSaver = genericSaver<ShowTaskUpsertSheet?>()) {
+                mutableStateOf(null)
+            }
+        var showSubTaskUpsertSheet: ShowSubTaskUpsertSheet? by
+            rememberSaveable(stateSaver = genericSaver<ShowSubTaskUpsertSheet?>()) {
+                mutableStateOf(null)
+            }
 
         val scrollBehavior = TopAppBarDefaults.enterAlwaysScrollBehavior()
 
@@ -162,14 +196,28 @@ fun TaskList(state: TaskState, onAction: (TaskAction) -> Unit, onEditCategories:
                     state = state,
                     isReorderMode = editState,
                     onAction = onAction,
-                    onEditTask = { editTask = it },
+                    onEditTask = { showTaskUpsertSheet = ShowTaskUpsertSheet.Edit(it) },
                     isCompact = windowSizeClass.isCompact(),
+                    onShowSubTasksSheet = {
+                        if (isPlusUser) {
+                            showSubTaskUpsertSheet = it
+                        } else {
+                            showSubTasksFeaturePreview = true
+                        }
+                    },
                 )
             } else {
                 ExpandedTasksView(
                     state = state,
                     onAction = onAction,
-                    onEditTask = { editTask = it },
+                    onEditTask = { showTaskUpsertSheet = ShowTaskUpsertSheet.Edit(it) },
+                    onShowSubTasksSheet = {
+                        if (isPlusUser) {
+                            showSubTaskUpsertSheet = it
+                        } else {
+                            showSubTasksFeaturePreview = true
+                        }
+                    },
                 )
             }
         }
@@ -186,7 +234,7 @@ fun TaskList(state: TaskState, onAction: (TaskAction) -> Unit, onEditCategories:
             modifier = Modifier.align(Alignment.BottomEnd).padding(16.dp).navigationBarsPadding(),
         ) {
             MediumFloatingActionButton(
-                onClick = { showTaskAddSheet = true },
+                onClick = { showTaskUpsertSheet = ShowTaskUpsertSheet.Add },
                 containerColor = MaterialTheme.colorScheme.tertiaryContainer,
                 contentColor = MaterialTheme.colorScheme.onTertiaryContainer,
             ) {
@@ -240,51 +288,86 @@ fun TaskList(state: TaskState, onAction: (TaskAction) -> Unit, onEditCategories:
             )
         }
 
-        if (editTask != null) {
-            LaunchedEffect(editTask) { onAction(TaskAction.OnTaskSheetOpened) }
+        showTaskUpsertSheet?.let { sheet ->
+            if (state.currentCategory == null) return@let
+
+            LaunchedEffect(sheet) { onAction(TaskAction.OnTaskSheetOpened) }
+
             TaskUpsertSheet(
-                task = editTask!!,
+                task =
+                    when (sheet) {
+                        Add ->
+                            Task(
+                                categoryId = state.currentCategory.id,
+                                title = "",
+                                index = state.tasks[state.currentCategory]?.size ?: 0,
+                                status = false,
+                                reminder = null,
+                            )
+                        is Edit -> sheet.task
+                    },
                 categories = state.tasks.keys.toList(),
                 onDismissRequest = {
                     onAction(TaskAction.OnTaskSheetDismissed)
-                    editTask = null
+                    showTaskUpsertSheet = null
                 },
-                isEditSheet = true,
+                isEditSheet = sheet is ShowTaskUpsertSheet.Edit,
                 is24Hr = state.is24Hour,
                 onUpsert = {
                     onAction(TaskAction.UpsertTask(it))
                     onAction(TaskAction.OnTaskSheetDismissed)
+                    showTaskUpsertSheet = null
                 },
                 onDelete = {
-                    editTask?.let { onAction(TaskAction.DeleteTask(it)) }
+                    when (sheet) {
+                        is Edit -> onAction(TaskAction.DeleteTask(sheet.task))
+                        else -> {}
+                    }
                     onAction(TaskAction.OnTaskSheetDismissed)
-                    editTask = null
+                    showTaskUpsertSheet = null
                 },
             )
         }
 
-        if (showTaskAddSheet && state.currentCategory != null) {
-            LaunchedEffect(Unit) { onAction(TaskAction.OnTaskSheetOpened) }
-            TaskUpsertSheet(
-                task =
-                    Task(
-                        categoryId = state.currentCategory.id,
-                        title = "",
-                        index = state.tasks[state.currentCategory]?.size ?: 0,
-                        status = false,
-                        reminder = null,
-                    ),
-                is24Hr = state.is24Hour,
-                categories = state.tasks.keys.toList(),
+        showSubTaskUpsertSheet?.let { sheet ->
+            LaunchedEffect(Unit) { onAction(TaskAction.OnSubTaskSheetOpened) }
+
+            SubTaskUpsertSheet(
+                subTask =
+                    when (sheet) {
+                        is Add -> SubTask(taskId = sheet.parentTask.id, title = "", status = false)
+                        is Edit -> sheet.subTask
+                    },
+                isEditSheet = sheet is ShowSubTaskUpsertSheet.Edit,
                 onDismissRequest = {
-                    onAction(TaskAction.OnTaskSheetDismissed)
-                    showTaskAddSheet = false
+                    onAction(TaskAction.OnSubTaskSheetDismissed)
+                    showSubTaskUpsertSheet = null
                 },
+                is24Hr = state.is24Hour,
                 onUpsert = {
-                    onAction(TaskAction.UpsertTask(it))
-                    onAction(TaskAction.OnTaskSheetDismissed)
+                    onAction(TaskAction.UpsertSubTask(it))
+                    showSubTaskUpsertSheet = null
                 },
-                onDelete = {},
+                onDelete = {
+                    when (sheet) {
+                        is Edit -> onAction(TaskAction.DeleteSubTask(sheet.subTask))
+                        else -> {}
+                    }
+                    showSubTaskUpsertSheet = null
+                },
+            )
+        }
+
+        if (showSubTasksFeaturePreview) {
+            LaunchedEffect(Unit) { onAction(OnSubTaskPreview) }
+
+            SubTasksFeaturePreview(
+                is24Hr = state.is24Hour,
+                onOpenPaywall = {
+                    onOpenPaywall()
+                    showSubTasksFeaturePreview = false
+                },
+                onDismissRequest = { showSubTasksFeaturePreview = false },
             )
         }
     }
@@ -431,6 +514,7 @@ private fun CompactTasksView(
     isReorderMode: Boolean,
     onAction: (TaskAction) -> Unit,
     onEditTask: (Task) -> Unit,
+    onShowSubTasksSheet: (ShowSubTaskUpsertSheet) -> Unit,
     isCompact: Boolean,
 ) {
     Surface(
@@ -454,7 +538,7 @@ private fun CompactTasksView(
                         mutableStateOf(
                             (state.tasks[category] ?: emptyList()).run {
                                 if (state.reorderTasks) {
-                                    filter { !it.status }
+                                    filter { !it.task.status }
                                 } else this
                             }
                         )
@@ -472,9 +556,10 @@ private fun CompactTasksView(
                     contentPadding = PaddingValues(8.dp),
                     verticalArrangement = Arrangement.spacedBy(2.dp),
                 ) {
-                    itemsIndexed(items = reorderableTasks, key = { _, it -> it.id }) { index, task
-                        ->
-                        ReorderableItem(reorderableListState, key = task.id) {
+                    itemsIndexed(items = reorderableTasks, key = { _, it -> it.task.id }) {
+                        index,
+                        taskWithSubTasks ->
+                        ReorderableItem(reorderableListState, key = taskWithSubTasks.task.id) {
                             val cardShape =
                                 when {
                                     reorderableTasks.size == 1 -> RoundedCornerShape(20.dp)
@@ -498,7 +583,7 @@ private fun CompactTasksView(
                                 }
 
                             TaskCard(
-                                task = task,
+                                taskWithSubTasks = taskWithSubTasks,
                                 dragState = isReorderMode,
                                 reorderIcon = {
                                     Icon(
@@ -510,7 +595,7 @@ private fun CompactTasksView(
                                                     onAction(
                                                         TaskAction.ReorderTasks(
                                                             reorderableTasks.mapIndexed { i, t ->
-                                                                i to t
+                                                                i to t.task
                                                             }
                                                         )
                                                     )
@@ -520,39 +605,49 @@ private fun CompactTasksView(
                                 },
                                 is24Hr = state.is24Hour,
                                 shape = cardShape,
-                                modifier =
-                                    Modifier.fillMaxWidth()
-                                        .clip(cardShape)
-                                        .combinedClickable(
-                                            onClick = {
-                                                if (!isReorderMode) {
-                                                    val updatedTask =
-                                                        task.copy(status = !task.status)
+                                onUpdateStatus = {
+                                    when (it) {
+                                        TaskStatus -> {
+                                            if (!isReorderMode) {
+                                                val updatedTask =
+                                                    taskWithSubTasks.task.copy(
+                                                        status = !taskWithSubTasks.task.status
+                                                    )
 
-                                                    onAction(TaskAction.UpsertTask(updatedTask))
-                                                }
-                                            },
-                                            onLongClick = {
-                                                if (!isReorderMode && !task.status) {
-                                                    onEditTask(task)
-                                                }
-                                            },
-                                        ),
+                                                onAction(TaskAction.UpsertTask(updatedTask))
+                                            }
+                                        }
+
+                                        is SubTaskStatus -> {
+                                            onAction(
+                                                TaskAction.UpsertSubTask(
+                                                    it.subTask.copy(status = !it.subTask.status)
+                                                )
+                                            )
+                                        }
+                                    }
+                                },
+                                onEdit = {
+                                    if (!isReorderMode && !taskWithSubTasks.task.status) {
+                                        onEditTask(taskWithSubTasks.task)
+                                    }
+                                },
+                                onShowSubTasksSheet = onShowSubTasksSheet,
                             )
                         }
                     }
 
                     if (state.reorderTasks) {
                         val completedTasks =
-                            (state.tasks[category] ?: emptyList()).filter { it.status }
+                            (state.tasks[category] ?: emptyList()).filter { it.task.status }
 
                         if (reorderableTasks.isNotEmpty()) {
                             item { Spacer(modifier = Modifier.height(16.dp)) }
                         }
                         itemsIndexed(
                             items = completedTasks,
-                            key = { _, it -> "completed_task_${it.id}" },
-                        ) { index, task ->
+                            key = { _, it -> "completed_task_${it.task.id}" },
+                        ) { index, taskWithSubTasks ->
                             val cardShape =
                                 when {
                                     completedTasks.size == 1 -> RoundedCornerShape(20.dp)
@@ -576,25 +671,35 @@ private fun CompactTasksView(
                                 }
 
                             TaskCard(
-                                task = task,
+                                taskWithSubTasks = taskWithSubTasks,
                                 dragState = false,
                                 reorderIcon = {},
                                 is24Hr = state.is24Hour,
                                 shape = cardShape,
-                                modifier =
-                                    Modifier.fillMaxWidth()
-                                        .clip(cardShape)
-                                        .combinedClickable(
-                                            onClick = {
-                                                if (!isReorderMode) {
-                                                    val updatedTask =
-                                                        task.copy(status = !task.status)
+                                onUpdateStatus = {
+                                    when (it) {
+                                        TaskStatus -> {
+                                            if (!isReorderMode) {
+                                                val updatedTask =
+                                                    taskWithSubTasks.task.copy(
+                                                        status = !taskWithSubTasks.task.status
+                                                    )
 
-                                                    onAction(TaskAction.UpsertTask(updatedTask))
-                                                }
-                                            },
-                                            onLongClick = {},
-                                        ),
+                                                onAction(TaskAction.UpsertTask(updatedTask))
+                                            }
+                                        }
+
+                                        is SubTaskStatus -> {
+                                            onAction(
+                                                TaskAction.UpsertSubTask(
+                                                    it.subTask.copy(status = !it.subTask.status)
+                                                )
+                                            )
+                                        }
+                                    }
+                                },
+                                onEdit = {},
+                                onShowSubTasksSheet = onShowSubTasksSheet,
                             )
                         }
                     }
@@ -613,6 +718,7 @@ private fun ExpandedTasksView(
     state: TaskState,
     onAction: (TaskAction) -> Unit,
     onEditTask: (Task) -> Unit,
+    onShowSubTasksSheet: (ShowSubTaskUpsertSheet) -> Unit,
 ) {
     val tasksAndCategories = state.tasks.toList()
 
@@ -623,8 +729,8 @@ private fun ExpandedTasksView(
         horizontalArrangement = Arrangement.spacedBy(8.dp),
         modifier = Modifier.fillMaxSize(),
     ) {
-        items(tasksAndCategories, key = { it.first.id }) { (category, tasks) ->
-            val displayTasks = if (state.reorderTasks) tasks.filter { !it.status } else tasks
+        items(tasksAndCategories, key = { it.first.id }) { (category, groups) ->
+            val displayTasks = if (state.reorderTasks) groups.filter { !it.task.status } else groups
             var showReorderDialog by remember { mutableStateOf(false) }
 
             Surface(
@@ -666,7 +772,9 @@ private fun ExpandedTasksView(
                         }
                     }
 
-                    itemsIndexed(items = displayTasks, key = { _, it -> it.id }) { index, task ->
+                    itemsIndexed(items = displayTasks, key = { _, it -> it.task.id }) {
+                        index,
+                        taskWithSubTasks ->
                         val cardShape =
                             when {
                                 displayTasks.size == 1 -> RoundedCornerShape(20.dp)
@@ -690,32 +798,49 @@ private fun ExpandedTasksView(
                             }
 
                         TaskCard(
-                            task = task,
+                            taskWithSubTasks = taskWithSubTasks,
                             dragState = false,
                             reorderIcon = {},
                             is24Hr = state.is24Hour,
                             shape = cardShape,
-                            modifier =
-                                Modifier.fillMaxWidth()
-                                    .clip(cardShape)
-                                    .combinedClickable(
-                                        onClick = {
-                                            val updatedTask = task.copy(status = !task.status)
-                                            onAction(TaskAction.UpsertTask(updatedTask))
-                                        },
-                                        onLongClick = { if (!task.status) onEditTask(task) },
-                                    ),
+                            onUpdateStatus = {
+                                when (it) {
+                                    TaskStatus -> {
+                                        val updatedTask =
+                                            taskWithSubTasks.task.copy(
+                                                status = !taskWithSubTasks.task.status
+                                            )
+
+                                        onAction(TaskAction.UpsertTask(updatedTask))
+                                    }
+
+                                    is SubTaskStatus -> {
+                                        onAction(
+                                            TaskAction.UpsertSubTask(
+                                                it.subTask.copy(status = !it.subTask.status)
+                                            )
+                                        )
+                                    }
+                                }
+                            },
+                            onEdit = {
+                                if (!taskWithSubTasks.task.status) {
+                                    onEditTask(taskWithSubTasks.task)
+                                }
+                            },
+                            onShowSubTasksSheet = onShowSubTasksSheet,
                         )
                     }
 
                     if (state.reorderTasks) {
-                        val completedTasks = tasks.filter { it.status }
+                        val completedTasks = groups.filter { it.task.status }
 
                         if (completedTasks.isNotEmpty()) {
                             item { Spacer(modifier = Modifier.height(16.dp)) }
                         }
-                        itemsIndexed(items = completedTasks, key = { _, it -> it.id }) { index, task
-                            ->
+                        itemsIndexed(items = completedTasks, key = { _, it -> it.task.id }) {
+                            index,
+                            taskWithSubtasks ->
                             val cardShape =
                                 when {
                                     completedTasks.size == 1 -> RoundedCornerShape(20.dp)
@@ -739,25 +864,41 @@ private fun ExpandedTasksView(
                                 }
 
                             TaskCard(
-                                task = task,
+                                taskWithSubTasks = taskWithSubtasks,
                                 dragState = false,
                                 reorderIcon = {},
                                 is24Hr = state.is24Hour,
                                 shape = cardShape,
-                                modifier =
-                                    Modifier.fillMaxWidth()
-                                        .clip(cardShape)
-                                        .combinedClickable(
-                                            onClick = {
-                                                val updatedTask = task.copy(status = !task.status)
-                                                onAction(TaskAction.UpsertTask(updatedTask))
-                                            },
-                                            onLongClick = { if (!task.status) onEditTask(task) },
-                                        ),
+                                onUpdateStatus = {
+                                    when (it) {
+                                        TaskStatus -> {
+                                            val updatedTask =
+                                                taskWithSubtasks.task.copy(
+                                                    status = !taskWithSubtasks.task.status
+                                                )
+
+                                            onAction(TaskAction.UpsertTask(updatedTask))
+                                        }
+
+                                        is SubTaskStatus -> {
+                                            onAction(
+                                                TaskAction.UpsertSubTask(
+                                                    it.subTask.copy(status = !it.subTask.status)
+                                                )
+                                            )
+                                        }
+                                    }
+                                },
+                                onEdit = {
+                                    if (!taskWithSubtasks.task.status) {
+                                        onEditTask(taskWithSubtasks.task)
+                                    }
+                                },
+                                onShowSubTasksSheet = onShowSubTasksSheet,
                             )
                         }
                     }
-                    if (tasks.isEmpty()) {
+                    if (groups.isEmpty()) {
                         item { Empty(modifier = Modifier.padding(32.dp)) }
                     }
                 }
@@ -777,7 +918,9 @@ private fun ExpandedTasksView(
 
                             onAction(
                                 TaskAction.ReorderTasks(
-                                    reorderableTasks.mapIndexed { index, task -> index to task }
+                                    reorderableTasks.mapIndexed { index, taskWithSubtasks ->
+                                        index to taskWithSubtasks.task
+                                    }
                                 )
                             )
                         }
@@ -822,10 +965,13 @@ private fun ExpandedTasksView(
                             verticalArrangement = Arrangement.spacedBy(2.dp),
                             contentPadding = PaddingValues(bottom = 16.dp),
                         ) {
-                            itemsIndexed(items = reorderableTasks, key = { _, it -> it.id }) {
+                            itemsIndexed(items = reorderableTasks, key = { _, it -> it.task.id }) {
                                 index,
-                                task ->
-                                ReorderableItem(reorderableListState, key = task.id) {
+                                taskWithSubTasks ->
+                                ReorderableItem(
+                                    reorderableListState,
+                                    key = taskWithSubTasks.task.id,
+                                ) {
                                     val shape =
                                         when {
                                             reorderableTasks.size == 1 -> detachedItemShape()
@@ -843,7 +989,7 @@ private fun ExpandedTasksView(
                                             ),
                                         headlineContent = {
                                             Text(
-                                                text = task.title,
+                                                text = taskWithSubTasks.task.title,
                                                 maxLines = 1,
                                                 overflow = TextOverflow.Ellipsis,
                                             )

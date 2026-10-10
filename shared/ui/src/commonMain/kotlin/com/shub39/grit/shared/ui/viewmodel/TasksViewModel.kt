@@ -66,6 +66,7 @@ class TasksViewModel(
                 observeTasks()
                 observeDatastore()
                 rescheduleAllTasks()
+                rescheduleSubTasks()
             }
             .stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000), TaskState())
 
@@ -74,11 +75,14 @@ class TasksViewModel(
             when (action) {
                 is UpsertTask -> {
                     if (action.task.status) {
-                        analytics.trackEvent(
-                            AnalyticsEvent.TASK_COMPLETED,
-                            mapOf("has_reminder" to (action.task.reminder != null)),
-                        )
                         repo.upsertTask(action.task.copy(reminder = null))
+                        repo
+                            .getSubTasks()
+                            .filter { it.taskId == action.task.id }
+                            .forEach {
+                                scheduler.cancel(it)
+                                repo.upsertSubTask(it.copy(reminder = null, status = true))
+                            }
                     } else {
                         if (action.task.id == 0L) {
                             analytics.trackEvent(
@@ -117,14 +121,14 @@ class TasksViewModel(
                 }
 
                 is ReorderTasks -> {
-                    for (pair in action.mapping) {
-                        repo.updateTaskIndexById(pair.second.id, pair.first)
+                    for ((first, second) in action.mapping) {
+                        repo.updateTaskIndexById(second.id, first)
                     }
                 }
 
                 is ReorderCategories -> {
-                    for (category in action.mapping) {
-                        upsertCategory(category.second.copy(index = category.first))
+                    for ((first, second) in action.mapping) {
+                        upsertCategory(second.copy(index = first))
                     }
 
                     delay(REORDER_DELAY.milliseconds)
@@ -165,8 +169,40 @@ class TasksViewModel(
                     analytics.trackEvent(AnalyticsEvent.TASK_CATEGORY_SHEET_OPENED, emptyMap())
                 }
 
+                OnSubTaskSheetOpened -> {
+                    analytics.trackEvent(AnalyticsEvent.TASK_SUBTASK_SHEET_OPENED, emptyMap())
+                }
+
+                OnSubTaskSheetDismissed -> {
+                    analytics.trackEvent(AnalyticsEvent.TASK_SUBTASK_SHEET_DISMISSED, emptyMap())
+                }
+
                 OnTaskCategorySheetDismissed -> {
                     analytics.trackEvent(AnalyticsEvent.TASK_CATEGORY_SHEET_DISMISSED, emptyMap())
+                }
+
+                OnSubTaskPreview -> {
+                    analytics.trackEvent(AnalyticsEvent.TASK_SUBTASK_PREVIEW, emptyMap())
+                }
+
+                is TaskAction.DeleteSubTask -> {
+                    repo.deleteSubTask(action.subTask)
+                    scheduler.cancel(action.subTask)
+                    analytics.trackEvent(AnalyticsEvent.TASK_SUBTASK_DELETED, emptyMap())
+                }
+
+                is TaskAction.UpsertSubTask -> {
+                    if (action.subTask.status) {
+                        analytics.trackEvent(AnalyticsEvent.TASK_SUBTASK_COMPLETED, emptyMap())
+                        repo.upsertSubTask(action.subTask.copy(reminder = null))
+                        scheduler.cancel(action.subTask)
+                    } else {
+                        if (action.subTask.id == 0L) {
+                            analytics.trackEvent(AnalyticsEvent.TASK_SUBTASK_CREATED, emptyMap())
+                        }
+                        val newId = repo.upsertSubTask(action.subTask)
+                        scheduler.schedule(action.subTask.copy(id = newId))
+                    }
                 }
             }
         }
@@ -205,6 +241,10 @@ class TasksViewModel(
 
     private suspend fun rescheduleAllTasks() {
         repo.getTasks().forEach { task -> scheduler.schedule(task) }
+    }
+
+    private suspend fun rescheduleSubTasks() {
+        repo.getSubTasks().forEach { task -> scheduler.schedule(task) }
     }
 
     private suspend fun addDefault() {

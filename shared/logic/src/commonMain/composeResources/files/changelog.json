@@ -1,5 +1,14 @@
 [
   {
+    "version": "6.1.0",
+    "changes": [
+      "Added Subtasks. Add them by long pressing on a task",
+      "Miscellaneous UI improvements",
+      "Updated app icon",
+      "Updated Translations"
+    ]
+  },
+  {
     "version": "6.0.91",
     "changes": [
       "Updated Translations",
@@ -68,14 +77,6 @@
     "version": "5.9.25",
     "changes": [
       "Fix Hebrew Translations not applied by Language Picker"
-    ]
-  },
-  {
-    "version": "5.9.24",
-    "changes": [
-      "Updated Translations",
-      "Added ability to choose export locations for backups",
-      "Miscellaneous UI improvements"
     ]
   }
 ]

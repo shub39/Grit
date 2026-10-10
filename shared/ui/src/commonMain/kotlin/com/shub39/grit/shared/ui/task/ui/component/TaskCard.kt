@@ -18,50 +18,86 @@ package com.shub39.grit.shared.ui.task.ui.component
 
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.animateColorAsState
-import androidx.compose.animation.animateContentSize
 import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
+import androidx.compose.foundation.gestures.detectTapGestures
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
+import androidx.compose.material3.DropdownMenu
+import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.MaterialTheme.colorScheme
+import androidx.compose.material3.MaterialTheme.typography
+import androidx.compose.material3.MenuDefaults
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberUpdatedState
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.Shape
+import androidx.compose.ui.input.pointer.pointerInput
+import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextDecoration
+import androidx.compose.ui.unit.DpOffset
+import androidx.compose.ui.unit.IntOffset
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.shub39.grit.core.tasks.Task
+import com.shub39.grit.core.tasks.TaskWithSubTasks
 import com.shub39.grit.core.toFormattedString
+import com.shub39.grit.shared.ui.components.detachedItemShape
+import com.shub39.grit.shared.ui.components.segmentedListItemShapes
+import com.shub39.grit.shared.ui.task.ui.section.ShowSubTaskUpsertSheet
+import com.shub39.grit.shared.ui.task.ui.section.UpdateStatusTarget
 import grit.shared.ui.generated.resources.*
+import org.jetbrains.compose.resources.stringResource
 import org.jetbrains.compose.resources.vectorResource
 
 @Composable
 fun TaskCard(
-    task: Task,
+    modifier: Modifier = Modifier,
+    taskWithSubTasks: TaskWithSubTasks,
     dragState: Boolean = false,
     reorderIcon: @Composable () -> Unit,
     is24Hr: Boolean,
-    modifier: Modifier = Modifier,
     shape: Shape = RoundedCornerShape(4.dp),
+    onUpdateStatus: (UpdateStatusTarget) -> Unit,
+    onEdit: () -> Unit,
+    onShowSubTasksSheet: (ShowSubTaskUpsertSheet) -> Unit,
 ) {
+    var expanded by remember { mutableStateOf(false) }
+    var touchOffset by remember { mutableStateOf(DpOffset.Zero) }
+
+    val density = LocalDensity.current
+
+    val currentOnUpdateStatus by rememberUpdatedState(onUpdateStatus)
+    val currentOnShowSubTasksSheet by rememberUpdatedState(onShowSubTasksSheet)
+
     val cardContent by
         animateColorAsState(
             targetValue =
-                when (task.status) {
-                    true -> MaterialTheme.colorScheme.onSurface
-                    else -> MaterialTheme.colorScheme.onSecondaryContainer
+                when (taskWithSubTasks.task.status) {
+                    true -> colorScheme.onSurface
+                    else -> colorScheme.onSecondaryContainer
                 },
             animationSpec = MaterialTheme.motionScheme.fastEffectsSpec(),
             label = "cardContent",
@@ -69,9 +105,9 @@ fun TaskCard(
     val cardContainer by
         animateColorAsState(
             targetValue =
-                when (task.status) {
-                    true -> MaterialTheme.colorScheme.surfaceContainerHighest
-                    else -> MaterialTheme.colorScheme.secondaryContainer
+                when (taskWithSubTasks.task.status) {
+                    true -> colorScheme.surfaceContainerHighest
+                    else -> colorScheme.secondaryContainer
                 },
             animationSpec = MaterialTheme.motionScheme.fastEffectsSpec(),
             label = "cardContainer",
@@ -79,56 +115,239 @@ fun TaskCard(
     val cardColors =
         CardDefaults.cardColors(containerColor = cardContainer, contentColor = cardContent)
 
-    Card(
-        modifier =
-            modifier.animateContentSize(
-                animationSpec = MaterialTheme.motionScheme.fastSpatialSpec()
-            ),
-        colors = cardColors,
-        shape = shape,
-    ) {
-        Row(
-            verticalAlignment = Alignment.CenterVertically,
-            modifier = Modifier.fillMaxWidth().padding(16.dp),
-            horizontalArrangement = Arrangement.SpaceBetween,
-        ) {
-            Column(modifier = Modifier.weight(1f)) {
-                Text(
-                    text = task.title,
-                    style = MaterialTheme.typography.bodyLarge.copy(fontWeight = FontWeight.Bold),
-                    textDecoration =
-                        if (task.status) {
-                            TextDecoration.LineThrough
-                        } else {
-                            TextDecoration.None
-                        },
-                )
-
-                if (task.reminder != null) {
-                    Row(
-                        verticalAlignment = Alignment.CenterVertically,
-                        horizontalArrangement = Arrangement.spacedBy(4.dp),
-                    ) {
-                        Icon(
-                            imageVector = vectorResource(Res.drawable.alarm),
-                            contentDescription = "Reminder",
-                            modifier = Modifier.size(12.dp),
-                        )
-
+    Column(modifier = modifier) {
+        Box {
+            Card(
+                modifier =
+                    Modifier.pointerInput(Unit) {
+                            detectTapGestures(
+                                onLongPress = {
+                                    touchOffset =
+                                        with(density) { DpOffset(it.x.toDp(), it.y.toDp()) }
+                                    expanded = true
+                                },
+                                onTap = { currentOnUpdateStatus(UpdateStatusTarget.TaskStatus) },
+                            )
+                        }
+                        .clip(shape),
+                colors = cardColors,
+                shape = shape,
+            ) {
+                Row(
+                    verticalAlignment = Alignment.CenterVertically,
+                    modifier = Modifier.fillMaxWidth().padding(16.dp),
+                    horizontalArrangement = Arrangement.SpaceBetween,
+                ) {
+                    Column(modifier = Modifier.weight(1f)) {
                         Text(
-                            text = task.reminder!!.toFormattedString(is24Hr),
-                            style =
-                                MaterialTheme.typography.labelSmall.copy(
-                                    fontSize = 12.sp,
-                                    fontWeight = FontWeight.Light,
-                                ),
+                            text = taskWithSubTasks.task.title,
+                            style = typography.bodyLarge.copy(fontWeight = FontWeight.Bold),
+                            textDecoration =
+                                if (taskWithSubTasks.task.status) {
+                                    TextDecoration.LineThrough
+                                } else {
+                                    TextDecoration.None
+                                },
                         )
+
+                        if (taskWithSubTasks.task.reminder != null) {
+                            Row(
+                                verticalAlignment = Alignment.CenterVertically,
+                                horizontalArrangement = Arrangement.spacedBy(4.dp),
+                            ) {
+                                Icon(
+                                    imageVector = vectorResource(Res.drawable.alarm),
+                                    contentDescription = "Reminder",
+                                    modifier = Modifier.size(12.dp),
+                                )
+
+                                Text(
+                                    text =
+                                        taskWithSubTasks.task.reminder!!.toFormattedString(is24Hr),
+                                    style =
+                                        typography.labelSmall.copy(
+                                            fontSize = 12.sp,
+                                            fontWeight = FontWeight.Light,
+                                        ),
+                                )
+                            }
+                        }
+                    }
+
+                    AnimatedVisibility(visible = dragState, enter = fadeIn(), exit = fadeOut()) {
+                        reorderIcon()
                     }
                 }
             }
 
-            AnimatedVisibility(visible = dragState, enter = fadeIn(), exit = fadeOut()) {
-                reorderIcon()
+            Box(
+                modifier =
+                    Modifier.offset {
+                        IntOffset(touchOffset.x.roundToPx(), touchOffset.y.roundToPx())
+                    }
+            ) {
+                DropdownMenu(
+                    expanded = expanded,
+                    onDismissRequest = { expanded = false },
+                    tonalElevation = 0.dp,
+                    shadowElevation = 0.dp,
+                    containerColor = Color.Transparent,
+                    border = null,
+                ) {
+                    DropdownMenuItem(
+                        text = { Text(text = stringResource(Res.string.edit_task)) },
+                        onClick = {
+                            onEdit()
+                            expanded = false
+                        },
+                        colors = MenuDefaults.selectableItemColors(),
+                        leadingIcon = {
+                            Icon(
+                                imageVector = vectorResource(Res.drawable.edit),
+                                contentDescription = null,
+                            )
+                        },
+                        shape = MenuDefaults.leadingItemShape,
+                    )
+
+                    Spacer(modifier = Modifier.height(2.dp))
+
+                    DropdownMenuItem(
+                        text = { Text(text = stringResource(Res.string.add_subtasks)) },
+                        onClick = {
+                            onShowSubTasksSheet(ShowSubTaskUpsertSheet.Add(taskWithSubTasks.task))
+                            expanded = false
+                        },
+                        colors = MenuDefaults.selectableItemColors(),
+                        leadingIcon = {
+                            Icon(
+                                imageVector = vectorResource(Res.drawable.add),
+                                contentDescription = null,
+                            )
+                        },
+                        shape = MenuDefaults.trailingItemShape,
+                    )
+                }
+            }
+        }
+
+        if (taskWithSubTasks.subTasks.isNotEmpty()) {
+            AnimatedVisibility(
+                visible = !dragState,
+                modifier = Modifier.fillMaxWidth().padding(start = 16.dp),
+            ) {
+                Column(
+                    verticalArrangement = Arrangement.spacedBy(2.dp),
+                    modifier = Modifier.padding(top = 2.dp),
+                ) {
+                    taskWithSubTasks.subTasks.forEachIndexed { index, subTask ->
+                        val currentSubTask by rememberUpdatedState(subTask)
+                        val subTaskShape =
+                            if (!subTask.status) {
+                                segmentedListItemShapes(index, taskWithSubTasks.subTasks.size).shape
+                            } else detachedItemShape()
+
+                        val subTaskContainerColor by
+                            animateColorAsState(
+                                targetValue =
+                                    if (subTask.status) {
+                                        colorScheme.surfaceContainerHighest
+                                    } else colorScheme.tertiaryContainer
+                            )
+                        val subTaskContentColor by
+                            animateColorAsState(
+                                targetValue =
+                                    if (subTask.status) {
+                                        colorScheme.onSurface
+                                    } else colorScheme.onTertiaryContainer
+                            )
+
+                        Card(
+                            modifier =
+                                Modifier.pointerInput(subTask.id) {
+                                        if (!taskWithSubTasks.task.status) {
+                                            detectTapGestures(
+                                                onTap = {
+                                                    currentOnUpdateStatus(
+                                                        UpdateStatusTarget.SubTaskStatus(
+                                                            currentSubTask
+                                                        )
+                                                    )
+                                                },
+                                                onLongPress = {
+                                                    currentOnShowSubTasksSheet(
+                                                        ShowSubTaskUpsertSheet.Edit(currentSubTask)
+                                                    )
+                                                },
+                                            )
+                                        }
+                                    }
+                                    .clip(subTaskShape),
+                            colors =
+                                CardDefaults.cardColors(
+                                    containerColor = subTaskContainerColor,
+                                    contentColor = subTaskContentColor,
+                                ),
+                            shape = subTaskShape,
+                        ) {
+                            Row(
+                                verticalAlignment = Alignment.CenterVertically,
+                                modifier = Modifier.fillMaxWidth().padding(16.dp),
+                            ) {
+                                Icon(
+                                    imageVector =
+                                        vectorResource(
+                                            if (subTask.status) {
+                                                Res.drawable.check_circle
+                                            } else {
+                                                Res.drawable.circle_border
+                                            }
+                                        ),
+                                    modifier = Modifier.size(18.dp),
+                                    contentDescription = null,
+                                )
+
+                                Spacer(modifier = Modifier.width(8.dp))
+
+                                Column {
+                                    Text(
+                                        text = subTask.title,
+                                        style =
+                                            typography.bodyLarge.copy(fontWeight = FontWeight.Bold),
+                                        textDecoration =
+                                            if (subTask.status) {
+                                                TextDecoration.LineThrough
+                                            } else {
+                                                TextDecoration.None
+                                            },
+                                    )
+
+                                    if (subTask.reminder != null) {
+                                        Row(
+                                            verticalAlignment = Alignment.CenterVertically,
+                                            horizontalArrangement = Arrangement.spacedBy(4.dp),
+                                        ) {
+                                            Icon(
+                                                imageVector = vectorResource(Res.drawable.alarm),
+                                                contentDescription = "Reminder",
+                                                modifier = Modifier.size(12.dp),
+                                            )
+
+                                            Text(
+                                                text = subTask.reminder!!.toFormattedString(is24Hr),
+                                                style =
+                                                    typography.labelSmall.copy(
+                                                        fontSize = 12.sp,
+                                                        fontWeight = FontWeight.Light,
+                                                    ),
+                                            )
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
             }
         }
     }
