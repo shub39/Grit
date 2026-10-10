@@ -31,6 +31,7 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
@@ -38,6 +39,7 @@ import androidx.compose.material3.DropdownMenu
 import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.MaterialTheme.colorScheme
 import androidx.compose.material3.MaterialTheme.typography
 import androidx.compose.material3.MenuDefaults
 import androidx.compose.material3.Text
@@ -62,6 +64,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.shub39.grit.core.tasks.TaskWithSubTasks
 import com.shub39.grit.core.toFormattedString
+import com.shub39.grit.shared.ui.components.detachedItemShape
 import com.shub39.grit.shared.ui.components.segmentedListItemShapes
 import com.shub39.grit.shared.ui.task.ui.section.ShowSubTaskUpsertSheet
 import com.shub39.grit.shared.ui.task.ui.section.UpdateStatusTarget
@@ -93,8 +96,8 @@ fun TaskCard(
         animateColorAsState(
             targetValue =
                 when (taskWithSubTasks.task.status) {
-                    true -> MaterialTheme.colorScheme.onSurface
-                    else -> MaterialTheme.colorScheme.onSecondaryContainer
+                    true -> colorScheme.onSurface
+                    else -> colorScheme.onSecondaryContainer
                 },
             animationSpec = MaterialTheme.motionScheme.fastEffectsSpec(),
             label = "cardContent",
@@ -103,8 +106,8 @@ fun TaskCard(
         animateColorAsState(
             targetValue =
                 when (taskWithSubTasks.task.status) {
-                    true -> MaterialTheme.colorScheme.surfaceContainerHighest
-                    else -> MaterialTheme.colorScheme.secondaryContainer
+                    true -> colorScheme.surfaceContainerHighest
+                    else -> colorScheme.secondaryContainer
                 },
             animationSpec = MaterialTheme.motionScheme.fastEffectsSpec(),
             label = "cardContainer",
@@ -240,7 +243,24 @@ fun TaskCard(
                     taskWithSubTasks.subTasks.forEachIndexed { index, subTask ->
                         val currentSubTask by rememberUpdatedState(subTask)
                         val subTaskShape =
-                            segmentedListItemShapes(index, taskWithSubTasks.subTasks.size).shape
+                            if (!subTask.status) {
+                                segmentedListItemShapes(index, taskWithSubTasks.subTasks.size).shape
+                            } else detachedItemShape()
+
+                        val subTaskContainerColor by
+                            animateColorAsState(
+                                targetValue =
+                                    if (subTask.status) {
+                                        colorScheme.surfaceContainerHighest
+                                    } else colorScheme.tertiaryContainer
+                            )
+                        val subTaskContentColor by
+                            animateColorAsState(
+                                targetValue =
+                                    if (subTask.status) {
+                                        colorScheme.onSurface
+                                    } else colorScheme.onTertiaryContainer
+                            )
 
                         Card(
                             modifier =
@@ -263,39 +283,65 @@ fun TaskCard(
                                         }
                                     }
                                     .clip(subTaskShape),
+                            colors =
+                                CardDefaults.cardColors(
+                                    containerColor = subTaskContainerColor,
+                                    contentColor = subTaskContentColor,
+                                ),
                             shape = subTaskShape,
                         ) {
-                            Column(modifier = Modifier.fillMaxWidth().padding(16.dp)) {
-                                Text(
-                                    text = subTask.title,
-                                    style = typography.bodyLarge.copy(fontWeight = FontWeight.Bold),
-                                    textDecoration =
-                                        if (subTask.status) {
-                                            TextDecoration.LineThrough
-                                        } else {
-                                            TextDecoration.None
-                                        },
+                            Row(
+                                verticalAlignment = Alignment.CenterVertically,
+                                modifier = Modifier.fillMaxWidth().padding(16.dp),
+                            ) {
+                                Icon(
+                                    imageVector =
+                                        vectorResource(
+                                            if (subTask.status) {
+                                                Res.drawable.check_circle
+                                            } else {
+                                                Res.drawable.circle_border
+                                            }
+                                        ),
+                                    modifier = Modifier.size(18.dp),
+                                    contentDescription = null,
                                 )
 
-                                if (subTask.reminder != null) {
-                                    Row(
-                                        verticalAlignment = Alignment.CenterVertically,
-                                        horizontalArrangement = Arrangement.spacedBy(4.dp),
-                                    ) {
-                                        Icon(
-                                            imageVector = vectorResource(Res.drawable.alarm),
-                                            contentDescription = "Reminder",
-                                            modifier = Modifier.size(12.dp),
-                                        )
+                                Spacer(modifier = Modifier.width(8.dp))
 
-                                        Text(
-                                            text = subTask.reminder!!.toFormattedString(is24Hr),
-                                            style =
-                                                typography.labelSmall.copy(
-                                                    fontSize = 12.sp,
-                                                    fontWeight = FontWeight.Light,
-                                                ),
-                                        )
+                                Column {
+                                    Text(
+                                        text = subTask.title,
+                                        style =
+                                            typography.bodyLarge.copy(fontWeight = FontWeight.Bold),
+                                        textDecoration =
+                                            if (subTask.status) {
+                                                TextDecoration.LineThrough
+                                            } else {
+                                                TextDecoration.None
+                                            },
+                                    )
+
+                                    if (subTask.reminder != null) {
+                                        Row(
+                                            verticalAlignment = Alignment.CenterVertically,
+                                            horizontalArrangement = Arrangement.spacedBy(4.dp),
+                                        ) {
+                                            Icon(
+                                                imageVector = vectorResource(Res.drawable.alarm),
+                                                contentDescription = "Reminder",
+                                                modifier = Modifier.size(12.dp),
+                                            )
+
+                                            Text(
+                                                text = subTask.reminder!!.toFormattedString(is24Hr),
+                                                style =
+                                                    typography.labelSmall.copy(
+                                                        fontSize = 12.sp,
+                                                        fontWeight = FontWeight.Light,
+                                                    ),
+                                            )
+                                        }
                                     }
                                 }
                             }

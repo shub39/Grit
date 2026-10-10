@@ -80,6 +80,13 @@ class TasksViewModel(
                             mapOf("has_reminder" to (action.task.reminder != null)),
                         )
                         repo.upsertTask(action.task.copy(reminder = null))
+                        repo
+                            .getSubTasks()
+                            .filter { it.taskId == action.task.id }
+                            .forEach {
+                                scheduler.cancel(it)
+                                repo.upsertSubTask(it.copy(reminder = null, status = true))
+                            }
                     } else {
                         if (action.task.id == 0L) {
                             analytics.trackEvent(

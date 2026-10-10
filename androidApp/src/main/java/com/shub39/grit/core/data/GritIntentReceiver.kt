@@ -122,7 +122,7 @@ class GritIntentReceiver : BroadcastReceiver(), KoinComponent {
 
         GritLogger.d(TAG, "SubTask marked as complete successfully")
 
-        get<GritNotificationManager>().cancelNotification(subTaskId.toInt())
+        get<GritNotificationManager>().cancelNotification(subTask)
     }
 
     private suspend fun markTaskDone(intent: Intent) {
