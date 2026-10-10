@@ -200,8 +200,8 @@ class TasksViewModel(
                         if (action.subTask.id == 0L) {
                             analytics.trackEvent(AnalyticsEvent.TASK_SUBTASK_CREATED, emptyMap())
                         }
-                        repo.upsertSubTask(action.subTask)
-                        scheduler.schedule(action.subTask)
+                        val newId = repo.upsertSubTask(action.subTask)
+                        scheduler.schedule(action.subTask.copy(id = newId))
                     }
                 }
             }

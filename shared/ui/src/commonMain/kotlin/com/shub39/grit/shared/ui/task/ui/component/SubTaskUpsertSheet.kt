@@ -286,7 +286,8 @@ fun SubTaskUpsertSheetContent(
                             modifier = Modifier.weight(1f),
                             enabled =
                                 textFieldState.text.isNotBlank() &&
-                                    textFieldState.text.length <= 100,
+                                    textFieldState.text.length <= 100 &&
+                                    isValidDateTime,
                         ) {
                             Text(
                                 stringResource(

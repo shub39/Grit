@@ -28,7 +28,7 @@ interface TaskRepo {
 
     suspend fun getSubTasks(): List<SubTask>
 
-    suspend fun upsertSubTask(subTask: SubTask)
+    suspend fun upsertSubTask(subTask: SubTask): Long
 
     suspend fun deleteSubTask(subTask: SubTask)
 

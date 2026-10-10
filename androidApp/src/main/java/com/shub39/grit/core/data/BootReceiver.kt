@@ -52,6 +52,11 @@ class BootReceiver : BroadcastReceiver(), KoinComponent {
                         scheduler.schedule(it)
                         GritLogger.d("BootReceiver", "Scheduled task: ${it.id}")
                     }
+
+                    taskRepo.getSubTasks().forEach {
+                        scheduler.schedule(it)
+                        GritLogger.d("BootReceiver", "Scheduled subtask: ${it.id}")
+                    }
                 } catch (t: Exception) {
                     GritLogger.e("BootReceiver", "Failed to initiate alarms", t)
                 } finally {

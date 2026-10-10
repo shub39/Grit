@@ -79,6 +79,7 @@ class RestoreImpl(
                     },
                     async {
                         taskRepo.getTasks().forEach { alarmScheduler.cancel(it) }
+                        taskRepo.getSubTasks().forEach { alarmScheduler.cancel(it) }
 
                         jsonDeserialized.categories
                             .map { it.toCategory() }
@@ -86,11 +87,17 @@ class RestoreImpl(
 
                         jsonDeserialized.tasks
                             .map { it.toTask() }
-                            .forEach { taskRepo.upsertTask(it) }
+                            .forEach {
+                                taskRepo.upsertTask(it)
+                                alarmScheduler.schedule(it)
+                            }
 
                         jsonDeserialized.subTasks
                             .map { it.toSubTask() }
-                            .forEach { taskRepo.upsertSubTask(it) }
+                            .forEach {
+                                taskRepo.upsertSubTask(it)
+                                alarmScheduler.schedule(it)
+                            }
                     },
                 )
             }

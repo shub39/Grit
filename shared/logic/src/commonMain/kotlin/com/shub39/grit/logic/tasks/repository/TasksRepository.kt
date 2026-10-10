@@ -91,8 +91,17 @@ class TasksRepository(
         return subTaskDao.getSubTasks().map { it.toSubTask() }
     }
 
-    override suspend fun upsertSubTask(subTask: SubTask) {
-        subTaskDao.upsertSubTask(subTask.toSubTaskEntity())
+    override suspend fun upsertSubTask(subTask: SubTask): Long {
+        return if (subTask.id == 0L) {
+            subTaskDao.upsertSubTask(subTask.toSubTaskEntity())
+        } else {
+            subTaskDao.upsertSubTask(subTask.toSubTaskEntity())
+            if (subTask.status) {
+                notificationManager.cancelNotification(subTask)
+            }
+
+            subTask.id
+        }
     }
 
     override suspend fun deleteSubTask(subTask: SubTask) {
