@@ -36,6 +36,7 @@ import com.shub39.grit.billing.PaywallPage
 import com.shub39.grit.core.interfaces.BiometricUtils
 import com.shub39.grit.shared.ui.components.InitialLoading
 import com.shub39.grit.shared.ui.navigation.GritNavDisplay
+import com.shub39.grit.shared.ui.theme.GritTheme
 import com.shub39.grit.shared.ui.viewmodel.MainViewModel
 import io.github.vinceglb.filekit.FileKit
 import io.github.vinceglb.filekit.dialogs.init
@@ -86,7 +87,7 @@ class MainActivity : FragmentActivity() {
                     PaywallPage(isPlusUser = isPlusUser, onDismissRequest = onDismissRequest)
                 }
             } else {
-                InitialLoading()
+                GritTheme(theme = state.theme) { InitialLoading() }
             }
         }
     }
