@@ -359,6 +359,7 @@ fun TaskList(
             LaunchedEffect(Unit) { onAction(OnSubTaskPreview) }
 
             SubTasksFeaturePreview(
+                is24Hr = state.is24Hour,
                 onOpenPaywall = {
                     onOpenPaywall()
                     showSubTasksFeaturePreview = false
