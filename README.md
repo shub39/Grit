@@ -26,10 +26,6 @@ There are plenty of todo list and habit tracker apps for android. Some have the 
 While learning android I made this app for myself that brings together all the features that I like keeping everything simple. 
 I eventually want to turn this app into a productivity hub with many social features like progress sharing in the form of beautiful cards.
 
-# Stargazers over time
-
-[![Stargazers over time](https://starchart.cc/shub39/Grit.svg?background=%23282828&axis=%23f2dfd3&line=%23ffb780)](https://starchart.cc/shub39/Grit)
-
 ## Translations
 
 Translations are done via weblate, you can contribute there!

@@ -70,7 +70,12 @@ import sh.calvin.reorderable.ReorderableItem
 import sh.calvin.reorderable.rememberReorderableLazyListState
 
 @Composable
-fun TasksPage(state: TaskState, onAction: (TaskAction) -> Unit) {
+fun TasksPage(
+    isPlusUser: Boolean,
+    onOpenPaywall: () -> Unit,
+    state: TaskState,
+    onAction: (TaskAction) -> Unit,
+) {
     LaunchedEffect(Unit) { onAction(TaskAction.OnTasksOpened) }
 
     var showCategoryEditor by rememberSaveable { mutableStateOf(false) }
@@ -82,6 +87,8 @@ fun TasksPage(state: TaskState, onAction: (TaskAction) -> Unit) {
             onAction(TaskAction.OnTaskCategorySheetOpened)
             showCategoryEditor = true
         },
+        isPlusUser = isPlusUser,
+        onOpenPaywall = onOpenPaywall,
     )
 
     if (showCategoryEditor) {

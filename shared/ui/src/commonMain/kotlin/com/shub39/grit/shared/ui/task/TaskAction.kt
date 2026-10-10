@@ -54,4 +54,6 @@ sealed interface TaskAction {
     data object OnTaskCategorySheetOpened : TaskAction
 
     data object OnTaskCategorySheetDismissed : TaskAction
+
+    data object OnSubTaskPreview : TaskAction
 }

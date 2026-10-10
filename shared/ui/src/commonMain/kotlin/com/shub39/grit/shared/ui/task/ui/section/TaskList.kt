@@ -105,6 +105,7 @@ import com.shub39.grit.shared.ui.task.TaskAction
 import com.shub39.grit.shared.ui.task.TaskState
 import com.shub39.grit.shared.ui.task.ui.component.CategoryUpsertSheet
 import com.shub39.grit.shared.ui.task.ui.component.SubTaskUpsertSheet
+import com.shub39.grit.shared.ui.task.ui.component.SubTasksFeaturePreview
 import com.shub39.grit.shared.ui.task.ui.component.TaskCard
 import com.shub39.grit.shared.ui.task.ui.component.TaskUpsertSheet
 import com.shub39.grit.shared.ui.theme.flexFontEmphasis
@@ -137,6 +138,8 @@ sealed interface UpdateStatusTarget {
 @Composable
 fun TaskList(
     modifier: Modifier = Modifier,
+    isPlusUser: Boolean,
+    onOpenPaywall: () -> Unit,
     state: TaskState,
     onAction: (TaskAction) -> Unit,
     onEditCategories: () -> Unit,
@@ -147,6 +150,8 @@ fun TaskList(
         var showCategoryAddSheet by rememberSaveable { mutableStateOf(false) }
         var showDeleteDialog by rememberSaveable { mutableStateOf(false) }
         var editState by rememberSaveable { mutableStateOf(false) }
+        var showSubTasksFeaturePreview by rememberSaveable { mutableStateOf(false) }
+
         var showTaskUpsertSheet: ShowTaskUpsertSheet? by
             rememberSaveable(stateSaver = genericSaver<ShowTaskUpsertSheet?>()) {
                 mutableStateOf(null)
@@ -193,14 +198,26 @@ fun TaskList(
                     onAction = onAction,
                     onEditTask = { showTaskUpsertSheet = ShowTaskUpsertSheet.Edit(it) },
                     isCompact = windowSizeClass.isCompact(),
-                    onShowSubTasksSheet = { showSubTaskUpsertSheet = it },
+                    onShowSubTasksSheet = {
+                        if (isPlusUser) {
+                            showSubTaskUpsertSheet = it
+                        } else {
+                            showSubTasksFeaturePreview = true
+                        }
+                    },
                 )
             } else {
                 ExpandedTasksView(
                     state = state,
                     onAction = onAction,
                     onEditTask = { showTaskUpsertSheet = ShowTaskUpsertSheet.Edit(it) },
-                    onShowSubTasksSheet = { showSubTaskUpsertSheet = it },
+                    onShowSubTasksSheet = {
+                        if (isPlusUser) {
+                            showSubTaskUpsertSheet = it
+                        } else {
+                            showSubTasksFeaturePreview = true
+                        }
+                    },
                 )
             }
         }
@@ -335,6 +352,18 @@ fun TaskList(
                         else -> {}
                     }
                 },
+            )
+        }
+
+        if (showSubTasksFeaturePreview) {
+            LaunchedEffect(Unit) { onAction(OnSubTaskPreview) }
+
+            SubTasksFeaturePreview(
+                onOpenPaywall = {
+                    onOpenPaywall()
+                    showSubTasksFeaturePreview = false
+                },
+                onDismissRequest = { showSubTasksFeaturePreview = false },
             )
         }
     }

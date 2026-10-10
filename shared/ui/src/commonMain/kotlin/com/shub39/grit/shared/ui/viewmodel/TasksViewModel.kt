@@ -75,10 +75,6 @@ class TasksViewModel(
             when (action) {
                 is UpsertTask -> {
                     if (action.task.status) {
-                        analytics.trackEvent(
-                            AnalyticsEvent.TASK_COMPLETED,
-                            mapOf("has_reminder" to (action.task.reminder != null)),
-                        )
                         repo.upsertTask(action.task.copy(reminder = null))
                         repo
                             .getSubTasks()
@@ -183,6 +179,10 @@ class TasksViewModel(
 
                 OnTaskCategorySheetDismissed -> {
                     analytics.trackEvent(AnalyticsEvent.TASK_CATEGORY_SHEET_DISMISSED, emptyMap())
+                }
+
+                OnSubTaskPreview -> {
+                    analytics.trackEvent(AnalyticsEvent.TASK_SUBTASK_PREVIEW, emptyMap())
                 }
 
                 is TaskAction.DeleteSubTask -> {

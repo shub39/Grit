@@ -111,7 +111,12 @@ fun GritNavDisplay(
                                 val viewModel = koinViewModel<TasksViewModel>()
                                 val state by viewModel.state.collectAsStateWithLifecycle()
 
-                                TasksPage(state = state, onAction = viewModel::onAction)
+                                TasksPage(
+                                    state = state,
+                                    onAction = viewModel::onAction,
+                                    isPlusUser = globalState.isUserSubscribed,
+                                    onOpenPaywall = { topLevelBackStack.add(Paywall) },
+                                )
                             }
 
                             habitsScreens(
