@@ -21,5 +21,7 @@ enum class IntentActions(val action: String) {
     ADD_HABIT_STATUS("add_habit_status"),
     HABIT_NOTIFICATION("habit"),
     TASK_NOTIFICATION("task_notification"),
+    SUBTASK_NOTIFICATION("subtask_notification"),
     MARK_TASK_DONE("mark_task_done"),
+    MARK_SUBTASK_DONE("mark_subtask_done"),
 }

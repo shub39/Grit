@@ -103,6 +103,10 @@ class TasksRepository(
         return tasksDao.getTaskById(id)?.toTask()
     }
 
+    override suspend fun getSubTaskById(id: Long): SubTask? {
+        return subTaskDao.getSubTaskById(id)?.toSubTask()
+    }
+
     override suspend fun getCategories(): List<Category> {
         return categoryDao.getCategories().map { it.toCategory() }
     }

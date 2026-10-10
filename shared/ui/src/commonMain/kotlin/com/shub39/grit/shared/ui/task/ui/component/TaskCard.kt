@@ -37,6 +37,7 @@ import androidx.compose.material3.DropdownMenu
 import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.MaterialTheme.typography
 import androidx.compose.material3.MenuDefaults
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -58,6 +59,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.shub39.grit.core.tasks.TaskWithSubTasks
 import com.shub39.grit.core.toFormattedString
+import com.shub39.grit.shared.ui.components.segmentedListItemShapes
 import com.shub39.grit.shared.ui.task.ui.section.ShowSubTaskUpsertSheet
 import grit.shared.ui.generated.resources.*
 import org.jetbrains.compose.resources.stringResource
@@ -104,64 +106,137 @@ fun TaskCard(
         CardDefaults.cardColors(containerColor = cardContainer, contentColor = cardContent)
 
     Box(modifier = modifier) {
-        Card(
-            modifier =
-                Modifier.pointerInput(Unit) {
-                        detectTapGestures(
-                            onLongPress = {
-                                touchOffset = with(density) { DpOffset(it.x.toDp(), 0.dp) }
-                                expanded = true
-                            },
-                            onTap = { onUpdateStatus() },
-                        )
-                    }
-                    .clip(shape),
-            colors = cardColors,
-            shape = shape,
-        ) {
-            Row(
-                verticalAlignment = Alignment.CenterVertically,
-                modifier = Modifier.fillMaxWidth().padding(16.dp),
-                horizontalArrangement = Arrangement.SpaceBetween,
-            ) {
-                Column(modifier = Modifier.weight(1f)) {
-                    Text(
-                        text = taskWithSubTasks.task.title,
-                        style =
-                            MaterialTheme.typography.bodyLarge.copy(fontWeight = FontWeight.Bold),
-                        textDecoration =
-                            if (taskWithSubTasks.task.status) {
-                                TextDecoration.LineThrough
-                            } else {
-                                TextDecoration.None
-                            },
-                    )
-
-                    if (taskWithSubTasks.task.reminder != null) {
-                        Row(
-                            verticalAlignment = Alignment.CenterVertically,
-                            horizontalArrangement = Arrangement.spacedBy(4.dp),
-                        ) {
-                            Icon(
-                                imageVector = vectorResource(Res.drawable.alarm),
-                                contentDescription = "Reminder",
-                                modifier = Modifier.size(12.dp),
-                            )
-
-                            Text(
-                                text = taskWithSubTasks.task.reminder!!.toFormattedString(is24Hr),
-                                style =
-                                    MaterialTheme.typography.labelSmall.copy(
-                                        fontSize = 12.sp,
-                                        fontWeight = FontWeight.Light,
-                                    ),
+        Column {
+            Card(
+                modifier =
+                    Modifier.pointerInput(Unit) {
+                            detectTapGestures(
+                                onLongPress = {
+                                    touchOffset = with(density) { DpOffset(it.x.toDp(), 0.dp) }
+                                    expanded = true
+                                },
+                                onTap = { onUpdateStatus() },
                             )
                         }
+                        .clip(shape),
+                colors = cardColors,
+                shape = shape,
+            ) {
+                Row(
+                    verticalAlignment = Alignment.CenterVertically,
+                    modifier = Modifier.fillMaxWidth().padding(16.dp),
+                    horizontalArrangement = Arrangement.SpaceBetween,
+                ) {
+                    Column(modifier = Modifier.weight(1f)) {
+                        Text(
+                            text = taskWithSubTasks.task.title,
+                            style = typography.bodyLarge.copy(fontWeight = FontWeight.Bold),
+                            textDecoration =
+                                if (taskWithSubTasks.task.status) {
+                                    TextDecoration.LineThrough
+                                } else {
+                                    TextDecoration.None
+                                },
+                        )
+
+                        if (taskWithSubTasks.task.reminder != null) {
+                            Row(
+                                verticalAlignment = Alignment.CenterVertically,
+                                horizontalArrangement = Arrangement.spacedBy(4.dp),
+                            ) {
+                                Icon(
+                                    imageVector = vectorResource(Res.drawable.alarm),
+                                    contentDescription = "Reminder",
+                                    modifier = Modifier.size(12.dp),
+                                )
+
+                                Text(
+                                    text =
+                                        taskWithSubTasks.task.reminder!!.toFormattedString(is24Hr),
+                                    style =
+                                        typography.labelSmall.copy(
+                                            fontSize = 12.sp,
+                                            fontWeight = FontWeight.Light,
+                                        ),
+                                )
+                            }
+                        }
+                    }
+
+                    AnimatedVisibility(visible = dragState, enter = fadeIn(), exit = fadeOut()) {
+                        reorderIcon()
                     }
                 }
+            }
 
-                AnimatedVisibility(visible = dragState, enter = fadeIn(), exit = fadeOut()) {
-                    reorderIcon()
+            if (taskWithSubTasks.subTasks.isNotEmpty()) {
+                AnimatedVisibility(
+                    visible = !dragState,
+                    modifier = Modifier.fillMaxWidth().padding(start = 16.dp),
+                ) {
+                    Column(
+                        verticalArrangement = Arrangement.spacedBy(2.dp),
+                        modifier = Modifier.padding(top = 2.dp),
+                    ) {
+                        taskWithSubTasks.subTasks.forEachIndexed { index, subTask ->
+                            val subTaskShape =
+                                segmentedListItemShapes(index, taskWithSubTasks.subTasks.size).shape
+
+                            Card(
+                                modifier =
+                                    Modifier.pointerInput(Unit) {
+                                            detectTapGestures(
+                                                onTap = {
+                                                    // TODO: Edit Subtask status
+                                                },
+                                                onLongPress = {
+                                                    onShowSubTasksSheet(
+                                                        ShowSubTaskUpsertSheet.Edit(subTask)
+                                                    )
+                                                },
+                                            )
+                                        }
+                                        .clip(subTaskShape),
+                                shape = subTaskShape,
+                            ) {
+                                Column(modifier = Modifier.fillMaxWidth().padding(16.dp)) {
+                                    Text(
+                                        text = subTask.title,
+                                        style =
+                                            typography.bodyLarge.copy(fontWeight = FontWeight.Bold),
+                                        textDecoration =
+                                            if (subTask.status) {
+                                                TextDecoration.LineThrough
+                                            } else {
+                                                TextDecoration.None
+                                            },
+                                    )
+
+                                    if (subTask.reminder != null) {
+                                        Row(
+                                            verticalAlignment = Alignment.CenterVertically,
+                                            horizontalArrangement = Arrangement.spacedBy(4.dp),
+                                        ) {
+                                            Icon(
+                                                imageVector = vectorResource(Res.drawable.alarm),
+                                                contentDescription = "Reminder",
+                                                modifier = Modifier.size(12.dp),
+                                            )
+
+                                            Text(
+                                                text = subTask.reminder!!.toFormattedString(is24Hr),
+                                                style =
+                                                    typography.labelSmall.copy(
+                                                        fontSize = 12.sp,
+                                                        fontWeight = FontWeight.Light,
+                                                    ),
+                                            )
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
                 }
             }
         }

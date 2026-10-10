@@ -28,6 +28,9 @@ interface SubTaskDao {
 
     @Query("SELECT * FROM sub_tasks") suspend fun getSubTasks(): List<SubTaskEntity>
 
+    @Query("SELECT * FROM sub_tasks WHERE id = :id")
+    suspend fun getSubTaskById(id: Long): SubTaskEntity?
+
     @Upsert suspend fun upsertSubTask(subTaskEntity: SubTaskEntity): Long
 
     @Delete suspend fun deleteSubTask(subTaskEntity: SubTaskEntity)

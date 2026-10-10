@@ -111,12 +111,20 @@ class GritModules {
                 GritLogger.d("NotificationManager", "Task Notification: $task")
             }
 
+            override fun subTaskNotification(subTask: SubTask) {
+                GritLogger.d("NotificationManager", "SubTask Notification: $subTask")
+            }
+
             override fun cancelNotification(habitId: Int) {
                 GritLogger.d("NotificationManager", "Cancel Habit Notification: $habitId")
             }
 
             override fun cancelNotification(task: Task) {
                 GritLogger.d("NotificationManager", "Cancel Task Notification: $task")
+            }
+
+            override fun cancelNotification(subTask: SubTask) {
+                GritLogger.d("NotificationManager", "Cancel SubTask Notification: $subTask")
             }
         }
 }

@@ -17,6 +17,7 @@
 package com.shub39.grit.core.interfaces
 
 import com.shub39.grit.core.habits.Habit
+import com.shub39.grit.core.tasks.SubTask
 import com.shub39.grit.core.tasks.Task
 
 interface AppNotificationManager {
@@ -24,7 +25,11 @@ interface AppNotificationManager {
 
     fun taskNotification(task: Task)
 
+    fun subTaskNotification(subTask: SubTask)
+
     fun cancelNotification(habitId: Int)
 
     fun cancelNotification(task: Task)
+
+    fun cancelNotification(subTask: SubTask)
 }

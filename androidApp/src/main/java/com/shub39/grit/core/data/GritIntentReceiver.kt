@@ -65,6 +65,10 @@ class GritIntentReceiver : BroadcastReceiver(), KoinComponent {
 
                         IntentActions.TASK_NOTIFICATION.action -> taskNotification(intent)
 
+                        IntentActions.SUBTASK_NOTIFICATION.action -> subTaskNotification(intent)
+
+                        IntentActions.MARK_SUBTASK_DONE.action -> markSubTaskDone(intent)
+
                         else -> return@launch
                     }
                 }
@@ -74,6 +78,51 @@ class GritIntentReceiver : BroadcastReceiver(), KoinComponent {
                 pendingResult.finish()
             }
         }
+    }
+
+    private suspend fun subTaskNotification(intent: Intent) {
+        GritLogger.d(TAG, "SubTask notification intent received")
+        val subTaskId = intent.getLongExtra("subtask_id", -1)
+        if (subTaskId < 0) {
+            GritLogger.e(TAG, "Invalid SubTask Id: $subTaskId")
+            return
+        }
+
+        val taskRepo = get<TaskRepo>()
+        val subTask = taskRepo.getSubTaskById(subTaskId)
+
+        if (subTask == null) {
+            GritLogger.e(TAG, "Invalid SubTask Id: $subTaskId")
+            return
+        }
+
+        if (!subTask.status && subTask.reminder != null) {
+            GritLogger.d(TAG, "sending SubTask notification")
+            get<GritNotificationManager>().subTaskNotification(subTask)
+        }
+    }
+
+    private suspend fun markSubTaskDone(intent: Intent) {
+        GritLogger.d(TAG, "Mark subtask done intent received")
+        val subTaskId = intent.getLongExtra("subtask_id", -1)
+        if (subTaskId < 0) {
+            GritLogger.e(TAG, "Invalid SubTask Id: $subTaskId")
+            return
+        }
+
+        val taskRepo = get<TaskRepo>()
+        val subTask = taskRepo.getSubTaskById(subTaskId)
+
+        if (subTask == null) {
+            GritLogger.e(TAG, "Invalid SubTask Id: $subTaskId")
+            return
+        }
+
+        taskRepo.upsertSubTask(subTask.copy(status = true, reminder = null))
+
+        GritLogger.d(TAG, "SubTask marked as complete successfully")
+
+        get<GritNotificationManager>().cancelNotification(subTaskId.toInt())
     }
 
     private suspend fun markTaskDone(intent: Intent) {

@@ -27,6 +27,7 @@ import com.shub39.grit.core.habits.Habit
 import com.shub39.grit.core.interfaces.AlarmScheduler
 import com.shub39.grit.core.interfaces.IntentActions
 import com.shub39.grit.core.now
+import com.shub39.grit.core.tasks.SubTask
 import com.shub39.grit.core.tasks.Task
 import kotlinx.datetime.DateTimeUnit
 import kotlinx.datetime.LocalDateTime
@@ -117,6 +118,41 @@ class NotificationAlarmScheduler(private val context: Context) : AlarmScheduler 
         GritLogger.d(TAG, "Scheduled: Task '$task' at $scheduleTime")
     }
 
+    override fun schedule(subTask: SubTask) {
+        cancel(subTask)
+        if (subTask.reminder == null) return
+        val scheduleTime = subTask.reminder!!
+
+        val now = LocalDateTime.now()
+
+        if (scheduleTime < now) {
+            GritLogger.d(TAG, "SubTask '${subTask.title}' reminder time is in the past")
+            return
+        }
+
+        val notificationIntent =
+            Intent(context, GritIntentReceiver::class.java).apply {
+                action = IntentActions.SUBTASK_NOTIFICATION.action
+                putExtra("subtask_id", subTask.id)
+            }
+
+        val pendingIntent =
+            PendingIntent.getBroadcast(
+                context,
+                subTask.id.toInt(),
+                notificationIntent,
+                PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE,
+            )
+
+        alarmManager.setExactAndAllowWhileIdle(
+            AlarmManager.RTC_WAKEUP,
+            scheduleTime.toInstant(TimeZone.currentSystemDefault()).toEpochMilliseconds(),
+            pendingIntent,
+        )
+
+        GritLogger.d(TAG, "Scheduled: SubTask '$subTask' at $scheduleTime")
+    }
+
     override fun cancel(habit: Habit) {
         val cancelIntent =
             Intent(context, GritIntentReceiver::class.java).apply {
@@ -151,6 +187,24 @@ class NotificationAlarmScheduler(private val context: Context) : AlarmScheduler 
 
         alarmManager.cancel(pendingIntent)
         GritLogger.d(TAG, "Cancelled: Task '${task.title}'")
+    }
+
+    override fun cancel(subTask: SubTask) {
+        val cancelIntent =
+            Intent(context, GritIntentReceiver::class.java).apply {
+                action = IntentActions.SUBTASK_NOTIFICATION.action
+            }
+
+        val pendingIntent =
+            PendingIntent.getBroadcast(
+                context,
+                subTask.id.toInt(),
+                cancelIntent,
+                PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE,
+            )
+
+        alarmManager.cancel(pendingIntent)
+        GritLogger.d(TAG, "Cancelled: SubTask '${subTask.title}'")
     }
 
     override fun cancelAll() {

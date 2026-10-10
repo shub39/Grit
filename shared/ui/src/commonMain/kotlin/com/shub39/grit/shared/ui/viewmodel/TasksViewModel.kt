@@ -185,7 +185,6 @@ class TasksViewModel(
                 }
 
                 is TaskAction.UpsertSubTask -> {
-                    scheduler.cancel(action.subTask)
                     repo.upsertSubTask(action.subTask)
                     scheduler.schedule(action.subTask)
                     analytics.trackEvent(AnalyticsEvent.TASK_SUBTASK_CREATED, emptyMap())
