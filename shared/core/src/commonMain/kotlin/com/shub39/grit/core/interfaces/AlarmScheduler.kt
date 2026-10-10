@@ -17,6 +17,7 @@
 package com.shub39.grit.core.interfaces
 
 import com.shub39.grit.core.habits.Habit
+import com.shub39.grit.core.tasks.SubTask
 import com.shub39.grit.core.tasks.Task
 
 interface AlarmScheduler {
@@ -24,9 +25,13 @@ interface AlarmScheduler {
 
     fun schedule(task: Task)
 
+    fun schedule(subTask: SubTask)
+
     fun cancel(habit: Habit)
 
     fun cancel(task: Task)
+
+    fun cancel(subTask: SubTask)
 
     fun cancelAll()
 }

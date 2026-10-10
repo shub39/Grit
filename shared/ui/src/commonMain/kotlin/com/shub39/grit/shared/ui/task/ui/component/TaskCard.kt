@@ -58,6 +58,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.shub39.grit.core.tasks.TaskWithSubTasks
 import com.shub39.grit.core.toFormattedString
+import com.shub39.grit.shared.ui.task.ui.section.ShowSubTaskUpsertSheet
 import grit.shared.ui.generated.resources.*
 import org.jetbrains.compose.resources.stringResource
 import org.jetbrains.compose.resources.vectorResource
@@ -72,7 +73,7 @@ fun TaskCard(
     shape: Shape = RoundedCornerShape(4.dp),
     onUpdateStatus: () -> Unit,
     onEdit: () -> Unit,
-    onAddSubTask: () -> Unit,
+    onShowSubTasksSheet: (ShowSubTaskUpsertSheet) -> Unit,
 ) {
     var expanded by remember { mutableStateOf(false) }
     var touchOffset by remember { mutableStateOf(DpOffset.Zero) }
@@ -176,7 +177,10 @@ fun TaskCard(
         ) {
             DropdownMenuItem(
                 text = { Text(text = stringResource(Res.string.edit_task)) },
-                onClick = onEdit,
+                onClick = {
+                    onEdit()
+                    expanded = false
+                },
                 colors = MenuDefaults.selectableItemColors(),
                 leadingIcon = {
                     Icon(imageVector = vectorResource(Res.drawable.edit), contentDescription = null)
@@ -188,7 +192,10 @@ fun TaskCard(
 
             DropdownMenuItem(
                 text = { Text(text = stringResource(Res.string.add_subtasks)) },
-                onClick = onAddSubTask,
+                onClick = {
+                    onShowSubTasksSheet(ShowSubTaskUpsertSheet.Add(taskWithSubTasks.task))
+                    expanded = false
+                },
                 colors = MenuDefaults.selectableItemColors(),
                 leadingIcon = {
                     Icon(imageVector = vectorResource(Res.drawable.add), contentDescription = null)

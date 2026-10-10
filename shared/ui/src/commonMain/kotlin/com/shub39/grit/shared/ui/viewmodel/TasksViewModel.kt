@@ -66,6 +66,7 @@ class TasksViewModel(
                 observeTasks()
                 observeDatastore()
                 rescheduleAllTasks()
+                rescheduleSubTasks()
             }
             .stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000), TaskState())
 
@@ -165,8 +166,29 @@ class TasksViewModel(
                     analytics.trackEvent(AnalyticsEvent.TASK_CATEGORY_SHEET_OPENED, emptyMap())
                 }
 
+                OnSubTaskSheetOpened -> {
+                    analytics.trackEvent(AnalyticsEvent.TASK_SUBTASK_SHEET_OPENED, emptyMap())
+                }
+
+                OnSubTaskSheetDismissed -> {
+                    analytics.trackEvent(AnalyticsEvent.TASK_SUBTASK_SHEET_DISMISSED, emptyMap())
+                }
+
                 OnTaskCategorySheetDismissed -> {
                     analytics.trackEvent(AnalyticsEvent.TASK_CATEGORY_SHEET_DISMISSED, emptyMap())
+                }
+
+                is TaskAction.DeleteSubTask -> {
+                    repo.deleteSubTask(action.subTask)
+                    scheduler.cancel(action.subTask)
+                    analytics.trackEvent(AnalyticsEvent.TASK_SUBTASK_DELETED, emptyMap())
+                }
+
+                is TaskAction.UpsertSubTask -> {
+                    scheduler.cancel(action.subTask)
+                    repo.upsertSubTask(action.subTask)
+                    scheduler.schedule(action.subTask)
+                    analytics.trackEvent(AnalyticsEvent.TASK_SUBTASK_CREATED, emptyMap())
                 }
             }
         }
@@ -205,6 +227,10 @@ class TasksViewModel(
 
     private suspend fun rescheduleAllTasks() {
         repo.getTasks().forEach { task -> scheduler.schedule(task) }
+    }
+
+    private suspend fun rescheduleSubTasks() {
+        repo.getSubTasks().forEach { task -> scheduler.schedule(task) }
     }
 
     private suspend fun addDefault() {

@@ -37,6 +37,12 @@ value class AnalyticsEvent(val name: String) {
         val TASK_CATEGORY_DELETED = AnalyticsEvent("task_category_deleted")
         val TASK_CATEGORY_EDITED = AnalyticsEvent("task_category_edited")
 
+        val TASK_SUBTASK_SHEET_OPENED = AnalyticsEvent("task_subtask_sheet_opened")
+        val TASK_SUBTASK_SHEET_DISMISSED = AnalyticsEvent("task_subtask_sheet_dismissed")
+        val TASK_SUBTASK_CREATED = AnalyticsEvent("task_subtask_created")
+        val TASK_SUBTASK_DELETED = AnalyticsEvent("task_subtask_deleted")
+        val TASK_SUBTASK_COMPLETED = AnalyticsEvent("task_subtask_completed")
+
         val HABITS_OPENED = AnalyticsEvent("habits_opened")
         val HABIT_SHEET_OPENED = AnalyticsEvent("habit_sheet_opened")
         val HABIT_SHEET_DISMISSED = AnalyticsEvent("habit_sheet_dismissed")

@@ -25,6 +25,7 @@ import com.shub39.grit.core.interfaces.AlarmScheduler
 import com.shub39.grit.core.interfaces.AnalyticsWrapper
 import com.shub39.grit.core.interfaces.AppNotificationManager
 import com.shub39.grit.core.interfaces.BiometricUtils
+import com.shub39.grit.core.tasks.SubTask
 import com.shub39.grit.core.tasks.Task
 import com.shub39.grit.logic.di.LogicModules
 import com.shub39.grit.shared.ui.di.UIModules
@@ -78,12 +79,20 @@ class GritModules {
                 GritLogger.d("AlarmScheduler", "Scheduled: $task")
             }
 
+            override fun schedule(subTask: SubTask) {
+                GritLogger.d("AlarmScheduler", "Scheduled: $subTask")
+            }
+
             override fun cancel(habit: Habit) {
                 GritLogger.d("AlarmScheduler", "Cancelled: $habit")
             }
 
             override fun cancel(task: Task) {
                 GritLogger.d("AlarmScheduler", "Cancelled: $task")
+            }
+
+            override fun cancel(subTask: SubTask) {
+                GritLogger.d("AlarmScheduler", "Cancelled: $subTask")
             }
 
             override fun cancelAll() {
