@@ -1,8 +1,8 @@
 # Changelog
 
-## 6.1.0
+## 6.1.1
 - Added Subtasks. Add them by long pressing on a task
-- Miscellaneous UI improvements
+- Miscellaneous UI improvements and Fixes
 - Updated app icon
 - Updated Translations
 

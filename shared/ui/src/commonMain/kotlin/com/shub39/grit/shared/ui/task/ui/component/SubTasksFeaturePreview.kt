@@ -25,7 +25,9 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.MaterialTheme
@@ -101,6 +103,7 @@ fun SubTasksFeaturePreview(
     }
 
     var currentSubTasks by remember { mutableStateOf<List<SubTask>>(emptyList()) }
+    val scrollState = rememberScrollState()
 
     LaunchedEffect(Unit) {
         while (isActive) {
@@ -122,6 +125,14 @@ fun SubTasksFeaturePreview(
             currentSubTasks =
                 listOf(subTask1.copy(status = true), subTask2.copy(status = true), subTask3)
             delay(2200.milliseconds)
+        }
+    }
+
+    LaunchedEffect(currentSubTasks) {
+        if (currentSubTasks.isNotEmpty()) {
+            scrollState.animateScrollTo(scrollState.maxValue)
+        } else {
+            scrollState.scrollTo(0)
         }
     }
 
@@ -153,34 +164,42 @@ fun SubTasksFeaturePreview(
                         .height(265.dp)
                         .clip(RoundedCornerShape(16.dp))
                         .background(MaterialTheme.colorScheme.surfaceContainer)
-                        .padding(12.dp),
+                        .padding(horizontal = 12.dp),
                 contentAlignment = Alignment.Center,
             ) {
-                TaskCard(
-                    modifier = Modifier.fillMaxWidth().animateContentSize(),
-                    taskWithSubTasks =
-                        TaskWithSubTasks(task = sampleTask, subTasks = currentSubTasks),
-                    dragState = false,
-                    reorderIcon = {},
-                    is24Hr = is24Hr,
-                    shape = MaterialTheme.shapes.medium,
-                    onUpdateStatus = { target ->
-                        when (target) {
-                            is UpdateStatusTarget.SubTaskStatus -> {
-                                currentSubTasks =
-                                    currentSubTasks.map {
-                                        if (it.id == target.subTask.id) {
-                                            it.copy(status = !it.status)
-                                        } else it
-                                    }
-                            }
+                Column(
+                    modifier =
+                        Modifier.fillMaxWidth()
+                            .verticalScroll(state = scrollState, enabled = false),
+                    verticalArrangement = Arrangement.Center,
+                ) {
+                    TaskCard(
+                        modifier =
+                            Modifier.padding(vertical = 16.dp).fillMaxWidth().animateContentSize(),
+                        taskWithSubTasks =
+                            TaskWithSubTasks(task = sampleTask, subTasks = currentSubTasks),
+                        dragState = false,
+                        reorderIcon = {},
+                        is24Hr = is24Hr,
+                        shape = MaterialTheme.shapes.medium,
+                        onUpdateStatus = { target ->
+                            when (target) {
+                                is UpdateStatusTarget.SubTaskStatus -> {
+                                    currentSubTasks =
+                                        currentSubTasks.map {
+                                            if (it.id == target.subTask.id) {
+                                                it.copy(status = !it.status)
+                                            } else it
+                                        }
+                                }
 
-                            UpdateStatusTarget.TaskStatus -> {}
-                        }
-                    },
-                    onEdit = {},
-                    onShowSubTasksSheet = {},
-                )
+                                UpdateStatusTarget.TaskStatus -> {}
+                            }
+                        },
+                        onEdit = {},
+                        onShowSubTasksSheet = {},
+                    )
+                }
             }
 
             Spacer(modifier = Modifier.height(8.dp))
