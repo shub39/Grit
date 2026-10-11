@@ -89,4 +89,9 @@
     <string name="monthly">Monthly</string>
     <string name="yearly" >Yearly</string>
     <string name="add_subtasks">Add Subtasks</string>
+    <string name="habit_type">Habit Type</string>
+    <string name="target_value">Target Value</string>
+    <string name="target_unit">Target Unit</string>
+    <string name="yes_or_no">Yes or No</string>
+    <string name="measure_able">Measure-able</string>
 </resources>
