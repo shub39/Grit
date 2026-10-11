@@ -89,4 +89,9 @@
     <string name="monthly">월간</string>
     <string name="yearly">연간</string>
     <string name="add_subtasks">하위 작업 추가</string>
+    <string name="habit_type">습관 유형</string>
+    <string name="target_value">목표량</string>
+    <string name="target_unit">목표 단위</string>
+    <string name="measure_able">측정 가능</string>
+    <string name="yes_or_no">실행 여부</string>
 </resources>
