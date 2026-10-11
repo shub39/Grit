@@ -31,4 +31,6 @@ data class HabitEntity(
     val days: Set<DayOfWeek>,
     val time: LocalDateTime,
     @ColumnInfo(name = "reminder", defaultValue = "1") val reminder: Boolean,
+    @ColumnInfo(name = "target_value", defaultValue = "0.0") val targetValue: Double = 0.0,
+    @ColumnInfo(name = "target_unit", defaultValue = "''") val targetUnit: String = "",
 )

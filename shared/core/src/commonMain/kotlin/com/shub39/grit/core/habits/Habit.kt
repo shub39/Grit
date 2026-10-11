@@ -29,4 +29,9 @@ data class Habit(
     val days: Set<DayOfWeek>,
     val index: Int,
     val reminder: Boolean,
-)
+    val targetValue: Double = 0.0,
+    val targetUnit: String = "",
+) {
+    val isMeasurable: Boolean
+        get() = targetValue > 0.0
+}

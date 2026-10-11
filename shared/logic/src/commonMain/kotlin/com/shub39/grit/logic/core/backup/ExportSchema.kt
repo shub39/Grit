@@ -40,9 +40,17 @@ data class HabitSchema(
     val time: Long,
     val days: String,
     val reminder: Boolean,
+    val targetValue: Double = 0.0,
+    val targetUnit: String = "",
 )
 
-@Serializable data class HabitStatusSchema(val id: Long = 0, val habitId: Long, val date: Long)
+@Serializable
+data class HabitStatusSchema(
+    val id: Long = 0,
+    val habitId: Long,
+    val date: Long,
+    val value: Double = 1.0,
+)
 
 @Serializable
 data class TaskSchema(
