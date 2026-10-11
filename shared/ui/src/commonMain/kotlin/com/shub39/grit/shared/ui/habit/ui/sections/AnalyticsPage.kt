@@ -68,6 +68,7 @@ import com.shub39.grit.shared.ui.WindowSize.Companion.isExpanded
 import com.shub39.grit.shared.ui.components.GritDialog
 import com.shub39.grit.shared.ui.habit.HabitState
 import com.shub39.grit.shared.ui.habit.HabitsAction
+import com.shub39.grit.shared.ui.habit.ui.component.HabitStatusDialog
 import com.shub39.grit.shared.ui.habit.ui.component.HabitUpsertSheet
 import com.shub39.grit.shared.ui.habit.ui.component.stats.CalendarMap
 import com.shub39.grit.shared.ui.habit.ui.component.stats.StartStats
@@ -77,9 +78,12 @@ import com.shub39.grit.shared.ui.habit.ui.component.stats.WeeklyBooleanHeatMap
 import com.shub39.grit.shared.ui.theme.flexFontEmphasis
 import com.shub39.grit.shared.ui.theme.flexFontRounded
 import grit.shared.ui.generated.resources.*
+import kotlinx.datetime.LocalDate
 import kotlinx.datetime.YearMonth
 import org.jetbrains.compose.resources.stringResource
 import org.jetbrains.compose.resources.vectorResource
+
+private data class InsertMeasuredHabitsStatus(val date: LocalDate)
 
 @Composable
 fun AnalyticsPage(
@@ -112,6 +116,7 @@ fun AnalyticsPage(
             firstDayOfWeek = state.startingDay,
         )
 
+    var insertStatusDialog: InsertMeasuredHabitsStatus? by remember { mutableStateOf(null) }
     var editDialog by remember { mutableStateOf(false) }
     var deleteDialog by remember { mutableStateOf(false) }
 
@@ -210,7 +215,13 @@ fun AnalyticsPage(
                     heatMapState = heatMapState,
                     statuses = currentHabit.statuses,
                     days = currentHabit.habit.days,
-                    onDateClick = { onAction(HabitsAction.InsertStatus(currentHabit.habit, it)) },
+                    onDateClick = {
+                        if (currentHabit.habit.isMeasurable) {
+                            insertStatusDialog = InsertMeasuredHabitsStatus(date = it)
+                        } else {
+                            onAction(HabitsAction.InsertStatus(currentHabit.habit, it))
+                        }
+                    },
                 )
             }
 
@@ -223,7 +234,11 @@ fun AnalyticsPage(
                     days = currentHabit.habit.days,
                     onNavigateToCalendar = onNavigateToCalendar,
                     onDateClick = {
-                        onAction(HabitsAction.InsertStatus(habit = currentHabit.habit, date = it))
+                        if (currentHabit.habit.isMeasurable) {
+                            insertStatusDialog = InsertMeasuredHabitsStatus(date = it)
+                        } else {
+                            onAction(HabitsAction.InsertStatus(currentHabit.habit, it))
+                        }
                     },
                 )
             }
@@ -315,6 +330,25 @@ fun AnalyticsPage(
             onUpsertHabit = { onAction(HabitsAction.UpdateHabit(it)) },
             is24Hr = state.is24Hr,
             isEditSheet = true,
+        )
+    }
+
+    // insert measured habit status dialog
+    insertStatusDialog?.let { dialog ->
+        HabitStatusDialog(
+            modifier = Modifier,
+            onDismissRequest = { insertStatusDialog = null },
+            habit = currentHabit.habit,
+            date = dialog.date,
+            onAddStatus = { value ->
+                onAction(
+                    HabitsAction.InsertMeasuredStatus(
+                        habit = currentHabit.habit,
+                        date = dialog.date,
+                        value = value,
+                    )
+                )
+            },
         )
     }
 }

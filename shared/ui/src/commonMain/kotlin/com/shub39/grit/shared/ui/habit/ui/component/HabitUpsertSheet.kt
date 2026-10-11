@@ -138,7 +138,9 @@ fun HabitUpsertSheetContent(
 
     var timePickerDialog by rememberSaveable { mutableStateOf(false) }
 
-    var currentHabitType by remember { mutableStateOf(HabitType.YES_NO) }
+    var currentHabitType by remember {
+        mutableStateOf(if (newHabit.isMeasurable) HabitType.MEASURE_ABLE else HabitType.YES_NO)
+    }
 
     val titleTextFieldState =
         rememberTextFieldState(
@@ -343,60 +345,57 @@ fun HabitUpsertSheetContent(
                                 modifier = Modifier.padding(16.dp),
                             )
                         }
+                    }
 
-                        if (currentHabitType == HabitType.MEASURE_ABLE) {
-                            Card(
-                                shape = middleItemShape(),
-                                colors =
-                                    CardDefaults.cardColors(
-                                        containerColor =
-                                            MaterialTheme.colorScheme.surfaceContainerHigh
-                                    ),
+                    // target value pickers
+                    if (currentHabitType == HabitType.MEASURE_ABLE) {
+                        Card(
+                            shape = middleItemShape(),
+                            colors =
+                                CardDefaults.cardColors(
+                                    containerColor = MaterialTheme.colorScheme.surfaceContainerHigh
+                                ),
+                        ) {
+                            Row(
+                                modifier = Modifier.padding(16.dp),
+                                horizontalArrangement = Arrangement.spacedBy(8.dp),
                             ) {
-                                Row(
-                                    modifier = Modifier.padding(16.dp),
-                                    horizontalArrangement = Arrangement.spacedBy(8.dp),
-                                ) {
-                                    OutlinedTextField(
-                                        state = targetValueState,
-                                        lineLimits = TextFieldLineLimits.SingleLine,
-                                        shape = MaterialTheme.shapes.medium,
-                                        keyboardOptions =
-                                            KeyboardOptions(
-                                                capitalization = KeyboardCapitalization.Sentences,
-                                                imeAction = ImeAction.Next,
-                                                keyboardType = KeyboardType.Number,
-                                            ),
-                                        label = {
-                                            Text(text = stringResource(Res.string.target_value))
-                                        },
-                                        placeholder = { Text(text = "10") },
-                                        modifier = Modifier.weight(1f),
-                                        isError =
-                                            targetValueState.text.isNotBlank() &&
-                                                targetValueState.text
-                                                    .toString()
-                                                    .toDoubleOrNull()
-                                                    ?.let { it <= 0.0 } ?: true,
-                                    )
+                                OutlinedTextField(
+                                    state = targetValueState,
+                                    lineLimits = TextFieldLineLimits.SingleLine,
+                                    shape = MaterialTheme.shapes.medium,
+                                    keyboardOptions =
+                                        KeyboardOptions(
+                                            capitalization = KeyboardCapitalization.Sentences,
+                                            imeAction = ImeAction.Next,
+                                            keyboardType = KeyboardType.Number,
+                                        ),
+                                    label = {
+                                        Text(text = stringResource(Res.string.target_value))
+                                    },
+                                    placeholder = { Text(text = "10") },
+                                    modifier = Modifier.weight(1f),
+                                    isError =
+                                        targetValueState.text.isNotBlank() &&
+                                            targetValueState.text.toString().toDoubleOrNull()?.let {
+                                                it <= 0.0
+                                            } ?: true,
+                                )
 
-                                    OutlinedTextField(
-                                        state = targetUnitState,
-                                        lineLimits = TextFieldLineLimits.SingleLine,
-                                        shape = MaterialTheme.shapes.medium,
-                                        keyboardOptions =
-                                            KeyboardOptions(
-                                                capitalization = KeyboardCapitalization.Sentences,
-                                                imeAction = ImeAction.Done,
-                                                keyboardType = KeyboardType.Text,
-                                            ),
-                                        label = {
-                                            Text(text = stringResource(Res.string.target_unit))
-                                        },
-                                        placeholder = { Text(text = "Hours") },
-                                        modifier = Modifier.weight(1f),
-                                    )
-                                }
+                                OutlinedTextField(
+                                    state = targetUnitState,
+                                    lineLimits = TextFieldLineLimits.SingleLine,
+                                    shape = MaterialTheme.shapes.medium,
+                                    keyboardOptions =
+                                        KeyboardOptions(
+                                            capitalization = KeyboardCapitalization.Sentences,
+                                            imeAction = ImeAction.Done,
+                                            keyboardType = KeyboardType.Text,
+                                        ),
+                                    label = { Text(text = stringResource(Res.string.target_unit)) },
+                                    placeholder = { Text(text = "Hours") },
+                                    modifier = Modifier.weight(1f),
+                                )
                             }
                         }
                     }

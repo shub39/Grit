@@ -26,6 +26,7 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.widthIn
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyListState
@@ -43,7 +44,10 @@ import androidx.compose.material3.TopAppBarScrollBehavior
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.saveable.rememberSaveable
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.unit.dp
@@ -55,12 +59,14 @@ import com.shub39.grit.shared.ui.components.Empty
 import com.shub39.grit.shared.ui.components.PageFill
 import com.shub39.grit.shared.ui.components.detachedItemShape
 import com.shub39.grit.shared.ui.components.endItemShape
+import com.shub39.grit.shared.ui.components.genericSaver
 import com.shub39.grit.shared.ui.components.leadingItemShape
 import com.shub39.grit.shared.ui.components.middleItemShape
 import com.shub39.grit.shared.ui.habit.HabitState
 import com.shub39.grit.shared.ui.habit.HabitsAction
 import com.shub39.grit.shared.ui.habit.ui.component.HabitCard
 import com.shub39.grit.shared.ui.habit.ui.component.HabitListFABs
+import com.shub39.grit.shared.ui.habit.ui.component.HabitStatusDialog
 import com.shub39.grit.shared.ui.habit.ui.component.HabitUpsertSheet
 import com.shub39.grit.shared.ui.theme.flexFontEmphasis
 import com.shub39.grit.shared.ui.theme.flexFontRounded
@@ -72,12 +78,16 @@ import grit.shared.ui.generated.resources.expand
 import grit.shared.ui.generated.resources.habits
 import grit.shared.ui.generated.resources.reorder
 import kotlinx.datetime.DayOfWeek
+import kotlinx.datetime.LocalDate
 import kotlinx.datetime.LocalDateTime
+import kotlinx.serialization.Serializable
 import org.jetbrains.compose.resources.painterResource
 import org.jetbrains.compose.resources.stringResource
 import org.jetbrains.compose.resources.vectorResource
 import sh.calvin.reorderable.ReorderableItem
 import sh.calvin.reorderable.rememberReorderableLazyListState
+
+@Serializable private data class AddMeasuredHabitStatus(val habit: Habit, val date: LocalDate)
 
 @Composable
 fun HabitsList(
@@ -214,6 +224,10 @@ private fun HabitsListContent(
         rememberReorderableLazyListState(lazyListState) { from, to ->
             onAction(HabitsAction.OnTransientHabitReorder(from.index, to.index))
         }
+    var showMeasuredHabitStatusAddDialog: AddMeasuredHabitStatus? by
+        rememberSaveable(stateSaver = genericSaver<AddMeasuredHabitStatus?>()) {
+            mutableStateOf(null)
+        }
 
     Column(modifier = modifier) {
         LazyColumn(
@@ -241,7 +255,13 @@ private fun HabitsListContent(
                     HabitCard(
                         habitWithAnalytics = habitWithAnalytics,
                         completed = completed,
-                        action = onAction,
+                        onInsertStatus = { habit, date ->
+                            if (habitWithAnalytics.habit.isMeasurable) {
+                                showMeasuredHabitStatusAddDialog =
+                                    AddMeasuredHabitStatus(habit, date)
+                            } else onAction(HabitsAction.InsertStatus(habit, date))
+                        },
+                        onPrepareAnalytics = { onAction(HabitsAction.PrepareAnalytics(it)) },
                         startingDay = state.startingDay,
                         editState = state.editState,
                         onNavigateToAnalytics = onNavigateToAnalytics,
@@ -277,7 +297,7 @@ private fun HabitsListContent(
         }
     }
 
-    // add dialog
+    // habit add dialog
     if (state.showHabitAddSheet) {
         HabitUpsertSheet(
             habit =
@@ -292,6 +312,24 @@ private fun HabitsListContent(
             onDismissRequest = { onAction(HabitsAction.DismissAddHabitDialog) },
             onUpsertHabit = { onAction(HabitsAction.AddHabit(it)) },
             is24Hr = state.is24Hr,
+        )
+    }
+
+    // add measured habit status
+    showMeasuredHabitStatusAddDialog?.let { measuredHabitStatus ->
+        HabitStatusDialog(
+            onDismissRequest = { showMeasuredHabitStatusAddDialog = null },
+            habit = measuredHabitStatus.habit,
+            date = measuredHabitStatus.date,
+            onAddStatus = { value ->
+                onAction(
+                    HabitsAction.InsertMeasuredStatus(
+                        habit = measuredHabitStatus.habit,
+                        date = measuredHabitStatus.date,
+                        value = value,
+                    )
+                )
+            },
         )
     }
 }

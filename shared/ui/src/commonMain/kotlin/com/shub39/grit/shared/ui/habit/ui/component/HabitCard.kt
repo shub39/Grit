@@ -56,10 +56,10 @@ import com.kizitonwose.calendar.compose.WeekCalendar
 import com.kizitonwose.calendar.compose.weekcalendar.rememberWeekCalendarState
 import com.kizitonwose.calendar.core.minusDays
 import com.kizitonwose.calendar.core.plusDays
+import com.shub39.grit.core.habits.Habit
 import com.shub39.grit.core.habits.HabitWithAnalytics
 import com.shub39.grit.core.now
 import com.shub39.grit.core.toFormattedString
-import com.shub39.grit.shared.ui.habit.HabitsAction
 import grit.shared.ui.generated.resources.*
 import kotlinx.datetime.DateTimeUnit
 import kotlinx.datetime.DayOfWeek
@@ -72,7 +72,8 @@ import org.jetbrains.compose.resources.vectorResource
 fun HabitCard(
     habitWithAnalytics: HabitWithAnalytics,
     completed: Boolean,
-    action: (HabitsAction) -> Unit,
+    onInsertStatus: (Habit, LocalDate) -> Unit,
+    onPrepareAnalytics: (Habit) -> Unit,
     onNavigateToAnalytics: () -> Unit,
     editState: Boolean,
     compactView: Boolean,
@@ -130,7 +131,7 @@ fun HabitCard(
             ),
         onClick = {
             if (canCompleteToday) {
-                action(HabitsAction.InsertStatus(habitWithAnalytics.habit, today))
+                onInsertStatus(habitWithAnalytics.habit, today)
             }
         },
         shape = shape,
@@ -200,7 +201,7 @@ fun HabitCard(
 
                     IconButton(
                         onClick = {
-                            action(HabitsAction.PrepareAnalytics(habitWithAnalytics.habit))
+                            onPrepareAnalytics(habitWithAnalytics.habit)
                             onNavigateToAnalytics()
                         },
                         modifier =
@@ -286,12 +287,7 @@ fun HabitCard(
                                     role = Role.Button,
                                     enabled = validDay,
                                     onClick = {
-                                        action(
-                                            HabitsAction.InsertStatus(
-                                                habit = habitWithAnalytics.habit,
-                                                date = weekDay.date,
-                                            )
-                                        )
+                                        onInsertStatus(habitWithAnalytics.habit, weekDay.date)
                                     },
                                 ),
                         contentAlignment = Alignment.Center,
