@@ -97,9 +97,7 @@ fun Targets(
 
 @Composable
 private fun TargetCard(modifier: Modifier = Modifier, target: Target, title: String) {
-    val progress = target.progress / target.target
-
-    if (progress >= 1f) return
+    val progress = (target.progress / target.target).coerceIn(0.0, 1.0).toFloat()
 
     Column(modifier = Modifier, horizontalAlignment = Alignment.CenterHorizontally) {
         Text(
@@ -125,39 +123,40 @@ private fun TargetCard(modifier: Modifier = Modifier, target: Target, title: Str
                     color = colorScheme.onSurface,
                 )
             }
-            Row(
-                modifier =
-                    Modifier.weight(progress.toFloat())
-                        .background(
-                            color = colorScheme.primary,
-                            shape = MaterialTheme.shapes.large,
-                        ),
-                horizontalArrangement = Arrangement.Center,
-            ) {
-                Text(
-                    text = target.progress.roundToInt().toString(),
-                    modifier = Modifier.padding(8.dp),
-                    overflow = TextOverflow.Ellipsis,
-                    maxLines = 1,
-                    fontFamily = flexFontRounded(),
-                    color = colorScheme.onPrimary.copy(alpha = if (progress in 0.1..1.0) 1f else 0f),
-                )
+            if (progress in 0.01..1.0) {
+                Row(
+                    modifier =
+                        Modifier.weight(progress)
+                            .background(
+                                color = colorScheme.primary,
+                                shape = MaterialTheme.shapes.large,
+                            ),
+                    horizontalArrangement = Arrangement.Center,
+                ) {
+                    Text(
+                        text = target.progress.roundToInt().toString(),
+                        modifier = Modifier.padding(8.dp),
+                        overflow = TextOverflow.Ellipsis,
+                        maxLines = 1,
+                        fontFamily = flexFontRounded(),
+                        color = colorScheme.onPrimary
+                    )
+                }
             }
-            Row(
-                modifier = Modifier.weight(1 - progress.toFloat()),
-                horizontalArrangement = Arrangement.Center,
-            ) {
-                Text(
-                    text = target.target.roundToInt().toString(),
-                    modifier = Modifier.padding(8.dp),
-                    overflow = TextOverflow.Ellipsis,
-                    maxLines = 1,
-                    fontFamily = flexFontRounded(),
-                    color =
-                        colorScheme.onSurfaceVariant.copy(
-                            alpha = if ((1 - progress) in 0.1..1.0) 1f else 0f
-                        ),
-                )
+            if ((1 - progress) in 0.01..1.0) {
+                Row(
+                    modifier = Modifier.weight(1 - progress),
+                    horizontalArrangement = Arrangement.Center,
+                ) {
+                    Text(
+                        text = target.target.roundToInt().toString(),
+                        modifier = Modifier.padding(8.dp),
+                        overflow = TextOverflow.Ellipsis,
+                        maxLines = 1,
+                        fontFamily = flexFontRounded(),
+                        color = colorScheme.onSurfaceVariant,
+                    )
+                }
             }
         }
     }
