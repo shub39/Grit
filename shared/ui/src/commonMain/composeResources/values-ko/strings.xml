@@ -94,4 +94,8 @@
     <string name="target_unit">목표 단위</string>
     <string name="measure_able">측정 가능</string>
     <string name="yes_or_no">실행 여부</string>
+    <string name="add_status">상태 추가</string>
+    <string name="quarterly">분기간</string>
+    <string name="weekly">주간</string>
+    <string name="daily">일간</string>
 </resources>
