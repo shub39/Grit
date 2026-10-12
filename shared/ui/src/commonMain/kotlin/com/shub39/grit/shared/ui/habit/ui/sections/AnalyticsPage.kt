@@ -34,7 +34,6 @@ import androidx.compose.foundation.layout.widthIn
 import androidx.compose.foundation.lazy.staggeredgrid.LazyVerticalStaggeredGrid
 import androidx.compose.foundation.lazy.staggeredgrid.StaggeredGridCells
 import androidx.compose.foundation.shape.CircleShape
-import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.ButtonShapes
 import androidx.compose.material3.FilledIconButton
 import androidx.compose.material3.FilledTonalIconButton
@@ -55,7 +54,6 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.unit.dp
@@ -74,7 +72,7 @@ import com.shub39.grit.shared.ui.habit.ui.component.stats.CalendarMap
 import com.shub39.grit.shared.ui.habit.ui.component.stats.StartStats
 import com.shub39.grit.shared.ui.habit.ui.component.stats.WeekDayBreakdown
 import com.shub39.grit.shared.ui.habit.ui.component.stats.WeeklyActivity
-import com.shub39.grit.shared.ui.habit.ui.component.stats.WeeklyBooleanHeatMap
+import com.shub39.grit.shared.ui.habit.ui.component.stats.WeeklyHeatMap
 import com.shub39.grit.shared.ui.theme.flexFontEmphasis
 import com.shub39.grit.shared.ui.theme.flexFontRounded
 import grit.shared.ui.generated.resources.*
@@ -192,10 +190,7 @@ fun AnalyticsPage(
 
         val maxWidth = 380.dp
         LazyVerticalStaggeredGrid(
-            modifier =
-                Modifier.fillMaxSize()
-                    .padding(start = 16.dp, end = 16.dp)
-                    .clip(RoundedCornerShape(topStart = 20.dp, topEnd = 20.dp)),
+            modifier = Modifier.fillMaxSize().padding(start = 16.dp, end = 16.dp),
             columns = StaggeredGridCells.Adaptive(minSize = maxWidth),
             contentPadding = PaddingValues(top = 16.dp, bottom = 60.dp),
             horizontalArrangement = Arrangement.spacedBy(16.dp),
@@ -211,7 +206,7 @@ fun AnalyticsPage(
             }
 
             item {
-                WeeklyBooleanHeatMap(
+                WeeklyHeatMap(
                     isMeasurable = currentHabit.habit.isMeasurable,
                     targetValue = currentHabit.habit.targetValue,
                     heatMapState = heatMapState,
@@ -248,20 +243,24 @@ fun AnalyticsPage(
                 )
             }
 
-            item {
-                WeeklyActivity(
-                    lineChartData = currentHabit.weeklyComparisonData,
-                    modifier = Modifier.widthIn(max = maxWidth),
-                )
+            if (!currentHabit.habit.isMeasurable) {
+                item {
+                    WeeklyActivity(
+                        lineChartData = currentHabit.weeklyComparisonData,
+                        modifier = Modifier.widthIn(max = maxWidth),
+                    )
+                }
             }
 
-            item {
-                WeekDayBreakdown(
-                    canSeeContent = isUserSubscribed,
-                    weekDayData = currentHabit.weekDayFrequencyData,
-                    onNavigateToPaywall = onNavigateToPaywall,
-                    modifier = Modifier.widthIn(max = maxWidth),
-                )
+            if (!currentHabit.habit.isMeasurable) {
+                item {
+                    WeekDayBreakdown(
+                        canSeeContent = isUserSubscribed,
+                        weekDayData = currentHabit.weekDayFrequencyData,
+                        onNavigateToPaywall = onNavigateToPaywall,
+                        modifier = Modifier.widthIn(max = maxWidth),
+                    )
+                }
             }
         }
     }

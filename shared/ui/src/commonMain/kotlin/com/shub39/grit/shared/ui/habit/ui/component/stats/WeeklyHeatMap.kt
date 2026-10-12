@@ -75,7 +75,7 @@ import org.jetbrains.compose.resources.stringResource
  * @param onDateClick callback when a day is clicked
  */
 @Composable
-fun WeeklyBooleanHeatMap(
+fun WeeklyHeatMap(
     isMeasurable: Boolean,
     targetValue: Double,
     heatMapState: HeatMapCalendarState,
@@ -248,7 +248,7 @@ fun WeeklyBooleanHeatMap(
 @Preview
 @Composable
 private fun Preview() {
-    WeeklyBooleanHeatMap(
+    WeeklyHeatMap(
         isMeasurable = false,
         targetValue = 0.0,
         heatMapState =

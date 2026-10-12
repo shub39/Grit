@@ -380,9 +380,11 @@ fun HabitUpsertSheetContent(
                                     modifier = Modifier.weight(1f),
                                     isError =
                                         targetValueState.text.isNotBlank() &&
-                                            (targetValueState.text.toString().toDoubleOrNull()?.let {
-                                                it !in MIN_TARGET_VALUE..MAX_TARGET_VALUE
-                                            } ?: true),
+                                            (targetValueState.text
+                                                .toString()
+                                                .toDoubleOrNull()
+                                                ?.let { it !in MIN_TARGET_VALUE..MAX_TARGET_VALUE }
+                                                ?: true),
                                 )
 
                                 OutlinedTextField(
