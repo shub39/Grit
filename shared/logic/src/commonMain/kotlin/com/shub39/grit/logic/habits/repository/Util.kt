@@ -16,7 +16,10 @@
  */
 package com.shub39.grit.logic.habits.repository
 
+import com.shub39.grit.core.habits.Habit
 import com.shub39.grit.core.habits.HabitStatus
+import com.shub39.grit.core.habits.MeasurableTargets
+import com.shub39.grit.core.habits.Target
 import com.shub39.grit.core.habits.WeekDayFrequencyData
 import com.shub39.grit.core.habits.WeeklyComparisonData
 import com.shub39.grit.core.now
@@ -28,6 +31,7 @@ import kotlinx.datetime.daysUntil
 import kotlinx.datetime.format.DayOfWeekNames
 import kotlinx.datetime.isoDayNumber
 import kotlinx.datetime.minus
+import kotlinx.datetime.number
 import kotlinx.datetime.plus
 
 fun countCurrentStreak(
@@ -185,3 +189,77 @@ fun calculateConsistency(dates: List<LocalDate>, eligibleWeekdays: Set<DayOfWeek
 
     return if (totalEligibleDays > 0) eligibleDates.size.toFloat() / totalEligibleDays else 0f
 }
+
+fun calculateMeasurableTargets(
+    habit: Habit,
+    statuses: List<HabitStatus>,
+    firstDayOfWeek: DayOfWeek = DayOfWeek.MONDAY,
+): MeasurableTargets {
+    if (!habit.isMeasurable) return emptyMeasurableTargets()
+
+    val today = LocalDate.now()
+    val statusMap = statuses.associateBy { it.date }
+
+    // Helper to calculate progress and target for any date range
+    fun getTargetForRange(startDate: LocalDate, endDate: LocalDate): Target {
+        var progress = 0.0
+        var targetDays = 0
+
+        var current = startDate
+        while (current <= endDate) {
+            // Only count days that are enabled in habit.days
+            if (current.dayOfWeek in habit.days) {
+                targetDays++
+                progress += statusMap[current]?.value ?: 0.0
+            }
+            current = current.plus(1, DateTimeUnit.DAY)
+        }
+
+        return Target(progress = progress, target = targetDays * habit.targetValue)
+    }
+
+    // 1. Daily Target: Today
+    val dailyTarget = getTargetForRange(today, today)
+
+    // 2. Weekly Target: Current week (from start of week to end of week)
+    val startOfWeek =
+        today.minus(
+            (today.dayOfWeek.isoDayNumber - firstDayOfWeek.isoDayNumber + 7) % 7,
+            DateTimeUnit.DAY,
+        )
+    val endOfWeek = startOfWeek.plus(6, DateTimeUnit.DAY)
+    val weeklyTarget = getTargetForRange(startOfWeek, endOfWeek)
+
+    // 3. Monthly Target: Current month (from 1st to last day of month)
+    val startOfMonth = LocalDate(today.year, today.month, 1)
+    val endOfMonth = startOfMonth.plus(1, DateTimeUnit.MONTH).minus(1, DateTimeUnit.DAY)
+    val monthlyTarget = getTargetForRange(startOfMonth, endOfMonth)
+
+    // 4. Quarterly Target: Current quarter (3 months)
+    val quarterStartMonth = ((today.month.number - 1) / 3) * 3 + 1
+    val startOfQuarter = LocalDate(today.year, quarterStartMonth, 1)
+    val endOfQuarter = startOfQuarter.plus(3, DateTimeUnit.MONTH).minus(1, DateTimeUnit.DAY)
+    val quarterlyTarget = getTargetForRange(startOfQuarter, endOfQuarter)
+
+    // 5. Yearly Target: Current year (Jan 1 to Dec 31)
+    val startOfYear = LocalDate(today.year, 1, 1)
+    val endOfYear = LocalDate(today.year, 12, 31)
+    val yearlyTarget = getTargetForRange(startOfYear, endOfYear)
+
+    return MeasurableTargets(
+        dailyTarget = dailyTarget,
+        weeklyTarget = weeklyTarget,
+        monthlyTarget = monthlyTarget,
+        quarterlyTarget = quarterlyTarget,
+        yearlyTarget = yearlyTarget,
+    )
+}
+
+private fun emptyMeasurableTargets() =
+    MeasurableTargets(
+        dailyTarget = Target(0.0, 0.0),
+        weeklyTarget = Target(0.0, 0.0),
+        monthlyTarget = Target(0.0, 0.0),
+        quarterlyTarget = Target(0.0, 0.0),
+        yearlyTarget = Target(0.0, 0.0),
+    )

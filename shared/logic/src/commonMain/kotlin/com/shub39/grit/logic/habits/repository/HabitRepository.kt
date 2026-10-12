@@ -111,15 +111,26 @@ class HabitRepository(
                     HabitWithAnalytics(
                         habit = habit,
                         statuses = habitStatusesForHabit,
+                        measurableTargets =
+                            calculateMeasurableTargets(
+                                habit = habit,
+                                statuses = habitStatusesForHabit,
+                                firstDayOfWeek = firstDayOfWeek.value,
+                            ),
                         currentStreak =
                             countCurrentStreak(dates = dates, eligibleWeekdays = habit.days),
                         bestStreak = countBestStreak(dates = dates, eligibleWeekdays = habit.days),
                         weeklyComparisonData =
-                            prepareLineChartData(
-                                firstDay = firstDayOfWeek.value,
-                                habitStatuses = habitStatusesForHabit,
-                            ),
-                        weekDayFrequencyData = prepareWeekDayFrequencyData(dates = dates),
+                            if (!habit.isMeasurable) {
+                                prepareLineChartData(
+                                    firstDay = firstDayOfWeek.value,
+                                    habitStatuses = habitStatusesForHabit,
+                                )
+                            } else emptyList(),
+                        weekDayFrequencyData =
+                            if (!habit.isMeasurable) {
+                                prepareWeekDayFrequencyData(dates = dates)
+                            } else emptyMap(),
                         startedDaysAgo = habit.time.date.daysUntil(LocalDate.now()).toLong(),
                         consistency = calculateConsistency(dates, habit.days),
                     )

@@ -77,7 +77,7 @@ class HabitViewModel(
                         AnalyticsEvent.HABIT_CREATED,
                         mapOf(
                             "has_reminder" to action.habit.reminder,
-                            "is_measurable" to action.habit.isMeasurable
+                            "is_measurable" to action.habit.isMeasurable,
                         ),
                     )
                     upsertHabit(action.habit)
