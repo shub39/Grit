@@ -57,6 +57,9 @@ import kotlinx.coroutines.delay
 import org.jetbrains.compose.resources.stringResource
 import org.jetbrains.compose.resources.vectorResource
 
+private const val MAX_STATUS_VALUE = 999_999.0
+private const val MIN_STATUS_VALUE = 0.0
+
 @Composable
 fun HabitStatusDialog(
     modifier: Modifier = Modifier,
@@ -74,7 +77,10 @@ fun HabitStatusDialog(
             initialSelection = TextRange(value.toString().length),
         )
 
-    val isValidInput = textFieldState.text.toString().toDoubleOrNull()?.let { it >= 0.0 } ?: false
+    val isValidInput =
+        textFieldState.text.toString().toDoubleOrNull()?.let {
+            (it in MIN_STATUS_VALUE..MAX_STATUS_VALUE)
+        } ?: false
 
     LaunchedEffect(Unit) {
         delay(400.milliseconds)

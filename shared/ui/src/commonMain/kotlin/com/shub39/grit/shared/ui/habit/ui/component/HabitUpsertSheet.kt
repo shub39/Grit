@@ -97,6 +97,9 @@ import org.jetbrains.compose.resources.vectorResource
 
 private const val TITLE_STRING_LIMIT = 50
 private const val DESCRIPTION_STRING_LIMIT = 200
+private const val UNIT_STRING_LIMIT = 20
+private const val MAX_TARGET_VALUE = 999_999.0
+private const val MIN_TARGET_VALUE = 0.01
 
 private enum class HabitType {
     YES_NO,
@@ -231,7 +234,7 @@ fun HabitUpsertSheetContent(
                                 imeAction = ImeAction.Next,
                             ),
                         label = {
-                            if (newHabit.title.length <= TITLE_STRING_LIMIT) {
+                            if (titleTextFieldState.text.length <= TITLE_STRING_LIMIT) {
                                 Text(
                                     text =
                                         stringResource(
@@ -243,7 +246,7 @@ fun HabitUpsertSheetContent(
                                 Text(text = stringResource(Res.string.too_long))
                             }
                         },
-                        isError = newHabit.title.length > TITLE_STRING_LIMIT,
+                        isError = titleTextFieldState.text.length > TITLE_STRING_LIMIT,
                         modifier = Modifier.fillMaxWidth().focusRequester(focusRequester),
                     )
 
@@ -259,7 +262,7 @@ fun HabitUpsertSheetContent(
                             ),
                         modifier = Modifier.fillMaxWidth(),
                         label = {
-                            if (newHabit.description.length <= DESCRIPTION_STRING_LIMIT) {
+                            if (descTextFieldState.text.length <= DESCRIPTION_STRING_LIMIT) {
                                 Text(
                                     text =
                                         stringResource(
@@ -271,7 +274,7 @@ fun HabitUpsertSheetContent(
                                 Text(text = stringResource(Res.string.too_long))
                             }
                         },
-                        isError = newHabit.description.length > DESCRIPTION_STRING_LIMIT,
+                        isError = descTextFieldState.text.length > DESCRIPTION_STRING_LIMIT,
                     )
                 }
             }
@@ -377,9 +380,9 @@ fun HabitUpsertSheetContent(
                                     modifier = Modifier.weight(1f),
                                     isError =
                                         targetValueState.text.isNotBlank() &&
-                                            targetValueState.text.toString().toDoubleOrNull()?.let {
-                                                it <= 0.0
-                                            } ?: true,
+                                            (targetValueState.text.toString().toDoubleOrNull()?.let {
+                                                it !in MIN_TARGET_VALUE..MAX_TARGET_VALUE
+                                            } ?: true),
                                 )
 
                                 OutlinedTextField(
@@ -392,9 +395,16 @@ fun HabitUpsertSheetContent(
                                             imeAction = ImeAction.Done,
                                             keyboardType = KeyboardType.Text,
                                         ),
-                                    label = { Text(text = stringResource(Res.string.target_unit)) },
+                                    label = {
+                                        if (targetUnitState.text.length <= UNIT_STRING_LIMIT) {
+                                            Text(text = stringResource(Res.string.target_unit))
+                                        } else {
+                                            Text(text = stringResource(Res.string.too_long))
+                                        }
+                                    },
                                     placeholder = { Text(text = "Hours") },
                                     modifier = Modifier.weight(1f),
+                                    isError = targetUnitState.text.length > UNIT_STRING_LIMIT,
                                 )
                             }
                         }
@@ -491,8 +501,11 @@ fun HabitUpsertSheetContent(
                             titleTextFieldState.text.length <= TITLE_STRING_LIMIT &&
                             titleTextFieldState.text.isNotBlank() &&
                             (currentHabitType != HabitType.MEASURE_ABLE ||
-                                targetValueState.text.toString().toDoubleOrNull()?.let { it > 0.0 }
-                                    ?: false && targetUnitState.text.isNotBlank()),
+                                (targetValueState.text.toString().toDoubleOrNull()?.let {
+                                    it in MIN_TARGET_VALUE..MAX_TARGET_VALUE
+                                } ?: false &&
+                                    targetUnitState.text.isNotBlank() &&
+                                    targetUnitState.text.length <= UNIT_STRING_LIMIT)),
                 ) {
                     Text(
                         text =
