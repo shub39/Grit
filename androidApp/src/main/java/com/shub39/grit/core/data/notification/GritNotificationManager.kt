@@ -26,6 +26,7 @@ import android.content.pm.PackageManager
 import androidx.core.app.ActivityCompat
 import androidx.core.app.NotificationCompat
 import androidx.core.app.NotificationManagerCompat
+import androidx.core.app.RemoteInput
 import com.shub39.grit.R
 import com.shub39.grit.core.GritLogger
 import com.shub39.grit.core.data.GritIntentReceiver
@@ -39,6 +40,7 @@ import org.koin.core.annotation.Single
 @Single(binds = [AppNotificationManager::class])
 class GritNotificationManager(private val context: Context) : AppNotificationManager {
     companion object {
+        const val KEY_HABIT_INPUT = "key_habit_input"
         private const val TAG = "NotificationManager"
         private const val HABIT_NOTIF_ID_OFFSET = 0
         private const val TASK_NOTIF_ID_OFFSET = 1000
@@ -68,13 +70,6 @@ class GritNotificationManager(private val context: Context) : AppNotificationMan
                 putExtra("habit_id", habit.id)
                 action = IntentActions.ADD_HABIT_STATUS.action
             }
-        val pendingBroadcast =
-            PendingIntent.getBroadcast(
-                context,
-                habit.id.toInt(),
-                intent,
-                PendingIntent.FLAG_IMMUTABLE,
-            )
 
         val builder =
             NotificationCompat.Builder(context, "1")
@@ -83,7 +78,42 @@ class GritNotificationManager(private val context: Context) : AppNotificationMan
                 .setContentText(habit.description)
                 .setPriority(NotificationCompat.PRIORITY_DEFAULT)
                 .setAutoCancel(true)
-                .addAction(R.drawable.notif_icon, "Mark Done", pendingBroadcast)
+
+        if (habit.isMeasurable) {
+            val remoteInput =
+                RemoteInput.Builder(KEY_HABIT_INPUT)
+                    .setLabel("Enter amount (${habit.targetUnit})")
+                    .build()
+
+            val pendingBroadcast =
+                PendingIntent.getBroadcast(
+                    context,
+                    habit.id.toInt(),
+                    intent,
+                    PendingIntent.FLAG_MUTABLE or PendingIntent.FLAG_UPDATE_CURRENT,
+                )
+
+            val action =
+                NotificationCompat.Action.Builder(
+                        R.drawable.notif_icon,
+                        "Log Progress",
+                        pendingBroadcast,
+                    )
+                    .addRemoteInput(remoteInput)
+                    .build()
+
+            builder.addAction(action)
+        } else {
+            val pendingBroadcast =
+                PendingIntent.getBroadcast(
+                    context,
+                    habit.id.toInt(),
+                    intent,
+                    PendingIntent.FLAG_IMMUTABLE or PendingIntent.FLAG_UPDATE_CURRENT,
+                )
+
+            builder.addAction(R.drawable.notif_icon, "Mark Done", pendingBroadcast)
+        }
 
         if (
             ActivityCompat.checkSelfPermission(context, Manifest.permission.POST_NOTIFICATIONS) ==
@@ -161,7 +191,21 @@ class GritNotificationManager(private val context: Context) : AppNotificationMan
     }
 
     override fun cancelNotification(habitId: Int) {
-        notificationManager.cancel(habitId + HABIT_NOTIF_ID_OFFSET)
+        val id = habitId + HABIT_NOTIF_ID_OFFSET
+        if (
+            ActivityCompat.checkSelfPermission(context, Manifest.permission.POST_NOTIFICATIONS) ==
+                PackageManager.PERMISSION_GRANTED
+        ) {
+            val updatedBuilder =
+                NotificationCompat.Builder(context, "1")
+                    .setSmallIcon(R.drawable.notif_icon)
+                    .setContentTitle("Done")
+                    .setPriority(NotificationCompat.PRIORITY_LOW)
+                    .setTimeoutAfter(500)
+                    .setAutoCancel(true)
+            notificationManager.notify(id, updatedBuilder.build())
+        }
+        notificationManager.cancel(id)
     }
 
     override fun cancelNotification(task: Task) {
