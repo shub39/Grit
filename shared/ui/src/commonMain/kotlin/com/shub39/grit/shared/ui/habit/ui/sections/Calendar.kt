@@ -25,6 +25,7 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.widthIn
 import androidx.compose.material3.ButtonGroupDefaults
 import androidx.compose.material3.FilledTonalIconButton
 import androidx.compose.material3.Icon
@@ -55,6 +56,7 @@ import com.shub39.grit.core.habits.HabitStatus
 import com.shub39.grit.core.habits.HabitWithAnalytics
 import com.shub39.grit.shared.ui.LocalWindowSizeClass
 import com.shub39.grit.shared.ui.WindowSize.Companion.isExpanded
+import com.shub39.grit.shared.ui.components.PageFill
 import com.shub39.grit.shared.ui.habit.HabitState
 import com.shub39.grit.shared.ui.habit.daysStartingFrom
 import com.shub39.grit.shared.ui.habit.ui.component.CalendarMonthHeader
@@ -192,7 +194,7 @@ private fun YearlyCalendar(
     currentHabit: HabitWithAnalytics,
     onDateClick: (LocalDate, Double) -> Unit,
     edgeWeeks: List<DayOfWeek>,
-) {
+) = PageFill(modifier = modifier) {
     val calendarState =
         rememberYearCalendarState(
             startYear = Year(2024),
@@ -202,7 +204,7 @@ private fun YearlyCalendar(
         )
 
     VerticalYearCalendar(
-        modifier = modifier.padding(horizontal = 8.dp),
+        modifier = Modifier.padding(horizontal = 8.dp).widthIn(max = 700.dp),
         contentPadding = PaddingValues(top = 16.dp, bottom = 60.dp),
         monthHorizontalSpacing = 4.dp,
         monthVerticalSpacing = 4.dp,
@@ -256,7 +258,7 @@ private fun MonthlyCalendar(
     edgeWeeks: List<DayOfWeek>,
     onDateClick: (LocalDate, Double) -> Unit,
     modifier: Modifier = Modifier,
-) {
+) = PageFill(modifier) {
     val calendarState =
         rememberCalendarState(
             startMonth = YearMonth(year = 2024, month = Month.JANUARY),
@@ -266,7 +268,7 @@ private fun MonthlyCalendar(
         )
 
     VerticalCalendar(
-        modifier = modifier.padding(horizontal = 16.dp),
+        modifier = Modifier.padding(horizontal = 16.dp).widthIn(max = 700.dp),
         contentPadding = PaddingValues(top = 16.dp, bottom = 60.dp),
         state = calendarState,
         reverseLayout = true,

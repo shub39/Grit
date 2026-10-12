@@ -70,7 +70,7 @@ fun HabitStatusDialog(
 
     val textFieldState =
         rememberTextFieldState(
-            initialText = value.toString(),
+            initialText = if (value == 0.0) "" else value.toString(),
             initialSelection = TextRange(value.toString().length),
         )
 
