@@ -70,6 +70,7 @@ import com.shub39.grit.shared.ui.habit.ui.component.HabitStatusDialog
 import com.shub39.grit.shared.ui.habit.ui.component.HabitUpsertSheet
 import com.shub39.grit.shared.ui.habit.ui.component.stats.CalendarMap
 import com.shub39.grit.shared.ui.habit.ui.component.stats.StartStats
+import com.shub39.grit.shared.ui.habit.ui.component.stats.Targets
 import com.shub39.grit.shared.ui.habit.ui.component.stats.WeekDayBreakdown
 import com.shub39.grit.shared.ui.habit.ui.component.stats.WeeklyActivity
 import com.shub39.grit.shared.ui.habit.ui.component.stats.WeeklyHeatMap
@@ -241,6 +242,16 @@ fun AnalyticsPage(
                         }
                     },
                 )
+            }
+
+            if (currentHabit.habit.isMeasurable) {
+                item {
+                    Targets(
+                        days = currentHabit.habit.days,
+                        measurableTargets = currentHabit.measurableTargets,
+                        canSeeContent = isUserSubscribed,
+                    )
+                }
             }
 
             if (!currentHabit.habit.isMeasurable) {

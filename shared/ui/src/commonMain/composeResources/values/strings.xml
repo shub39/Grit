@@ -88,6 +88,9 @@
     <string name="calendar">Calendar</string>
     <string name="monthly">Monthly</string>
     <string name="yearly" >Yearly</string>
+    <string name="quarterly">Quarterly</string>
+    <string name="weekly">Weekly</string>
+    <string name="daily">Daily</string>
     <string name="add_subtasks">Add Subtasks</string>
     <string name="habit_type">Habit Type</string>
     <string name="target_value">Target Value</string>
@@ -95,4 +98,5 @@
     <string name="yes_or_no">Yes or No</string>
     <string name="measure_able">Measurable</string>
     <string name="add_status">Add Status</string>
+    <string name="targets">Targets</string>
 </resources>
