@@ -26,6 +26,7 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.MaterialTheme.colorScheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -40,6 +41,7 @@ import com.kizitonwose.calendar.core.CalendarMonth
 import com.kizitonwose.calendar.core.DayPosition
 import com.kizitonwose.calendar.core.minusDays
 import com.kizitonwose.calendar.core.plusDays
+import com.shub39.grit.core.habits.HabitStatus
 import com.shub39.grit.core.habits.StreakPosition
 import com.shub39.grit.shared.ui.calendarMapStreakShape
 import com.shub39.grit.shared.ui.theme.flexFontRounded
@@ -67,11 +69,7 @@ fun CalendarMonthHeader(
                         year()
                     }
                 ),
-            style =
-                style.copy(
-                    color = MaterialTheme.colorScheme.secondary,
-                    fontFamily = flexFontRounded(),
-                ),
+            style = style.copy(color = colorScheme.secondary, fontFamily = flexFontRounded()),
             modifier = Modifier.align(Alignment.Center),
         )
     }
@@ -80,22 +78,24 @@ fun CalendarMonthHeader(
 @Composable
 fun YearlyCalendarDayContent(
     day: CalendarDay,
-    doneDates: Set<LocalDate>,
+    isMeasurable: Boolean,
+    targetValue: Double,
+    doneDates: List<HabitStatus>,
     today: LocalDate,
     habitDays: Set<DayOfWeek>,
     edgeWeeks: List<DayOfWeek>,
     modifier: Modifier = Modifier,
     style: TextStyle =
         MaterialTheme.typography.labelSmall.copy(fontSize = 9.sp, fontFamily = flexFontRounded()),
-    onDateClick: (LocalDate) -> Unit,
+    onDateClick: (LocalDate, Double) -> Unit,
 ) {
     if (day.position != DayPosition.MonthDate) return
 
-    val done = day.date in doneDates
+    val done = doneDates.find { day.date == it.date }
     val validDate = day.date <= today && day.date.dayOfWeek in habitDays
 
-    val donePrevious = day.date.minusDays(1) in doneDates
-    val doneAfter = day.date.plusDays(1) in doneDates
+    val donePrevious = doneDates.any { it.date == day.date.minusDays(1) }
+    val doneAfter = doneDates.any { it.date == day.date.plusDays(1) }
     val streakPosition: StreakPosition =
         when {
             donePrevious && doneAfter -> MIDDLE
@@ -103,6 +103,24 @@ fun YearlyCalendarDayContent(
             doneAfter -> START
             else -> ISOLATED
         }
+
+    val backgroundColor =
+        if (done != null) {
+            colorScheme.primary.copy(
+                alpha =
+                    if (isMeasurable) {
+                        (done.value / targetValue).toFloat().coerceIn(0f, 1f)
+                    } else 1f
+            )
+        } else colorScheme.surface
+    val contentColor =
+        if (done != null) {
+            if (!isMeasurable) colorScheme.onPrimary
+            else {
+                val progress = (done.value / targetValue).toFloat().coerceIn(0f, 1f)
+                if (progress >= 0.7f) colorScheme.onPrimary else colorScheme.onSurface
+            }
+        } else colorScheme.onSurface.copy(alpha = if (!validDate) 0.5f else 1f)
 
     Box(
         modifier =
@@ -119,51 +137,25 @@ fun YearlyCalendarDayContent(
                         isLastDayOfMonth = day.date.plusDays(1).day == 1,
                     )
                 )
-                .clickable(enabled = validDate) { onDateClick(day.date) },
+                .clickable(enabled = validDate) { onDateClick(day.date, done?.value ?: 0.0) },
         contentAlignment = Alignment.Center,
     ) {
-        if (done) {
+        if (done != null) {
             Box(
-                modifier =
-                    Modifier.fillMaxSize().background(color = MaterialTheme.colorScheme.primary),
+                modifier = Modifier.fillMaxSize().background(color = backgroundColor),
                 contentAlignment = Alignment.Center,
             ) {
-                val isStreakEnd = streakPosition == START || streakPosition == END
-
-                if (isStreakEnd) {
-                    Box(
-                        modifier =
-                            Modifier.fillMaxSize()
-                                .padding(1.dp)
-                                .background(
-                                    color = MaterialTheme.colorScheme.onPrimary,
-                                    shape = CircleShape,
-                                ),
-                        contentAlignment = Alignment.Center,
-                    ) {
-                        Text(
-                            text = day.date.day.toString(),
-                            style = style,
-                            color = MaterialTheme.colorScheme.primary,
-                        )
-                    }
-                } else {
-                    Text(
-                        text = day.date.day.toString(),
-                        style = style,
-                        color = MaterialTheme.colorScheme.onPrimary,
-                    )
-                }
+                Text(text = day.date.day.toString(), style = style, color = contentColor)
             }
         } else if (validDate) {
             Box(
                 modifier =
                     Modifier.matchParentSize()
-                        .background(
-                            color = MaterialTheme.colorScheme.surfaceContainerLow,
-                            shape = CircleShape,
-                        )
-            )
+                        .background(color = backgroundColor, shape = CircleShape),
+                contentAlignment = Alignment.Center,
+            ) {
+                Text(text = day.date.day.toString(), style = style, color = contentColor)
+            }
         }
     }
 }
@@ -171,22 +163,24 @@ fun YearlyCalendarDayContent(
 @Composable
 fun MonthlyCalendarDayContent(
     day: CalendarDay,
-    doneDates: Set<LocalDate>,
+    isMeasurable: Boolean,
+    targetValue: Double,
+    doneDates: List<HabitStatus>,
     today: LocalDate,
     habitDays: Set<DayOfWeek>,
     edgeWeeks: List<DayOfWeek>,
-    onDateClick: (LocalDate) -> Unit,
+    onDateClick: (LocalDate, Double) -> Unit,
     modifier: Modifier = Modifier,
     height: Dp = 40.dp,
     style: TextStyle = MaterialTheme.typography.bodyLarge.copy(fontFamily = flexFontRounded()),
 ) {
     if (day.position != DayPosition.MonthDate) return
 
-    val done = day.date in doneDates
+    val done = doneDates.find { day.date == it.date }
     val validDate = day.date <= today && day.date.dayOfWeek in habitDays
 
-    val donePrevious = day.date.minusDays(1) in doneDates
-    val doneAfter = day.date.plusDays(1) in doneDates
+    val donePrevious = doneDates.any { it.date == day.date.minusDays(1) }
+    val doneAfter = doneDates.any { it.date == day.date.plusDays(1) }
     val streakPosition: StreakPosition =
         when {
             donePrevious && doneAfter -> MIDDLE
@@ -194,6 +188,24 @@ fun MonthlyCalendarDayContent(
             doneAfter -> START
             else -> ISOLATED
         }
+
+    val backgroundColor =
+        if (done != null) {
+            colorScheme.primary.copy(
+                alpha =
+                    if (isMeasurable) {
+                        (done.value / targetValue).toFloat().coerceIn(0f, 1f)
+                    } else 1f
+            )
+        } else colorScheme.surface
+    val contentColor =
+        if (done != null) {
+            if (!isMeasurable) colorScheme.onPrimary
+            else {
+                val progress = (done.value / targetValue).toFloat().coerceIn(0f, 1f)
+                if (progress >= 0.7f) colorScheme.onPrimary else colorScheme.onSurface
+            }
+        } else colorScheme.onSurface.copy(alpha = if (!validDate) 0.5f else 1f)
 
     Box(
         modifier =
@@ -215,50 +227,18 @@ fun MonthlyCalendarDayContent(
                         isLastDayOfMonth = day.date.plusDays(1).day == 1,
                     )
                 )
-                .clickable(enabled = validDate) { onDateClick(day.date) },
+                .clickable(enabled = validDate) { onDateClick(day.date, done?.value ?: 0.0) },
         contentAlignment = Alignment.Center,
     ) {
-        if (done) {
+        if (done != null) {
             Box(
-                modifier =
-                    Modifier.fillMaxSize().background(color = MaterialTheme.colorScheme.primary),
+                modifier = Modifier.fillMaxSize().background(color = backgroundColor),
                 contentAlignment = Alignment.Center,
             ) {
-                val isStreakEnd = streakPosition == START || streakPosition == END
-
-                if (isStreakEnd) {
-                    Box(
-                        modifier =
-                            Modifier.fillMaxSize()
-                                .padding(1.dp)
-                                .background(
-                                    color = MaterialTheme.colorScheme.onPrimary,
-                                    shape = CircleShape,
-                                ),
-                        contentAlignment = Alignment.Center,
-                    ) {
-                        Text(
-                            text = day.date.day.toString(),
-                            style = style,
-                            color = MaterialTheme.colorScheme.primary,
-                        )
-                    }
-                } else {
-                    Text(
-                        text = day.date.day.toString(),
-                        style = style,
-                        color = MaterialTheme.colorScheme.onPrimary,
-                    )
-                }
+                Text(text = day.date.day.toString(), style = style, color = contentColor)
             }
         } else {
-            Text(
-                text = day.date.day.toString(),
-                style = style,
-                color =
-                    if (!validDate) MaterialTheme.colorScheme.onSurface.copy(alpha = 0.5f)
-                    else MaterialTheme.colorScheme.onSurface,
-            )
+            Text(text = day.date.day.toString(), style = style, color = contentColor)
         }
     }
 }

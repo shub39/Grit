@@ -93,6 +93,6 @@
     <string name="target_value">Target Value</string>
     <string name="target_unit">Target Unit</string>
     <string name="yes_or_no">Yes or No</string>
-    <string name="measure_able">Measure-able</string>
+    <string name="measure_able">Measurable</string>
     <string name="add_status">Add Status</string>
 </resources>

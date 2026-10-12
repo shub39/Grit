@@ -26,7 +26,6 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.widthIn
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyListState
@@ -85,7 +84,8 @@ import org.jetbrains.compose.resources.vectorResource
 import sh.calvin.reorderable.ReorderableItem
 import sh.calvin.reorderable.rememberReorderableLazyListState
 
-@Serializable private data class AddMeasuredHabitStatus(val habit: Habit, val date: LocalDate)
+@Serializable
+private data class AddMeasuredHabitStatus(val habit: Habit, val date: LocalDate, val value: Double)
 
 @Composable
 fun HabitsList(
@@ -252,10 +252,10 @@ private fun HabitsListContent(
                     HabitCard(
                         habitWithAnalytics = habitWithAnalytics,
                         completed = completed,
-                        onInsertStatus = { habit, date ->
+                        onInsertStatus = { habit, date, value ->
                             if (habitWithAnalytics.habit.isMeasurable) {
                                 showMeasuredHabitStatusAddDialog =
-                                    AddMeasuredHabitStatus(habit, date)
+                                    AddMeasuredHabitStatus(habit, date, value)
                             } else onAction(HabitsAction.InsertStatus(habit, date))
                         },
                         onPrepareAnalytics = { onAction(HabitsAction.PrepareAnalytics(it)) },
@@ -314,6 +314,7 @@ private fun HabitsListContent(
         HabitStatusDialog(
             onDismissRequest = { showMeasuredHabitStatusAddDialog = null },
             habit = measuredHabitStatus.habit,
+            value = measuredHabitStatus.value,
             onAddStatus = { value ->
                 onAction(
                     HabitsAction.InsertMeasuredStatus(

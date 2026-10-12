@@ -22,7 +22,6 @@ import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
@@ -61,18 +60,19 @@ import org.jetbrains.compose.resources.stringResource
 @Composable
 fun CalendarMap(
     canSeeContent: Boolean,
+    isMeasurable: Boolean,
     calendarState: CalendarState,
+    targetValue: Double,
     statuses: List<HabitStatus>,
     days: Set<DayOfWeek>,
     onNavigateToPaywall: () -> Unit,
     onNavigateToCalendar: () -> Unit,
-    onDateClick: (LocalDate) -> Unit,
+    onDateClick: (LocalDate, Double) -> Unit,
     modifier: Modifier = Modifier,
 ) {
     val today = LocalDate.now()
     val scope = rememberCoroutineScope()
 
-    val doneDates = remember(statuses) { statuses.map { it.date }.toSet() }
     val edgeWeeks =
         listOf(calendarState.firstDayOfWeek, daysStartingFrom(calendarState.firstDayOfWeek).last())
 
@@ -124,11 +124,16 @@ fun CalendarMap(
             dayContent = { day ->
                 MonthlyCalendarDayContent(
                     day = day,
-                    doneDates = doneDates,
+                    isMeasurable = isMeasurable,
+                    targetValue = targetValue,
+                    doneDates = statuses,
                     today = today,
                     habitDays = days,
                     edgeWeeks = edgeWeeks,
-                    onDateClick = onDateClick,
+                    onDateClick = { _, _ ->
+                        val status = statuses.find { it.date == day.date }?.value ?: 0.0
+                        onDateClick(day.date, status)
+                    },
                 )
             },
         )
@@ -141,6 +146,7 @@ fun CalendarMap(
 private fun Preview() {
     CalendarMap(
         canSeeContent = true,
+        targetValue = 0.0,
         calendarState =
             rememberCalendarState(
                 startMonth = YearMonth.now().minusYears(1),
@@ -153,7 +159,8 @@ private fun Preview() {
             },
         days = DayOfWeek.entries.toSet(),
         onNavigateToPaywall = {},
-        onDateClick = {},
+        onDateClick = { _, _ -> },
         onNavigateToCalendar = {},
+        isMeasurable = false,
     )
 }

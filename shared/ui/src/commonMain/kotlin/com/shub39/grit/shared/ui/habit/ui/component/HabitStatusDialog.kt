@@ -41,6 +41,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
+import androidx.compose.ui.text.TextRange
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
@@ -61,12 +62,17 @@ fun HabitStatusDialog(
     modifier: Modifier = Modifier,
     onDismissRequest: () -> Unit,
     habit: Habit,
+    value: Double,
     onAddStatus: (Double) -> Unit,
 ) {
     val keyboardController = LocalSoftwareKeyboardController.current
     val focusRequester = remember { FocusRequester() }
 
-    val textFieldState = rememberTextFieldState(initialText = "")
+    val textFieldState =
+        rememberTextFieldState(
+            initialText = value.toString(),
+            initialSelection = TextRange(value.toString().length),
+        )
 
     val isValidInput = textFieldState.text.toString().toDoubleOrNull()?.let { it >= 0.0 } ?: false
 

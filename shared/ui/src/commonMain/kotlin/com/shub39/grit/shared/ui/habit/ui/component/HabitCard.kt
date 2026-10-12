@@ -42,6 +42,7 @@ import androidx.compose.material3.IconButtonDefaults
 import androidx.compose.material3.ListItem
 import androidx.compose.material3.ListItemDefaults
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.MaterialTheme.colorScheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -72,7 +73,7 @@ import org.jetbrains.compose.resources.vectorResource
 fun HabitCard(
     habitWithAnalytics: HabitWithAnalytics,
     completed: Boolean,
-    onInsertStatus: (Habit, LocalDate) -> Unit,
+    onInsertStatus: (Habit, LocalDate, Double) -> Unit,
     onPrepareAnalytics: (Habit) -> Unit,
     onNavigateToAnalytics: () -> Unit,
     editState: Boolean,
@@ -91,11 +92,8 @@ fun HabitCard(
         animateColorAsState(
             targetValue =
                 when (completed) {
-                    true -> MaterialTheme.colorScheme.onPrimaryContainer
-                    else ->
-                        MaterialTheme.colorScheme.onSurface.copy(
-                            alpha = if (canCompleteToday) 1f else 0.7f
-                        )
+                    true -> colorScheme.onPrimaryContainer
+                    else -> colorScheme.onSurface.copy(alpha = if (canCompleteToday) 1f else 0.7f)
                 },
             animationSpec = MaterialTheme.motionScheme.fastEffectsSpec(),
             label = "cardBackground",
@@ -104,9 +102,9 @@ fun HabitCard(
         animateColorAsState(
             targetValue =
                 when (completed) {
-                    true -> MaterialTheme.colorScheme.primaryContainer
+                    true -> colorScheme.primaryContainer
                     else ->
-                        MaterialTheme.colorScheme.surfaceContainer.copy(
+                        colorScheme.surfaceContainer.copy(
                             alpha = if (canCompleteToday) 1f else 0.7f
                         )
                 },
@@ -130,7 +128,11 @@ fun HabitCard(
             ),
         onClick = {
             if (canCompleteToday) {
-                onInsertStatus(habitWithAnalytics.habit, today)
+                onInsertStatus(
+                    habitWithAnalytics.habit,
+                    today,
+                    habitWithAnalytics.statuses.find { it.date == today }?.value ?: 0.0,
+                )
             }
         },
         shape = shape,
@@ -211,8 +213,8 @@ fun HabitCard(
                             ),
                         colors =
                             IconButtonDefaults.iconButtonColors(
-                                containerColor = MaterialTheme.colorScheme.primary,
-                                contentColor = MaterialTheme.colorScheme.onPrimary,
+                                containerColor = colorScheme.primary,
+                                contentColor = colorScheme.onPrimary,
                             ),
                     ) {
                         Icon(
@@ -236,16 +238,40 @@ fun HabitCard(
                 contentPadding = PaddingValues(8.dp),
                 state = weekState,
                 dayContent = { weekDay ->
-                    val done = habitWithAnalytics.statuses.any { it.date == weekDay.date }
+                    val done = habitWithAnalytics.statuses.find { it.date == weekDay.date }
                     val validDay =
                         weekDay.date <= today &&
                             weekDay.date.dayOfWeek in habitWithAnalytics.habit.days
+
+                    val backgroundColor =
+                        if (done != null) {
+                            colorScheme.primary.copy(
+                                alpha =
+                                    if (habitWithAnalytics.habit.isMeasurable) {
+                                        (done.value / habitWithAnalytics.habit.targetValue)
+                                            .toFloat()
+                                            .coerceIn(0f, 1f)
+                                    } else 1f
+                            )
+                        } else colorScheme.surface
+                    val contentColor =
+                        if (done != null) {
+                            if (!habitWithAnalytics.habit.isMeasurable) colorScheme.onPrimary
+                            else {
+                                val progress =
+                                    (done.value / habitWithAnalytics.habit.targetValue)
+                                        .toFloat()
+                                        .coerceIn(0f, 1f)
+                                if (progress >= 0.7f) colorScheme.onPrimary
+                                else colorScheme.onSurface
+                            }
+                        } else if (!validDay) cardContent.copy(alpha = 0.5f) else cardContent
 
                     Box(
                         modifier =
                             Modifier.fillMaxWidth()
                                 .then(
-                                    if (done) {
+                                    if (done != null) {
                                         val donePrevious =
                                             habitWithAnalytics.statuses.any {
                                                 it.date == weekDay.date.minusDays(1)
@@ -274,10 +300,7 @@ fun HabitCard(
                                                 else -> RoundedCornerShape(20.dp)
                                             }
 
-                                        Modifier.background(
-                                            color = MaterialTheme.colorScheme.primary,
-                                            shape = shape,
-                                        )
+                                        Modifier.background(color = backgroundColor, shape = shape)
                                     } else Modifier
                                 )
                                 .clip(shape = RoundedCornerShape(20.dp))
@@ -285,7 +308,11 @@ fun HabitCard(
                                     role = Role.Button,
                                     enabled = validDay,
                                     onClick = {
-                                        onInsertStatus(habitWithAnalytics.habit, weekDay.date)
+                                        onInsertStatus(
+                                            habitWithAnalytics.habit,
+                                            weekDay.date,
+                                            done?.value ?: 0.0,
+                                        )
                                     },
                                 ),
                         contentAlignment = Alignment.Center,
@@ -300,10 +327,7 @@ fun HabitCard(
                                 fontWeight = FontWeight.Bold,
                                 maxLines = 1,
                                 modifier = Modifier.basicMarquee(),
-                                color =
-                                    if (done) MaterialTheme.colorScheme.onPrimary
-                                    else if (!validDay) cardContent.copy(alpha = 0.5f)
-                                    else cardContent,
+                                color = contentColor,
                             )
 
                             Text(
@@ -311,10 +335,7 @@ fun HabitCard(
                                 style = MaterialTheme.typography.bodySmall,
                                 maxLines = 1,
                                 modifier = Modifier.basicMarquee(),
-                                color =
-                                    if (done) MaterialTheme.colorScheme.onPrimary
-                                    else if (!validDay) cardContent.copy(alpha = 0.5f)
-                                    else cardContent,
+                                color = contentColor,
                             )
                         }
                     }

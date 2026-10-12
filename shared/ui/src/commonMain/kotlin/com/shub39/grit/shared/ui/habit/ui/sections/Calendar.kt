@@ -51,12 +51,14 @@ import com.kizitonwose.calendar.core.Year
 import com.kizitonwose.calendar.core.now
 import com.shub39.grit.core.habits.CalendarType
 import com.shub39.grit.core.habits.Habit
+import com.shub39.grit.core.habits.HabitStatus
 import com.shub39.grit.core.habits.HabitWithAnalytics
 import com.shub39.grit.shared.ui.LocalWindowSizeClass
 import com.shub39.grit.shared.ui.WindowSize.Companion.isExpanded
 import com.shub39.grit.shared.ui.habit.HabitState
 import com.shub39.grit.shared.ui.habit.daysStartingFrom
 import com.shub39.grit.shared.ui.habit.ui.component.CalendarMonthHeader
+import com.shub39.grit.shared.ui.habit.ui.component.HabitStatusDialog
 import com.shub39.grit.shared.ui.habit.ui.component.MonthlyCalendarDayContent
 import com.shub39.grit.shared.ui.habit.ui.component.YearlyCalendarDayContent
 import com.shub39.grit.shared.ui.theme.flexFontEmphasis
@@ -71,21 +73,23 @@ import kotlinx.datetime.yearMonth
 import org.jetbrains.compose.resources.stringResource
 import org.jetbrains.compose.resources.vectorResource
 
+private data class ShowInsertStatus(val date: LocalDate, val value: Double)
+
 @Composable
 fun Calendar(
     state: HabitState,
-    onDateClick: (Habit, LocalDate) -> Unit,
+    onDateClick: (Habit, LocalDate, Double?) -> Unit,
     onNavigateBack: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
+    var showInsertStatusDialog by remember { mutableStateOf<ShowInsertStatus?>(null) }
     var calendarType by rememberSaveable { mutableStateOf(CalendarType.MONTH) }
 
     val currentHabit =
         state.habitsWithAnalytics.find { it.habit.id == state.analyticsHabitId } ?: return
+    val isMeasurable = currentHabit.habit.isMeasurable
     val windowSizeClass = LocalWindowSizeClass.current
     val today = LocalDate.now()
-    val doneDates =
-        remember(currentHabit.statuses) { currentHabit.statuses.map { it.date }.toSet() }
     val edgeWeeks = listOf(state.startingDay, daysStartingFrom(state.startingDay).last())
 
     Column(modifier = modifier.fillMaxSize()) {
@@ -136,25 +140,46 @@ fun Calendar(
                         today = today,
                         state = state,
                         modifier = modifier,
-                        doneDates = doneDates,
+                        doneDates = currentHabit.statuses,
                         currentHabit = currentHabit,
                         edgeWeeks = edgeWeeks,
-                        onDateClick = onDateClick,
+                        onDateClick = { date, value ->
+                            if (isMeasurable) {
+                                showInsertStatusDialog = ShowInsertStatus(date, value)
+                            } else {
+                                onDateClick(currentHabit.habit, date, null)
+                            }
+                        },
                     )
                 }
 
                 MONTH -> {
                     MonthlyCalendar(
                         state = state,
-                        doneDates = doneDates,
+                        doneDates = currentHabit.statuses,
                         today = today,
                         currentHabit = currentHabit,
                         edgeWeeks = edgeWeeks,
-                        onDateClick = onDateClick,
+                        onDateClick = { date, value ->
+                            if (isMeasurable) {
+                                showInsertStatusDialog = ShowInsertStatus(date, value)
+                            } else {
+                                onDateClick(currentHabit.habit, date, null)
+                            }
+                        },
                     )
                 }
             }
         }
+    }
+
+    showInsertStatusDialog?.let { dialog ->
+        HabitStatusDialog(
+            onDismissRequest = { showInsertStatusDialog = null },
+            habit = currentHabit.habit,
+            value = dialog.value,
+            onAddStatus = { onDateClick(currentHabit.habit, dialog.date, it) },
+        )
     }
 }
 
@@ -163,9 +188,9 @@ private fun YearlyCalendar(
     today: LocalDate,
     state: HabitState,
     modifier: Modifier,
-    doneDates: Set<LocalDate>,
+    doneDates: List<HabitStatus>,
     currentHabit: HabitWithAnalytics,
-    onDateClick: (Habit, LocalDate) -> Unit,
+    onDateClick: (LocalDate, Double) -> Unit,
     edgeWeeks: List<DayOfWeek>,
 ) {
     val calendarState =
@@ -208,12 +233,14 @@ private fun YearlyCalendar(
         dayContent = { day ->
             if (day.date.yearMonth <= today.yearMonth) {
                 YearlyCalendarDayContent(
+                    targetValue = currentHabit.habit.targetValue,
+                    isMeasurable = currentHabit.habit.isMeasurable,
                     day = day,
                     doneDates = doneDates,
                     today = today,
                     habitDays = currentHabit.habit.days,
                     edgeWeeks = edgeWeeks,
-                    onDateClick = { onDateClick(currentHabit.habit, it) },
+                    onDateClick = onDateClick,
                 )
             }
         },
@@ -223,11 +250,11 @@ private fun YearlyCalendar(
 @Composable
 private fun MonthlyCalendar(
     state: HabitState,
-    doneDates: Set<LocalDate>,
+    doneDates: List<HabitStatus>,
     today: LocalDate,
     currentHabit: HabitWithAnalytics,
     edgeWeeks: List<DayOfWeek>,
-    onDateClick: (Habit, LocalDate) -> Unit,
+    onDateClick: (LocalDate, Double) -> Unit,
     modifier: Modifier = Modifier,
 ) {
     val calendarState =
@@ -246,12 +273,14 @@ private fun MonthlyCalendar(
         monthHeader = { calendarMonth -> CalendarMonthHeader(calendarMonth = calendarMonth) },
         dayContent = { day ->
             MonthlyCalendarDayContent(
+                targetValue = currentHabit.habit.targetValue,
+                isMeasurable = currentHabit.habit.isMeasurable,
                 day = day,
                 doneDates = doneDates,
                 today = today,
                 habitDays = currentHabit.habit.days,
                 edgeWeeks = edgeWeeks,
-                onDateClick = { onDateClick(currentHabit.habit, it) },
+                onDateClick = onDateClick,
             )
         },
     )

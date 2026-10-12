@@ -83,7 +83,7 @@ import kotlinx.datetime.YearMonth
 import org.jetbrains.compose.resources.stringResource
 import org.jetbrains.compose.resources.vectorResource
 
-private data class InsertMeasuredHabitsStatus(val date: LocalDate)
+private data class InsertMeasuredHabitsStatus(val date: LocalDate, val value: Double)
 
 @Composable
 fun AnalyticsPage(
@@ -212,14 +212,17 @@ fun AnalyticsPage(
 
             item {
                 WeeklyBooleanHeatMap(
+                    isMeasurable = currentHabit.habit.isMeasurable,
+                    targetValue = currentHabit.habit.targetValue,
                     heatMapState = heatMapState,
                     statuses = currentHabit.statuses,
                     days = currentHabit.habit.days,
-                    onDateClick = {
+                    onDateClick = { date, value ->
                         if (currentHabit.habit.isMeasurable) {
-                            insertStatusDialog = InsertMeasuredHabitsStatus(date = it)
+                            insertStatusDialog =
+                                InsertMeasuredHabitsStatus(date = date, value = value)
                         } else {
-                            onAction(HabitsAction.InsertStatus(currentHabit.habit, it))
+                            onAction(HabitsAction.InsertStatus(currentHabit.habit, date))
                         }
                     },
                 )
@@ -228,16 +231,18 @@ fun AnalyticsPage(
             item {
                 CalendarMap(
                     canSeeContent = isUserSubscribed,
+                    isMeasurable = currentHabit.habit.isMeasurable,
+                    targetValue = currentHabit.habit.targetValue,
                     calendarState = calendarState,
                     onNavigateToPaywall = onNavigateToPaywall,
                     statuses = currentHabit.statuses,
                     days = currentHabit.habit.days,
                     onNavigateToCalendar = onNavigateToCalendar,
-                    onDateClick = {
+                    onDateClick = { date, value ->
                         if (currentHabit.habit.isMeasurable) {
-                            insertStatusDialog = InsertMeasuredHabitsStatus(date = it)
+                            insertStatusDialog = InsertMeasuredHabitsStatus(date, value)
                         } else {
-                            onAction(HabitsAction.InsertStatus(currentHabit.habit, it))
+                            onAction(HabitsAction.InsertStatus(currentHabit.habit, date))
                         }
                     },
                 )
@@ -339,6 +344,7 @@ fun AnalyticsPage(
             modifier = Modifier,
             onDismissRequest = { insertStatusDialog = null },
             habit = currentHabit.habit,
+            value = dialog.value,
             onAddStatus = { value ->
                 onAction(
                     HabitsAction.InsertMeasuredStatus(

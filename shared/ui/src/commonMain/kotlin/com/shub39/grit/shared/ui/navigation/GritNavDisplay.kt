@@ -189,8 +189,12 @@ private fun EntryProviderScope<Routes>.habitsScreens(
         Calendar(
             state = state,
             onNavigateBack = { topLevelBackStack.removeLast() },
-            onDateClick = { habit, date ->
-                viewModel.onAction(HabitsAction.InsertStatus(habit, date))
+            onDateClick = { habit, date, value ->
+                if (value != null) {
+                    viewModel.onAction(HabitsAction.InsertMeasuredStatus(habit, date, value))
+                } else {
+                    viewModel.onAction(HabitsAction.InsertStatus(habit, date))
+                }
             },
             modifier = Modifier.background(colorScheme.background),
         )
