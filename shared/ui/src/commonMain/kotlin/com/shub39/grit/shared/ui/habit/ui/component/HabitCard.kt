@@ -77,7 +77,6 @@ fun HabitCard(
     onNavigateToAnalytics: () -> Unit,
     editState: Boolean,
     compactView: Boolean,
-    analyticsEnabled: Boolean,
     startingDay: DayOfWeek,
     reorderHandle: @Composable () -> Unit,
     is24Hr: Boolean,
@@ -215,7 +214,6 @@ fun HabitCard(
                                 containerColor = MaterialTheme.colorScheme.primary,
                                 contentColor = MaterialTheme.colorScheme.onPrimary,
                             ),
-                        enabled = analyticsEnabled,
                     ) {
                         Icon(
                             imageVector = vectorResource(Res.drawable.analytics),

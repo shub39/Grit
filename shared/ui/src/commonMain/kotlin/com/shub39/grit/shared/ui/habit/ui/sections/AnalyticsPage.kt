@@ -339,7 +339,6 @@ fun AnalyticsPage(
             modifier = Modifier,
             onDismissRequest = { insertStatusDialog = null },
             habit = currentHabit.habit,
-            date = dialog.date,
             onAddStatus = { value ->
                 onAction(
                     HabitsAction.InsertMeasuredStatus(

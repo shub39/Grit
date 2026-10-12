@@ -53,8 +53,6 @@ import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.unit.dp
 import com.shub39.grit.core.habits.Habit
 import com.shub39.grit.core.now
-import com.shub39.grit.shared.ui.LocalWindowSizeClass
-import com.shub39.grit.shared.ui.WindowSize.Companion.isExpanded
 import com.shub39.grit.shared.ui.components.Empty
 import com.shub39.grit.shared.ui.components.PageFill
 import com.shub39.grit.shared.ui.components.detachedItemShape
@@ -219,7 +217,6 @@ private fun HabitsListContent(
     onNavigateToAnalytics: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
-    val windowSizeClass = LocalWindowSizeClass.current
     val reorderableListState =
         rememberReorderableLazyListState(lazyListState) { from, to ->
             onAction(HabitsAction.OnTransientHabitReorder(from.index, to.index))
@@ -278,9 +275,6 @@ private fun HabitsListContent(
                         },
                         shape = shape,
                         compactView = state.compactHabitView,
-                        analyticsEnabled =
-                            state.analyticsHabitId != habitWithAnalytics.habit.id ||
-                                !windowSizeClass.isExpanded(),
                     )
                 }
             }
@@ -320,7 +314,6 @@ private fun HabitsListContent(
         HabitStatusDialog(
             onDismissRequest = { showMeasuredHabitStatusAddDialog = null },
             habit = measuredHabitStatus.habit,
-            date = measuredHabitStatus.date,
             onAddStatus = { value ->
                 onAction(
                     HabitsAction.InsertMeasuredStatus(

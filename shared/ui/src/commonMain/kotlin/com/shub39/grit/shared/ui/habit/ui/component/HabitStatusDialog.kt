@@ -50,9 +50,9 @@ import com.shub39.grit.shared.ui.theme.flexFontEmphasis
 import grit.shared.ui.generated.resources.Res
 import grit.shared.ui.generated.resources.add
 import grit.shared.ui.generated.resources.add_status
+import grit.shared.ui.generated.resources.done
 import kotlin.time.Duration.Companion.milliseconds
 import kotlinx.coroutines.delay
-import kotlinx.datetime.LocalDate
 import org.jetbrains.compose.resources.stringResource
 import org.jetbrains.compose.resources.vectorResource
 
@@ -61,7 +61,6 @@ fun HabitStatusDialog(
     modifier: Modifier = Modifier,
     onDismissRequest: () -> Unit,
     habit: Habit,
-    date: LocalDate,
     onAddStatus: (Double) -> Unit,
 ) {
     val keyboardController = LocalSoftwareKeyboardController.current
@@ -77,7 +76,7 @@ fun HabitStatusDialog(
         keyboardController?.show()
     }
 
-    GritDialog(onDismissRequest = onDismissRequest) {
+    GritDialog(onDismissRequest = onDismissRequest, modifier = modifier) {
         Column {
             Box(
                 contentAlignment = Alignment.Center,
@@ -119,7 +118,7 @@ fun HabitStatusDialog(
                 modifier = Modifier.fillMaxWidth(),
                 enabled = isValidInput,
             ) {
-                Text(text = stringResource(Res.string.add))
+                Text(text = stringResource(Res.string.done))
             }
         }
     }
