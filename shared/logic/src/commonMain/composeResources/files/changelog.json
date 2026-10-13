@@ -2,7 +2,8 @@
   {
     "version": "6.2.0",
     "changes": [
-      "Added measurable Habits",
+      "Added Measurable Habits",
+      "Added new Target Analytic for Measurable Habits",
       "Updated Translations"
     ]
   },

@@ -1,7 +1,8 @@
 # Changelog
 
 ## 6.2.0
-- Added measurable Habits
+- Added Measurable Habits
+- Added new Target Analytic for Measurable Habits
 - Updated Translations
 
 ## 6.1.1
