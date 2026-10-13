@@ -1,5 +1,10 @@
 # Changelog
 
+## 6.2.0
+- Added Measurable Habits
+- Added new Target Analytic for Measurable Habits
+- Updated Translations
+
 ## 6.1.1
 - Added Subtasks. Add them by long pressing on a task
 - Miscellaneous UI improvements and Fixes

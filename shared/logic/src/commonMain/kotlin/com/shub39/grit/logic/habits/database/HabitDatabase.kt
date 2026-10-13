@@ -41,7 +41,7 @@ abstract class HabitDatabase : RoomDatabase() {
     abstract fun habitStatusDao(): HabitStatusDao
 
     companion object {
-        const val SCHEMA_VERSION = 5
+        const val SCHEMA_VERSION = 6
         const val DB_NAME = "habit_database"
 
         val migrate_3_4 =
@@ -49,6 +49,21 @@ abstract class HabitDatabase : RoomDatabase() {
                 override suspend fun migrate(connection: SQLiteConnection) {
                     connection.execSQL(
                         "ALTER TABLE habit_index ADD COLUMN days TEXT NOT NULL DEFAULT '${Converters.allDays}'"
+                    )
+                }
+            }
+
+        val migrate_5_6 =
+            object : Migration(5, 6) {
+                override suspend fun migrate(connection: SQLiteConnection) {
+                    connection.execSQL(
+                        "ALTER TABLE habit_index ADD COLUMN target_value REAL NOT NULL DEFAULT 0.0"
+                    )
+                    connection.execSQL(
+                        "ALTER TABLE habit_index ADD COLUMN target_unit TEXT NOT NULL DEFAULT ''"
+                    )
+                    connection.execSQL(
+                        "ALTER TABLE habit_status ADD COLUMN value REAL NOT NULL DEFAULT 1.0"
                     )
                 }
             }

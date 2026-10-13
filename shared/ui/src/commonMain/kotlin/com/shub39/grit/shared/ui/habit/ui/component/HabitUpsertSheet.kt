@@ -35,6 +35,7 @@ import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.text.input.TextFieldLineLimits
 import androidx.compose.foundation.text.input.rememberTextFieldState
 import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.ButtonGroupDefaults
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
@@ -65,6 +66,7 @@ import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.text.TextRange
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardCapitalization
+import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.shub39.grit.core.habits.Habit
@@ -73,11 +75,13 @@ import com.shub39.grit.core.toFormattedString
 import com.shub39.grit.shared.ui.components.ExpressiveSwitch
 import com.shub39.grit.shared.ui.components.GritBottomSheet
 import com.shub39.grit.shared.ui.components.GritTimePicker
+import com.shub39.grit.shared.ui.components.ListSelect
 import com.shub39.grit.shared.ui.components.detachedItemShape
 import com.shub39.grit.shared.ui.components.endItemShape
 import com.shub39.grit.shared.ui.components.leadingItemShape
 import com.shub39.grit.shared.ui.components.listItemColors
 import com.shub39.grit.shared.ui.components.middleItemShape
+import com.shub39.grit.shared.ui.habit.ui.component.HabitType.Companion.toStringRes
 import com.shub39.grit.shared.ui.theme.GritTheme
 import com.shub39.grit.shared.ui.theme.flexFontEmphasis
 import com.shub39.grit.shared.ui.theme.flexFontRounded
@@ -87,11 +91,28 @@ import kotlinx.coroutines.delay
 import kotlinx.datetime.DayOfWeek
 import kotlinx.datetime.LocalDateTime
 import kotlinx.datetime.LocalTime
+import org.jetbrains.compose.resources.StringResource
 import org.jetbrains.compose.resources.stringResource
 import org.jetbrains.compose.resources.vectorResource
 
 private const val TITLE_STRING_LIMIT = 50
 private const val DESCRIPTION_STRING_LIMIT = 200
+private const val UNIT_STRING_LIMIT = 20
+private const val MAX_TARGET_VALUE = 999_999.0
+private const val MIN_TARGET_VALUE = 0.01
+
+private enum class HabitType {
+    YES_NO,
+    MEASURE_ABLE;
+
+    companion object {
+        fun HabitType.toStringRes(): StringResource =
+            when (this) {
+                YES_NO -> Res.string.yes_or_no
+                MEASURE_ABLE -> Res.string.measure_able
+            }
+    }
+}
 
 @Composable
 expect fun HabitUpsertSheet(
@@ -105,6 +126,7 @@ expect fun HabitUpsertSheet(
 
 @Composable
 fun HabitUpsertSheetContent(
+    modifier: Modifier = Modifier,
     newHabit: Habit,
     updateHabit: (Habit) -> Unit,
     onDismissRequest: () -> Unit,
@@ -113,12 +135,15 @@ fun HabitUpsertSheetContent(
     isEditSheet: Boolean = false,
     notificationPermission: Boolean,
     onRequestPermission: () -> Unit,
-    modifier: Modifier = Modifier,
 ) {
     val keyboardController = LocalSoftwareKeyboardController.current
     val focusRequester = remember { FocusRequester() }
 
     var timePickerDialog by rememberSaveable { mutableStateOf(false) }
+
+    var currentHabitType by remember {
+        mutableStateOf(if (newHabit.isMeasurable) HabitType.MEASURE_ABLE else HabitType.YES_NO)
+    }
 
     val titleTextFieldState =
         rememberTextFieldState(
@@ -132,10 +157,27 @@ fun HabitUpsertSheetContent(
             initialSelection = TextRange(newHabit.description.length),
         )
 
+    val targetValueState =
+        rememberTextFieldState(
+            initialText = if (newHabit.targetValue <= 0.0) "" else newHabit.targetValue.toString(),
+            initialSelection = TextRange(newHabit.targetValue.toString().length),
+        )
+    val targetUnitState =
+        rememberTextFieldState(
+            initialText = newHabit.targetUnit,
+            initialSelection = TextRange(newHabit.targetUnit.length),
+        )
+
     LaunchedEffect(Unit) {
         delay(400.milliseconds)
         focusRequester.requestFocus()
         keyboardController?.show()
+    }
+
+    LaunchedEffect(currentHabitType) {
+        if (currentHabitType == HabitType.YES_NO) {
+            updateHabit(newHabit.copy(targetValue = 0.0, targetUnit = ""))
+        }
     }
 
     GritBottomSheet(
@@ -180,61 +222,64 @@ fun HabitUpsertSheetContent(
             contentPadding = PaddingValues(16.dp),
         ) {
             item {
-                OutlinedTextField(
-                    state = titleTextFieldState,
-                    lineLimits = TextFieldLineLimits.SingleLine,
-                    shape = MaterialTheme.shapes.medium,
-                    keyboardOptions =
-                        KeyboardOptions(
-                            capitalization = KeyboardCapitalization.Sentences,
-                            imeAction = ImeAction.Next,
-                        ),
-                    label = {
-                        if (newHabit.title.length <= TITLE_STRING_LIMIT) {
-                            Text(
-                                text =
-                                    stringResource(
-                                        if (isEditSheet) Res.string.update_title
-                                        else Res.string.title
-                                    )
-                            )
-                        } else {
-                            Text(text = stringResource(Res.string.too_long))
-                        }
-                    },
-                    isError = newHabit.title.length > TITLE_STRING_LIMIT,
-                    modifier = Modifier.fillMaxWidth().focusRequester(focusRequester),
-                )
+                Column {
+                    // title
+                    OutlinedTextField(
+                        state = titleTextFieldState,
+                        lineLimits = TextFieldLineLimits.SingleLine,
+                        shape = MaterialTheme.shapes.medium,
+                        keyboardOptions =
+                            KeyboardOptions(
+                                capitalization = KeyboardCapitalization.Sentences,
+                                imeAction = ImeAction.Next,
+                            ),
+                        label = {
+                            if (titleTextFieldState.text.length <= TITLE_STRING_LIMIT) {
+                                Text(
+                                    text =
+                                        stringResource(
+                                            if (isEditSheet) Res.string.update_title
+                                            else Res.string.title
+                                        )
+                                )
+                            } else {
+                                Text(text = stringResource(Res.string.too_long))
+                            }
+                        },
+                        isError = titleTextFieldState.text.length > TITLE_STRING_LIMIT,
+                        modifier = Modifier.fillMaxWidth().focusRequester(focusRequester),
+                    )
+
+                    // desc
+                    OutlinedTextField(
+                        state = descTextFieldState,
+                        lineLimits = TextFieldLineLimits.SingleLine,
+                        shape = MaterialTheme.shapes.medium,
+                        keyboardOptions =
+                            KeyboardOptions(
+                                capitalization = KeyboardCapitalization.Sentences,
+                                imeAction = ImeAction.Done,
+                            ),
+                        modifier = Modifier.fillMaxWidth(),
+                        label = {
+                            if (descTextFieldState.text.length <= DESCRIPTION_STRING_LIMIT) {
+                                Text(
+                                    text =
+                                        stringResource(
+                                            if (isEditSheet) Res.string.update_description
+                                            else Res.string.description
+                                        )
+                                )
+                            } else {
+                                Text(text = stringResource(Res.string.too_long))
+                            }
+                        },
+                        isError = descTextFieldState.text.length > DESCRIPTION_STRING_LIMIT,
+                    )
+                }
             }
 
-            item {
-                OutlinedTextField(
-                    state = descTextFieldState,
-                    lineLimits = TextFieldLineLimits.SingleLine,
-                    shape = MaterialTheme.shapes.medium,
-                    keyboardOptions =
-                        KeyboardOptions(
-                            capitalization = KeyboardCapitalization.Sentences,
-                            imeAction = ImeAction.Done,
-                        ),
-                    modifier = Modifier.fillMaxWidth(),
-                    label = {
-                        if (newHabit.description.length <= DESCRIPTION_STRING_LIMIT) {
-                            Text(
-                                text =
-                                    stringResource(
-                                        if (isEditSheet) Res.string.update_description
-                                        else Res.string.description
-                                    )
-                            )
-                        } else {
-                            Text(text = stringResource(Res.string.too_long))
-                        }
-                    },
-                    isError = newHabit.description.length > DESCRIPTION_STRING_LIMIT,
-                )
-            }
-
+            // Week day picker
             item {
                 Spacer(modifier = Modifier.height(4.dp))
                 Column(verticalArrangement = Arrangement.spacedBy(2.dp)) {
@@ -285,75 +330,154 @@ fun HabitUpsertSheetContent(
                         }
                     }
 
-                    if (newHabit.days.isNotEmpty()) {
-                        ListItem(
-                            colors = listItemColors(),
-                            modifier =
-                                Modifier.clip(
-                                    if (newHabit.reminder) middleItemShape() else endItemShape()
+                    // habit type picker
+                    if (!isEditSheet) {
+                        Card(
+                            shape = middleItemShape(),
+                            colors =
+                                CardDefaults.cardColors(
+                                    containerColor = MaterialTheme.colorScheme.surfaceContainerHigh
                                 ),
-                            headlineContent = {
-                                Text(text = stringResource(Res.string.add_reminder))
-                            },
-                            supportingContent = {
-                                Text(
-                                    text = stringResource(Res.string.add_reminder_desc),
-                                    maxLines = 1,
-                                    modifier = Modifier.basicMarquee(),
+                        ) {
+                            ListSelect(
+                                title = stringResource(Res.string.habit_type),
+                                options = HabitType.entries.toList(),
+                                selected = currentHabitType,
+                                onSelectedChange = { currentHabitType = it },
+                                labelProvider = { Text(text = stringResource(it.toStringRes())) },
+                                modifier = Modifier.padding(16.dp),
+                            )
+                        }
+                    }
+
+                    // target value pickers
+                    if (currentHabitType == HabitType.MEASURE_ABLE) {
+                        Card(
+                            shape = middleItemShape(),
+                            colors =
+                                CardDefaults.cardColors(
+                                    containerColor = MaterialTheme.colorScheme.surfaceContainerHigh
+                                ),
+                        ) {
+                            Row(
+                                modifier = Modifier.padding(16.dp),
+                                horizontalArrangement = Arrangement.spacedBy(8.dp),
+                            ) {
+                                OutlinedTextField(
+                                    state = targetValueState,
+                                    lineLimits = TextFieldLineLimits.SingleLine,
+                                    shape = MaterialTheme.shapes.medium,
+                                    keyboardOptions =
+                                        KeyboardOptions(
+                                            capitalization = KeyboardCapitalization.Sentences,
+                                            imeAction = ImeAction.Next,
+                                            keyboardType = KeyboardType.Number,
+                                        ),
+                                    label = {
+                                        Text(text = stringResource(Res.string.target_value))
+                                    },
+                                    placeholder = { Text(text = "10") },
+                                    modifier = Modifier.weight(1f),
+                                    isError =
+                                        targetValueState.text.isNotBlank() &&
+                                            (targetValueState.text
+                                                .toString()
+                                                .toDoubleOrNull()
+                                                ?.let { it !in MIN_TARGET_VALUE..MAX_TARGET_VALUE }
+                                                ?: true),
                                 )
-                            },
-                            leadingContent = {
-                                Icon(
-                                    imageVector = vectorResource(Res.drawable.alarm),
-                                    contentDescription = "Alarm Icon",
-                                )
-                            },
-                            trailingContent = {
-                                ExpressiveSwitch(
-                                    checked = newHabit.reminder,
-                                    onCheckedChange = { checked ->
-                                        if (checked) {
-                                            if (notificationPermission) {
-                                                updateHabit(newHabit.copy(reminder = true))
-                                            } else {
-                                                onRequestPermission()
-                                            }
+
+                                OutlinedTextField(
+                                    state = targetUnitState,
+                                    lineLimits = TextFieldLineLimits.SingleLine,
+                                    shape = MaterialTheme.shapes.medium,
+                                    keyboardOptions =
+                                        KeyboardOptions(
+                                            capitalization = KeyboardCapitalization.Sentences,
+                                            imeAction = ImeAction.Done,
+                                            keyboardType = KeyboardType.Text,
+                                        ),
+                                    label = {
+                                        if (targetUnitState.text.length <= UNIT_STRING_LIMIT) {
+                                            Text(text = stringResource(Res.string.target_unit))
                                         } else {
-                                            updateHabit(newHabit.copy(reminder = false))
+                                            Text(text = stringResource(Res.string.too_long))
                                         }
                                     },
+                                    placeholder = { Text(text = "Hours") },
+                                    modifier = Modifier.weight(1f),
+                                    isError = targetUnitState.text.length > UNIT_STRING_LIMIT,
                                 )
-                            },
-                        )
+                            }
+                        }
+                    }
 
-                        if (newHabit.reminder) {
-                            ListItem(
-                                colors = listItemColors(),
-                                modifier = Modifier.clip(endItemShape()),
-                                headlineContent = {
-                                    Text(
-                                        text =
-                                            newHabit.time.time.toFormattedString(is24Hr = is24Hr),
-                                        style =
-                                            MaterialTheme.typography.titleLarge.copy(
-                                                fontFamily = flexFontRounded()
-                                            ),
-                                    )
-                                },
-                                trailingContent = {
-                                    FilledTonalIconButton(onClick = { timePickerDialog = true }) {
-                                        Icon(
-                                            imageVector = vectorResource(Res.drawable.edit),
-                                            contentDescription = "Pick Time",
-                                        )
+                    // reminder
+                    ListItem(
+                        colors = listItemColors(),
+                        modifier =
+                            Modifier.clip(
+                                if (newHabit.reminder) middleItemShape() else endItemShape()
+                            ),
+                        headlineContent = { Text(text = stringResource(Res.string.add_reminder)) },
+                        supportingContent = {
+                            Text(
+                                text = stringResource(Res.string.add_reminder_desc),
+                                maxLines = 1,
+                                modifier = Modifier.basicMarquee(),
+                            )
+                        },
+                        leadingContent = {
+                            Icon(
+                                imageVector = vectorResource(Res.drawable.alarm),
+                                contentDescription = "Alarm Icon",
+                            )
+                        },
+                        trailingContent = {
+                            ExpressiveSwitch(
+                                checked = newHabit.reminder,
+                                onCheckedChange = { checked ->
+                                    if (checked) {
+                                        if (notificationPermission) {
+                                            updateHabit(newHabit.copy(reminder = true))
+                                        } else {
+                                            onRequestPermission()
+                                        }
+                                    } else {
+                                        updateHabit(newHabit.copy(reminder = false))
                                     }
                                 },
                             )
-                        }
+                        },
+                    )
+
+                    if (newHabit.reminder) {
+                        ListItem(
+                            colors = listItemColors(),
+                            modifier = Modifier.clip(endItemShape()),
+                            headlineContent = {
+                                Text(
+                                    text = newHabit.time.time.toFormattedString(is24Hr = is24Hr),
+                                    style =
+                                        MaterialTheme.typography.titleLarge.copy(
+                                            fontFamily = flexFontRounded()
+                                        ),
+                                )
+                            },
+                            trailingContent = {
+                                FilledTonalIconButton(onClick = { timePickerDialog = true }) {
+                                    Icon(
+                                        imageVector = vectorResource(Res.drawable.edit),
+                                        contentDescription = "Pick Time",
+                                    )
+                                }
+                            },
+                        )
                     }
                 }
             }
 
+            // save button
             item {
                 Button(
                     onClick = {
@@ -361,15 +485,29 @@ fun HabitUpsertSheetContent(
                             newHabit.copy(
                                 title = titleTextFieldState.text.toString(),
                                 description = descTextFieldState.text.toString(),
+                                targetValue =
+                                    if (targetValueState.text.isNotBlank())
+                                        targetValueState.text.toString().toDoubleOrNull() ?: 1.0
+                                    else 0.0,
+                                targetUnit = targetUnitState.text.toString(),
                             )
                         )
                         onDismissRequest()
                     },
-                    modifier = Modifier.padding(bottom = 32.dp).fillMaxWidth(),
+                    modifier =
+                        Modifier.padding(bottom = 32.dp)
+                            .height(ButtonDefaults.MediumContainerHeight)
+                            .fillMaxWidth(),
                     enabled =
                         descTextFieldState.text.length <= DESCRIPTION_STRING_LIMIT &&
                             titleTextFieldState.text.length <= TITLE_STRING_LIMIT &&
-                            titleTextFieldState.text.isNotBlank(),
+                            titleTextFieldState.text.isNotBlank() &&
+                            (currentHabitType != HabitType.MEASURE_ABLE ||
+                                (targetValueState.text.toString().toDoubleOrNull()?.let {
+                                    it in MIN_TARGET_VALUE..MAX_TARGET_VALUE
+                                } ?: false &&
+                                    targetUnitState.text.isNotBlank() &&
+                                    targetUnitState.text.length <= UNIT_STRING_LIMIT)),
                 ) {
                     Text(
                         text =
@@ -379,7 +517,10 @@ fun HabitUpsertSheetContent(
                                 } else {
                                     Res.string.add_habit
                                 }
-                            )
+                            ),
+                        style =
+                            ButtonDefaults.textStyleFor(ButtonDefaults.MediumContainerHeight)
+                                .copy(fontFamily = flexFontRounded()),
                     )
                 }
             }

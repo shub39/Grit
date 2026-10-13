@@ -43,24 +43,27 @@ import androidx.compose.material3.TopAppBarScrollBehavior
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.saveable.rememberSaveable
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.unit.dp
 import com.shub39.grit.core.habits.Habit
 import com.shub39.grit.core.now
-import com.shub39.grit.shared.ui.LocalWindowSizeClass
-import com.shub39.grit.shared.ui.WindowSize.Companion.isExpanded
 import com.shub39.grit.shared.ui.components.Empty
 import com.shub39.grit.shared.ui.components.PageFill
 import com.shub39.grit.shared.ui.components.detachedItemShape
 import com.shub39.grit.shared.ui.components.endItemShape
+import com.shub39.grit.shared.ui.components.genericSaver
 import com.shub39.grit.shared.ui.components.leadingItemShape
 import com.shub39.grit.shared.ui.components.middleItemShape
 import com.shub39.grit.shared.ui.habit.HabitState
 import com.shub39.grit.shared.ui.habit.HabitsAction
 import com.shub39.grit.shared.ui.habit.ui.component.HabitCard
 import com.shub39.grit.shared.ui.habit.ui.component.HabitListFABs
+import com.shub39.grit.shared.ui.habit.ui.component.HabitStatusDialog
 import com.shub39.grit.shared.ui.habit.ui.component.HabitUpsertSheet
 import com.shub39.grit.shared.ui.theme.flexFontEmphasis
 import com.shub39.grit.shared.ui.theme.flexFontRounded
@@ -72,12 +75,17 @@ import grit.shared.ui.generated.resources.expand
 import grit.shared.ui.generated.resources.habits
 import grit.shared.ui.generated.resources.reorder
 import kotlinx.datetime.DayOfWeek
+import kotlinx.datetime.LocalDate
 import kotlinx.datetime.LocalDateTime
+import kotlinx.serialization.Serializable
 import org.jetbrains.compose.resources.painterResource
 import org.jetbrains.compose.resources.stringResource
 import org.jetbrains.compose.resources.vectorResource
 import sh.calvin.reorderable.ReorderableItem
 import sh.calvin.reorderable.rememberReorderableLazyListState
+
+@Serializable
+private data class AddMeasuredHabitStatus(val habit: Habit, val date: LocalDate, val value: Double)
 
 @Composable
 fun HabitsList(
@@ -209,10 +217,13 @@ private fun HabitsListContent(
     onNavigateToAnalytics: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
-    val windowSizeClass = LocalWindowSizeClass.current
     val reorderableListState =
         rememberReorderableLazyListState(lazyListState) { from, to ->
             onAction(HabitsAction.OnTransientHabitReorder(from.index, to.index))
+        }
+    var showMeasuredHabitStatusAddDialog: AddMeasuredHabitStatus? by
+        rememberSaveable(stateSaver = genericSaver<AddMeasuredHabitStatus?>()) {
+            mutableStateOf(null)
         }
 
     Column(modifier = modifier) {
@@ -241,7 +252,13 @@ private fun HabitsListContent(
                     HabitCard(
                         habitWithAnalytics = habitWithAnalytics,
                         completed = completed,
-                        action = onAction,
+                        onInsertStatus = { habit, date, value ->
+                            if (habitWithAnalytics.habit.isMeasurable) {
+                                showMeasuredHabitStatusAddDialog =
+                                    AddMeasuredHabitStatus(habit, date, value)
+                            } else onAction(HabitsAction.InsertStatus(habit, date))
+                        },
+                        onPrepareAnalytics = { onAction(HabitsAction.PrepareAnalytics(it)) },
                         startingDay = state.startingDay,
                         editState = state.editState,
                         onNavigateToAnalytics = onNavigateToAnalytics,
@@ -258,9 +275,6 @@ private fun HabitsListContent(
                         },
                         shape = shape,
                         compactView = state.compactHabitView,
-                        analyticsEnabled =
-                            state.analyticsHabitId != habitWithAnalytics.habit.id ||
-                                !windowSizeClass.isExpanded(),
                     )
                 }
             }
@@ -277,7 +291,7 @@ private fun HabitsListContent(
         }
     }
 
-    // add dialog
+    // habit add dialog
     if (state.showHabitAddSheet) {
         HabitUpsertSheet(
             habit =
@@ -292,6 +306,24 @@ private fun HabitsListContent(
             onDismissRequest = { onAction(HabitsAction.DismissAddHabitDialog) },
             onUpsertHabit = { onAction(HabitsAction.AddHabit(it)) },
             is24Hr = state.is24Hr,
+        )
+    }
+
+    // add measured habit status
+    showMeasuredHabitStatusAddDialog?.let { measuredHabitStatus ->
+        HabitStatusDialog(
+            onDismissRequest = { showMeasuredHabitStatusAddDialog = null },
+            habit = measuredHabitStatus.habit,
+            value = measuredHabitStatus.value,
+            onAddStatus = { value ->
+                onAction(
+                    HabitsAction.InsertMeasuredStatus(
+                        habit = measuredHabitStatus.habit,
+                        date = measuredHabitStatus.date,
+                        value = value,
+                    )
+                )
+            },
         )
     }
 }

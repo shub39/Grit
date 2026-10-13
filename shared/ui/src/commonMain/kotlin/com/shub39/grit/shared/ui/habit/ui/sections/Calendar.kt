@@ -25,12 +25,12 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.widthIn
 import androidx.compose.material3.ButtonGroupDefaults
 import androidx.compose.material3.FilledTonalIconButton
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
-import androidx.compose.material3.ToggleButton
 import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
@@ -51,12 +51,16 @@ import com.kizitonwose.calendar.core.Year
 import com.kizitonwose.calendar.core.now
 import com.shub39.grit.core.habits.CalendarType
 import com.shub39.grit.core.habits.Habit
+import com.shub39.grit.core.habits.HabitStatus
 import com.shub39.grit.core.habits.HabitWithAnalytics
 import com.shub39.grit.shared.ui.LocalWindowSizeClass
 import com.shub39.grit.shared.ui.WindowSize.Companion.isExpanded
+import com.shub39.grit.shared.ui.components.ListSelect
+import com.shub39.grit.shared.ui.components.PageFill
 import com.shub39.grit.shared.ui.habit.HabitState
 import com.shub39.grit.shared.ui.habit.daysStartingFrom
 import com.shub39.grit.shared.ui.habit.ui.component.CalendarMonthHeader
+import com.shub39.grit.shared.ui.habit.ui.component.HabitStatusDialog
 import com.shub39.grit.shared.ui.habit.ui.component.MonthlyCalendarDayContent
 import com.shub39.grit.shared.ui.habit.ui.component.YearlyCalendarDayContent
 import com.shub39.grit.shared.ui.theme.flexFontEmphasis
@@ -71,21 +75,23 @@ import kotlinx.datetime.yearMonth
 import org.jetbrains.compose.resources.stringResource
 import org.jetbrains.compose.resources.vectorResource
 
+private data class ShowInsertStatus(val date: LocalDate, val value: Double)
+
 @Composable
 fun Calendar(
     state: HabitState,
-    onDateClick: (Habit, LocalDate) -> Unit,
+    onDateClick: (Habit, LocalDate, Double?) -> Unit,
     onNavigateBack: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
+    var showInsertStatusDialog by remember { mutableStateOf<ShowInsertStatus?>(null) }
     var calendarType by rememberSaveable { mutableStateOf(CalendarType.MONTH) }
 
     val currentHabit =
         state.habitsWithAnalytics.find { it.habit.id == state.analyticsHabitId } ?: return
+    val isMeasurable = currentHabit.habit.isMeasurable
     val windowSizeClass = LocalWindowSizeClass.current
     val today = LocalDate.now()
-    val doneDates =
-        remember(currentHabit.statuses) { currentHabit.statuses.map { it.date }.toSet() }
     val edgeWeeks = listOf(state.startingDay, daysStartingFrom(state.startingDay).last())
 
     Column(modifier = modifier.fillMaxSize()) {
@@ -118,15 +124,13 @@ fun Calendar(
             modifier = Modifier.padding(horizontal = 16.dp),
             horizontalArrangement = Arrangement.spacedBy(ButtonGroupDefaults.ConnectedSpaceBetween),
         ) {
-            CalendarType.entries.forEach { entry ->
-                ToggleButton(
-                    checked = entry == calendarType,
-                    onCheckedChange = { calendarType = entry },
-                    modifier = Modifier.weight(1f),
-                ) {
-                    Text(text = stringResource(entry.toStringRes()))
-                }
-            }
+            ListSelect(
+                title = null,
+                options = CalendarType.entries.toList(),
+                onSelectedChange = { calendarType = it },
+                labelProvider = { Text(text = stringResource(it.toStringRes())) },
+                selected = calendarType,
+            )
         }
 
         AnimatedContent(targetState = calendarType, modifier = Modifier.fillMaxSize()) { type ->
@@ -136,25 +140,46 @@ fun Calendar(
                         today = today,
                         state = state,
                         modifier = modifier,
-                        doneDates = doneDates,
+                        doneDates = currentHabit.statuses,
                         currentHabit = currentHabit,
                         edgeWeeks = edgeWeeks,
-                        onDateClick = onDateClick,
+                        onDateClick = { date, value ->
+                            if (isMeasurable) {
+                                showInsertStatusDialog = ShowInsertStatus(date, value)
+                            } else {
+                                onDateClick(currentHabit.habit, date, null)
+                            }
+                        },
                     )
                 }
 
                 MONTH -> {
                     MonthlyCalendar(
                         state = state,
-                        doneDates = doneDates,
+                        doneDates = currentHabit.statuses,
                         today = today,
                         currentHabit = currentHabit,
                         edgeWeeks = edgeWeeks,
-                        onDateClick = onDateClick,
+                        onDateClick = { date, value ->
+                            if (isMeasurable) {
+                                showInsertStatusDialog = ShowInsertStatus(date, value)
+                            } else {
+                                onDateClick(currentHabit.habit, date, null)
+                            }
+                        },
                     )
                 }
             }
         }
+    }
+
+    showInsertStatusDialog?.let { dialog ->
+        HabitStatusDialog(
+            onDismissRequest = { showInsertStatusDialog = null },
+            habit = currentHabit.habit,
+            value = dialog.value,
+            onAddStatus = { onDateClick(currentHabit.habit, dialog.date, it) },
+        )
     }
 }
 
@@ -163,96 +188,105 @@ private fun YearlyCalendar(
     today: LocalDate,
     state: HabitState,
     modifier: Modifier,
-    doneDates: Set<LocalDate>,
+    doneDates: List<HabitStatus>,
     currentHabit: HabitWithAnalytics,
-    onDateClick: (Habit, LocalDate) -> Unit,
+    onDateClick: (LocalDate, Double) -> Unit,
     edgeWeeks: List<DayOfWeek>,
-) {
-    val calendarState =
-        rememberYearCalendarState(
-            startYear = Year(2024),
-            endYear = Year(today.yearMonth.year),
-            firstVisibleYear = Year(today.yearMonth.year),
-            firstDayOfWeek = state.startingDay,
-        )
+) =
+    PageFill(modifier = modifier) {
+        val calendarState =
+            rememberYearCalendarState(
+                startYear = Year(2024),
+                endYear = Year(today.yearMonth.year),
+                firstVisibleYear = Year(today.yearMonth.year),
+                firstDayOfWeek = state.startingDay,
+            )
 
-    VerticalYearCalendar(
-        modifier = modifier.padding(horizontal = 8.dp),
-        contentPadding = PaddingValues(top = 16.dp, bottom = 60.dp),
-        monthHorizontalSpacing = 4.dp,
-        monthVerticalSpacing = 4.dp,
-        state = calendarState,
-        reverseLayout = true,
-        calendarScrollPaged = false,
-        yearHeader = { calendarYear ->
-            Box(modifier = Modifier.padding(start = 4.dp, end = 4.dp, top = 48.dp, bottom = 0.dp)) {
-                Text(
-                    text = calendarYear.year.value.toString(),
-                    style =
-                        MaterialTheme.typography.titleLarge.copy(
-                            color = MaterialTheme.colorScheme.secondary,
-                            fontFamily = flexFontRounded(),
-                        ),
-                    modifier = Modifier.align(Alignment.Center),
-                )
-            }
-        },
-        monthHeader = { calendarMonth ->
-            if (calendarMonth.yearMonth <= today.yearMonth) {
-                CalendarMonthHeader(
-                    calendarMonth = calendarMonth,
-                    style = MaterialTheme.typography.labelMedium,
-                )
-            }
-        },
-        dayContent = { day ->
-            if (day.date.yearMonth <= today.yearMonth) {
-                YearlyCalendarDayContent(
+        VerticalYearCalendar(
+            modifier = Modifier.padding(horizontal = 8.dp).widthIn(max = 700.dp),
+            contentPadding = PaddingValues(top = 16.dp, bottom = 60.dp),
+            monthHorizontalSpacing = 4.dp,
+            monthVerticalSpacing = 4.dp,
+            state = calendarState,
+            reverseLayout = true,
+            calendarScrollPaged = false,
+            yearHeader = { calendarYear ->
+                Box(
+                    modifier =
+                        Modifier.padding(start = 4.dp, end = 4.dp, top = 48.dp, bottom = 0.dp)
+                ) {
+                    Text(
+                        text = calendarYear.year.value.toString(),
+                        style =
+                            MaterialTheme.typography.titleLarge.copy(
+                                color = MaterialTheme.colorScheme.secondary,
+                                fontFamily = flexFontRounded(),
+                            ),
+                        modifier = Modifier.align(Alignment.Center),
+                    )
+                }
+            },
+            monthHeader = { calendarMonth ->
+                if (calendarMonth.yearMonth <= today.yearMonth) {
+                    CalendarMonthHeader(
+                        calendarMonth = calendarMonth,
+                        style = MaterialTheme.typography.labelMedium,
+                    )
+                }
+            },
+            dayContent = { day ->
+                if (day.date.yearMonth <= today.yearMonth) {
+                    YearlyCalendarDayContent(
+                        targetValue = currentHabit.habit.targetValue,
+                        isMeasurable = currentHabit.habit.isMeasurable,
+                        day = day,
+                        doneDates = doneDates,
+                        today = today,
+                        habitDays = currentHabit.habit.days,
+                        edgeWeeks = edgeWeeks,
+                        onDateClick = onDateClick,
+                    )
+                }
+            },
+        )
+    }
+
+@Composable
+private fun MonthlyCalendar(
+    state: HabitState,
+    doneDates: List<HabitStatus>,
+    today: LocalDate,
+    currentHabit: HabitWithAnalytics,
+    edgeWeeks: List<DayOfWeek>,
+    onDateClick: (LocalDate, Double) -> Unit,
+    modifier: Modifier = Modifier,
+) =
+    PageFill(modifier) {
+        val calendarState =
+            rememberCalendarState(
+                startMonth = YearMonth(year = 2024, month = Month.JANUARY),
+                endMonth = YearMonth.now(),
+                firstVisibleMonth = YearMonth.now(),
+                firstDayOfWeek = state.startingDay,
+            )
+
+        VerticalCalendar(
+            modifier = Modifier.padding(horizontal = 16.dp).widthIn(max = 700.dp),
+            contentPadding = PaddingValues(top = 16.dp, bottom = 60.dp),
+            state = calendarState,
+            reverseLayout = true,
+            monthHeader = { calendarMonth -> CalendarMonthHeader(calendarMonth = calendarMonth) },
+            dayContent = { day ->
+                MonthlyCalendarDayContent(
+                    targetValue = currentHabit.habit.targetValue,
+                    isMeasurable = currentHabit.habit.isMeasurable,
                     day = day,
                     doneDates = doneDates,
                     today = today,
                     habitDays = currentHabit.habit.days,
                     edgeWeeks = edgeWeeks,
-                    onDateClick = { onDateClick(currentHabit.habit, it) },
+                    onDateClick = onDateClick,
                 )
-            }
-        },
-    )
-}
-
-@Composable
-private fun MonthlyCalendar(
-    state: HabitState,
-    doneDates: Set<LocalDate>,
-    today: LocalDate,
-    currentHabit: HabitWithAnalytics,
-    edgeWeeks: List<DayOfWeek>,
-    onDateClick: (Habit, LocalDate) -> Unit,
-    modifier: Modifier = Modifier,
-) {
-    val calendarState =
-        rememberCalendarState(
-            startMonth = YearMonth(year = 2024, month = Month.JANUARY),
-            endMonth = YearMonth.now(),
-            firstVisibleMonth = YearMonth.now(),
-            firstDayOfWeek = state.startingDay,
+            },
         )
-
-    VerticalCalendar(
-        modifier = modifier.padding(horizontal = 16.dp),
-        contentPadding = PaddingValues(top = 16.dp, bottom = 60.dp),
-        state = calendarState,
-        reverseLayout = true,
-        monthHeader = { calendarMonth -> CalendarMonthHeader(calendarMonth = calendarMonth) },
-        dayContent = { day ->
-            MonthlyCalendarDayContent(
-                day = day,
-                doneDates = doneDates,
-                today = today,
-                habitDays = currentHabit.habit.days,
-                edgeWeeks = edgeWeeks,
-                onDateClick = { onDateClick(currentHabit.habit, it) },
-            )
-        },
-    )
-}
+    }

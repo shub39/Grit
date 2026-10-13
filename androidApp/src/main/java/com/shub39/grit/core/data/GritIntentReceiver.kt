@@ -19,6 +19,7 @@ package com.shub39.grit.core.data
 import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
+import androidx.core.app.RemoteInput
 import com.shub39.grit.core.GritLogger
 import com.shub39.grit.core.data.notification.GritNotificationManager
 import com.shub39.grit.core.habits.HabitRepo
@@ -28,7 +29,6 @@ import com.shub39.grit.core.interfaces.IntentActions
 import com.shub39.grit.core.interfaces.SettingsDatastore
 import com.shub39.grit.core.now
 import com.shub39.grit.core.tasks.TaskRepo
-import com.shub39.grit.logic.habits.database.HabitsDao
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.SupervisorJob
@@ -151,18 +151,46 @@ class GritIntentReceiver : BroadcastReceiver(), KoinComponent {
     private suspend fun addHabitStatus(intent: Intent) {
         GritLogger.d(TAG, "Add habit status intent received")
         val habitId = intent.getLongExtra("habit_id", -1)
-        if (habitId < 0 || get<HabitsDao>().getHabitById(habitId) == null) {
+        if (habitId < 0) {
             GritLogger.e(TAG, "Invalid Habit Id: $habitId")
             return
         }
 
         val habitRepo = get<HabitRepo>()
+        val habit = habitRepo.getHabitById(habitId)
+        if (habit == null) {
+            GritLogger.e(TAG, "Habit not found for Id: $habitId")
+            return
+        }
 
-        habitRepo.insertHabitStatus(HabitStatus(habitId = habitId, date = LocalDate.now()))
+        try {
+            val resultsBundle = RemoteInput.getResultsFromIntent(intent)
+            val inputString =
+                resultsBundle?.getCharSequence(GritNotificationManager.KEY_HABIT_INPUT)?.toString()
 
-        GritLogger.d(TAG, "Habit status added successfully")
+            val loggedValue =
+                if (habit.isMeasurable) {
+                    val parsedValue = inputString?.toDoubleOrNull()
+                    if (parsedValue == null || parsedValue <= 0.0) {
+                        GritLogger.e(
+                            TAG,
+                            "Invalid progress input for measurable habit: '$inputString'",
+                        )
+                        return
+                    }
+                    parsedValue
+                } else {
+                    1.0
+                }
 
-        get<GritNotificationManager>().cancelNotification(habitId.toInt())
+            habitRepo.insertHabitStatus(
+                HabitStatus(habitId = habitId, date = LocalDate.now(), value = loggedValue)
+            )
+
+            GritLogger.d(TAG, "Habit status added successfully with value: $loggedValue")
+        } finally {
+            get<GritNotificationManager>().cancelNotification(habitId.toInt())
+        }
     }
 
     private suspend fun taskNotification(intent: Intent) {

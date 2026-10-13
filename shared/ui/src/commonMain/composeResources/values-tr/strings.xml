@@ -89,4 +89,10 @@
     <string name="monthly">Aylık</string>
     <string name="yearly">Yıllık</string>
     <string name="add_subtasks">Alt Görev Ekle</string>
+    <string name="habit_type">Alışkanlık Türü</string>
+    <string name="target_value">Hedef Değeri</string>
+    <string name="target_unit">Hedef Birimi</string>
+    <string name="yes_or_no">Evet veya Hayır</string>
+    <string name="measure_able">Ölçülebilir</string>
+    <string name="add_status">Durum Ekle</string>
 </resources>

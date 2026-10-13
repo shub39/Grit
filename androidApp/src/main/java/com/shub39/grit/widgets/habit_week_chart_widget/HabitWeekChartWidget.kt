@@ -66,6 +66,7 @@ import com.shub39.grit.core.habits.Habit
 import com.shub39.grit.core.habits.HabitRepo
 import com.shub39.grit.core.habits.HabitWithAnalytics
 import com.shub39.grit.core.now
+import com.shub39.grit.logic.habits.repository.calculateMeasurableTargets
 import com.shub39.grit.widgets.WidgetSize
 import kotlin.math.roundToInt
 import kotlin.random.Random
@@ -145,6 +146,21 @@ class HabitWeekChartWidget : GlanceAppWidget(), KoinComponent {
                         bestStreak = 20,
                         startedDaysAgo = 100,
                         consistency = 0.38f,
+                        measurableTargets =
+                            calculateMeasurableTargets(
+                                habit =
+                                    Habit(
+                                        id = 1,
+                                        title = "Exercise",
+                                        description = "40 mins daily",
+                                        time = LocalDateTime.now(),
+                                        days = setOf(),
+                                        index = 1,
+                                        reminder = false,
+                                    ),
+                                statuses = listOf(),
+                                firstDayOfWeek = LocalDateTime.now().date.dayOfWeek,
+                            ),
                     ),
             )
         }
@@ -311,6 +327,21 @@ private fun GlancePreview() {
                 bestStreak = 20,
                 startedDaysAgo = 100,
                 consistency = 0.38f,
+                measurableTargets =
+                    calculateMeasurableTargets(
+                        habit =
+                            Habit(
+                                id = 1,
+                                title = "Exercise",
+                                description = "40 mins daily",
+                                time = LocalDateTime.now(),
+                                days = setOf(),
+                                index = 1,
+                                reminder = false,
+                            ),
+                        statuses = listOf(),
+                        firstDayOfWeek = LocalDateTime.now().date.dayOfWeek,
+                    ),
             ),
     )
 }

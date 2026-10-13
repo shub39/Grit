@@ -44,5 +44,5 @@ interface HabitRepo {
 
     suspend fun deleteHabitStatus(habitId: Long, date: LocalDate)
 
-    suspend fun getCompletedHabitsForDate(date: LocalDate): List<Habit>
+    suspend fun getCompletedHabitsForDate(date: LocalDate): Map<Habit, Double?>
 }

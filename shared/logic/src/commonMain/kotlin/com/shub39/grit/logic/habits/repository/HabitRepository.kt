@@ -32,7 +32,6 @@ import com.shub39.grit.logic.habits.toHabitEntity
 import com.shub39.grit.logic.habits.toHabitStatus
 import com.shub39.grit.logic.habits.toHabitStatusEntity
 import kotlin.collections.sortedBy
-import kotlin.time.ExperimentalTime
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
@@ -50,7 +49,6 @@ import kotlinx.datetime.daysUntil
 import org.koin.core.annotation.Single
 
 @Single(binds = [HabitRepo::class])
-@OptIn(ExperimentalTime::class)
 class HabitRepository(
     private val habitDao: HabitsDao,
     private val habitStatusDao: HabitStatusDao,
@@ -113,15 +111,33 @@ class HabitRepository(
                     HabitWithAnalytics(
                         habit = habit,
                         statuses = habitStatusesForHabit,
+                        measurableTargets =
+                            calculateMeasurableTargets(
+                                habit = habit,
+                                statuses = habitStatusesForHabit,
+                                firstDayOfWeek = firstDayOfWeek.value,
+                            ),
                         currentStreak =
                             countCurrentStreak(dates = dates, eligibleWeekdays = habit.days),
                         bestStreak = countBestStreak(dates = dates, eligibleWeekdays = habit.days),
                         weeklyComparisonData =
-                            prepareLineChartData(
-                                firstDay = firstDayOfWeek.value,
-                                habitStatuses = habitStatusesForHabit,
-                            ),
-                        weekDayFrequencyData = prepareWeekDayFrequencyData(dates = dates),
+                            if (habit.isMeasurable) {
+                                prepareMeasurableLineChartData(
+                                    firstDay = firstDayOfWeek.value,
+                                    habitStatuses = habitStatusesForHabit,
+                                )
+                            } else {
+                                prepareLineChartData(
+                                    firstDay = firstDayOfWeek.value,
+                                    habitStatuses = habitStatusesForHabit,
+                                )
+                            },
+                        weekDayFrequencyData =
+                            if (habit.isMeasurable) {
+                                prepareMeasurableWeekDayData(habitStatuses = habitStatusesForHabit)
+                            } else {
+                                prepareWeekDayFrequencyData(dates = dates)
+                            },
                         startedDaysAgo = habit.time.date.daysUntil(LocalDate.now()).toLong(),
                         consistency = calculateConsistency(dates, habit.days),
                     )
@@ -131,9 +147,21 @@ class HabitRepository(
     }
 
     override fun getCompletedHabitIds(): Flow<List<Long>> {
-        return habitStatuses
-            .map { habitStatuses ->
-                habitStatuses.filter { it.date == LocalDate.now() }.map { it.habitId }
+        return habits
+            .combine(habitStatuses) { habitsFlow, statusFlow ->
+                habitsFlow
+                    .filter { habit ->
+                        val statusForToday =
+                            statusFlow.firstOrNull {
+                                it.habitId == habit.id && it.date == LocalDate.now()
+                            }
+                        if (habit.isMeasurable) {
+                            statusForToday != null && statusForToday.value > 0.0
+                        } else {
+                            statusForToday != null
+                        }
+                    }
+                    .map { it.id }
             }
             .flowOn(Dispatchers.Default)
     }
@@ -173,9 +201,16 @@ class HabitRepository(
     override fun getHabitsWithStatus(): Flow<List<Pair<Habit, Boolean>>> {
         return habits.combine(habitStatuses) { habitsFlow, statusFlow ->
             habitsFlow.map { habit ->
-                val dates = statusFlow.filter { it.habitId == habit.id }.map { it.date }
+                val statusForToday =
+                    statusFlow.firstOrNull { it.habitId == habit.id && it.date == LocalDate.now() }
+                val isCompleted =
+                    if (habit.isMeasurable) {
+                        statusForToday != null && statusForToday.value >= habit.targetValue
+                    } else {
+                        statusForToday != null
+                    }
 
-                habit to dates.any { it == LocalDate.now() }
+                habit to isCompleted
             }
         }
     }
@@ -196,8 +231,14 @@ class HabitRepository(
         habitStatusDao.deleteStatus(habitId, date)
     }
 
-    override suspend fun getCompletedHabitsForDate(date: LocalDate): List<Habit> {
-        val completedStatuses = habitStatusDao.getCompletedStatuses(date)
-        return completedStatuses.mapNotNull { habitDao.getHabitById(it.habitId)?.toHabit() }
+    override suspend fun getCompletedHabitsForDate(date: LocalDate): Map<Habit, Double?> {
+        val completedStatuses = habitStatusDao.getCompletedStatuses(date).map { it.toHabitStatus() }
+        val habitsList = habitDao.getAllHabits().map { it.toHabit() }
+        return habitsList
+            .mapNotNull { habit ->
+                val status = completedStatuses.firstOrNull { it.habitId == habit.id }
+                if (status != null) habit to status.value else null
+            }
+            .associate { it.first to it.second }
     }
 }

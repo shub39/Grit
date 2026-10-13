@@ -48,6 +48,9 @@ sealed interface HabitsAction {
     /** Add/Remove status for [habit] at given [date] */
     data class InsertStatus(val habit: Habit, val date: LocalDate) : HabitsAction
 
+    data class InsertMeasuredStatus(val habit: Habit, val date: LocalDate, val value: Double) :
+        HabitsAction
+
     data class UpdateHabit(val habit: Habit) : HabitsAction
 
     data object ReorderHabits : HabitsAction

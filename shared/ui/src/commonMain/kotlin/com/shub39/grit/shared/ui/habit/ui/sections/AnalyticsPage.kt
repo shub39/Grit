@@ -34,7 +34,6 @@ import androidx.compose.foundation.layout.widthIn
 import androidx.compose.foundation.lazy.staggeredgrid.LazyVerticalStaggeredGrid
 import androidx.compose.foundation.lazy.staggeredgrid.StaggeredGridCells
 import androidx.compose.foundation.shape.CircleShape
-import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.ButtonShapes
 import androidx.compose.material3.FilledIconButton
 import androidx.compose.material3.FilledTonalIconButton
@@ -55,7 +54,6 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.unit.dp
@@ -68,18 +66,23 @@ import com.shub39.grit.shared.ui.WindowSize.Companion.isExpanded
 import com.shub39.grit.shared.ui.components.GritDialog
 import com.shub39.grit.shared.ui.habit.HabitState
 import com.shub39.grit.shared.ui.habit.HabitsAction
+import com.shub39.grit.shared.ui.habit.ui.component.HabitStatusDialog
 import com.shub39.grit.shared.ui.habit.ui.component.HabitUpsertSheet
 import com.shub39.grit.shared.ui.habit.ui.component.stats.CalendarMap
 import com.shub39.grit.shared.ui.habit.ui.component.stats.StartStats
+import com.shub39.grit.shared.ui.habit.ui.component.stats.Targets
 import com.shub39.grit.shared.ui.habit.ui.component.stats.WeekDayBreakdown
 import com.shub39.grit.shared.ui.habit.ui.component.stats.WeeklyActivity
-import com.shub39.grit.shared.ui.habit.ui.component.stats.WeeklyBooleanHeatMap
+import com.shub39.grit.shared.ui.habit.ui.component.stats.WeeklyHeatMap
 import com.shub39.grit.shared.ui.theme.flexFontEmphasis
 import com.shub39.grit.shared.ui.theme.flexFontRounded
 import grit.shared.ui.generated.resources.*
+import kotlinx.datetime.LocalDate
 import kotlinx.datetime.YearMonth
 import org.jetbrains.compose.resources.stringResource
 import org.jetbrains.compose.resources.vectorResource
+
+private data class InsertMeasuredHabitsStatus(val date: LocalDate, val value: Double)
 
 @Composable
 fun AnalyticsPage(
@@ -112,6 +115,7 @@ fun AnalyticsPage(
             firstDayOfWeek = state.startingDay,
         )
 
+    var insertStatusDialog: InsertMeasuredHabitsStatus? by remember { mutableStateOf(null) }
     var editDialog by remember { mutableStateOf(false) }
     var deleteDialog by remember { mutableStateOf(false) }
 
@@ -187,10 +191,7 @@ fun AnalyticsPage(
 
         val maxWidth = 380.dp
         LazyVerticalStaggeredGrid(
-            modifier =
-                Modifier.fillMaxSize()
-                    .padding(start = 16.dp, end = 16.dp)
-                    .clip(RoundedCornerShape(topStart = 20.dp, topEnd = 20.dp)),
+            modifier = Modifier.fillMaxSize().padding(start = 16.dp, end = 16.dp),
             columns = StaggeredGridCells.Adaptive(minSize = maxWidth),
             contentPadding = PaddingValues(top = 16.dp, bottom = 60.dp),
             horizontalArrangement = Arrangement.spacedBy(16.dp),
@@ -206,26 +207,51 @@ fun AnalyticsPage(
             }
 
             item {
-                WeeklyBooleanHeatMap(
+                WeeklyHeatMap(
+                    isMeasurable = currentHabit.habit.isMeasurable,
+                    targetValue = currentHabit.habit.targetValue,
                     heatMapState = heatMapState,
                     statuses = currentHabit.statuses,
                     days = currentHabit.habit.days,
-                    onDateClick = { onAction(HabitsAction.InsertStatus(currentHabit.habit, it)) },
+                    onDateClick = { date, value ->
+                        if (currentHabit.habit.isMeasurable) {
+                            insertStatusDialog =
+                                InsertMeasuredHabitsStatus(date = date, value = value)
+                        } else {
+                            onAction(HabitsAction.InsertStatus(currentHabit.habit, date))
+                        }
+                    },
                 )
             }
 
             item {
                 CalendarMap(
                     canSeeContent = isUserSubscribed,
+                    isMeasurable = currentHabit.habit.isMeasurable,
+                    targetValue = currentHabit.habit.targetValue,
                     calendarState = calendarState,
                     onNavigateToPaywall = onNavigateToPaywall,
                     statuses = currentHabit.statuses,
                     days = currentHabit.habit.days,
                     onNavigateToCalendar = onNavigateToCalendar,
-                    onDateClick = {
-                        onAction(HabitsAction.InsertStatus(habit = currentHabit.habit, date = it))
+                    onDateClick = { date, value ->
+                        if (currentHabit.habit.isMeasurable) {
+                            insertStatusDialog = InsertMeasuredHabitsStatus(date, value)
+                        } else {
+                            onAction(HabitsAction.InsertStatus(currentHabit.habit, date))
+                        }
                     },
                 )
+            }
+
+            if (currentHabit.habit.isMeasurable) {
+                item {
+                    Targets(
+                        days = currentHabit.habit.days,
+                        measurableTargets = currentHabit.measurableTargets,
+                        canSeeContent = isUserSubscribed,
+                    )
+                }
             }
 
             item {
@@ -315,6 +341,25 @@ fun AnalyticsPage(
             onUpsertHabit = { onAction(HabitsAction.UpdateHabit(it)) },
             is24Hr = state.is24Hr,
             isEditSheet = true,
+        )
+    }
+
+    // insert measured habit status dialog
+    insertStatusDialog?.let { dialog ->
+        HabitStatusDialog(
+            modifier = Modifier,
+            onDismissRequest = { insertStatusDialog = null },
+            habit = currentHabit.habit,
+            value = dialog.value,
+            onAddStatus = { value ->
+                onAction(
+                    HabitsAction.InsertMeasuredStatus(
+                        habit = currentHabit.habit,
+                        date = dialog.date,
+                        value = value,
+                    )
+                )
+            },
         )
     }
 }

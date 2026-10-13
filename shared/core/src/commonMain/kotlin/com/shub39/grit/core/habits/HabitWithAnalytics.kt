@@ -20,6 +20,16 @@ typealias WeeklyComparisonData = List<Double>
 
 typealias WeekDayFrequencyData = Map<String, Int>
 
+data class Target(val progress: Double, val target: Double)
+
+data class MeasurableTargets(
+    val dailyTarget: Target,
+    val weeklyTarget: Target,
+    val monthlyTarget: Target,
+    val quarterlyTarget: Target,
+    val yearlyTarget: Target,
+)
+
 /** Grouped model for [habit] and its constituent analytics calculated from [statuses] */
 data class HabitWithAnalytics(
     val habit: Habit,
@@ -27,6 +37,7 @@ data class HabitWithAnalytics(
     val statuses: List<HabitStatus>,
     val weeklyComparisonData: WeeklyComparisonData,
     val weekDayFrequencyData: WeekDayFrequencyData,
+    val measurableTargets: MeasurableTargets,
     val currentStreak: Int,
     val bestStreak: Int,
     val startedDaysAgo: Long,

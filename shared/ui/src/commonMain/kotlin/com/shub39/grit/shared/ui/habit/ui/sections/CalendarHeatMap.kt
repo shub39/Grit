@@ -36,11 +36,14 @@ import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.ButtonGroupDefaults
+import androidx.compose.material3.Card
+import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.FilledTonalIconButton
 import androidx.compose.material3.Icon
 import androidx.compose.material3.ListItem
 import androidx.compose.material3.ListItemDefaults
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.MaterialTheme.colorScheme
 import androidx.compose.material3.Text
 import androidx.compose.material3.ToggleButton
 import androidx.compose.material3.TopAppBar
@@ -77,6 +80,7 @@ import com.shub39.grit.shared.ui.theme.flexFontEmphasis
 import com.shub39.grit.shared.ui.theme.flexFontRounded
 import com.shub39.grit.shared.ui.toStringRes
 import grit.shared.ui.generated.resources.*
+import kotlin.math.roundToInt
 import kotlinx.datetime.LocalDate
 import kotlinx.datetime.Month
 import kotlinx.datetime.YearMonth
@@ -106,14 +110,14 @@ fun CalendarHeatMap(
                 Text(
                     text = date.toFormattedString(),
                     fontFamily = flexFontRounded(),
-                    color = MaterialTheme.colorScheme.onSurface,
+                    color = colorScheme.onSurface,
                     modifier = Modifier.fillMaxWidth().padding(horizontal = 16.dp),
                 )
 
                 Column(modifier = Modifier.verticalScroll(rememberScrollState())) {
                     if (habits.isNotEmpty()) {
                         Spacer(modifier = Modifier.height(4.dp))
-                        habits.forEachIndexed { index, habit ->
+                        habits.toList().forEachIndexed { index, (habit, value) ->
                             val shape =
                                 when {
                                     habits.size == 1 -> RoundedCornerShape(12.dp)
@@ -125,13 +129,34 @@ fun CalendarHeatMap(
                             ListItem(
                                 colors =
                                     ListItemDefaults.colors(
-                                        containerColor =
-                                            MaterialTheme.colorScheme.secondaryContainer,
-                                        contentColor =
-                                            MaterialTheme.colorScheme.onSecondaryContainer,
+                                        containerColor = Color.Transparent,
+                                        contentColor = colorScheme.onSecondaryContainer,
                                     ),
-                                modifier = Modifier.padding(vertical = 1.dp).clip(shape),
-                                headlineContent = { Text(habit) },
+                                modifier =
+                                    Modifier.padding(vertical = 1.dp)
+                                        .background(colorScheme.secondaryContainer, shape = shape),
+                                headlineContent = { Text(habit.title) },
+                                trailingContent = {
+                                    if (habit.isMeasurable) {
+                                        value?.let {
+                                            Card(
+                                                colors =
+                                                    CardDefaults.cardColors(
+                                                        containerColor =
+                                                            colorScheme.onPrimaryContainer,
+                                                        contentColor = colorScheme.primaryContainer,
+                                                    )
+                                            ) {
+                                                Text(
+                                                    text =
+                                                        "${value.roundToInt()}/${habit.targetValue.roundToInt()}",
+                                                    modifier = Modifier.padding(8.dp),
+                                                    fontFamily = flexFontRounded(),
+                                                )
+                                            }
+                                        }
+                                    }
+                                },
                             )
                         }
                     }
@@ -241,7 +266,7 @@ private fun YearlyMap(
                     text = calendarYear.year.value.toString(),
                     style =
                         MaterialTheme.typography.titleLarge.copy(
-                            color = MaterialTheme.colorScheme.secondary,
+                            color = colorScheme.secondary,
                             fontFamily = flexFontRounded(),
                         ),
                     modifier = Modifier.align(Alignment.Center),
@@ -273,12 +298,12 @@ private fun YearlyMap(
                             shape = RoundedCornerShape(corners),
                             color =
                                 when (count) {
-                                    0 -> MaterialTheme.colorScheme.surfaceContainerHighest
+                                    0 -> colorScheme.surfaceContainerHighest
 
-                                    null -> MaterialTheme.colorScheme.surfaceContainerLowest
+                                    null -> colorScheme.surfaceContainerLowest
 
                                     else ->
-                                        MaterialTheme.colorScheme.primary.copy(
+                                        colorScheme.primary.copy(
                                             alpha = (count.toFloat() / totalHabits).coerceIn(0f, 1f)
                                         )
                                 },
@@ -332,12 +357,12 @@ private fun MonthlyMap(
                             shape = RoundedCornerShape(corners),
                             color =
                                 when (count) {
-                                    0 -> MaterialTheme.colorScheme.surfaceContainerHighest
+                                    0 -> colorScheme.surfaceContainerHighest
 
-                                    null -> MaterialTheme.colorScheme.surfaceContainerLowest
+                                    null -> colorScheme.surfaceContainerLowest
 
                                     else ->
-                                        MaterialTheme.colorScheme.primary.copy(
+                                        colorScheme.primary.copy(
                                             alpha = (count.toFloat() / totalHabits).coerceIn(0f, 1f)
                                         )
                                 },
@@ -348,15 +373,15 @@ private fun MonthlyMap(
             ) {
                 val textColor =
                     when (count) {
-                        0 -> MaterialTheme.colorScheme.onSurface
-                        null -> MaterialTheme.colorScheme.onSurfaceVariant
+                        0 -> colorScheme.onSurface
+                        null -> colorScheme.onSurfaceVariant
                         else -> {
                             val alpha = (count.toFloat() / totalHabits).coerceIn(0f, 1f)
 
                             if (alpha in 0f..0.5f) {
-                                MaterialTheme.colorScheme.primary
+                                colorScheme.primary
                             } else {
-                                MaterialTheme.colorScheme.onPrimary
+                                colorScheme.onPrimary
                             }
                         }
                     }

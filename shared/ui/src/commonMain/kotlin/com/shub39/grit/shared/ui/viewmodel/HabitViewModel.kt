@@ -75,7 +75,10 @@ class HabitViewModel(
                 is AddHabit -> {
                     analytics.trackEvent(
                         AnalyticsEvent.HABIT_CREATED,
-                        mapOf("has_reminder" to action.habit.reminder),
+                        mapOf(
+                            "has_reminder" to action.habit.reminder,
+                            "is_measurable" to action.habit.isMeasurable,
+                        ),
                     )
                     upsertHabit(action.habit)
                 }
@@ -150,17 +153,13 @@ class HabitViewModel(
                             return@launch
                         }
 
-                        val completedHabits =
-                            repo.getCompletedHabitsForDate(action.date).map { it.title }
+                        val completedHabits = repo.getCompletedHabitsForDate(action.date)
 
                         _state.update { habitState ->
                             habitState.copy(
                                 overallAnalytics =
                                     habitState.overallAnalytics.copy(
-                                        completedHabits =
-                                            if (completedHabits.isNotEmpty()) {
-                                                action.date to completedHabits
-                                            } else null
+                                        completedHabits = action.date to completedHabits
                                     )
                             )
                         }
@@ -173,6 +172,10 @@ class HabitViewModel(
 
                 OnOverallAnalyticsViewed -> {
                     analytics.trackEvent(AnalyticsEvent.OVERALL_ANALYTICS_VIEWED, emptyMap())
+                }
+
+                is HabitsAction.InsertMeasuredStatus -> {
+                    insertHabitStatus(action.habit, action.date, action.value)
                 }
             }
         }
@@ -255,5 +258,21 @@ class HabitViewModel(
             analytics.trackEvent(AnalyticsEvent.HABIT_COMPLETED, emptyMap())
             repo.insertHabitStatus(HabitStatus(habitId = habit.id, date = date))
         }
+    }
+
+    private suspend fun insertHabitStatus(habit: Habit, date: LocalDate, value: Double) {
+        val isStatusAdded =
+            _state.value.habitsWithAnalytics
+                .find { it.habit == habit }
+                ?.statuses
+                ?.any { it.date == date } ?: false
+
+        if (isStatusAdded) repo.deleteHabitStatus(habit.id, date)
+        if (value <= 0.0) {
+            repo.deleteHabitStatus(habit.id, date)
+            return
+        }
+        analytics.trackEvent(AnalyticsEvent.HABIT_COMPLETED, emptyMap())
+        repo.insertHabitStatus(HabitStatus(habitId = habit.id, date = date, value = value))
     }
 }
