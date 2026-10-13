@@ -149,7 +149,7 @@ class HabitRepository(
                                 it.habitId == habit.id && it.date == LocalDate.now()
                             }
                         if (habit.isMeasurable) {
-                            statusForToday != null && statusForToday.value >= 0.0
+                            statusForToday != null && statusForToday.value > 0.0
                         } else {
                             statusForToday != null
                         }
