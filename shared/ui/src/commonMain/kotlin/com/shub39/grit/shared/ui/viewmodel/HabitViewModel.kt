@@ -153,17 +153,13 @@ class HabitViewModel(
                             return@launch
                         }
 
-                        val completedHabits =
-                            repo.getCompletedHabitsForDate(action.date).map { it.title }
+                        val completedHabits = repo.getCompletedHabitsForDate(action.date)
 
                         _state.update { habitState ->
                             habitState.copy(
                                 overallAnalytics =
                                     habitState.overallAnalytics.copy(
-                                        completedHabits =
-                                            if (completedHabits.isNotEmpty()) {
-                                                action.date to completedHabits
-                                            } else null
+                                        completedHabits = action.date to completedHabits
                                     )
                             )
                         }

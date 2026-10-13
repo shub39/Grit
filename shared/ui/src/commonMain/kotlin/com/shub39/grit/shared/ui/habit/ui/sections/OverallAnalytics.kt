@@ -49,7 +49,6 @@ import com.kizitonwose.calendar.core.now
 import com.shub39.grit.shared.ui.LocalWindowSizeClass
 import com.shub39.grit.shared.ui.WindowSize.Companion.isExpanded
 import com.shub39.grit.shared.ui.habit.HabitState
-import com.shub39.grit.shared.ui.habit.HabitsAction
 import com.shub39.grit.shared.ui.habit.ui.component.stats.HabitHeatMap
 import com.shub39.grit.shared.ui.habit.ui.component.stats.WeekDayBreakdown
 import com.shub39.grit.shared.ui.theme.flexFontEmphasis
@@ -63,7 +62,6 @@ import org.jetbrains.compose.resources.vectorResource
 @Composable
 fun OverallAnalytics(
     state: HabitState,
-    onAction: (HabitsAction) -> Unit,
     onNavigateBack: () -> Unit,
     onNavigateToPaywall: () -> Unit,
     onNavigateToCalendarHeatMap: () -> Unit,

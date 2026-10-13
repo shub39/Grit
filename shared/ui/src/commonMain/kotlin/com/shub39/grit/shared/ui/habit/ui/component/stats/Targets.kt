@@ -139,7 +139,7 @@ private fun TargetCard(modifier: Modifier = Modifier, target: Target, title: Str
                         overflow = TextOverflow.Ellipsis,
                         maxLines = 1,
                         fontFamily = flexFontRounded(),
-                        color = colorScheme.onPrimary
+                        color = colorScheme.onPrimary,
                     )
                 }
             }

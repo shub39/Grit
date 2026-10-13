@@ -224,16 +224,14 @@ class HabitRepository(
         habitStatusDao.deleteStatus(habitId, date)
     }
 
-    override suspend fun getCompletedHabitsForDate(date: LocalDate): List<Habit> {
+    override suspend fun getCompletedHabitsForDate(date: LocalDate): Map<Habit, Double?> {
         val completedStatuses = habitStatusDao.getCompletedStatuses(date).map { it.toHabitStatus() }
         val habitsList = habitDao.getAllHabits().map { it.toHabit() }
-        return habitsList.filter { habit ->
-            val status = completedStatuses.firstOrNull { it.habitId == habit.id }
-            if (habit.isMeasurable) {
-                status != null && status.value >= habit.targetValue
-            } else {
-                status != null
+        return habitsList
+            .mapNotNull { habit ->
+                val status = completedStatuses.firstOrNull { it.habitId == habit.id }
+                if (status != null) habit to status.value else null
             }
-        }
+            .associate { it.first to it.second }
     }
 }

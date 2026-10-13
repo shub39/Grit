@@ -214,7 +214,6 @@ private fun EntryProviderScope<Routes>.habitsScreens(
             onNavigateBack = { topLevelBackStack.removeLast() },
             onNavigateToPaywall = { topLevelBackStack.add(Paywall) },
             isUserSubscribed = globalState.isUserSubscribed,
-            onAction = viewModel::onAction,
             onNavigateToCalendarHeatMap = { topLevelBackStack.add(CalendarHeatMap) },
             modifier = Modifier.background(colorScheme.background),
         )
