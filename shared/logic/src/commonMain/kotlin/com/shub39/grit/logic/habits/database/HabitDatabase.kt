@@ -63,7 +63,7 @@ abstract class HabitDatabase : RoomDatabase() {
                         "ALTER TABLE habit_index ADD COLUMN target_unit TEXT NOT NULL DEFAULT ''"
                     )
                     connection.execSQL(
-                        "ALTER TABLE habit_status ADD COLUMN value REAL NOT NULL DEFAULT 1.0"
+                        "ALTER TABLE habit_status ADD COLUMN value REAL NOT NULL DEFAULT 0.0"
                     )
                 }
             }

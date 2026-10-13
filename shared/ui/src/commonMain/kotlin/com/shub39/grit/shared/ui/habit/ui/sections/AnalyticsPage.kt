@@ -254,24 +254,20 @@ fun AnalyticsPage(
                 }
             }
 
-            if (!currentHabit.habit.isMeasurable) {
-                item {
-                    WeeklyActivity(
-                        lineChartData = currentHabit.weeklyComparisonData,
-                        modifier = Modifier.widthIn(max = maxWidth),
-                    )
-                }
+            item {
+                WeeklyActivity(
+                    lineChartData = currentHabit.weeklyComparisonData,
+                    modifier = Modifier.widthIn(max = maxWidth),
+                )
             }
 
-            if (!currentHabit.habit.isMeasurable) {
-                item {
-                    WeekDayBreakdown(
-                        canSeeContent = isUserSubscribed,
-                        weekDayData = currentHabit.weekDayFrequencyData,
-                        onNavigateToPaywall = onNavigateToPaywall,
-                        modifier = Modifier.widthIn(max = maxWidth),
-                    )
-                }
+            item {
+                WeekDayBreakdown(
+                    canSeeContent = isUserSubscribed,
+                    weekDayData = currentHabit.weekDayFrequencyData,
+                    onNavigateToPaywall = onNavigateToPaywall,
+                    modifier = Modifier.widthIn(max = maxWidth),
+                )
             }
         }
     }

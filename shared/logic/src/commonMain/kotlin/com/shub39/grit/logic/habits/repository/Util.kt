@@ -23,6 +23,7 @@ import com.shub39.grit.core.habits.Target
 import com.shub39.grit.core.habits.WeekDayFrequencyData
 import com.shub39.grit.core.habits.WeeklyComparisonData
 import com.shub39.grit.core.now
+import kotlin.math.roundToInt
 import kotlinx.datetime.DatePeriod
 import kotlinx.datetime.DateTimeUnit
 import kotlinx.datetime.DayOfWeek
@@ -140,6 +141,36 @@ fun prepareLineChartData(
     return values
 }
 
+fun prepareMeasurableLineChartData(
+    firstDay: DayOfWeek,
+    habitStatuses: List<HabitStatus>,
+): WeeklyComparisonData {
+    val today = LocalDate.now()
+    val totalWeeks = 52
+
+    val startDateOfTodayWeek =
+        today.minus(today.dayOfWeek.isoDayNumber - firstDay.isoDayNumber, DateTimeUnit.DAY)
+    val startDateOfPeriod = startDateOfTodayWeek.minus(totalWeeks, DateTimeUnit.WEEK)
+
+    val habitSumByWeek =
+        habitStatuses
+            .filter { it.date in startDateOfPeriod..today }
+            .groupBy {
+                val daysFromFirstDay =
+                    (it.date.dayOfWeek.isoDayNumber - firstDay.isoDayNumber + 7) % 7
+                it.date.minus(daysFromFirstDay, DateTimeUnit.DAY)
+            }
+            .mapValues { (_, habitStatuses) -> habitStatuses.sumOf { it.value } }
+
+    val values =
+        (0..totalWeeks).map { i ->
+            val currentWeekStart = startDateOfPeriod.plus(i, DateTimeUnit.WEEK)
+
+            habitSumByWeek[currentWeekStart] ?: 0.0
+        }
+    return values
+}
+
 fun prepareWeekDayFrequencyData(dates: List<LocalDate>): WeekDayFrequencyData {
     val dayFrequency = dates.groupingBy { it.dayOfWeek }.eachCount()
 
@@ -147,6 +178,19 @@ fun prepareWeekDayFrequencyData(dates: List<LocalDate>): WeekDayFrequencyData {
         val weekName = DayOfWeekNames.ENGLISH_ABBREVIATED.names[dayOfWeek.isoDayNumber - 1]
 
         weekName to (dayFrequency[dayOfWeek] ?: 0)
+    }
+}
+
+fun prepareMeasurableWeekDayData(habitStatuses: List<HabitStatus>): WeekDayFrequencyData {
+    val daySum =
+        habitStatuses
+            .groupBy { it.date.dayOfWeek }
+            .mapValues { (_, statuses) -> statuses.sumOf { it.value }.roundToInt() }
+
+    return DayOfWeek.entries.associate { dayOfWeek ->
+        val weekName = DayOfWeekNames.ENGLISH_ABBREVIATED.names[dayOfWeek.isoDayNumber - 1]
+
+        weekName to (daySum[dayOfWeek] ?: 0)
     }
 }
 

@@ -121,16 +121,23 @@ class HabitRepository(
                             countCurrentStreak(dates = dates, eligibleWeekdays = habit.days),
                         bestStreak = countBestStreak(dates = dates, eligibleWeekdays = habit.days),
                         weeklyComparisonData =
-                            if (!habit.isMeasurable) {
+                            if (habit.isMeasurable) {
+                                prepareMeasurableLineChartData(
+                                    firstDay = firstDayOfWeek.value,
+                                    habitStatuses = habitStatusesForHabit,
+                                )
+                            } else {
                                 prepareLineChartData(
                                     firstDay = firstDayOfWeek.value,
                                     habitStatuses = habitStatusesForHabit,
                                 )
-                            } else emptyList(),
+                            },
                         weekDayFrequencyData =
-                            if (!habit.isMeasurable) {
+                            if (habit.isMeasurable) {
+                                prepareMeasurableWeekDayData(habitStatuses = habitStatusesForHabit)
+                            } else {
                                 prepareWeekDayFrequencyData(dates = dates)
-                            } else emptyMap(),
+                            },
                         startedDaysAgo = habit.time.date.daysUntil(LocalDate.now()).toLong(),
                         consistency = calculateConsistency(dates, habit.days),
                     )
