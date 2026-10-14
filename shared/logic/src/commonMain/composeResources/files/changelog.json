@@ -1,5 +1,13 @@
 [
   {
+    "version": "6.2.1",
+    "changes": [
+      "Fixed Light mode Splashscreen",
+      "Miscellaneous UI fixes",
+      "Updated Translations"
+    ]
+  },
+  {
     "version": "6.2.0",
     "changes": [
       "Added Measurable Habits",
@@ -67,18 +75,6 @@
     "changes": [
       "Updated Translations",
       "Miscellaneous Bug Fixes and Improvements"
-    ]
-  },
-  {
-    "version": "6.0.0",
-    "changes": [
-      "Added new Consistency Stat in Habit Analytics",
-      "Redesigned Weekly Comparison Stat, Displays weekly comparison up to 1 year",
-      "Miscellaneous UI improvements #291",
-      "Monthly Progress Stat can be expanded to a calendar view, up to January 2024",
-      "Fixed Habits being created with no selected days",
-      "Updated Translations",
-      "Thanks to everyone for 1000+ stars on GitHub 🙏"
     ]
   }
 ]

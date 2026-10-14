@@ -1,5 +1,10 @@
 # Changelog
 
+## 6.2.1
+- Fixed Light mode Splashscreen
+- Miscellaneous UI fixes
+- Updated Translations
+
 ## 6.2.0
 - Added Measurable Habits
 - Added new Target Analytic for Measurable Habits

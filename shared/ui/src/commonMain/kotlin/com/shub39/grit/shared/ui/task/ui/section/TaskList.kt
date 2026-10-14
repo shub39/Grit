@@ -187,11 +187,11 @@ fun TaskList(
                     showCategoryAddSheet = true
                 },
                 onEditCategoriesClick = onEditCategories,
-                isExpanded = windowSizeClass.isExpanded(),
+                isExpanded = !windowSizeClass.isCompact(),
                 onReorderModeChange = { editState = it },
             )
 
-            if (!windowSizeClass.isExpanded()) {
+            if (windowSizeClass.isCompact()) {
                 CompactTasksView(
                     state = state,
                     isReorderMode = editState,
