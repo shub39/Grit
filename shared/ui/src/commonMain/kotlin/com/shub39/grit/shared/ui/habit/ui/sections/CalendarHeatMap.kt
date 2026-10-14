@@ -32,6 +32,7 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.widthIn
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
@@ -72,6 +73,7 @@ import com.shub39.grit.shared.ui.LocalWindowSizeClass
 import com.shub39.grit.shared.ui.WindowSize.Companion.isExpanded
 import com.shub39.grit.shared.ui.components.GritBottomSheet
 import com.shub39.grit.shared.ui.components.LocalDateSaver
+import com.shub39.grit.shared.ui.components.PageFill
 import com.shub39.grit.shared.ui.components.endItemShape
 import com.shub39.grit.shared.ui.components.leadingItemShape
 import com.shub39.grit.shared.ui.habit.HabitState
@@ -94,143 +96,152 @@ fun CalendarHeatMap(
     onNavigateBack: () -> Unit,
     onChangeSelectedDay: (LocalDate?) -> Unit,
     modifier: Modifier = Modifier,
-) {
-    var calendarType by rememberSaveable { mutableStateOf(CalendarType.MONTH) }
-    val windowSizeClass = LocalWindowSizeClass.current
-    val today = LocalDate.now()
-    val totalHabits = state.habitsWithAnalytics.size
-    var selectedDay: LocalDate? by
-        rememberSaveable(stateSaver = LocalDateSaver) { mutableStateOf(null) }
+) =
+    PageFill(modifier = modifier) {
+        var calendarType by rememberSaveable { mutableStateOf(CalendarType.MONTH) }
+        val windowSizeClass = LocalWindowSizeClass.current
+        val today = LocalDate.now()
+        val totalHabits = state.habitsWithAnalytics.size
+        var selectedDay: LocalDate? by
+            rememberSaveable(stateSaver = LocalDateSaver) { mutableStateOf(null) }
 
-    LaunchedEffect(selectedDay) { onChangeSelectedDay(selectedDay) }
+        LaunchedEffect(selectedDay) { onChangeSelectedDay(selectedDay) }
 
-    if (state.overallAnalytics.completedHabits != null) {
-        GritBottomSheet(onDismissRequest = { selectedDay = null }, padding = 16.dp) {
-            state.overallAnalytics.completedHabits?.let { (date, habits) ->
-                Text(
-                    text = date.toFormattedString(),
-                    fontFamily = flexFontRounded(),
-                    color = colorScheme.onSurface,
-                    modifier = Modifier.fillMaxWidth().padding(horizontal = 16.dp),
-                )
+        if (state.overallAnalytics.completedHabits != null) {
+            GritBottomSheet(onDismissRequest = { selectedDay = null }, padding = 16.dp) {
+                state.overallAnalytics.completedHabits?.let { (date, habits) ->
+                    Text(
+                        text = date.toFormattedString(),
+                        fontFamily = flexFontRounded(),
+                        color = colorScheme.onSurface,
+                        modifier = Modifier.fillMaxWidth().padding(horizontal = 16.dp),
+                    )
 
-                Column(modifier = Modifier.verticalScroll(rememberScrollState())) {
-                    if (habits.isNotEmpty()) {
-                        Spacer(modifier = Modifier.height(4.dp))
-                        habits.toList().forEachIndexed { index, (habit, value) ->
-                            val shape =
-                                when {
-                                    habits.size == 1 -> RoundedCornerShape(12.dp)
-                                    index == 0 -> leadingItemShape(topRadius = 12)
-                                    index == habits.size - 1 -> endItemShape(bottomRadius = 12)
-                                    else -> RoundedCornerShape(4.dp)
-                                }
+                    Column(modifier = Modifier.verticalScroll(rememberScrollState())) {
+                        if (habits.isNotEmpty()) {
+                            Spacer(modifier = Modifier.height(4.dp))
+                            habits.toList().forEachIndexed { index, (habit, value) ->
+                                val shape =
+                                    when {
+                                        habits.size == 1 -> RoundedCornerShape(12.dp)
+                                        index == 0 -> leadingItemShape(topRadius = 12)
+                                        index == habits.size - 1 -> endItemShape(bottomRadius = 12)
+                                        else -> RoundedCornerShape(4.dp)
+                                    }
 
-                            ListItem(
-                                colors =
-                                    ListItemDefaults.colors(
-                                        containerColor = Color.Transparent,
-                                        contentColor = colorScheme.onSecondaryContainer,
-                                    ),
-                                modifier =
-                                    Modifier.padding(vertical = 1.dp)
-                                        .background(colorScheme.secondaryContainer, shape = shape),
-                                headlineContent = { Text(habit.title) },
-                                trailingContent = {
-                                    if (habit.isMeasurable) {
-                                        value?.let {
-                                            Card(
-                                                colors =
-                                                    CardDefaults.cardColors(
-                                                        containerColor =
-                                                            colorScheme.onPrimaryContainer,
-                                                        contentColor = colorScheme.primaryContainer,
+                                ListItem(
+                                    colors =
+                                        ListItemDefaults.colors(
+                                            containerColor = Color.Transparent,
+                                            contentColor = colorScheme.onSecondaryContainer,
+                                        ),
+                                    modifier =
+                                        Modifier.padding(vertical = 1.dp)
+                                            .background(
+                                                colorScheme.secondaryContainer,
+                                                shape = shape,
+                                            ),
+                                    headlineContent = { Text(habit.title) },
+                                    trailingContent = {
+                                        if (habit.isMeasurable) {
+                                            value?.let {
+                                                Card(
+                                                    colors =
+                                                        CardDefaults.cardColors(
+                                                            containerColor =
+                                                                colorScheme.onPrimaryContainer,
+                                                            contentColor =
+                                                                colorScheme.primaryContainer,
+                                                        )
+                                                ) {
+                                                    Text(
+                                                        text =
+                                                            "${value.roundToInt()}/${habit.targetValue.roundToInt()}",
+                                                        modifier = Modifier.padding(8.dp),
+                                                        fontFamily = flexFontRounded(),
                                                     )
-                                            ) {
-                                                Text(
-                                                    text =
-                                                        "${value.roundToInt()}/${habit.targetValue.roundToInt()}",
-                                                    modifier = Modifier.padding(8.dp),
-                                                    fontFamily = flexFontRounded(),
-                                                )
+                                                }
                                             }
                                         }
-                                    }
-                                },
-                            )
+                                    },
+                                )
+                            }
                         }
                     }
                 }
             }
         }
-    }
 
-    Column(modifier = modifier.fillMaxSize()) {
-        TopAppBar(
-            title = {
-                Text(text = stringResource(Res.string.calendar), fontFamily = flexFontEmphasis())
-            },
-            navigationIcon = {
-                FilledTonalIconButton(onClick = onNavigateBack) {
-                    Icon(
-                        imageVector = vectorResource(Res.drawable.nav_arrow_back),
-                        contentDescription = "Navigate Back",
+        Column(modifier = Modifier.fillMaxSize().widthIn(max = 700.dp)) {
+            TopAppBar(
+                title = {
+                    Text(
+                        text = stringResource(Res.string.calendar),
+                        fontFamily = flexFontEmphasis(),
                     )
-                }
-            },
-            colors =
-                TopAppBarDefaults.topAppBarColors(
-                    scrolledContainerColor = Color.Transparent,
-                    containerColor = Color.Transparent,
-                ),
-            windowInsets =
-                if (windowSizeClass.isExpanded()) {
-                    WindowInsets(0)
-                } else {
-                    TopAppBarDefaults.windowInsets
                 },
-        )
+                navigationIcon = {
+                    FilledTonalIconButton(onClick = onNavigateBack) {
+                        Icon(
+                            imageVector = vectorResource(Res.drawable.nav_arrow_back),
+                            contentDescription = "Navigate Back",
+                        )
+                    }
+                },
+                colors =
+                    TopAppBarDefaults.topAppBarColors(
+                        scrolledContainerColor = Color.Transparent,
+                        containerColor = Color.Transparent,
+                    ),
+                windowInsets =
+                    if (windowSizeClass.isExpanded()) {
+                        WindowInsets(0)
+                    } else {
+                        TopAppBarDefaults.windowInsets
+                    },
+            )
 
-        Row(
-            modifier = Modifier.padding(horizontal = 16.dp),
-            horizontalArrangement = Arrangement.spacedBy(ButtonGroupDefaults.ConnectedSpaceBetween),
-        ) {
-            CalendarType.entries.forEach { entry ->
-                ToggleButton(
-                    checked = entry == calendarType,
-                    onCheckedChange = { calendarType = entry },
-                    modifier = Modifier.weight(1f),
-                ) {
-                    Text(text = stringResource(entry.toStringRes()))
+            Row(
+                modifier = Modifier.padding(horizontal = 16.dp),
+                horizontalArrangement =
+                    Arrangement.spacedBy(ButtonGroupDefaults.ConnectedSpaceBetween),
+            ) {
+                CalendarType.entries.forEach { entry ->
+                    ToggleButton(
+                        checked = entry == calendarType,
+                        onCheckedChange = { calendarType = entry },
+                        modifier = Modifier.weight(1f),
+                    ) {
+                        Text(text = stringResource(entry.toStringRes()))
+                    }
                 }
             }
-        }
 
-        AnimatedContent(targetState = calendarType, modifier = Modifier.fillMaxSize()) { type ->
-            when (type) {
-                YEAR -> {
-                    YearlyMap(
-                        today = today,
-                        state = state,
-                        totalHabits = totalHabits,
-                        selectedDay = selectedDay,
-                        onChangeSelectedDay = { selectedDay = it },
-                    )
-                }
+            AnimatedContent(targetState = calendarType, modifier = Modifier.fillMaxSize()) { type ->
+                when (type) {
+                    YEAR -> {
+                        YearlyMap(
+                            today = today,
+                            state = state,
+                            totalHabits = totalHabits,
+                            selectedDay = selectedDay,
+                            onChangeSelectedDay = { selectedDay = it },
+                        )
+                    }
 
-                MONTH -> {
-                    MonthlyMap(
-                        state = state,
-                        today = today,
-                        totalHabits = totalHabits,
-                        selectedDay = selectedDay,
-                        onChangeSelectedDay = { selectedDay = it },
-                    )
+                    MONTH -> {
+                        MonthlyMap(
+                            state = state,
+                            today = today,
+                            totalHabits = totalHabits,
+                            selectedDay = selectedDay,
+                            onChangeSelectedDay = { selectedDay = it },
+                        )
+                    }
                 }
             }
         }
     }
-}
 
 @Composable
 private fun YearlyMap(

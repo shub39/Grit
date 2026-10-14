@@ -5,26 +5,25 @@
 
 # Screenshots
 
+## Phone
 | ![Image 1](fastlane/metadata/android/en-US/images/phoneScreenshots/1.png) | ![Image 2](fastlane/metadata/android/en-US/images/phoneScreenshots/2.png) |
 |:-------------------------------------------------------------------------:|:-------------------------------------------------------------------------:|
 | ![Image 3](fastlane/metadata/android/en-US/images/phoneScreenshots/3.png) | ![Image 4](fastlane/metadata/android/en-US/images/phoneScreenshots/4.png) |
-| ![Image 5](fastlane/metadata/android/en-US/images/phoneScreenshots/5.png) | ![Image 6](fastlane/metadata/android/en-US/images/phoneScreenshots/6.png) |
 
-# Features
-
-- [x] Todo List with reminders
-- [x] Daily Habit Tracking
-- [x] Analytics with Habit Maps
-- [x] Notification Reminders
-- [x] Widgets
+## Tablets and Desktop
+| ![Image 1](fastlane/metadata/android/en-US/images/phoneScreenshots/7.png) | ![Image 2](fastlane/metadata/android/en-US/images/phoneScreenshots/8.png)  |
+|:-------------------------------------------------------------------------:|:--------------------------------------------------------------------------:|
+| ![Image 3](fastlane/metadata/android/en-US/images/phoneScreenshots/9.png) | ![Image 4](fastlane/metadata/android/en-US/images/phoneScreenshots/10.png) |
 
 Check out planned changes in [RoadMap](https://github.com/shub39/Grit/discussions/66)
 
 # Motivation 
 
-There are plenty of todo list and habit tracker apps for android. Some have the features I love while some have good UI design.
-While learning android I made this app for myself that brings together all the features that I like keeping everything simple. 
-I eventually want to turn this app into a productivity hub with many social features like progress sharing in the form of beautiful cards.
+There are plenty of todo list and habit tracker apps for android. Some have the features I love 
+while some have good UI design. While learning android I made this app for myself that brings 
+together all the features that I like keeping everything simple. I eventually want to turn this app 
+into a productivity hub with many social features like progress sharing in the form of beautiful 
+cards.
 
 ## Translations
 
@@ -45,7 +44,8 @@ Translations are done via weblate, you can contribute there!
 
 # Contributing
 
-Please read [CONTRIBUTING.md](CONTRIBUTING.md) for details on our code of conduct, and the process for submitting pull requests.
+Please read [CONTRIBUTING.md](CONTRIBUTING.md) for details on our code of conduct, and the process for 
+submitting pull requests.
 
 # Security
 

@@ -95,4 +95,8 @@
     <string name="yes_or_no">Evet veya Hayır</string>
     <string name="measure_able">Ölçülebilir</string>
     <string name="add_status">Durum Ekle</string>
+    <string name="quarterly">Üç Aylık</string>
+    <string name="weekly">Haftalık</string>
+    <string name="daily">Günlük</string>
+    <string name="targets">Hedefler</string>
 </resources>
