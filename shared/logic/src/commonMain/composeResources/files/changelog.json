@@ -1,8 +1,9 @@
 [
   {
-    "version": "6.2.1",
+    "version": "6.2.2",
     "changes": [
       "Fixed Light mode Splashscreen",
+      "Updated App Icon",
       "Miscellaneous UI fixes",
       "Updated Translations"
     ]

@@ -1,7 +1,8 @@
 # Changelog
 
-## 6.2.1
+## 6.2.2
 - Fixed Light mode Splashscreen
+- Updated App Icon
 - Miscellaneous UI fixes
 - Updated Translations
 
