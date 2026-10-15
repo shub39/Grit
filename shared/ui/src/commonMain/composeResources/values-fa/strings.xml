@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="tasks">‌‎وظیفه‌ها</string>
+    <string name="tasks">‌کارها</string>
     <string name="material_theme">پوستهٔ متریال‌یو</string>
     <string name="done">انجام شد</string>
-    <string name="add_task">افزودن وظیفه</string>
+    <string name="add_task">افزودن کار</string>
     <string name="add_habit">افزودن عادت جدید</string>
     <string name="update_description">ویرایش توضیحات</string>
     <string name="delete">حذف</string>
@@ -16,11 +16,11 @@
     <string name="settings">تنظیمات</string>
     <string name="too_long">بیش از حد طولانی</string>
     <string name="save">ذخیره</string>
-    <string name="edit_task">ویرایش وظیفه</string>
-    <string name="delete_tasks">آیا مطمئن هستید که می‌خواهید همهٔ وظیفه‌های انجام شده را حذف کنید؟</string>
+    <string name="edit_task">ویرایش کار</string>
+    <string name="delete_tasks">آیا مطمئن هستید که می‌خواهید همهٔ کارهای انجام شده را حذف کنید؟</string>
     <string name="update_title">ویرایش عنوان</string>
     <string name="edit_categories">ویرایش دسته‌بندی‌ها</string>
-    <string name="delete_category">آیا مطمئن هستید؟ همهٔ وظیفه‌های این دسته‌بندی حذف خواهند شد</string>
+    <string name="delete_category">آیا مطمئن هستید؟ همهٔ کارهای این دسته‌بندی حذف خواهند شد</string>
     <string name="add_category">افزودن دسته‌بندی</string>
     <string name="add">چیزی اضافه کنید</string>
     <string name="habit_map">نقشهٔ حرارتی عادت‌ها</string>
@@ -32,11 +32,11 @@
     <string name="palette_style">سبک پالت</string>
     <string name="look_and_feel_desc">شخصی‌سازی برنامه به روش‌های مختلف</string>
     <string name="backup">پشتیبان‌گیری</string>
-    <string name="backup_desc">خروجی گرفتن یا بازیابی وظیفه‌ها و عادت‌ها</string>
+    <string name="backup_desc">خروجی گرفتن یا بازیابی کارها و عادت‌ها</string>
     <string name="export">برون‌ریزی داده‌ها</string>
     <string name="export_desc">انتخاب شاخه برای برون‌ریزی داده‌ها</string>
     <string name="restore">بازیابی</string>
-    <string name="restore_desc">بازیابی وظیفه‌ها و عادت‌ها از فایل انتخاب‌شده</string>
+    <string name="restore_desc">بازیابی کارها و عادت‌ها از فایل انتخاب‌شده</string>
     <string name="material_theme_desc">استفاده از رنگ‌های متناسب با تصویر زمینه</string>
     <string name="show_habits">ابتدا نمایش عادت‌ها</string>
     <string name="show_habits_desc">نمایش صفحهٔ عادت‌ها هنگام اجرای برنامه</string>
@@ -65,19 +65,19 @@
     <string name="weekly_progress">پیشرفت هفتگی</string>
     <string name="overall_analytics">تحلیل کلی</string>
     <string name="unlock_more_plus">امکانات بیشتر با پلاس</string>
-    <string name="unlock_plus">بازکردن با پلاس</string>
+    <string name="unlock_plus">باز کردن با پلاس</string>
     <string name="grit_plus">گریت پلاس</string>
     <string name="monthly_progress">پیشرفت ماهانه</string>
     <string name="week_breakdown">تفکیک روزهای هفته</string>
     <string name="foss">شما از نسخهٔ متن‌باز (FOSS) استفاده می‌کنید</string>
-    <string name="foss_desc">همه امکانات فعال هستند. این نسخه از برنامه از پرداخت درون‌برنامه‌ای پشتیبانی نمی‌کند. اگر این برنامه برایتان مفید بوده، می‌توانید با حمایت مالی به ما کمک کنید از طریق</string>
+    <string name="foss_desc">همهٔ امکانات فعال هستند. این نسخه از برنامه از پرداخت درون‌برنامه‌ای پشتیبانی نمی‌کند. اگر این برنامه برایتان مفید بوده، می‌توانید با حمایت مالی به ما کمک کنید از طریق</string>
     <string name="add_reminder">افزودن یادآور</string>
     <string name="add_reminder_desc">دریافت یادآور در روزهای انتخاب‌شده</string>
     <string name="invalid_date_time">زمان انتخاب‌شده در گذشته است</string>
     <string name="reorder_tasks">تغییر ترتیب کارها</string>
     <string name="reorder_tasks_desc">تغییر ترتیب کارها پس از انجام</string>
     <string name="translate">ترجمه</string>
-    <string name="translate_desc">ترجمه گریت به زبان شما</string>
+    <string name="translate_desc">ترجمهٔ گریت به زبان شما</string>
     <string name="changelog">گزارش تغییرات</string>
     <string name="whats_changed">تغییرات اخیر</string>
     <string name="select_days">انتخاب روزها</string>
@@ -88,4 +88,15 @@
     <string name="calendar">تقویم</string>
     <string name="monthly">ماهانه</string>
     <string name="yearly">سالانه</string>
+    <string name="quarterly">سه‌ماهه</string>
+    <string name="weekly">هفتگی</string>
+    <string name="daily">روزانه</string>
+    <string name="add_subtasks">افزودن زیر‌کارها</string>
+    <string name="habit_type">نوع عادت</string>
+    <string name="target_value">مقدار هدف</string>
+    <string name="target_unit">واحد هدف</string>
+    <string name="yes_or_no">بله یا خیر</string>
+    <string name="measure_able">قابل‌اندازه‌گیری</string>
+    <string name="add_status">افزودن وضعیت</string>
+    <string name="targets">اهداف</string>
 </resources>
