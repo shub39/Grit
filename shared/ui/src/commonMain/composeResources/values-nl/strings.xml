@@ -22,4 +22,17 @@
     <string name="select_seed_desc">Selecteer kleur om pallet mee te genereren</string>
     <string name="palette_style">Pallet stijl</string>
     <string name="backup">Backup</string>
+    <string name="title">Titel</string>
+    <string name="description">Beschrijving</string>
+    <string name="edit_habit">Pas routine aan</string>
+    <string name="biometric_lock">Biometrisch slot</string>
+    <string name="add">Voeg iets toe</string>
+    <string name="language">Taal</string>
+    <string name="about">Over</string>
+    <string name="calendar">Kalender</string>
+    <string name="monthly">Maandelijks</string>
+    <string name="yearly">Jaarlijks</string>
+    <string name="not_enough_data">Niet genoeg gegevens</string>
+    <string name="items_completed">Voltooid</string>
+    <string name="completed">Vandaag voltooid</string>
 </resources>
