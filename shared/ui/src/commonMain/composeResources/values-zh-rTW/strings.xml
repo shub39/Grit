@@ -79,4 +79,9 @@
     <string name="select_days">選擇日期</string>
     <string name="select_seed_desc">選擇調色盤的基礎色</string>
     <string name="habit_map">習慣熱力圖</string>
+    <string name="system_default">系統預設</string>
+    <string name="language">語言</string>
+    <string name="add_subtasks">新增子任務</string>
+    <string name="translate_desc">將 Grit 翻譯為你的語言</string>
+    <string name="about">關於</string>
 </resources>
