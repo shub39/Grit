@@ -98,4 +98,5 @@
     <string name="quarterly">분기간</string>
     <string name="weekly">주간</string>
     <string name="daily">일간</string>
+    <string name="targets">목표</string>
 </resources>
