@@ -1,1 +1,1 @@
-A Simple ToDo List and Habit Tracker
+Simple to-do list & habit tracker with streaks, analytics and widgets

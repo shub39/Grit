@@ -1,1 +1,1 @@
-Grit
+Grit - Habit Tracker, ToDo List

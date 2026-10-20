@@ -1,1 +1,41 @@
-Grit is a ToDo List and Daily habit tracker app that lets you visualize your progress.
+Grit combines a to-do list and a daily habit tracker in one focused, ad-free app — so you can plan your day and build routines in the same place.
+
+Whether you want a simple checklist, a habit streak, or a measurable goal, Grit keeps everything on your phone, offline and in sync.
+
+▸ TASKS THAT STAY ORGANIZED
+• Categorize tasks into custom lists
+• Add subtasks by long-pressing a task
+• Set per-task reminders and mark tasks done straight from the notification
+• Drag to reorder your list, and reorder automatically as tasks are completed
+
+▸ HABITS THAT ACTUALLY STICK
+• Yes/No habits and Measurable habits with a target value and unit (8 km, 3 hours, 10 pages…)
+• Choose which days of the week each habit runs on
+• Get a daily reminder for any habit
+• Current streak, the best streak and consistency score for every habit
+
+▸ SEE YOUR PROGRESS
+• Habit heat map and calendar view of completed days
+• Weekly comparison charts, up to a full year of history
+• Week day breakdown to find when you are most consistent
+• Monthly and overall analytics across all your habits
+
+▸ BUILT FOR YOUR HOME SCREEN
+• Four widgets: All Tasks, Habit Overview, Habit Streak and Habit Week Chart
+• Live widget previews and quick refresh
+
+▸ MAKE IT YOURS
+• Material 3 Expressive design with Material You wallpaper colours
+• AMOLED dark theme, custom fonts and custom colour palettes
+• Biometric app lock, 24-hour clock, and configurable week start
+• Adapts to tablets, foldables and desktop
+
+▸ YOUR DATA, YOUR DEVICE
+• Works fully offline — no account required
+• Export and restore your data any time
+• Open source, GPL-3.0
+• Available in 35+ languages
+
+Grit Plus unlocks extra themes, unlimited habits, subtasks and full analytics. Prefer everything unlocked? The FOSS variant on GitHub and F-Droid includes every feature for free.
+
+Made with Kotlin and Jetpack Compose. Open source under GPL-3.0 — contributions welcome.
