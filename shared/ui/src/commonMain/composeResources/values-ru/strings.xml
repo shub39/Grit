@@ -88,4 +88,15 @@
     <string name="calendar">Календарь</string>
     <string name="monthly">Ежемесячно</string>
     <string name="yearly">Ежегодно</string>
+    <string name="weekly">Еженедельно</string>
+    <string name="daily">Ежедневно</string>
+    <string name="add_subtasks">Добавить подзадачи</string>
+    <string name="habit_type">Тип привычки</string>
+    <string name="quarterly">Ежеквартально</string>
+    <string name="yes_or_no">Да или Нет</string>
+    <string name="add_status">Добавить статус</string>
+    <string name="targets">Цели</string>
+    <string name="measure_able">Измеримая</string>
+    <string name="target_value">Целевое значение</string>
+    <string name="target_unit">Единица измерения</string>
 </resources>
