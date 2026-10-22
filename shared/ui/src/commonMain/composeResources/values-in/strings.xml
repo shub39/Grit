@@ -20,7 +20,7 @@
     <string name="delete_tasks">Yakin mau hapus semua jejak perjuanganmu?</string>
     <string name="update_title">Edit judul</string>
     <string name="edit_categories">Edit kategori</string>
-    <string name="delete_category">Yakin? Semua bukti kerja kerasmu di kategori ini bakal musnah lho! :\u0027)</string>
+    <string name="delete_category">Yakin? Semua bukti kerja kerasmu di kategori ini bakal musnah lho! :')</string>
     <string name="add_category">Tambahkan kategori</string>
     <string name="add">Tambahkan sesuatu</string>
     <string name="habit_map">Peta Kebiasaan</string>
@@ -88,4 +88,15 @@
     <string name="calendar">Kalender</string>
     <string name="monthly">Bulanan</string>
     <string name="yearly">Tahunan</string>
+    <string name="measure_able"></string>
+    <string name="quarterly"></string>
+    <string name="add_subtasks"></string>
+    <string name="target_value"></string>
+    <string name="targets"></string>
+    <string name="yes_or_no"></string>
+    <string name="habit_type"></string>
+    <string name="target_unit"></string>
+    <string name="add_status"></string>
+    <string name="daily"></string>
+    <string name="weekly"></string>
 </resources>
