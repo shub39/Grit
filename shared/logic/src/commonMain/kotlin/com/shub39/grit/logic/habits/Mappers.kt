@@ -17,7 +17,9 @@
 package com.shub39.grit.logic.habits
 
 import com.shub39.grit.core.habits.Habit
+import com.shub39.grit.core.habits.HabitCategory
 import com.shub39.grit.core.habits.HabitStatus
+import com.shub39.grit.logic.habits.database.HabitCategoryEntity
 import com.shub39.grit.logic.habits.database.HabitEntity
 import com.shub39.grit.logic.habits.database.HabitStatusEntity
 
@@ -32,6 +34,7 @@ fun HabitEntity.toHabit(): Habit {
         reminder = reminder,
         targetValue = targetValue,
         targetUnit = targetUnit,
+        categoryId = categoryId,
     )
 }
 
@@ -50,7 +53,16 @@ fun Habit.toHabitEntity(): HabitEntity {
         reminder = reminder,
         targetValue = targetValue,
         targetUnit = targetUnit,
+        categoryId = categoryId,
     )
+}
+
+fun HabitCategoryEntity.toHabitCategory(): HabitCategory {
+    return HabitCategory(id = id, name = name, index = index, color = color)
+}
+
+fun HabitCategory.toHabitCategoryEntity(): HabitCategoryEntity {
+    return HabitCategoryEntity(id = id, name = name, index = index, color = color)
 }
 
 fun HabitStatus.toHabitStatusEntity(): HabitStatusEntity {

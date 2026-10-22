@@ -22,6 +22,11 @@
     <string name="edit_categories">Edit Categories</string>
     <string name="delete_category">Are you sure? All tasks in this category will be deleted</string>
     <string name="add_category">Add Category</string>
+    <string name="category">Category</string>
+    <string name="no_category">None</string>
+    <string name="all">All</string>
+    <string name="today">Today</string>
+    <string name="delete_habit_category">Are you sure? All habits in this category will be deleted</string>
     <string name="add">Add Something</string>
     <string name="habit_map">Habit Heat Map</string>
     <string name="look_and_feel">Look and Feel</string>

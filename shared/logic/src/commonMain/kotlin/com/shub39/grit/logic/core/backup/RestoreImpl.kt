@@ -66,6 +66,10 @@ class RestoreImpl(
                     async {
                         habitRepo.getHabits().forEach { alarmScheduler.cancel(it) }
 
+                        jsonDeserialized.habitCategories
+                            .map { it.toHabitCategory() }
+                            .forEach { habitRepo.upsertHabitCategory(it) }
+
                         jsonDeserialized.habits
                             .map { it.toHabit() }
                             .forEach {

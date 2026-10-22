@@ -23,11 +23,13 @@ import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import com.shub39.grit.core.habits.Habit
+import com.shub39.grit.core.habits.HabitCategory
 import com.shub39.grit.shared.ui.components.genericSaver
 
 @Composable
 actual fun HabitUpsertSheet(
     habit: Habit,
+    categories: List<HabitCategory>,
     onDismissRequest: () -> Unit,
     onUpsertHabit: (Habit) -> Unit,
     is24Hr: Boolean,
@@ -38,6 +40,7 @@ actual fun HabitUpsertSheet(
 
     HabitUpsertSheetContent(
         newHabit = newHabit,
+        categories = categories,
         updateHabit = { newHabit = it },
         onDismissRequest = onDismissRequest,
         onUpsertHabit = onUpsertHabit,

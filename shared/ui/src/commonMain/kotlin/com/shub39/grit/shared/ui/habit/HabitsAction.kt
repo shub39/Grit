@@ -17,6 +17,7 @@
 package com.shub39.grit.shared.ui.habit
 
 import com.shub39.grit.core.habits.Habit
+import com.shub39.grit.core.habits.HabitCategory
 import kotlinx.datetime.LocalDate
 
 /**
@@ -60,4 +61,21 @@ sealed interface HabitsAction {
     data object OnHabitsOpened : HabitsAction
 
     data object OnOverallAnalyticsViewed : HabitsAction
+
+    /** select the list filter (Today / All / category) */
+    data class ChangeFilter(val filter: HabitFilter) : HabitsAction
+
+    data class AddHabitCategory(val category: HabitCategory) : HabitsAction
+
+    /** deletes the category and all habits in it */
+    data class DeleteHabitCategory(val category: HabitCategory) : HabitsAction
+
+    data class ReorderHabitCategories(val mapping: List<Pair<Int, HabitCategory>>) : HabitsAction
+
+    /** scope overall analytics to a category, null = all habits */
+    data class ChangeAnalyticsCategory(val categoryId: Long?) : HabitsAction
+
+    data object OnHabitCategorySheetOpened : HabitsAction
+
+    data object OnHabitCategorySheetDismissed : HabitsAction
 }

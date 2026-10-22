@@ -26,6 +26,8 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.widthIn
+import androidx.compose.foundation.lazy.LazyRow
+import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.staggeredgrid.LazyVerticalStaggeredGrid
 import androidx.compose.foundation.lazy.staggeredgrid.StaggeredGridCells
 import androidx.compose.material3.CircularProgressIndicator
@@ -33,6 +35,7 @@ import androidx.compose.material3.FilledTonalIconButton
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
+import androidx.compose.material3.ToggleButton
 import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
@@ -49,6 +52,7 @@ import com.kizitonwose.calendar.core.now
 import com.shub39.grit.shared.ui.LocalWindowSizeClass
 import com.shub39.grit.shared.ui.WindowSize.Companion.isExpanded
 import com.shub39.grit.shared.ui.habit.HabitState
+import com.shub39.grit.shared.ui.habit.HabitsAction
 import com.shub39.grit.shared.ui.habit.ui.component.stats.HabitHeatMap
 import com.shub39.grit.shared.ui.habit.ui.component.stats.WeekDayBreakdown
 import com.shub39.grit.shared.ui.theme.flexFontEmphasis
@@ -62,6 +66,7 @@ import org.jetbrains.compose.resources.vectorResource
 @Composable
 fun OverallAnalytics(
     state: HabitState,
+    onAction: (HabitsAction) -> Unit,
     onNavigateBack: () -> Unit,
     onNavigateToPaywall: () -> Unit,
     onNavigateToCalendarHeatMap: () -> Unit,
@@ -110,6 +115,34 @@ fun OverallAnalytics(
                 }
             },
         )
+
+        if (state.habitCategories.isNotEmpty()) {
+            LazyRow(
+                modifier = Modifier.fillMaxWidth(),
+                horizontalArrangement = Arrangement.spacedBy(2.dp),
+                contentPadding = PaddingValues(vertical = 8.dp, horizontal = 16.dp),
+            ) {
+                item {
+                    ToggleButton(
+                        checked = state.analyticsCategoryId == null,
+                        onCheckedChange = { onAction(HabitsAction.ChangeAnalyticsCategory(null)) },
+                    ) {
+                        Text(text = stringResource(Res.string.all))
+                    }
+                }
+
+                items(state.habitCategories, key = { it.id }) { category ->
+                    ToggleButton(
+                        checked = state.analyticsCategoryId == category.id,
+                        onCheckedChange = {
+                            onAction(HabitsAction.ChangeAnalyticsCategory(category.id))
+                        },
+                    ) {
+                        Text(text = category.name)
+                    }
+                }
+            }
+        }
 
         val maxWidth = 380.dp
         LazyVerticalStaggeredGrid(

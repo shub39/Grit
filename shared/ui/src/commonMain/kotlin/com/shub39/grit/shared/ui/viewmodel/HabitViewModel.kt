@@ -25,13 +25,16 @@ import com.shub39.grit.core.habits.HabitStatus
 import com.shub39.grit.core.interfaces.AlarmScheduler
 import com.shub39.grit.core.interfaces.AnalyticsWrapper
 import com.shub39.grit.core.interfaces.SettingsDatastore
+import com.shub39.grit.shared.ui.habit.HabitFilter
 import com.shub39.grit.shared.ui.habit.HabitState
 import com.shub39.grit.shared.ui.habit.HabitsAction
+import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.combine
+import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.flow.onStart
@@ -53,6 +56,9 @@ class HabitViewModel(
     private var overallAnalyticsJob: Job? = null
     private var observeDatastoreJob: Job? = null
     private var completedHabitsFetchJob: Job? = null
+    private var habitCategoryJob: Job? = null
+
+    private val selectedAnalyticsCategory = MutableStateFlow<Long?>(null)
 
     private val _state = MutableStateFlow(HabitState())
 
@@ -62,6 +68,7 @@ class HabitViewModel(
             .onStart {
                 observeDataStore()
                 observeHabitStatuses()
+                observeHabitCategories()
                 observeOverallAnalytics()
 
                 rescheduleAllHabits()
@@ -166,6 +173,55 @@ class HabitViewModel(
                     }
                 }
 
+                is ChangeFilter -> _state.update { it.copy(selectedFilter = action.filter) }
+
+                is AddHabitCategory -> {
+                    if (action.category.id == 0L) {
+                        analytics.trackEvent(AnalyticsEvent.HABIT_CATEGORY_CREATED, emptyMap())
+                    } else {
+                        analytics.trackEvent(AnalyticsEvent.HABIT_CATEGORY_EDITED, emptyMap())
+                    }
+                    repo.upsertHabitCategory(action.category)
+                }
+
+                is DeleteHabitCategory -> {
+                    analytics.trackEvent(AnalyticsEvent.HABIT_CATEGORY_DELETED, emptyMap())
+
+                    _state.value.habitsWithAnalytics
+                        .filter { it.habit.categoryId == action.category.id }
+                        .forEach { scheduler.cancel(it.habit) }
+
+                    repo.deleteHabitCategory(action.category)
+
+                    if (_state.value.selectedFilter == HabitFilter.Category(action.category)) {
+                        _state.update { it.copy(selectedFilter = HabitFilter.All) }
+                    }
+
+                    if (_state.value.analyticsCategoryId == action.category.id) {
+                        selectedAnalyticsCategory.value = null
+                        _state.update { it.copy(analyticsCategoryId = null) }
+                    }
+                }
+
+                is ReorderHabitCategories -> {
+                    action.mapping.forEach { (index, category) ->
+                        repo.upsertHabitCategory(category.copy(index = index))
+                    }
+                }
+
+                is ChangeAnalyticsCategory -> {
+                    selectedAnalyticsCategory.value = action.categoryId
+                    _state.update { it.copy(analyticsCategoryId = action.categoryId) }
+                }
+
+                OnHabitCategorySheetOpened -> {
+                    analytics.trackEvent(AnalyticsEvent.HABIT_CATEGORY_SHEET_OPENED, emptyMap())
+                }
+
+                OnHabitCategorySheetDismissed -> {
+                    analytics.trackEvent(AnalyticsEvent.HABIT_CATEGORY_SHEET_DISMISSED, emptyMap())
+                }
+
                 OnHabitsOpened -> {
                     analytics.trackEvent(AnalyticsEvent.HABITS_OPENED, emptyMap())
                 }
@@ -199,11 +255,21 @@ class HabitViewModel(
             }
     }
 
+    private fun observeHabitCategories() {
+        habitCategoryJob?.cancel()
+        habitCategoryJob =
+            repo
+                .getHabitCategoriesFlow()
+                .onEach { categories -> _state.update { it.copy(habitCategories = categories) } }
+                .launchIn(viewModelScope)
+    }
+
+    @OptIn(ExperimentalCoroutinesApi::class)
     private fun observeOverallAnalytics() {
         overallAnalyticsJob?.cancel()
         overallAnalyticsJob =
-            repo
-                .getOverallAnalytics()
+            selectedAnalyticsCategory
+                .flatMapLatest { repo.getOverallAnalytics(it) }
                 .onEach { overallAnalytics ->
                     _state.update { it.copy(overallAnalytics = overallAnalytics) }
                 }

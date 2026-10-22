@@ -17,6 +17,7 @@
 package com.shub39.grit.logic.core.backup
 
 import com.shub39.grit.core.habits.Habit
+import com.shub39.grit.core.habits.HabitCategory
 import com.shub39.grit.core.habits.HabitStatus
 import com.shub39.grit.core.tasks.Category
 import com.shub39.grit.core.tasks.SubTask
@@ -38,6 +39,7 @@ fun Habit.toHabitSchema(): HabitSchema {
         reminder = reminder,
         targetValue = targetValue,
         targetUnit = targetUnit,
+        categoryId = categoryId,
     )
 }
 
@@ -52,7 +54,16 @@ fun HabitSchema.toHabit(): Habit {
         reminder = reminder,
         targetValue = targetValue,
         targetUnit = targetUnit,
+        categoryId = categoryId,
     )
+}
+
+fun HabitCategory.toHabitCategorySchema(): HabitCategorySchema {
+    return HabitCategorySchema(id = id, name = name, index = index, color = color)
+}
+
+fun HabitCategorySchema.toHabitCategory(): HabitCategory {
+    return HabitCategory(id = id, name = name, index = index, color = color)
 }
 
 fun HabitStatus.toHabitStatusSchema(): HabitStatusSchema {
