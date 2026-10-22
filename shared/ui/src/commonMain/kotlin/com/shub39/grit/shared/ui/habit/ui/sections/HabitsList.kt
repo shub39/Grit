@@ -141,8 +141,9 @@ fun HabitsList(
         var showCategoryEditor by rememberSaveable { mutableStateOf(false) }
 
         val filteredHabits =
-            remember(state.habitsWithAnalytics, state.selectedFilter) {
-                state.habitsWithAnalytics.filterBy(state.selectedFilter)
+            remember(state.habitsWithAnalytics, state.selectedFilter, state.editState) {
+                if (state.editState) state.habitsWithAnalytics
+                else state.habitsWithAnalytics.filterBy(state.selectedFilter)
             }
 
         Column(modifier = Modifier.widthIn(max = 700.dp)) {
@@ -156,6 +157,7 @@ fun HabitsList(
             HabitCategorySelector(
                 state = state,
                 onAction = onAction,
+                enabled = !state.editState,
                 onAddCategoryClick = {
                     onAction(HabitsAction.OnHabitCategorySheetOpened)
                     showCategoryAddSheet = true
@@ -435,6 +437,7 @@ private fun List<HabitWithAnalytics>.filterBy(habitFilter: HabitFilter): List<Ha
 private fun HabitCategorySelector(
     state: HabitState,
     onAction: (HabitsAction) -> Unit,
+    enabled: Boolean,
     onAddCategoryClick: () -> Unit,
     onEditCategoriesClick: () -> Unit,
     modifier: Modifier = Modifier,
@@ -448,6 +451,7 @@ private fun HabitCategorySelector(
             ToggleButton(
                 checked = state.selectedFilter == HabitFilter.Today,
                 onCheckedChange = { onAction(HabitsAction.ChangeFilter(HabitFilter.Today)) },
+                enabled = enabled,
             ) {
                 Text(text = stringResource(Res.string.today))
             }
@@ -457,6 +461,7 @@ private fun HabitCategorySelector(
             ToggleButton(
                 checked = state.selectedFilter == HabitFilter.All,
                 onCheckedChange = { onAction(HabitsAction.ChangeFilter(HabitFilter.All)) },
+                enabled = enabled,
             ) {
                 Text(text = stringResource(Res.string.all))
             }
@@ -468,6 +473,7 @@ private fun HabitCategorySelector(
                 onCheckedChange = {
                     onAction(HabitsAction.ChangeFilter(HabitFilter.Category(category)))
                 },
+                enabled = enabled,
             ) {
                 Text(text = category.name)
             }
@@ -475,14 +481,14 @@ private fun HabitCategorySelector(
 
         item {
             Spacer(modifier = Modifier.width(4.dp))
-            FilledTonalIconButton(onClick = onAddCategoryClick) {
+            FilledTonalIconButton(onClick = onAddCategoryClick, enabled = enabled) {
                 Icon(
                     imageVector = vectorResource(Res.drawable.add),
                     contentDescription = "Add Category",
                 )
             }
             if (state.habitCategories.isNotEmpty()) {
-                FilledTonalIconButton(onClick = onEditCategoriesClick) {
+                FilledTonalIconButton(onClick = onEditCategoriesClick, enabled = enabled) {
                     Icon(
                         imageVector = vectorResource(Res.drawable.edit),
                         contentDescription = "Edit Categories",
