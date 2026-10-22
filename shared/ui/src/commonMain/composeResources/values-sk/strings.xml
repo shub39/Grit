@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="tasks">Úlohy</string>
-    <string name="material_theme">Motív "Material You"</string>
+    <string name="material_theme">Motív Material You</string>
     <string name="done">Hotovo</string>
     <string name="add_task">Pridať Úlohu</string>
     <string name="add_habit">Pridať Nový Návyk</string>
