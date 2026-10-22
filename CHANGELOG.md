@@ -1,5 +1,11 @@
 # Changelog
 
+## 6.3.0
+- Added Habit Categories, create categories and assign habits to them
+- Habits list now has "Today" and "All" filters based on the days a habit is scheduled
+- Overall Analytics can now be grouped by category
+- Updated Translations
+
 ## 6.2.2
 - Fixed Light mode Splashscreen
 - Updated App Icon
