@@ -76,27 +76,4 @@
     <string name="reorder_tasks_desc">Pārveidot uzdevumu secību, kad tie ir atzīmēti kā pabeigti</string>
     <string name="translate">Tulkot</string>
     <string name="changelog">Izmaiņu žurnāls</string>
-    <string name="measure_able"></string>
-    <string name="monthly"></string>
-    <string name="quarterly"></string>
-    <string name="add_subtasks"></string>
-    <string name="add_reminder_desc"></string>
-    <string name="whats_changed"></string>
-    <string name="target_value"></string>
-    <string name="select_days"></string>
-    <string name="targets"></string>
-    <string name="yes_or_no"></string>
-    <string name="habit_type"></string>
-    <string name="target_unit"></string>
-    <string name="add_status"></string>
-    <string name="daily"></string>
-    <string name="about"></string>
-    <string name="language"></string>
-    <string name="weekly"></string>
-    <string name="consistency"></string>
-    <string name="translate_desc"></string>
-    <string name="yearly"></string>
-    <string name="bmc_desc"></string>
-    <string name="calendar"></string>
-    <string name="system_default"></string>
 </resources>

@@ -84,19 +84,4 @@
     <string name="add_subtasks">新增子任務</string>
     <string name="translate_desc">將 Grit 翻譯為你的語言</string>
     <string name="about">關於</string>
-    <string name="measure_able"></string>
-    <string name="monthly"></string>
-    <string name="quarterly"></string>
-    <string name="target_value"></string>
-    <string name="targets"></string>
-    <string name="yes_or_no"></string>
-    <string name="habit_type"></string>
-    <string name="target_unit"></string>
-    <string name="add_status"></string>
-    <string name="daily"></string>
-    <string name="weekly"></string>
-    <string name="consistency"></string>
-    <string name="yearly"></string>
-    <string name="bmc_desc"></string>
-    <string name="calendar"></string>
 </resources>

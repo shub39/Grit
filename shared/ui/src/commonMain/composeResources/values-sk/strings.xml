@@ -88,15 +88,4 @@
     <string name="monthly">Mesačne</string>
     <string name="yearly">Ročne</string>
     <string name="consistency">Dôslednosť</string>
-    <string name="measure_able"></string>
-    <string name="quarterly"></string>
-    <string name="add_subtasks"></string>
-    <string name="target_value"></string>
-    <string name="targets"></string>
-    <string name="yes_or_no"></string>
-    <string name="habit_type"></string>
-    <string name="target_unit"></string>
-    <string name="add_status"></string>
-    <string name="daily"></string>
-    <string name="weekly"></string>
 </resources>

@@ -84,19 +84,4 @@
     <string name="system_default">Sistemsko privzeto</string>
     <string name="language">Jezik</string>
     <string name="about">O aplikaciji</string>
-    <string name="measure_able"></string>
-    <string name="monthly"></string>
-    <string name="quarterly"></string>
-    <string name="add_subtasks"></string>
-    <string name="target_value"></string>
-    <string name="targets"></string>
-    <string name="yes_or_no"></string>
-    <string name="habit_type"></string>
-    <string name="target_unit"></string>
-    <string name="add_status"></string>
-    <string name="daily"></string>
-    <string name="weekly"></string>
-    <string name="consistency"></string>
-    <string name="yearly"></string>
-    <string name="calendar"></string>
 </resources>

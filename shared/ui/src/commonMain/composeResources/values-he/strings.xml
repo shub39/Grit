@@ -97,6 +97,4 @@
     <string name="measure_able">מדיד</string>
     <string name="add_status">הוספת מצב</string>
     <string name="targets">יעדים</string>
-    <string name="target_value"></string>
-    <string name="target_unit"></string>
 </resources>
