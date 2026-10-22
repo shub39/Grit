@@ -83,4 +83,20 @@
     <string name="system_default">Padrão do sistema</string>
     <string name="language">Idioma</string>
     <string name="about">Sobre</string>
+    <string name="measure_able"></string>
+    <string name="monthly"></string>
+    <string name="quarterly"></string>
+    <string name="add_subtasks"></string>
+    <string name="material_theme"></string>
+    <string name="target_value"></string>
+    <string name="targets"></string>
+    <string name="yes_or_no"></string>
+    <string name="habit_type"></string>
+    <string name="target_unit"></string>
+    <string name="add_status"></string>
+    <string name="daily"></string>
+    <string name="weekly"></string>
+    <string name="consistency"></string>
+    <string name="yearly"></string>
+    <string name="calendar"></string>
 </resources>
