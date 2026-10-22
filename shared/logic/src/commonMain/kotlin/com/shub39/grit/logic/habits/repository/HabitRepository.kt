@@ -17,6 +17,7 @@
 package com.shub39.grit.logic.habits.repository
 
 import com.shub39.grit.core.habits.Habit
+import com.shub39.grit.core.habits.HabitCategory
 import com.shub39.grit.core.habits.HabitRanking
 import com.shub39.grit.core.habits.HabitRepo
 import com.shub39.grit.core.habits.HabitStatus
@@ -25,9 +26,12 @@ import com.shub39.grit.core.habits.OverallAnalytics
 import com.shub39.grit.core.interfaces.AppNotificationManager
 import com.shub39.grit.core.interfaces.SettingsDatastore
 import com.shub39.grit.core.now
+import com.shub39.grit.logic.habits.database.HabitCategoryDao
 import com.shub39.grit.logic.habits.database.HabitStatusDao
 import com.shub39.grit.logic.habits.database.HabitsDao
 import com.shub39.grit.logic.habits.toHabit
+import com.shub39.grit.logic.habits.toHabitCategory
+import com.shub39.grit.logic.habits.toHabitCategoryEntity
 import com.shub39.grit.logic.habits.toHabitEntity
 import com.shub39.grit.logic.habits.toHabitStatus
 import com.shub39.grit.logic.habits.toHabitStatusEntity
@@ -52,6 +56,7 @@ import org.koin.core.annotation.Single
 class HabitRepository(
     private val habitDao: HabitsDao,
     private val habitStatusDao: HabitStatusDao,
+    private val categoryDao: HabitCategoryDao,
     private val datastore: SettingsDatastore,
     private val notificationManager: AppNotificationManager,
 ) : HabitRepo {
@@ -66,6 +71,12 @@ class HabitRepository(
         habitStatusDao
             .getAllHabitStatuses()
             .map { habitStatuses -> habitStatuses.map { it.toHabitStatus() } }
+            .flowOn(Dispatchers.IO)
+
+    private val habitCategories =
+        categoryDao
+            .getCategoriesFlow()
+            .map { categories -> categories.map { it.toHabitCategory() }.sortedBy { it.index } }
             .flowOn(Dispatchers.IO)
 
     private val firstDayOfWeek = MutableStateFlow(DayOfWeek.MONDAY)
@@ -166,13 +177,20 @@ class HabitRepository(
             .flowOn(Dispatchers.Default)
     }
 
-    override fun getOverallAnalytics(): Flow<OverallAnalytics> {
+    override fun getOverallAnalytics(categoryId: Long?): Flow<OverallAnalytics> {
         return habits
             .combine(habitStatuses) { habitsFlow, habitStatusesFlow ->
+                val scopedHabits =
+                    if (categoryId == null) habitsFlow
+                    else habitsFlow.filter { it.categoryId == categoryId }
+                val scopedStatuses =
+                    habitStatusesFlow.filter { status ->
+                        scopedHabits.any { it.id == status.habitId }
+                    }
+
                 val habitConsistencies =
-                    habitsFlow.map { habit ->
-                        val dates =
-                            habitStatusesFlow.filter { it.habitId == habit.id }.map { it.date }
+                    scopedHabits.map { habit ->
+                        val dates = scopedStatuses.filter { it.habitId == habit.id }.map { it.date }
                         habit.title to calculateConsistency(dates, habit.days)
                     }
 
@@ -188,14 +206,29 @@ class HabitRepository(
                         .map { HabitRanking(it.first, it.second) }
 
                 OverallAnalytics(
-                    heatMapData = prepareHeatMapData(habitStatusesFlow),
+                    heatMapData = prepareHeatMapData(scopedStatuses),
                     weekDayFrequencyData =
-                        prepareWeekDayFrequencyData(habitStatusesFlow.map { it.date }),
+                        prepareWeekDayFrequencyData(scopedStatuses.map { it.date }),
                     consistency = overallConsistency,
                     topHabits = topHabits,
                 )
             }
             .flowOn(Dispatchers.Default)
+    }
+
+    override fun getHabitCategoriesFlow(): Flow<List<HabitCategory>> = habitCategories
+
+    override suspend fun getHabitCategories(): List<HabitCategory> {
+        return categoryDao.getCategories().map { it.toHabitCategory() }
+    }
+
+    override suspend fun upsertHabitCategory(category: HabitCategory) {
+        categoryDao.upsertCategory(category.toHabitCategoryEntity())
+    }
+
+    override suspend fun deleteHabitCategory(category: HabitCategory) {
+        habitDao.deleteHabitsByCategory(category.id)
+        categoryDao.deleteCategory(category.toHabitCategoryEntity())
     }
 
     override fun getHabitsWithStatus(): Flow<List<Pair<Habit, Boolean>>> {

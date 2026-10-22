@@ -28,6 +28,10 @@ actual class HabitDbFactory(private val context: Context) {
         val dbFile = appContext.getDatabasePath(HabitDatabase.DB_NAME)
 
         return Room.databaseBuilder<HabitDatabase>(appContext, dbFile.absolutePath)
-            .addMigrations(HabitDatabase.migrate_3_4, HabitDatabase.migrate_5_6)
+            .addMigrations(
+                HabitDatabase.migrate_3_4,
+                HabitDatabase.migrate_5_6,
+                HabitDatabase.migrate_6_7,
+            )
     }
 }

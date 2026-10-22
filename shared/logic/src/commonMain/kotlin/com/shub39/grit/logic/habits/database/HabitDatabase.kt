@@ -28,7 +28,7 @@ import androidx.sqlite.execSQL
 import com.shub39.grit.logic.core.Converters
 
 @Database(
-    entities = [HabitEntity::class, HabitStatusEntity::class],
+    entities = [HabitEntity::class, HabitStatusEntity::class, HabitCategoryEntity::class],
     version = HabitDatabase.SCHEMA_VERSION,
     exportSchema = true,
     autoMigrations = [AutoMigration(from = 4, to = 5)],
@@ -40,8 +40,10 @@ abstract class HabitDatabase : RoomDatabase() {
 
     abstract fun habitStatusDao(): HabitStatusDao
 
+    abstract fun habitCategoryDao(): HabitCategoryDao
+
     companion object {
-        const val SCHEMA_VERSION = 6
+        const val SCHEMA_VERSION = 7
         const val DB_NAME = "habit_database"
 
         val migrate_3_4 =
@@ -64,6 +66,24 @@ abstract class HabitDatabase : RoomDatabase() {
                     )
                     connection.execSQL(
                         "ALTER TABLE habit_status ADD COLUMN value REAL NOT NULL DEFAULT 1.0"
+                    )
+                }
+            }
+
+        val migrate_6_7 =
+            object : Migration(6, 7) {
+                override suspend fun migrate(connection: SQLiteConnection) {
+                    connection.execSQL(
+                        "CREATE TABLE IF NOT EXISTS `habit_categories` (" +
+                            "`id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, " +
+                            "`name` TEXT NOT NULL, " +
+                            "`index` INTEGER NOT NULL, " +
+                            "`color` TEXT NOT NULL)"
+                    )
+                    connection.execSQL("ALTER TABLE habit_index ADD COLUMN category_id INTEGER")
+                    connection.execSQL(
+                        "CREATE INDEX IF NOT EXISTS index_habit_index_category_id " +
+                            "ON habit_index(category_id)"
                     )
                 }
             }

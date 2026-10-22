@@ -51,6 +51,14 @@ class ExportImpl(private val taskRepo: TaskRepo, private val habitsRepo: HabitRe
                     }
                     .await()
 
+            val habitCategoriesDef =
+                async {
+                        withContext(Dispatchers.IO) {
+                            habitsRepo.getHabitCategories().map { it.toHabitCategorySchema() }
+                        }
+                    }
+                    .await()
+
             val tasksDef =
                 async {
                         withContext(Dispatchers.IO) {
@@ -87,6 +95,7 @@ class ExportImpl(private val taskRepo: TaskRepo, private val habitsRepo: HabitRe
                     ExportSchema(
                         habits = habitsDef,
                         habitStatus = statusesDef,
+                        habitCategories = habitCategoriesDef,
                         tasks = tasksDef,
                         categories = categoriesDef,
                         subTasks = subTasksDef,

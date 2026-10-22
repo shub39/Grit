@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="tasks">Úlohy</string>
-    <string name="material_theme">Motív "Material You"</string>
+    <string name="material_theme">Motív Material You</string>
     <string name="done">Hotovo</string>
     <string name="add_task">Pridať Úlohu</string>
     <string name="add_habit">Pridať Nový Návyk</string>
@@ -79,7 +79,6 @@
     <string name="translate">Preložiť</string>
     <string name="translate_desc">Preložte Grit do svojho jazyka</string>
     <string name="changelog">Zoznam zmien</string>
-    <string name="whats_changed">Čo je nové</string>
     <string name="select_days">Zvoliť dni</string>
     <string name="system_default">Predvolené systémom</string>
     <string name="language">Jazyk</string>

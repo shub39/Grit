@@ -26,6 +26,7 @@ data class ExportSchema(
     val habitsSchemaVersion: Int = HabitDatabase.SCHEMA_VERSION,
     val habits: List<HabitSchema>,
     val habitStatus: List<HabitStatusSchema>,
+    val habitCategories: List<HabitCategorySchema> = emptyList(),
     val tasks: List<TaskSchema>,
     val categories: List<CategorySchema>,
     val subTasks: List<SubTaskSchema>,
@@ -42,6 +43,7 @@ data class HabitSchema(
     val reminder: Boolean,
     val targetValue: Double = 0.0,
     val targetUnit: String = "",
+    val categoryId: Long? = null,
 )
 
 @Serializable
@@ -64,6 +66,14 @@ data class TaskSchema(
 
 @Serializable
 data class CategorySchema(val id: Long = 0, val name: String, val index: Int = 0, val color: String)
+
+@Serializable
+data class HabitCategorySchema(
+    val id: Long = 0,
+    val name: String,
+    val index: Int = 0,
+    val color: String,
+)
 
 @Serializable
 data class SubTaskSchema(

@@ -31,6 +31,7 @@ data class Habit(
     val reminder: Boolean,
     val targetValue: Double = 0.0,
     val targetUnit: String = "",
+    val categoryId: Long? = null,
 ) {
     val isMeasurable: Boolean
         get() = targetValue > 0.0

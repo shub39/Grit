@@ -18,6 +18,7 @@ package com.shub39.grit.shared.ui.habit
 
 import androidx.compose.runtime.Immutable
 import androidx.compose.runtime.Stable
+import com.shub39.grit.core.habits.HabitCategory
 import com.shub39.grit.core.habits.HabitWithAnalytics
 import com.shub39.grit.core.habits.OverallAnalytics
 import kotlinx.datetime.DayOfWeek
@@ -50,6 +51,9 @@ data class HabitState(
     val analyticsHabitId: Long? = null,
     val showHabitAddSheet: Boolean = false,
     val editState: Boolean = false,
+    val habitCategories: List<HabitCategory> = emptyList(),
+    val selectedFilter: HabitFilter = HabitFilter.Today,
+    val analyticsCategoryId: Long? = null,
 
     // datastore
     val compactHabitView: Boolean = false,

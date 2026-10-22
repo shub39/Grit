@@ -34,7 +34,17 @@ interface HabitRepo {
 
     fun getCompletedHabitIds(): Flow<List<Long>>
 
-    fun getOverallAnalytics(): Flow<OverallAnalytics>
+    /** Aggregated analytics across all habits, or scoped to [categoryId] when non-null. */
+    fun getOverallAnalytics(categoryId: Long? = null): Flow<OverallAnalytics>
+
+    fun getHabitCategoriesFlow(): Flow<List<HabitCategory>>
+
+    suspend fun getHabitCategories(): List<HabitCategory>
+
+    suspend fun upsertHabitCategory(category: HabitCategory)
+
+    /** Deletes the category and all habits belonging to it. */
+    suspend fun deleteHabitCategory(category: HabitCategory)
 
     fun getHabitsWithStatus(): Flow<List<Pair<Habit, Boolean>>>
 

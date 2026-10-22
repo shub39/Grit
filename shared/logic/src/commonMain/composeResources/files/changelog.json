@@ -1,5 +1,14 @@
 [
   {
+    "version": "6.3.0",
+    "changes": [
+      "Added Habit Categories, create categories and assign habits to them",
+      "Habits list now has \"Today\" and \"All\" filters based on the days a habit is scheduled",
+      "Overall Analytics can now be grouped by category",
+      "Updated Translations"
+    ]
+  },
+  {
     "version": "6.2.2",
     "changes": [
       "Fixed Light mode Splashscreen",
@@ -69,13 +78,6 @@
       "Updated Translations",
       "Calendar UI Improvements",
       "Improved Floating Action Button Visibility #299 @therealVitia"
-    ]
-  },
-  {
-    "version": "6.0.2",
-    "changes": [
-      "Updated Translations",
-      "Miscellaneous Bug Fixes and Improvements"
     ]
   }
 ]

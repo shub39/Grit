@@ -211,6 +211,7 @@ private fun EntryProviderScope<Routes>.habitsScreens(
 
         OverallAnalytics(
             state = state,
+            onAction = viewModel::onAction,
             onNavigateBack = { topLevelBackStack.removeLast() },
             onNavigateToPaywall = { topLevelBackStack.add(Paywall) },
             isUserSubscribed = globalState.isUserSubscribed,

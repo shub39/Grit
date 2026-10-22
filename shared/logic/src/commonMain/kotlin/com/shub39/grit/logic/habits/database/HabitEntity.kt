@@ -18,11 +18,12 @@ package com.shub39.grit.logic.habits.database
 
 import androidx.room3.ColumnInfo
 import androidx.room3.Entity
+import androidx.room3.Index
 import androidx.room3.PrimaryKey
 import kotlinx.datetime.DayOfWeek
 import kotlinx.datetime.LocalDateTime
 
-@Entity(tableName = "habit_index")
+@Entity(tableName = "habit_index", indices = [Index(value = ["category_id"])])
 data class HabitEntity(
     @PrimaryKey(autoGenerate = true) val id: Long = 0,
     val title: String,
@@ -33,4 +34,5 @@ data class HabitEntity(
     @ColumnInfo(name = "reminder", defaultValue = "1") val reminder: Boolean,
     @ColumnInfo(name = "target_value", defaultValue = "0.0") val targetValue: Double = 0.0,
     @ColumnInfo(name = "target_unit", defaultValue = "''") val targetUnit: String = "",
+    @ColumnInfo(name = "category_id") val categoryId: Long? = null,
 )

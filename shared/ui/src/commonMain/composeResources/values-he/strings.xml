@@ -62,13 +62,12 @@
     <string name="reorder_tasks">סידור מחדש של המשימות</string>
     <string name="translate">תרגום</string>
     <string name="changelog">יומן שינויים</string>
-    <string name="whats_changed">מה השתנה</string>
     <string name="select_days">בחירת ימים</string>
     <string name="done">בוצע</string>
     <string name="add">אפשר לכתוב משהו</string>
     <string name="use_amoled">ערכת צבעים למסכי AMOLED</string>
     <string name="use_amoled_desc">לחוויה המיטבית במסכי AMOLED</string>
-    <string name="export_desc">כל הנתונים יוצאו לתיקייה Downloads/Grit</string>
+    <string name="export_desc">נא לבחור תיקייה לייצוא הנתונים</string>
     <string name="show_habits_desc">קודם להציג את עמוד ההרגלים בעת פתיחת היישום</string>
     <string name="use_24Hr_desc">שימוש בשעון 24 שעות לקביעת השעה</string>
     <string name="started_on">הותחל בתאריך</string>
@@ -79,4 +78,22 @@
     <string name="foss_desc">כל התכונות פתוחות. מהדורה זו של היישום אינה תומכת ברכישות בתוך היישום. אם היישום הזה הוסיף ערך לחייך, אפשר לתמוך בי בעזרת תרומה דרך</string>
     <string name="reorder_tasks_desc">סידור מחדש של המשימות בעת סימונן ככאלה שהושלמו</string>
     <string name="habit_map">מפת להיטות להרגל</string>
+    <string name="bmc_desc">אפשר לתמוך במפתח בעזרת תרומה כספית קטנה</string>
+    <string name="translate_desc">אפשר לתרגם את Grit לעברית</string>
+    <string name="system_default">ברירת המחדל של המערכת</string>
+    <string name="language">שפה</string>
+    <string name="about">מידע כללי</string>
+    <string name="consistency">התמדה</string>
+    <string name="calendar">לוח שנה</string>
+    <string name="monthly">לפי חודש</string>
+    <string name="yearly">לפי שנה</string>
+    <string name="quarterly">לפי רבעון</string>
+    <string name="weekly">לפי שבוע</string>
+    <string name="daily">לפי יום</string>
+    <string name="add_subtasks">הוספת משימות משנה</string>
+    <string name="habit_type">סוג הרגל</string>
+    <string name="yes_or_no">כן או לא</string>
+    <string name="measure_able">מדיד</string>
+    <string name="add_status">הוספת מצב</string>
+    <string name="targets">יעדים</string>
 </resources>

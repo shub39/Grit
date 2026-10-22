@@ -20,7 +20,7 @@
     <string name="delete_tasks">Yakin mau hapus semua jejak perjuanganmu?</string>
     <string name="update_title">Edit judul</string>
     <string name="edit_categories">Edit kategori</string>
-    <string name="delete_category">Yakin? Semua bukti kerja kerasmu di kategori ini bakal musnah lho! :\u0027)</string>
+    <string name="delete_category">Yakin? Semua bukti kerja kerasmu di kategori ini bakal musnah lho!</string>
     <string name="add_category">Tambahkan kategori</string>
     <string name="add">Tambahkan sesuatu</string>
     <string name="habit_map">Peta Kebiasaan</string>
@@ -77,7 +77,6 @@
     <string name="reorder_tasks_desc">Atur ulang tugas saat ditandai udah selesai</string>
     <string name="translate">Terjemahan</string>
     <string name="changelog">Catatan update</string>
-    <string name="whats_changed">Apa aja yang Berubah</string>
     <string name="select_days">Pilih hari</string>
     <string name="bmc_desc">Dukung saya dengan memberikan donasi kecil</string>
     <string name="translate_desc">Terjemahkan Grit ke dalam bahasa Anda</string>

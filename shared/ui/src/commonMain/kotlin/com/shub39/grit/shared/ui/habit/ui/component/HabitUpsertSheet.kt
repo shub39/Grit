@@ -70,6 +70,7 @@ import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.shub39.grit.core.habits.Habit
+import com.shub39.grit.core.habits.HabitCategory
 import com.shub39.grit.core.now
 import com.shub39.grit.core.toFormattedString
 import com.shub39.grit.shared.ui.components.ExpressiveSwitch
@@ -117,6 +118,7 @@ private enum class HabitType {
 @Composable
 expect fun HabitUpsertSheet(
     habit: Habit,
+    categories: List<HabitCategory>,
     onDismissRequest: () -> Unit,
     onUpsertHabit: (Habit) -> Unit,
     is24Hr: Boolean,
@@ -128,6 +130,7 @@ expect fun HabitUpsertSheet(
 fun HabitUpsertSheetContent(
     modifier: Modifier = Modifier,
     newHabit: Habit,
+    categories: List<HabitCategory>,
     updateHabit: (Habit) -> Unit,
     onDismissRequest: () -> Unit,
     onUpsertHabit: (Habit) -> Unit,
@@ -345,6 +348,32 @@ fun HabitUpsertSheetContent(
                                 selected = currentHabitType,
                                 onSelectedChange = { currentHabitType = it },
                                 labelProvider = { Text(text = stringResource(it.toStringRes())) },
+                                modifier = Modifier.padding(16.dp),
+                            )
+                        }
+                    }
+
+                    // category picker
+                    if (categories.isNotEmpty()) {
+                        Card(
+                            shape = middleItemShape(),
+                            colors =
+                                CardDefaults.cardColors(
+                                    containerColor = MaterialTheme.colorScheme.surfaceContainerHigh
+                                ),
+                        ) {
+                            ListSelect(
+                                title = stringResource(Res.string.category),
+                                options = listOf<Long?>(null) + categories.map { it.id },
+                                selected = newHabit.categoryId,
+                                onSelectedChange = { updateHabit(newHabit.copy(categoryId = it)) },
+                                labelProvider = { id ->
+                                    Text(
+                                        text =
+                                            categories.find { it.id == id }?.name
+                                                ?: stringResource(Res.string.no_category)
+                                    )
+                                },
                                 modifier = Modifier.padding(16.dp),
                             )
                         }
@@ -573,6 +602,7 @@ private fun Preview() {
                     index = 1,
                     reminder = false,
                 ),
+            categories = emptyList(),
             onDismissRequest = {},
             onUpsertHabit = {},
             is24Hr = true,

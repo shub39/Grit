@@ -7,7 +7,7 @@
     <string name="add_habit">Ajouter une nouvelle habitude</string>
     <string name="update_description">Mettre à jour la description</string>
     <string name="delete">Supprimer</string>
-    <string name="delete_warning">Êtes-vous sûr de vouloir supprimer cette habitude ? Tout progrès sera perdu, à jamais</string>
+    <string name="delete_warning">Êtes-vous sûr de vouloir supprimer cette habitude ? Tout progrès sera perdu, à jamais</string>
     <string name="cancel">Annuler</string>
     <string name="select_time">Séléctionnez le temps</string>
     <string name="habits">Habitudes</string>
@@ -16,7 +16,7 @@
     <string name="settings">Paramètres</string>
     <string name="too_long">Trop long</string>
     <string name="edit_task">Modifier la tâche</string>
-    <string name="delete_tasks">Êtes-vous sûr de vouloir supprimer toutes les tâches accomplies ?</string>
+    <string name="delete_tasks">Êtes-vous sûr de vouloir supprimer toutes les tâches accomplies ?</string>
     <string name="update_title">Mettre à jour le titre</string>
     <string name="edit_categories">Modifier les catégories</string>
     <string name="delete_category">Êtes-vous sûr ? Toutes les tâches dans cette catégories seront supprimées</string>
@@ -77,7 +77,6 @@
     <string name="translate">Traduire</string>
     <string name="changelog">Journaux des modifications</string>
     <string name="add_reminder_desc">Recevoir une notification de rappel les jours sélectionnés</string>
-    <string name="whats_changed">Nouveautés</string>
     <string name="select_days">Sélectionner des jours</string>
     <string name="translate_desc">Traduire Grit dans votre langue</string>
     <string name="language">Langue</string>

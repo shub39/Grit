@@ -42,7 +42,6 @@
     <string name="add_reminder">Lisa meeldetuletus</string>
     <string name="translate">Tõlgi</string>
     <string name="changelog">Muudatuste nimekiri</string>
-    <string name="whats_changed">Mis on muutnud</string>
     <string name="select_days">Vali päevad</string>
     <string name="delete_tasks">Oled sa kindel, et soovid kõik lõpetatud ülesanded kustutada?</string>
     <string name="delete_category">Oled sa kindel? Kõik ülesanded selles kategoorias kustutatakse</string>

@@ -19,6 +19,7 @@ package com.shub39.grit.logic.di
 import androidx.datastore.core.DataStore
 import androidx.datastore.preferences.core.Preferences
 import com.shub39.grit.logic.core.datastore.DatastoreFactory
+import com.shub39.grit.logic.habits.database.HabitCategoryDao
 import com.shub39.grit.logic.habits.database.HabitDatabase
 import com.shub39.grit.logic.habits.database.HabitDbFactory
 import com.shub39.grit.logic.habits.database.HabitStatusDao
@@ -52,4 +53,6 @@ class LogicModules {
     @Single fun getHabitsDao(db: HabitDatabase): HabitsDao = db.habitDao()
 
     @Single fun getHabitStatusDao(db: HabitDatabase): HabitStatusDao = db.habitStatusDao()
+
+    @Single fun getHabitCategoryDao(db: HabitDatabase): HabitCategoryDao = db.habitCategoryDao()
 }

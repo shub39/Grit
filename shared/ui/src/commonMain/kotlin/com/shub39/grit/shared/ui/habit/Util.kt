@@ -16,7 +16,12 @@
  */
 package com.shub39.grit.shared.ui.habit
 
+import com.shub39.grit.core.habits.HabitWithAnalytics
 import kotlinx.datetime.DayOfWeek
+
+/** Habits scoped to [categoryId] (null = all habits). */
+fun List<HabitWithAnalytics>.filterByCategory(categoryId: Long?): List<HabitWithAnalytics> =
+    if (categoryId == null) this else filter { it.habit.categoryId == categoryId }
 
 fun daysStartingFrom(start: DayOfWeek): Set<DayOfWeek> {
     val allDays = DayOfWeek.entries

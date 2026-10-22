@@ -17,6 +17,7 @@
 package com.shub39.grit.shared.ui.components
 
 import androidx.compose.animation.core.animateFloatAsState
+import androidx.compose.foundation.gestures.detectTapGestures
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.interaction.collectIsHoveredAsState
 import androidx.compose.foundation.interaction.collectIsPressedAsState
@@ -26,6 +27,7 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.offset
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.ButtonGroupDefaults
 import androidx.compose.material3.DropdownMenu
@@ -45,7 +47,10 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.input.pointer.pointerInput
+import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.unit.DpOffset
+import androidx.compose.ui.unit.IntOffset
 import androidx.compose.ui.unit.dp
 import grit.shared.ui.generated.resources.Res
 import grit.shared.ui.generated.resources.check
@@ -80,28 +85,31 @@ fun <T> ListSelect(
 
         if (options.size > 3) {
             var expanded by remember { mutableStateOf(false) }
+            var touchOffset by remember { mutableStateOf(DpOffset.Zero) }
 
-            Row(
-                modifier = Modifier.fillMaxWidth(),
-                verticalAlignment = Alignment.CenterVertically,
-                horizontalArrangement =
-                    Arrangement.spacedBy(ButtonGroupDefaults.ConnectedSpaceBetween),
-            ) {
-                TonalToggleButton(
-                    checked = false,
-                    enabled = enabled,
-                    onCheckedChange = { expanded = true },
-                    modifier = Modifier.height(ButtonDefaults.MinHeight).weight(0.7f),
-                    shapes = ButtonGroupDefaults.connectedLeadingButtonShapes(),
-                    content = { labelProvider(selected) },
-                )
+            val density = LocalDensity.current
 
-                Box(modifier = Modifier.weight(0.3f)) {
+            Box {
+                Row(
+                    modifier = Modifier.fillMaxWidth(),
+                    verticalAlignment = Alignment.CenterVertically,
+                    horizontalArrangement =
+                        Arrangement.spacedBy(ButtonGroupDefaults.ConnectedSpaceBetween),
+                ) {
+                    TonalToggleButton(
+                        checked = false,
+                        enabled = enabled,
+                        onCheckedChange = { expanded = true },
+                        modifier = Modifier.height(ButtonDefaults.MinHeight).weight(0.7f),
+                        shapes = ButtonGroupDefaults.connectedLeadingButtonShapes(),
+                        content = { labelProvider(selected) },
+                    )
+
                     TonalToggleButton(
                         checked = expanded,
                         enabled = enabled,
                         onCheckedChange = { expanded = true },
-                        modifier = Modifier.height(ButtonDefaults.MinHeight).fillMaxWidth(),
+                        modifier = Modifier.height(ButtonDefaults.MinHeight).weight(0.3f),
                         shapes = ButtonGroupDefaults.connectedTrailingButtonShapes(),
                         content = {
                             Icon(
@@ -110,11 +118,34 @@ fun <T> ListSelect(
                             )
                         },
                     )
+                }
 
+                if (enabled) {
+                    Box(
+                        modifier =
+                            Modifier.matchParentSize().pointerInput(Unit) {
+                                detectTapGestures(
+                                    onTap = { offset ->
+                                        touchOffset =
+                                            with(density) {
+                                                DpOffset(offset.x.toDp(), offset.y.toDp())
+                                            }
+                                        expanded = true
+                                    }
+                                )
+                            }
+                    )
+                }
+
+                Box(
+                    modifier =
+                        Modifier.offset {
+                            IntOffset(touchOffset.x.roundToPx(), touchOffset.y.roundToPx())
+                        }
+                ) {
                     DropdownMenu(
                         expanded = expanded,
                         onDismissRequest = { expanded = false },
-                        offset = DpOffset(10.dp, 10.dp),
                         containerColor = Color.Transparent,
                         tonalElevation = 0.dp,
                         shadowElevation = 0.dp,

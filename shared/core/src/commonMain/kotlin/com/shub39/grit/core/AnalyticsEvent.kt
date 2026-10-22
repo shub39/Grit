@@ -51,6 +51,12 @@ value class AnalyticsEvent(val name: String) {
         val HABIT_EDITED = AnalyticsEvent("habit_edited")
         val HABIT_COMPLETED = AnalyticsEvent("habit_completed")
         val HABIT_ANALYTICS_VIEWED = AnalyticsEvent("habit_analytics_viewed")
+
+        val HABIT_CATEGORY_SHEET_OPENED = AnalyticsEvent("habit_category_sheet_opened")
+        val HABIT_CATEGORY_SHEET_DISMISSED = AnalyticsEvent("habit_category_sheet_dismissed")
+        val HABIT_CATEGORY_CREATED = AnalyticsEvent("habit_category_created")
+        val HABIT_CATEGORY_DELETED = AnalyticsEvent("habit_category_deleted")
+        val HABIT_CATEGORY_EDITED = AnalyticsEvent("habit_category_edited")
         val OVERALL_ANALYTICS_VIEWED = AnalyticsEvent("overall_analytics_viewed")
 
         val SETTINGS_OPENED = AnalyticsEvent("settings_opened")

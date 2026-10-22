@@ -27,7 +27,7 @@
     <string name="look_and_feel">Izskats un Funkcionalitāte</string>
     <string name="use_amoled">Amoled palete</string>
     <string name="use_amoled_desc">Vislabākā pieredze lietojot AMOLED displeju</string>
-    <string name="select_seed">Izvēlēties "Seed" krāsu</string>
+    <string name="select_seed">Izvēlēties Seed krāsu</string>
     <string name="select_seed_desc">Izvēlēties krāsu, no kuras tiks ģenerēta palete</string>
     <string name="palette_style">Paletes Stils</string>
     <string name="look_and_feel_desc">Pielāgot lietotni vairākos veidos</string>

@@ -76,7 +76,6 @@
     <string name="reorder_tasks_desc">أعد ترتيب المهام عند اكمالها</string>
     <string name="translate">ترجم</string>
     <string name="changelog">سجل التغييرات</string>
-    <string name="whats_changed">التغييرات</string>
     <string name="add_reminder_desc">تلقي تنبيه تذكيري في أيام محدّدة</string>
     <string name="select_days">حدّد الأيام</string>
     <string name="language">اللغة</string>
