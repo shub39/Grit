@@ -481,11 +481,13 @@ private fun HabitCategorySelector(
                     contentDescription = "Add Category",
                 )
             }
-            FilledTonalIconButton(onClick = onEditCategoriesClick) {
-                Icon(
-                    imageVector = vectorResource(Res.drawable.edit),
-                    contentDescription = "Edit Categories",
-                )
+            if (state.habitCategories.isNotEmpty()) {
+                FilledTonalIconButton(onClick = onEditCategoriesClick) {
+                    Icon(
+                        imageVector = vectorResource(Res.drawable.edit),
+                        contentDescription = "Edit Categories",
+                    )
+                }
             }
         }
     }
@@ -587,10 +589,7 @@ private fun HabitCategoryEditDialog(
                                         )
                                     }
 
-                                    IconButton(
-                                        onClick = { showDeleteDialog = true },
-                                        enabled = categories.size > 1,
-                                    ) {
+                                    IconButton(onClick = { showDeleteDialog = true }) {
                                         Icon(
                                             imageVector = vectorResource(Res.drawable.delete),
                                             contentDescription = "Delete",
@@ -649,6 +648,7 @@ private fun HabitCategoryEditDialog(
                                     onClick = {
                                         onAction(HabitsAction.DeleteHabitCategory(category))
                                         showDeleteDialog = false
+                                        if (categories.size == 1) onDismissRequest()
                                     },
                                     shapes =
                                         ButtonShapes(
