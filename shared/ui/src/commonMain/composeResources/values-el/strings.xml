@@ -79,4 +79,24 @@
     <string name="export_desc">Όλα τα δεδομένα αποθηκεύτηκαν στις Λήψεις/Grit</string>
     <string name="started_on">Ξεκίνησε σε</string>
     <string name="week_breakdown">Εβδομαδιαία ανάλυση</string>
+    <string name="measure_able"></string>
+    <string name="monthly"></string>
+    <string name="quarterly"></string>
+    <string name="add_subtasks"></string>
+    <string name="target_value"></string>
+    <string name="targets"></string>
+    <string name="yes_or_no"></string>
+    <string name="habit_type"></string>
+    <string name="target_unit"></string>
+    <string name="add_status"></string>
+    <string name="daily"></string>
+    <string name="about"></string>
+    <string name="language"></string>
+    <string name="weekly"></string>
+    <string name="consistency"></string>
+    <string name="translate_desc"></string>
+    <string name="yearly"></string>
+    <string name="bmc_desc"></string>
+    <string name="calendar"></string>
+    <string name="system_default"></string>
 </resources>
