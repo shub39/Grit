@@ -193,7 +193,7 @@ class HabitViewModel(
 
                     repo.deleteHabitCategory(action.category)
 
-                    if (_state.value.selectedFilter == HabitFilter.Category(action.category)) {
+                    if (_state.value.selectedFilter == HabitFilter.Category(action.category.id)) {
                         _state.update { it.copy(selectedFilter = HabitFilter.All) }
                     }
 

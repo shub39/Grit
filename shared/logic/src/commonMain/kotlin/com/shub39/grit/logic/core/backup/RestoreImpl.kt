@@ -66,15 +66,18 @@ class RestoreImpl(
                     async {
                         habitRepo.getHabits().forEach { alarmScheduler.cancel(it) }
 
-                        jsonDeserialized.habitCategories
-                            .map { it.toHabitCategory() }
-                            .forEach { habitRepo.upsertHabitCategory(it) }
+                        val categoryIdMapping =
+                            restoreHabitCategories(jsonDeserialized.habitCategories)
 
                         jsonDeserialized.habits
                             .map { it.toHabit() }
-                            .forEach {
-                                habitRepo.upsertHabit(it)
-                                alarmScheduler.schedule(it)
+                            .forEach { habit ->
+                                val restoredHabit =
+                                    habit.copy(
+                                        categoryId = habit.categoryId?.let { categoryIdMapping[it] }
+                                    )
+                                habitRepo.upsertHabit(restoredHabit)
+                                alarmScheduler.schedule(restoredHabit)
                             }
 
                         jsonDeserialized.habitStatus
@@ -114,5 +117,28 @@ class RestoreImpl(
             GritLogger.e("RestoreRepo", "Failed to deserialize, invalid file: ", e)
             RestoreResult.Failure(InvalidFile)
         }
+    }
+
+    /**
+     * Restores habit categories under freshly generated ids so an import can never overwrite
+     * categories that already exist in the database.
+     *
+     * @return a mapping from the original (imported) category id to the newly assigned id.
+     */
+    private suspend fun restoreHabitCategories(
+        categories: List<HabitCategorySchema>
+    ): Map<Long, Long> {
+        if (categories.isEmpty()) return emptyMap()
+
+        var nextId = habitRepo.getHabitCategories().maxOfOrNull { it.id } ?: 0L
+        val idMapping = mutableMapOf<Long, Long>()
+
+        categories.forEach { schema ->
+            val newId = ++nextId
+            idMapping[schema.id] = newId
+            habitRepo.upsertHabitCategory(schema.toHabitCategory().copy(id = newId))
+        }
+
+        return idMapping
     }
 }

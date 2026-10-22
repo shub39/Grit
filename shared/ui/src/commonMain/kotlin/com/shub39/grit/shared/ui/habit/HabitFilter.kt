@@ -16,8 +16,6 @@
  */
 package com.shub39.grit.shared.ui.habit
 
-import com.shub39.grit.core.habits.HabitCategory
-
 /**
  * Filter for the habits list. [Today] and [All] are virtual and always pinned to the front of the
  * selector, followed by the user defined [Category] entries.
@@ -29,5 +27,5 @@ sealed interface HabitFilter {
     /** every habit */
     data object All : HabitFilter
 
-    data class Category(val category: HabitCategory) : HabitFilter
+    data class Category(val categoryId: Long) : HabitFilter
 }

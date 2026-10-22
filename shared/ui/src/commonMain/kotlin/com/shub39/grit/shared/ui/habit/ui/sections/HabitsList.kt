@@ -398,7 +398,7 @@ private fun HabitsListContent(
                     days = DayOfWeek.entries.toSet(),
                     index = state.habitsWithAnalytics.size,
                     reminder = false,
-                    categoryId = (state.selectedFilter as? HabitFilter.Category)?.category?.id,
+                    categoryId = (state.selectedFilter as? HabitFilter.Category)?.categoryId,
                 ),
             categories = state.habitCategories,
             onDismissRequest = { onAction(HabitsAction.DismissAddHabitDialog) },
@@ -430,7 +430,7 @@ private fun List<HabitWithAnalytics>.filterBy(habitFilter: HabitFilter): List<Ha
     when (habitFilter) {
         HabitFilter.All -> this
         HabitFilter.Today -> filter { LocalDate.now().dayOfWeek in it.habit.days }
-        is HabitFilter.Category -> filter { it.habit.categoryId == habitFilter.category.id }
+        is HabitFilter.Category -> filter { it.habit.categoryId == habitFilter.categoryId }
     }
 
 @Composable
@@ -469,9 +469,9 @@ private fun HabitCategorySelector(
 
         items(state.habitCategories, key = { it.id }) { category ->
             ToggleButton(
-                checked = state.selectedFilter == HabitFilter.Category(category),
+                checked = state.selectedFilter == HabitFilter.Category(category.id),
                 onCheckedChange = {
-                    onAction(HabitsAction.ChangeFilter(HabitFilter.Category(category)))
+                    onAction(HabitsAction.ChangeFilter(HabitFilter.Category(category.id)))
                 },
                 enabled = enabled,
             ) {
