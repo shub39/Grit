@@ -77,6 +77,7 @@ import com.shub39.grit.shared.ui.components.PageFill
 import com.shub39.grit.shared.ui.components.endItemShape
 import com.shub39.grit.shared.ui.components.leadingItemShape
 import com.shub39.grit.shared.ui.habit.HabitState
+import com.shub39.grit.shared.ui.habit.filterByCategory
 import com.shub39.grit.shared.ui.habit.ui.component.CalendarMonthHeader
 import com.shub39.grit.shared.ui.theme.flexFontEmphasis
 import com.shub39.grit.shared.ui.theme.flexFontRounded
@@ -101,7 +102,7 @@ fun CalendarHeatMap(
         var calendarType by rememberSaveable { mutableStateOf(CalendarType.MONTH) }
         val windowSizeClass = LocalWindowSizeClass.current
         val today = LocalDate.now()
-        val totalHabits = state.habitsWithAnalytics.size
+        val totalHabits = state.habitsWithAnalytics.filterByCategory(state.analyticsCategoryId).size
         var selectedDay: LocalDate? by
             rememberSaveable(stateSaver = LocalDateSaver) { mutableStateOf(null) }
 

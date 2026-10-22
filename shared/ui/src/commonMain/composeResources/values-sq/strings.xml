@@ -17,7 +17,7 @@
     <string name="too_long">Shumë i gjatë</string>
     <string name="save">Ruaj</string>
     <string name="edit_task">Modifiko detyrën</string>
-    <string name="delete_tasks">Je i sigurt që dëshiron t\\'i fshish të gjitha detyrat e përfunduara?</string>
+    <string name="delete_tasks">Je i sigurt që dëshiron t\u0027i fshish të gjitha detyrat e përfunduara?</string>
     <string name="update_title">Modifiko titullin</string>
     <string name="edit_categories">Modifiko kategoritë</string>
     <string name="delete_category">Je i sigurt? Të gjitha detyrat në këtë kategori do të fshihen</string>
@@ -79,7 +79,6 @@
     <string name="translate">Përkthe</string>
     <string name="translate_desc">Përkthe Grit në gjuhën tënde</string>
     <string name="changelog">Regjistri i ndryshimeve</string>
-    <string name="whats_changed">Çfarë ka ndryshuar</string>
     <string name="select_days">Zgjidh ditët</string>
     <string name="system_default">Parazgjedhja e sistemit</string>
     <string name="language">Gjuha</string>

@@ -333,30 +333,6 @@ fun HabitUpsertSheetContent(
                         }
                     }
 
-                    // category picker
-                    Card(
-                        shape = middleItemShape(),
-                        colors =
-                            CardDefaults.cardColors(
-                                containerColor = MaterialTheme.colorScheme.surfaceContainerHigh
-                            ),
-                    ) {
-                        ListSelect(
-                            title = stringResource(Res.string.category),
-                            options = listOf<Long?>(null) + categories.map { it.id },
-                            selected = newHabit.categoryId,
-                            onSelectedChange = { updateHabit(newHabit.copy(categoryId = it)) },
-                            labelProvider = { id ->
-                                Text(
-                                    text =
-                                        categories.find { it.id == id }?.name
-                                            ?: stringResource(Res.string.no_category)
-                                )
-                            },
-                            modifier = Modifier.padding(16.dp),
-                        )
-                    }
-
                     // habit type picker
                     if (!isEditSheet) {
                         Card(
@@ -372,6 +348,32 @@ fun HabitUpsertSheetContent(
                                 selected = currentHabitType,
                                 onSelectedChange = { currentHabitType = it },
                                 labelProvider = { Text(text = stringResource(it.toStringRes())) },
+                                modifier = Modifier.padding(16.dp),
+                            )
+                        }
+                    }
+
+                    // category picker
+                    if (categories.isNotEmpty()) {
+                        Card(
+                            shape = middleItemShape(),
+                            colors =
+                                CardDefaults.cardColors(
+                                    containerColor = MaterialTheme.colorScheme.surfaceContainerHigh
+                                ),
+                        ) {
+                            ListSelect(
+                                title = stringResource(Res.string.category),
+                                options = listOf<Long?>(null) + categories.map { it.id },
+                                selected = newHabit.categoryId,
+                                onSelectedChange = { updateHabit(newHabit.copy(categoryId = it)) },
+                                labelProvider = { id ->
+                                    Text(
+                                        text =
+                                            categories.find { it.id == id }?.name
+                                                ?: stringResource(Res.string.no_category)
+                                    )
+                                },
                                 modifier = Modifier.padding(16.dp),
                             )
                         }

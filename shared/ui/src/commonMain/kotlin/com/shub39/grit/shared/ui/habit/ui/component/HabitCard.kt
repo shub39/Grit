@@ -127,19 +127,15 @@ fun HabitCard(
                 contentColor = cardContent,
             ),
         onClick = {
-            if (canCompleteToday) {
-                onInsertStatus(
-                    habitWithAnalytics.habit,
-                    today,
-                    habitWithAnalytics.statuses.find { it.date == today }?.value ?: 0.0,
-                )
-            }
+            onInsertStatus(
+                habitWithAnalytics.habit,
+                today,
+                habitWithAnalytics.statuses.find { it.date == today }?.value ?: 0.0,
+            )
         },
+        enabled = canCompleteToday,
         shape = shape,
-        modifier =
-            modifier.animateContentSize(
-                animationSpec = MaterialTheme.motionScheme.fastSpatialSpec()
-            ),
+        modifier = modifier.animateContentSize(),
     ) {
         ListItem(
             modifier = Modifier.fillMaxWidth().clip(MaterialTheme.shapes.large),

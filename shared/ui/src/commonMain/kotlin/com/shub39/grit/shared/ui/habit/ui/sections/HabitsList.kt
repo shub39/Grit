@@ -323,9 +323,12 @@ private fun HabitsListContent(
     Column(modifier = modifier) {
         LazyColumn(
             state = lazyListState,
-            contentPadding = PaddingValues(start = 16.dp, end = 16.dp, top = 16.dp, bottom = 60.dp),
+            contentPadding = PaddingValues(top = 16.dp, bottom = 60.dp),
             verticalArrangement = Arrangement.spacedBy(2.dp),
-            modifier = Modifier.fillMaxHeight(),
+            modifier =
+                Modifier.fillMaxHeight()
+                    .padding(horizontal = 16.dp)
+                    .clip(RoundedCornerShape(topStart = 20.dp, topEnd = 20.dp)),
         ) {
             // habits
             itemsIndexed(habits, key = { _, it -> it.habit.id }) { index, habitWithAnalytics ->

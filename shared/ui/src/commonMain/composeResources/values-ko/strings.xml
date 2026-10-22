@@ -79,7 +79,6 @@
     <string name="translate">번역</string>
     <string name="translate_desc">Grit을 당신의 언어로 번역하기</string>
     <string name="changelog">변경 내역</string>
-    <string name="whats_changed">바뀐 점</string>
     <string name="select_days">요일 선택</string>
     <string name="system_default">시스템 기본값</string>
     <string name="language">언어</string>

@@ -77,7 +77,6 @@
     <string name="add_reminder_desc">Получать уведомления‑напоминания в выбранные дни</string>
     <string name="translate">Перевести</string>
     <string name="changelog">Журнал изменений</string>
-    <string name="whats_changed">Что изменилось</string>
     <string name="select_days">Выбрать дни</string>
     <string name="bmc_desc">Поддержите меня, сделав небольшое пожертвование</string>
     <string name="translate_desc">Переведите Grit на ваш язык</string>

@@ -75,7 +75,6 @@
     <string name="reorder_tasks_desc">標記完成時重新排序任務</string>
     <string name="translate">翻譯</string>
     <string name="changelog">版本記錄</string>
-    <string name="whats_changed">本次更新內容</string>
     <string name="select_days">選擇日期</string>
     <string name="select_seed_desc">選擇調色盤的基礎色</string>
     <string name="habit_map">習慣熱力圖</string>

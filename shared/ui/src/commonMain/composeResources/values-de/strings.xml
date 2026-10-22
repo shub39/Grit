@@ -77,7 +77,6 @@
     <string name="reorder_tasks_desc">Aufgaben neu anordnen, wenn sie abgeschlossen sind</string>
     <string name="translate">Übersetzen</string>
     <string name="changelog">Änderungen</string>
-    <string name="whats_changed">Was sich geändert hat</string>
     <string name="select_days">Tage auswählen</string>
     <string name="bmc_desc">Unterstütze mich durch eine kleine Spende</string>
     <string name="translate_desc">Übersetze Grit in deine Sprache</string>

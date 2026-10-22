@@ -53,6 +53,7 @@ import com.shub39.grit.shared.ui.LocalWindowSizeClass
 import com.shub39.grit.shared.ui.WindowSize.Companion.isExpanded
 import com.shub39.grit.shared.ui.habit.HabitState
 import com.shub39.grit.shared.ui.habit.HabitsAction
+import com.shub39.grit.shared.ui.habit.filterByCategory
 import com.shub39.grit.shared.ui.habit.ui.component.stats.HabitHeatMap
 import com.shub39.grit.shared.ui.habit.ui.component.stats.WeekDayBreakdown
 import com.shub39.grit.shared.ui.theme.flexFontEmphasis
@@ -239,7 +240,8 @@ fun OverallAnalytics(
                     heatMapState = heatMapState,
                     heatMapData = state.overallAnalytics.heatMapData,
                     modifier = Modifier.widthIn(max = maxWidth),
-                    totalHabits = state.habitsWithAnalytics.size,
+                    totalHabits =
+                        state.habitsWithAnalytics.filterByCategory(state.analyticsCategoryId).size,
                     onNavigateToCalendarHeatMap = onNavigateToCalendarHeatMap,
                 )
             }
