@@ -98,4 +98,9 @@
     <string name="weekly">주간</string>
     <string name="daily">일간</string>
     <string name="targets">목표</string>
+    <string name="category">분류</string>
+    <string name="no_category">없음</string>
+    <string name="all">모두</string>
+    <string name="today">오늘</string>
+    <string name="delete_habit_category">정말입니까? 이 습관의 모든 작업이 삭제됩니다</string>
 </resources>
