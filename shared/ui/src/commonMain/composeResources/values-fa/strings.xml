@@ -98,4 +98,9 @@
     <string name="measure_able">قابل‌اندازه‌گیری</string>
     <string name="add_status">افزودن وضعیت</string>
     <string name="targets">اهداف</string>
+    <string name="category">دسته‌بندی</string>
+    <string name="no_category">هیچ‌کدام</string>
+    <string name="all">همه</string>
+    <string name="today">امروز</string>
+    <string name="delete_habit_category">مطمئن هستید؟ همه عادت‌های این دسته حذف خواهند شد</string>
 </resources>
