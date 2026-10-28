@@ -83,4 +83,24 @@
     <string name="add_subtasks">新增子任務</string>
     <string name="translate_desc">將 Grit 翻譯為你的語言</string>
     <string name="about">關於</string>
+    <string name="category">類別</string>
+    <string name="no_category">未分類</string>
+    <string name="all">全部</string>
+    <string name="today">今天</string>
+    <string name="delete_habit_category">確定要刪除嗎？此類別中的所有習慣也會一起刪除</string>
+    <string name="bmc_desc">小額贊助，幫開發者補充咖啡因</string>
+    <string name="consistency">完成率</string>
+    <string name="calendar">日曆</string>
+    <string name="monthly">每月</string>
+    <string name="yearly">每年</string>
+    <string name="quarterly">每季</string>
+    <string name="weekly">每週</string>
+    <string name="daily">每日</string>
+    <string name="habit_type">習慣類型</string>
+    <string name="target_value">目標數值</string>
+    <string name="target_unit">目標單位</string>
+    <string name="yes_or_no">完成／未完成</string>
+    <string name="measure_able">可量化</string>
+    <string name="add_status">新增紀錄</string>
+    <string name="targets">目標</string>
 </resources>
