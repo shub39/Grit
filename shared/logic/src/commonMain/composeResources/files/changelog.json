@@ -1,5 +1,16 @@
 [
   {
+    "version": "6.4.0",
+    "changes": [
+      "Widgets now support Subtasks, Habit Categories and Measurable Habits",
+      "Task and Habit widgets use the same connected lists and spacing as the app",
+      "Completing a task from a widget completes its subtasks and clears their reminders",
+      "Added progress for Measurable Habits in the Habits widget",
+      "Fixed widgets logging Measurable Habits with the wrong value",
+      "Removed outdated widget preview images"
+    ]
+  },
+  {
     "version": "6.3.0",
     "changes": [
       "Added Habit Categories, create categories and assign habits to them",
@@ -70,14 +81,6 @@
     "changes": [
       "Updated Translations",
       "Increased habit title and description length limits"
-    ]
-  },
-  {
-    "version": "6.0.3",
-    "changes": [
-      "Updated Translations",
-      "Calendar UI Improvements",
-      "Improved Floating Action Button Visibility #299 @therealVitia"
     ]
   }
 ]

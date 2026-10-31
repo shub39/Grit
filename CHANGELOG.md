@@ -1,5 +1,13 @@
 # Changelog
 
+## 6.4.0
+- Widgets now support Subtasks, Habit Categories and Measurable Habits
+- Task and Habit widgets use the same connected lists and spacing as the app
+- Completing a task from a widget completes its subtasks and clears their reminders
+- Added progress for Measurable Habits in the Habits widget
+- Fixed widgets logging Measurable Habits with the wrong value
+- Removed outdated widget preview images
+
 ## 6.3.0
 - Added Habit Categories, create categories and assign habits to them
 - Habits list now has "Today" and "All" filters based on the days a habit is scheduled

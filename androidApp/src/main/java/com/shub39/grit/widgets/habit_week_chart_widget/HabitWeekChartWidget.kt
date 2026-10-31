@@ -24,7 +24,6 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.key
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 import androidx.datastore.preferences.core.Preferences
 import androidx.datastore.preferences.core.longPreferencesKey
 import androidx.glance.ColorFilter
@@ -58,8 +57,6 @@ import androidx.glance.layout.padding
 import androidx.glance.layout.width
 import androidx.glance.preview.ExperimentalGlancePreviewApi
 import androidx.glance.preview.Preview
-import androidx.glance.text.Text
-import androidx.glance.text.TextStyle
 import com.shub39.grit.R
 import com.shub39.grit.app.MainActivity
 import com.shub39.grit.core.habits.Habit
@@ -70,7 +67,6 @@ import com.shub39.grit.logic.habits.repository.calculateMeasurableTargets
 import com.shub39.grit.widgets.WidgetSize
 import com.shub39.grit.widgets.common.NothingToShow
 import com.shub39.grit.widgets.common.widgetSurface
-import kotlin.math.roundToInt
 import kotlin.random.Random
 import kotlinx.coroutines.launch
 import kotlinx.datetime.LocalDateTime
@@ -237,16 +233,24 @@ private fun Content(
                         )
                     val maxData = data.maxOrNull()?.coerceAtLeast(1.0) ?: 1.0
 
-                    data.forEach { double ->
+                    data.forEachIndexed { index, double ->
                         Row(
                             verticalAlignment = Alignment.Bottom,
-                            modifier = GlanceModifier.fillMaxHeight(),
+                            modifier = GlanceModifier.fillMaxHeight().defaultWeight(),
                         ) {
-                            Box(modifier = GlanceModifier.padding(end = 4.dp)) {
+                            Box(
+                                modifier =
+                                    (if (index != data.lastIndex) {
+                                            GlanceModifier.padding(end = 4.dp)
+                                        } else {
+                                            GlanceModifier
+                                        })
+                                        .fillMaxWidth()
+                            ) {
                                 Box(
                                     modifier =
-                                        GlanceModifier.width(20.dp)
-                                            .height((90 * (double.roundToInt() / maxData)).dp)
+                                        GlanceModifier.fillMaxWidth()
+                                            .height((90 * (double / maxData)).dp)
                                             .then(
                                                 if (roundedCornerSupported) {
                                                     GlanceModifier.background(
@@ -262,18 +266,8 @@ private fun Content(
                                                             ),
                                                     )
                                                 }
-                                            ),
-                                    contentAlignment = Alignment.TopCenter,
-                                ) {
-                                    Text(
-                                        text = "${double.roundToInt()}",
-                                        style =
-                                            TextStyle(
-                                                fontSize = 10.sp,
-                                                color = GlanceTheme.colors.onPrimary,
-                                            ),
-                                    )
-                                }
+                                            )
+                                ) {}
                             }
                         }
                     }
