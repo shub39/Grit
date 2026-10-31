@@ -24,7 +24,6 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.key
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 import androidx.datastore.preferences.core.Preferences
 import androidx.datastore.preferences.core.longPreferencesKey
 import androidx.glance.ColorFilter
@@ -58,8 +57,6 @@ import androidx.glance.layout.padding
 import androidx.glance.layout.width
 import androidx.glance.preview.ExperimentalGlancePreviewApi
 import androidx.glance.preview.Preview
-import androidx.glance.text.Text
-import androidx.glance.text.TextStyle
 import com.shub39.grit.R
 import com.shub39.grit.app.MainActivity
 import com.shub39.grit.core.habits.Habit
@@ -68,7 +65,8 @@ import com.shub39.grit.core.habits.HabitWithAnalytics
 import com.shub39.grit.core.now
 import com.shub39.grit.logic.habits.repository.calculateMeasurableTargets
 import com.shub39.grit.widgets.WidgetSize
-import kotlin.math.roundToInt
+import com.shub39.grit.widgets.common.NothingToShow
+import com.shub39.grit.widgets.common.widgetSurface
 import kotlin.random.Random
 import kotlinx.coroutines.launch
 import kotlinx.datetime.LocalDateTime
@@ -91,7 +89,8 @@ class HabitWeekChartWidget : GlanceAppWidget(), KoinComponent {
             val size = LocalSize.current
 
             val habitsWithAnalytics by repo.getHabitsWithAnalytics().collectAsState(emptyList())
-            val sortedData = habitsWithAnalytics.sortedBy { it.habit.id }
+            val sortedData =
+                habitsWithAnalytics.sortedWith(compareBy({ it.habit.index }, { it.habit.id }))
 
             val state = currentState<Preferences>()
             val habitId = state[habitIdKey] ?: sortedData.firstOrNull()?.habit?.id ?: 0
@@ -185,20 +184,7 @@ private fun Content(
 
     Column(
         modifier =
-            modifier
-                .fillMaxSize()
-                .then(
-                    if (roundedCornerSupported) {
-                        GlanceModifier.background(GlanceTheme.colors.widgetBackground)
-                            .cornerRadius(24.dp)
-                    } else {
-                        GlanceModifier.background(
-                            imageProvider = ImageProvider(R.drawable.rounded_4dp),
-                            colorFilter = ColorFilter.tint(GlanceTheme.colors.widgetBackground),
-                        )
-                    }
-                )
-                .clickable(actionStartActivity<MainActivity>())
+            modifier.fillMaxSize().widgetSurface().clickable(actionStartActivity<MainActivity>())
     ) {
         if (habitWithAnalytics != null) {
             TitleBar(
@@ -247,16 +233,24 @@ private fun Content(
                         )
                     val maxData = data.maxOrNull()?.coerceAtLeast(1.0) ?: 1.0
 
-                    data.forEach { double ->
+                    data.forEachIndexed { index, double ->
                         Row(
                             verticalAlignment = Alignment.Bottom,
-                            modifier = GlanceModifier.fillMaxHeight(),
+                            modifier = GlanceModifier.fillMaxHeight().defaultWeight(),
                         ) {
-                            Box(modifier = GlanceModifier.padding(end = 4.dp)) {
+                            Box(
+                                modifier =
+                                    (if (index != data.lastIndex) {
+                                            GlanceModifier.padding(end = 4.dp)
+                                        } else {
+                                            GlanceModifier
+                                        })
+                                        .fillMaxWidth()
+                            ) {
                                 Box(
                                     modifier =
-                                        GlanceModifier.width(20.dp)
-                                            .height((90 * (double.roundToInt() / maxData)).dp)
+                                        GlanceModifier.fillMaxWidth()
+                                            .height((90 * (double / maxData)).dp)
                                             .then(
                                                 if (roundedCornerSupported) {
                                                     GlanceModifier.background(
@@ -272,30 +266,15 @@ private fun Content(
                                                             ),
                                                     )
                                                 }
-                                            ),
-                                    contentAlignment = Alignment.TopCenter,
-                                ) {
-                                    Text(
-                                        text = "${double.roundToInt()}",
-                                        style =
-                                            TextStyle(
-                                                fontSize = 10.sp,
-                                                color = GlanceTheme.colors.onPrimary,
-                                            ),
-                                    )
-                                }
+                                            )
+                                ) {}
                             }
                         }
                     }
                 }
             }
         } else {
-            Box(modifier = GlanceModifier.fillMaxSize(), contentAlignment = Alignment.Center) {
-                Text(
-                    text = "Nothing to show",
-                    style = TextStyle(color = GlanceTheme.colors.onSurface),
-                )
-            }
+            NothingToShow()
         }
     }
 }

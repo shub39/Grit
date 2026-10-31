@@ -18,6 +18,11 @@ package com.shub39.grit.logic.di
 
 import androidx.datastore.core.DataStore
 import androidx.datastore.preferences.core.Preferences
+import com.shub39.grit.core.habits.HabitRepo
+import com.shub39.grit.core.habits.HabitStatusHandler
+import com.shub39.grit.core.interfaces.AlarmScheduler
+import com.shub39.grit.core.tasks.TaskRepo
+import com.shub39.grit.core.tasks.TasksStatusHandler
 import com.shub39.grit.logic.core.datastore.DatastoreFactory
 import com.shub39.grit.logic.habits.database.HabitCategoryDao
 import com.shub39.grit.logic.habits.database.HabitDatabase
@@ -55,4 +60,11 @@ class LogicModules {
     @Single fun getHabitStatusDao(db: HabitDatabase): HabitStatusDao = db.habitStatusDao()
 
     @Single fun getHabitCategoryDao(db: HabitDatabase): HabitCategoryDao = db.habitCategoryDao()
+
+    @Single
+    fun getTasksStatusHandler(repo: TaskRepo, scheduler: AlarmScheduler): TasksStatusHandler =
+        TasksStatusHandler(repo, scheduler)
+
+    @Single
+    fun getHabitStatusHandler(repo: HabitRepo): HabitStatusHandler = HabitStatusHandler(repo)
 }

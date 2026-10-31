@@ -25,6 +25,7 @@ import com.shub39.grit.core.interfaces.SettingsDatastore
 import com.shub39.grit.core.tasks.Category
 import com.shub39.grit.core.tasks.CategoryColors
 import com.shub39.grit.core.tasks.TaskRepo
+import com.shub39.grit.core.tasks.TasksStatusHandler
 import com.shub39.grit.shared.ui.task.TaskAction
 import com.shub39.grit.shared.ui.task.TaskState
 import kotlin.time.Duration.Companion.milliseconds
@@ -48,6 +49,7 @@ class TasksViewModel(
     @Provided private val scheduler: AlarmScheduler,
     @Provided private val datastore: SettingsDatastore,
     @Provided private val analytics: AnalyticsWrapper,
+    @Provided private val statusHandler: TasksStatusHandler,
 ) : ViewModel() {
 
     companion object {
@@ -75,14 +77,7 @@ class TasksViewModel(
             when (action) {
                 is UpsertTask -> {
                     if (action.task.status) {
-                        repo.upsertTask(action.task.copy(reminder = null))
-                        repo
-                            .getSubTasks()
-                            .filter { it.taskId == action.task.id }
-                            .forEach {
-                                scheduler.cancel(it)
-                                repo.upsertSubTask(it.copy(reminder = null, status = true))
-                            }
+                        statusHandler.completeTask(action.task)
                     } else {
                         if (action.task.id == 0L) {
                             analytics.trackEvent(
@@ -194,8 +189,7 @@ class TasksViewModel(
                 is TaskAction.UpsertSubTask -> {
                     if (action.subTask.status) {
                         analytics.trackEvent(AnalyticsEvent.TASK_SUBTASK_COMPLETED, emptyMap())
-                        repo.upsertSubTask(action.subTask.copy(reminder = null))
-                        scheduler.cancel(action.subTask)
+                        statusHandler.completeSubTask(action.subTask)
                     } else {
                         if (action.subTask.id == 0L) {
                             analytics.trackEvent(AnalyticsEvent.TASK_SUBTASK_CREATED, emptyMap())

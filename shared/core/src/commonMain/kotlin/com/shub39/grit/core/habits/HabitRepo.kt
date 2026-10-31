@@ -46,7 +46,8 @@ interface HabitRepo {
     /** Deletes the category and all habits belonging to it. */
     suspend fun deleteHabitCategory(category: HabitCategory)
 
-    fun getHabitsWithStatus(): Flow<List<Pair<Habit, Boolean>>>
+    /** Every habit with its status for today, if it was logged. */
+    fun getHabitsWithTodayStatus(): Flow<List<Pair<Habit, HabitStatus?>>>
 
     suspend fun getStatusForHabit(id: Long): List<HabitStatus>
 
