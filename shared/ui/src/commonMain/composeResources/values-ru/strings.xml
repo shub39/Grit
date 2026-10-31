@@ -98,4 +98,9 @@
     <string name="measure_able">Измеримая</string>
     <string name="target_value">Целевое значение</string>
     <string name="target_unit">Единица измерения</string>
+    <string name="category">Категория</string>
+    <string name="no_category">Нет</string>
+    <string name="all">Все</string>
+    <string name="today">Сегодня</string>
+    <string name="delete_habit_category">Вы уверены? Все привычки в этой категории будут удалены</string>
 </resources>
