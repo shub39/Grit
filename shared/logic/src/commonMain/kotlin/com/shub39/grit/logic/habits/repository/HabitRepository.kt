@@ -23,6 +23,7 @@ import com.shub39.grit.core.habits.HabitRepo
 import com.shub39.grit.core.habits.HabitStatus
 import com.shub39.grit.core.habits.HabitWithAnalytics
 import com.shub39.grit.core.habits.OverallAnalytics
+import com.shub39.grit.core.habits.isCompletedToday
 import com.shub39.grit.core.interfaces.AppNotificationManager
 import com.shub39.grit.core.interfaces.SettingsDatastore
 import com.shub39.grit.core.now
@@ -166,11 +167,7 @@ class HabitRepository(
                             statusFlow.firstOrNull {
                                 it.habitId == habit.id && it.date == LocalDate.now()
                             }
-                        if (habit.isMeasurable) {
-                            statusForToday != null && statusForToday.value > 0.0
-                        } else {
-                            statusForToday != null
-                        }
+                        habit.isCompletedToday(statusForToday)
                     }
                     .map { it.id }
             }
@@ -231,21 +228,19 @@ class HabitRepository(
         categoryDao.deleteCategory(category.toHabitCategoryEntity())
     }
 
-    override fun getHabitsWithStatus(): Flow<List<Pair<Habit, Boolean>>> {
-        return habits.combine(habitStatuses) { habitsFlow, statusFlow ->
-            habitsFlow.map { habit ->
-                val statusForToday =
-                    statusFlow.firstOrNull { it.habitId == habit.id && it.date == LocalDate.now() }
-                val isCompleted =
-                    if (habit.isMeasurable) {
-                        statusForToday != null && statusForToday.value >= habit.targetValue
-                    } else {
-                        statusForToday != null
-                    }
+    override fun getHabitsWithTodayStatus(): Flow<List<Pair<Habit, HabitStatus?>>> {
+        return habits
+            .combine(habitStatuses) { habitsFlow, statusFlow ->
+                habitsFlow.map { habit ->
+                    val statusForToday =
+                        statusFlow.firstOrNull {
+                            it.habitId == habit.id && it.date == LocalDate.now()
+                        }
 
-                habit to isCompleted
+                    habit to statusForToday
+                }
             }
-        }
+            .flowOn(Dispatchers.Default)
     }
 
     override suspend fun getStatusForHabit(id: Long): List<HabitStatus> {
@@ -253,6 +248,9 @@ class HabitRepository(
     }
 
     override suspend fun insertHabitStatus(habitStatus: HabitStatus) {
+        // A habit has at most one status per day, replace any previous value instead of duplicating
+        // it
+        habitStatusDao.deleteStatus(habitStatus.habitId, habitStatus.date)
         habitStatusDao.insertHabitStatus(habitStatus.toHabitStatusEntity())
 
         if (habitStatus.date == LocalDate.now()) {

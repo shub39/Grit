@@ -17,13 +17,13 @@
 package com.shub39.grit.widgets.all_tasks_widget
 
 import android.content.Context
-import android.os.Build
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.key
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import androidx.glance.ColorFilter
 import androidx.glance.GlanceComposable
 import androidx.glance.GlanceId
@@ -37,34 +37,46 @@ import androidx.glance.action.clickable
 import androidx.glance.appwidget.GlanceAppWidget
 import androidx.glance.appwidget.SizeMode
 import androidx.glance.appwidget.components.TitleBar
-import androidx.glance.appwidget.cornerRadius
 import androidx.glance.appwidget.lazy.LazyColumn
 import androidx.glance.appwidget.lazy.items
 import androidx.glance.appwidget.provideContent
-import androidx.glance.background
 import androidx.glance.layout.Alignment
 import androidx.glance.layout.Box
 import androidx.glance.layout.Column
+import androidx.glance.layout.Row
 import androidx.glance.layout.Spacer
 import androidx.glance.layout.fillMaxSize
 import androidx.glance.layout.fillMaxWidth
 import androidx.glance.layout.height
 import androidx.glance.layout.padding
+import androidx.glance.layout.size
+import androidx.glance.layout.width
 import androidx.glance.preview.ExperimentalGlancePreviewApi
 import androidx.glance.preview.Preview
-import androidx.glance.text.FontWeight
 import androidx.glance.text.Text
 import androidx.glance.text.TextDecoration
 import androidx.glance.text.TextStyle
 import com.shub39.grit.R
 import com.shub39.grit.app.MainActivity
+import com.shub39.grit.core.interfaces.SettingsDatastore
+import com.shub39.grit.core.now
 import com.shub39.grit.core.tasks.Category
 import com.shub39.grit.core.tasks.CategoryColors
+import com.shub39.grit.core.tasks.SubTask
 import com.shub39.grit.core.tasks.Task
 import com.shub39.grit.core.tasks.TaskRepo
 import com.shub39.grit.core.tasks.TaskWithSubTasks
+import com.shub39.grit.core.tasks.TasksStatusHandler
+import com.shub39.grit.core.toFormattedString
 import com.shub39.grit.widgets.WidgetSize
+import com.shub39.grit.widgets.common.ListSlot
+import com.shub39.grit.widgets.common.NothingToShow
+import com.shub39.grit.widgets.common.SectionHeader
+import com.shub39.grit.widgets.common.connectedBackground
+import com.shub39.grit.widgets.common.slotOf
+import com.shub39.grit.widgets.common.widgetSurface
 import kotlinx.coroutines.launch
+import kotlinx.datetime.LocalDateTime
 import org.koin.core.component.KoinComponent
 import org.koin.core.component.get
 
@@ -73,18 +85,31 @@ class AllTasksWidget : GlanceAppWidget(), KoinComponent {
 
     override suspend fun provideGlance(context: Context, id: GlanceId) {
         val repo = get<TaskRepo>()
+        val statusHandler = get<TasksStatusHandler>()
+        val datastore = get<SettingsDatastore>()
 
         provideContent {
             val scope = rememberCoroutineScope()
             val size = LocalSize.current
-            val tasks by repo.getTasksFlow().collectAsState(emptyMap())
+            val tasks by repo.getTasksFlow().collectAsState(initial = emptyMap())
+            val is24Hr by datastore.getIs24Hr().collectAsState(initial = false)
 
             key(size) {
                 GlanceTheme {
                     Content(
                         tasks = tasks.filter { it.value.isNotEmpty() },
-                        onUpdateTaskStatus = {
-                            scope.launch { repo.upsertTask(it.copy(status = !it.status)) }
+                        is24Hr = is24Hr,
+                        onToggleTask = { task ->
+                            scope.launch {
+                                statusHandler.toggleTask(task)
+                                this@AllTasksWidget.update(context, id)
+                            }
+                        },
+                        onToggleSubTask = { subTask ->
+                            scope.launch {
+                                statusHandler.toggleSubTask(subTask)
+                                this@AllTasksWidget.update(context, id)
+                            }
                         },
                         onUpdateWidget = {
                             scope.launch { this@AllTasksWidget.update(context, id) }
@@ -96,14 +121,60 @@ class AllTasksWidget : GlanceAppWidget(), KoinComponent {
     }
 
     override suspend fun providePreview(context: Context, widgetCategory: Int) {
+        val category =
+            Category(id = 1, name = "Chores", index = 0, color = CategoryColors.GRAY.color)
+
         val previewItems =
             mapOf(
-                Category(name = "Chores", index = 1, color = CategoryColors.GRAY.color) to
-                    emptyList<TaskWithSubTasks>() // TODO: Add items later
+                category to
+                    listOf(
+                        TaskWithSubTasks(
+                            task =
+                                Task(
+                                    id = 1,
+                                    categoryId = category.id,
+                                    title = "Clean the kitchen",
+                                    index = 0,
+                                    reminder = LocalDateTime.now(),
+                                ),
+                            subTasks =
+                                listOf(
+                                    SubTask(id = 1, taskId = 1, title = "Dishes", index = 0),
+                                    SubTask(id = 2, taskId = 1, title = "Trash", index = 1),
+                                ),
+                        ),
+                        TaskWithSubTasks(
+                            task =
+                                Task(
+                                    id = 2,
+                                    categoryId = category.id,
+                                    title = "Water the plants",
+                                    index = 1,
+                                ),
+                            subTasks = emptyList(),
+                        ),
+                        TaskWithSubTasks(
+                            task =
+                                Task(
+                                    id = 3,
+                                    categoryId = category.id,
+                                    title = "Buy groceries",
+                                    index = 2,
+                                    status = true,
+                                ),
+                            subTasks = emptyList(),
+                        ),
+                    )
             )
 
         provideContent {
-            Content(tasks = previewItems, onUpdateTaskStatus = {}, onUpdateWidget = {})
+            Content(
+                tasks = previewItems,
+                is24Hr = false,
+                onToggleTask = {},
+                onToggleSubTask = {},
+                onUpdateWidget = {},
+            )
         }
     }
 }
@@ -112,35 +183,24 @@ class AllTasksWidget : GlanceAppWidget(), KoinComponent {
 @GlanceComposable
 private fun Content(
     tasks: Map<Category, List<TaskWithSubTasks>>,
-    onUpdateTaskStatus: (Task) -> Unit,
+    is24Hr: Boolean,
+    onToggleTask: (Task) -> Unit,
+    onToggleSubTask: (SubTask) -> Unit,
     onUpdateWidget: () -> Unit,
     modifier: GlanceModifier = GlanceModifier,
 ) {
     val size = LocalSize.current
-    val roundedCornerSupported = Build.VERSION.SDK_INT >= Build.VERSION_CODES.S
+    val showSubTaskCount = size.width >= WidgetSize.Width4
 
     Column(
         modifier =
-            modifier
-                .fillMaxSize()
-                .then(
-                    if (roundedCornerSupported) {
-                        GlanceModifier.background(GlanceTheme.colors.widgetBackground)
-                            .cornerRadius(24.dp)
-                    } else {
-                        GlanceModifier.background(
-                            imageProvider = ImageProvider(R.drawable.rounded_4dp),
-                            colorFilter = ColorFilter.tint(GlanceTheme.colors.widgetBackground),
-                        )
-                    }
-                )
-                .clickable(actionStartActivity<MainActivity>())
+            modifier.fillMaxSize().widgetSurface().clickable(actionStartActivity<MainActivity>())
     ) {
         TitleBar(
             startIcon = ImageProvider(R.drawable.check_list),
             title = "Tasks",
             actions = {
-                if (size.width >= WidgetSize.Width4) {
+                if (showSubTaskCount) {
                     Box(GlanceModifier.padding(horizontal = 16.dp)) {
                         Image(
                             provider = ImageProvider(R.drawable.refresh),
@@ -153,81 +213,211 @@ private fun Content(
             },
         )
 
-        LazyColumn(
-            modifier = GlanceModifier.padding(horizontal = 8.dp).fillMaxSize(),
-            horizontalAlignment = Alignment.Start,
-        ) {
-            items(tasks.entries.toList(), itemId = { it.key.id }) { taskGroup ->
-                Column {
-                    Text(
-                        text = taskGroup.key.name,
-                        style =
-                            TextStyle(
-                                fontWeight = FontWeight.Bold,
-                                color = GlanceTheme.colors.onSurfaceVariant,
-                            ),
-                    )
-                    Spacer(GlanceModifier.height(8.dp))
-                    taskGroup.value.forEach { taskWithSubTasks ->
-                        val status = taskWithSubTasks.task.status
+        if (tasks.isEmpty()) {
+            NothingToShow()
+        } else {
+            LazyColumn(
+                modifier = GlanceModifier.fillMaxSize().padding(horizontal = 8.dp),
+                horizontalAlignment = Alignment.Start,
+            ) {
+                tasks.entries.forEach { (category, taskWithSubTasks) ->
+                    val open = taskWithSubTasks.filter { !it.task.status }
+                    val completed = taskWithSubTasks.filter { it.task.status }
 
-                        Column {
-                            Column(
-                                modifier =
-                                    GlanceModifier.fillMaxWidth()
-                                        .then(
-                                            if (roundedCornerSupported) {
-                                                GlanceModifier.cornerRadius(16.dp)
-                                                    .background(
-                                                        if (!status)
-                                                            GlanceTheme.colors.secondaryContainer
-                                                        else GlanceTheme.colors.tertiaryContainer
-                                                    )
-                                            } else {
-                                                GlanceModifier.background(
-                                                    imageProvider =
-                                                        ImageProvider(R.drawable.rounded_list_top),
-                                                    colorFilter =
-                                                        ColorFilter.tint(
-                                                            if (!status)
-                                                                GlanceTheme.colors
-                                                                    .secondaryContainer
-                                                            else
-                                                                GlanceTheme.colors.tertiaryContainer
-                                                        ),
-                                                )
-                                            }
-                                        )
-                                        .padding(horizontal = 10.dp, vertical = 4.dp)
-                                        .clickable {
-                                            onUpdateTaskStatus(taskWithSubTasks.task)
-                                            onUpdateWidget()
-                                        }
-                            ) {
-                                Text(
-                                    text = taskWithSubTasks.task.title,
-                                    modifier = GlanceModifier.fillMaxWidth().padding(8.dp),
-                                    style =
-                                        TextStyle(
-                                            color =
-                                                if (!status) {
-                                                    GlanceTheme.colors.onSecondaryContainer
-                                                } else GlanceTheme.colors.onTertiaryContainer,
-                                            textDecoration =
-                                                if (!status) {
-                                                    TextDecoration.None
-                                                } else TextDecoration.LineThrough,
-                                        ),
-                                    maxLines = 2,
-                                )
-                            }
-                            Spacer(GlanceModifier.height(4.dp))
+                    item {
+                        SectionHeader(
+                            text = category.name,
+                            modifier = GlanceModifier.padding(horizontal = 8.dp, vertical = 4.dp),
+                        )
+                    }
+
+                    items(
+                        open.mapIndexed { index, item -> index to item },
+                        itemId = { it.second.task.id },
+                    ) { (index, task) ->
+                        // 2dp between items, matching the task list in the app
+                        Column(modifier = GlanceModifier.padding(bottom = 2.dp)) {
+                            TaskItem(
+                                taskWithSubTasks = task,
+                                slot = slotOf(index, open.size),
+                                is24Hr = is24Hr,
+                                showSubTaskCount = showSubTaskCount,
+                                onToggleTask = onToggleTask,
+                                onToggleSubTask = onToggleSubTask,
+                            )
                         }
                     }
+
+                    if (completed.isNotEmpty()) {
+                        items(
+                            completed.mapIndexed { index, item -> index to item },
+                            itemId = { it.second.task.id },
+                        ) { (index, task) ->
+                            Column(modifier = GlanceModifier.padding(bottom = 2.dp)) {
+                                TaskItem(
+                                    taskWithSubTasks = task,
+                                    slot = slotOf(index, completed.size),
+                                    is24Hr = is24Hr,
+                                    showSubTaskCount = showSubTaskCount,
+                                    onToggleTask = onToggleTask,
+                                    onToggleSubTask = onToggleSubTask,
+                                )
+                            }
+                        }
+                    }
+
+                    item { Spacer(modifier = GlanceModifier.height(12.dp)) }
+                }
+
+                item { Spacer(modifier = GlanceModifier.height(4.dp)) }
+            }
+        }
+    }
+}
+
+@Composable
+@GlanceComposable
+private fun TaskItem(
+    taskWithSubTasks: TaskWithSubTasks,
+    slot: ListSlot,
+    is24Hr: Boolean,
+    showSubTaskCount: Boolean,
+    onToggleTask: (Task) -> Unit,
+    onToggleSubTask: (SubTask) -> Unit,
+) {
+    val status = taskWithSubTasks.task.status
+    val containerColor =
+        if (status) GlanceTheme.colors.tertiaryContainer else GlanceTheme.colors.secondaryContainer
+    val contentColor =
+        if (status) GlanceTheme.colors.onTertiaryContainer
+        else GlanceTheme.colors.onSecondaryContainer
+
+    Column {
+        Row(
+            modifier =
+                GlanceModifier.fillMaxWidth()
+                    .connectedBackground(slot, containerColor)
+                    .padding(horizontal = 10.dp, vertical = 8.dp)
+                    .clickable { onToggleTask(taskWithSubTasks.task) },
+            verticalAlignment = Alignment.CenterVertically,
+        ) {
+            Column(modifier = GlanceModifier.defaultWeight()) {
+                Text(
+                    text = taskWithSubTasks.task.title,
+                    maxLines = 2,
+                    style =
+                        TextStyle(
+                            color = contentColor,
+                            textDecoration =
+                                if (status) TextDecoration.LineThrough else TextDecoration.None,
+                        ),
+                )
+
+                val reminder = taskWithSubTasks.task.reminder
+                if (reminder != null) {
+                    Text(
+                        text = reminder.time.toFormattedString(is24Hr),
+                        maxLines = 1,
+                        style = TextStyle(color = contentColor, fontSize = 10.sp),
+                    )
                 }
             }
 
-            item { Spacer(modifier = GlanceModifier.height(4.dp)) }
+            if (showSubTaskCount && taskWithSubTasks.subTasks.isNotEmpty()) {
+                Text(
+                    text =
+                        "${taskWithSubTasks.subTasks.count { it.status }}/" +
+                            taskWithSubTasks.subTasks.size,
+                    maxLines = 1,
+                    style = TextStyle(color = contentColor, fontSize = 10.sp),
+                    modifier = GlanceModifier.padding(start = 8.dp),
+                )
+            }
+        }
+
+        val subTasks = taskWithSubTasks.subTasks
+        if (subTasks.isNotEmpty()) {
+            Column(modifier = GlanceModifier.padding(start = 16.dp, top = 2.dp)) {
+                subTasks.forEachIndexed { index, subTask ->
+                    // 2dp between subtasks, matching the subtask list in the app
+                    Column(
+                        modifier =
+                            if (index == subTasks.lastIndex) GlanceModifier
+                            else GlanceModifier.padding(bottom = 2.dp)
+                    ) {
+                        SubTaskItem(
+                            subTask = subTask,
+                            slot = slotOf(index, subTasks.size),
+                            isParentDone = status,
+                            is24Hr = is24Hr,
+                            onToggleSubTask = onToggleSubTask,
+                        )
+                    }
+                }
+            }
+        }
+    }
+}
+
+@Composable
+@GlanceComposable
+private fun SubTaskItem(
+    subTask: SubTask,
+    slot: ListSlot,
+    isParentDone: Boolean,
+    is24Hr: Boolean,
+    onToggleSubTask: (SubTask) -> Unit,
+) {
+    val containerColor =
+        if (subTask.status) GlanceTheme.colors.tertiaryContainer
+        else GlanceTheme.colors.secondaryContainer
+    val contentColor =
+        if (subTask.status) GlanceTheme.colors.onTertiaryContainer
+        else GlanceTheme.colors.onSecondaryContainer
+
+    Row(
+        modifier =
+            GlanceModifier.fillMaxWidth()
+                .connectedBackground(slot, containerColor)
+                .padding(horizontal = 8.dp, vertical = 6.dp)
+                .then(
+                    if (isParentDone) GlanceModifier
+                    else GlanceModifier.clickable { onToggleSubTask(subTask) }
+                ),
+        verticalAlignment = Alignment.CenterVertically,
+    ) {
+        Image(
+            provider =
+                ImageProvider(
+                    if (subTask.status) R.drawable.check_circle else R.drawable.circle_border
+                ),
+            contentDescription = null,
+            colorFilter = ColorFilter.tint(contentColor),
+            modifier = GlanceModifier.size(14.dp),
+        )
+
+        Spacer(modifier = GlanceModifier.width(6.dp))
+
+        Column {
+            Text(
+                text = subTask.title,
+                maxLines = 1,
+                style =
+                    TextStyle(
+                        color = contentColor,
+                        textDecoration =
+                            if (subTask.status) TextDecoration.LineThrough else TextDecoration.None,
+                    ),
+            )
+
+            val reminder = subTask.reminder
+            if (reminder != null) {
+                Text(
+                    text = reminder.time.toFormattedString(is24Hr),
+                    maxLines = 1,
+                    style = TextStyle(color = contentColor, fontSize = 10.sp),
+                )
+            }
         }
     }
 }
@@ -237,17 +427,48 @@ private fun Content(
 @Preview(heightDp = 200, widthDp = 300)
 @Composable
 private fun GlancePreview() {
+    val category = Category(id = 1, name = "Chores", index = 0, color = CategoryColors.GRAY.color)
+
     Content(
         tasks =
-            (0..3).associate {
-                Category(
-                    id = it.toLong(),
-                    name = "Category $it",
-                    index = it,
-                    color = CategoryColors.GRAY.color,
-                ) to emptyList() // TODO: Add proper dummy items later
-            },
-        onUpdateTaskStatus = {},
+            mapOf(
+                category to
+                    listOf(
+                        TaskWithSubTasks(
+                            task =
+                                Task(id = 1, categoryId = category.id, title = "Clean the kitchen"),
+                            subTasks =
+                                listOf(
+                                    SubTask(id = 1, taskId = 1, title = "Dishes"),
+                                    SubTask(id = 2, taskId = 1, title = "Trash", status = true),
+                                ),
+                        ),
+                        TaskWithSubTasks(
+                            task =
+                                Task(
+                                    id = 2,
+                                    categoryId = category.id,
+                                    title = "Water the plants",
+                                    index = 1,
+                                ),
+                            subTasks = emptyList(),
+                        ),
+                        TaskWithSubTasks(
+                            task =
+                                Task(
+                                    id = 3,
+                                    categoryId = category.id,
+                                    title = "Buy groceries",
+                                    index = 2,
+                                    status = true,
+                                ),
+                            subTasks = emptyList(),
+                        ),
+                    )
+            ),
+        is24Hr = false,
+        onToggleTask = {},
+        onToggleSubTask = {},
         onUpdateWidget = {},
     )
 }

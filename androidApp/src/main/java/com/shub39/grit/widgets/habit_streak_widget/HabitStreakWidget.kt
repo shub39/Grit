@@ -17,7 +17,6 @@
 package com.shub39.grit.widgets.habit_streak_widget
 
 import android.content.Context
-import android.os.Build
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
@@ -40,11 +39,9 @@ import androidx.glance.action.clickable
 import androidx.glance.appwidget.GlanceAppWidget
 import androidx.glance.appwidget.SizeMode
 import androidx.glance.appwidget.components.TitleBar
-import androidx.glance.appwidget.cornerRadius
 import androidx.glance.appwidget.lazy.LazyColumn
 import androidx.glance.appwidget.provideContent
 import androidx.glance.appwidget.state.updateAppWidgetState
-import androidx.glance.background
 import androidx.glance.currentState
 import androidx.glance.layout.Alignment
 import androidx.glance.layout.Box
@@ -70,6 +67,10 @@ import com.shub39.grit.core.habits.HabitWithAnalytics
 import com.shub39.grit.core.now
 import com.shub39.grit.logic.habits.repository.calculateMeasurableTargets
 import com.shub39.grit.widgets.WidgetSize
+import com.shub39.grit.widgets.common.ListSlot
+import com.shub39.grit.widgets.common.NothingToShow
+import com.shub39.grit.widgets.common.connectedBackground
+import com.shub39.grit.widgets.common.widgetSurface
 import kotlinx.coroutines.launch
 import kotlinx.datetime.LocalDateTime
 import org.koin.core.component.KoinComponent
@@ -92,7 +93,8 @@ class HabitStreakWidget : GlanceAppWidget(), KoinComponent {
             val size = LocalSize.current
 
             val habitsWithAnalytics by repo.getHabitsWithAnalytics().collectAsState(emptyList())
-            val sortedData = habitsWithAnalytics.sortedBy { it.habit.id }
+            val sortedData =
+                habitsWithAnalytics.sortedWith(compareBy({ it.habit.index }, { it.habit.id }))
 
             val state = currentState<Preferences>()
             val habitId = state[habitIdKey] ?: sortedData.firstOrNull()?.habit?.id ?: 0
@@ -182,24 +184,10 @@ private fun Content(
     onChangeHabit: () -> Unit,
 ) {
     val size = LocalSize.current
-    val roundedCornerSupported = Build.VERSION.SDK_INT >= Build.VERSION_CODES.S
 
     Column(
         modifier =
-            modifier
-                .fillMaxSize()
-                .then(
-                    if (roundedCornerSupported) {
-                        GlanceModifier.background(GlanceTheme.colors.widgetBackground)
-                            .cornerRadius(24.dp)
-                    } else {
-                        GlanceModifier.background(
-                            imageProvider = ImageProvider(R.drawable.rounded_4dp),
-                            colorFilter = ColorFilter.tint(GlanceTheme.colors.widgetBackground),
-                        )
-                    }
-                )
-                .clickable(actionStartActivity<MainActivity>())
+            modifier.fillMaxSize().widgetSurface().clickable(actionStartActivity<MainActivity>())
     ) {
         if (habitWithAnalytics != null) {
             TitleBar(
@@ -242,9 +230,9 @@ private fun Content(
                 item {
                     Column(
                         modifier =
-                            GlanceModifier.background(
-                                imageProvider = ImageProvider(R.drawable.rounded_list_top),
-                                colorFilter = ColorFilter.tint(GlanceTheme.colors.primary),
+                            GlanceModifier.connectedBackground(
+                                ListSlot.Top,
+                                GlanceTheme.colors.primary,
                             )
                     ) {
                         Row(
@@ -321,9 +309,9 @@ private fun Content(
                 item {
                     Column(
                         modifier =
-                            GlanceModifier.background(
-                                imageProvider = ImageProvider(R.drawable.widget_list_middle),
-                                colorFilter = ColorFilter.tint(GlanceTheme.colors.primary),
+                            GlanceModifier.connectedBackground(
+                                ListSlot.Middle,
+                                GlanceTheme.colors.primary,
                             )
                     ) {
                         Row(
@@ -400,9 +388,9 @@ private fun Content(
                 item {
                     Column(
                         modifier =
-                            GlanceModifier.background(
-                                imageProvider = ImageProvider(R.drawable.widget_list_bottom),
-                                colorFilter = ColorFilter.tint(GlanceTheme.colors.primary),
+                            GlanceModifier.connectedBackground(
+                                ListSlot.Bottom,
+                                GlanceTheme.colors.primary,
                             )
                     ) {
                         Row(
@@ -476,12 +464,7 @@ private fun Content(
                 item { Spacer(modifier = GlanceModifier.height(8.dp)) }
             }
         } else {
-            Box(modifier = GlanceModifier.fillMaxSize(), contentAlignment = Alignment.Center) {
-                Text(
-                    text = "Nothing to show",
-                    style = TextStyle(color = GlanceTheme.colors.onSurface),
-                )
-            }
+            NothingToShow()
         }
     }
 }

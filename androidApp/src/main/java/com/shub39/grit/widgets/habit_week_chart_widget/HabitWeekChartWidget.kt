@@ -68,6 +68,8 @@ import com.shub39.grit.core.habits.HabitWithAnalytics
 import com.shub39.grit.core.now
 import com.shub39.grit.logic.habits.repository.calculateMeasurableTargets
 import com.shub39.grit.widgets.WidgetSize
+import com.shub39.grit.widgets.common.NothingToShow
+import com.shub39.grit.widgets.common.widgetSurface
 import kotlin.math.roundToInt
 import kotlin.random.Random
 import kotlinx.coroutines.launch
@@ -91,7 +93,8 @@ class HabitWeekChartWidget : GlanceAppWidget(), KoinComponent {
             val size = LocalSize.current
 
             val habitsWithAnalytics by repo.getHabitsWithAnalytics().collectAsState(emptyList())
-            val sortedData = habitsWithAnalytics.sortedBy { it.habit.id }
+            val sortedData =
+                habitsWithAnalytics.sortedWith(compareBy({ it.habit.index }, { it.habit.id }))
 
             val state = currentState<Preferences>()
             val habitId = state[habitIdKey] ?: sortedData.firstOrNull()?.habit?.id ?: 0
@@ -185,20 +188,7 @@ private fun Content(
 
     Column(
         modifier =
-            modifier
-                .fillMaxSize()
-                .then(
-                    if (roundedCornerSupported) {
-                        GlanceModifier.background(GlanceTheme.colors.widgetBackground)
-                            .cornerRadius(24.dp)
-                    } else {
-                        GlanceModifier.background(
-                            imageProvider = ImageProvider(R.drawable.rounded_4dp),
-                            colorFilter = ColorFilter.tint(GlanceTheme.colors.widgetBackground),
-                        )
-                    }
-                )
-                .clickable(actionStartActivity<MainActivity>())
+            modifier.fillMaxSize().widgetSurface().clickable(actionStartActivity<MainActivity>())
     ) {
         if (habitWithAnalytics != null) {
             TitleBar(
@@ -290,12 +280,7 @@ private fun Content(
                 }
             }
         } else {
-            Box(modifier = GlanceModifier.fillMaxSize(), contentAlignment = Alignment.Center) {
-                Text(
-                    text = "Nothing to show",
-                    style = TextStyle(color = GlanceTheme.colors.onSurface),
-                )
-            }
+            NothingToShow()
         }
     }
 }

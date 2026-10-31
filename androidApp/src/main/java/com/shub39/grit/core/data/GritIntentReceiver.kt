@@ -23,12 +23,13 @@ import androidx.core.app.RemoteInput
 import com.shub39.grit.core.GritLogger
 import com.shub39.grit.core.data.notification.GritNotificationManager
 import com.shub39.grit.core.habits.HabitRepo
-import com.shub39.grit.core.habits.HabitStatus
+import com.shub39.grit.core.habits.HabitStatusHandler
 import com.shub39.grit.core.interfaces.AlarmScheduler
 import com.shub39.grit.core.interfaces.IntentActions
 import com.shub39.grit.core.interfaces.SettingsDatastore
 import com.shub39.grit.core.now
 import com.shub39.grit.core.tasks.TaskRepo
+import com.shub39.grit.core.tasks.TasksStatusHandler
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.SupervisorJob
@@ -118,7 +119,7 @@ class GritIntentReceiver : BroadcastReceiver(), KoinComponent {
             return
         }
 
-        taskRepo.upsertSubTask(subTask.copy(status = true, reminder = null))
+        get<TasksStatusHandler>().completeSubTask(subTask)
 
         GritLogger.d(TAG, "SubTask marked as complete successfully")
 
@@ -141,7 +142,7 @@ class GritIntentReceiver : BroadcastReceiver(), KoinComponent {
             return
         }
 
-        taskRepo.upsertTask(task.copy(status = true, reminder = null))
+        get<TasksStatusHandler>().completeTask(task)
 
         GritLogger.d(TAG, "Task marked as complete successfully")
 
@@ -168,26 +169,21 @@ class GritIntentReceiver : BroadcastReceiver(), KoinComponent {
             val inputString =
                 resultsBundle?.getCharSequence(GritNotificationManager.KEY_HABIT_INPUT)?.toString()
 
-            val loggedValue =
-                if (habit.isMeasurable) {
-                    val parsedValue = inputString?.toDoubleOrNull()
-                    if (parsedValue == null || parsedValue <= 0.0) {
-                        GritLogger.e(
-                            TAG,
-                            "Invalid progress input for measurable habit: '$inputString'",
-                        )
-                        return
-                    }
-                    parsedValue
-                } else {
-                    1.0
+            val statusHandler = get<HabitStatusHandler>()
+
+            if (habit.isMeasurable) {
+                val parsedValue = inputString?.toDoubleOrNull()
+                if (parsedValue == null || parsedValue <= 0.0) {
+                    GritLogger.e(TAG, "Invalid progress input for measurable habit: '$inputString'")
+                    return
                 }
 
-            habitRepo.insertHabitStatus(
-                HabitStatus(habitId = habitId, date = LocalDate.now(), value = loggedValue)
-            )
-
-            GritLogger.d(TAG, "Habit status added successfully with value: $loggedValue")
+                statusHandler.log(habit = habit, value = parsedValue)
+                GritLogger.d(TAG, "Habit status added successfully with value: $parsedValue")
+            } else {
+                statusHandler.complete(habit)
+                GritLogger.d(TAG, "Habit status added successfully")
+            }
         } finally {
             get<GritNotificationManager>().cancelNotification(habitId.toInt())
         }
