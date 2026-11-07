@@ -1,5 +1,12 @@
 [
   {
+    "version": "6.4.1",
+    "changes": [
+      "Fixed random crashes",
+      "Updates Translations"
+    ]
+  },
+  {
     "version": "6.4.0",
     "changes": [
       "Widgets now support Subtasks, Habit Categories and Measurable Habits",
@@ -74,13 +81,6 @@
       "Fixed App crashing in private spaces #305",
       "Fixed categories sheet disappearing after enabling dark mode #304",
       "Miscellaneous UI updates"
-    ]
-  },
-  {
-    "version": "6.0.4",
-    "changes": [
-      "Updated Translations",
-      "Increased habit title and description length limits"
     ]
   }
 ]

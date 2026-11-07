@@ -48,6 +48,7 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.retain.retain
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
@@ -67,7 +68,6 @@ import com.shub39.grit.shared.ui.components.ExpressiveSwitch
 import com.shub39.grit.shared.ui.components.GritBottomSheet
 import com.shub39.grit.shared.ui.components.GritTimePicker
 import com.shub39.grit.shared.ui.components.detachedItemShape
-import com.shub39.grit.shared.ui.components.genericSaver
 import com.shub39.grit.shared.ui.components.listItemColors
 import com.shub39.grit.shared.ui.theme.flexFontEmphasis
 import grit.shared.ui.generated.resources.Res
@@ -118,8 +118,7 @@ fun SubTaskUpsertSheetContent(
     updateDateTimePickerVisibility: (Boolean) -> Unit,
     onPermissionRequest: () -> Unit,
 ) {
-    var newSubTask by
-        rememberSaveable(stateSaver = genericSaver<SubTask>()) { mutableStateOf(subTask) }
+    var newSubTask by retain(subTask) { mutableStateOf(subTask) }
 
     val textFieldState =
         rememberTextFieldState(

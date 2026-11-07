@@ -1,5 +1,9 @@
 # Changelog
 
+## 6.4.1
+- Fixed random crashes
+- Updates Translations
+
 ## 6.4.0
 - Widgets now support Subtasks, Habit Categories and Measurable Habits
 - Task and Habit widgets use the same connected lists and spacing as the app
