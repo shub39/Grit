@@ -26,11 +26,10 @@ import com.shub39.grit.BuildConfig
 class AnalyticsInitializer {
     private val config =
         PostHogAndroidConfig(
-            projectToken = BuildConfig.POSTHOG_API_KEY,
-            host = BuildConfig.POSTHOG_HOST
-        ).apply {
-            errorTrackingConfig.autoCapture = true
-        }
+                projectToken = BuildConfig.POSTHOG_API_KEY,
+                host = BuildConfig.POSTHOG_HOST,
+            )
+            .apply { errorTrackingConfig.autoCapture = true }
 
     fun setup(context: Context) {
         PostHogAndroid.setup(context, config)
