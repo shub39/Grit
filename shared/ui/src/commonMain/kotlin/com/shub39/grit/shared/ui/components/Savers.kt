@@ -18,12 +18,8 @@ package com.shub39.grit.shared.ui.components
 
 import androidx.compose.runtime.saveable.Saver
 import kotlinx.datetime.LocalDate
-import kotlinx.serialization.json.Json
 
 val LocalDateSaver =
     Saver<LocalDate?, String>(save = { it?.toString() ?: "" }) {
         if (it.isEmpty()) null else LocalDate.parse(it)
     }
-
-inline fun <reified T> genericSaver() =
-    Saver<T, String>(save = { Json.encodeToString(it) }) { Json.decodeFromString(it) }

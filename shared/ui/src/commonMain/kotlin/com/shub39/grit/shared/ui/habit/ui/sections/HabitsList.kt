@@ -63,6 +63,7 @@ import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.retain.retain
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
@@ -81,7 +82,6 @@ import com.shub39.grit.shared.ui.components.GritDialog
 import com.shub39.grit.shared.ui.components.PageFill
 import com.shub39.grit.shared.ui.components.detachedItemShape
 import com.shub39.grit.shared.ui.components.endItemShape
-import com.shub39.grit.shared.ui.components.genericSaver
 import com.shub39.grit.shared.ui.components.leadingItemShape
 import com.shub39.grit.shared.ui.components.listItemColors
 import com.shub39.grit.shared.ui.components.middleItemShape
@@ -114,14 +114,12 @@ import grit.shared.ui.generated.resources.warning
 import kotlinx.datetime.DayOfWeek
 import kotlinx.datetime.LocalDate
 import kotlinx.datetime.LocalDateTime
-import kotlinx.serialization.Serializable
 import org.jetbrains.compose.resources.painterResource
 import org.jetbrains.compose.resources.stringResource
 import org.jetbrains.compose.resources.vectorResource
 import sh.calvin.reorderable.ReorderableItem
 import sh.calvin.reorderable.rememberReorderableLazyListState
 
-@Serializable
 private data class AddMeasuredHabitStatus(val habit: Habit, val date: LocalDate, val value: Double)
 
 @Composable
@@ -317,10 +315,9 @@ private fun HabitsListContent(
         rememberReorderableLazyListState(lazyListState) { from, to ->
             onAction(HabitsAction.OnTransientHabitReorder(from.index, to.index))
         }
-    var showMeasuredHabitStatusAddDialog: AddMeasuredHabitStatus? by
-        rememberSaveable(stateSaver = genericSaver<AddMeasuredHabitStatus?>()) {
-            mutableStateOf(null)
-        }
+    var showMeasuredHabitStatusAddDialog: AddMeasuredHabitStatus? by retain {
+        mutableStateOf<AddMeasuredHabitStatus?>(null)
+    }
 
     Column(modifier = modifier) {
         LazyColumn(

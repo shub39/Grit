@@ -78,6 +78,7 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.retain.retain
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
@@ -98,7 +99,6 @@ import com.shub39.grit.shared.ui.components.GritDialog
 import com.shub39.grit.shared.ui.components.PageFill
 import com.shub39.grit.shared.ui.components.detachedItemShape
 import com.shub39.grit.shared.ui.components.endItemShape
-import com.shub39.grit.shared.ui.components.genericSaver
 import com.shub39.grit.shared.ui.components.leadingItemShape
 import com.shub39.grit.shared.ui.components.middleItemShape
 import com.shub39.grit.shared.ui.task.TaskAction
@@ -152,14 +152,12 @@ fun TaskList(
         var editState by rememberSaveable { mutableStateOf(false) }
         var showSubTasksFeaturePreview by rememberSaveable { mutableStateOf(false) }
 
-        var showTaskUpsertSheet: ShowTaskUpsertSheet? by
-            rememberSaveable(stateSaver = genericSaver<ShowTaskUpsertSheet?>()) {
-                mutableStateOf(null)
-            }
-        var showSubTaskUpsertSheet: ShowSubTaskUpsertSheet? by
-            rememberSaveable(stateSaver = genericSaver<ShowSubTaskUpsertSheet?>()) {
-                mutableStateOf(null)
-            }
+        var showTaskUpsertSheet: ShowTaskUpsertSheet? by retain {
+            mutableStateOf<ShowTaskUpsertSheet?>(null)
+        }
+        var showSubTaskUpsertSheet: ShowSubTaskUpsertSheet? by retain {
+            mutableStateOf<ShowSubTaskUpsertSheet?>(null)
+        }
 
         val scrollBehavior = TopAppBarDefaults.enterAlwaysScrollBehavior()
 

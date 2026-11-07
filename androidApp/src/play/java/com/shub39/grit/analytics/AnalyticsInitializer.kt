@@ -25,12 +25,16 @@ import com.shub39.grit.BuildConfig
 
 class AnalyticsInitializer {
     private val config =
-        PostHogAndroidConfig(apiKey = BuildConfig.POSTHOG_API_KEY, host = BuildConfig.POSTHOG_HOST)
+        PostHogAndroidConfig(
+            projectToken = BuildConfig.POSTHOG_API_KEY,
+            host = BuildConfig.POSTHOG_HOST
+        ).apply {
+            errorTrackingConfig.autoCapture = true
+        }
 
     fun setup(context: Context) {
         PostHogAndroid.setup(context, config)
 
-        val rcId = Purchases.sharedInstance.appUserID
-        PostHog.identify("grit:$rcId")
+        PostHog.identify(Purchases.sharedInstance.appUserID)
     }
 }

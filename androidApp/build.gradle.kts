@@ -154,7 +154,7 @@ dependencies {
 
     "playImplementation"(libs.purchases)
     "playImplementation"(libs.purchases.ui)
-    "playImplementation"("com.posthog:posthog-android:3.+")
+    "playImplementation"(libs.posthog)
 
     implementation(libs.filekit.core)
     implementation(libs.filekit.dialogs)
