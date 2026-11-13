@@ -16,6 +16,8 @@
  */
 package com.shub39.grit.core
 
+import kotlin.jvm.JvmInline
+
 @JvmInline
 value class AnalyticsEvent(val name: String) {
     companion object {

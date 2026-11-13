@@ -38,6 +38,16 @@ kotlin {
 
     jvm()
 
+    listOf(iosArm64(), iosSimulatorArm64()).forEach { target ->
+        target.binaries.framework {
+            baseName = "Shared"
+            isStatic = true
+            binaryOption("bundleId", "com.shub39.grit.shared")
+            export(projects.shared.core)
+            export(projects.shared.logic)
+        }
+    }
+
     android {
         namespace = "com.shub39.grit.shared.ui"
         compileSdk = libs.versions.compileSdk.get().toInt()
@@ -48,7 +58,8 @@ kotlin {
 
     sourceSets {
         commonMain.dependencies {
-            implementation(projects.shared.core)
+            api(projects.shared.core)
+            api(projects.shared.logic)
 
             implementation(libs.compose.material3)
             implementation(libs.compose.runtime)
@@ -70,6 +81,7 @@ kotlin {
             implementation(libs.colorpicker.compose)
 
             implementation(libs.koin.core)
+            implementation(libs.koin.core.viewmodel)
             implementation(libs.koin.compose)
             implementation(libs.koin.compose.viewmodel)
             implementation(libs.koin.compose.viewmodel.navigation)

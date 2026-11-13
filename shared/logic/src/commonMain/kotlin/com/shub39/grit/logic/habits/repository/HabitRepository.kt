@@ -26,6 +26,7 @@ import com.shub39.grit.core.habits.OverallAnalytics
 import com.shub39.grit.core.habits.isCompletedToday
 import com.shub39.grit.core.interfaces.AppNotificationManager
 import com.shub39.grit.core.interfaces.SettingsDatastore
+import com.shub39.grit.core.ioDispatcher
 import com.shub39.grit.core.now
 import com.shub39.grit.logic.habits.database.HabitCategoryDao
 import com.shub39.grit.logic.habits.database.HabitStatusDao
@@ -66,24 +67,24 @@ class HabitRepository(
         habitDao
             .getAllHabitsFlow()
             .map { habits -> habits.map { it.toHabit() }.sortedBy { it.index } }
-            .flowOn(Dispatchers.IO)
+            .flowOn(ioDispatcher)
 
     private val habitStatuses =
         habitStatusDao
             .getAllHabitStatuses()
             .map { habitStatuses -> habitStatuses.map { it.toHabitStatus() } }
-            .flowOn(Dispatchers.IO)
+            .flowOn(ioDispatcher)
 
     private val habitCategories =
         categoryDao
             .getCategoriesFlow()
             .map { categories -> categories.map { it.toHabitCategory() }.sortedBy { it.index } }
-            .flowOn(Dispatchers.IO)
+            .flowOn(ioDispatcher)
 
     private val firstDayOfWeek = MutableStateFlow(DayOfWeek.MONDAY)
 
     init {
-        CoroutineScope(Dispatchers.IO).launch {
+        CoroutineScope(ioDispatcher).launch {
             datastore.getStartOfTheWeekPref().onEach { firstDayOfWeek.update { it } }.launchIn(this)
         }
     }

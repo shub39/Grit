@@ -19,6 +19,7 @@ package com.shub39.grit.logic.core.backup
 import com.shub39.grit.core.GritLogger
 import com.shub39.grit.core.habits.HabitRepo
 import com.shub39.grit.core.interfaces.AlarmScheduler
+import com.shub39.grit.core.ioDispatcher
 import com.shub39.grit.core.settings.backup.RestoreRepo
 import com.shub39.grit.core.settings.backup.RestoreResult
 import com.shub39.grit.core.settings.backup.SchemaMismatchException
@@ -30,7 +31,6 @@ import io.github.vinceglb.filekit.dialogs.FileKitMode
 import io.github.vinceglb.filekit.dialogs.FileKitType
 import io.github.vinceglb.filekit.dialogs.openFilePicker
 import io.github.vinceglb.filekit.readString
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.async
 import kotlinx.coroutines.awaitAll
 import kotlinx.coroutines.withContext
@@ -61,7 +61,7 @@ class RestoreImpl(
                 throw SchemaMismatchException()
             }
 
-            withContext(Dispatchers.IO) {
+            withContext(ioDispatcher) {
                 awaitAll(
                     async {
                         habitRepo.getHabits().forEach { alarmScheduler.cancel(it) }

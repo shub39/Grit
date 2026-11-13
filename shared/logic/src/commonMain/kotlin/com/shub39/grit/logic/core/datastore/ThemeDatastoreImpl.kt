@@ -16,8 +16,6 @@
  */
 package com.shub39.grit.logic.core.datastore
 
-import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.toArgb
 import androidx.datastore.core.DataStore
 import androidx.datastore.preferences.core.Preferences
 import androidx.datastore.preferences.core.booleanPreferencesKey
@@ -35,6 +33,9 @@ import org.koin.core.annotation.Single
 @Single(binds = [ThemeDatastore::class])
 class ThemeDatastoreImpl(private val datastore: DataStore<Preferences>) : ThemeDatastore {
     companion object {
+        /** Opaque white, matches `Color.White.toArgb()`. */
+        private const val DEFAULT_SEED_COLOR: Int = 0xFFFFFFFF.toInt()
+
         private val appThemeKey = stringPreferencesKey("app_theme")
         private val seedColorKey = intPreferencesKey("seed_color")
         private val amoledKey = booleanPreferencesKey("amoled")
@@ -45,7 +46,7 @@ class ThemeDatastoreImpl(private val datastore: DataStore<Preferences>) : ThemeD
 
     override suspend fun resetAppTheme() {
         datastore.edit { settings ->
-            settings[seedColorKey] = Color.White.toArgb()
+            settings[seedColorKey] = DEFAULT_SEED_COLOR
             settings[amoledKey] = false
             settings[paletteKey] = PaletteStyle.TONALSPOT.name
             settings[materialYouKey] = false
@@ -64,7 +65,7 @@ class ThemeDatastoreImpl(private val datastore: DataStore<Preferences>) : ThemeD
     }
 
     override fun getSeedColorFlow(): Flow<Int> =
-        datastore.data.map { prefs -> prefs[seedColorKey] ?: Color.White.toArgb() }
+        datastore.data.map { prefs -> prefs[seedColorKey] ?: DEFAULT_SEED_COLOR }
 
     override suspend fun setSeedColor(color: Int) {
         datastore.edit { prefs -> prefs[seedColorKey] = color }

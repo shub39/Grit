@@ -6,6 +6,11 @@
 .kotlin
 **/build
 /captures
+# iOS
+iosApp/**/xcuserdata/
+iosApp/**/DerivedData/
+**/*.xcframework
+**/*.xcuserdatad
 .externalNativeBuild
 .cxx
 local.properties

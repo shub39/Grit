@@ -29,6 +29,9 @@ kotlin {
 
     jvm()
 
+    iosArm64()
+    iosSimulatorArm64()
+
     android {
         namespace = "com.shub39.grit.shared.core"
         compileSdk = libs.versions.compileSdk.get().toInt()
