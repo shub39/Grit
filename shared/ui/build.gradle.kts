@@ -50,7 +50,11 @@ kotlin {
 
     android {
         namespace = "com.shub39.grit.shared.ui"
-        compileSdk = libs.versions.compileSdk.get().toInt()
+        compileSdk {
+            version = release(libs.versions.targetSdk.get().toInt()) {
+                minorApiLevel = 2
+            }
+        }
         minSdk = libs.versions.minSdk.get().toInt()
 
         androidResources { enable = true }
