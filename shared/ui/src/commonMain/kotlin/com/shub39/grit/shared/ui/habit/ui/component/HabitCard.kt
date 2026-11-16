@@ -158,7 +158,7 @@ fun HabitCard(
                     )
                 }
             },
-            headlineContent = {
+            content = {
                 Row(
                     verticalAlignment = Alignment.CenterVertically,
                     horizontalArrangement = Arrangement.SpaceBetween,

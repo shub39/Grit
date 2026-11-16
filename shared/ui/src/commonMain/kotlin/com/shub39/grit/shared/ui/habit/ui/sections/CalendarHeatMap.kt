@@ -142,7 +142,7 @@ fun CalendarHeatMap(
                                                 colorScheme.secondaryContainer,
                                                 shape = shape,
                                             ),
-                                    headlineContent = { Text(habit.title) },
+                                    content = { Text(habit.title) },
                                     trailingContent = {
                                         if (habit.isMeasurable) {
                                             value?.let {

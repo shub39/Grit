@@ -42,7 +42,7 @@ actual fun LazyListScope.languagePicker(onClick: () -> Unit) {
                         contentDescription = null,
                     )
                 },
-                headlineContent = { Text(text = stringResource(Res.string.language)) },
+                content = { Text(text = stringResource(Res.string.language)) },
                 supportingContent = {
                     Text(text = LocalLocale.current.platformLocale.displayLanguage)
                 },

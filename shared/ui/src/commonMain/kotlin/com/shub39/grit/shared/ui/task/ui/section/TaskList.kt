@@ -985,7 +985,7 @@ private fun ExpandedTasksView(
                                                 containerColor =
                                                     MaterialTheme.colorScheme.surfaceContainerHigh
                                             ),
-                                        headlineContent = {
+                                        content = {
                                             Text(
                                                 text = taskWithSubTasks.task.title,
                                                 maxLines = 1,

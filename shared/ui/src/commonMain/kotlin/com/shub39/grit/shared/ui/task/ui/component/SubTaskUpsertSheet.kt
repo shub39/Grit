@@ -214,7 +214,7 @@ fun SubTaskUpsertSheetContent(
                                 contentDescription = null,
                             )
                         },
-                        headlineContent = { Text(text = stringResource(Res.string.add_reminder)) },
+                        content = { Text(text = stringResource(Res.string.add_reminder)) },
                         supportingContent = {
                             if (newSubTask.reminder != null) {
                                 Column {

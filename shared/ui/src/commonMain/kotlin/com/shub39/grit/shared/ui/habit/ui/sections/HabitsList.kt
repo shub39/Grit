@@ -571,7 +571,7 @@ private fun HabitCategoryEditDialog(
                         ListItem(
                             modifier = Modifier.clip(shape),
                             colors = listItemColors(),
-                            headlineContent = { Text(text = category.name, maxLines = 1) },
+                            content = { Text(text = category.name, maxLines = 1) },
                             supportingContent = {
                                 Text(
                                     text =

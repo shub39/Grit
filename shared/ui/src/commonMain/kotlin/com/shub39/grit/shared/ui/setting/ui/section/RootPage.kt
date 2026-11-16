@@ -103,7 +103,7 @@ fun RootPage(
                 // Grit Plus
                 item {
                     ListItem(
-                        headlineContent = { Text(text = stringResource(Res.string.grit_plus)) },
+                        content = { Text(text = stringResource(Res.string.grit_plus)) },
                         colors = listItemColors(),
                         modifier =
                             Modifier.clip(detachedItemShape()).clickable { onNavigateToPaywall() },
@@ -128,7 +128,7 @@ fun RootPage(
                 item {
                     Column(verticalArrangement = Arrangement.spacedBy(2.dp)) {
                         ListItem(
-                            headlineContent = {
+                            content = {
                                 Text(text = stringResource(Res.string.pause_notifications))
                             },
                             supportingContent = {
@@ -147,7 +147,7 @@ fun RootPage(
                         )
 
                         ListItem(
-                            headlineContent = {
+                            content = {
                                 Text(text = stringResource(Res.string.reorder_tasks))
                             },
                             supportingContent = {
@@ -166,7 +166,7 @@ fun RootPage(
                         )
 
                         ListItem(
-                            headlineContent = {
+                            content = {
                                 Text(text = stringResource(Res.string.show_habits))
                             },
                             supportingContent = {
@@ -189,7 +189,7 @@ fun RootPage(
                         )
 
                         ListItem(
-                            headlineContent = {
+                            content = {
                                 Text(text = stringResource(Res.string.staring_day))
                             },
                             trailingContent = {
@@ -210,7 +210,7 @@ fun RootPage(
 
                         if (state.isBiometricLockAvailable) {
                             ListItem(
-                                headlineContent = {
+                                content = {
                                     Text(text = stringResource(Res.string.biometric_lock))
                                 },
                                 supportingContent = {
@@ -230,7 +230,7 @@ fun RootPage(
                         }
 
                         ListItem(
-                            headlineContent = { Text(text = stringResource(Res.string.use_24Hr)) },
+                            content = { Text(text = stringResource(Res.string.use_24Hr)) },
                             supportingContent = {
                                 Text(text = stringResource(Res.string.use_24Hr_desc))
                             },
@@ -254,7 +254,7 @@ fun RootPage(
                                 Modifier.clip(leadingItemShape()).clickable {
                                     onNavigateToLookAndFeel()
                                 },
-                            headlineContent = {
+                            content = {
                                 Text(text = stringResource(Res.string.look_and_feel))
                             },
                             supportingContent = {
@@ -279,7 +279,7 @@ fun RootPage(
                             modifier =
                                 Modifier.clip(endItemShape()).clickable { onNavigateToBackup() },
                             colors = listItemColors(),
-                            headlineContent = { Text(text = stringResource(Res.string.backup)) },
+                            content = { Text(text = stringResource(Res.string.backup)) },
                             supportingContent = {
                                 Text(text = stringResource(Res.string.backup_desc))
                             },
@@ -319,7 +319,7 @@ fun RootPage(
                                     contentDescription = "Navigate",
                                 )
                             },
-                            headlineContent = { Text(text = stringResource(Res.string.about)) },
+                            content = { Text(text = stringResource(Res.string.about)) },
                             modifier =
                                 Modifier.clip(leadingItemShape()).clickable {
                                     onNavigateToAppInfo()
@@ -340,7 +340,7 @@ fun RootPage(
                                     contentDescription = "Navigate",
                                 )
                             },
-                            headlineContent = { Text(text = stringResource(Res.string.changelog)) },
+                            content = { Text(text = stringResource(Res.string.changelog)) },
                             modifier =
                                 Modifier.clip(endItemShape()).clickable { onNavigateToChangelog() },
                         )

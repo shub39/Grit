@@ -113,7 +113,7 @@ fun Changelog(modifier: Modifier = Modifier, changelog: Changelog, onNavigateBac
                     ListItem(
                         colors = listItemColors(),
                         modifier = Modifier.clip(shape),
-                        headlineContent = { Text(text = change) },
+                        content = { Text(text = change) },
                     )
                 }
 
