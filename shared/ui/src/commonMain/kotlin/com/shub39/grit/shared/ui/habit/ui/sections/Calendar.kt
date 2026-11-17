@@ -53,8 +53,9 @@ import com.shub39.grit.core.habits.CalendarType
 import com.shub39.grit.core.habits.Habit
 import com.shub39.grit.core.habits.HabitStatus
 import com.shub39.grit.core.habits.HabitWithAnalytics
+import com.shub39.grit.shared.ui.ContentMaxWidth
 import com.shub39.grit.shared.ui.LocalWindowSizeClass
-import com.shub39.grit.shared.ui.WindowSize.Companion.isExpanded
+import com.shub39.grit.shared.ui.WindowSize.Companion.isWidthExpanded
 import com.shub39.grit.shared.ui.components.ListSelect
 import com.shub39.grit.shared.ui.components.PageFill
 import com.shub39.grit.shared.ui.habit.HabitState
@@ -113,7 +114,7 @@ fun Calendar(
                     containerColor = Color.Transparent,
                 ),
             windowInsets =
-                if (windowSizeClass.isExpanded()) {
+                if (windowSizeClass.isWidthExpanded()) {
                     WindowInsets(0)
                 } else {
                     TopAppBarDefaults.windowInsets
@@ -203,7 +204,7 @@ private fun YearlyCalendar(
             )
 
         VerticalYearCalendar(
-            modifier = Modifier.padding(horizontal = 8.dp).widthIn(max = 700.dp),
+            modifier = Modifier.padding(horizontal = 8.dp).widthIn(max = ContentMaxWidth),
             contentPadding = PaddingValues(top = 16.dp, bottom = 60.dp),
             monthHorizontalSpacing = 4.dp,
             monthVerticalSpacing = 4.dp,
@@ -271,7 +272,7 @@ private fun MonthlyCalendar(
             )
 
         VerticalCalendar(
-            modifier = Modifier.padding(horizontal = 16.dp).widthIn(max = 700.dp),
+            modifier = Modifier.padding(horizontal = 16.dp).widthIn(max = ContentMaxWidth),
             contentPadding = PaddingValues(top = 16.dp, bottom = 60.dp),
             state = calendarState,
             reverseLayout = true,

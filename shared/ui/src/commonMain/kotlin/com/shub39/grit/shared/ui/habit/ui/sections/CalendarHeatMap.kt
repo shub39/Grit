@@ -69,8 +69,9 @@ import com.kizitonwose.calendar.core.Year
 import com.kizitonwose.calendar.core.now
 import com.shub39.grit.core.habits.CalendarType
 import com.shub39.grit.core.toFormattedString
+import com.shub39.grit.shared.ui.ContentMaxWidth
 import com.shub39.grit.shared.ui.LocalWindowSizeClass
-import com.shub39.grit.shared.ui.WindowSize.Companion.isExpanded
+import com.shub39.grit.shared.ui.WindowSize.Companion.isWidthExpanded
 import com.shub39.grit.shared.ui.components.GritBottomSheet
 import com.shub39.grit.shared.ui.components.LocalDateSaver
 import com.shub39.grit.shared.ui.components.PageFill
@@ -173,7 +174,7 @@ fun CalendarHeatMap(
             }
         }
 
-        Column(modifier = Modifier.fillMaxSize().widthIn(max = 700.dp)) {
+        Column(modifier = Modifier.fillMaxSize().widthIn(max = ContentMaxWidth)) {
             TopAppBar(
                 title = {
                     Text(
@@ -195,7 +196,7 @@ fun CalendarHeatMap(
                         containerColor = Color.Transparent,
                     ),
                 windowInsets =
-                    if (windowSizeClass.isExpanded()) {
+                    if (windowSizeClass.isWidthExpanded()) {
                         WindowInsets(0)
                     } else {
                         TopAppBarDefaults.windowInsets

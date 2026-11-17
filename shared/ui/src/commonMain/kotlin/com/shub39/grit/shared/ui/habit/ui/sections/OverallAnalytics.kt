@@ -50,7 +50,8 @@ import com.kizitonwose.calendar.compose.heatmapcalendar.rememberHeatMapCalendarS
 import com.kizitonwose.calendar.core.minusMonths
 import com.kizitonwose.calendar.core.now
 import com.shub39.grit.shared.ui.LocalWindowSizeClass
-import com.shub39.grit.shared.ui.WindowSize.Companion.isExpanded
+import com.shub39.grit.shared.ui.WindowSize.Companion.getGridMinWidth
+import com.shub39.grit.shared.ui.WindowSize.Companion.isWidthExpanded
 import com.shub39.grit.shared.ui.habit.HabitState
 import com.shub39.grit.shared.ui.habit.HabitsAction
 import com.shub39.grit.shared.ui.habit.filterByCategory
@@ -100,7 +101,7 @@ fun OverallAnalytics(
                 )
             },
             windowInsets =
-                if (windowSizeClass.isExpanded()) {
+                if (windowSizeClass.isWidthExpanded()) {
                     WindowInsets(0)
                 } else {
                     TopAppBarDefaults.windowInsets
@@ -145,7 +146,7 @@ fun OverallAnalytics(
             }
         }
 
-        val maxWidth = 380.dp
+        val maxWidth = windowSizeClass.getGridMinWidth()
         LazyVerticalStaggeredGrid(
             modifier = Modifier.fillMaxSize(),
             columns = StaggeredGridCells.Adaptive(minSize = maxWidth),

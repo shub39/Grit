@@ -52,6 +52,8 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
+import com.shub39.grit.shared.ui.LocalWindowSizeClass
+import com.shub39.grit.shared.ui.WindowSize.Companion.getDialogMaxHeight
 import com.shub39.grit.shared.ui.components.GritDialog
 import com.shub39.grit.shared.ui.components.detachedItemShape
 import com.shub39.grit.shared.ui.components.endItemShape
@@ -110,6 +112,7 @@ private fun CategoryEditDialog(
     onDismissRequest: () -> Unit,
 ) {
     GritDialog(onDismissRequest = onDismissRequest, padding = 0.dp) {
+        val windowSizeClass = LocalWindowSizeClass.current
         var categories by remember(state.tasks) { mutableStateOf(state.tasks.keys.toList()) }
 
         val listState = rememberLazyListState()
@@ -128,7 +131,7 @@ private fun CategoryEditDialog(
         Column(
             modifier =
                 Modifier.fillMaxWidth()
-                    .heightIn(max = 600.dp)
+                    .heightIn(max = windowSizeClass.getDialogMaxHeight())
                     .padding(start = 16.dp, end = 16.dp, top = 16.dp),
             verticalArrangement = Arrangement.spacedBy(8.dp),
         ) {

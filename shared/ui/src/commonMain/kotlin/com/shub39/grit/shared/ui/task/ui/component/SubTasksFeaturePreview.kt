@@ -46,6 +46,8 @@ import androidx.compose.ui.unit.dp
 import com.shub39.grit.core.tasks.SubTask
 import com.shub39.grit.core.tasks.Task
 import com.shub39.grit.core.tasks.TaskWithSubTasks
+import com.shub39.grit.shared.ui.LocalWindowSizeClass
+import com.shub39.grit.shared.ui.WindowSize.Companion.getPreviewHeight
 import com.shub39.grit.shared.ui.components.GritBottomSheet
 import com.shub39.grit.shared.ui.task.ui.section.UpdateStatusTarget
 import com.shub39.grit.shared.ui.theme.flexFontRounded
@@ -161,7 +163,7 @@ fun SubTasksFeaturePreview(
             Box(
                 modifier =
                     Modifier.fillMaxWidth()
-                        .height(265.dp)
+                        .height(LocalWindowSizeClass.current.getPreviewHeight())
                         .clip(RoundedCornerShape(16.dp))
                         .background(MaterialTheme.colorScheme.surfaceContainer)
                         .padding(horizontal = 12.dp),

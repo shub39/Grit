@@ -22,7 +22,6 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Button
@@ -38,6 +37,8 @@ import com.github.skydoves.colorpicker.compose.AlphaTile
 import com.github.skydoves.colorpicker.compose.BrightnessSlider
 import com.github.skydoves.colorpicker.compose.HsvColorPicker
 import com.github.skydoves.colorpicker.compose.rememberColorPickerController
+import com.shub39.grit.shared.ui.LocalWindowSizeClass
+import com.shub39.grit.shared.ui.WindowSize.Companion.getColorPickerSize
 import grit.shared.ui.generated.resources.*
 import org.jetbrains.compose.resources.stringResource
 
@@ -53,7 +54,9 @@ fun ColorPickerDialog(initialColor: Color, onSelect: (Color) -> Unit, onDismiss:
             verticalArrangement = Arrangement.Center,
         ) {
             HsvColorPicker(
-                modifier = Modifier.width(350.dp).height(300.dp).padding(top = 10.dp),
+                modifier =
+                    Modifier.size(LocalWindowSizeClass.current.getColorPickerSize())
+                        .padding(top = 10.dp),
                 initialColor = initialColor,
                 controller = controller,
             )

@@ -43,6 +43,7 @@ import androidx.navigation3.scene.SceneDecoratorStrategy
 import androidx.navigation3.scene.SceneDecoratorStrategyScope
 import androidx.navigation3.ui.LocalNavAnimatedContentScope
 import androidx.window.core.layout.WindowSizeClass
+import com.shub39.grit.shared.ui.WindowSize.Companion.isWidthCompact
 
 data class ResponsiveNavigationScene<T : Any>(
     private val scene: Scene<T>,
@@ -60,11 +61,7 @@ data class ResponsiveNavigationScene<T : Any>(
                 animatedContentScope.transition.targetState == EnterExitState.Visible
 
             with(sharedTransitionScope) {
-                if (
-                    windowSizeClass.isWidthAtLeastBreakpoint(
-                        WindowSizeClass.WIDTH_DP_MEDIUM_LOWER_BOUND
-                    )
-                ) {
+                if (!windowSizeClass.isWidthCompact()) {
                     Row(Modifier.fillMaxSize()) {
                         Box(
                             modifier =

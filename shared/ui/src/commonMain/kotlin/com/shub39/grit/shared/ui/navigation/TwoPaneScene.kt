@@ -30,7 +30,7 @@ import androidx.navigation3.scene.Scene
 import androidx.navigation3.scene.SceneStrategy
 import androidx.navigation3.scene.SceneStrategyScope
 import androidx.window.core.layout.WindowSizeClass
-import androidx.window.core.layout.WindowSizeClass.Companion.WIDTH_DP_MEDIUM_LOWER_BOUND
+import com.shub39.grit.shared.ui.WindowSize.Companion.isWidthCompact
 
 // --- TwoPaneScene ---
 /** A custom [Scene] that displays two [NavEntry]s side-by-side in a 50/50 split. */
@@ -73,8 +73,8 @@ class TwoPaneSceneStrategy<T : Any>(val windowSizeClass: WindowSizeClass) : Scen
     override fun SceneStrategyScope<T>.calculateScene(entries: List<NavEntry<T>>): Scene<T>? {
 
         // Condition 1: Only return a Scene if the window is sufficiently wide to render two panes.
-        // We use isWidthAtLeastBreakpoint with WIDTH_DP_MEDIUM_LOWER_BOUND (600dp).
-        if (!windowSizeClass.isWidthAtLeastBreakpoint(WIDTH_DP_MEDIUM_LOWER_BOUND)) {
+        // We use isWidthCompact, which is false from the medium width breakpoint (600dp) upwards.
+        if (windowSizeClass.isWidthCompact()) {
             return null
         }
 

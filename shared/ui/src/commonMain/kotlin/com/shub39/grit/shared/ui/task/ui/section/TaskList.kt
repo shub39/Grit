@@ -92,8 +92,9 @@ import com.shub39.grit.core.tasks.CategoryColors
 import com.shub39.grit.core.tasks.SubTask
 import com.shub39.grit.core.tasks.Task
 import com.shub39.grit.shared.ui.LocalWindowSizeClass
-import com.shub39.grit.shared.ui.WindowSize.Companion.isCompact
-import com.shub39.grit.shared.ui.WindowSize.Companion.isExpanded
+import com.shub39.grit.shared.ui.WindowSize.Companion.getDialogMaxHeight
+import com.shub39.grit.shared.ui.WindowSize.Companion.isWidthCompact
+import com.shub39.grit.shared.ui.WindowSize.Companion.isWidthExpanded
 import com.shub39.grit.shared.ui.components.Empty
 import com.shub39.grit.shared.ui.components.GritDialog
 import com.shub39.grit.shared.ui.components.PageFill
@@ -173,7 +174,7 @@ fun TaskList(
                 isReorderMode = editState,
                 onReorderToggle = { editState = it },
                 onDeleteClick = { showDeleteDialog = true },
-                isExpanded = windowSizeClass.isExpanded(),
+                isExpanded = windowSizeClass.isWidthExpanded(),
             )
 
             CategorySelector(
@@ -185,17 +186,17 @@ fun TaskList(
                     showCategoryAddSheet = true
                 },
                 onEditCategoriesClick = onEditCategories,
-                isExpanded = !windowSizeClass.isCompact(),
+                isExpanded = !windowSizeClass.isWidthCompact(),
                 onReorderModeChange = { editState = it },
             )
 
-            if (windowSizeClass.isCompact()) {
+            if (windowSizeClass.isWidthCompact()) {
                 CompactTasksView(
                     state = state,
                     isReorderMode = editState,
                     onAction = onAction,
                     onEditTask = { showTaskUpsertSheet = ShowTaskUpsertSheet.Edit(it) },
-                    isCompact = windowSizeClass.isCompact(),
+                    isCompact = windowSizeClass.isWidthCompact(),
                     onShowSubTasksSheet = {
                         if (isPlusUser) {
                             showSubTaskUpsertSheet = it
@@ -248,7 +249,7 @@ fun TaskList(
                     AnimatedVisibility(
                         visible =
                             state.tasks[state.currentCategory].isNullOrEmpty() ||
-                                windowSizeClass.isExpanded(),
+                                windowSizeClass.isWidthExpanded(),
                         enter = fadeIn(MaterialTheme.motionScheme.fastEffectsSpec()),
                         exit = fadeOut(MaterialTheme.motionScheme.fastEffectsSpec()),
                     ) {
@@ -904,6 +905,7 @@ private fun ExpandedTasksView(
 
             if (showReorderDialog) {
                 GritDialog(onDismissRequest = { showReorderDialog = false }, padding = 0.dp) {
+                    val windowSizeClass = LocalWindowSizeClass.current
                     var reorderableTasks = remember { displayTasks }
 
                     val listState = rememberLazyListState()
@@ -926,7 +928,7 @@ private fun ExpandedTasksView(
                     Column(
                         modifier =
                             Modifier.fillMaxWidth()
-                                .heightIn(max = 600.dp)
+                                .heightIn(max = windowSizeClass.getDialogMaxHeight())
                                 .padding(top = 16.dp, start = 16.dp, end = 16.dp),
                         verticalArrangement = Arrangement.spacedBy(8.dp),
                     ) {

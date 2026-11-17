@@ -1,3 +1,6 @@
+## Codebase Rules
+* Run `./gradlew spotlessApply` after finishing changes
+
 ## Issues and PR guidelines
 
 * Never create an issue

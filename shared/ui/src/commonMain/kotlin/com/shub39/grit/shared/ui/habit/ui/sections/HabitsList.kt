@@ -77,6 +77,9 @@ import com.shub39.grit.core.habits.HabitCategory
 import com.shub39.grit.core.habits.HabitWithAnalytics
 import com.shub39.grit.core.now
 import com.shub39.grit.core.tasks.CategoryColors
+import com.shub39.grit.shared.ui.ContentMaxWidth
+import com.shub39.grit.shared.ui.LocalWindowSizeClass
+import com.shub39.grit.shared.ui.WindowSize.Companion.getDialogMaxHeight
 import com.shub39.grit.shared.ui.components.Empty
 import com.shub39.grit.shared.ui.components.GritDialog
 import com.shub39.grit.shared.ui.components.PageFill
@@ -144,7 +147,7 @@ fun HabitsList(
                 else state.habitsWithAnalytics.filterBy(state.selectedFilter)
             }
 
-        Column(modifier = Modifier.widthIn(max = 700.dp)) {
+        Column(modifier = Modifier.widthIn(max = ContentMaxWidth)) {
             HabitsTopAppBar(
                 state = state,
                 filteredHabits = filteredHabits,
@@ -503,6 +506,7 @@ private fun HabitCategoryEditDialog(
     onDismissRequest: () -> Unit,
 ) {
     GritDialog(onDismissRequest = onDismissRequest, padding = 0.dp) {
+        val windowSizeClass = LocalWindowSizeClass.current
         var categories by remember(state.habitCategories) { mutableStateOf(state.habitCategories) }
 
         val listState = rememberLazyListState()
@@ -521,7 +525,7 @@ private fun HabitCategoryEditDialog(
         Column(
             modifier =
                 Modifier.fillMaxWidth()
-                    .heightIn(max = 600.dp)
+                    .heightIn(max = windowSizeClass.getDialogMaxHeight())
                     .padding(start = 16.dp, end = 16.dp, top = 16.dp),
             verticalArrangement = Arrangement.spacedBy(8.dp),
         ) {

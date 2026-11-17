@@ -43,6 +43,7 @@ import androidx.compose.ui.tooling.preview.PreviewLightDark
 import androidx.compose.ui.tooling.preview.PreviewWrapper
 import androidx.compose.ui.unit.dp
 import com.shub39.grit.core.settings.Sections
+import com.shub39.grit.shared.ui.ContentMaxWidth
 import com.shub39.grit.shared.ui.GritPreviewWrapper
 import com.shub39.grit.shared.ui.components.ExpressiveSwitch
 import com.shub39.grit.shared.ui.components.PageFill
@@ -78,7 +79,8 @@ fun RootPage(
         val scrollBehavior = TopAppBarDefaults.enterAlwaysScrollBehavior()
         Column(
             modifier =
-                Modifier.widthIn(max = 700.dp).nestedScroll(scrollBehavior.nestedScrollConnection)
+                Modifier.widthIn(max = ContentMaxWidth)
+                    .nestedScroll(scrollBehavior.nestedScrollConnection)
         ) {
             LargeFlexibleTopAppBar(
                 scrollBehavior = scrollBehavior,
