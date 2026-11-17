@@ -107,7 +107,7 @@ fun WeeklyActivity(lineChartData: List<Double>, modifier: Modifier = Modifier) {
                             },
                         modifier = Modifier.weight(1f),
                         colors =
-                            ToggleButtonDefaults.toggleButtonColors(
+                            ToggleButtonDefaults.colors(
                                 containerColor = MaterialTheme.colorScheme.surfaceContainerHigh
                             ),
                     ) {

@@ -99,45 +99,48 @@ fun GritNavDisplay(
                         sharedTransitionScope = this,
                     )
 
-                NavDisplay(
-                    backStack = topLevelBackStack.backStack,
-                    sharedTransitionScope = this,
-                    sceneDecoratorStrategies = listOf(responsiveNavigationSceneDecoratorStrategy),
-                    sceneStrategies = listOf(twoPaneSceneStrategy, listDetailSceneStrategy),
-                    onBack = { topLevelBackStack.removeLast() },
-                    entryProvider =
-                        entryProvider {
-                            entry<TaskList>(metadata = fadeTransitionMetadata()) {
-                                val viewModel = koinViewModel<TasksViewModel>()
-                                val state by viewModel.state.collectAsStateWithLifecycle()
+                CompositionLocalProvider(LocalSharedTransitionScope provides this) {
+                    NavDisplay(
+                        backStack = topLevelBackStack.backStack,
+                        sharedTransitionScope = this,
+                        sceneDecoratorStrategies =
+                            listOf(responsiveNavigationSceneDecoratorStrategy),
+                        sceneStrategies = listOf(twoPaneSceneStrategy, listDetailSceneStrategy),
+                        onBack = { topLevelBackStack.removeLast() },
+                        entryProvider =
+                            entryProvider {
+                                entry<TaskList>(metadata = fadeTransitionMetadata()) {
+                                    val viewModel = koinViewModel<TasksViewModel>()
+                                    val state by viewModel.state.collectAsStateWithLifecycle()
 
-                                TasksPage(
-                                    state = state,
-                                    onAction = viewModel::onAction,
-                                    isPlusUser = globalState.isUserSubscribed,
-                                    onOpenPaywall = { topLevelBackStack.add(Paywall) },
-                                )
-                            }
-
-                            habitsScreens(
-                                topLevelBackStack = topLevelBackStack,
-                                globalState = globalState,
-                            )
-
-                            entry<Paywall>(metadata = verticalTransitionMetadata()) {
-                                LaunchedEffect(Unit) { globalVM.trackPaywallOpened() }
-                                paywall(globalState.isUserSubscribed) {
-                                    globalVM.updateSubscription()
-                                    topLevelBackStack.removeLast()
+                                    TasksPage(
+                                        state = state,
+                                        onAction = viewModel::onAction,
+                                        isPlusUser = globalState.isUserSubscribed,
+                                        onOpenPaywall = { topLevelBackStack.add(Paywall) },
+                                    )
                                 }
-                            }
 
-                            settingsScreens(
-                                topLevelBackStack = topLevelBackStack,
-                                globalState = globalState,
-                            )
-                        },
-                )
+                                habitsScreens(
+                                    topLevelBackStack = topLevelBackStack,
+                                    globalState = globalState,
+                                )
+
+                                entry<Paywall>(metadata = verticalTransitionMetadata()) {
+                                    LaunchedEffect(Unit) { globalVM.trackPaywallOpened() }
+                                    paywall(globalState.isUserSubscribed) {
+                                        globalVM.updateSubscription()
+                                        topLevelBackStack.removeLast()
+                                    }
+                                }
+
+                                settingsScreens(
+                                    topLevelBackStack = topLevelBackStack,
+                                    globalState = globalState,
+                                )
+                            },
+                    )
+                }
             }
         }
     }

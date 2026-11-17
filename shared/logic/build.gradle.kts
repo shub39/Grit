@@ -123,9 +123,7 @@ kotlin {
     android {
         namespace = "com.shub39.grit.logic"
         compileSdk {
-            version = release(libs.versions.targetSdk.get().toInt()) {
-                minorApiLevel = 2
-            }
+            version = release(libs.versions.targetSdk.get().toInt()) { minorApiLevel = 2 }
         }
         minSdk = libs.versions.minSdk.get().toInt()
 

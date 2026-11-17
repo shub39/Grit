@@ -46,21 +46,25 @@ data class ListDetailScene<T : Any>(
 ) : Scene<T> {
     override val entries: List<NavEntry<T>> = listOf(listEntry, detailEntry)
     override val content: @Composable (() -> Unit) = {
-        Row(modifier = Modifier.fillMaxSize()) {
-            Column(modifier = Modifier.weight(0.4f)) { listEntry.Content() }
+        // Both panes are composed simultaneously, so a shared key would be registered twice within
+        // the same target state. Multi-pane scenes therefore opt out of shared transitions.
+        CompositionLocalProvider(LocalSharedTransitionsEnabled provides false) {
+            Row(modifier = Modifier.fillMaxSize()) {
+                Column(modifier = Modifier.weight(0.4f)) { listEntry.Content() }
 
-            // Let the detail entry know not to display a back button.
-            CompositionLocalProvider(LocalBackButtonVisibility provides false) {
-                Column(modifier = Modifier.weight(0.6f)) {
-                    AnimatedContent(
-                        targetState = detailEntry,
-                        contentKey = { entry -> entry.contentKey },
-                        transitionSpec = {
-                            slideInHorizontally(initialOffsetX = { it }) togetherWith
-                                slideOutHorizontally(targetOffsetX = { -it })
-                        },
-                    ) { entry ->
-                        entry.Content()
+                // Let the detail entry know not to display a back button.
+                CompositionLocalProvider(LocalBackButtonVisibility provides false) {
+                    Column(modifier = Modifier.weight(0.6f)) {
+                        AnimatedContent(
+                            targetState = detailEntry,
+                            contentKey = { entry -> entry.contentKey },
+                            transitionSpec = {
+                                slideInHorizontally(initialOffsetX = { it }) togetherWith
+                                    slideOutHorizontally(targetOffsetX = { -it })
+                            },
+                        ) { entry ->
+                            entry.Content()
+                        }
                     }
                 }
             }

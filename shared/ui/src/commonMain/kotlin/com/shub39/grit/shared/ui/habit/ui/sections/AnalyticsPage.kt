@@ -41,10 +41,10 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButtonShapes
 import androidx.compose.material3.MaterialShapes
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.MediumFlexibleTopAppBar
 import androidx.compose.material3.OutlinedIconButton
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
+import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.material3.toShape
 import androidx.compose.runtime.Composable
@@ -55,7 +55,6 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.unit.dp
 import com.kizitonwose.calendar.compose.heatmapcalendar.rememberHeatMapCalendarState
 import com.kizitonwose.calendar.compose.rememberCalendarState
@@ -74,6 +73,8 @@ import com.shub39.grit.shared.ui.habit.ui.component.stats.Targets
 import com.shub39.grit.shared.ui.habit.ui.component.stats.WeekDayBreakdown
 import com.shub39.grit.shared.ui.habit.ui.component.stats.WeeklyActivity
 import com.shub39.grit.shared.ui.habit.ui.component.stats.WeeklyHeatMap
+import com.shub39.grit.shared.ui.navigation.HabitTitleKey
+import com.shub39.grit.shared.ui.navigation.gritSharedBounds
 import com.shub39.grit.shared.ui.theme.flexFontEmphasis
 import com.shub39.grit.shared.ui.theme.flexFontRounded
 import grit.shared.ui.generated.resources.*
@@ -119,10 +120,8 @@ fun AnalyticsPage(
     var editDialog by remember { mutableStateOf(false) }
     var deleteDialog by remember { mutableStateOf(false) }
 
-    val scrollBehavior = TopAppBarDefaults.enterAlwaysScrollBehavior()
-    Column(modifier = modifier.nestedScroll(scrollBehavior.nestedScrollConnection).fillMaxSize()) {
-        MediumFlexibleTopAppBar(
-            scrollBehavior = scrollBehavior,
+    Column(modifier = modifier.fillMaxSize()) {
+        TopAppBar(
             colors =
                 TopAppBarDefaults.topAppBarColors(
                     scrolledContainerColor = Color.Transparent,
@@ -131,7 +130,9 @@ fun AnalyticsPage(
             title = {
                 Text(
                     text = currentHabit.habit.title,
-                    modifier = Modifier.basicMarquee(),
+                    modifier =
+                        Modifier.gritSharedBounds(HabitTitleKey(currentHabit.habit.id))
+                            .basicMarquee(),
                     fontFamily = flexFontEmphasis(),
                 )
             },

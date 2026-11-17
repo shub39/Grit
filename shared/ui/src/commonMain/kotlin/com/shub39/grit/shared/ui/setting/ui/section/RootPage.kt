@@ -147,9 +147,7 @@ fun RootPage(
                         )
 
                         ListItem(
-                            content = {
-                                Text(text = stringResource(Res.string.reorder_tasks))
-                            },
+                            content = { Text(text = stringResource(Res.string.reorder_tasks)) },
                             supportingContent = {
                                 Text(text = stringResource(Res.string.reorder_tasks_desc))
                             },
@@ -166,9 +164,7 @@ fun RootPage(
                         )
 
                         ListItem(
-                            content = {
-                                Text(text = stringResource(Res.string.show_habits))
-                            },
+                            content = { Text(text = stringResource(Res.string.show_habits)) },
                             supportingContent = {
                                 Text(text = stringResource(Res.string.show_habits_desc))
                             },
@@ -189,9 +185,7 @@ fun RootPage(
                         )
 
                         ListItem(
-                            content = {
-                                Text(text = stringResource(Res.string.staring_day))
-                            },
+                            content = { Text(text = stringResource(Res.string.staring_day)) },
                             trailingContent = {
                                 ExpressiveSwitch(
                                     checked = state.startOfTheWeek == DayOfWeek.SUNDAY,
@@ -254,9 +248,7 @@ fun RootPage(
                                 Modifier.clip(leadingItemShape()).clickable {
                                     onNavigateToLookAndFeel()
                                 },
-                            content = {
-                                Text(text = stringResource(Res.string.look_and_feel))
-                            },
+                            content = { Text(text = stringResource(Res.string.look_and_feel)) },
                             supportingContent = {
                                 Text(text = stringResource(Res.string.look_and_feel_desc))
                             },

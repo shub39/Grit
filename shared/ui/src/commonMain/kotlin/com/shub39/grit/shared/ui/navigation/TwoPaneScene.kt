@@ -20,6 +20,7 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.ui.Modifier
 import androidx.navigation3.runtime.NavEntry
 import androidx.navigation3.runtime.NavMetadataKey
@@ -41,9 +42,13 @@ data class TwoPaneScene<T : Any>(
 ) : Scene<T> {
     override val entries: List<NavEntry<T>> = listOf(firstEntry, secondEntry)
     override val content: @Composable (() -> Unit) = {
-        Row(modifier = Modifier.fillMaxSize()) {
-            Column(modifier = Modifier.weight(0.5f)) { firstEntry.Content() }
-            Column(modifier = Modifier.weight(0.5f)) { secondEntry.Content() }
+        // Both panes are composed simultaneously, so a shared key would be registered twice within
+        // the same target state. Multi-pane scenes therefore opt out of shared transitions.
+        CompositionLocalProvider(LocalSharedTransitionsEnabled provides false) {
+            Row(modifier = Modifier.fillMaxSize()) {
+                Column(modifier = Modifier.weight(0.5f)) { firstEntry.Content() }
+                Column(modifier = Modifier.weight(0.5f)) { secondEntry.Content() }
+            }
         }
     }
 

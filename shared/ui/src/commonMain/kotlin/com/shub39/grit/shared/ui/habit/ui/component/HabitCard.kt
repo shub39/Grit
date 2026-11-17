@@ -61,6 +61,8 @@ import com.shub39.grit.core.habits.Habit
 import com.shub39.grit.core.habits.HabitWithAnalytics
 import com.shub39.grit.core.now
 import com.shub39.grit.core.toFormattedString
+import com.shub39.grit.shared.ui.navigation.HabitTitleKey
+import com.shub39.grit.shared.ui.navigation.gritSharedBounds
 import grit.shared.ui.generated.resources.*
 import kotlinx.datetime.DateTimeUnit
 import kotlinx.datetime.DayOfWeek
@@ -168,7 +170,9 @@ fun HabitCard(
                         maxLines = 1,
                         style =
                             MaterialTheme.typography.bodyLarge.copy(fontWeight = FontWeight.Bold),
-                        modifier = Modifier.basicMarquee(),
+                        modifier =
+                            Modifier.gritSharedBounds(HabitTitleKey(habitWithAnalytics.habit.id))
+                                .basicMarquee(),
                     )
                 }
             },
