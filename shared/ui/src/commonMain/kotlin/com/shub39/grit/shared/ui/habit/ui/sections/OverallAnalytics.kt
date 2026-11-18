@@ -113,37 +113,40 @@ fun OverallAnalytics(
                         }
                     }
                 },
+                bottomContent = {
+                    if (state.habitCategories.isNotEmpty()) {
+                        LazyRow(
+                            modifier = Modifier.fillMaxWidth(),
+                            horizontalArrangement = Arrangement.spacedBy(2.dp),
+                            contentPadding = PaddingValues(vertical = 8.dp, horizontal = 16.dp),
+                        ) {
+                            item {
+                                ToggleButton(
+                                    checked = state.analyticsCategoryId == null,
+                                    onCheckedChange = {
+                                        onAction(HabitsAction.ChangeAnalyticsCategory(null))
+                                    },
+                                ) {
+                                    Text(text = stringResource(Res.string.all))
+                                }
+                            }
+
+                            items(state.habitCategories, key = { it.id }) { category ->
+                                ToggleButton(
+                                    checked = state.analyticsCategoryId == category.id,
+                                    onCheckedChange = {
+                                        onAction(HabitsAction.ChangeAnalyticsCategory(category.id))
+                                    },
+                                ) {
+                                    Text(text = category.name)
+                                }
+                            }
+                        }
+                    }
+                },
             )
         },
     ) { padding ->
-        if (state.habitCategories.isNotEmpty()) {
-            LazyRow(
-                modifier = Modifier.fillMaxWidth(),
-                horizontalArrangement = Arrangement.spacedBy(2.dp),
-                contentPadding = PaddingValues(vertical = 8.dp, horizontal = 16.dp),
-            ) {
-                item {
-                    ToggleButton(
-                        checked = state.analyticsCategoryId == null,
-                        onCheckedChange = { onAction(HabitsAction.ChangeAnalyticsCategory(null)) },
-                    ) {
-                        Text(text = stringResource(Res.string.all))
-                    }
-                }
-
-                items(state.habitCategories, key = { it.id }) { category ->
-                    ToggleButton(
-                        checked = state.analyticsCategoryId == category.id,
-                        onCheckedChange = {
-                            onAction(HabitsAction.ChangeAnalyticsCategory(category.id))
-                        },
-                    ) {
-                        Text(text = category.name)
-                    }
-                }
-            }
-        }
-
         val maxWidth = windowSizeClass.getGridMinWidth()
         LazierGrid(
             modifier = Modifier.fillMaxSize(),

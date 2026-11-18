@@ -36,8 +36,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.Dp
-import com.shub39.grit.shared.ui.LocalWindowSizeClass
-import com.shub39.grit.shared.ui.WindowSize.Companion.isWidthExpanded
 
 /** Layout of an [ExpressiveTopBar]. */
 enum class ExpressiveTopBarStyle {
@@ -98,11 +96,7 @@ fun ExpressiveTopBar(
             ?: if (style == ExpressiveTopBarStyle.LargeFlexible) Alignment.Start
             else Alignment.CenterHorizontally
 
-    // On expanded windows the two row layout wastes vertical space, so only use it while compact.
-    val useLargeBar =
-        style == ExpressiveTopBarStyle.LargeFlexible &&
-            !LocalWindowSizeClass.current.isWidthExpanded()
-
+    val useLargeBar = style == ExpressiveTopBarStyle.LargeFlexible
     val barModifier =
         if (maxWidth == null) {
             modifier.background(brush = expressiveTopBarGradient())
