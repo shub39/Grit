@@ -39,6 +39,9 @@ kotlin {
             implementation(projects.shared.ui)
             implementation(projects.shared.logic)
 
+            implementation(libs.kotlinx.datetime)
+            implementation(libs.kotlinx.coroutines)
+
             implementation(libs.compose.material3)
             implementation(libs.compose.components.resources)
             implementation(libs.compose.windowsizeclass)
