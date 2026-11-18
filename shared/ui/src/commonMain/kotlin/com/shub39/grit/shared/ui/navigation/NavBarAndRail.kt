@@ -31,6 +31,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
+import com.shub39.grit.shared.ui.progressiveBlurPossible
 import grit.shared.ui.generated.resources.Res
 import grit.shared.ui.generated.resources.Res.string
 import grit.shared.ui.generated.resources.alarm
@@ -61,12 +62,21 @@ fun NavBar(modifier: Modifier = Modifier, currentRoute: Routes?, onNavigate: (Ro
         modifier =
             modifier.background(
                 brush =
-                    Brush.verticalGradient(
-                        0f to Color.Transparent,
-                        0.2f to NavigationBarDefaults.containerColor.copy(0.5f),
-                        0.5f to NavigationBarDefaults.containerColor.copy(0.7f),
-                        1f to NavigationBarDefaults.containerColor,
-                    )
+                    if (progressiveBlurPossible()) {
+                        Brush.verticalGradient(
+                            0f to Color.Transparent,
+                            0.2f to NavigationBarDefaults.containerColor.copy(0.5f),
+                            0.5f to NavigationBarDefaults.containerColor.copy(0.7f),
+                            1f to NavigationBarDefaults.containerColor,
+                        )
+                    } else {
+                        Brush.verticalGradient(
+                            0f to Color.Transparent,
+                            0.2f to NavigationBarDefaults.containerColor.copy(0.8f),
+                            0.5f to NavigationBarDefaults.containerColor.copy(0.9f),
+                            1f to NavigationBarDefaults.containerColor,
+                        )
+                    }
             ),
     ) {
         NAV_ITEMS.forEach { item ->

@@ -17,3 +17,5 @@
 package com.shub39.grit.shared.ui
 
 actual fun blurPossible(): Boolean = true
+
+actual fun progressiveBlurPossible(): Boolean = true
