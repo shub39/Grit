@@ -19,16 +19,15 @@ package com.shub39.grit.shared.ui.setting.ui.section
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.widthIn
-import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyListScope
 import androidx.compose.material3.Icon
-import androidx.compose.material3.LargeFlexibleTopAppBar
 import androidx.compose.material3.ListItem
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
@@ -46,6 +45,9 @@ import com.shub39.grit.core.settings.Sections
 import com.shub39.grit.shared.ui.ContentMaxWidth
 import com.shub39.grit.shared.ui.GritPreviewWrapper
 import com.shub39.grit.shared.ui.components.ExpressiveSwitch
+import com.shub39.grit.shared.ui.components.ExpressiveTopBar
+import com.shub39.grit.shared.ui.components.ExpressiveTopBarStyle
+import com.shub39.grit.shared.ui.components.LazierColumn
 import com.shub39.grit.shared.ui.components.PageFill
 import com.shub39.grit.shared.ui.components.detachedItemShape
 import com.shub39.grit.shared.ui.components.endItemShape
@@ -72,34 +74,31 @@ fun RootPage(
     onNavigateToPaywall: () -> Unit,
     onNavigateToChangelog: () -> Unit,
     onNavigateToAppInfo: () -> Unit,
-) =
-    PageFill(modifier = modifier.fillMaxSize()) {
-        var showLocalePicker by rememberSaveable { mutableStateOf(false) }
+) {
+    var showLocalePicker by rememberSaveable { mutableStateOf(false) }
 
-        val scrollBehavior = TopAppBarDefaults.enterAlwaysScrollBehavior()
-        Column(
-            modifier =
-                Modifier.widthIn(max = ContentMaxWidth)
-                    .nestedScroll(scrollBehavior.nestedScrollConnection)
-        ) {
-            LargeFlexibleTopAppBar(
-                scrollBehavior = scrollBehavior,
+    val scrollBehavior = TopAppBarDefaults.enterAlwaysScrollBehavior()
+
+    Scaffold(
+        modifier = modifier.fillMaxSize().nestedScroll(scrollBehavior.nestedScrollConnection),
+        topBar = {
+            ExpressiveTopBar(
                 title = {
                     Text(
                         text = stringResource(Res.string.settings),
                         fontFamily = flexFontEmphasis(),
                     )
                 },
-                colors =
-                    TopAppBarDefaults.topAppBarColors(
-                        scrolledContainerColor = MaterialTheme.colorScheme.surface
-                    ),
+                style = ExpressiveTopBarStyle.LargeFlexible,
+                scrollBehavior = scrollBehavior,
+                maxWidth = ContentMaxWidth,
             )
-
-            LazyColumn(
-                modifier = Modifier.fillMaxSize(),
-                contentPadding =
-                    PaddingValues(start = 12.dp, end = 12.dp, top = 16.dp, bottom = 60.dp),
+        },
+    ) { padding ->
+        PageFill {
+            LazierColumn(
+                modifier = Modifier.fillMaxHeight().widthIn(max = ContentMaxWidth),
+                contentPadding = padding,
                 verticalArrangement = Arrangement.spacedBy(16.dp),
             ) {
                 // Grit Plus
@@ -344,12 +343,13 @@ fun RootPage(
                 // language picker
                 languagePicker(onClick = { showLocalePicker = true })
             }
-
-            if (showLocalePicker) {
-                LocalePickerSheet(onDismissRequest = { showLocalePicker = false })
-            }
         }
     }
+
+    if (showLocalePicker) {
+        LocalePickerSheet(onDismissRequest = { showLocalePicker = false })
+    }
+}
 
 expect fun LazyListScope.languagePicker(onClick: () -> Unit)
 

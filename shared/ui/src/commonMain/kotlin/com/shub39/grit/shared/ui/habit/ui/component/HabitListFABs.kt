@@ -39,6 +39,8 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import com.shub39.grit.shared.ui.LocalWindowSizeClass
 import com.shub39.grit.shared.ui.WindowSize.Companion.isWidthExpanded
+import com.shub39.grit.shared.ui.components.LazierDefaults
+import com.shub39.grit.shared.ui.components.PageInsets
 import com.shub39.grit.shared.ui.habit.HabitState
 import com.shub39.grit.shared.ui.habit.HabitsAction
 import grit.shared.ui.generated.resources.*
@@ -61,7 +63,12 @@ fun BoxScope.HabitListFABs(
     Row(
         modifier =
             modifier
-                .padding(16.dp)
+                .padding(
+                    start = PageInsets.Edge,
+                    end = PageInsets.Edge,
+                    top = PageInsets.Edge,
+                    bottom = PageInsets.Edge + LazierDefaults.navBarClearance(),
+                )
                 .navigationBarsPadding()
                 .align(if (isExpanded) Alignment.BottomStart else Alignment.BottomEnd),
         horizontalArrangement = Arrangement.spacedBy(8.dp),

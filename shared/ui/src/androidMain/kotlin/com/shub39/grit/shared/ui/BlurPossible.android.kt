@@ -23,4 +23,5 @@ import androidx.annotation.ChecksSdkIntAtLeast
 actual fun blurPossible(): Boolean = Build.VERSION.SDK_INT >= Build.VERSION_CODES.S
 
 @ChecksSdkIntAtLeast(api = Build.VERSION_CODES.TIRAMISU)
-actual fun progressiveBlurPossible(): Boolean = Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU
+actual fun progressiveBlurPossible(): Boolean =
+    Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU

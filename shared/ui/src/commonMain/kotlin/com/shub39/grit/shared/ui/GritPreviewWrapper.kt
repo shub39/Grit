@@ -17,7 +17,9 @@
 package com.shub39.grit.shared.ui
 
 import androidx.compose.material3.Surface
+import androidx.compose.material3.adaptive.currentWindowAdaptiveInfoV2
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.ui.tooling.preview.PreviewWrapperProvider
 import com.shub39.grit.core.theme.Theme
 import com.shub39.grit.shared.ui.theme.GritTheme
@@ -25,6 +27,13 @@ import com.shub39.grit.shared.ui.theme.GritTheme
 class GritPreviewWrapper : PreviewWrapperProvider {
     @Composable
     override fun Wrap(content: @Composable (() -> Unit)) {
-        GritTheme(theme = Theme()) { Surface(content = content) }
+        GritTheme(theme = Theme()) {
+            Surface {
+                CompositionLocalProvider(
+                    LocalWindowSizeClass provides currentWindowAdaptiveInfoV2().windowSizeClass,
+                    content = content,
+                )
+            }
+        }
     }
 }

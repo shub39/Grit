@@ -19,19 +19,19 @@ package com.shub39.grit.shared.ui.habit.ui.sections
 import androidx.compose.animation.AnimatedContent
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.widthIn
 import androidx.compose.material3.ButtonGroupDefaults
 import androidx.compose.material3.FilledTonalIconButton
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
-import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -41,7 +41,6 @@ import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import com.kizitonwose.calendar.compose.VerticalCalendar
 import com.kizitonwose.calendar.compose.VerticalYearCalendar
@@ -56,6 +55,10 @@ import com.shub39.grit.core.habits.HabitWithAnalytics
 import com.shub39.grit.shared.ui.ContentMaxWidth
 import com.shub39.grit.shared.ui.LocalWindowSizeClass
 import com.shub39.grit.shared.ui.WindowSize.Companion.isWidthExpanded
+import com.shub39.grit.shared.ui.components.ExpressiveTopBar
+import com.shub39.grit.shared.ui.components.LazierBlur
+import com.shub39.grit.shared.ui.components.LazierDefaults
+import com.shub39.grit.shared.ui.components.LazierDefaults.lazierEdgeBlur
 import com.shub39.grit.shared.ui.components.ListSelect
 import com.shub39.grit.shared.ui.components.PageFill
 import com.shub39.grit.shared.ui.habit.HabitState
@@ -95,55 +98,60 @@ fun Calendar(
     val today = LocalDate.now()
     val edgeWeeks = listOf(state.startingDay, daysStartingFrom(state.startingDay).last())
 
-    Column(modifier = modifier.fillMaxSize()) {
-        TopAppBar(
-            title = {
-                Text(text = stringResource(Res.string.calendar), fontFamily = flexFontEmphasis())
-            },
-            navigationIcon = {
-                FilledTonalIconButton(onClick = onNavigateBack) {
-                    Icon(
-                        imageVector = vectorResource(Res.drawable.nav_arrow_back),
-                        contentDescription = "Navigate Back",
+    Scaffold(
+        modifier = modifier,
+        topBar = {
+            ExpressiveTopBar(
+                title = {
+                    Text(
+                        text = stringResource(Res.string.calendar),
+                        fontFamily = flexFontEmphasis(),
                     )
-                }
-            },
-            colors =
-                TopAppBarDefaults.topAppBarColors(
-                    scrolledContainerColor = Color.Transparent,
-                    containerColor = Color.Transparent,
-                ),
-            windowInsets =
-                if (windowSizeClass.isWidthExpanded()) {
-                    WindowInsets(0)
-                } else {
-                    TopAppBarDefaults.windowInsets
                 },
-        )
-
-        Row(
-            modifier = Modifier.padding(horizontal = 16.dp),
-            horizontalArrangement = Arrangement.spacedBy(ButtonGroupDefaults.ConnectedSpaceBetween),
-        ) {
-            ListSelect(
-                title = null,
-                options = CalendarType.entries.toList(),
-                onSelectedChange = { calendarType = it },
-                labelProvider = { Text(text = stringResource(it.toStringRes())) },
-                selected = calendarType,
+                navigationIcon = {
+                    FilledTonalIconButton(onClick = onNavigateBack) {
+                        Icon(
+                            imageVector = vectorResource(Res.drawable.nav_arrow_back),
+                            contentDescription = "Navigate Back",
+                        )
+                    }
+                },
+                maxWidth = ContentMaxWidth,
+                windowInsets =
+                    if (windowSizeClass.isWidthExpanded()) {
+                        WindowInsets(0)
+                    } else {
+                        TopAppBarDefaults.windowInsets
+                    },
+                bottomContent = {
+                    Row(
+                        modifier = Modifier.fillMaxWidth().padding(horizontal = 16.dp),
+                        horizontalArrangement =
+                            Arrangement.spacedBy(ButtonGroupDefaults.ConnectedSpaceBetween),
+                    ) {
+                        ListSelect(
+                            title = null,
+                            options = CalendarType.entries.toList(),
+                            onSelectedChange = { calendarType = it },
+                            labelProvider = { Text(text = stringResource(it.toStringRes())) },
+                            selected = calendarType,
+                        )
+                    }
+                },
             )
-        }
-
+        },
+    ) { padding ->
         AnimatedContent(targetState = calendarType, modifier = Modifier.fillMaxSize()) { type ->
             when (type) {
                 YEAR -> {
                     YearlyCalendar(
                         today = today,
                         state = state,
-                        modifier = modifier,
+                        modifier = Modifier,
                         doneDates = currentHabit.statuses,
                         currentHabit = currentHabit,
                         edgeWeeks = edgeWeeks,
+                        contentPadding = padding,
                         onDateClick = { date, value ->
                             if (isMeasurable) {
                                 showInsertStatusDialog = ShowInsertStatus(date, value)
@@ -161,6 +169,7 @@ fun Calendar(
                         today = today,
                         currentHabit = currentHabit,
                         edgeWeeks = edgeWeeks,
+                        contentPadding = padding,
                         onDateClick = { date, value ->
                             if (isMeasurable) {
                                 showInsertStatusDialog = ShowInsertStatus(date, value)
@@ -193,6 +202,7 @@ private fun YearlyCalendar(
     currentHabit: HabitWithAnalytics,
     onDateClick: (LocalDate, Double) -> Unit,
     edgeWeeks: List<DayOfWeek>,
+    contentPadding: PaddingValues = PaddingValues(0.dp),
 ) =
     PageFill(modifier = modifier) {
         val calendarState =
@@ -204,8 +214,11 @@ private fun YearlyCalendar(
             )
 
         VerticalYearCalendar(
-            modifier = Modifier.padding(horizontal = 8.dp).widthIn(max = ContentMaxWidth),
-            contentPadding = PaddingValues(top = 16.dp, bottom = 60.dp),
+            modifier =
+                Modifier.padding(horizontal = 8.dp)
+                    .widthIn(max = ContentMaxWidth)
+                    .lazierEdgeBlur(LazierBlur.Both),
+            contentPadding = LazierDefaults.contentPaddingWith(contentPadding),
             monthHorizontalSpacing = 4.dp,
             monthVerticalSpacing = 4.dp,
             state = calendarState,
@@ -261,6 +274,7 @@ private fun MonthlyCalendar(
     edgeWeeks: List<DayOfWeek>,
     onDateClick: (LocalDate, Double) -> Unit,
     modifier: Modifier = Modifier,
+    contentPadding: PaddingValues = PaddingValues(0.dp),
 ) =
     PageFill(modifier) {
         val calendarState =
@@ -272,8 +286,11 @@ private fun MonthlyCalendar(
             )
 
         VerticalCalendar(
-            modifier = Modifier.padding(horizontal = 16.dp).widthIn(max = ContentMaxWidth),
-            contentPadding = PaddingValues(top = 16.dp, bottom = 60.dp),
+            modifier =
+                Modifier.padding(horizontal = 16.dp)
+                    .widthIn(max = ContentMaxWidth)
+                    .lazierEdgeBlur(LazierBlur.Both),
+            contentPadding = LazierDefaults.contentPaddingWith(contentPadding),
             state = calendarState,
             reverseLayout = true,
             monthHeader = { calendarMonth -> CalendarMonthHeader(calendarMonth = calendarMonth) },

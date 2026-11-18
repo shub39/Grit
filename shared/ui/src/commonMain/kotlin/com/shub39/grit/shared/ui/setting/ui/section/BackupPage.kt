@@ -19,33 +19,30 @@ package com.shub39.grit.shared.ui.setting.ui.section
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material3.Button
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.FilledTonalIconButton
 import androidx.compose.material3.Icon
 import androidx.compose.material3.ListItem
-import androidx.compose.material3.MediumFlexibleTopAppBar
+import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
-import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.shub39.grit.core.settings.backup.ExportState
 import com.shub39.grit.core.settings.backup.RestoreState
 import com.shub39.grit.core.theme.AppTheme
 import com.shub39.grit.core.theme.Theme
+import com.shub39.grit.shared.ui.components.ExpressiveTopBar
+import com.shub39.grit.shared.ui.components.LazierColumn
 import com.shub39.grit.shared.ui.components.endItemShape
 import com.shub39.grit.shared.ui.components.leadingItemShape
 import com.shub39.grit.shared.ui.components.listItemColors
@@ -67,27 +64,25 @@ fun BackupPage(
 ) {
     LaunchedEffect(Unit) { onAction(SettingsAction.OnResetBackupState) }
 
-    val scrollBehavior = TopAppBarDefaults.enterAlwaysScrollBehavior()
-    Column(modifier = modifier.fillMaxSize().nestedScroll(scrollBehavior.nestedScrollConnection)) {
-        MediumFlexibleTopAppBar(
-            scrollBehavior = scrollBehavior,
-            title = {
-                Text(text = stringResource(Res.string.backup), fontFamily = flexFontEmphasis())
-            },
-            navigationIcon = {
-                FilledTonalIconButton(onClick = onNavigateBack) {
-                    Icon(
-                        imageVector = vectorResource(Res.drawable.nav_arrow_back),
-                        contentDescription = "Navigate Back",
-                    )
-                }
-            },
-        )
-
-        LazyColumn(
-            modifier = Modifier.fillMaxWidth(),
-            contentPadding = PaddingValues(start = 12.dp, end = 12.dp, top = 16.dp, bottom = 60.dp),
-        ) {
+    Scaffold(
+        modifier = modifier,
+        topBar = {
+            ExpressiveTopBar(
+                title = {
+                    Text(text = stringResource(Res.string.backup), fontFamily = flexFontEmphasis())
+                },
+                navigationIcon = {
+                    FilledTonalIconButton(onClick = onNavigateBack) {
+                        Icon(
+                            imageVector = vectorResource(Res.drawable.nav_arrow_back),
+                            contentDescription = "Navigate Back",
+                        )
+                    }
+                },
+            )
+        },
+    ) { padding ->
+        LazierColumn(modifier = Modifier.fillMaxSize(), contentPadding = padding) {
             item {
                 Column(verticalArrangement = Arrangement.spacedBy(2.dp)) {
                     Column(modifier = Modifier.clip(leadingItemShape())) {

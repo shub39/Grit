@@ -28,21 +28,19 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.widthIn
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
-import androidx.compose.foundation.lazy.staggeredgrid.LazyVerticalStaggeredGrid
 import androidx.compose.foundation.lazy.staggeredgrid.StaggeredGridCells
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.FilledTonalIconButton
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.ToggleButton
-import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.StrokeCap
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
@@ -52,6 +50,8 @@ import com.kizitonwose.calendar.core.now
 import com.shub39.grit.shared.ui.LocalWindowSizeClass
 import com.shub39.grit.shared.ui.WindowSize.Companion.getGridMinWidth
 import com.shub39.grit.shared.ui.WindowSize.Companion.isWidthExpanded
+import com.shub39.grit.shared.ui.components.ExpressiveTopBar
+import com.shub39.grit.shared.ui.components.LazierGrid
 import com.shub39.grit.shared.ui.habit.HabitState
 import com.shub39.grit.shared.ui.habit.HabitsAction
 import com.shub39.grit.shared.ui.habit.filterByCategory
@@ -87,37 +87,35 @@ fun OverallAnalytics(
             firstDayOfWeek = state.startingDay,
         )
 
-    Column(modifier = modifier.fillMaxSize()) {
-        TopAppBar(
-            colors =
-                TopAppBarDefaults.topAppBarColors(
-                    scrolledContainerColor = Color.Transparent,
-                    containerColor = Color.Transparent,
-                ),
-            title = {
-                Text(
-                    text = stringResource(Res.string.overall_analytics),
-                    fontFamily = flexFontEmphasis(),
-                )
-            },
-            windowInsets =
-                if (windowSizeClass.isWidthExpanded()) {
-                    WindowInsets(0)
-                } else {
-                    TopAppBarDefaults.windowInsets
+    Scaffold(
+        modifier = modifier,
+        topBar = {
+            ExpressiveTopBar(
+                title = {
+                    Text(
+                        text = stringResource(Res.string.overall_analytics),
+                        fontFamily = flexFontEmphasis(),
+                    )
                 },
-            navigationIcon = {
-                if (showNavigateBack) {
-                    FilledTonalIconButton(onClick = onNavigateBack) {
-                        Icon(
-                            imageVector = vectorResource(Res.drawable.nav_arrow_back),
-                            contentDescription = "Navigate Back",
-                        )
+                windowInsets =
+                    if (windowSizeClass.isWidthExpanded()) {
+                        WindowInsets(0)
+                    } else {
+                        TopAppBarDefaults.windowInsets
+                    },
+                navigationIcon = {
+                    if (showNavigateBack) {
+                        FilledTonalIconButton(onClick = onNavigateBack) {
+                            Icon(
+                                imageVector = vectorResource(Res.drawable.nav_arrow_back),
+                                contentDescription = "Navigate Back",
+                            )
+                        }
                     }
-                }
-            },
-        )
-
+                },
+            )
+        },
+    ) { padding ->
         if (state.habitCategories.isNotEmpty()) {
             LazyRow(
                 modifier = Modifier.fillMaxWidth(),
@@ -147,10 +145,10 @@ fun OverallAnalytics(
         }
 
         val maxWidth = windowSizeClass.getGridMinWidth()
-        LazyVerticalStaggeredGrid(
+        LazierGrid(
             modifier = Modifier.fillMaxSize(),
             columns = StaggeredGridCells.Adaptive(minSize = maxWidth),
-            contentPadding = PaddingValues(start = 16.dp, end = 16.dp, top = 16.dp, bottom = 60.dp),
+            contentPadding = padding,
             horizontalArrangement = Arrangement.spacedBy(16.dp),
             verticalItemSpacing = 16.dp,
         ) {
