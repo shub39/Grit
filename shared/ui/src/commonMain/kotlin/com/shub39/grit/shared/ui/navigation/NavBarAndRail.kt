@@ -16,16 +16,20 @@
  */
 package com.shub39.grit.shared.ui.navigation
 
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.height
 import androidx.compose.material3.Icon
 import androidx.compose.material3.NavigationBar
+import androidx.compose.material3.NavigationBarDefaults
 import androidx.compose.material3.NavigationBarItem
 import androidx.compose.material3.NavigationRail
 import androidx.compose.material3.NavigationRailItem
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Brush
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import grit.shared.ui.generated.resources.Res
 import grit.shared.ui.generated.resources.Res.string
@@ -52,7 +56,19 @@ private val NAV_ITEMS =
 fun NavBar(modifier: Modifier = Modifier, currentRoute: Routes?, onNavigate: (Routes) -> Unit) {
     if (currentRoute?.getTopLevelRoute() == null) return
 
-    NavigationBar(modifier = modifier) {
+    NavigationBar(
+        containerColor = Color.Transparent,
+        modifier =
+            modifier.background(
+                brush =
+                    Brush.verticalGradient(
+                        0f to Color.Transparent,
+                        0.2f to NavigationBarDefaults.containerColor.copy(0.5f),
+                        0.5f to NavigationBarDefaults.containerColor.copy(0.7f),
+                        1f to NavigationBarDefaults.containerColor,
+                    )
+            ),
+    ) {
         NAV_ITEMS.forEach { item ->
             val selected = currentRoute.getTopLevelRoute() == item.route
 
