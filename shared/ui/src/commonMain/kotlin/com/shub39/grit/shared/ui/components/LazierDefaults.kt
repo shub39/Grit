@@ -65,13 +65,17 @@ object LazierDefaults {
     fun navBarClearance(): Dp =
         if (LocalWindowSizeClass.current.isWidthCompact()) PageInsets.NavBarHeight else 0.dp
 
+    @Composable
+    fun appBarClearance(): Dp =
+        if (LocalWindowSizeClass.current.isWidthCompact()) 6.dp else 0.dp
+
     /** Edge and top padding, plus clearance for the overlaid navigation bar on compact windows. */
     @Composable
     fun pagePadding(): PaddingValues =
         PaddingValues(
             start = PageInsets.Edge,
             end = PageInsets.Edge,
-            top = PageInsets.Edge,
+            top = PageInsets.Edge + appBarClearance(),
             bottom = PageInsets.Edge + navBarClearance(),
         )
 
