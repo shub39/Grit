@@ -17,6 +17,8 @@
 package com.shub39.grit.shared.ui.components
 
 import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.calculateEndPadding
+import androidx.compose.foundation.layout.calculateStartPadding
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.blur
@@ -83,11 +85,11 @@ object LazierDefaults {
 
         return PaddingValues(
             start =
-                scaffoldPadding.calculateLeftPadding(direction) +
-                    page.calculateLeftPadding(direction),
+                scaffoldPadding.calculateStartPadding(direction) +
+                    page.calculateStartPadding(direction),
             end =
-                scaffoldPadding.calculateRightPadding(direction) +
-                    page.calculateRightPadding(direction),
+                scaffoldPadding.calculateEndPadding(direction) +
+                    page.calculateEndPadding(direction),
             top = scaffoldPadding.calculateTopPadding() + page.calculateTopPadding(),
             bottom = scaffoldPadding.calculateBottomPadding() + page.calculateBottomPadding(),
         )

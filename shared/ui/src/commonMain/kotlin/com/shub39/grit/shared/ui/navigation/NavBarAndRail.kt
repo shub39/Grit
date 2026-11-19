@@ -50,6 +50,8 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalLayoutDirection
+import androidx.compose.ui.semantics.contentDescription
+import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -119,6 +121,7 @@ fun NavBar(modifier: Modifier = Modifier, currentRoute: Routes?, onNavigate: (Ro
         ) {
             NAV_ITEMS.fastForEach { item ->
                 val selected = currentRoute.getTopLevelRoute() == item.route
+                val title = stringResource(item.title)
 
                 ToggleButton(
                     checked = selected,
@@ -140,7 +143,7 @@ fun NavBar(modifier: Modifier = Modifier, currentRoute: Routes?, onNavigate: (Ro
                             checkedContentColor = colorScheme.onPrimary,
                         ),
                     shapes = ToggleButtonShapes(CircleShape, CircleShape, CircleShape),
-                    modifier = Modifier.height(56.dp),
+                    modifier = Modifier.height(56.dp).semantics { contentDescription = title },
                 ) {
                     Row(verticalAlignment = Alignment.CenterVertically) {
                         Icon(painter = painterResource(item.icon), contentDescription = null)
@@ -150,7 +153,7 @@ fun NavBar(modifier: Modifier = Modifier, currentRoute: Routes?, onNavigate: (Ro
                             exit = shrinkHorizontally(motionScheme.defaultSpatialSpec()),
                         ) {
                             Text(
-                                text = stringResource(item.title),
+                                text = title,
                                 fontSize = 16.sp,
                                 lineHeight = 24.sp,
                                 fontFamily = flexFontRounded(),

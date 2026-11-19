@@ -21,6 +21,8 @@ import androidx.compose.foundation.gestures.FlingBehavior
 import androidx.compose.foundation.gestures.ScrollableDefaults
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.calculateEndPadding
+import androidx.compose.foundation.layout.calculateStartPadding
 import androidx.compose.foundation.lazy.staggeredgrid.LazyStaggeredGridScope
 import androidx.compose.foundation.lazy.staggeredgrid.LazyStaggeredGridState
 import androidx.compose.foundation.lazy.staggeredgrid.LazyVerticalStaggeredGrid
@@ -71,11 +73,11 @@ fun LazierGrid(
                 bottom =
                     contentPadding.calculateBottomPadding() + extraPadding.calculateBottomPadding(),
                 start =
-                    contentPadding.calculateLeftPadding(layoutDirection) +
-                        extraPadding.calculateLeftPadding(layoutDirection),
+                    contentPadding.calculateStartPadding(layoutDirection) +
+                        extraPadding.calculateStartPadding(layoutDirection),
                 end =
-                    contentPadding.calculateRightPadding(layoutDirection) +
-                        extraPadding.calculateRightPadding(layoutDirection),
+                    contentPadding.calculateEndPadding(layoutDirection) +
+                        extraPadding.calculateEndPadding(layoutDirection),
             ),
         reverseLayout = reverseLayout,
         verticalItemSpacing = verticalItemSpacing,

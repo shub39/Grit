@@ -21,6 +21,8 @@ import androidx.compose.foundation.gestures.FlingBehavior
 import androidx.compose.foundation.gestures.ScrollableDefaults
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.calculateEndPadding
+import androidx.compose.foundation.layout.calculateStartPadding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyListDefaults
 import androidx.compose.foundation.lazy.LazyListScope
@@ -71,11 +73,11 @@ fun LazierColumn(
                 bottom =
                     contentPadding.calculateBottomPadding() + extraPadding.calculateBottomPadding(),
                 start =
-                    contentPadding.calculateLeftPadding(layoutDirection) +
-                        extraPadding.calculateLeftPadding(layoutDirection),
+                    contentPadding.calculateStartPadding(layoutDirection) +
+                        extraPadding.calculateStartPadding(layoutDirection),
                 end =
-                    contentPadding.calculateRightPadding(layoutDirection) +
-                        extraPadding.calculateRightPadding(layoutDirection),
+                    contentPadding.calculateEndPadding(layoutDirection) +
+                        extraPadding.calculateEndPadding(layoutDirection),
             ),
         reverseLayout = reverseLayout,
         verticalArrangement = verticalArrangement,

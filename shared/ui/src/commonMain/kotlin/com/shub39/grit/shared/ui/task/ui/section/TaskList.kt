@@ -161,6 +161,12 @@ fun TaskList(
         var editState by rememberSaveable { mutableStateOf(false) }
         var showSubTasksFeaturePreview by rememberSaveable { mutableStateOf(false) }
 
+        LaunchedEffect(windowSizeClass.isWidthCompact()) {
+            if (!windowSizeClass.isWidthCompact()) {
+                editState = false
+            }
+        }
+
         var showTaskUpsertSheet: ShowTaskUpsertSheet? by retain { mutableStateOf(null) }
         var showSubTaskUpsertSheet: ShowSubTaskUpsertSheet? by retain { mutableStateOf(null) }
 
@@ -176,7 +182,7 @@ fun TaskList(
                     isReorderMode = editState,
                     onReorderToggle = { editState = it },
                     onDeleteClick = { showDeleteDialog = true },
-                    isExpanded = windowSizeClass.isWidthExpanded(),
+                    isExpanded = !windowSizeClass.isWidthCompact(),
                     bottomContent = {
                         CategorySelector(
                             state = state,

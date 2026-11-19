@@ -27,9 +27,7 @@
             android:name=".app.MainActivity"
             android:launchMode="standard"
             android:exported="true"
-            android:theme="@style/Theme.Grit.Splash"
-            android:screenOrientation="portrait"
-            tools:ignore="DiscouragedApi,LockedOrientationActivity">
+            android:theme="@style/Theme.Grit.Splash">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
