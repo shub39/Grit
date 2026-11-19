@@ -183,6 +183,16 @@ fun HabitsList(
                     },
                 )
             },
+            floatingActionButton = {
+                HabitListFABs(
+                    onNavigateToOverallAnalytics = onNavigateToOverallAnalytics,
+                    state = state,
+                    fabVisible = fabVisible && !state.editState,
+                    onAction = onAction,
+                    onNavigateToPaywall = onNavigateToPaywall,
+                    isUserSubscribed = isUserSubscribed,
+                )
+            },
         ) { padding ->
             PageFill {
                 HabitsListContent(
@@ -196,15 +206,6 @@ fun HabitsList(
                 )
             }
         }
-
-        HabitListFABs(
-            onNavigateToOverallAnalytics = onNavigateToOverallAnalytics,
-            state = state,
-            fabVisible = fabVisible && !state.editState,
-            onAction = onAction,
-            onNavigateToPaywall = onNavigateToPaywall,
-            isUserSubscribed = isUserSubscribed,
-        )
 
         if (showCategoryAddSheet) {
             HabitCategoryUpsertSheet(

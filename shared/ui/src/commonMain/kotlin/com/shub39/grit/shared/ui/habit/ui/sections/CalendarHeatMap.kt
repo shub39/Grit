@@ -278,7 +278,7 @@ private fun YearlyMap(
             modifier
                 .padding(horizontal = 8.dp)
                 .clip(RoundedCornerShape(topStart = 20.dp, topEnd = 20.dp))
-                .lazierEdgeBlur(LazierBlur.Both),
+                .lazierEdgeBlur(LazierBlur.Top),
         contentPadding = LazierDefaults.contentPaddingWith(contentPadding),
         state = calendarState,
         monthVerticalSpacing = 4.dp,
@@ -363,7 +363,7 @@ private fun MonthlyMap(
             modifier
                 .padding(horizontal = 8.dp)
                 .clip(RoundedCornerShape(topStart = 20.dp, topEnd = 20.dp))
-                .lazierEdgeBlur(LazierBlur.Both),
+                .lazierEdgeBlur(LazierBlur.Top),
         state = calendarState,
         monthHeader = { calendarMonth -> CalendarMonthHeader(calendarMonth = calendarMonth) },
         contentPadding = LazierDefaults.contentPaddingWith(contentPadding),

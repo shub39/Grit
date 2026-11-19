@@ -33,6 +33,7 @@ import androidx.navigation3.runtime.entryProvider
 import androidx.navigation3.ui.NavDisplay
 import com.shub39.grit.core.settings.Sections
 import com.shub39.grit.shared.ui.LocalWindowSizeClass
+import com.shub39.grit.shared.ui.WindowSize.Companion.isWidthCompact
 import com.shub39.grit.shared.ui.app.MainAppState
 import com.shub39.grit.shared.ui.habit.HabitsAction
 import com.shub39.grit.shared.ui.habit.ui.sections.AnalyticsPage
@@ -124,6 +125,7 @@ fun GritNavDisplay(
                                 habitsScreens(
                                     topLevelBackStack = topLevelBackStack,
                                     globalState = globalState,
+                                    isExpanded = !windowSizeClass.isWidthCompact(),
                                 )
 
                                 entry<Paywall>(metadata = verticalTransitionMetadata()) {
@@ -149,6 +151,7 @@ fun GritNavDisplay(
 private fun EntryProviderScope<Routes>.habitsScreens(
     topLevelBackStack: TopLevelBackStack,
     globalState: MainAppState,
+    isExpanded: Boolean,
 ) {
     entry<HabitsList>(metadata = ListDetailScene.listPane() + fadeTransitionMetadata()) {
         val viewModel = koinViewModel<HabitViewModel>()
@@ -205,7 +208,13 @@ private fun EntryProviderScope<Routes>.habitsScreens(
 
     entry<OverallAnalytics>(
         metadata =
-            TwoPaneScene.twoPane() + ListDetailScene.detailPane() + horizontalTransitionMetadata()
+            TwoPaneScene.twoPane() +
+                ListDetailScene.detailPane() +
+                if (isExpanded) {
+                    horizontalTransitionMetadata()
+                } else {
+                    verticalTransitionMetadata()
+                }
     ) {
         val viewModel = koinViewModel<HabitViewModel>()
         val state by viewModel.state.collectAsStateWithLifecycle()

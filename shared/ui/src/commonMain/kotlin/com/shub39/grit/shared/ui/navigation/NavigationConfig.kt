@@ -76,6 +76,9 @@ class TopLevelBackStack(private val startKey: Routes = TaskList) {
 
     fun isRouteOnTop(route: Routes): Boolean = backStack.lastOrNull() == route
 
+    fun isMainRoute(): Boolean =
+        backStack.lastOrNull() in listOf(HabitsList, TaskList, SettingsHome)
+
     fun add(route: Routes) {
         if (!isRouteOnTop(route)) {
             backStack.clear()

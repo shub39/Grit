@@ -45,12 +45,6 @@ enum class LazierBlur {
 
     /** Fade out at the top edge, behind the top bar. */
     Top,
-
-    /** Fade out at the bottom edge, behind the overlaid navigation bar. */
-    Bottom,
-
-    /** Fade out at both edges. */
-    Both,
 }
 
 /** Defaults shared by [LazierColumn] and [LazierGrid]. */
@@ -66,8 +60,7 @@ object LazierDefaults {
         if (LocalWindowSizeClass.current.isWidthCompact()) PageInsets.NavBarHeight else 0.dp
 
     @Composable
-    fun appBarClearance(): Dp =
-        if (LocalWindowSizeClass.current.isWidthCompact()) 6.dp else 0.dp
+    fun appBarClearance(): Dp = if (LocalWindowSizeClass.current.isWidthCompact()) 6.dp else 0.dp
 
     /** Edge and top padding, plus clearance for the overlaid navigation bar on compact windows. */
     @Composable
@@ -116,30 +109,12 @@ object LazierDefaults {
     fun edgeBlurSpec(edges: LazierBlur): BlurRadiusSpec? {
         if (edges == LazierBlur.None || !progressiveBlurPossible()) return null
 
-        val isCompact = LocalWindowSizeClass.current.isWidthCompact()
-        val blurTop = edges == LazierBlur.Top || edges == LazierBlur.Both
-        // Without the navigation bar there is nothing at the bottom edge to fade into.
-        val blurBottom = isCompact && (edges == LazierBlur.Bottom || edges == LazierBlur.Both)
+        val blurTop = edges == LazierBlur.Top || edges == LazierBlur.Top
 
         return when {
-            blurTop && blurBottom ->
-                BlurRadiusSpec.verticalGradient(
-                    listOf(
-                        BlurStop(0f, EdgeBlur),
-                        BlurStop(0.15f, 0.dp),
-                        BlurStop(0.85f, 0.dp),
-                        BlurStop(1f, EdgeBlur),
-                    )
-                )
-
             blurTop ->
                 BlurRadiusSpec.verticalGradient(
-                    listOf(BlurStop(0f, EdgeBlur), BlurStop(0.25f, 0.dp), BlurStop(1f, 0.dp))
-                )
-
-            blurBottom ->
-                BlurRadiusSpec.verticalGradient(
-                    listOf(BlurStop(0f, 0.dp), BlurStop(0.85f, 0.dp), BlurStop(1f, EdgeBlur))
+                    listOf(BlurStop(0f, EdgeBlur), BlurStop(0.15f, 0.dp), BlurStop(1f, 0.dp))
                 )
 
             else -> null

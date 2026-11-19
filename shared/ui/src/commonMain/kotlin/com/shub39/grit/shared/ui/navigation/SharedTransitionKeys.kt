@@ -22,6 +22,4 @@ import kotlin.jvm.JvmInline
  * Shared key for the habit title, which travels between the habit card in the habits list and the
  * title of the habit analytics page.
  */
-@JvmInline
-value class HabitTitleKey(val habitId: Long)
-
+@JvmInline value class HabitTitleKey(val habitId: Long)

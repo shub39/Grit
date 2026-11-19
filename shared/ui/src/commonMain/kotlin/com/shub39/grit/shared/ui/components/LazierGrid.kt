@@ -51,7 +51,7 @@ fun LazierGrid(
     state: LazyStaggeredGridState = rememberLazyStaggeredGridState(),
     contentPadding: PaddingValues = PaddingValues(0.dp),
     extraPadding: PaddingValues = LazierDefaults.pagePadding(),
-    blur: LazierBlur = LazierBlur.Both,
+    blur: LazierBlur = LazierBlur.Top,
     reverseLayout: Boolean = false,
     verticalItemSpacing: Dp = 16.dp,
     horizontalArrangement: Arrangement.Horizontal = Arrangement.spacedBy(16.dp),

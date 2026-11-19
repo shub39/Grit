@@ -22,7 +22,6 @@ import androidx.compose.animation.fadeOut
 import androidx.compose.animation.scaleIn
 import androidx.compose.animation.scaleOut
 import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.BoxScope
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.RowScope
 import androidx.compose.foundation.layout.Spacer
@@ -31,7 +30,6 @@ import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
-import androidx.compose.foundation.layout.widthIn
 import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.FloatingActionButtonDefaults
 import androidx.compose.material3.Icon
@@ -44,11 +42,9 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
-import com.shub39.grit.shared.ui.ContentMaxWidth
 import com.shub39.grit.shared.ui.LocalWindowSizeClass
 import com.shub39.grit.shared.ui.WindowSize.Companion.isWidthExpanded
 import com.shub39.grit.shared.ui.components.LazierDefaults
-import com.shub39.grit.shared.ui.components.PageInsets
 import com.shub39.grit.shared.ui.habit.HabitState
 import com.shub39.grit.shared.ui.habit.HabitsAction
 import grit.shared.ui.generated.resources.*
@@ -56,7 +52,7 @@ import org.jetbrains.compose.resources.stringResource
 import org.jetbrains.compose.resources.vectorResource
 
 @Composable
-fun BoxScope.HabitListFABs(
+fun HabitListFABs(
     onNavigateToOverallAnalytics: () -> Unit,
     state: HabitState,
     fabVisible: Boolean,
@@ -71,16 +67,9 @@ fun BoxScope.HabitListFABs(
     Row(
         modifier =
             modifier
-                .padding(
-                    start = PageInsets.Edge,
-                    end = PageInsets.Edge,
-                    top = PageInsets.Edge,
-                    bottom = PageInsets.Edge + LazierDefaults.navBarClearance(),
-                )
+                .fillMaxWidth()
                 .navigationBarsPadding()
-                .align(Alignment.BottomCenter)
-                .widthIn(max = ContentMaxWidth)
-                .fillMaxWidth(),
+                .padding(bottom = LazierDefaults.navBarClearance()),
         horizontalArrangement = if (isExpanded) Arrangement.Start else Arrangement.End,
         verticalAlignment = Alignment.Bottom,
     ) {
@@ -88,7 +77,7 @@ fun BoxScope.HabitListFABs(
             OverallAnalyticsButton(
                 state = state,
                 fabVisible = fabVisible,
-                onNavigateToOverallAnalytics = onNavigateToOverallAnalytics
+                onNavigateToOverallAnalytics = onNavigateToOverallAnalytics,
             )
 
             Spacer(modifier = Modifier.width(8.dp))
@@ -98,13 +87,13 @@ fun BoxScope.HabitListFABs(
                 onAction = onAction,
                 state = state,
                 isUserSubscribed = isUserSubscribed,
-                onNavigateToPaywall = onNavigateToPaywall
+                onNavigateToPaywall = onNavigateToPaywall,
             )
         } else {
             OverallAnalyticsButton(
                 state = state,
                 fabVisible = fabVisible,
-                onNavigateToOverallAnalytics = onNavigateToOverallAnalytics
+                onNavigateToOverallAnalytics = onNavigateToOverallAnalytics,
             )
 
             Spacer(modifier = Modifier.width(8.dp))
@@ -114,7 +103,7 @@ fun BoxScope.HabitListFABs(
                 onAction = onAction,
                 state = state,
                 isUserSubscribed = isUserSubscribed,
-                onNavigateToPaywall = onNavigateToPaywall
+                onNavigateToPaywall = onNavigateToPaywall,
             )
         }
     }
@@ -126,16 +115,16 @@ private fun RowScope.AddHabitButton(
     onAction: (HabitsAction) -> Unit,
     state: HabitState,
     isUserSubscribed: Boolean,
-    onNavigateToPaywall: () -> Unit
+    onNavigateToPaywall: () -> Unit,
 ) {
     AnimatedVisibility(
         visible = fabVisible,
         enter =
             fadeIn(MaterialTheme.motionScheme.fastEffectsSpec()) +
-                    scaleIn(MaterialTheme.motionScheme.fastSpatialSpec()),
+                scaleIn(MaterialTheme.motionScheme.fastSpatialSpec()),
         exit =
             fadeOut(MaterialTheme.motionScheme.fastEffectsSpec()) +
-                    scaleOut(MaterialTheme.motionScheme.fastSpatialSpec()),
+                scaleOut(MaterialTheme.motionScheme.fastSpatialSpec()),
     ) {
         MediumFloatingActionButton(
             onClick = {
@@ -147,7 +136,6 @@ private fun RowScope.AddHabitButton(
             },
             containerColor = MaterialTheme.colorScheme.tertiary,
             contentColor = MaterialTheme.colorScheme.onTertiary,
-            shape = MaterialShapes.Cookie12Sided.toShape()
         ) {
             Row(
                 modifier = Modifier.padding(16.dp),
@@ -176,22 +164,22 @@ private fun RowScope.AddHabitButton(
 private fun RowScope.OverallAnalyticsButton(
     state: HabitState,
     fabVisible: Boolean,
-    onNavigateToOverallAnalytics: () -> Unit
+    onNavigateToOverallAnalytics: () -> Unit,
 ) {
     AnimatedVisibility(
         visible = state.habitsWithAnalytics.isNotEmpty() && fabVisible,
         enter =
             fadeIn(MaterialTheme.motionScheme.fastEffectsSpec()) +
-                    scaleIn(MaterialTheme.motionScheme.fastSpatialSpec()),
+                scaleIn(MaterialTheme.motionScheme.fastSpatialSpec()),
         exit =
             fadeOut(MaterialTheme.motionScheme.fastEffectsSpec()) +
-                    scaleOut(MaterialTheme.motionScheme.fastSpatialSpec()),
+                scaleOut(MaterialTheme.motionScheme.fastSpatialSpec()),
     ) {
         FloatingActionButton(
             onClick = onNavigateToOverallAnalytics,
             containerColor = MaterialTheme.colorScheme.secondary,
             contentColor = MaterialTheme.colorScheme.onSecondary,
-            shape = MaterialShapes.Circle.toShape()
+            shape = MaterialShapes.Circle.toShape(),
         ) {
             Icon(
                 imageVector = vectorResource(Res.drawable.analytics),

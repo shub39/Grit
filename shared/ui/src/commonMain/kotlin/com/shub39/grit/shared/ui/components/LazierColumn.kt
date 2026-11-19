@@ -50,7 +50,7 @@ fun LazierColumn(
     state: LazyListState = rememberLazyListState(),
     contentPadding: PaddingValues = PaddingValues(0.dp),
     extraPadding: PaddingValues = LazierDefaults.pagePadding(),
-    blur: LazierBlur = LazierBlur.Both,
+    blur: LazierBlur = LazierBlur.Top,
     reverseLayout: Boolean = false,
     verticalArrangement: Arrangement.Vertical =
         if (!reverseLayout) Arrangement.Top else Arrangement.Bottom,

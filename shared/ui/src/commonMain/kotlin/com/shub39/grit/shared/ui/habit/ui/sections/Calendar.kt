@@ -217,7 +217,7 @@ private fun YearlyCalendar(
             modifier =
                 Modifier.padding(horizontal = 8.dp)
                     .widthIn(max = ContentMaxWidth)
-                    .lazierEdgeBlur(LazierBlur.Both),
+                    .lazierEdgeBlur(LazierBlur.Top),
             contentPadding = LazierDefaults.contentPaddingWith(contentPadding),
             monthHorizontalSpacing = 4.dp,
             monthVerticalSpacing = 4.dp,
@@ -289,7 +289,7 @@ private fun MonthlyCalendar(
             modifier =
                 Modifier.padding(horizontal = 16.dp)
                     .widthIn(max = ContentMaxWidth)
-                    .lazierEdgeBlur(LazierBlur.Both),
+                    .lazierEdgeBlur(LazierBlur.Top),
             contentPadding = LazierDefaults.contentPaddingWith(contentPadding),
             state = calendarState,
             reverseLayout = true,

@@ -208,7 +208,6 @@ fun TaskList(
                         modifier = Modifier.padding(bottom = LazierDefaults.navBarClearance()),
                         containerColor = colorScheme.primary,
                         contentColor = colorScheme.onPrimary,
-                        shape = MaterialShapes.VerySunny.toShape()
                     ) {
                         Row(
                             modifier = Modifier.padding(16.dp),
@@ -557,7 +556,7 @@ private fun CompactTasksView(
                 modifier = Modifier.fillMaxSize(),
                 state = lazyListState,
                 contentPadding = contentPadding,
-                blur = LazierBlur.Both,
+                blur = LazierBlur.Top,
                 verticalArrangement = Arrangement.spacedBy(2.dp),
             ) {
                 itemsIndexed(items = reorderableTasks, key = { _, it -> it.task.id }) {
@@ -989,8 +988,7 @@ private fun ExpandedTasksView(
                                         modifier = Modifier.clip(shape),
                                         colors =
                                             ListItemDefaults.colors(
-                                                containerColor =
-                                                    colorScheme.surfaceContainerHigh
+                                                containerColor = colorScheme.surfaceContainerHigh
                                             ),
                                         content = {
                                             Text(
