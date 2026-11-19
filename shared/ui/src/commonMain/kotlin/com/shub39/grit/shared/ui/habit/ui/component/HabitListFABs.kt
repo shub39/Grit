@@ -96,7 +96,9 @@ fun BoxScope.HabitListFABs(
             AddHabitButton(
                 fabVisible = fabVisible,
                 onAction = onAction,
-                state = state
+                state = state,
+                isUserSubscribed = isUserSubscribed,
+                onNavigateToPaywall = onNavigateToPaywall
             )
         } else {
             OverallAnalyticsButton(
@@ -110,7 +112,9 @@ fun BoxScope.HabitListFABs(
             AddHabitButton(
                 fabVisible = fabVisible,
                 onAction = onAction,
-                state = state
+                state = state,
+                isUserSubscribed = isUserSubscribed,
+                onNavigateToPaywall = onNavigateToPaywall
             )
         }
     }
@@ -120,7 +124,9 @@ fun BoxScope.HabitListFABs(
 private fun RowScope.AddHabitButton(
     fabVisible: Boolean,
     onAction: (HabitsAction) -> Unit,
-    state: HabitState
+    state: HabitState,
+    isUserSubscribed: Boolean,
+    onNavigateToPaywall: () -> Unit
 ) {
     AnimatedVisibility(
         visible = fabVisible,
@@ -132,7 +138,13 @@ private fun RowScope.AddHabitButton(
                     scaleOut(MaterialTheme.motionScheme.fastSpatialSpec()),
     ) {
         MediumFloatingActionButton(
-            onClick = { onAction(OnAddHabitClicked) },
+            onClick = {
+                if (isUserSubscribed || state.habitsWithAnalytics.size <= 5) {
+                    onAction(HabitsAction.OnAddHabitClicked)
+                } else {
+                    onNavigateToPaywall()
+                }
+            },
             containerColor = MaterialTheme.colorScheme.tertiary,
             contentColor = MaterialTheme.colorScheme.onTertiary,
             shape = MaterialShapes.Cookie12Sided.toShape()
