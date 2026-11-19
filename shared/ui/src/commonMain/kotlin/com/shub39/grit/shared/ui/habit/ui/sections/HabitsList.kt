@@ -80,6 +80,7 @@ import com.shub39.grit.core.tasks.CategoryColors
 import com.shub39.grit.shared.ui.ContentMaxWidth
 import com.shub39.grit.shared.ui.LocalWindowSizeClass
 import com.shub39.grit.shared.ui.WindowSize.Companion.getDialogMaxHeight
+import com.shub39.grit.shared.ui.components.CompletionConfetti
 import com.shub39.grit.shared.ui.components.Empty
 import com.shub39.grit.shared.ui.components.ExpressiveTopBar
 import com.shub39.grit.shared.ui.components.ExpressiveTopBarStyle
@@ -232,6 +233,17 @@ fun HabitsList(
                 },
             )
         }
+
+        CompletionConfetti(
+            completedIds = state.completedHabitIds,
+            relevantIds =
+                remember(state.habitsWithAnalytics) {
+                    val today = LocalDate.now().dayOfWeek
+                    state.habitsWithAnalytics.filter { today in it.habit.days }.map { it.habit.id }
+                },
+            isLoaded = state.habitsWithAnalytics.isNotEmpty(),
+            modifier = Modifier.fillMaxSize(),
+        )
     }
 
 @Composable

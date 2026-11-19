@@ -39,7 +39,7 @@ import androidx.compose.ui.unit.Dp
 
 /** Layout of an [ExpressiveTopBar]. */
 enum class ExpressiveTopBarStyle {
-    /** Single row, centred title, fixed height. Used by utility screens. */
+    /** Single row, fixed height. Used by utility screens. */
     CenterAligned,
 
     /**
@@ -60,9 +60,7 @@ enum class ExpressiveTopBarStyle {
  * @param bottomContent optional content rendered directly under the bar, inside the same gradient
  *   and therefore part of the same pinned chrome.
  * @param titleAlignment horizontal alignment of the title and subtitle. Defaults to
- *   [Alignment.Start] for [ExpressiveTopBarStyle.LargeFlexible] and [Alignment.CenterHorizontally]
- *   otherwise. Bars that show [actions] should use [Alignment.Start] so the title does not collide
- *   with them.
+ *   [Alignment.Start], pass [Alignment.CenterHorizontally] to centre the title instead.
  * @param style layout of the bar. Only [ExpressiveTopBarStyle.LargeFlexible] supports collapsing to
  *   a smaller title, so it is the only style that should be given a [scrollBehavior]. On expanded
  *   windows the large layout wastes vertical space, so it falls back to the collapsed bar.
@@ -91,10 +89,7 @@ fun ExpressiveTopBar(
     windowInsets: WindowInsets = TopAppBarDefaults.windowInsets,
     contentPadding: PaddingValues = TopAppBarDefaults.ContentPadding,
 ) {
-    val alignment =
-        titleAlignment
-            ?: if (style == ExpressiveTopBarStyle.LargeFlexible) Alignment.Start
-            else Alignment.CenterHorizontally
+    val alignment = titleAlignment ?: Alignment.Start
 
     val useLargeBar = style == ExpressiveTopBarStyle.LargeFlexible
     val barModifier =

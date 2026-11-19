@@ -81,6 +81,7 @@ kotlin {
             implementation(libs.calendar)
             implementation(libs.materialkolor)
             implementation(libs.colorpicker.compose)
+            implementation(libs.confetti)
 
             implementation(libs.koin.core)
             implementation(libs.koin.core.viewmodel)

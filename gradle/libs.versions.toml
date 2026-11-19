@@ -28,6 +28,7 @@ truth = "1.4.5"
 compose-multiplatform = "1.13.0-rc01"
 compose-windowsizeclass = "1.9.0"
 kotlinx-coroutines = "1.11.0"
+confetti = "0.9.0"
 kotlinx-serialization-json = "1.13.0"
 spotless = "8.11.0"
 filekit = "0.17.0"
@@ -91,6 +92,7 @@ kotlinx-serialization-json = { module = "org.jetbrains.kotlinx:kotlinx-serializa
 kotlinx-coroutines-swing = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-swing", version.ref = "kotlinx-coroutines" }
 kotlinx-coroutines = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-core", version.ref = "kotlinx-coroutines" }
 posthog = { module = "com.posthog:posthog-android", version.ref = "posthog" }
+confetti = { module = "io.github.vinceglb:confettikit", version.ref = "confetti" }
 
 [plugins]
 android-kotlin-multiplatform-library = { id = "com.android.kotlin.multiplatform.library", version.ref = "agp" }

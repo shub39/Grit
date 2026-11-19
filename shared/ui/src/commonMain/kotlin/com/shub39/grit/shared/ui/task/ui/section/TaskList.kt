@@ -96,6 +96,7 @@ import com.shub39.grit.shared.ui.LocalWindowSizeClass
 import com.shub39.grit.shared.ui.WindowSize.Companion.getDialogMaxHeight
 import com.shub39.grit.shared.ui.WindowSize.Companion.isWidthCompact
 import com.shub39.grit.shared.ui.WindowSize.Companion.isWidthExpanded
+import com.shub39.grit.shared.ui.components.CompletionConfetti
 import com.shub39.grit.shared.ui.components.Empty
 import com.shub39.grit.shared.ui.components.ExpressiveTopBar
 import com.shub39.grit.shared.ui.components.ExpressiveTopBarStyle
@@ -377,6 +378,16 @@ fun TaskList(
                 onDismissRequest = { showSubTasksFeaturePreview = false },
             )
         }
+
+        CompletionConfetti(
+            completedIds = state.completedTasks.map { it.id },
+            relevantIds =
+                remember(state.tasks, state.currentCategory) {
+                    state.tasks[state.currentCategory].orEmpty().map { it.task.id }
+                },
+            isLoaded = state.tasks.isNotEmpty(),
+            modifier = Modifier.fillMaxSize(),
+        )
     }
 
 @Composable

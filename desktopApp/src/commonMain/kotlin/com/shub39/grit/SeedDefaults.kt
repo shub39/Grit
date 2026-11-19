@@ -189,6 +189,7 @@ suspend fun seedDesktopDefaults(habitRepo: HabitRepo, taskRepo: TaskRepo) {
     if (habitRepo.getHabits().isEmpty()) {
         val now = LocalDateTime.now()
         val allDays = DayOfWeek.entries.toSet()
+        val weekdays = DayOfWeek.entries.toSet() - setOf(DayOfWeek.SATURDAY, DayOfWeek.SUNDAY)
 
         val meditationId =
             habitRepo.upsertHabit(
@@ -205,6 +206,19 @@ suspend fun seedDesktopDefaults(habitRepo: HabitRepo, taskRepo: TaskRepo) {
                 )
             )
 
+        val makeBedId =
+            habitRepo.upsertHabit(
+                Habit(
+                    title = "Make the Bed",
+                    description = "Start the day with a small win",
+                    time = now,
+                    days = allDays,
+                    index = 1,
+                    reminder = false,
+                    categoryId = habitProdCatId,
+                )
+            )
+
         val waterId =
             habitRepo.upsertHabit(
                 Habit(
@@ -212,7 +226,7 @@ suspend fun seedDesktopDefaults(habitRepo: HabitRepo, taskRepo: TaskRepo) {
                     description = "Stay hydrated throughout the day",
                     time = now,
                     days = allDays,
-                    index = 1,
+                    index = 2,
                     reminder = false,
                     targetValue = 2000.0,
                     targetUnit = "ml",
@@ -220,18 +234,16 @@ suspend fun seedDesktopDefaults(habitRepo: HabitRepo, taskRepo: TaskRepo) {
                 )
             )
 
-        val readingId =
+        val journalId =
             habitRepo.upsertHabit(
                 Habit(
-                    title = "Read 20 Pages",
-                    description = "Read a book to expand knowledge",
+                    title = "Journal",
+                    description = "Write a few lines about the day",
                     time = now,
                     days = allDays,
-                    index = 2,
+                    index = 3,
                     reminder = false,
-                    targetValue = 20.0,
-                    targetUnit = "pages",
-                    categoryId = habitProdCatId,
+                    categoryId = habitMindCatId,
                 )
             )
 
@@ -242,7 +254,7 @@ suspend fun seedDesktopDefaults(habitRepo: HabitRepo, taskRepo: TaskRepo) {
                     description = "Get at least 30 mins walk",
                     time = now,
                     days = allDays,
-                    index = 3,
+                    index = 4,
                     reminder = false,
                     targetValue = 30.0,
                     targetUnit = "mins",
@@ -250,18 +262,29 @@ suspend fun seedDesktopDefaults(habitRepo: HabitRepo, taskRepo: TaskRepo) {
                 )
             )
 
-        val pushupsId =
+        val stretchId =
             habitRepo.upsertHabit(
                 Habit(
-                    title = "Push-ups",
-                    description = "Daily push-up repetitions",
+                    title = "Stretch",
+                    description = "Loosen up your back and shoulders",
                     time = now,
                     days = allDays,
-                    index = 4,
+                    index = 5,
                     reminder = false,
-                    targetValue = 50.0,
-                    targetUnit = "reps",
                     categoryId = habitHealthCatId,
+                )
+            )
+
+        val planTomorrowId =
+            habitRepo.upsertHabit(
+                Habit(
+                    title = "Plan Tomorrow",
+                    description = "Pick the three things that matter most",
+                    time = now,
+                    days = weekdays,
+                    index = 6,
+                    reminder = false,
+                    categoryId = habitProdCatId,
                 )
             )
 
@@ -277,6 +300,12 @@ suspend fun seedDesktopDefaults(habitRepo: HabitRepo, taskRepo: TaskRepo) {
                     )
                 }
 
+                if (makeBedId != 0L && daysAgo % 4 != 2) {
+                    habitRepo.insertHabitStatus(
+                        HabitStatus(habitId = makeBedId, date = date, value = 1.0)
+                    )
+                }
+
                 if (waterId != 0L && daysAgo % 7 != 3) {
                     val waterVal = if (daysAgo % 5 == 0) 1800.0 else 2000.0
                     habitRepo.insertHabitStatus(
@@ -284,10 +313,9 @@ suspend fun seedDesktopDefaults(habitRepo: HabitRepo, taskRepo: TaskRepo) {
                     )
                 }
 
-                if (readingId != 0L && daysAgo % 5 != 1) {
-                    val pageVal = if (daysAgo % 4 == 0) 25.0 else 20.0
+                if (journalId != 0L && daysAgo % 3 != 0) {
                     habitRepo.insertHabitStatus(
-                        HabitStatus(habitId = readingId, date = date, value = pageVal)
+                        HabitStatus(habitId = journalId, date = date, value = 1.0)
                     )
                 }
 
@@ -298,9 +326,15 @@ suspend fun seedDesktopDefaults(habitRepo: HabitRepo, taskRepo: TaskRepo) {
                     )
                 }
 
-                if (pushupsId != 0L && daysAgo % 2 == 0) {
+                if (stretchId != 0L && daysAgo % 5 != 4) {
                     habitRepo.insertHabitStatus(
-                        HabitStatus(habitId = pushupsId, date = date, value = 50.0)
+                        HabitStatus(habitId = stretchId, date = date, value = 1.0)
+                    )
+                }
+
+                if (planTomorrowId != 0L && date.dayOfWeek in weekdays && daysAgo % 4 != 3) {
+                    habitRepo.insertHabitStatus(
+                        HabitStatus(habitId = planTomorrowId, date = date, value = 1.0)
                     )
                 }
             }
