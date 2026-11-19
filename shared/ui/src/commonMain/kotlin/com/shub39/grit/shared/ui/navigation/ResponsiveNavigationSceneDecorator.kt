@@ -19,7 +19,6 @@ package com.shub39.grit.shared.ui.navigation
 import androidx.compose.animation.EnterExitState
 import androidx.compose.animation.SharedTransitionScope
 import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material3.adaptive.currentWindowAdaptiveInfoV2
@@ -28,6 +27,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.movableContentOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberUpdatedState
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.layout.Measurable
 import androidx.compose.ui.layout.MeasureResult
@@ -43,6 +43,7 @@ import androidx.navigation3.scene.SceneDecoratorStrategy
 import androidx.navigation3.scene.SceneDecoratorStrategyScope
 import androidx.navigation3.ui.LocalNavAnimatedContentScope
 import androidx.window.core.layout.WindowSizeClass
+import com.shub39.grit.shared.ui.WindowSize.Companion.isWidthCompact
 
 data class ResponsiveNavigationScene<T : Any>(
     private val scene: Scene<T>,
@@ -60,11 +61,7 @@ data class ResponsiveNavigationScene<T : Any>(
                 animatedContentScope.transition.targetState == EnterExitState.Visible
 
             with(sharedTransitionScope) {
-                if (
-                    windowSizeClass.isWidthAtLeastBreakpoint(
-                        WindowSizeClass.WIDTH_DP_MEDIUM_LOWER_BOUND
-                    )
-                ) {
+                if (!windowSizeClass.isWidthCompact()) {
                     Row(Modifier.fillMaxSize()) {
                         Box(
                             modifier =
@@ -81,11 +78,12 @@ data class ResponsiveNavigationScene<T : Any>(
                         Box(modifier = Modifier.weight(1f)) { scene.content() }
                     }
                 } else {
-                    Column(Modifier.fillMaxSize()) {
-                        Box(modifier = Modifier.weight(1f)) { scene.content() }
+                    Box(Modifier.fillMaxSize()) {
+                        Box(modifier = Modifier.fillMaxSize()) { scene.content() }
                         Box(
                             modifier =
                                 Modifier.cacheSize(!isMovableContentCaller)
+                                    .align(Alignment.BottomCenter)
                                     .sharedElement(
                                         rememberSharedContentState("nav-bar"),
                                         animatedContentScope,

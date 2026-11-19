@@ -35,7 +35,7 @@ import androidx.navigation3.scene.Scene
 import androidx.navigation3.scene.SceneStrategy
 import androidx.navigation3.scene.SceneStrategyScope
 import androidx.window.core.layout.WindowSizeClass
-import com.shub39.grit.shared.ui.WindowSize.Companion.isCompact
+import com.shub39.grit.shared.ui.WindowSize.Companion.isWidthCompact
 
 /** A [Scene] that displays a list and a detail [NavEntry] side-by-side in a 40/60 split. */
 data class ListDetailScene<T : Any>(
@@ -46,21 +46,25 @@ data class ListDetailScene<T : Any>(
 ) : Scene<T> {
     override val entries: List<NavEntry<T>> = listOf(listEntry, detailEntry)
     override val content: @Composable (() -> Unit) = {
-        Row(modifier = Modifier.fillMaxSize()) {
-            Column(modifier = Modifier.weight(0.4f)) { listEntry.Content() }
+        // Both panes are composed simultaneously, so a shared key would be registered twice within
+        // the same target state. Multi-pane scenes therefore opt out of shared transitions.
+        CompositionLocalProvider(LocalSharedTransitionsEnabled provides false) {
+            Row(modifier = Modifier.fillMaxSize()) {
+                Column(modifier = Modifier.weight(0.4f)) { listEntry.Content() }
 
-            // Let the detail entry know not to display a back button.
-            CompositionLocalProvider(LocalBackButtonVisibility provides false) {
-                Column(modifier = Modifier.weight(0.6f)) {
-                    AnimatedContent(
-                        targetState = detailEntry,
-                        contentKey = { entry -> entry.contentKey },
-                        transitionSpec = {
-                            slideInHorizontally(initialOffsetX = { it }) togetherWith
-                                slideOutHorizontally(targetOffsetX = { -it })
-                        },
-                    ) { entry ->
-                        entry.Content()
+                // Let the detail entry know not to display a back button.
+                CompositionLocalProvider(LocalBackButtonVisibility provides false) {
+                    Column(modifier = Modifier.weight(0.6f)) {
+                        AnimatedContent(
+                            targetState = detailEntry,
+                            contentKey = { entry -> entry.contentKey },
+                            transitionSpec = {
+                                slideInHorizontally(initialOffsetX = { it }) togetherWith
+                                    slideOutHorizontally(targetOffsetX = { -it })
+                            },
+                        ) { entry ->
+                            entry.Content()
+                        }
                     }
                 }
             }
@@ -106,7 +110,7 @@ class ListDetailSceneStrategy<T : Any>(val windowSizeClass: WindowSizeClass) : S
 
     override fun SceneStrategyScope<T>.calculateScene(entries: List<NavEntry<T>>): Scene<T>? {
 
-        if (windowSizeClass.isCompact()) return null
+        if (windowSizeClass.isWidthCompact()) return null
 
         val listEntry =
             entries.findLast { it.metadata.contains(ListDetailScene.ListKey) } ?: return null

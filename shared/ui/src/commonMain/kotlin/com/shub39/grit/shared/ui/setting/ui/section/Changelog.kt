@@ -17,29 +17,25 @@
 package com.shub39.grit.shared.ui.setting.ui.section
 
 import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.material3.FilledTonalIconButton
 import androidx.compose.material3.Icon
 import androidx.compose.material3.ListItem
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.MediumFlexibleTopAppBar
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
-import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.input.nestedscroll.nestedScroll
-import androidx.compose.ui.platform.LocalLayoutDirection
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.shub39.grit.core.app.Changelog
 import com.shub39.grit.core.app.VersionEntry
+import com.shub39.grit.shared.ui.components.ExpressiveTopBar
+import com.shub39.grit.shared.ui.components.LazierColumn
 import com.shub39.grit.shared.ui.components.detachedItemShape
 import com.shub39.grit.shared.ui.components.endItemShape
 import com.shub39.grit.shared.ui.components.leadingItemShape
@@ -54,12 +50,10 @@ import org.jetbrains.compose.resources.vectorResource
 
 @Composable
 fun Changelog(modifier: Modifier = Modifier, changelog: Changelog, onNavigateBack: () -> Unit) {
-    val scrollBehavior = TopAppBarDefaults.enterAlwaysScrollBehavior()
     Scaffold(
-        modifier = modifier.nestedScroll(scrollBehavior.nestedScrollConnection),
+        modifier = modifier,
         topBar = {
-            MediumFlexibleTopAppBar(
-                scrollBehavior = scrollBehavior,
+            ExpressiveTopBar(
                 title = {
                     Text(
                         text = stringResource(Res.string.changelog),
@@ -77,16 +71,10 @@ fun Changelog(modifier: Modifier = Modifier, changelog: Changelog, onNavigateBac
             )
         },
     ) { padding ->
-        LazyColumn(
+        LazierColumn(
             modifier = Modifier.fillMaxSize(),
             verticalArrangement = Arrangement.spacedBy(2.dp),
-            contentPadding =
-                PaddingValues(
-                    top = padding.calculateTopPadding() + 16.dp,
-                    bottom = padding.calculateBottomPadding() + 60.dp,
-                    start = padding.calculateLeftPadding(LocalLayoutDirection.current) + 16.dp,
-                    end = padding.calculateRightPadding(LocalLayoutDirection.current) + 16.dp,
-                ),
+            contentPadding = padding,
         ) {
             changelog.forEach { versionEntry ->
                 item {
@@ -113,7 +101,7 @@ fun Changelog(modifier: Modifier = Modifier, changelog: Changelog, onNavigateBac
                     ListItem(
                         colors = listItemColors(),
                         modifier = Modifier.clip(shape),
-                        headlineContent = { Text(text = change) },
+                        content = { Text(text = change) },
                     )
                 }
 

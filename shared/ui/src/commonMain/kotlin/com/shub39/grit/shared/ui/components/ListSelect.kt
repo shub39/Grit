@@ -31,14 +31,12 @@ import androidx.compose.foundation.layout.offset
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.ButtonGroupDefaults
 import androidx.compose.material3.DropdownMenu
-import androidx.compose.material3.DropdownMenuItem
+import androidx.compose.material3.FilledTonalToggleButton
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.MenuDefaults
+import androidx.compose.material3.SelectableDropdownMenuItem
 import androidx.compose.material3.Text
-import androidx.compose.material3.ToggleButton
-import androidx.compose.material3.ToggleButtonDefaults
-import androidx.compose.material3.TonalToggleButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -96,7 +94,7 @@ fun <T> ListSelect(
                     horizontalArrangement =
                         Arrangement.spacedBy(ButtonGroupDefaults.ConnectedSpaceBetween),
                 ) {
-                    TonalToggleButton(
+                    FilledTonalToggleButton(
                         checked = false,
                         enabled = enabled,
                         onCheckedChange = { expanded = true },
@@ -105,7 +103,7 @@ fun <T> ListSelect(
                         content = { labelProvider(selected) },
                     )
 
-                    TonalToggleButton(
+                    FilledTonalToggleButton(
                         checked = expanded,
                         enabled = enabled,
                         onCheckedChange = { expanded = true },
@@ -153,14 +151,14 @@ fun <T> ListSelect(
                     ) {
                         options.forEachIndexed { index, option ->
                             if (option == selected) {
-                                DropdownMenuItem(
+                                SelectableDropdownMenuItem(
                                     text = { labelProvider(option) },
-                                    onCheckedChange = {
+                                    onClick = {
                                         onSelectedChange(option)
                                         expanded = false
                                     },
                                     shapes = MenuDefaults.itemShape(index, options.size),
-                                    checked = option == selected,
+                                    selected = option == selected,
                                     colors = MenuDefaults.selectableItemVibrantColors(),
                                     leadingIcon = {
                                         Icon(
@@ -170,15 +168,15 @@ fun <T> ListSelect(
                                     },
                                 )
                             } else {
-                                DropdownMenuItem(
+                                SelectableDropdownMenuItem(
                                     text = { labelProvider(option) },
-                                    onCheckedChange = {
+                                    onClick = {
                                         onSelectedChange(option)
                                         expanded = false
                                     },
                                     colors = MenuDefaults.selectableItemVibrantColors(),
                                     shapes = MenuDefaults.itemShape(index, options.size),
-                                    checked = option == selected,
+                                    selected = option == selected,
                                 )
                             }
                         }
@@ -200,12 +198,11 @@ fun <T> ListSelect(
                                 if (option == selected || isHovered || isPressed) 0.25f else 0f
                         )
 
-                    ToggleButton(
+                    FilledTonalToggleButton(
                         checked = option == selected,
                         enabled = enabled,
                         onCheckedChange = { onSelectedChange(option) },
                         content = { labelProvider(option) },
-                        colors = ToggleButtonDefaults.tonalToggleButtonColors(),
                         modifier = Modifier.weight(1f + animatedWeight),
                         interactionSource = interactionSource,
                         shapes =

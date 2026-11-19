@@ -46,6 +46,8 @@ import androidx.compose.ui.unit.dp
 import com.shub39.grit.core.now
 import com.shub39.grit.core.toFormattedString
 import com.shub39.grit.shared.ui.GritPreviewWrapper
+import com.shub39.grit.shared.ui.LocalWindowSizeClass
+import com.shub39.grit.shared.ui.WindowSize.Companion.getStatCardMaxWidth
 import com.shub39.grit.shared.ui.theme.flexFontRounded
 import grit.shared.ui.generated.resources.*
 import kotlin.math.roundToInt
@@ -70,7 +72,10 @@ fun StartStats(
     modifier: Modifier = Modifier,
 ) {
     Row(
-        modifier = modifier.fillMaxWidth().widthIn(max = 300.dp),
+        modifier =
+            modifier
+                .fillMaxWidth()
+                .widthIn(max = LocalWindowSizeClass.current.getStatCardMaxWidth()),
         verticalAlignment = Alignment.CenterVertically,
         horizontalArrangement = Arrangement.spacedBy(14.dp),
     ) {

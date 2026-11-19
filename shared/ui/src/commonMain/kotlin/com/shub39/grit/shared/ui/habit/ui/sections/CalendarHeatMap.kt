@@ -45,9 +45,9 @@ import androidx.compose.material3.ListItem
 import androidx.compose.material3.ListItemDefaults
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.MaterialTheme.colorScheme
+import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.ToggleButton
-import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -69,9 +69,14 @@ import com.kizitonwose.calendar.core.Year
 import com.kizitonwose.calendar.core.now
 import com.shub39.grit.core.habits.CalendarType
 import com.shub39.grit.core.toFormattedString
+import com.shub39.grit.shared.ui.ContentMaxWidth
 import com.shub39.grit.shared.ui.LocalWindowSizeClass
-import com.shub39.grit.shared.ui.WindowSize.Companion.isExpanded
+import com.shub39.grit.shared.ui.WindowSize.Companion.isWidthExpanded
+import com.shub39.grit.shared.ui.components.ExpressiveTopBar
 import com.shub39.grit.shared.ui.components.GritBottomSheet
+import com.shub39.grit.shared.ui.components.LazierBlur
+import com.shub39.grit.shared.ui.components.LazierDefaults
+import com.shub39.grit.shared.ui.components.LazierDefaults.lazierEdgeBlur
 import com.shub39.grit.shared.ui.components.LocalDateSaver
 import com.shub39.grit.shared.ui.components.PageFill
 import com.shub39.grit.shared.ui.components.endItemShape
@@ -142,7 +147,7 @@ fun CalendarHeatMap(
                                                 colorScheme.secondaryContainer,
                                                 shape = shape,
                                             ),
-                                    headlineContent = { Text(habit.title) },
+                                    content = { Text(habit.title) },
                                     trailingContent = {
                                         if (habit.isMeasurable) {
                                             value?.let {
@@ -173,71 +178,77 @@ fun CalendarHeatMap(
             }
         }
 
-        Column(modifier = Modifier.fillMaxSize().widthIn(max = 700.dp)) {
-            TopAppBar(
-                title = {
-                    Text(
-                        text = stringResource(Res.string.calendar),
-                        fontFamily = flexFontEmphasis(),
-                    )
-                },
-                navigationIcon = {
-                    FilledTonalIconButton(onClick = onNavigateBack) {
-                        Icon(
-                            imageVector = vectorResource(Res.drawable.nav_arrow_back),
-                            contentDescription = "Navigate Back",
+        Scaffold(
+            topBar = {
+                ExpressiveTopBar(
+                    title = {
+                        Text(
+                            text = stringResource(Res.string.calendar),
+                            fontFamily = flexFontEmphasis(),
                         )
-                    }
-                },
-                colors =
-                    TopAppBarDefaults.topAppBarColors(
-                        scrolledContainerColor = Color.Transparent,
-                        containerColor = Color.Transparent,
-                    ),
-                windowInsets =
-                    if (windowSizeClass.isExpanded()) {
-                        WindowInsets(0)
-                    } else {
-                        TopAppBarDefaults.windowInsets
                     },
-            )
-
-            Row(
-                modifier = Modifier.padding(horizontal = 16.dp),
-                horizontalArrangement =
-                    Arrangement.spacedBy(ButtonGroupDefaults.ConnectedSpaceBetween),
-            ) {
-                CalendarType.entries.forEach { entry ->
-                    ToggleButton(
-                        checked = entry == calendarType,
-                        onCheckedChange = { calendarType = entry },
-                        modifier = Modifier.weight(1f),
-                    ) {
-                        Text(text = stringResource(entry.toStringRes()))
-                    }
-                }
+                    navigationIcon = {
+                        FilledTonalIconButton(onClick = onNavigateBack) {
+                            Icon(
+                                imageVector = vectorResource(Res.drawable.nav_arrow_back),
+                                contentDescription = "Navigate Back",
+                            )
+                        }
+                    },
+                    maxWidth = ContentMaxWidth,
+                    windowInsets =
+                        if (windowSizeClass.isWidthExpanded()) {
+                            WindowInsets(0)
+                        } else {
+                            TopAppBarDefaults.windowInsets
+                        },
+                    bottomContent = {
+                        Row(
+                            modifier = Modifier.fillMaxWidth().padding(horizontal = 16.dp),
+                            horizontalArrangement =
+                                Arrangement.spacedBy(ButtonGroupDefaults.ConnectedSpaceBetween),
+                        ) {
+                            CalendarType.entries.forEach { entry ->
+                                ToggleButton(
+                                    checked = entry == calendarType,
+                                    onCheckedChange = { calendarType = entry },
+                                    modifier = Modifier.weight(1f),
+                                ) {
+                                    Text(text = stringResource(entry.toStringRes()))
+                                }
+                            }
+                        }
+                    },
+                )
             }
+        ) { padding ->
+            PageFill {
+                AnimatedContent(
+                    targetState = calendarType,
+                    modifier = Modifier.widthIn(max = ContentMaxWidth).fillMaxSize(),
+                ) { type ->
+                    when (type) {
+                        YEAR -> {
+                            YearlyMap(
+                                today = today,
+                                state = state,
+                                totalHabits = totalHabits,
+                                selectedDay = selectedDay,
+                                onChangeSelectedDay = { selectedDay = it },
+                                contentPadding = padding,
+                            )
+                        }
 
-            AnimatedContent(targetState = calendarType, modifier = Modifier.fillMaxSize()) { type ->
-                when (type) {
-                    YEAR -> {
-                        YearlyMap(
-                            today = today,
-                            state = state,
-                            totalHabits = totalHabits,
-                            selectedDay = selectedDay,
-                            onChangeSelectedDay = { selectedDay = it },
-                        )
-                    }
-
-                    MONTH -> {
-                        MonthlyMap(
-                            state = state,
-                            today = today,
-                            totalHabits = totalHabits,
-                            selectedDay = selectedDay,
-                            onChangeSelectedDay = { selectedDay = it },
-                        )
+                        MONTH -> {
+                            MonthlyMap(
+                                state = state,
+                                today = today,
+                                totalHabits = totalHabits,
+                                selectedDay = selectedDay,
+                                onChangeSelectedDay = { selectedDay = it },
+                                contentPadding = padding,
+                            )
+                        }
                     }
                 }
             }
@@ -252,6 +263,7 @@ private fun YearlyMap(
     totalHabits: Int,
     selectedDay: LocalDate?,
     onChangeSelectedDay: (LocalDate) -> Unit,
+    contentPadding: PaddingValues = PaddingValues(0.dp),
 ) {
     val calendarState =
         rememberYearCalendarState(
@@ -265,8 +277,9 @@ private fun YearlyMap(
         modifier =
             modifier
                 .padding(horizontal = 8.dp)
-                .clip(RoundedCornerShape(topStart = 20.dp, topEnd = 20.dp)),
-        contentPadding = PaddingValues(top = 16.dp, bottom = 60.dp),
+                .clip(RoundedCornerShape(topStart = 20.dp, topEnd = 20.dp))
+                .lazierEdgeBlur(LazierBlur.Top),
+        contentPadding = LazierDefaults.contentPaddingWith(contentPadding),
         state = calendarState,
         monthVerticalSpacing = 4.dp,
         monthHorizontalSpacing = 4.dp,
@@ -335,6 +348,7 @@ private fun MonthlyMap(
     totalHabits: Int,
     selectedDay: LocalDate?,
     onChangeSelectedDay: (LocalDate) -> Unit,
+    contentPadding: PaddingValues = PaddingValues(0.dp),
 ) {
     val calendarState =
         rememberCalendarState(
@@ -348,10 +362,11 @@ private fun MonthlyMap(
         modifier =
             modifier
                 .padding(horizontal = 8.dp)
-                .clip(RoundedCornerShape(topStart = 20.dp, topEnd = 20.dp)),
+                .clip(RoundedCornerShape(topStart = 20.dp, topEnd = 20.dp))
+                .lazierEdgeBlur(LazierBlur.Top),
         state = calendarState,
         monthHeader = { calendarMonth -> CalendarMonthHeader(calendarMonth = calendarMonth) },
-        contentPadding = PaddingValues(top = 16.dp, bottom = 60.dp),
+        contentPadding = LazierDefaults.contentPaddingWith(contentPadding),
         reverseLayout = true,
         dayContent = { day ->
             if (day.date > today || day.position != DayPosition.MonthDate) return@VerticalCalendar

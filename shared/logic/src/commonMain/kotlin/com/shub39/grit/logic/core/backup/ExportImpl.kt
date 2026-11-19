@@ -17,13 +17,13 @@
 package com.shub39.grit.logic.core.backup
 
 import com.shub39.grit.core.habits.HabitRepo
+import com.shub39.grit.core.ioDispatcher
 import com.shub39.grit.core.now
 import com.shub39.grit.core.settings.backup.ExportRepo
 import com.shub39.grit.core.tasks.TaskRepo
 import io.github.vinceglb.filekit.FileKit
 import io.github.vinceglb.filekit.dialogs.openFileSaver
 import io.github.vinceglb.filekit.writeString
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.async
 import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.withContext
@@ -37,7 +37,7 @@ class ExportImpl(private val taskRepo: TaskRepo, private val habitsRepo: HabitRe
         coroutineScope {
             val habitsDef =
                 async {
-                        withContext(Dispatchers.IO) {
+                        withContext(ioDispatcher) {
                             habitsRepo.getHabits().map { it.toHabitSchema() }
                         }
                     }
@@ -45,7 +45,7 @@ class ExportImpl(private val taskRepo: TaskRepo, private val habitsRepo: HabitRe
 
             val statusesDef =
                 async {
-                        withContext(Dispatchers.IO) {
+                        withContext(ioDispatcher) {
                             habitsRepo.getHabitStatuses().map { it.toHabitStatusSchema() }
                         }
                     }
@@ -53,7 +53,7 @@ class ExportImpl(private val taskRepo: TaskRepo, private val habitsRepo: HabitRe
 
             val habitCategoriesDef =
                 async {
-                        withContext(Dispatchers.IO) {
+                        withContext(ioDispatcher) {
                             habitsRepo.getHabitCategories().map { it.toHabitCategorySchema() }
                         }
                     }
@@ -61,15 +61,13 @@ class ExportImpl(private val taskRepo: TaskRepo, private val habitsRepo: HabitRe
 
             val tasksDef =
                 async {
-                        withContext(Dispatchers.IO) {
-                            taskRepo.getTasks().map { it.toTaskSchema() }
-                        }
+                        withContext(ioDispatcher) { taskRepo.getTasks().map { it.toTaskSchema() } }
                     }
                     .await()
 
             val categoriesDef =
                 async {
-                        withContext(Dispatchers.IO) {
+                        withContext(ioDispatcher) {
                             taskRepo.getCategories().map { it.toCategorySchema() }
                         }
                     }
@@ -77,7 +75,7 @@ class ExportImpl(private val taskRepo: TaskRepo, private val habitsRepo: HabitRe
 
             val subTasksDef =
                 async {
-                        withContext(Dispatchers.IO) {
+                        withContext(ioDispatcher) {
                             taskRepo.getSubTasks().map { it.toSubTaskSchema() }
                         }
                     }

@@ -200,7 +200,7 @@ fun TaskCard(
                             onEdit()
                             expanded = false
                         },
-                        colors = MenuDefaults.selectableItemColors(),
+                        colors = MenuDefaults.itemColors(),
                         leadingIcon = {
                             Icon(
                                 imageVector = vectorResource(Res.drawable.edit),
@@ -218,7 +218,7 @@ fun TaskCard(
                             onShowSubTasksSheet(ShowSubTaskUpsertSheet.Add(taskWithSubTasks.task))
                             expanded = false
                         },
-                        colors = MenuDefaults.selectableItemColors(),
+                        colors = MenuDefaults.itemColors(),
                         leadingIcon = {
                             Icon(
                                 imageVector = vectorResource(Res.drawable.add),

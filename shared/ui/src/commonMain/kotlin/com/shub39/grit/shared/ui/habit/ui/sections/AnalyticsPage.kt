@@ -21,17 +21,14 @@ import androidx.compose.foundation.basicMarquee
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.widthIn
-import androidx.compose.foundation.lazy.staggeredgrid.LazyVerticalStaggeredGrid
 import androidx.compose.foundation.lazy.staggeredgrid.StaggeredGridCells
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material3.ButtonShapes
@@ -41,8 +38,8 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButtonShapes
 import androidx.compose.material3.MaterialShapes
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.MediumFlexibleTopAppBar
 import androidx.compose.material3.OutlinedIconButton
+import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.material3.TopAppBarDefaults
@@ -54,16 +51,17 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.unit.dp
 import com.kizitonwose.calendar.compose.heatmapcalendar.rememberHeatMapCalendarState
 import com.kizitonwose.calendar.compose.rememberCalendarState
 import com.kizitonwose.calendar.core.minusMonths
 import com.kizitonwose.calendar.core.now
 import com.shub39.grit.shared.ui.LocalWindowSizeClass
-import com.shub39.grit.shared.ui.WindowSize.Companion.isExpanded
+import com.shub39.grit.shared.ui.WindowSize.Companion.getGridMinWidth
+import com.shub39.grit.shared.ui.WindowSize.Companion.isWidthExpanded
+import com.shub39.grit.shared.ui.components.ExpressiveTopBar
 import com.shub39.grit.shared.ui.components.GritDialog
+import com.shub39.grit.shared.ui.components.LazierGrid
 import com.shub39.grit.shared.ui.habit.HabitState
 import com.shub39.grit.shared.ui.habit.HabitsAction
 import com.shub39.grit.shared.ui.habit.ui.component.HabitStatusDialog
@@ -74,6 +72,8 @@ import com.shub39.grit.shared.ui.habit.ui.component.stats.Targets
 import com.shub39.grit.shared.ui.habit.ui.component.stats.WeekDayBreakdown
 import com.shub39.grit.shared.ui.habit.ui.component.stats.WeeklyActivity
 import com.shub39.grit.shared.ui.habit.ui.component.stats.WeeklyHeatMap
+import com.shub39.grit.shared.ui.navigation.HabitTitleKey
+import com.shub39.grit.shared.ui.navigation.gritSharedBounds
 import com.shub39.grit.shared.ui.theme.flexFontEmphasis
 import com.shub39.grit.shared.ui.theme.flexFontRounded
 import grit.shared.ui.generated.resources.*
@@ -119,81 +119,80 @@ fun AnalyticsPage(
     var editDialog by remember { mutableStateOf(false) }
     var deleteDialog by remember { mutableStateOf(false) }
 
-    val scrollBehavior = TopAppBarDefaults.enterAlwaysScrollBehavior()
-    Column(modifier = modifier.nestedScroll(scrollBehavior.nestedScrollConnection).fillMaxSize()) {
-        MediumFlexibleTopAppBar(
-            scrollBehavior = scrollBehavior,
-            colors =
-                TopAppBarDefaults.topAppBarColors(
-                    scrolledContainerColor = Color.Transparent,
-                    containerColor = Color.Transparent,
-                ),
-            title = {
-                Text(
-                    text = currentHabit.habit.title,
-                    modifier = Modifier.basicMarquee(),
-                    fontFamily = flexFontEmphasis(),
-                )
-            },
-            subtitle = {
-                if (currentHabit.habit.description.isNotEmpty()) {
+    Scaffold(
+        modifier = modifier,
+        topBar = {
+            ExpressiveTopBar(
+                titleAlignment = Alignment.Start,
+                title = {
                     Text(
-                        text = currentHabit.habit.description,
-                        modifier = Modifier.basicMarquee(),
-                        fontFamily = flexFontRounded(),
+                        text = currentHabit.habit.title,
+                        modifier =
+                            Modifier.gritSharedBounds(HabitTitleKey(currentHabit.habit.id))
+                                .basicMarquee(),
+                        fontFamily = flexFontEmphasis(),
                     )
-                }
-            },
-            windowInsets =
-                if (windowSizeClass.isExpanded()) {
-                    WindowInsets(0)
-                } else {
-                    TopAppBarDefaults.windowInsets
                 },
-            navigationIcon = {
-                FilledTonalIconButton(onClick = onNavigateBack) {
-                    Icon(
-                        imageVector = vectorResource(Res.drawable.nav_arrow_back),
-                        contentDescription = "Navigate Back",
-                    )
-                }
-            },
-            actions = {
-                OutlinedIconButton(
-                    onClick = { deleteDialog = true },
-                    shapes =
-                        IconButtonShapes(
-                            shape = CircleShape,
-                            pressedShape = MaterialTheme.shapes.small,
-                        ),
-                ) {
-                    Icon(
-                        imageVector = vectorResource(Res.drawable.delete),
-                        contentDescription = "Delete Habit",
-                    )
-                }
+                subtitle = {
+                    if (currentHabit.habit.description.isNotEmpty()) {
+                        Text(
+                            text = currentHabit.habit.description,
+                            modifier = Modifier.basicMarquee(),
+                            fontFamily = flexFontRounded(),
+                        )
+                    }
+                },
+                windowInsets =
+                    if (windowSizeClass.isWidthExpanded()) {
+                        WindowInsets(0)
+                    } else {
+                        TopAppBarDefaults.windowInsets
+                    },
+                navigationIcon = {
+                    FilledTonalIconButton(onClick = onNavigateBack) {
+                        Icon(
+                            imageVector = vectorResource(Res.drawable.nav_arrow_back),
+                            contentDescription = "Navigate Back",
+                        )
+                    }
+                },
+                actions = {
+                    OutlinedIconButton(
+                        onClick = { deleteDialog = true },
+                        shapes =
+                            IconButtonShapes(
+                                shape = CircleShape,
+                                pressedShape = MaterialTheme.shapes.small,
+                            ),
+                    ) {
+                        Icon(
+                            imageVector = vectorResource(Res.drawable.delete),
+                            contentDescription = "Delete Habit",
+                        )
+                    }
 
-                FilledIconButton(
-                    onClick = { editDialog = true },
-                    shapes =
-                        IconButtonShapes(
-                            shape = CircleShape,
-                            pressedShape = MaterialTheme.shapes.small,
-                        ),
-                ) {
-                    Icon(
-                        imageVector = vectorResource(Res.drawable.edit),
-                        contentDescription = "Edit Habit",
-                    )
-                }
-            },
-        )
-
-        val maxWidth = 380.dp
-        LazyVerticalStaggeredGrid(
-            modifier = Modifier.fillMaxSize().padding(start = 16.dp, end = 16.dp),
+                    FilledIconButton(
+                        onClick = { editDialog = true },
+                        shapes =
+                            IconButtonShapes(
+                                shape = CircleShape,
+                                pressedShape = MaterialTheme.shapes.small,
+                            ),
+                    ) {
+                        Icon(
+                            imageVector = vectorResource(Res.drawable.edit),
+                            contentDescription = "Edit Habit",
+                        )
+                    }
+                },
+            )
+        },
+    ) { padding ->
+        val maxWidth = windowSizeClass.getGridMinWidth()
+        LazierGrid(
+            modifier = Modifier.fillMaxSize(),
             columns = StaggeredGridCells.Adaptive(minSize = maxWidth),
-            contentPadding = PaddingValues(top = 16.dp, bottom = 60.dp),
+            contentPadding = padding,
             horizontalArrangement = Arrangement.spacedBy(16.dp),
             verticalItemSpacing = 16.dp,
         ) {

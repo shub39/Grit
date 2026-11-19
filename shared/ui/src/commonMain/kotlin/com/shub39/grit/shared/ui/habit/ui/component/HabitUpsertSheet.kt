@@ -40,14 +40,13 @@ import androidx.compose.material3.ButtonGroupDefaults
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.FilledTonalIconButton
+import androidx.compose.material3.FilledTonalToggleButton
 import androidx.compose.material3.Icon
 import androidx.compose.material3.ListItem
 import androidx.compose.material3.MaterialShapes
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
-import androidx.compose.material3.ToggleButton
-import androidx.compose.material3.ToggleButtonDefaults
 import androidx.compose.material3.rememberTimePickerState
 import androidx.compose.material3.toShape
 import androidx.compose.runtime.Composable
@@ -307,7 +306,7 @@ fun HabitUpsertSheetContent(
                                     Arrangement.spacedBy(ButtonGroupDefaults.ConnectedSpaceBetween)
                             ) {
                                 DayOfWeek.entries.forEach { dayOfWeek ->
-                                    ToggleButton(
+                                    FilledTonalToggleButton(
                                         checked = newHabit.days.contains(dayOfWeek),
                                         onCheckedChange = {
                                             updateHabit(
@@ -325,7 +324,6 @@ fun HabitUpsertSheetContent(
                                             !(newHabit.days.size == 1 &&
                                                 newHabit.days.contains(dayOfWeek)),
                                         modifier = Modifier.weight(1f),
-                                        colors = ToggleButtonDefaults.tonalToggleButtonColors(),
                                         content = { Text(text = dayOfWeek.name.take(1)) },
                                     )
                                 }
@@ -448,7 +446,7 @@ fun HabitUpsertSheetContent(
                             Modifier.clip(
                                 if (newHabit.reminder) middleItemShape() else endItemShape()
                             ),
-                        headlineContent = { Text(text = stringResource(Res.string.add_reminder)) },
+                        content = { Text(text = stringResource(Res.string.add_reminder)) },
                         supportingContent = {
                             Text(
                                 text = stringResource(Res.string.add_reminder_desc),
@@ -484,7 +482,7 @@ fun HabitUpsertSheetContent(
                         ListItem(
                             colors = listItemColors(),
                             modifier = Modifier.clip(endItemShape()),
-                            headlineContent = {
+                            content = {
                                 Text(
                                     text = newHabit.time.time.toFormattedString(is24Hr = is24Hr),
                                     style =

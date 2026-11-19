@@ -8,16 +8,16 @@ espresso-core = "3.7.0"
 junit = "4.13.2"
 junit-version = "1.3.0"
 kotlinx-datetime = "0.8.0"
-purchases = "11.0.1"
+purchases = "11.2.1"
 splashscreen = "1.2.0"
 datastore = "1.3.0"
 colorpicker = "1.3.0"
 glance = "1.2.0"
 koin = "4.2.2"
-koin-plugin = "1.2.1"
+koin-plugin = "1.2.3"
 kotlin = "2.4.21"
 ksp = "2.3.10"
-material3 = "1.12.0-alpha03"
+material3 = "1.13.0-rc01"
 reorderable = "3.1.0"
 room3 = "3.0.3"
 navigation = "1.2.0"
@@ -25,16 +25,17 @@ materialkolor = "5.0.1"
 compose-junit = "1.12.1"
 biometric = "1.4.0-alpha02"
 truth = "1.4.5"
-compose-multiplatform = "1.12.2"
+compose-multiplatform = "1.13.0-rc01"
 compose-windowsizeclass = "1.9.0"
 kotlinx-coroutines = "1.11.0"
-kotlinx-serialization-json = "1.12.0"
-spotless = "8.10.4"
+confetti = "0.9.0"
+kotlinx-serialization-json = "1.13.0"
+spotless = "8.11.0"
 filekit = "0.17.0"
 sqlite = "2.7.1"
 navigation-adaptive = "1.3.0"
 androidx-lifecycle = "2.11.0"
-posthog = "3.76.1"
+posthog = "3.76.2"
 ktfmt = "0.61"
 
 [libraries]
@@ -71,6 +72,7 @@ compose-windowsizeclass = { module = "org.jetbrains.compose.material3:material3-
 
 # Koin
 koin-core = { module = "io.insert-koin:koin-core", version.ref = "koin" }
+koin-core-viewmodel = { module = "io.insert-koin:koin-core-viewmodel", version.ref = "koin" }
 koin-compose = { module = "io.insert-koin:koin-compose", version.ref = "koin" }
 koin-compose-viewmodel = { module = "io.insert-koin:koin-compose-viewmodel", version.ref = "koin" }
 koin-compose-viewmodel-navigation = { module = "io.insert-koin:koin-compose-viewmodel-navigation", version.ref = "koin" }
@@ -90,6 +92,7 @@ kotlinx-serialization-json = { module = "org.jetbrains.kotlinx:kotlinx-serializa
 kotlinx-coroutines-swing = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-swing", version.ref = "kotlinx-coroutines" }
 kotlinx-coroutines = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-core", version.ref = "kotlinx-coroutines" }
 posthog = { module = "com.posthog:posthog-android", version.ref = "posthog" }
+confetti = { module = "io.github.vinceglb:confettikit", version.ref = "confetti" }
 
 [plugins]
 android-kotlin-multiplatform-library = { id = "com.android.kotlin.multiplatform.library", version.ref = "agp" }

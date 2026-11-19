@@ -17,13 +17,21 @@
 package com.shub39.grit
 
 import androidx.compose.ui.window.singleWindowApplication
+import com.shub39.grit.core.habits.HabitRepo
+import com.shub39.grit.core.tasks.TaskRepo
 import com.shub39.grit.di.GritModules
 import com.shub39.grit.shared.ui.components.FossPaywall
 import com.shub39.grit.shared.ui.navigation.GritNavDisplay
+import kotlinx.coroutines.runBlocking
 import org.koin.plugin.module.dsl.startKoin
 
 fun main() {
-    startKoin<GritModules>()
+    val koinApp = startKoin<GritModules>()
+    val koin = koinApp.koin
+
+    runBlocking {
+        seedDesktopDefaults(habitRepo = koin.get<HabitRepo>(), taskRepo = koin.get<TaskRepo>())
+    }
 
     singleWindowApplication(title = "Grit") { GritNavDisplay(paywall = { _, _ -> FossPaywall() }) }
 }

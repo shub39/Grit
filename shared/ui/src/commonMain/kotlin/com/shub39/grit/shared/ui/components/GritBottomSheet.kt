@@ -31,6 +31,8 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
+import com.shub39.grit.shared.ui.LocalWindowSizeClass
+import com.shub39.grit.shared.ui.WindowSize.Companion.getSheetMaxWidth
 
 @Composable
 fun GritBottomSheet(
@@ -46,7 +48,7 @@ fun GritBottomSheet(
 ) {
     ModalBottomSheet(
         onDismissRequest = onDismissRequest,
-        sheetMaxWidth = 500.dp,
+        sheetMaxWidth = LocalWindowSizeClass.current.getSheetMaxWidth(),
         modifier = modifier,
         sheetState = sheetState,
     ) {

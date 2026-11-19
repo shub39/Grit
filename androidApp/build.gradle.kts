@@ -27,14 +27,14 @@ plugins {
 }
 
 val appName = "Grit"
-val appVersionCode = 6410
-val appVersionName = "6.4.1"
+val appVersionCode = 6500
+val appVersionName = "6.5.0"
 
 val gitHash = execute("git", "rev-parse", "HEAD").take(7)
 
 android {
     namespace = "com.shub39.grit"
-    compileSdk = libs.versions.compileSdk.get().toInt()
+    compileSdk { version = release(libs.versions.targetSdk.get().toInt()) { minorApiLevel = 2 } }
 
     defaultConfig {
         applicationId = "com.shub39.grit"

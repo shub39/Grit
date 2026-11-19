@@ -19,9 +19,9 @@ package com.shub39.grit.logic
 import com.shub39.grit.core.GritLogger
 import com.shub39.grit.core.app.Changelog
 import com.shub39.grit.core.interfaces.ChangelogManager
-import grit.shared.logic.generated.resources.Res
+import com.shub39.grit.core.ioDispatcher
+import com.shub39.grit.logic.generated.ChangelogData
 import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -36,13 +36,12 @@ class ChangelogManagerImpl : ChangelogManager {
     override val changelogs: Flow<Changelog> = _changelogs.asStateFlow()
 
     init {
-        CoroutineScope(Dispatchers.IO).launch { getChangelogs() }
+        CoroutineScope(ioDispatcher).launch { getChangelogs() }
     }
 
     private suspend fun getChangelogs() {
         try {
-            val rawJson = Res.readBytes("files/changelog.json").decodeToString()
-            val json = Json.decodeFromString<Changelog>(rawJson)
+            val json = Json.decodeFromString<Changelog>(ChangelogData.JSON)
             _changelogs.update { json }
         } catch (e: Exception) {
             GritLogger.e("ChangelogManagerImpl", "Unable to extract changelog", e)

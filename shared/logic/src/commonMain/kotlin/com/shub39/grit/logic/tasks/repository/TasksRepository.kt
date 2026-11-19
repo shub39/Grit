@@ -17,6 +17,7 @@
 package com.shub39.grit.logic.tasks.repository
 
 import com.shub39.grit.core.interfaces.AppNotificationManager
+import com.shub39.grit.core.ioDispatcher
 import com.shub39.grit.core.tasks.Category
 import com.shub39.grit.core.tasks.SubTask
 import com.shub39.grit.core.tasks.Task
@@ -31,7 +32,6 @@ import com.shub39.grit.logic.tasks.toSubTask
 import com.shub39.grit.logic.tasks.toSubTaskEntity
 import com.shub39.grit.logic.tasks.toTask
 import com.shub39.grit.logic.tasks.toTaskEntity
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.flowOn
@@ -50,19 +50,19 @@ class TasksRepository(
         tasksDao
             .getTasksFlow()
             .map { entities -> entities.map { it.toTask() }.sortedBy { it.index } }
-            .flowOn(Dispatchers.IO)
+            .flowOn(ioDispatcher)
 
     val categoriesFlow =
         categoryDao
             .getCategoriesFlow()
             .map { entities -> entities.map { it.toCategory() }.sortedBy { it.index } }
-            .flowOn(Dispatchers.IO)
+            .flowOn(ioDispatcher)
 
     val subTasksFlow =
         subTaskDao
             .getSubTasksFlow()
             .map { entities -> entities.map { it.toSubTask() }.sortedBy { it.index } }
-            .flowOn(Dispatchers.IO)
+            .flowOn(ioDispatcher)
 
     override fun getTasksFlow(): Flow<Map<Category, List<TaskWithSubTasks>>> {
         return combine(tasksFlow, categoriesFlow, subTasksFlow) { tasks, categories, subTasks ->
@@ -80,7 +80,7 @@ class TasksRepository(
     }
 
     override fun getCompletedTasksFlow(): Flow<List<Task>> {
-        return tasksFlow.map { tasks -> tasks.filter { it.status } }.flowOn(Dispatchers.IO)
+        return tasksFlow.map { tasks -> tasks.filter { it.status } }.flowOn(ioDispatcher)
     }
 
     override suspend fun getTasks(): List<Task> {

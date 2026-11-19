@@ -16,7 +16,12 @@
  */
 package com.shub39.grit.shared.ui
 
+import androidx.compose.ui.unit.Dp
+import androidx.compose.ui.unit.dp
 import androidx.window.core.layout.WindowSizeClass
+
+/** Max width for single column content (settings, forms) so text lines stay readable. */
+val ContentMaxWidth: Dp = 700.dp
 
 enum class WindowSize {
     COMPACT,
@@ -24,20 +29,92 @@ enum class WindowSize {
     EXPANDED;
 
     companion object {
-        fun WindowSizeClass.getWindowSize(): WindowSize {
-            return if (isAtLeastBreakpoint(840, 900)) {
+        fun WindowSizeClass.getWidthSize(): WindowSize {
+            return if (isWidthAtLeastBreakpoint(900)) {
                 EXPANDED
-            } else if (isAtLeastBreakpoint(600, 480)) {
+            } else if (isWidthAtLeastBreakpoint(480)) {
                 MEDIUM
             } else {
                 COMPACT
             }
         }
 
-        fun WindowSizeClass.isExpanded(): Boolean = getWindowSize() == EXPANDED
+        fun WindowSizeClass.getHeightSize(): WindowSize {
+            return if (isHeightAtLeastBreakpoint(840)) {
+                EXPANDED
+            } else if (isHeightAtLeastBreakpoint(600)) {
+                MEDIUM
+            } else {
+                COMPACT
+            }
+        }
 
-        fun WindowSizeClass.isCompact(): Boolean = getWindowSize() == COMPACT
+        fun WindowSizeClass.isWidthExpanded(): Boolean = getWidthSize() == EXPANDED
 
-        fun WindowSizeClass.isMedium(): Boolean = getWindowSize() == MEDIUM
+        fun WindowSizeClass.isHeightExpanded(): Boolean = getHeightSize() == EXPANDED
+
+        fun WindowSizeClass.isWidthCompact(): Boolean = getWidthSize() == COMPACT
+
+        fun WindowSizeClass.isHeightCompact(): Boolean = getHeightSize() == COMPACT
+
+        fun WindowSizeClass.isWidthMedium(): Boolean = getWidthSize() == MEDIUM
+
+        fun WindowSizeClass.isHeightMedium(): Boolean = getHeightSize() == MEDIUM
+
+        /** Max width of bottom sheets so they don't stretch across wide windows. */
+        fun WindowSizeClass.getSheetMaxWidth(): Dp =
+            when (getWidthSize()) {
+                COMPACT -> 480.dp
+                MEDIUM -> 600.dp
+                EXPANDED -> 700.dp
+            }
+
+        /** Max height for dialogs and sheets so they don't fill a short window edge to edge. */
+        fun WindowSizeClass.getDialogMaxHeight(): Dp =
+            when (getHeightSize()) {
+                COMPACT -> 560.dp
+                MEDIUM -> 640.dp
+                EXPANDED -> 720.dp
+            }
+
+        /** Minimum width of a single item in the adaptive stats grid. */
+        fun WindowSizeClass.getGridMinWidth(): Dp =
+            when (getWidthSize()) {
+                COMPACT -> 320.dp
+                MEDIUM -> 380.dp
+                EXPANDED -> 440.dp
+            }
+
+        /** Max width of a single stat card so its row content stays readable. */
+        fun WindowSizeClass.getStatCardMaxWidth(): Dp =
+            when (getWidthSize()) {
+                COMPACT -> 280.dp
+                MEDIUM -> 300.dp
+                EXPANDED -> 340.dp
+            }
+
+        /** Max height of the charts inside analytics cards. */
+        fun WindowSizeClass.getChartMaxHeight(): Dp =
+            when (getHeightSize()) {
+                COMPACT -> 300.dp
+                MEDIUM -> 380.dp
+                EXPANDED -> 440.dp
+            }
+
+        /** Height of previews shown inside sheets. */
+        fun WindowSizeClass.getPreviewHeight(): Dp =
+            when (getHeightSize()) {
+                COMPACT -> 220.dp
+                MEDIUM -> 265.dp
+                EXPANDED -> 320.dp
+            }
+
+        /** Edge length of the color picker inside the color picker dialog. */
+        fun WindowSizeClass.getColorPickerSize(): Dp =
+            when (getWidthSize()) {
+                COMPACT -> 280.dp
+                MEDIUM -> 320.dp
+                EXPANDED -> 360.dp
+            }
     }
 }

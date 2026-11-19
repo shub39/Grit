@@ -39,6 +39,8 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.withLink
 import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.unit.dp
+import com.shub39.grit.shared.ui.LocalWindowSizeClass
+import com.shub39.grit.shared.ui.WindowSize.Companion.getDialogMaxHeight
 import com.shub39.grit.shared.ui.components.GritBottomSheet
 
 // yeeted from nsh07/Tomato
@@ -352,7 +354,9 @@ fun LicenseBottomSheet(modifier: Modifier = Modifier, onDismissRequest: () -> Un
 
     GritBottomSheet(onDismissRequest = onDismissRequest, padding = 0.dp) {
         LazyColumn(
-            modifier = Modifier.clip(shapes.large).heightIn(max = 500.dp),
+            modifier =
+                Modifier.clip(shapes.large)
+                    .heightIn(max = LocalWindowSizeClass.current.getDialogMaxHeight()),
             contentPadding = PaddingValues(16.dp),
         ) {
             item {

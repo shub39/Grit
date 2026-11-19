@@ -58,7 +58,7 @@ actual fun MaterialYouToggle(
 ) {
     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
         ListItem(
-            headlineContent = { Text(text = stringResource(Res.string.material_theme)) },
+            content = { Text(text = stringResource(Res.string.material_theme)) },
             supportingContent = { Text(text = stringResource(Res.string.material_theme_desc)) },
             trailingContent = {
                 ExpressiveSwitch(checked = isMaterialYou, onCheckedChange = onClick)
@@ -81,7 +81,7 @@ actual fun PaletteStylePicker(
 ) {
     Column(modifier = Modifier.clip(endItemShape())) {
         ListItem(
-            headlineContent = { Text(text = stringResource(Res.string.palette_style)) },
+            content = { Text(text = stringResource(Res.string.palette_style)) },
             colors = listItemColors(),
             supportingContent = {
                 Text(

@@ -29,9 +29,14 @@ kotlin {
 
     jvm()
 
+    iosArm64()
+    iosSimulatorArm64()
+
     android {
         namespace = "com.shub39.grit.shared.core"
-        compileSdk = libs.versions.compileSdk.get().toInt()
+        compileSdk {
+            version = release(libs.versions.targetSdk.get().toInt()) { minorApiLevel = 2 }
+        }
         minSdk = libs.versions.minSdk.get().toInt()
 
         androidResources { enable = true }
@@ -39,9 +44,9 @@ kotlin {
 
     sourceSets {
         commonMain.dependencies {
-            implementation(libs.kotlinx.datetime)
+            api(libs.kotlinx.datetime)
+            api(libs.kotlinx.coroutines)
             implementation(libs.kotlinx.serialization.json)
-            implementation(libs.kotlinx.coroutines)
         }
     }
 }

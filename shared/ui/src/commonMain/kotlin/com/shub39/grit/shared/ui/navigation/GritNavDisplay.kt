@@ -33,6 +33,7 @@ import androidx.navigation3.runtime.entryProvider
 import androidx.navigation3.ui.NavDisplay
 import com.shub39.grit.core.settings.Sections
 import com.shub39.grit.shared.ui.LocalWindowSizeClass
+import com.shub39.grit.shared.ui.WindowSize.Companion.isWidthCompact
 import com.shub39.grit.shared.ui.app.MainAppState
 import com.shub39.grit.shared.ui.habit.HabitsAction
 import com.shub39.grit.shared.ui.habit.ui.sections.AnalyticsPage
@@ -99,45 +100,49 @@ fun GritNavDisplay(
                         sharedTransitionScope = this,
                     )
 
-                NavDisplay(
-                    backStack = topLevelBackStack.backStack,
-                    sharedTransitionScope = this,
-                    sceneDecoratorStrategies = listOf(responsiveNavigationSceneDecoratorStrategy),
-                    sceneStrategies = listOf(twoPaneSceneStrategy, listDetailSceneStrategy),
-                    onBack = { topLevelBackStack.removeLast() },
-                    entryProvider =
-                        entryProvider {
-                            entry<TaskList>(metadata = fadeTransitionMetadata()) {
-                                val viewModel = koinViewModel<TasksViewModel>()
-                                val state by viewModel.state.collectAsStateWithLifecycle()
+                CompositionLocalProvider(LocalSharedTransitionScope provides this) {
+                    NavDisplay(
+                        backStack = topLevelBackStack.backStack,
+                        sharedTransitionScope = this,
+                        sceneDecoratorStrategies =
+                            listOf(responsiveNavigationSceneDecoratorStrategy),
+                        sceneStrategies = listOf(twoPaneSceneStrategy, listDetailSceneStrategy),
+                        onBack = { topLevelBackStack.removeLast() },
+                        entryProvider =
+                            entryProvider {
+                                entry<TaskList>(metadata = fadeTransitionMetadata()) {
+                                    val viewModel = koinViewModel<TasksViewModel>()
+                                    val state by viewModel.state.collectAsStateWithLifecycle()
 
-                                TasksPage(
-                                    state = state,
-                                    onAction = viewModel::onAction,
-                                    isPlusUser = globalState.isUserSubscribed,
-                                    onOpenPaywall = { topLevelBackStack.add(Paywall) },
-                                )
-                            }
-
-                            habitsScreens(
-                                topLevelBackStack = topLevelBackStack,
-                                globalState = globalState,
-                            )
-
-                            entry<Paywall>(metadata = verticalTransitionMetadata()) {
-                                LaunchedEffect(Unit) { globalVM.trackPaywallOpened() }
-                                paywall(globalState.isUserSubscribed) {
-                                    globalVM.updateSubscription()
-                                    topLevelBackStack.removeLast()
+                                    TasksPage(
+                                        state = state,
+                                        onAction = viewModel::onAction,
+                                        isPlusUser = globalState.isUserSubscribed,
+                                        onOpenPaywall = { topLevelBackStack.add(Paywall) },
+                                    )
                                 }
-                            }
 
-                            settingsScreens(
-                                topLevelBackStack = topLevelBackStack,
-                                globalState = globalState,
-                            )
-                        },
-                )
+                                habitsScreens(
+                                    topLevelBackStack = topLevelBackStack,
+                                    globalState = globalState,
+                                    isExpanded = !windowSizeClass.isWidthCompact(),
+                                )
+
+                                entry<Paywall>(metadata = verticalTransitionMetadata()) {
+                                    LaunchedEffect(Unit) { globalVM.trackPaywallOpened() }
+                                    paywall(globalState.isUserSubscribed) {
+                                        globalVM.updateSubscription()
+                                        topLevelBackStack.removeLast()
+                                    }
+                                }
+
+                                settingsScreens(
+                                    topLevelBackStack = topLevelBackStack,
+                                    globalState = globalState,
+                                )
+                            },
+                    )
+                }
             }
         }
     }
@@ -146,6 +151,7 @@ fun GritNavDisplay(
 private fun EntryProviderScope<Routes>.habitsScreens(
     topLevelBackStack: TopLevelBackStack,
     globalState: MainAppState,
+    isExpanded: Boolean,
 ) {
     entry<HabitsList>(metadata = ListDetailScene.listPane() + fadeTransitionMetadata()) {
         val viewModel = koinViewModel<HabitViewModel>()
@@ -202,7 +208,13 @@ private fun EntryProviderScope<Routes>.habitsScreens(
 
     entry<OverallAnalytics>(
         metadata =
-            TwoPaneScene.twoPane() + ListDetailScene.detailPane() + horizontalTransitionMetadata()
+            TwoPaneScene.twoPane() +
+                ListDetailScene.detailPane() +
+                if (isExpanded) {
+                    horizontalTransitionMetadata()
+                } else {
+                    verticalTransitionMetadata()
+                }
     ) {
         val viewModel = koinViewModel<HabitViewModel>()
         val state by viewModel.state.collectAsStateWithLifecycle()

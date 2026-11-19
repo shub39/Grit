@@ -48,10 +48,10 @@ import androidx.compose.material3.FilledTonalIconToggleButton
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.IconToggleButtonShapes
-import androidx.compose.material3.LargeFlexibleTopAppBar
 import androidx.compose.material3.ListItem
 import androidx.compose.material3.MaterialShapes
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.material3.ToggleButton
@@ -77,8 +77,15 @@ import com.shub39.grit.core.habits.HabitCategory
 import com.shub39.grit.core.habits.HabitWithAnalytics
 import com.shub39.grit.core.now
 import com.shub39.grit.core.tasks.CategoryColors
+import com.shub39.grit.shared.ui.ContentMaxWidth
+import com.shub39.grit.shared.ui.LocalWindowSizeClass
+import com.shub39.grit.shared.ui.WindowSize.Companion.getDialogMaxHeight
+import com.shub39.grit.shared.ui.components.CompletionConfetti
 import com.shub39.grit.shared.ui.components.Empty
+import com.shub39.grit.shared.ui.components.ExpressiveTopBar
+import com.shub39.grit.shared.ui.components.ExpressiveTopBarStyle
 import com.shub39.grit.shared.ui.components.GritDialog
+import com.shub39.grit.shared.ui.components.LazierColumn
 import com.shub39.grit.shared.ui.components.PageFill
 import com.shub39.grit.shared.ui.components.detachedItemShape
 import com.shub39.grit.shared.ui.components.endItemShape
@@ -144,47 +151,40 @@ fun HabitsList(
                 else state.habitsWithAnalytics.filterBy(state.selectedFilter)
             }
 
-        Column(modifier = Modifier.widthIn(max = 700.dp)) {
-            HabitsTopAppBar(
-                state = state,
-                filteredHabits = filteredHabits,
-                onAction = onAction,
-                scrollBehavior = scrollBehavior,
-            )
+        val lazyListState = rememberLazyListState()
+        val fabVisible by remember {
+            derivedStateOf {
+                lazyListState.firstVisibleItemIndex == 0 &&
+                    lazyListState.firstVisibleItemScrollOffset == 0
+            }
+        }
 
-            HabitCategorySelector(
-                state = state,
-                onAction = onAction,
-                enabled = !state.editState,
-                onAddCategoryClick = {
-                    onAction(HabitsAction.OnHabitCategorySheetOpened)
-                    showCategoryAddSheet = true
-                },
-                onEditCategoriesClick = {
-                    onAction(HabitsAction.OnHabitCategorySheetOpened)
-                    showCategoryEditor = true
-                },
-            )
-
-            PageFill {
-                val lazyListState = rememberLazyListState()
-                val fabVisible by remember {
-                    derivedStateOf {
-                        lazyListState.firstVisibleItemIndex == 0 &&
-                            lazyListState.firstVisibleItemScrollOffset == 0
-                    }
-                }
-
-                HabitsListContent(
-                    habits = filteredHabits,
+        Scaffold(
+            modifier = Modifier.nestedScroll(scrollBehavior.nestedScrollConnection),
+            topBar = {
+                HabitsTopAppBar(
                     state = state,
+                    filteredHabits = filteredHabits,
                     onAction = onAction,
-                    lazyListState = lazyListState,
-                    onNavigateToAnalytics = onNavigateToAnalytics,
-                    modifier =
-                        Modifier.fillMaxHeight().nestedScroll(scrollBehavior.nestedScrollConnection),
+                    scrollBehavior = scrollBehavior,
+                    bottomContent = {
+                        HabitCategorySelector(
+                            state = state,
+                            onAction = onAction,
+                            enabled = !state.editState,
+                            onAddCategoryClick = {
+                                onAction(HabitsAction.OnHabitCategorySheetOpened)
+                                showCategoryAddSheet = true
+                            },
+                            onEditCategoriesClick = {
+                                onAction(HabitsAction.OnHabitCategorySheetOpened)
+                                showCategoryEditor = true
+                            },
+                        )
+                    },
                 )
-
+            },
+            floatingActionButton = {
                 HabitListFABs(
                     onNavigateToOverallAnalytics = onNavigateToOverallAnalytics,
                     state = state,
@@ -192,6 +192,18 @@ fun HabitsList(
                     onAction = onAction,
                     onNavigateToPaywall = onNavigateToPaywall,
                     isUserSubscribed = isUserSubscribed,
+                )
+            },
+        ) { padding ->
+            PageFill {
+                HabitsListContent(
+                    habits = filteredHabits,
+                    state = state,
+                    onAction = onAction,
+                    lazyListState = lazyListState,
+                    onNavigateToAnalytics = onNavigateToAnalytics,
+                    modifier = Modifier.fillMaxHeight().widthIn(max = ContentMaxWidth),
+                    contentPadding = padding,
                 )
             }
         }
@@ -221,6 +233,17 @@ fun HabitsList(
                 },
             )
         }
+
+        CompletionConfetti(
+            completedIds = state.completedHabitIds,
+            relevantIds =
+                remember(state.habitsWithAnalytics) {
+                    val today = LocalDate.now().dayOfWeek
+                    state.habitsWithAnalytics.filter { today in it.habit.days }.map { it.habit.id }
+                },
+            isLoaded = state.habitsWithAnalytics.isNotEmpty(),
+            modifier = Modifier.fillMaxSize(),
+        )
     }
 
 @Composable
@@ -228,16 +251,17 @@ private fun HabitsTopAppBar(
     state: HabitState,
     filteredHabits: List<HabitWithAnalytics>,
     onAction: (HabitsAction) -> Unit,
+    scrollBehavior: TopAppBarScrollBehavior,
+    bottomContent: @Composable () -> Unit,
     modifier: Modifier = Modifier,
-    scrollBehavior: TopAppBarScrollBehavior? = null,
 ) {
-    LargeFlexibleTopAppBar(
+    ExpressiveTopBar(
         modifier = modifier,
+        style = ExpressiveTopBarStyle.LargeFlexible,
+        titleAlignment = Alignment.Start,
         scrollBehavior = scrollBehavior,
-        colors =
-            TopAppBarDefaults.topAppBarColors(
-                scrolledContainerColor = MaterialTheme.colorScheme.surface
-            ),
+        maxWidth = ContentMaxWidth,
+        bottomContent = bottomContent,
         title = { Text(text = stringResource(Res.string.habits), fontFamily = flexFontEmphasis()) },
         subtitle = {
             Column {
@@ -310,6 +334,7 @@ private fun HabitsListContent(
     onAction: (HabitsAction) -> Unit,
     onNavigateToAnalytics: () -> Unit,
     modifier: Modifier = Modifier,
+    contentPadding: PaddingValues = PaddingValues(0.dp),
 ) {
     val reorderableListState =
         rememberReorderableLazyListState(lazyListState) { from, to ->
@@ -320,14 +345,10 @@ private fun HabitsListContent(
     }
 
     Column(modifier = modifier) {
-        LazyColumn(
+        LazierColumn(
             state = lazyListState,
-            contentPadding = PaddingValues(top = 16.dp, bottom = 60.dp),
+            contentPadding = contentPadding,
             verticalArrangement = Arrangement.spacedBy(2.dp),
-            modifier =
-                Modifier.fillMaxHeight()
-                    .padding(horizontal = 16.dp)
-                    .clip(RoundedCornerShape(topStart = 20.dp, topEnd = 20.dp)),
         ) {
             // habits
             itemsIndexed(habits, key = { _, it -> it.habit.id }) { index, habitWithAnalytics ->
@@ -503,6 +524,7 @@ private fun HabitCategoryEditDialog(
     onDismissRequest: () -> Unit,
 ) {
     GritDialog(onDismissRequest = onDismissRequest, padding = 0.dp) {
+        val windowSizeClass = LocalWindowSizeClass.current
         var categories by remember(state.habitCategories) { mutableStateOf(state.habitCategories) }
 
         val listState = rememberLazyListState()
@@ -521,7 +543,7 @@ private fun HabitCategoryEditDialog(
         Column(
             modifier =
                 Modifier.fillMaxWidth()
-                    .heightIn(max = 600.dp)
+                    .heightIn(max = windowSizeClass.getDialogMaxHeight())
                     .padding(start = 16.dp, end = 16.dp, top = 16.dp),
             verticalArrangement = Arrangement.spacedBy(8.dp),
         ) {
@@ -571,7 +593,7 @@ private fun HabitCategoryEditDialog(
                         ListItem(
                             modifier = Modifier.clip(shape),
                             colors = listItemColors(),
-                            headlineContent = { Text(text = category.name, maxLines = 1) },
+                            content = { Text(text = category.name, maxLines = 1) },
                             supportingContent = {
                                 Text(
                                     text =

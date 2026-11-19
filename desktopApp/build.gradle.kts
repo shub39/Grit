@@ -39,6 +39,9 @@ kotlin {
             implementation(projects.shared.ui)
             implementation(projects.shared.logic)
 
+            implementation(libs.kotlinx.datetime)
+            implementation(libs.kotlinx.coroutines)
+
             implementation(libs.compose.material3)
             implementation(libs.compose.components.resources)
             implementation(libs.compose.windowsizeclass)
@@ -53,7 +56,9 @@ kotlin {
         }
 
         jvmMain.dependencies {
-            implementation(compose.desktop.currentOs)
+            implementation(libs.compose.ui)
+            implementation(libs.compose.foundation)
+            implementation(libs.compose.material3)
             implementation(libs.kotlinx.coroutines.swing)
         }
     }

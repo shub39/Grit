@@ -61,6 +61,8 @@ import com.shub39.grit.core.habits.WeeklyTimePeriod
 import com.shub39.grit.core.habits.WeeklyTimePeriod.Companion.toDisplayString
 import com.shub39.grit.core.habits.WeeklyTimePeriod.Companion.toWeeks
 import com.shub39.grit.shared.ui.GritPreviewWrapper
+import com.shub39.grit.shared.ui.LocalWindowSizeClass
+import com.shub39.grit.shared.ui.WindowSize.Companion.getChartMaxHeight
 import com.shub39.grit.shared.ui.habit.ui.component.AnalyticsCard
 import com.shub39.grit.shared.ui.habit.ui.component.NotEnoughData
 import com.shub39.grit.shared.ui.theme.flexFontRounded
@@ -85,7 +87,7 @@ fun WeeklyActivity(lineChartData: List<Double>, modifier: Modifier = Modifier) {
     AnalyticsCard(
         title = stringResource(Res.string.weekly_graph),
         icon = Res.drawable.chart_data,
-        modifier = modifier.heightIn(max = 400.dp),
+        modifier = modifier.heightIn(max = LocalWindowSizeClass.current.getChartMaxHeight()),
     ) {
         if (max != null) {
             Row(
@@ -107,7 +109,7 @@ fun WeeklyActivity(lineChartData: List<Double>, modifier: Modifier = Modifier) {
                             },
                         modifier = Modifier.weight(1f),
                         colors =
-                            ToggleButtonDefaults.toggleButtonColors(
+                            ToggleButtonDefaults.colors(
                                 containerColor = MaterialTheme.colorScheme.surfaceContainerHigh
                             ),
                     ) {

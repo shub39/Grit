@@ -22,23 +22,29 @@ import androidx.compose.animation.fadeOut
 import androidx.compose.animation.scaleIn
 import androidx.compose.animation.scaleOut
 import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.BoxScope
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.RowScope
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
 import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.FloatingActionButtonDefaults
 import androidx.compose.material3.Icon
+import androidx.compose.material3.MaterialShapes
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.MediumFloatingActionButton
 import androidx.compose.material3.Text
+import androidx.compose.material3.toShape
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import com.shub39.grit.shared.ui.LocalWindowSizeClass
-import com.shub39.grit.shared.ui.WindowSize.Companion.isExpanded
+import com.shub39.grit.shared.ui.WindowSize.Companion.isWidthExpanded
+import com.shub39.grit.shared.ui.components.LazierDefaults
 import com.shub39.grit.shared.ui.habit.HabitState
 import com.shub39.grit.shared.ui.habit.HabitsAction
 import grit.shared.ui.generated.resources.*
@@ -46,7 +52,7 @@ import org.jetbrains.compose.resources.stringResource
 import org.jetbrains.compose.resources.vectorResource
 
 @Composable
-fun BoxScope.HabitListFABs(
+fun HabitListFABs(
     onNavigateToOverallAnalytics: () -> Unit,
     state: HabitState,
     fabVisible: Boolean,
@@ -56,140 +62,129 @@ fun BoxScope.HabitListFABs(
     modifier: Modifier = Modifier,
 ) {
     val windowSizeClass = LocalWindowSizeClass.current
-    val isExpanded = windowSizeClass.isExpanded()
+    val isExpanded = windowSizeClass.isWidthExpanded()
 
     Row(
         modifier =
             modifier
-                .padding(16.dp)
+                .fillMaxWidth()
                 .navigationBarsPadding()
-                .align(if (isExpanded) Alignment.BottomStart else Alignment.BottomEnd),
-        horizontalArrangement = Arrangement.spacedBy(8.dp),
+                .padding(bottom = LazierDefaults.navBarClearance()),
+        horizontalArrangement = if (isExpanded) Arrangement.Start else Arrangement.End,
         verticalAlignment = Alignment.Bottom,
     ) {
         if (!isExpanded) {
-            AnimatedVisibility(
-                visible = state.habitsWithAnalytics.isNotEmpty() && fabVisible,
-                enter =
-                    fadeIn(MaterialTheme.motionScheme.fastEffectsSpec()) +
-                        scaleIn(MaterialTheme.motionScheme.fastSpatialSpec()),
-                exit =
-                    fadeOut(MaterialTheme.motionScheme.fastEffectsSpec()) +
-                        scaleOut(MaterialTheme.motionScheme.fastSpatialSpec()),
-            ) {
-                FloatingActionButton(
-                    onClick = onNavigateToOverallAnalytics,
-                    containerColor = MaterialTheme.colorScheme.secondaryContainer,
-                    contentColor = MaterialTheme.colorScheme.onSecondaryContainer,
-                ) {
-                    Icon(
-                        imageVector = vectorResource(Res.drawable.analytics),
-                        contentDescription = "All Analytics",
-                    )
-                }
-            }
+            OverallAnalyticsButton(
+                state = state,
+                fabVisible = fabVisible,
+                onNavigateToOverallAnalytics = onNavigateToOverallAnalytics,
+            )
 
-            AnimatedVisibility(
-                visible = fabVisible,
-                enter =
-                    fadeIn(MaterialTheme.motionScheme.fastEffectsSpec()) +
-                        scaleIn(MaterialTheme.motionScheme.fastSpatialSpec()),
-                exit =
-                    fadeOut(MaterialTheme.motionScheme.fastEffectsSpec()) +
-                        scaleOut(MaterialTheme.motionScheme.fastSpatialSpec()),
-            ) {
-                MediumFloatingActionButton(
-                    onClick = { onAction(HabitsAction.OnAddHabitClicked) },
-                    containerColor = MaterialTheme.colorScheme.tertiaryContainer,
-                    contentColor = MaterialTheme.colorScheme.onTertiaryContainer,
-                ) {
-                    Row(
-                        modifier = Modifier.padding(16.dp),
-                        horizontalArrangement = Arrangement.spacedBy(8.dp),
-                        verticalAlignment = Alignment.CenterVertically,
-                    ) {
-                        Icon(
-                            imageVector = vectorResource(Res.drawable.add),
-                            contentDescription = "Add Habit",
-                            modifier = Modifier.size(FloatingActionButtonDefaults.MediumIconSize),
-                        )
+            Spacer(modifier = Modifier.width(8.dp))
 
-                        AnimatedVisibility(
-                            visible = state.habitsWithAnalytics.isEmpty(),
-                            enter = fadeIn(MaterialTheme.motionScheme.fastEffectsSpec()),
-                            exit = fadeOut(MaterialTheme.motionScheme.fastEffectsSpec()),
-                        ) {
-                            Text(text = stringResource(Res.string.add_habit))
-                        }
-                    }
-                }
-            }
+            AddHabitButton(
+                fabVisible = fabVisible,
+                onAction = onAction,
+                state = state,
+                isUserSubscribed = isUserSubscribed,
+                onNavigateToPaywall = onNavigateToPaywall,
+            )
         } else {
-            AnimatedVisibility(
-                visible = fabVisible,
-                enter =
-                    fadeIn(MaterialTheme.motionScheme.fastEffectsSpec()) +
-                        scaleIn(MaterialTheme.motionScheme.fastSpatialSpec()),
-                exit =
-                    fadeOut(MaterialTheme.motionScheme.fastEffectsSpec()) +
-                        scaleOut(MaterialTheme.motionScheme.fastSpatialSpec()),
-            ) {
-                MediumFloatingActionButton(
-                    onClick = {
-                        if (isUserSubscribed || state.habitsWithAnalytics.size <= 5) {
-                            onAction(HabitsAction.OnAddHabitClicked)
-                        } else {
-                            onNavigateToPaywall()
-                        }
-                    },
-                    containerColor = MaterialTheme.colorScheme.tertiaryContainer,
-                    contentColor = MaterialTheme.colorScheme.onTertiaryContainer,
-                ) {
-                    Row(
-                        modifier = Modifier.padding(16.dp),
-                        horizontalArrangement = Arrangement.spacedBy(8.dp),
-                        verticalAlignment = Alignment.CenterVertically,
-                    ) {
-                        Icon(
-                            imageVector = vectorResource(Res.drawable.add),
-                            contentDescription = "Add Habit",
-                            modifier = Modifier.size(FloatingActionButtonDefaults.MediumIconSize),
-                        )
+            OverallAnalyticsButton(
+                state = state,
+                fabVisible = fabVisible,
+                onNavigateToOverallAnalytics = onNavigateToOverallAnalytics,
+            )
 
-                        AnimatedVisibility(
-                            visible = state.habitsWithAnalytics.isEmpty(),
-                            enter = fadeIn(MaterialTheme.motionScheme.fastEffectsSpec()),
-                            exit = fadeOut(MaterialTheme.motionScheme.fastEffectsSpec()),
-                        ) {
-                            Text(text = stringResource(Res.string.add_habit))
-                        }
-                    }
+            Spacer(modifier = Modifier.width(8.dp))
+
+            AddHabitButton(
+                fabVisible = fabVisible,
+                onAction = onAction,
+                state = state,
+                isUserSubscribed = isUserSubscribed,
+                onNavigateToPaywall = onNavigateToPaywall,
+            )
+        }
+    }
+}
+
+@Composable
+private fun RowScope.AddHabitButton(
+    fabVisible: Boolean,
+    onAction: (HabitsAction) -> Unit,
+    state: HabitState,
+    isUserSubscribed: Boolean,
+    onNavigateToPaywall: () -> Unit,
+) {
+    AnimatedVisibility(
+        visible = fabVisible,
+        enter =
+            fadeIn(MaterialTheme.motionScheme.fastEffectsSpec()) +
+                scaleIn(MaterialTheme.motionScheme.fastSpatialSpec()),
+        exit =
+            fadeOut(MaterialTheme.motionScheme.fastEffectsSpec()) +
+                scaleOut(MaterialTheme.motionScheme.fastSpatialSpec()),
+    ) {
+        MediumFloatingActionButton(
+            onClick = {
+                if (isUserSubscribed || state.habitsWithAnalytics.size <= 5) {
+                    onAction(HabitsAction.OnAddHabitClicked)
+                } else {
+                    onNavigateToPaywall()
+                }
+            },
+            containerColor = MaterialTheme.colorScheme.tertiary,
+            contentColor = MaterialTheme.colorScheme.onTertiary,
+        ) {
+            Row(
+                modifier = Modifier.padding(16.dp),
+                horizontalArrangement = Arrangement.spacedBy(8.dp),
+                verticalAlignment = Alignment.CenterVertically,
+            ) {
+                Icon(
+                    imageVector = vectorResource(Res.drawable.add),
+                    contentDescription = "Add Habit",
+                    modifier = Modifier.size(FloatingActionButtonDefaults.MediumIconSize),
+                )
+
+                AnimatedVisibility(
+                    visible = state.habitsWithAnalytics.isEmpty(),
+                    enter = fadeIn(MaterialTheme.motionScheme.fastEffectsSpec()),
+                    exit = fadeOut(MaterialTheme.motionScheme.fastEffectsSpec()),
+                ) {
+                    Text(text = stringResource(Res.string.add_habit))
                 }
             }
+        }
+    }
+}
 
-            AnimatedVisibility(
-                visible =
-                    state.analyticsHabitId != null &&
-                        state.habitsWithAnalytics.isNotEmpty() &&
-                        fabVisible,
-                enter =
-                    fadeIn(MaterialTheme.motionScheme.fastEffectsSpec()) +
-                        scaleIn(MaterialTheme.motionScheme.fastSpatialSpec()),
-                exit =
-                    fadeOut(MaterialTheme.motionScheme.fastEffectsSpec()) +
-                        scaleOut(MaterialTheme.motionScheme.fastSpatialSpec()),
-            ) {
-                FloatingActionButton(
-                    onClick = onNavigateToOverallAnalytics,
-                    containerColor = MaterialTheme.colorScheme.secondaryContainer,
-                    contentColor = MaterialTheme.colorScheme.onSecondaryContainer,
-                ) {
-                    Icon(
-                        imageVector = vectorResource(Res.drawable.analytics),
-                        contentDescription = "All Analytics",
-                    )
-                }
-            }
+@Composable
+private fun RowScope.OverallAnalyticsButton(
+    state: HabitState,
+    fabVisible: Boolean,
+    onNavigateToOverallAnalytics: () -> Unit,
+) {
+    AnimatedVisibility(
+        visible = state.habitsWithAnalytics.isNotEmpty() && fabVisible,
+        enter =
+            fadeIn(MaterialTheme.motionScheme.fastEffectsSpec()) +
+                scaleIn(MaterialTheme.motionScheme.fastSpatialSpec()),
+        exit =
+            fadeOut(MaterialTheme.motionScheme.fastEffectsSpec()) +
+                scaleOut(MaterialTheme.motionScheme.fastSpatialSpec()),
+    ) {
+        FloatingActionButton(
+            onClick = onNavigateToOverallAnalytics,
+            containerColor = MaterialTheme.colorScheme.secondary,
+            contentColor = MaterialTheme.colorScheme.onSecondary,
+            shape = MaterialShapes.Circle.toShape(),
+        ) {
+            Icon(
+                imageVector = vectorResource(Res.drawable.analytics),
+                contentDescription = "All Analytics",
+            )
         }
     }
 }

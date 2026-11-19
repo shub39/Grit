@@ -1,5 +1,12 @@
 # Changelog
 
+## 6.5.0
+- Updated Translations
+- Added Confetti animations on Task and Habit Completion
+- Added Floating Toolbar Navigation
+- Revamped App Bars with Blur effect (Android 13+)
+- Miscellaneous fixes and Updates
+
 ## 6.4.1
 - Fixed random crashes
 - Updates Translations
