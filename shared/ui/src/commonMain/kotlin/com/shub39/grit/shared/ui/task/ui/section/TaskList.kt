@@ -63,6 +63,7 @@ import androidx.compose.material3.ListItem
 import androidx.compose.material3.ListItemDefaults
 import androidx.compose.material3.MaterialShapes
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.MaterialTheme.colorScheme
 import androidx.compose.material3.MediumFloatingActionButton
 import androidx.compose.material3.OutlinedIconButton
 import androidx.compose.material3.Scaffold
@@ -205,8 +206,9 @@ fun TaskList(
                     MediumFloatingActionButton(
                         onClick = { showTaskUpsertSheet = ShowTaskUpsertSheet.Add },
                         modifier = Modifier.padding(bottom = LazierDefaults.navBarClearance()),
-                        containerColor = MaterialTheme.colorScheme.tertiaryContainer,
-                        contentColor = MaterialTheme.colorScheme.onTertiaryContainer,
+                        containerColor = colorScheme.primary,
+                        contentColor = colorScheme.onPrimary,
+                        shape = MaterialShapes.VerySunny.toShape()
                     ) {
                         Row(
                             modifier = Modifier.padding(16.dp),
@@ -736,7 +738,7 @@ private fun ExpandedTasksView(
             var showReorderDialog by remember { mutableStateOf(false) }
 
             Surface(
-                color = MaterialTheme.colorScheme.surfaceContainer,
+                color = colorScheme.surfaceContainer,
                 shape = RoundedCornerShape(28.dp),
                 modifier =
                     Modifier.widthIn(max = 350.dp)
@@ -940,14 +942,14 @@ private fun ExpandedTasksView(
                             modifier =
                                 Modifier.size(48.dp)
                                     .background(
-                                        color = MaterialTheme.colorScheme.primaryContainer,
+                                        color = colorScheme.primaryContainer,
                                         shape = MaterialShapes.Pill.toShape(),
                                     ),
                         ) {
                             Icon(
                                 imageVector = vectorResource(Res.drawable.reorder),
                                 contentDescription = null,
-                                tint = MaterialTheme.colorScheme.onPrimaryContainer,
+                                tint = colorScheme.onPrimaryContainer,
                             )
                         }
 
@@ -988,7 +990,7 @@ private fun ExpandedTasksView(
                                         colors =
                                             ListItemDefaults.colors(
                                                 containerColor =
-                                                    MaterialTheme.colorScheme.surfaceContainerHigh
+                                                    colorScheme.surfaceContainerHigh
                                             ),
                                         content = {
                                             Text(
@@ -1027,14 +1029,14 @@ private fun DeleteTasksDialog(onDismiss: () -> Unit, onConfirm: () -> Unit) {
                 modifier =
                     Modifier.size(48.dp)
                         .background(
-                            color = MaterialTheme.colorScheme.primaryContainer,
+                            color = colorScheme.primaryContainer,
                             shape = MaterialShapes.Pill.toShape(),
                         ),
             ) {
                 Icon(
                     imageVector = vectorResource(Res.drawable.warning),
                     contentDescription = "Warning",
-                    tint = MaterialTheme.colorScheme.onPrimaryContainer,
+                    tint = colorScheme.onPrimaryContainer,
                 )
             }
             Spacer(modifier = Modifier.height(4.dp))

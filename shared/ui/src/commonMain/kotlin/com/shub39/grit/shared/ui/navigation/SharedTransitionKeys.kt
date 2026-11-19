@@ -16,8 +16,12 @@
  */
 package com.shub39.grit.shared.ui.navigation
 
+import kotlin.jvm.JvmInline
+
 /**
  * Shared key for the habit title, which travels between the habit card in the habits list and the
  * title of the habit analytics page.
  */
-data class HabitTitleKey(val habitId: Long)
+@JvmInline
+value class HabitTitleKey(val habitId: Long)
+
