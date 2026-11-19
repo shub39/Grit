@@ -24,9 +24,13 @@ import androidx.compose.animation.scaleOut
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.BoxScope
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.layout.widthIn
 import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.FloatingActionButtonDefaults
 import androidx.compose.material3.Icon
@@ -37,6 +41,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
+import com.shub39.grit.shared.ui.ContentMaxWidth
 import com.shub39.grit.shared.ui.LocalWindowSizeClass
 import com.shub39.grit.shared.ui.WindowSize.Companion.isWidthExpanded
 import com.shub39.grit.shared.ui.components.LazierDefaults
@@ -70,8 +75,10 @@ fun BoxScope.HabitListFABs(
                     bottom = PageInsets.Edge + LazierDefaults.navBarClearance(),
                 )
                 .navigationBarsPadding()
-                .align(if (isExpanded) Alignment.BottomStart else Alignment.BottomEnd),
-        horizontalArrangement = Arrangement.spacedBy(8.dp),
+                .align(Alignment.BottomCenter)
+                .widthIn(max = ContentMaxWidth)
+                .fillMaxWidth(),
+        horizontalArrangement = if (isExpanded) Arrangement.Start else Arrangement.End,
         verticalAlignment = Alignment.Bottom,
     ) {
         if (!isExpanded) {
@@ -95,6 +102,8 @@ fun BoxScope.HabitListFABs(
                     )
                 }
             }
+
+            Spacer(modifier = Modifier.width(8.dp))
 
             AnimatedVisibility(
                 visible = fabVisible,
@@ -173,6 +182,8 @@ fun BoxScope.HabitListFABs(
                     }
                 }
             }
+
+            Spacer(modifier = Modifier.width(8.dp))
 
             AnimatedVisibility(
                 visible =
