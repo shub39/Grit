@@ -1,5 +1,8 @@
 # Changelog
 
+## 6.5.1
+- Fixed Task edit dropdown UI not themed properly
+
 ## 6.5.0
 - Updated Translations
 - Added Confetti animations on Task and Habit Completion

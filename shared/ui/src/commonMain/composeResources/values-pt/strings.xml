@@ -82,4 +82,25 @@
     <string name="system_default">Padrão do sistema</string>
     <string name="language">Idioma</string>
     <string name="about">Sobre</string>
+    <string name="no_category">Nenhum</string>
+    <string name="all">Todos</string>
+    <string name="today">Hoje</string>
+    <string name="delete_habit_category">Tem a certeza? Todos os hábitos nesta categoria serão eliminados</string>
+    <string name="consistency">Consistência</string>
+    <string name="calendar">Calendário</string>
+    <string name="monthly">Mensal</string>
+    <string name="yearly">Anual</string>
+    <string name="quarterly">Trimestral</string>
+    <string name="weekly">Semanal</string>
+    <string name="daily">Diário</string>
+    <string name="habit_type">Tipo de hábito</string>
+    <string name="target_value">Valor meta</string>
+    <string name="target_unit">Unidade meta</string>
+    <string name="yes_or_no">Sim ou não</string>
+    <string name="measure_able">Mensurável</string>
+    <string name="add_status">Adicionar estado</string>
+    <string name="targets">Metas</string>
+    <string name="material_theme">Tema Material you</string>
+    <string name="category">Categoria</string>
+    <string name="add_subtasks">Adicionar sub-tarefas</string>
 </resources>
