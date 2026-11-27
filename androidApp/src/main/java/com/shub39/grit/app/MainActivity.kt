@@ -37,6 +37,7 @@ import com.shub39.grit.core.interfaces.BiometricUtils
 import com.shub39.grit.shared.ui.components.InitialLoading
 import com.shub39.grit.shared.ui.navigation.GritNavDisplay
 import com.shub39.grit.shared.ui.theme.GritTheme
+import com.shub39.grit.shared.ui.viewmodel.BiometricBridge
 import com.shub39.grit.shared.ui.viewmodel.MainViewModel
 import io.github.vinceglb.filekit.FileKit
 import io.github.vinceglb.filekit.dialogs.init
@@ -79,6 +80,24 @@ class MainActivity : FragmentActivity() {
                             )
                         }
                     }
+                }
+            }
+
+            LaunchedEffect(Unit) {
+                BiometricBridge.requests.collect { result ->
+                    showBiometricPrompt(
+                        onSuccess = {
+                            mainViewModel.setAppUnlocked(true)
+                            result.complete(true)
+                        },
+                        onError = { errorCode, _ ->
+                            result.complete(
+                                errorCode == BiometricPrompt.ERROR_NO_BIOMETRICS ||
+                                        errorCode == BiometricPrompt.ERROR_HW_NOT_PRESENT ||
+                                        errorCode == BiometricPrompt.ERROR_HW_UNAVAILABLE
+                            )
+                        },
+                    )
                 }
             }
 

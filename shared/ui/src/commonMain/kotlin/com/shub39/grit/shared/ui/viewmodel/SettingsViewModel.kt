@@ -197,6 +197,8 @@ class SettingsViewModel(
                 }
 
                 is ChangeBiometricLock -> {
+                    if (!BiometricBridge.requestAuthentication()) return@launch
+
                     analytics.trackEvent(
                         AnalyticsEvent.SETTINGS_UPDATED,
                         mapOf("setting" to "ChangeBiometricLock", "value" to action.pref),
